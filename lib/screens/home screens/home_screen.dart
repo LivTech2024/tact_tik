@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -12,6 +13,8 @@ import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
+import 'package:tact_tik/services/auth/auth.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../fonts/poppins_light.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,8 +31,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  List IconColors = [Primarycolor,color4,color4,color4];
+  //Get the current User
+  final Auth auth = Auth();
+  String _userName = "";
+  List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
 
@@ -84,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
+    _getUserInfo();
     super.initState();
   }
 
@@ -95,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void ChangeIconColor(int index){
+  void ChangeIconColor(int index) {
     setState(() {
       switch (index) {
         case 0:
@@ -126,8 +132,27 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  FireStoreService fireStoreService = FireStoreService();
+
+  void _getUserInfo() async {
+    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    if (userInfo != null) {
+      String userName = userInfo['EmployeeName'];
+      setState(() {
+        _userName = userName;
+      });
+      print('User Info: ${userInfo.data()}');
+    } else {
+      print('User info not found');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    User? currentUser = auth.CurrentUser;
+    if (currentUser != null) {
+      print("Current User ${currentUser.email}");
+    }
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -138,7 +163,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: CustomScrollView(
             slivers: [
-              HomeScreenPart1(),
+              HomeScreenPart1(
+                userName: _userName,
+              ),
               SliverToBoxAdapter(
                 child: Column(
                   children: [
@@ -195,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(40),
+                                    borderRadius: BorderRadius.circular(40),
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(40.0),
@@ -218,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     width: double.maxFinite,
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        begin: Alignment(0,-1.5),
+                                        begin: Alignment(0, -1.5),
                                         end: Alignment.bottomCenter,
                                         colors: [
                                           Colors.black,
@@ -282,7 +309,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(
                                           height: 55,
@@ -325,7 +353,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceAround,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   PoppinsBold(
                                                     text: 'Robert D. Vaughn',
@@ -343,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         GestureDetector(
-                                          onTap: (){},
+                                          onTap: () {},
                                           child: Container(
                                             height: 55,
                                             padding: EdgeInsets.symmetric(
@@ -356,7 +385,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 RobotoBold(
                                                   text: 'Get Direction',

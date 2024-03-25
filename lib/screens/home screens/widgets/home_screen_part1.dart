@@ -5,7 +5,8 @@ import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
 
 class HomeScreenPart1 extends StatelessWidget {
-  const HomeScreenPart1({super.key});
+  final String userName;
+  const HomeScreenPart1({Key? key, required this.userName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class HomeScreenPart1 extends StatelessWidget {
           ),
           SizedBox(height: 10),
           PoppinsLight(
-            text: 'Nick Jones',
+            text: userName,
             color: Primarycolor,
             fontsize: 30,
           ),
