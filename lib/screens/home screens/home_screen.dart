@@ -136,14 +136,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    if (userInfo != null) {
-      String userName = userInfo['EmployeeName'];
-      setState(() {
-        _userName = userName;
-      });
-      print('User Info: ${userInfo.data()}');
-    } else {
-      print('User info not found');
+    if (mounted) {
+      if (userInfo != null) {
+        String userName = userInfo['EmployeeName'];
+        setState(() {
+          _userName = userName;
+        });
+        print('User Info: ${userInfo.data()}');
+      } else {
+        print('User info not found');
+      }
     }
   }
 
