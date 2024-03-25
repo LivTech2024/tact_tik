@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 
+import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
@@ -15,6 +16,7 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
+  bool issShift = true;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +143,31 @@ class _TaskScreenState extends State<TaskScreen> {
                   SizedBox(
                     height: 22,
                   ),
-                  GestureDetector(
+                  Button1(
+                    text: 'Start Shift',
+                    fontsize: 18,
+                    color: issShift ? color5 : color12,
+                    backgroundcolor:
+                        issShift ? WidgetColor : color11/*.withOpacity(50)*/,
+                    onPressed: () {
+                      setState(() {
+                        ShiftStarted = true;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Button1(
+                    text: 'Check Patrolling',
+                    fontsize: 18,
+                    color: issShift ? color12 : color5,
+                    backgroundcolor:
+                        issShift ? color11 : WidgetColor,
+                    onPressed: () {},
+                  ),
+
+                  /*GestureDetector(
                     onTap: () {
                       setState(() {
                         ShiftStarted = true;
@@ -158,7 +184,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         ),
                       ),
                     ),
-                  )
+                  )*/
                 ],
               )
       ],

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -14,6 +16,7 @@ import 'package:tact_tik/utils/colors.dart';
 import '../../fonts/poppins_light.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
 
@@ -25,6 +28,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List IconColors = [Primarycolor,color4,color4,color4];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
 
@@ -85,7 +90,39 @@ class _HomeScreenState extends State<HomeScreen> {
   void ChangeScreenIndex(int index) {
     setState(() {
       ScreenIndex = index;
+      ChangeIconColor(index);
       print(ScreenIndex);
+    });
+  }
+
+  void ChangeIconColor(int index){
+    setState(() {
+      switch (index) {
+        case 0:
+          IconColors[0] = Primarycolor;
+          IconColors[1] = color4;
+          IconColors[2] = color4;
+          IconColors[3] = color4;
+          break;
+        case 1:
+          IconColors[0] = color4;
+          IconColors[1] = Primarycolor;
+          IconColors[2] = color4;
+          IconColors[3] = color4;
+          break;
+        case 2:
+          IconColors[0] = color4;
+          IconColors[1] = color4;
+          IconColors[2] = Primarycolor;
+          IconColors[3] = color4;
+          break;
+        case 3:
+          IconColors[0] = color4;
+          IconColors[1] = color4;
+          IconColors[2] = color4;
+          IconColors[3] = Primarycolor;
+          break;
+      }
     });
   }
 
@@ -112,28 +149,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () => ChangeScreenIndex(0),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.add_task,
-                            color: Primarycolor,
+                            color: IconColors[0],
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => ChangeScreenIndex(1),
+                          // onTap: () => ChangeScreenIndex(1),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.grid_view_rounded,
-                            color: color4,
+                            color: IconColors[1],
                           ),
                         ),
                         GestureDetector(
                           onTap: () => ChangeScreenIndex(2),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.calendar_today,
-                            color: color4,
+                            color: IconColors[2],
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => ChangeScreenIndex(3),
+                          // onTap: () => ChangeScreenIndex(3),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.chat_bubble_outline,
-                            color: color4,
+                            color: IconColors[3],
                           ),
                         ),
                       ],
@@ -156,29 +193,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.redAccent),
                             child: Stack(
                               children: [
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    height: 470,
-                                    width: double.maxFinite,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.black,
-                                          Colors.transparent
-                                        ],
-                                      ),
-                                    ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
                                   ),
-                                ),
-                                /*Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(40),
-                                    ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(40.0),
                                     child: GoogleMap(
                                       initialCameraPosition: CameraPosition(
                                         target: _center,
@@ -190,7 +210,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                     ),
                                   ),
-                                ),*/
+                                ),
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(
+                                    height: 470,
+                                    width: double.maxFinite,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment(0,-1.5),
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.black,
+                                          Colors.transparent
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Align(
                                   alignment: Alignment.topCenter,
                                   child: Container(
@@ -222,6 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           icon: Icon(
                                             Icons.cancel_outlined,
                                             size: 30,
+                                            color: color1,
                                           ),
                                           padding: EdgeInsets.zero,
                                         )
@@ -244,6 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(
                                           height: 55,
@@ -257,22 +296,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 height: 55,
                                                 width: 55,
-                                                child: Container(
-                                                  alignment: Alignment.center,
-                                                  height: 45,
-                                                  width: 45,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      6,
-                                                    ),
-                                                    color: color9,
-                                                    border: Border.all(
+                                                child: Center(
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    height: 45,
+                                                    width: 45,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        6,
+                                                      ),
+                                                      color: color9,
+                                                      border: Border.all(
                                                         color: Primarycolor,
-                                                        width: 1),
+                                                        width: 1,
+                                                      ),
+                                                    ),
+                                                    child: MyNetworkImage(
+                                                      'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                    ),
                                                   ),
-                                                  child: MyNetworkImage(
-                                                      'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg'),
                                                 ),
                                               ),
                                               SizedBox(
@@ -282,6 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceAround,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   PoppinsBold(
                                                     text: 'Robert D. Vaughn',
@@ -291,10 +335,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   RobotoMedium(
                                                     text:
                                                         '318 Grand St,  New York 10002, US',
+                                                    color: color10,
                                                   )
                                                 ],
                                               )
                                             ],
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: (){},
+                                          child: Container(
+                                            height: 55,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Primarycolor,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                RobotoBold(
+                                                  text: 'Get Direction',
+                                                  color: color1,
+                                                ),
+                                                Icon(
+                                                  Icons.arrow_forward_sharp,
+                                                  color: color1,
+                                                  size: 24,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         )
                                       ],
@@ -313,6 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 
 /*padding: EdgeInsets.symmetric(
             vertical: 40.0,

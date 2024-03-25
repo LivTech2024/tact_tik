@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tact_tik/login_screen.dart';
 
 import '../../fonts/poppins_medium.dart';
 import '../../fonts/poppins_regular.dart';
@@ -6,8 +7,10 @@ import '../../fonts/poppis_semibold.dart';
 import '../../utils/colors.dart';
 
 class PageType2 extends StatelessWidget {
-  PageType2(
-      {super.key, required  this.index,});
+  PageType2({
+    super.key,
+    required this.index,
+  });
 
   final int index;
 
@@ -89,18 +92,24 @@ class PageType2 extends StatelessWidget {
           ),
           Visibility(
             visible: true,
-            child: Container(
-              height: 60,
-              margin:
-              const EdgeInsets.only(left: 24.0, right: 24.0, top: 74.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Primarycolor,
-              ),
-              child: const Center(
-                child: PoppinsMedium(
-                  text: 'Get Started',
-                  fontsize: 16,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+              child: Container(
+                height: 60,
+                margin:
+                    const EdgeInsets.only(left: 24.0, right: 24.0, top: 74.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Primarycolor,
+                ),
+                child: const Center(
+                  child: PoppinsMedium(
+                    text: 'Get Started',
+                    fontsize: 16,
+                  ),
                 ),
               ),
             ),

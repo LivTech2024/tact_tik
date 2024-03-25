@@ -3,6 +3,7 @@ import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/utils/colors.dart';
 
+import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_semibold.dart';
 
@@ -115,12 +116,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         SizedBox(height: 10),
         Container(
           height: 65,
+          width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
             color: WidgetColor,
           ),
           child: Row(
             children: [
+
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -147,6 +150,21 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               VerticalDivider(
                 color: Colors.white,
               ),
+              /*Button1(
+                text: 'OUT',
+                fontsize: 18,
+                color: clickedIn ? Primarycolor : Primarycolorlight,
+                flex: 2,
+                onPressed: () {
+                  setState(() {
+                    if (!clickedIn) {
+                      clickedIn = true;
+                    } else {
+                      print('already clicked');
+                    }
+                  });
+                },
+              ),*/
               Expanded(
                 child: GestureDetector(
                   onTap: () {},
