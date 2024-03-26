@@ -1,12 +1,16 @@
-import 'dart:collection';
+import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
@@ -34,6 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
   //Get the current User
   final Auth auth = Auth();
   String _userName = "";
+  String _ShiftDate = "";
+  String _ShiftLocation = "";
+  String _ShiftName = "";
+  String _ShiftEndTime = "";
+  String _ShiftStartTime = "";
+  double _shiftLatitude = 0;
+  double _shiftLongitude = 0;
+
+  bool isWithRadius = true;
+
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
@@ -90,6 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
+    checkLocation();
     super.initState();
   }
 
@@ -134,8 +149,55 @@ class _HomeScreenState extends State<HomeScreen> {
 
   FireStoreService fireStoreService = FireStoreService();
 
+  Future<void> checkLocation() async {
+    var status = await Permission.locationWhenInUse.status;
+    if (status.isDenied) {
+      // Request location permission
+      await Permission.locationWhenInUse.request();
+    }
+
+    // Check if permission is granted before accessing the device's location
+    if (status.isGranted) {
+      Position currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      double distanceInMeters = Geolocator.distanceBetween(
+          currentPosition.latitude,
+          currentPosition.longitude,
+          _shiftLatitude,
+          _shiftLongitude);
+      print(currentPosition.latitude);
+      print(currentPosition.longitude);
+      // Assuming the radius is 100 meters
+      if (distanceInMeters <= 100) {
+        setState(() {
+          isWithRadius = true;
+        });
+      } else {
+        // Display alert
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Alert'),
+              content: Text('You are not within the shift location radius.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
+
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    var shiftInfo = await fireStoreService.getShiftByEmployeeIdFromUserInfo();
     if (mounted) {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
@@ -145,6 +207,29 @@ class _HomeScreenState extends State<HomeScreen> {
         print('User Info: ${userInfo.data()}');
       } else {
         print('User info not found');
+      }
+      if (shiftInfo != null) {
+        String shiftDateStr =
+            DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+        String shiftEndTimeStr = shiftInfo['ShiftEndTime'];
+        String shiftStartTimeStr = shiftInfo['ShiftStartTime'];
+        String shiftLocation = shiftInfo['ShiftAddress'];
+        String shiftName = shiftInfo['ShiftName'];
+        GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'];
+        double shiftLocationLatitude = shiftGeolocation.latitude;
+        double shiftLocationLongitude = shiftGeolocation.longitude;
+        setState(() {
+          _ShiftDate = shiftDateStr;
+          _ShiftEndTime = shiftEndTimeStr;
+          _ShiftStartTime = shiftStartTimeStr;
+          _ShiftLocation = shiftLocation;
+          _ShiftName = shiftName;
+          _shiftLatitude = shiftLocationLatitude;
+          _shiftLongitude = shiftLocationLongitude;
+        });
+        print('Shift Info: ${shiftInfo.data()}');
+      } else {
+        print('Shift info not found');
       }
     }
   }
@@ -211,7 +296,14 @@ class _HomeScreenState extends State<HomeScreen> {
               // ,
               ScreenIndex == 0
                   ? SliverToBoxAdapter(
-                      child: TaskScreen(),
+                      child: TaskScreen(
+                        ShiftDate: _ShiftDate,
+                        ShiftStartTime: _ShiftStartTime,
+                        ShiftLocation: _ShiftLocation,
+                        ShiftName: _ShiftLocation,
+                        ShiftEndTime: _ShiftEndTime,
+                        isWithINRadius: isWithRadius,
+                      ),
                     )
                   : ScreenIndex == 2
                       ? SliverToBoxAdapter(

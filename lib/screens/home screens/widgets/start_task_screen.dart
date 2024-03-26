@@ -8,8 +8,19 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_semibold.dart';
 
 class StartTaskScreen extends StatefulWidget {
-  const StartTaskScreen({super.key});
+  final String ShiftDate;
+  final String ShiftEndTime;
+  final String ShiftStartTime;
+  // final String ShiftLocation;
+  // final String ShiftName;
 
+  StartTaskScreen({
+    required this.ShiftDate,
+    required this.ShiftEndTime,
+    required this.ShiftStartTime,
+    // required this.ShiftLocation,
+    // required this.ShiftName,
+  });
   @override
   State<StartTaskScreen> createState() => _StartTaskScreenState();
 }
@@ -32,7 +43,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               Row(
                 children: [
                   InterBold(
-                    text: 'Today',
+                    text: widget.ShiftDate,
                     color: color1,
                     fontsize: 18,
                   ),
@@ -65,12 +76,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         ),
                         SizedBox(height: 10),
                         InterRegular(
-                          text: '12 : 00 pm',
+                          text: widget.ShiftStartTime,
                           fontsize: 19,
                           color: color7,
                         ),
                         SizedBox(height: 20),
-                        clickedIn ? InterSemibold(text: '13m Late',color: Colors.redAccent,fontsize: 14,) : SizedBox()
+                        clickedIn
+                            ? InterSemibold(
+                                text: '13m Late',
+                                color: Colors.redAccent,
+                                fontsize: 14,
+                              )
+                            : SizedBox()
                       ],
                     ),
                   ),
@@ -80,18 +97,24 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
-                          text: 'In time',
+                          text: 'Out time',
                           fontsize: 28,
                           color: color1,
                         ),
                         SizedBox(height: 10),
                         InterRegular(
-                          text: '12 : 00 pm',
+                          text: widget.ShiftEndTime,
                           fontsize: 19,
                           color: color7,
                         ),
                         SizedBox(height: 20),
-                        clickedIn ? InterSemibold(text: '00 : 00 : 00',color: color8,fontsize: 14,) : SizedBox()
+                        clickedIn
+                            ? InterSemibold(
+                                text: '00 : 00 : 00', //Stopwatch
+                                color: color8,
+                                fontsize: 14,
+                              )
+                            : SizedBox()
                       ],
                     ),
                   ),
@@ -109,7 +132,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   )
                 ],
               ),
-
             ],
           ),
         ),
@@ -123,7 +145,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           ),
           child: Row(
             children: [
-
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -184,13 +205,19 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           ),
         ),
         SizedBox(height: 10),
-        clickedIn ? Container(
-          height: 65,
-          color: WidgetColor,
-          child: Center(
-            child: InterBold(text: 'Break', fontsize: 18, color: Primarycolor,),
-          ),
-        ) : SizedBox()
+        clickedIn
+            ? Container(
+                height: 65,
+                color: WidgetColor,
+                child: Center(
+                  child: InterBold(
+                    text: 'Break',
+                    fontsize: 18,
+                    color: Primarycolor,
+                  ),
+                ),
+              )
+            : SizedBox()
       ],
     );
   }

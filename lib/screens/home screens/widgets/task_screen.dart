@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
@@ -8,7 +9,21 @@ import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
 class TaskScreen extends StatefulWidget {
-  TaskScreen({super.key});
+  final String ShiftDate;
+  final String ShiftEndTime;
+  final String ShiftStartTime;
+  final String ShiftLocation;
+  final String ShiftName;
+  bool isWithINRadius;
+
+  TaskScreen({
+    required this.ShiftDate,
+    required this.ShiftEndTime,
+    required this.ShiftStartTime,
+    required this.ShiftLocation,
+    required this.ShiftName,
+    required this.isWithINRadius,
+  });
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -17,13 +32,16 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
   bool issShift = true;
-
+  FireStoreService fireStoreService = FireStoreService();
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ShiftStarted
-            ? const StartTaskScreen()
+            ? StartTaskScreen(
+                ShiftDate: widget.ShiftDate,
+                ShiftStartTime: widget.ShiftStartTime,
+                ShiftEndTime: widget.ShiftDate)
             : Column(
                 children: [
                   Container(
@@ -46,7 +64,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   InterBold(
-                                    text: 'Today',
+                                    text: widget.ShiftDate,
                                     color: Colors.white,
                                     fontsize: 18,
                                   ),
@@ -60,7 +78,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         fontsize: 18,
                                       ),
                                       InterMedium(
-                                        text: '12 : 00 pm',
+                                        text: widget.ShiftStartTime,
                                         color: Colors.white,
                                         fontsize: 16,
                                       )
@@ -76,7 +94,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         fontsize: 18,
                                       ),
                                       InterMedium(
-                                        text: '12 : 00 pm',
+                                        text: widget.ShiftEndTime,
                                         color: Colors.white,
                                         fontsize: 16,
                                       )
@@ -128,8 +146,7 @@ class _TaskScreenState extends State<TaskScreen> {
                               SizedBox(width: 38),
                               Flexible(
                                 child: InterRegular(
-                                  text:
-                                      '2972 Westheimer Rd. Santa Ana, Illinois 85486',
+                                  text: widget.ShiftLocation,
                                   fontsize: 16,
                                   color: Colors.white,
                                 ),
@@ -148,8 +165,9 @@ class _TaskScreenState extends State<TaskScreen> {
                     fontsize: 18,
                     color: issShift ? color5 : color12,
                     backgroundcolor:
-                        issShift ? WidgetColor : color11/*.withOpacity(50)*/,
-                    onPressed: () {
+                        issShift ? WidgetColor : color11 /*.withOpacity(50)*/,
+                    onPressed: () async {
+                      await fireStoreService.startShiftLog();
                       setState(() {
                         ShiftStarted = true;
                       });
@@ -162,8 +180,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     text: 'Check Patrolling',
                     fontsize: 18,
                     color: issShift ? color12 : color5,
-                    backgroundcolor:
-                        issShift ? color11 : WidgetColor,
+                    backgroundcolor: issShift ? color11 : WidgetColor,
                     onPressed: () {},
                   ),
 
