@@ -57,6 +57,7 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.white, // Change text color to white
                 ),
                 controller: _passwordcontrller,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   hintText: 'Enter your password',

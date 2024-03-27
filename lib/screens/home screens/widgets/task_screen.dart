@@ -186,13 +186,16 @@ class _TaskScreenState extends State<TaskScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Button1(
-                    text: 'Check Patrolling',
-                    fontsize: 18,
-                    color: issShift ? color12 : color5,
-                    backgroundcolor: issShift ? color11 : WidgetColor,
-                    onPressed: () {},
-                  ),
+                  issShift
+                      ? SizedBox() :Button1(
+                          text: 'Check Patrolling',
+                          fontsize: 18,
+                          color: color5,
+                          backgroundcolor: WidgetColor,
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => OpenPatrollingScreen()));
+                          },
+                        ),
 
                   /*GestureDetector(
                     onTap: () {

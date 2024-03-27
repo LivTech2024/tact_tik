@@ -321,6 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         GestureDetector(
                           // onTap: () => ChangeScreenIndex(2),
+                          // onTap: () => ChangeScreenIndex(2),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.calendar_today,
                             color: IconColors[2],
@@ -352,6 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shiftId: _shiftId,
                       ),
                     )
+                  /*: ScreenIndex == 2
                   /*: ScreenIndex == 2
                       ? SliverToBoxAdapter(
                           child: Container(
@@ -551,6 +553,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
+                      */
+                  : SizedBox()
                       */
                   : SizedBox()
             ],

@@ -69,7 +69,7 @@ class PageType2 extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 100,
+            height: 20,
           ),
           PoppinsSemibold(
             text: tittls[index],
@@ -83,7 +83,7 @@ class PageType2 extends StatelessWidget {
               height: 3,
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
           PoppinsRegular(
             text: description[index],
             fontsize: 14,

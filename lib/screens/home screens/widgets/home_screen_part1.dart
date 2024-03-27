@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../../utils/utils.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../utils/utils.dart';
 
@@ -172,7 +177,69 @@ class HomeScreenPart1 extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
+          // Container(
+          //   height: 64,
+          //   padding: EdgeInsets.symmetric(horizontal: 10.0),
+          //   decoration: BoxDecoration(
+          //     color: WidgetColor,
+          //     borderRadius: BorderRadius.circular(13),
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Expanded(
+          //         child: TextField(
+          //           style: GoogleFonts.poppins(
+          //             fontWeight: FontWeight.w300,
+          //             fontSize: 18,
+          //             color: Colors.white, // Change text color to white
+          //           ),
+          //           decoration: InputDecoration(
+          //             border: OutlineInputBorder(
+          //               borderSide: BorderSide.none,
+          //               borderRadius: const BorderRadius.all(
+          //                 const Radius.circular(10.0),
+          //               ),
+          //             ),
+          //             focusedBorder: InputBorder.none,
+          //             // filled: true,
+          //             // fillColor: Colors.transparent, // Change background color to red
+          //             /*labelStyle: GoogleFonts.poppins(
+          //               fontWeight: FontWeight.w300,
+          //               fontSize: 18,
+          //               color: Colors.white, // Change text color to white
+          //             ),*/
+          //             hintStyle: GoogleFonts.poppins(
+          //               fontWeight: FontWeight.w300,
+          //               fontSize: 18,
+          //               color: color2, // Change text color to white
+          //             ),
+          //             hintText: 'Search',
+          //             contentPadding: EdgeInsets.zero, // Remove padding
+          //           ),
+          //           cursorColor: Primarycolor,
+          //         ),
+          //       ),
+          //       Container(
+          //         height: 44,
+          //         width: 44,
+          //         decoration: BoxDecoration(
+          //           color: Primarycolor,
+          //           borderRadius: BorderRadius.circular(10),
+          //         ),
+          //         child: Center(
+          //           child: Icon(
+          //             Icons.search,
+          //             size: 20,
+          //             color: Colors.black,
+          //           ),
+          //         ),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          SizedBox(height: 10),
         ],
       ),
     );
