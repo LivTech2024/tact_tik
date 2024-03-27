@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
@@ -45,16 +47,19 @@ class _HomeScreenState extends State<HomeScreen> {
   String _ShiftStartTime = "";
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
-
-  bool isWithRadius = true;
+  String _employeeId = "";
+  String _shiftId = "";
+  bool isWithinRadius = true;
+  bool issShift = false;
 
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
 
   final LatLng _center =
-      const LatLng(37.7749, -122.4194); // San Francisco coordinates
+      const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   // void _shoeDatePicker(BuildContext context) {
   //   showDatePicker(
@@ -148,6 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   FireStoreService fireStoreService = FireStoreService();
+  Future<void> _refresh() {
+    return Future.delayed(Duration(seconds: 2));
+  }
 
   Future<void> checkLocation() async {
     var status = await Permission.locationWhenInUse.status;
@@ -170,88 +178,126 @@ class _HomeScreenState extends State<HomeScreen> {
       // Assuming the radius is 100 meters
       if (distanceInMeters <= 100) {
         setState(() {
-          isWithRadius = true;
+          isWithinRadius = true;
         });
       } else {
         // Display alert
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Alert'),
-              content: Text('You are not within the shift location radius.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        // showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return AlertDialog(
+        //       title: Text('Alert'),
+        //       content: Text('You are not within the shift location radius.'),
+        //       actions: <Widget>[
+        //         TextButton(
+        //           child: Text('OK'),
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
       }
     }
   }
 
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    var shiftInfo = await fireStoreService.getShiftByEmployeeIdFromUserInfo();
     if (mounted) {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
+        String EmployeeId = userInfo['EmployeeId'];
+        _employeeId = EmployeeId;
+        var shiftInfo =
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
           _userName = userName;
         });
         print('User Info: ${userInfo.data()}');
+        if (shiftInfo != null) {
+          String shiftDateStr =
+              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+          String shiftEndTimeStr = shiftInfo['ShiftEndTime'];
+          String shiftStartTimeStr = shiftInfo['ShiftStartTime'];
+          String shiftLocation = shiftInfo['ShiftAddress'];
+          String shiftName = shiftInfo['ShiftName'];
+          String shiftId = shiftInfo['ShiftId'];
+          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'];
+          double shiftLocationLatitude = shiftGeolocation.latitude;
+          double shiftLocationLongitude = shiftGeolocation.longitude;
+          // String employeeImg = shiftInfo['EmployeeImg'];
+          setState(() {
+            _ShiftDate = shiftDateStr;
+            _ShiftEndTime = shiftEndTimeStr;
+            _ShiftStartTime = shiftStartTimeStr;
+            _ShiftLocation = shiftLocation;
+            _ShiftName = shiftName;
+            _shiftLatitude = shiftLocationLatitude;
+            _shiftLongitude = shiftLocationLongitude;
+            _shiftId = shiftId;
+            // _employeeImg = employeeImg;
+          });
+          print('Shift Info: ${shiftInfo.data()}');
+        } else {
+          setState(() {
+            issShift = true; //To validate that shift exists for the user.
+          });
+          print('Shift info not found');
+        }
       } else {
         print('User info not found');
-      }
-      if (shiftInfo != null) {
-        String shiftDateStr =
-            DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
-        String shiftEndTimeStr = shiftInfo['ShiftEndTime'];
-        String shiftStartTimeStr = shiftInfo['ShiftStartTime'];
-        String shiftLocation = shiftInfo['ShiftAddress'];
-        String shiftName = shiftInfo['ShiftName'];
-        GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'];
-        double shiftLocationLatitude = shiftGeolocation.latitude;
-        double shiftLocationLongitude = shiftGeolocation.longitude;
-        setState(() {
-          _ShiftDate = shiftDateStr;
-          _ShiftEndTime = shiftEndTimeStr;
-          _ShiftStartTime = shiftStartTimeStr;
-          _ShiftLocation = shiftLocation;
-          _ShiftName = shiftName;
-          _shiftLatitude = shiftLocationLatitude;
-          _shiftLongitude = shiftLocationLongitude;
-        });
-        print('Shift Info: ${shiftInfo.data()}');
-      } else {
-        print('Shift info not found');
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    User? currentUser = auth.CurrentUser;
-    if (currentUser != null) {
-      print("Current User ${currentUser.email}");
-    }
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
+        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Primarycolor, // Background color for the drawer header
+                ),
+                child: Text(
+                  'Drawer Header',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.logout, color: Colors.red),
+                // Logout icon in red color
+                title: Text('Logout', style: TextStyle(color: Colors.red)),
+                // Logout text in red color
+                onTap: () {
+                  auth.signOut(context, GetStartedScreens());
+                },
+              ),
+            ],
+          ),
+        ),
         body: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 40.0,
-            horizontal: 30.0,
+          padding: EdgeInsets.only(
+            top: 40.0,
+            left: 30.0,
+            right: 30.0,
           ),
           child: CustomScrollView(
             slivers: [
               HomeScreenPart1(
                 userName: _userName,
+                // employeeImg: _employeeImg,
+                drawerOnClicked: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
               ),
               SliverToBoxAdapter(
                 child: Column(
@@ -274,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => ChangeScreenIndex(2),
+                          // onTap: () => ChangeScreenIndex(2),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.calendar_today,
                             color: IconColors[2],
@@ -293,7 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              // ,
               ScreenIndex == 0
                   ? SliverToBoxAdapter(
                       child: TaskScreen(
@@ -302,16 +347,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ShiftLocation: _ShiftLocation,
                         ShiftName: _ShiftLocation,
                         ShiftEndTime: _ShiftEndTime,
-                        isWithINRadius: isWithRadius,
+                        isWithINRadius: isWithinRadius,
+                        empId: _employeeId,
+                        shiftId: _shiftId,
                       ),
                     )
-                  : ScreenIndex == 2
+                  /*: ScreenIndex == 2
                       ? SliverToBoxAdapter(
                           child: Container(
                             height: 470,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                color: Colors.redAccent),
+                              borderRadius: BorderRadius.circular(40),
+                              color: Secondarycolor,
+                            ),
                             child: Stack(
                               children: [
                                 Container(
@@ -503,7 +551,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
-                      : SizedBox()
+                      */
+                  : SizedBox()
             ],
           ),
         ),
@@ -511,7 +560,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
 
 /*padding: EdgeInsets.symmetric(
             vertical: 40.0,

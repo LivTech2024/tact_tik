@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/widgets/button1.dart';
@@ -11,6 +16,8 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftDate;
   final String ShiftEndTime;
   final String ShiftStartTime;
+  final String EmployeId;
+  final String ShiftId;
   // final String ShiftLocation;
   // final String ShiftName;
 
@@ -18,6 +25,9 @@ class StartTaskScreen extends StatefulWidget {
     required this.ShiftDate,
     required this.ShiftEndTime,
     required this.ShiftStartTime,
+    required this.EmployeId,
+    required this.ShiftId,
+
     // required this.ShiftLocation,
     // required this.ShiftName,
   });
@@ -27,9 +37,40 @@ class StartTaskScreen extends StatefulWidget {
 
 class _StartTaskScreenState extends State<StartTaskScreen> {
   bool clickedIn = false;
+  FireStoreService fireStoreService = FireStoreService();
+  bool issShift = true;
+  late Timer _stopwatchTimer;
+  int _stopwatchSeconds = 0;
+
+  bool isPaused = false;
+  @override
+  void initState() {
+    super.initState();
+    _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      if (clickedIn && !isPaused) {
+        setState(() {
+          _stopwatchSeconds++;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _stopwatchTimer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    DateFormat format = DateFormat.jm(); // "h:mm a" format
+    DateTime dateTime = format.parse(widget.ShiftStartTime);
+    String formattedStopwatchTime =
+        '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
+// Get current time
+    DateTime currentTime = DateTime.now();
+    Duration difference = currentTime.difference(dateTime);
+    bool isLate = currentTime.isAfter(dateTime);
     return Column(
       children: [
         Container(
@@ -83,9 +124,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         SizedBox(height: 20),
                         clickedIn
                             ? InterSemibold(
-                                text: '13m Late',
+                                text: isLate
+                                    ? '${difference.inMinutes.abs()}m Late'
+                                    : '',
                                 color: Colors.redAccent,
-                                fontsize: 14,
+                                fontsize: 10,
                               )
                             : SizedBox()
                       ],
@@ -97,7 +140,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
-                          text: 'Out time',
+                          text: 'In time',
                           fontsize: 28,
                           color: color1,
                         ),
@@ -110,7 +153,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         SizedBox(height: 20),
                         clickedIn
                             ? InterSemibold(
-                                text: '00 : 00 : 00', //Stopwatch
+                                text:
+                                    '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
                                 color: color8,
                                 fontsize: 14,
                               )
@@ -151,6 +195,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     setState(() {
                       if (!clickedIn) {
                         clickedIn = true;
+                        fireStoreService.INShiftLog(widget.EmployeId);
                       } else {
                         print('already clicked');
                       }
@@ -188,7 +233,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               ),*/
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      isPaused = !isPaused;
+                    });
+                    fireStoreService.EndShiftLog(widget.EmployeId,
+                        formattedStopwatchTime, widget.ShiftId);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                    );
+                  },
                   child: Container(
                     color: WidgetColor,
                     child: Center(
@@ -209,15 +265,34 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ? Container(
                 height: 65,
                 color: WidgetColor,
-                child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isPaused = !isPaused;
+                    });
+                    if (isPaused) {
+                      fireStoreService.BreakShiftLog(widget.EmployeId);
+                    } else {
+                      fireStoreService.ResumeShiftLog(widget.EmployeId);
+                    }
+                  },
                   child: InterBold(
-                    text: 'Break',
+                    text: isPaused ? 'Resume' : 'Break',
                     fontsize: 18,
                     color: Primarycolor,
                   ),
                 ),
               )
-            : SizedBox()
+            : const SizedBox(),
+        issShift
+            ? const SizedBox()
+            : Button1(
+                text: 'Check Patrolling',
+                fontsize: 18,
+                color: color5,
+                backgroundcolor: WidgetColor,
+                onPressed: () {},
+              ),
       ],
     );
   }

@@ -7,6 +7,7 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
+import '../../feature screens/petroling/patrolling.dart';
 
 class TaskScreen extends StatefulWidget {
   final String ShiftDate;
@@ -15,6 +16,8 @@ class TaskScreen extends StatefulWidget {
   final String ShiftLocation;
   final String ShiftName;
   bool isWithINRadius;
+  final String empId;
+  final String shiftId;
 
   TaskScreen({
     required this.ShiftDate,
@@ -23,6 +26,8 @@ class TaskScreen extends StatefulWidget {
     required this.ShiftLocation,
     required this.ShiftName,
     required this.isWithINRadius,
+    required this.empId,
+    required this.shiftId,
   });
 
   @override
@@ -41,7 +46,10 @@ class _TaskScreenState extends State<TaskScreen> {
             ? StartTaskScreen(
                 ShiftDate: widget.ShiftDate,
                 ShiftStartTime: widget.ShiftStartTime,
-                ShiftEndTime: widget.ShiftDate)
+                ShiftEndTime: widget.ShiftEndTime,
+                EmployeId: widget.empId,
+                ShiftId: widget.shiftId,
+              )
             : Column(
                 children: [
                   Container(
@@ -149,6 +157,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                   text: widget.ShiftLocation,
                                   fontsize: 16,
                                   color: Colors.white,
+                                  maxLines: 2,
                                 ),
                               )
                             ],
@@ -166,10 +175,11 @@ class _TaskScreenState extends State<TaskScreen> {
                     color: issShift ? color5 : color12,
                     backgroundcolor:
                         issShift ? WidgetColor : color11 /*.withOpacity(50)*/,
-                    onPressed: () async {
-                      await fireStoreService.startShiftLog();
+                    onPressed: () {
                       setState(() {
                         ShiftStarted = true;
+                        fireStoreService.startShiftLog(
+                            widget.empId, widget.shiftId);
                       });
                     },
                   ),
