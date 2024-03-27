@@ -16,6 +16,7 @@ class StartTaskScreen extends StatefulWidget {
 
 class _StartTaskScreenState extends State<StartTaskScreen> {
   bool clickedIn = false;
+  bool issShift = true;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +191,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           child: Center(
             child: InterBold(text: 'Break', fontsize: 18, color: Primarycolor,),
           ),
-        ) : SizedBox()
+        ) : const SizedBox(),
+        issShift ? const SizedBox() :Button1(
+          text: 'Check Patrolling',
+          fontsize: 18,
+          color: color5,
+          backgroundcolor:
+           WidgetColor,
+          onPressed: () {},
+        ),
       ],
     );
   }

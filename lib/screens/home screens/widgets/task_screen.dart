@@ -6,6 +6,7 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
+import '../../feature screens/petroling/patrolling.dart';
 
 class TaskScreen extends StatefulWidget {
   TaskScreen({super.key});
@@ -16,7 +17,7 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
-  bool issShift = true;
+  bool issShift = false;
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +133,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                       '2972 Westheimer Rd. Santa Ana, Illinois 85486',
                                   fontsize: 16,
                                   color: Colors.white,
+                                  maxLines: 2,
                                 ),
                               )
                             ],
@@ -148,7 +150,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     fontsize: 18,
                     color: issShift ? color5 : color12,
                     backgroundcolor:
-                        issShift ? WidgetColor : color11/*.withOpacity(50)*/,
+                        issShift ? WidgetColor : color11 /*.withOpacity(50)*/,
                     onPressed: () {
                       setState(() {
                         ShiftStarted = true;
@@ -158,14 +160,16 @@ class _TaskScreenState extends State<TaskScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Button1(
-                    text: 'Check Patrolling',
-                    fontsize: 18,
-                    color: issShift ? color12 : color5,
-                    backgroundcolor:
-                        issShift ? color11 : WidgetColor,
-                    onPressed: () {},
-                  ),
+                  issShift
+                      ? SizedBox() :Button1(
+                          text: 'Check Patrolling',
+                          fontsize: 18,
+                          color: color5,
+                          backgroundcolor: WidgetColor,
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => OpenPatrollingScreen()));
+                          },
+                        ),
 
                   /*GestureDetector(
                     onTap: () {

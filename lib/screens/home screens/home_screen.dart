@@ -39,8 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   late GoogleMapController mapController;
 
   final LatLng _center =
-      const LatLng(37.7749, -122.4194); // San Francisco coordinates
+      const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   // void _shoeDatePicker(BuildContext context) {
   //   showDatePicker(
@@ -158,15 +159,44 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
+        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Primarycolor, // Background color for the drawer header
+                ),
+                child: Text(
+                  'Drawer Header',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.logout, color: Colors.red),
+                // Logout icon in red color
+                title: Text('Logout', style: TextStyle(color: Colors.red)),
+                // Logout text in red color
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
         body: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 40.0,
-            horizontal: 30.0,
+          padding: EdgeInsets.only(
+            top: 40.0,
+            left: 30.0,
+            right: 30.0,
           ),
           child: CustomScrollView(
             slivers: [
               HomeScreenPart1(
                 userName: _userName,
+                drawerOnClicked: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
               ),
               SliverToBoxAdapter(
                 child: Column(
@@ -189,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () => ChangeScreenIndex(2),
+                          // onTap: () => ChangeScreenIndex(2),
                           child: HomeScreenCustomNavigation(
                             icon: Icons.calendar_today,
                             color: IconColors[2],
@@ -208,18 +238,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              // ,
               ScreenIndex == 0
                   ? SliverToBoxAdapter(
                       child: TaskScreen(),
                     )
-                  : ScreenIndex == 2
+                  /*: ScreenIndex == 2
                       ? SliverToBoxAdapter(
                           child: Container(
                             height: 470,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                color: Colors.redAccent),
+                              borderRadius: BorderRadius.circular(40),
+                              color: Secondarycolor,
+                            ),
                             child: Stack(
                               children: [
                                 Container(
@@ -411,7 +441,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
-                      : SizedBox()
+                      */
+                  : SizedBox()
             ],
           ),
         ),
@@ -419,7 +450,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
 
 /*padding: EdgeInsets.symmetric(
             vertical: 40.0,
