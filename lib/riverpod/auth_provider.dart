@@ -8,3 +8,5 @@ final authenticationProvider = Provider<Auth>((ref) {
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.read(authenticationProvider).authStateChanges;
 });
+
+final currentUserProvider = StateProvider<String?>((ref) => null);

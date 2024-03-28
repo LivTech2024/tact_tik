@@ -49,6 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _shiftId = "";
+  String _patrolArea = "";
+  String _patrolCompanyId = "";
+  bool _patrolKeepGuardInRadiusOfLocation = true;
+  String _patrolLocationName = "";
+  String _patrolName = "";
+  int _patrolRestrictedRadius = 0;
+  String _patrolTime = "";
+  String _patrolDate = "";
   bool isWithinRadius = true;
   bool issShift = false;
 
@@ -212,10 +220,41 @@ class _HomeScreenState extends State<HomeScreen> {
         _employeeId = EmployeeId;
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+        var patrolInfo = await fireStoreService
+            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
           _userName = userName;
         });
         print('User Info: ${userInfo.data()}');
+        if (patrolInfo != null) {
+          String PatrolArea = patrolInfo['PatrolArea'];
+          String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
+          // Bool PatrolKeepGuardInRadiusOfLocation = patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+          String PatrolLocationName = patrolInfo['PatrolLocationName'];
+          String PatrolName = patrolInfo['PatrolName'];
+          int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
+          Timestamp PatrolTime = patrolInfo['PatrolTime'];
+          DateTime patrolDateTime = PatrolTime.toDate();
+
+          // Format DateTime as String
+          String patrolTimeString =
+              DateFormat('hh:mm a').format(patrolDateTime);
+          String patrolDateString =
+              DateFormat('yyyy-MM-dd').format(patrolDateTime);
+          print('Shift Info: ${patrolInfo.data()}');
+
+          setState(() {
+            _patrolArea = PatrolArea;
+            _patrolCompanyId = PatrolCompanyId;
+            // _patrolKeepGuardInRadiusOfLocation =
+            //     PatrolKeepGuardInRadiusOfLocation;
+            _patrolLocationName = PatrolLocationName;
+            _patrolRestrictedRadius = PatrolRestrictedRadius;
+            _patrolTime = patrolTimeString;
+            _patrolDate = patrolDateString;
+            // issShift = false;
+          });
+        }
         if (shiftInfo != null) {
           String shiftDateStr =
               DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
@@ -250,6 +289,11 @@ class _HomeScreenState extends State<HomeScreen> {
         print('User info not found');
       }
     }
+  }
+
+  Future<void> _refreshData() async {
+    // Fetch patrol data from Firestore (assuming your logic exists)
+    _getUserInfo();
   }
 
   @override
@@ -290,274 +334,281 @@ class _HomeScreenState extends State<HomeScreen> {
             left: 30.0,
             right: 30.0,
           ),
-          child: CustomScrollView(
-            slivers: [
-              HomeScreenPart1(
-                userName: _userName,
-                // employeeImg: _employeeImg,
-                drawerOnClicked: () {
-                  _scaffoldKey.currentState?.openEndDrawer();
-                },
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () => ChangeScreenIndex(0),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.add_task,
-                            color: IconColors[0],
-                          ),
-                        ),
-                        GestureDetector(
-                          // onTap: () => ChangeScreenIndex(1),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.grid_view_rounded,
-                            color: IconColors[1],
-                          ),
-                        ),
-                        GestureDetector(
-                          // onTap: () => ChangeScreenIndex(2),
-                          // onTap: () => ChangeScreenIndex(2),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.calendar_today,
-                            color: IconColors[2],
-                          ),
-                        ),
-                        GestureDetector(
-                          // onTap: () => ChangeScreenIndex(3),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.chat_bubble_outline,
-                            color: IconColors[3],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30)
-                  ],
+          child: RefreshIndicator(
+            onRefresh: _refreshData,
+            child: CustomScrollView(
+              slivers: [
+                HomeScreenPart1(
+                  userName: _userName,
+                  // employeeImg: _employeeImg,
+                  drawerOnClicked: () {
+                    _scaffoldKey.currentState?.openEndDrawer();
+                  },
                 ),
-              ),
-              ScreenIndex == 0
-                  ? SliverToBoxAdapter(
-                      child: TaskScreen(
-                        ShiftDate: _ShiftDate,
-                        ShiftStartTime: _ShiftStartTime,
-                        ShiftLocation: _ShiftLocation,
-                        ShiftName: _ShiftLocation,
-                        ShiftEndTime: _ShiftEndTime,
-                        isWithINRadius: isWithinRadius,
-                        empId: _employeeId,
-                        shiftId: _shiftId,
-                      ),
-                    )
-                  /*: ScreenIndex == 2
-                  /*: ScreenIndex == 2
-                      ? SliverToBoxAdapter(
-                          child: Container(
-                            height: 470,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40),
-                              color: Secondarycolor,
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () => ChangeScreenIndex(0),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.add_task,
+                              color: IconColors[0],
                             ),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(40.0),
-                                    child: GoogleMap(
-                                      initialCameraPosition: CameraPosition(
-                                        target: _center,
-                                        zoom: _zoom,
+                          ),
+                          GestureDetector(
+                            // onTap: () => ChangeScreenIndex(1),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.grid_view_rounded,
+                              color: IconColors[1],
+                            ),
+                          ),
+                          GestureDetector(
+                            // onTap: () => ChangeScreenIndex(2),
+                            // onTap: () => ChangeScreenIndex(2),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.calendar_today,
+                              color: IconColors[2],
+                            ),
+                          ),
+                          GestureDetector(
+                            // onTap: () => ChangeScreenIndex(3),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.chat_bubble_outline,
+                              color: IconColors[3],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30)
+                    ],
+                  ),
+                ),
+                ScreenIndex == 0
+                    ? SliverToBoxAdapter(
+                        child: TaskScreen(
+                          ShiftDate: _ShiftDate,
+                          ShiftStartTime: _ShiftStartTime,
+                          ShiftLocation: _ShiftLocation,
+                          ShiftName: _ShiftLocation,
+                          ShiftEndTime: _ShiftEndTime,
+                          isWithINRadius: isWithinRadius,
+                          empId: _employeeId,
+                          shiftId: _shiftId,
+                          patrolDate: _patrolDate,
+                          patrolTime: _patrolTime,
+                          patrollocation: _patrolArea,
+                          issShiftFetched: issShift,
+                        ),
+                      )
+                    /*: ScreenIndex == 2
+                    /*: ScreenIndex == 2
+                        ? SliverToBoxAdapter(
+                            child: Container(
+                              height: 470,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                color: Secondarycolor,
+                              ),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(40.0),
+                                      child: GoogleMap(
+                                        initialCameraPosition: CameraPosition(
+                                          target: _center,
+                                          zoom: _zoom,
+                                        ),
+                                        onMapCreated:
+                                            (GoogleMapController controller) {
+                                          mapController = controller;
+                                        },
                                       ),
-                                      onMapCreated:
-                                          (GoogleMapController controller) {
-                                        mapController = controller;
-                                      },
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    height: 470,
-                                    width: double.maxFinite,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment(0, -1.5),
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.black,
-                                          Colors.transparent
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      height: 470,
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment(0, -1.5),
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.black,
+                                            Colors.transparent
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      height: 45,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 18, vertical: 25),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 45,
+                                            width: 48,
+                                            child: Image.asset(
+                                              'assets/images/site_tours.png',
+                                              fit: BoxFit.fitHeight,
+                                              filterQuality: FilterQuality.high,
+                                            ),
+                                          ),
+                                          InterBold(
+                                            text: 'Site Tours',
+                                            fontsize: 18,
+                                            color: Colors.white,
+                                          ),
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(
+                                              Icons.cancel_outlined,
+                                              size: 30,
+                                              color: color1,
+                                            ),
+                                            padding: EdgeInsets.zero,
+                                          )
                                         ],
                                       ),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    height: 45,
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 18, vertical: 25),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 45,
-                                          width: 48,
-                                          child: Image.asset(
-                                            'assets/images/site_tours.png',
-                                            fit: BoxFit.fitHeight,
-                                            filterQuality: FilterQuality.high,
-                                          ),
-                                        ),
-                                        InterBold(
-                                          text: 'Site Tours',
-                                          fontsize: 18,
-                                          color: Colors.white,
-                                        ),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.cancel_outlined,
-                                            size: 30,
-                                            color: color1,
-                                          ),
-                                          padding: EdgeInsets.zero,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    margin: EdgeInsets.only(bottom: 24),
-                                    width: 322,
-                                    height: 165,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 15.0,
-                                      horizontal: 15.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Secondarycolor,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SizedBox(
-                                          height: 55,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  color: color9,
-                                                ),
-                                                height: 55,
-                                                width: 55,
-                                                child: Center(
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    height: 45,
-                                                    width: 45,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        6,
-                                                      ),
-                                                      color: color9,
-                                                      border: Border.all(
-                                                        color: Primarycolor,
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                    child: MyNetworkImage(
-                                                      'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 15,
-                                              ),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  PoppinsBold(
-                                                    text: 'Robert D. Vaughn',
-                                                    color: Colors.white,
-                                                    fontsize: 16,
-                                                  ),
-                                                  RobotoMedium(
-                                                    text:
-                                                        '318 Grand St,  New York 10002, US',
-                                                    color: color10,
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      margin: EdgeInsets.only(bottom: 24),
+                                      width: 322,
+                                      height: 165,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 15.0,
+                                        horizontal: 15.0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Secondarycolor,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
                                             height: 55,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Primarycolor,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                            ),
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
-                                                RobotoBold(
-                                                  text: 'Get Direction',
-                                                  color: color1,
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(12),
+                                                    color: color9,
+                                                  ),
+                                                  height: 55,
+                                                  width: 55,
+                                                  child: Center(
+                                                    child: Container(
+                                                      alignment: Alignment.center,
+                                                      height: 45,
+                                                      width: 45,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                          6,
+                                                        ),
+                                                        color: color9,
+                                                        border: Border.all(
+                                                          color: Primarycolor,
+                                                          width: 1,
+                                                        ),
+                                                      ),
+                                                      child: MyNetworkImage(
+                                                        'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                                Icon(
-                                                  Icons.arrow_forward_sharp,
-                                                  color: color1,
-                                                  size: 24,
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    PoppinsBold(
+                                                      text: 'Robert D. Vaughn',
+                                                      color: Colors.white,
+                                                      fontsize: 16,
+                                                    ),
+                                                    RobotoMedium(
+                                                      text:
+                                                          '318 Grand St,  New York 10002, US',
+                                                      color: color10,
+                                                    )
+                                                  ],
                                                 )
                                               ],
                                             ),
                                           ),
-                                        )
-                                      ],
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: Container(
+                                              height: 55,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Primarycolor,
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  RobotoBold(
+                                                    text: 'Get Direction',
+                                                    color: color1,
+                                                  ),
+                                                  Icon(
+                                                    Icons.arrow_forward_sharp,
+                                                    color: color1,
+                                                    size: 24,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      */
-                  : SizedBox()
-                      */
-                  : SizedBox()
-            ],
+                          )
+                        */
+                    : SizedBox()
+                        */
+                    : SizedBox()
+              ],
+            ),
           ),
         ),
       ),

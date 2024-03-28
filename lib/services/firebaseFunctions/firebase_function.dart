@@ -12,6 +12,8 @@ class FireStoreService {
       FirebaseFirestore.instance.collection("Employees");
   final CollectionReference shifts =
       FirebaseFirestore.instance.collection("Shifts");
+  final CollectionReference patrols =
+      FirebaseFirestore.instance.collection("Patrols");
   //Get userinfo based on the useremailid
   Future<DocumentSnapshot?> getUserInfoByCurrentUserEmail() async {
     String? currentUser = storage.getItem("CurrentUser");
@@ -64,6 +66,80 @@ class FireStoreService {
     } else {
       print("No pending shift found for EmployeeId: $EmpId");
       return null;
+    }
+  }
+
+  Future<DocumentSnapshot?> getPatrolsByEmployeeIdFromUserInfo(
+      String EmpId) async {
+    if (EmpId.isEmpty) {
+      return null;
+    }
+
+    final querySnapshot = await patrols
+        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
+        .where("PatrolCurrentStatus",
+            isEqualTo: "pending") // Filter by pending status
+        .orderBy("PatrolTime", descending: false)
+        .limit(1)
+        .get();
+
+    print("Retrieved documents:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Return the first document with pending status
+      print(querySnapshot.docs.first);
+      return querySnapshot.docs.first;
+    } else {
+      print("No pending shift found for EmployeeId: $EmpId");
+      return null;
+    }
+  }
+
+  Future<List<DocumentSnapshot>> getAllPatrolsByEmployeeIdFromUserInfo(
+      String EmpId) async {
+    if (EmpId.isEmpty) {
+      return [];
+    }
+
+    final querySnapshot = await patrols
+        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
+        .where("PatrolCurrentStatus", isEqualTo: "pending")
+        .orderBy("PatrolTime", descending: false)
+        .get();
+
+    print("Retrieved documents:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    return querySnapshot.docs;
+  }
+
+  Future<void> updatePatrolsStatus(
+      String EmpId, String PatrolId, String CheckPointId) async {
+    if (EmpId.isEmpty || PatrolId.isEmpty || CheckPointId.isEmpty) {
+      return;
+    }
+
+    final querySnapshot = await patrols
+        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
+        .where("PatrolCurrentStatus", isEqualTo: "pending")
+        .orderBy("PatrolTime", descending: false)
+        .get();
+
+    print("Retrieved documents:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    for (var doc in querySnapshot.docs) {
+      var checkpoints = doc.get('PatrolCheckPoints');
+      for (var checkpoint in checkpoints) {
+        if (checkpoint['CheckPointId'] == CheckPointId) {
+          // Update the CheckPointStatus to "Scanned"
+          checkpoint['CheckPointStatus'] = 'Scanned';
+        }
+      }
+
+      // Update the document in Firestore
+      await doc.reference.update({'PatrolCheckPoints': checkpoints});
     }
   }
 
