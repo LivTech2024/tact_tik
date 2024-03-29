@@ -13,12 +13,13 @@ class Button1 extends StatelessWidget {
     this.color,
     required this.onPressed,
     this.height = 65,
-    this.backgroundcolor = WidgetColor,
+    this.backgroundcolor = WidgetColor, this.borderRadius = 0,
   });
 
   final bool useBold;
   final String text;
   final double? fontsize;
+  final double borderRadius;
   final double height;
   final Color? color;
   final Color backgroundcolor;
@@ -29,8 +30,11 @@ class Button1 extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
+        decoration: BoxDecoration(
+          color: backgroundcolor,
+          borderRadius: BorderRadius.circular(borderRadius)
+        ),
         height: height,
-        color: backgroundcolor,
         child: Center(
           child: useBold
               ? InterBold(

@@ -23,8 +23,10 @@ const Color color15 = Color(0xFF292929);
 const Color color16 = Color(0xFF393939);
 const Color color17 = Color(0xFFC6C6C6);
 const Color color18 = Color(0xFFF9F9F9);
+const Color color19 = Color(0xFF1E1E1E);
 const Color colorRed = Color(0x14EA4335);
-const Color colorGreen = Color.fromARGB(241, 6, 255, 52);
+const Color colorRed2 = Color(0xFF442525);
+const Color colorGreen = Color(0xFF1F291C);
 
 
 

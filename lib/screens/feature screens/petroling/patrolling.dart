@@ -9,6 +9,7 @@ import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import '../../../common/sizes.dart';
+import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
@@ -317,226 +318,261 @@ class _MovieCategoryState extends State<MovieCategory> {
                       ),
                       if (_expanded)
                         Column(
-                          children: movie.checkpoints
-                              .map(
-                                (checkpoint) => GestureDetector(
-                                  onTap: () async {
-                                    if (checkpoint['CheckPointStatus'] !=
-                                        'checked') {
-                                      var res = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SimpleBarcodeScannerPage(),
-                                          ));
-                                      setState(() {
-                                        if (res is String) {
-                                          Result = res;
-                                          print(res);
+                          children: [
+                            Button1(
+                              text: 'START',
+                              backgroundcolor: colorGreen,
+                              color: Colors.green,
+                              borderRadius: 10,
+                              onPressed: () {},
+                            ),
+                            Column(
+                              children: movie.checkpoints
+                                  .map(
+                                    (checkpoint) => GestureDetector(
+                                      onTap: () async {
+                                        if (checkpoint['CheckPointStatus'] !=
+                                            'checked') {
+                                          var res = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SimpleBarcodeScannerPage(),
+                                              ));
+                                          setState(() {
+                                            if (res is String) {
+                                              Result = res;
+                                              print(res);
 
-                                          if (Result ==
-                                              checkpoint['CheckPointId']) {
-                                            fireStoreService
-                                                .updatePatrolsStatus(
-                                              movie.PatrolAssignedGuardId,
-                                              movie.patrolId,
-                                              checkpoint['CheckPointId'],
-                                            );
-                                            // Show an alert indicating a match
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    'Checkpoint Match',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  content: Text(
-                                                    'The scanned QR code matches the checkpoint ID.',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
+                                              if (Result ==
+                                                  checkpoint['CheckPointId']) {
+                                                fireStoreService
+                                                    .updatePatrolsStatus(
+                                                  movie.PatrolAssignedGuardId,
+                                                  movie.patrolId,
+                                                  checkpoint['CheckPointId'],
                                                 );
-                                              },
-                                            );
-                                          } else {
-                                            // Show an alert indicating no match
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    'Checkpoint Mismatch',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  content: Text(
-                                                    'The scanned QR code does not match the checkpoint ID.',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: Text('OK'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          }
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    height: height / height70,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / width20,
-                                        vertical: height / height11),
-                                    margin:
-                                        EdgeInsets.only(top: height / height10),
-                                    decoration: BoxDecoration(
-                                      color: color15,
-                                      borderRadius: BorderRadius.circular(
-                                          width / width10),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              height: height / height48,
-                                              width: width / width48,
-                                              decoration: BoxDecoration(
-                                                color: color16,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        width / width10),
-                                              ),
-                                              child: Center(
-                                                child: checkpoint[
-                                                            'CheckPointStatus'] ==
-                                                        'checked'
-                                                    ? Container(
-                                                        height:
-                                                            height / height30,
-                                                        width: width / width30,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: color2,
-                                                        ),
-                                                        child: Icon(
-                                                          Icons.done,
-                                                          color: Colors.green,
-                                                        ),
-                                                      )
-                                                    : Icon(
-                                                        Icons.qr_code_scanner,
-                                                        size: width / width24,
-                                                        color: Primarycolor,
-                                                      ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: width / width20,
-                                            ),
-                                            InterRegular(
-                                              text:
-                                                  checkpoint['CheckPointName'],
-                                              color: color17,
-                                              fontsize: width / width18,
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          height: height / height34,
-                                          width: width / width34,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: color16,
-                                          ),
-                                          child: Center(
-                                            child: IconButton(
-                                              onPressed: () {
+                                                // Show an alert indicating a match
                                                 showDialog(
                                                   context: context,
                                                   builder:
                                                       (BuildContext context) {
                                                     return AlertDialog(
                                                       title: Text(
-                                                        'Report Qr',
+                                                        'Checkpoint Match',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.white),
                                                       ),
                                                       content: Text(
-                                                        'The scanned QR code does work.',
+                                                        'The scanned QR code matches the checkpoint ID.',
                                                         style: TextStyle(
                                                             color:
                                                                 Colors.white),
                                                       ),
                                                       actions: [
                                                         TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            child:
-                                                                Text("Cancel")),
-                                                        TextButton(
                                                           onPressed: () {
-                                                            fireStoreService.updatePatrolsReport(
-                                                                movie
-                                                                    .PatrolAssignedGuardId,
-                                                                movie.patrolId,
-                                                                checkpoint[
-                                                                    'CheckPointId']);
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
                                                           },
-                                                          child: Text('Submit'),
+                                                          child: Text('OK'),
                                                         ),
                                                       ],
                                                     );
                                                   },
                                                 );
-                                                print("Info Icon Pressed");
-                                              },
-                                              icon: Icon(
-                                                Icons.info,
-                                                color: color18,
-                                                size: width / width24,
-                                              ),
-                                              padding: EdgeInsets.zero,
+                                              } else {
+                                                // Show an alert indicating no match
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: Text(
+                                                        'Checkpoint Mismatch',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      content: Text(
+                                                        'The scanned QR code does not match the checkpoint ID.',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('OK'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            }
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        height: height / height70,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width / width20,
+                                            vertical: height / height11),
+                                        margin: EdgeInsets.only(
+                                            top: height / height10),
+                                        decoration: BoxDecoration(
+                                          color: color15,
+                                          borderRadius: BorderRadius.circular(
+                                              width / width10),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: height / height48,
+                                                  width: width / width48,
+                                                  decoration: BoxDecoration(
+                                                    color: color16,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            width / width10),
+                                                  ),
+                                                  child: Center(
+                                                    child: checkpoint[
+                                                                'CheckPointStatus'] ==
+                                                            'checked'
+                                                        ? Container(
+                                                            height: height /
+                                                                height30,
+                                                            width:
+                                                                width / width30,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: color2,
+                                                            ),
+                                                            child: Icon(
+                                                              Icons.done,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                          )
+                                                        : Icon(
+                                                            Icons
+                                                                .qr_code_scanner,
+                                                            size:
+                                                                width / width24,
+                                                            color: Primarycolor,
+                                                          ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width / width20,
+                                                ),
+                                                InterRegular(
+                                                  text: checkpoint[
+                                                      'CheckPointName'],
+                                                  color: color17,
+                                                  fontsize: width / width18,
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                            Container(
+                                              height: height / height34,
+                                              width: width / width34,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: color16,
+                                              ),
+                                              child: Center(
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                            'Report Qr',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          content: Text(
+                                                            'The scanned QR code does work.',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child: Text(
+                                                                    "Cancel")),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                fireStoreService.updatePatrolsReport(
+                                                                    movie
+                                                                        .PatrolAssignedGuardId,
+                                                                    movie
+                                                                        .patrolId,
+                                                                    checkpoint[
+                                                                        'CheckPointId']);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text(
+                                                                  'Submit'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                    print("Info Icon Pressed");
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.info,
+                                                    color: color18,
+                                                    size: width / width24,
+                                                  ),
+                                                  padding: EdgeInsets.zero,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                                  )
+                                  .toList(),
+                            ),
+                            SizedBox(
+                              height: height / height10,
+                            ),
+                            Button1(
+                              text: 'END',
+                              backgroundcolor: colorRed2,
+                              color: Colors.redAccent,
+                              borderRadius: 10,
+                              onPressed: () {},
+                            ),
+                          ],
                         ),
                     ],
                   ),
