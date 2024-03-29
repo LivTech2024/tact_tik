@@ -23,7 +23,7 @@ class Movie {
   final List<Map<String, dynamic>> checkpoints;
   int get totalCheckpoints => checkpoints.length;
   int get completedCheckpoints => checkpoints
-      .where((checkpoint) => checkpoint['CheckPointStatus'] == 'scanned')
+      .where((checkpoint) => checkpoint['CheckPointStatus'] == 'checked')
       .length;
 
   // final List<String> patrolCheckPoints;
@@ -67,7 +67,6 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
           .getAllPatrolsByEmployeeIdFromUserInfo(widget.empId);
 
       List<Movie> updatedMovies = [];
-      List<Map<String, dynamic>> checkpoints = [];
       for (var patrolInfo in patrolInfoList) {
         String PatrolArea = patrolInfo['PatrolArea'];
         String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
@@ -80,6 +79,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
         DateTime dateTime = PatrolTime.toDate();
         String time = DateFormat.Hms().format(dateTime);
         String date = DateFormat.yMd().format(dateTime);
+        List<Map<String, dynamic>> checkpoints = [];
         for (var checkpoint in patrolInfo['PatrolCheckPoints']) {
           String checkpointName = checkpoint['CheckPointName'];
           String checkpointLocation = checkpoint['CheckPointId'];
@@ -90,16 +90,26 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
             'CheckPointStatus': CheckPointStatus,
           });
         }
-        // List<String> patrolCheckPoints =
-        //     List<String>.from(patrolInfo['PatrolCheckPoints']);
 
         updatedMovies.add(Movie(PatrolName, PatrolArea, PatrolLocationName,
             time, checkpoints, date, patrolId, PatrolAssignedGuardId));
+
+        print('PatrolArea: $PatrolArea');
+        print('PatrolCompanyId: $PatrolCompanyId');
+        print('PatrolLocationName: $PatrolLocationName');
+        print('PatrolName: $PatrolName');
+        print('PatrolRestrictedRadius: $PatrolRestrictedRadius');
+        print('PatrolAssignedGuardId: $PatrolAssignedGuardId');
+        print('patrolId: $patrolId');
+        print('PatrolTime: $time');
+        print('PatrolDate: $date');
+        print('Checkpoints: $checkpoints');
       }
 
       setState(() {
         movies = updatedMovies;
       });
+      print("Updated Movies: ${updatedMovies}");
     } else {
       print('Patrol info not found');
     }
@@ -123,7 +133,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
           elevation: 0,
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios, // Use the iPhone back button icon
+              Icons.arrow_back_ios,
               color: Colors.white,
             ),
             padding: EdgeInsets.only(left: 20),
@@ -165,7 +175,10 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
                         .toList();
                     return MovieCategory(category, categoryMovies);
                   },
-                  childCount: 1,
+                  childCount: movies
+                      .map((movie) => movie.patrolLocationName)
+                      .toSet()
+                      .length,
                 ),
               ),
             ],
@@ -204,242 +217,276 @@ class _MovieCategoryState extends State<MovieCategory> {
             color: color1,
           ),
           SizedBox(height: 30),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            decoration: BoxDecoration(
-              color: WidgetColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            constraints:
-                _expanded ? BoxConstraints(minHeight: 200) : BoxConstraints(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          for (var movie in widget.movies)
+            Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  decoration: BoxDecoration(
+                    color: WidgetColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: _expanded
+                      ? BoxConstraints(minHeight: 200)
+                      : BoxConstraints(),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 5),
-                      IconTextWidget(
-                        iconSize: 24,
-                        icon: Icons.location_on,
-                        text: widget.movies[0].patrolArea,
-                        useBold: false,
-                        color: color13,
-                      ),
-                      SizedBox(height: 16),
-                      Divider(
-                        color: color14,
-                      ),
-                      SizedBox(height: 5),
-                      IconTextWidget(
-                        iconSize: 24,
-                        icon: Icons.access_time,
-                        text: widget.movies[0].patrolTime,
-                        useBold: false,
-                        color: color13,
-                      ),
-                      SizedBox(height: 16),
-                      Divider(
-                        color: color14,
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.qr_code_scanner,
-                                color: Primarycolor,
-                                size: 24,
-                              ),
-                              SizedBox(width: 20),
-                              InterMedium(
-                                text:
-                                    'Total ${widget.movies[0].totalCheckpoints}     Completed ${widget.movies[0].completedCheckpoints}',
-                                fontsize: 14,
-                                color: color13,
-                              )
-                            ],
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _expanded = !_expanded;
-                              });
-                            },
-                            icon: Icon(
-                              _expanded
-                                  ? Icons.arrow_circle_up_outlined
-                                  : Icons.arrow_circle_down_outlined,
-                              size: 24,
-                              color: Primarycolor,
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 5),
+                            IconTextWidget(
+                              iconSize: 24,
+                              icon: Icons.location_on,
+                              text: movie.patrolArea,
+                              useBold: false,
+                              color: color13,
                             ),
-                          )
-                        ],
+                            SizedBox(height: 16),
+                            Divider(
+                              color: color14,
+                            ),
+                            SizedBox(height: 5),
+                            IconTextWidget(
+                              iconSize: 24,
+                              icon: Icons.access_time,
+                              text: movie.patrolTime,
+                              useBold: false,
+                              color: color13,
+                            ),
+                            SizedBox(height: 16),
+                            Divider(
+                              color: color14,
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.qr_code_scanner,
+                                      color: Primarycolor,
+                                      size: 24,
+                                    ),
+                                    SizedBox(width: 20),
+                                    InterMedium(
+                                      text:
+                                          'Total ${movie.totalCheckpoints}     Completed ${movie.completedCheckpoints}',
+                                      fontsize: 14,
+                                      color: color13,
+                                    )
+                                  ],
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _expanded = !_expanded;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    _expanded
+                                        ? Icons.arrow_circle_up_outlined
+                                        : Icons.arrow_circle_down_outlined,
+                                    size: 24,
+                                    color: Primarycolor,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
+                      if (_expanded)
+                        Column(
+                          children: movie.checkpoints
+                              .map((checkpoint) => GestureDetector(
+                                    onTap: () async {
+                                      var res = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SimpleBarcodeScannerPage(),
+                                          ));
+                                      setState(() {
+                                        if (res is String) {
+                                          Result = res;
+                                          print(res);
+
+                                          if (Result ==
+                                              checkpoint['CheckPointId']) {
+                                            fireStoreService
+                                                .updatePatrolsStatus(
+                                              movie.PatrolAssignedGuardId,
+                                              movie.patrolId,
+                                              checkpoint['CheckPointId'],
+                                            );
+                                            // Show an alert indicating a match
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title:
+                                                      Text('Checkpoint Match'),
+                                                  content: Text(
+                                                      'The scanned QR code matches the checkpoint ID.'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            // Show an alert indicating no match
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    'Checkpoint Mismatch',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  content: Text(
+                                                    'The scanned QR code does not match the checkpoint ID.',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text('OK'),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      height: 70,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 11.0),
+                                      margin: EdgeInsets.only(top: 10.0),
+                                      decoration: BoxDecoration(
+                                        color: color15,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 48,
+                                                width: 48,
+                                                decoration: BoxDecoration(
+                                                  color: color16,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.qr_code_scanner,
+                                                    size: 24,
+                                                    color: checkpoint[
+                                                                'CheckPointStatus'] ==
+                                                            'checked'
+                                                        ? colorGreen
+                                                        : Primarycolor,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 20,
+                                              ),
+                                              InterRegular(
+                                                text: checkpoint[
+                                                    'CheckPointName'],
+                                                color: color17,
+                                                fontsize: 18,
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            height: 34,
+                                            width: 34,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: color16,
+                                            ),
+                                            child: Center(
+                                              child: IconButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: Text(
+                                                          'Report Qr',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                        content: Text(
+                                                          'The scanned QR code does work.',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child:
+                                                                Text('Submit'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                  print("Info Icon Pressed");
+                                                },
+                                                icon: Icon(
+                                                  Icons.info,
+                                                  color: color18,
+                                                ),
+                                                padding: EdgeInsets.zero,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
                     ],
                   ),
                 ),
-                if (_expanded)
-                  Column(
-                    children: widget.movies
-                        .map(
-                          (movie) => Column(
-                            children: movie.checkpoints
-                                .map((checkpoint) => GestureDetector(
-                                      onTap: () async {
-                                        var res = await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SimpleBarcodeScannerPage(),
-                                            ));
-                                        setState(() {
-                                          if (res is String) {
-                                            Result = res;
-                                            print(res);
-
-                                            if (Result ==
-                                                checkpoint['CheckPointId']) {
-                                              fireStoreService
-                                                  .updatePatrolsStatus(
-                                                movie.PatrolAssignedGuardId,
-                                                movie.patrolId,
-                                                checkpoint['CheckPointId'],
-                                              );
-                                              // Show an alert indicating a match
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: Text(
-                                                        'Checkpoint Match'),
-                                                    content: Text(
-                                                        'The scanned QR code matches the checkpoint ID.'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text('OK'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              // Show an alert indicating no match
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: Text(
-                                                        'Checkpoint Mismatch'),
-                                                    content: Text(
-                                                        'The scanned QR code does not match the checkpoint ID.'),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text('OK'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          }
-                                        });
-                                      },
-                                      child: Container(
-                                        height: 70,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 11.0),
-                                        margin: EdgeInsets.only(top: 10.0),
-                                        decoration: BoxDecoration(
-                                          color: color15,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  height: 48,
-                                                  width: 48,
-                                                  decoration: BoxDecoration(
-                                                    color: color16,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Center(
-                                                    child: Icon(
-                                                      Icons.qr_code_scanner,
-                                                      size: 24,
-                                                      color: checkpoint[
-                                                                  'CheckPointStatus'] ==
-                                                              'scanned'
-                                                          ? colorGreen
-                                                          : Primarycolor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 20,
-                                                ),
-                                                InterRegular(
-                                                  text: checkpoint[
-                                                      'CheckPointName'],
-                                                  color: color17,
-                                                  fontsize: 18,
-                                                ),
-                                              ],
-                                            ),
-                                            Container(
-                                              height: 34,
-                                              width: 34,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: color16,
-                                              ),
-                                              child: Center(
-                                                child: IconButton(
-                                                  onPressed: () {
-                                                    print("Info Icon Pressed");
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.info,
-                                                    color: color18,
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
-                          ),
-                        )
-                        .toList(),
-                  ),
               ],
             ),
-          ),
         ],
       ),
     );

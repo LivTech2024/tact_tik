@@ -114,6 +114,15 @@ class FireStoreService {
     return querySnapshot.docs;
   }
 
+  Stream<QuerySnapshot> getPatrols(String EmpId) {
+    final patrolStream = patrols
+        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
+        .where("PatrolCurrentStatus", isEqualTo: "pending")
+        .orderBy("PatrolTime", descending: false)
+        .snapshots();
+    return patrolStream;
+  }
+
   Future<void> updatePatrolsStatus(
       String EmpId, String PatrolId, String CheckPointId) async {
     if (EmpId.isEmpty || PatrolId.isEmpty || CheckPointId.isEmpty) {
