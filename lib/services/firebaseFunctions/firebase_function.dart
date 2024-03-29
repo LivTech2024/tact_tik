@@ -154,6 +154,37 @@ class FireStoreService {
     }
   }
 
+  Future<void> updatePatrolsReport(
+      String EmpId, String PatrolId, String CheckPointId) async {
+    if (EmpId.isEmpty || PatrolId.isEmpty || CheckPointId.isEmpty) {
+      return;
+    }
+
+    final querySnapshot = await patrols
+        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
+        .where("PatrolCurrentStatus", isEqualTo: "pending")
+        .orderBy("PatrolTime", descending: false)
+        .get();
+
+    print("Retrieved documents:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    for (var doc in querySnapshot.docs) {
+      var checkpoints = doc.get('PatrolCheckPoints');
+      for (var checkpoint in checkpoints) {
+        if (checkpoint['CheckPointId'] == CheckPointId) {
+          // Update the CheckPointStatus to "checked"
+          checkpoint['CheckPointFailureReason'] = 'Qr-code missing';
+          // checkpoint['CheckPointCheckedTime'] =
+          //     Timestamp.now(); //Update the timestamp
+        }
+      }
+
+      // Update the document in Firestore
+      await doc.reference.update({'PatrolCheckPoints': checkpoints});
+    }
+  }
+
 //Update the User Shift Status
   Future<void> startShiftLog(String employeeId, String shiftId) async {
     try {
@@ -174,9 +205,8 @@ class FireStoreService {
           await shifts.where('ShiftId', isEqualTo: shiftId).get();
       if (updateShiftStatus.docs.isNotEmpty) {
         final documentId = updateShiftStatus.docs.first.id;
-        await shifts.doc(documentId).update({
-          'ShiftAcknowledged': true,
-        });
+        await shifts.doc(documentId).update(
+            {'ShiftAcknowledged': true, 'ShiftCurrentStatus': "started"});
       } else {
         throw Exception('Shift with id $shiftId not found.');
       }

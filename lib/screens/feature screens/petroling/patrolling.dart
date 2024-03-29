@@ -495,7 +495,21 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                       ),
                                                       actions: [
                                                         TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child:
+                                                                Text("Cancel")),
+                                                        TextButton(
                                                           onPressed: () {
+                                                            fireStoreService.updatePatrolsReport(
+                                                                movie
+                                                                    .PatrolAssignedGuardId,
+                                                                movie.patrolId,
+                                                                checkpoint[
+                                                                    'CheckPointId']);
                                                             Navigator.of(
                                                                     context)
                                                                 .pop();
