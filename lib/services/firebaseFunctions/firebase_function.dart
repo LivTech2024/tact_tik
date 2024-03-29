@@ -142,8 +142,10 @@ class FireStoreService {
       var checkpoints = doc.get('PatrolCheckPoints');
       for (var checkpoint in checkpoints) {
         if (checkpoint['CheckPointId'] == CheckPointId) {
-          // Update the CheckPointStatus to "Scanned"
-          checkpoint['CheckPointStatus'] = 'Scanned';
+          // Update the CheckPointStatus to "checked"
+          checkpoint['CheckPointStatus'] = 'checked';
+          checkpoint['CheckPointCheckedTime'] =
+              Timestamp.now(); //Update the timestamp
         }
       }
 
@@ -294,4 +296,18 @@ class FireStoreService {
 //Start Shift
 //Break
 //Stop push the timer also change the shiftStatus as done
+//get Gaurds for Supervisor Screen
+  String CompanyId = "aSvLtwII6Cjs7uCISBRR"; //sample Company Id
+  Future<List<DocumentSnapshot>> getGuardForSupervisor(String CompanyId) async {
+    if (CompanyId.isEmpty) {
+      return [];
+    }
+
+    final querySnapshot = await userInfo
+        .where("EmployeeCompanyId", isEqualTo: CompanyId)
+        .orderBy("EmployeeModifiedAt", descending: false)
+        .get();
+    // Log all retrieved documents
+    return querySnapshot.docs;
+  }
 }
