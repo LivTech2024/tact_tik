@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/login_screen.dart';
 
+import '../../common/sizes.dart';
 import '../../fonts/poppins_medium.dart';
 import '../../fonts/poppins_regular.dart';
 import '../../fonts/poppis_semibold.dart';
@@ -37,6 +38,8 @@ class PageType2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     return Container(
       color: Secondarycolor,
       child: Column(
@@ -44,49 +47,49 @@ class PageType2 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 470,
+            height: height / height470,
             width: double.maxFinite,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Primarycolor,
               borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(40),
-                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(width / width40),
+                bottomLeft: Radius.circular(width / width40),
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                left: 65.0,
-                right: 65.0,
-                top: 76.0,
-                bottom: 144.0,
+              padding: EdgeInsets.only(
+                left: width / width65,
+                right: width / width65,
+                top: height / height76,
+                bottom: height / height144,
               ),
               child: SizedBox(
-                height: 250,
-                width: 300,
+                height: height / height250,
+                width: width / width300,
                 // color: Colors.white,
                 child: Image.asset(images[index]),
               ),
             ),
           ),
           SizedBox(
-            height: 20,
+            height: height / height20,
           ),
           PoppinsSemibold(
             text: tittls[index],
-            fontsize: 32,
+            fontsize: width / width32,
             color: color1,
           ),
-          SizedBox(height: 27),
+          SizedBox(height: height / height27),
           SizedBox(
-            width: 54,
+            width: width / width54,
             child: Divider(
               height: 3,
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: height / height10),
           PoppinsRegular(
             text: description[index],
-            fontsize: 14,
+            fontsize: width / width14,
             color: color2,
             textAlign: TextAlign.center,
           ),
@@ -98,17 +101,16 @@ class PageType2 extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               },
               child: Container(
-                height: 60,
-                margin:
-                    const EdgeInsets.only(left: 24.0, right: 24.0, top: 74.0),
+                height: height / height60,
+                margin: EdgeInsets.only(left: width / width24, right: width / width24, top: height / height74),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: Primarycolor,
                 ),
-                child: const Center(
+                child: Center(
                   child: PoppinsMedium(
                     text: 'Get Started',
-                    fontsize: 16,
+                    fontsize: width / width16,
                   ),
                 ),
               ),

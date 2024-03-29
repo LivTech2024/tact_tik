@@ -6,6 +6,7 @@ import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/colors.dart';
 
+import 'common/sizes.dart';
 import 'common/widgets/button1.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -28,18 +29,21 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
-                  fontSize: 18,
+                  fontSize: width / width18,
                   color: Colors.white, // Change text color to white
                 ),
                 controller: _emailcontrller,
@@ -49,11 +53,11 @@ class LoginScreen extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 10.0),
+              SizedBox(height: height / height10),
               TextField(
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
-                  fontSize: 18,
+                  fontSize: width / width18,
                   color: Colors.white, // Change text color to white
                 ),
                 controller: _passwordcontrller,
@@ -63,7 +67,7 @@ class LoginScreen extends StatelessWidget {
                   hintText: 'Enter your password',
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: height / height10),
               Button1(
                 backgroundcolor: Primarycolor,
                 text: 'Login',

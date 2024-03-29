@@ -8,6 +8,7 @@ import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
+import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_semibold.dart';
@@ -18,6 +19,7 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftStartTime;
   final String EmployeId;
   final String ShiftId;
+
   // final String ShiftLocation;
   // final String ShiftName;
 
@@ -31,6 +33,7 @@ class StartTaskScreen extends StatefulWidget {
     // required this.ShiftLocation,
     // required this.ShiftName,
   });
+
   @override
   State<StartTaskScreen> createState() => _StartTaskScreenState();
 }
@@ -43,6 +46,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   int _stopwatchSeconds = 0;
 
   bool isPaused = false;
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +67,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     DateFormat format = DateFormat.jm(); // "h:mm a" format
     DateTime dateTime = format.parse(widget.ShiftStartTime);
     String formattedStopwatchTime =
@@ -74,11 +80,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: 200,
-          decoration: BoxDecoration(
+          height: height / height200,
+          decoration: const BoxDecoration(
             color: WidgetColor,
           ),
-          padding: EdgeInsets.only(left: 26, top: 10, right: 12),
+          padding: EdgeInsets.only(left: width / width26, top: height / height10, right: width / width12),
           child: Column(
             children: [
               Row(
@@ -86,77 +92,77 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   InterBold(
                     text: widget.ShiftDate,
                     color: color1,
-                    fontsize: 18,
+                    fontsize: width / width18,
                   ),
                   SizedBox(
-                    width: 12,
+                    width: width / width12,
                   ),
                   IconButton(
                     onPressed: () {},
                     icon: Icon(
                       Icons.contact_support_outlined,
-                      size: 20,
+                      size: width / width20,
                     ),
                     padding: EdgeInsets.zero,
                   )
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: height / height20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: 98,
+                    width: width / width98,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'In time',
-                          fontsize: 28,
+                          fontsize: width / width28,
                           color: color1,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftStartTime,
-                          fontsize: 19,
+                          fontsize: width / width19,
                           color: color7,
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
                                 text: isLate
                                     ? '${difference.inMinutes.abs()}m Late'
                                     : '',
                                 color: Colors.redAccent,
-                                fontsize: 10,
+                                fontsize: width / width10,
                               )
                             : SizedBox()
                       ],
                     ),
                   ),
                   SizedBox(
-                    width: 98,
+                    width: width / width98,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
-                          text: 'In time',
-                          fontsize: 28,
+                          text: 'Out time',
+                          fontsize: width / width28,
                           color: color1,
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftEndTime,
-                          fontsize: 19,
+                          fontsize: width / width19,
                           color: color7,
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
                                 text:
                                     '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
                                 color: color8,
-                                fontsize: 14,
+                                fontsize: width / width14,
                               )
                             : SizedBox()
                       ],
@@ -164,14 +170,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 12),
-                    height: 74,
-                    width: 70,
+                    height: height / height74,
+                    width: width / width70,
                     decoration: BoxDecoration(
                       // color: Colors.redAccent,
                       image: DecorationImage(
-                          image: AssetImage('assets/images/log_book.png'),
-                          fit: BoxFit.fitHeight,
-                          filterQuality: FilterQuality.high),
+                        image: AssetImage('assets/images/log_book.png'),
+                        fit: BoxFit.fitHeight,
+                        filterQuality: FilterQuality.high,
+                      ),
                     ),
                   )
                 ],
@@ -179,11 +186,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: height / height10),
         Container(
-          height: 65,
+          height: height / height65,
           width: double.maxFinite,
-          padding: EdgeInsets.symmetric(vertical: 5),
+          padding: EdgeInsets.symmetric(vertical: height / height5),
           decoration: BoxDecoration(
             color: WidgetColor,
           ),
@@ -206,7 +213,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     child: Center(
                       child: InterBold(
                         text: 'IN',
-                        fontsize: 18,
+                        fontsize: width / width18,
                         color: clickedIn ? Primarycolorlight : Primarycolor,
                       ),
                     ),
@@ -250,7 +257,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     child: Center(
                       child: InterBold(
                         text: 'OUT',
-                        fontsize: 18,
+                        fontsize: width / width18,
                         color: clickedIn ? Primarycolor : Primarycolorlight,
                       ),
                     ),
@@ -260,10 +267,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: height / height10),
         clickedIn
             ? Container(
-                height: 65,
+                height: height / height65,
                 color: WidgetColor,
                 child: GestureDetector(
                   onTap: () {
@@ -278,7 +285,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   },
                   child: InterBold(
                     text: isPaused ? 'Resume' : 'Break',
-                    fontsize: 18,
+                    fontsize: width / width18,
                     color: Primarycolor,
                   ),
                 ),
@@ -288,7 +295,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ? const SizedBox()
             : Button1(
                 text: 'Check Patrolling',
-                fontsize: 18,
+                fontsize: width / width18,
                 color: color5,
                 backgroundcolor: WidgetColor,
                 onPressed: () {},

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tact_tik/screens/get%20started/page_type1.dart';
 import 'package:tact_tik/screens/get%20started/page_type2.dart';
+import '../../common/sizes.dart';
 import '../../fonts/poppins_bold.dart';
 import '../../fonts/poppins_medium.dart';
 import '../../fonts/poppins_regular.dart';
@@ -32,15 +33,17 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         bottomSheet: LastPage
             ? const SizedBox()
             : Container(
-                height: 66,
+                height: height / height66,
                 color: Secondarycolor,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  padding: EdgeInsets.symmetric(horizontal: width / width40),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,20 +52,20 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         onPressed: () {
                           _pagecontroller.jumpToPage(3);
                         },
-                        child: const PoppinsBold(
+                        child: PoppinsBold(
                           text: 'Skip',
-                          fontsize: 16,
+                          fontsize: width / width16,
                           color: Primarycolor,
                         ),
                       ),
                       SmoothPageIndicator(
                         controller: _pagecontroller,
                         count: 3,
-                        effect: const WormEffect(
+                        effect: WormEffect(
                           dotColor: color3,
                           activeDotColor: Primarycolor,
-                          dotHeight: 13,
-                          dotWidth: 13,
+                          dotHeight: height / height13,
+                          dotWidth: width / width13,
                           type: WormType.thinUnderground,
                         ),
                         onDotClicked: (index) => _pagecontroller.animateToPage(
@@ -76,9 +79,9 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.easeInOut,
                         ),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_forward_ios,
-                          size: 24,
+                          size: width / width24,
                           color: Primarycolor,
                         ),
                       )

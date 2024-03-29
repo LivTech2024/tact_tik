@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../common/sizes.dart';
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
@@ -29,18 +30,21 @@ class HomeScreenPart1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 55,
+            height: height / height55,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  height: 55,
-                  width: 55,
+                  height: height / height55,
+                  width: width / width55,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
@@ -66,14 +70,14 @@ class HomeScreenPart1 extends StatelessWidget {
                           Icons.notifications,
                           // Use the notifications_active icon
                           color: Primarycolor, // Change color if unread
-                          size: 28,
+                          size: width / width28,
                         ),
                         if (isUnread)
                           Positioned(
                             top: 0,
                             right: 0,
                             child: Container(
-                              padding: EdgeInsets.all(4),
+                              padding: EdgeInsets.all(width / width4 / 2),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color:
@@ -84,7 +88,7 @@ class HomeScreenPart1 extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      width: 30,
+                      width: width / width30,
                     ),
                     GestureDetector(
                       onTap: drawerOnClicked,
@@ -93,7 +97,7 @@ class HomeScreenPart1 extends StatelessWidget {
                         child: Icon(
                           Icons.short_text_rounded,
                           color: Primarycolor,
-                          size: 40,
+                          size: width / width40,
                         ),
                       ),
                     ),
@@ -102,26 +106,26 @@ class HomeScreenPart1 extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 60),
+          SizedBox(height: height / height60),
           PoppinsSemibold(
             text: 'Good Morning,',
             color: Primarycolor,
             letterSpacing: -.5,
-            fontsize: 35,
+            fontsize: width / width35,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: height / height10),
           PoppinsLight(
             text: userName,
             color: Primarycolor,
-            fontsize: 30,
+            fontsize: width / width30,
           ),
-          SizedBox(height: 46),
+          SizedBox(height: height / height46),
           Container(
-            height: 64,
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            height: height / height64,
+            padding: EdgeInsets.symmetric(horizontal: width / width10),
             decoration: BoxDecoration(
               color: WidgetColor,
-              borderRadius: BorderRadius.circular(13),
+              borderRadius: BorderRadius.circular(width / width13),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,14 +134,14 @@ class HomeScreenPart1 extends StatelessWidget {
                   child: TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: 18,
+                      fontSize: width / width18,
                       color: Colors.white, // Change text color to white
                     ),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10.0),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(width / width10),
                         ),
                       ),
                       focusedBorder: InputBorder.none,
@@ -150,7 +154,7 @@ class HomeScreenPart1 extends StatelessWidget {
                       ),*/
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
-                        fontSize: 18,
+                        fontSize: width / width18,
                         color: color2, // Change text color to white
                       ),
                       hintText: 'Search',
@@ -160,16 +164,16 @@ class HomeScreenPart1 extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  height: 44,
-                  width: 44,
+                  height: height / height44,
+                  width: width / width44,
                   decoration: BoxDecoration(
                     color: Primarycolor,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(width / width10),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.search,
-                      size: 20,
+                      size: width / width20,
                       color: Colors.black,
                     ),
                   ),

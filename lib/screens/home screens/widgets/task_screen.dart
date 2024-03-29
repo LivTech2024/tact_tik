@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
+import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_medium.dart';
@@ -58,6 +59,9 @@ class _TaskScreenState extends State<TaskScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: Column(
@@ -73,7 +77,7 @@ class _TaskScreenState extends State<TaskScreen> {
               : Column(
                   children: [
                     Container(
-                      height: 242,
+                      height: height / height242,
                       color: WidgetColor,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,9 +87,9 @@ class _TaskScreenState extends State<TaskScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: 20, left: 26),
-                                width: 200,
-                                height: 96,
+                                margin: EdgeInsets.only(top: height / height20, left: width / width26),
+                                width: width / width200,
+                                height: height / height96,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
@@ -94,7 +98,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     InterBold(
                                       text: widget.ShiftDate,
                                       color: Colors.white,
-                                      fontsize: 18,
+                                      fontsize: width / width18,
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -103,12 +107,12 @@ class _TaskScreenState extends State<TaskScreen> {
                                         InterMedium(
                                           text: 'In time',
                                           color: Colors.white,
-                                          fontsize: 18,
+                                          fontsize: width / width18,
                                         ),
                                         InterMedium(
                                           text: widget.ShiftStartTime,
                                           color: Colors.white,
-                                          fontsize: 16,
+                                          fontsize: width / width16,
                                         )
                                       ],
                                     ),
@@ -117,14 +121,14 @@ class _TaskScreenState extends State<TaskScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         InterMedium(
-                                          text: 'In time',
+                                          text: 'Out time',
                                           color: Colors.white,
-                                          fontsize: 18,
+                                          fontsize: width / width18,
                                         ),
                                         InterMedium(
                                           text: widget.ShiftEndTime,
                                           color: Colors.white,
-                                          fontsize: 16,
+                                          fontsize: width / width16,
                                         )
                                       ],
                                     ),
@@ -132,9 +136,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(right: 12),
-                                height: 74,
-                                width: 70,
+                                margin: EdgeInsets.only(right: width / width12),
+                                height: height / height74,
+                                width: width / width70,
                                 decoration: BoxDecoration(
                                   // color: Colors.redAccent,
                                   image: DecorationImage(
@@ -147,8 +151,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             ],
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 26.0),
-                            height: 90,
+                            padding: EdgeInsets.symmetric(horizontal: width / width26),
+                            height: height / height90,
                             color: colorRed,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,10 +164,10 @@ class _TaskScreenState extends State<TaskScreen> {
                                     Icon(
                                       Icons.location_on,
                                       color: Colors.redAccent,
-                                      size: 20,
+                                      size: width / width20,
                                     ),
                                     SizedBox(
-                                      height: 10,
+                                      height: height / height10,
                                     ),
                                     InterMedium(
                                       text: 'Location',
@@ -171,11 +175,11 @@ class _TaskScreenState extends State<TaskScreen> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(width: 38),
+                                SizedBox(width: width / width38),
                                 Flexible(
                                   child: InterRegular(
                                     text: widget.ShiftLocation,
-                                    fontsize: 16,
+                                    fontsize: width / width16,
                                     color: Colors.white,
                                     maxLines: 2,
                                   ),
@@ -187,11 +191,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 22,
+                      height: height / height22,
                     ),
                     Button1(
                       text: 'Start Shift',
-                      fontsize: 18,
+                      fontsize: width / width18,
                       color: issShift ? color5 : color12,
                       backgroundcolor:
                           issShift ? WidgetColor : color11 /*.withOpacity(50)*/,
@@ -204,13 +208,13 @@ class _TaskScreenState extends State<TaskScreen> {
                       },
                     ),
                     SizedBox(
-                      height: 10,
+                      height: height / height10,
                     ),
                     issShift
                         ? SizedBox()
                         : Button1(
                             text: 'Check Patrolling',
-                            fontsize: 18,
+                            fontsize: width / width18,
                             color: color5,
                             backgroundcolor: WidgetColor,
                             onPressed: () {

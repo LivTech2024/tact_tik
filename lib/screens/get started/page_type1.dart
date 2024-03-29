@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/sizes.dart';
 import '../../fonts/poppins_regular.dart';
 import '../../fonts/poppis_semibold.dart';
 import '../../utils/colors.dart';
@@ -34,6 +35,8 @@ class PageType1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     return Container(
       color: Secondarycolor,
       child: Column(
@@ -41,49 +44,49 @@ class PageType1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 470,
+            height: height / height470,
             width: double.maxFinite,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Primarycolor,
               borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(40),
-                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(width / width40),
+                bottomLeft: Radius.circular(width / width40),
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                left: 65.0,
-                right: 65.0,
-                top: 76.0,
-                bottom: 144.0,
+              padding: EdgeInsets.only(
+                left: width / width65,
+                right: width / width65,
+                top: height / height76,
+                bottom: height / height144,
               ),
               child: SizedBox(
-                height: 250,
-                width: 300,
+                height: height / height250,
+                width: width / width300,
                 // color: Colors.white,
                 child: Image.asset(images[index]),
               ),
             ),
           ),
           SizedBox(
-            height: 100,
+            height: height / height100,
           ),
           PoppinsSemibold(
             text: tittls[index],
-            fontsize: 32,
+            fontsize: width / width32,
             color: color1,
           ),
-          SizedBox(height: 27),
+          SizedBox(height: height / height27),
           SizedBox(
-            width: 54,
+            width: width / width54,
             child: Divider(
               height: 3,
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: height / height30),
           PoppinsRegular(
             text: description[index],
-            fontsize: 14,
+            fontsize: width / width14,
             color: color2,
             textAlign: TextAlign.center,
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
 class HomeScreenCustomNavigation extends StatelessWidget {
@@ -9,17 +10,20 @@ class HomeScreenCustomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return Container(
-      height: 74,
-      width: 74,
+      height: height / height74,
+      width: width / width74,
       decoration: BoxDecoration(
         color: WidgetColor,
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: BorderRadius.circular(width / width13),
       ),
       child: Center(
         child: Icon(
           icon,
-          size: 24,
+          size: width / width24,
           color: color,
         ),
       ),

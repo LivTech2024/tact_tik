@@ -22,6 +22,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
+import '../../common/sizes.dart';
 import '../../fonts/poppins_light.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -298,6 +299,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -330,9 +334,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Padding(
           padding: EdgeInsets.only(
-            top: 40.0,
-            left: 30.0,
-            right: 30.0,
+            top: height / height40,
+            left: width / width30,
+            right: width / width30,
           ),
           child: RefreshIndicator(
             onRefresh: _refreshData,
@@ -382,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 30)
+                      SizedBox(height: height / height30)
                     ],
                   ),
                 ),
@@ -606,7 +610,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         */
                     : SizedBox()
                         */
-                    : SizedBox()
+                    : const SizedBox()
               ],
             ),
           ),
