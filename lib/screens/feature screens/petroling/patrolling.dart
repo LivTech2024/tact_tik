@@ -331,11 +331,8 @@ class _MovieCategoryState extends State<MovieCategory> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Text(
-                                                    'Checkpoint Match',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
+                                                  title:
+                                                      Text('Checkpoint Match'),
                                                   content: Text(
                                                       'The scanned QR code matches the checkpoint ID.'),
                                                   actions: [
