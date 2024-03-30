@@ -526,12 +526,110 @@ class _MovieCategoryState extends State<MovieCategory> {
                                       onTap: () async {
                                         if (checkpoint['CheckPointStatus'] !=
                                             'checked') {
-                                          bool isWithinRaius =
-                                              await locationChecker.checkLocation(
-                                                  movie.patrolLocationLatitude,
-                                                  movie.patrolLocationLongitude,
-                                                  movie.PatrolRadius);
-                                          if (isWithinRaius) {
+                                          if (movie.keepINRaius == true) {
+                                            bool isWithinRaius =
+                                                await locationChecker.checkLocation(
+                                                    movie
+                                                        .patrolLocationLatitude,
+                                                    movie
+                                                        .patrolLocationLongitude,
+                                                    movie.PatrolRadius);
+
+                                            if (isWithinRaius) {
+                                              var res = await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const SimpleBarcodeScannerPage(),
+                                                  ));
+                                              setState(() {
+                                                if (res is String) {
+                                                  Result = res;
+                                                  print(res);
+
+                                                  if (Result ==
+                                                      checkpoint[
+                                                          'CheckPointId']) {
+                                                    fireStoreService
+                                                        .updatePatrolsStatus(
+                                                      widget.EmployeeId,
+                                                      movie.patrolId,
+                                                      checkpoint[
+                                                          'CheckPointId'],
+                                                    );
+                                                    // Show an alert indicating a match
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                            'Checkpoint Match',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          content: Text(
+                                                            'The scanned QR code matches the checkpoint ID.',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text('OK'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  } else {
+                                                    // Show an alert indicating no match
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                            'Checkpoint Mismatch',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          content: Text(
+                                                            'The scanned QR code does not match the checkpoint ID.',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: Text('OK'),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              });
+                                            } else {
+                                              showCustomDialog(
+                                                  context,
+                                                  "Patrol Radius",
+                                                  "Move inside the Patrol Radius");
+                                            }
+                                          } else {
                                             var res = await Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -618,11 +716,10 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                 }
                                               }
                                             });
-                                          } else {
-                                            showCustomDialog(
-                                                context,
-                                                "Patrol Radius",
-                                                "Move inside the Patrol Radius");
+                                            // showCustomDialog(
+                                            //     context,
+                                            //     "Patrol Radius",
+                                            //     "Move inside the Patrol Radius");
                                           }
                                         }
                                       },
