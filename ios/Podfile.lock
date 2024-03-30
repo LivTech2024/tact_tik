@@ -60,8 +60,6 @@ PODS:
   - Flutter (1.0.0)
   - flutter_barcode_scanner (2.0.0):
     - Flutter
-  - flutter_email_sender (0.0.1):
-    - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
   - google_maps_flutter_ios (0.0.1):
@@ -119,7 +117,6 @@ DEPENDENCIES:
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.22.0`)
   - Flutter (from `Flutter`)
   - flutter_barcode_scanner (from `.symlinks/plugins/flutter_barcode_scanner/ios`)
-  - flutter_email_sender (from `.symlinks/plugins/flutter_email_sender/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -163,8 +160,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_barcode_scanner:
     :path: ".symlinks/plugins/flutter_barcode_scanner/ios"
-  flutter_email_sender:
-    :path: ".symlinks/plugins/flutter_email_sender/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
@@ -201,7 +196,6 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: 48076404e6e52372290d15a07d2ed1d2f1754023
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
-  flutter_email_sender: 02d7443217d8c41483223627972bfdc09f74276b
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   google_maps_flutter_ios: f135b968a67c05679e0a53538e900b5c174b0d99
   GoogleMaps: 20d7b12be49a14287f797e88e0e31bc4156aaeb4
