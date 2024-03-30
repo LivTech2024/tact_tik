@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   localstorage: ^4.0.0+1
   simple_barcode_scanner: ^0.0.8
+  flutter_email_sender: ^5.0.2
 
 dev_dependencies:
   flutter_test:

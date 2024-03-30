@@ -19,6 +19,10 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftStartTime;
   final String EmployeId;
   final String ShiftId;
+  final String ShiftAddressName;
+  final String ShiftCompanyId;
+  final String ShiftBranchId;
+  final String EmployeeName;
 
   // final String ShiftLocation;
   // final String ShiftName;
@@ -29,6 +33,10 @@ class StartTaskScreen extends StatefulWidget {
     required this.ShiftStartTime,
     required this.EmployeId,
     required this.ShiftId,
+    required this.ShiftAddressName,
+    required this.ShiftCompanyId,
+    required this.ShiftBranchId,
+    required this.EmployeeName,
 
     // required this.ShiftLocation,
     // required this.ShiftName,
@@ -71,12 +79,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final double width = MediaQuery.of(context).size.width;
     DateFormat format = DateFormat.jm(); // "h:mm a" format
     DateTime dateTime = format.parse(widget.ShiftStartTime);
+
     String formattedStopwatchTime =
         '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
 // Get current time
     DateTime currentTime = DateTime.now();
-    Duration difference = currentTime.difference(dateTime);
-    bool isLate = currentTime.isAfter(dateTime);
+    // Duration difference = currentTime.difference(dateTime);
+    // bool isLate = currentTime.isAfter(dateTime);
+
+    DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
+    Duration difference = currentTime.difference(shiftStartTime);
+    bool isLate = currentTime.isAfter(shiftStartTime);
+    String lateTime = isLate ? '${difference.inMinutes.abs()}m Late' : '';
     return Column(
       children: [
         Container(
@@ -84,7 +98,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
-          padding: EdgeInsets.only(left: width / width26, top: height / height10, right: width / width12),
+          padding: EdgeInsets.only(
+              left: width / width26,
+              top: height / height10,
+              right: width / width12),
           child: Column(
             children: [
               Row(
@@ -130,9 +147,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
-                                text: isLate
-                                    ? '${difference.inMinutes.abs()}m Late'
-                                    : '',
+                                text: lateTime,
                                 color: Colors.redAccent,
                                 fontsize: width / width10,
                               )
@@ -147,7 +162,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       children: [
                         InterMedium(
                           text: 'Out time',
-                          fontsize: width / width28,
+                          fontsize: width / width20,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
@@ -244,8 +259,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     setState(() {
                       isPaused = !isPaused;
                     });
-                    fireStoreService.EndShiftLog(widget.EmployeId,
-                        formattedStopwatchTime, widget.ShiftId);
+                    fireStoreService.EndShiftLog(
+                        widget.EmployeId,
+                        formattedStopwatchTime,
+                        widget.ShiftId,
+                        widget.ShiftAddressName,
+                        widget.ShiftBranchId,
+                        widget.ShiftCompanyId,
+                        widget.EmployeeName);
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

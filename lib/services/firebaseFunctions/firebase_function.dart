@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
@@ -76,7 +77,7 @@ class FireStoreService {
     }
 
     final querySnapshot = await patrols
-        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
+        .where("PatrolAssignedGuardsId", arrayContains: EmpId)
         .where("PatrolCurrentStatus",
             isEqualTo: "pending") // Filter by pending status
         .orderBy("PatrolTime", descending: false)
@@ -97,14 +98,14 @@ class FireStoreService {
   }
 
   Future<List<DocumentSnapshot>> getAllPatrolsByEmployeeIdFromUserInfo(
-      String EmpId) async {
-    if (EmpId.isEmpty) {
+      String empId) async {
+    if (empId.isEmpty) {
       return [];
     }
 
     final querySnapshot = await patrols
-        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
-        .where("PatrolCurrentStatus", isEqualTo: "pending")
+        .where("PatrolAssignedGuardsId", arrayContains: empId)
+        .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
         .orderBy("PatrolTime", descending: false)
         .get();
 
@@ -131,7 +132,7 @@ class FireStoreService {
 
     final querySnapshot = await patrols
         .where("PatrolAssignedGuardId", isEqualTo: EmpId)
-        .where("PatrolCurrentStatus", isEqualTo: "pending")
+        .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
         .orderBy("PatrolTime", descending: false)
         .get();
 
@@ -188,19 +189,11 @@ class FireStoreService {
 //Update the User Shift Status
   Future<void> startShiftLog(String employeeId, String shiftId) async {
     try {
-      final userRef = FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(employeeId)
-          .collection('Log');
-
       // Get the current system time
       DateTime currentTime = DateTime.now();
 
       // Create a new document in the "Log" subcollection
-      await userRef.doc("ShiftStart").set({
-        'type': 'ShiftStart',
-        'time': currentTime,
-      });
+      // await generateReport(address, reportName, Empid, BranchId, Data, CompanyId, Status, EmpName)
       final updateShiftStatus =
           await shifts.where('ShiftId', isEqualTo: shiftId).get();
       if (updateShiftStatus.docs.isNotEmpty) {
@@ -219,19 +212,19 @@ class FireStoreService {
 
   Future<void> INShiftLog(String employeeId) async {
     try {
-      final userRef = FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(employeeId)
-          .collection('Log');
+      // final userRef = FirebaseFirestore.instance
+      //     .collection('Employees')
+      //     .doc(employeeId)
+      //     .collection('Log');
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
 
       // Create a new document in the "Log" subcollection
-      await userRef.doc("ShiftIn").set({
-        'type': 'ShiftIn',
-        'time': currentTime,
-      });
+      // await userRef.doc("ShiftIn").set({
+      //   'type': 'ShiftIn',
+      //   'time': currentTime,
+      // });
 
       print('Shift start logged at $currentTime');
     } catch (e) {
@@ -241,19 +234,19 @@ class FireStoreService {
 
   Future<void> BreakShiftLog(String employeeId) async {
     try {
-      final userRef = FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(employeeId)
-          .collection('Log');
+      // final userRef = FirebaseFirestore.instance
+      //     .collection('Employees')
+      //     .doc(employeeId)
+      //     .collection('Log');
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
 
       // Create a new document in the "Log" subcollection
-      await userRef.doc("ShiftBreak").set({
-        'type': 'ShiftBreak',
-        'time': currentTime,
-      });
+      // await userRef.doc("ShiftBreak").set({
+      //   'type': 'ShiftBreak',
+      //   'time': currentTime,
+      // });
 
       print('Shift start logged at $currentTime');
     } catch (e) {
@@ -263,19 +256,19 @@ class FireStoreService {
 
   Future<void> ResumeShiftLog(String employeeId) async {
     try {
-      final userRef = FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(employeeId)
-          .collection('Log');
+      // final userRef = FirebaseFirestore.instance
+      //     .collection('Employees')
+      //     .doc(employeeId)
+      //     .collection('Log');
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
 
       // Create a new document in the "Log" subcollection
-      await userRef.doc("ResumeShift").set({
-        'type': 'ResumeShift',
-        'time': currentTime,
-      });
+      // await userRef.doc("ResumeShift").set({
+      //   'type': 'ResumeShift',
+      //   'time': currentTime,
+      // });
 
       print('Shift start logged at $currentTime');
     } catch (e) {
@@ -284,16 +277,22 @@ class FireStoreService {
   }
 
   Future<void> EndShiftLog(
-      String employeeId, String Stopwatch, String? shiftId) async {
+      String employeeId,
+      String Stopwatch,
+      String? shiftId,
+      String LocationName,
+      String BrachId,
+      String CompyId,
+      String EmpNames) async {
     try {
       if (shiftId == null || shiftId.isEmpty) {
         throw ArgumentError('Invalid shiftId: $shiftId');
       }
 
-      final userRef = FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(employeeId)
-          .collection('Log');
+      // final userRef = FirebaseFirestore.instance
+      //     .collection('Employees')
+      //     .doc(employeeId)
+      //     .collection('Log');
 
       // Update the shift status in Firestore
       final updateShiftStatus =
@@ -301,21 +300,24 @@ class FireStoreService {
       if (updateShiftStatus.docs.isNotEmpty) {
         final documentId = updateShiftStatus.docs.first.id;
         await shifts.doc(documentId).update({
-          'ShiftCurrentStatus': 'done',
+          'ShiftCurrentStatus': 'completed',
         });
       } else {
         throw Exception('Shift with id $shiftId not found.');
       }
-
+      String Title = "Shift Ended";
+      String Data = "Shift Ended ";
+      await generateReport(LocationName, Title, employeeId, BrachId, Data,
+          CompyId, "other", EmpNames);
       // Get the current system time
       DateTime currentTime = DateTime.now();
 
       // Create a new document in the "Log" subcollection
-      await userRef.doc('ShiftEnd').set({
-        'type': 'ShiftEnd',
-        'time': currentTime,
-        'totalTime': Stopwatch,
-      });
+      // await userRef.doc('ShiftEnd').set({
+      //   'type': 'ShiftEnd',
+      //   'time': currentTime,
+      //   'totalTime': Stopwatch,
+      // });
 
       print('Shift start logged at $currentTime');
     } catch (e) {
@@ -340,4 +342,171 @@ class FireStoreService {
     // Log all retrieved documents
     return querySnapshot.docs;
   }
+
+  //Patrol is Started
+  Future<void> startPatrol(String PatrolId) async {
+    try {
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+      String data = "Patroll Started";
+      //Modify the PatrolModifiedAt
+      final patrolRef = FirebaseFirestore.instance
+          .collection('Patrols')
+          .where("PatrolId", isEqualTo: PatrolId);
+
+      final querySnapshot = await patrolRef.get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('Patrols')
+            .doc(documentId)
+            .update({
+          'PatrolModifiedAt': Timestamp.now(),
+          'PatrolCurrentStatus': "started"
+        });
+      }
+      // PatrolModifiedAt
+      print('Patrol start logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift start: $e');
+      // Handle the error as needed
+    }
+  }
+
+  Future<void> UpdatePatrol(String PatrolId) async {
+    try {
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+      String data = "Patroll Started";
+      //Modify the PatrolModifiedAt
+      final patrolRef = FirebaseFirestore.instance
+          .collection('Patrols')
+          .where("PatrolId", isEqualTo: PatrolId);
+
+      final querySnapshot = await patrolRef.get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('Patrols')
+            .doc(documentId)
+            .update({
+          'PatrolModifiedAt': Timestamp.now(),
+          'PatrolCurrentStatus': "started"
+        });
+      }
+      // PatrolModifiedAt
+      print('Patrol start logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift start: $e');
+      // Handle the error as needed
+    }
+  }
+
+  Future<void> updatePatrolsCounter(String empId, String patrolId) async {
+    if (empId.isEmpty || patrolId.isEmpty) {
+      print("Error in UpdatePatrolCounter");
+      return;
+    }
+
+    final querySnapshot = await patrols
+        .where("PatrolAssignedGuardsId", arrayContains: empId)
+        .where("PatrolCurrentStatus", isEqualTo: "started")
+        .orderBy("PatrolTime", descending: false)
+        .get();
+
+    print("Retrieved documents Update Docs:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    for (var doc in querySnapshot.docs) {
+      var checkpoints = doc.get('PatrolCheckPoints');
+      for (var checkpoint in checkpoints) {
+        // Set all other CheckPointStatus to "not_checked"
+        checkpoint['CheckPointStatus'] = 'not_checked';
+      }
+
+      // Increment PatrolCompletedCount by 1
+      int completedCount = doc.get('PatrolCompletedCount') + 1;
+
+      // Update the document in Firestore
+      await doc.reference.update({
+        'PatrolCheckPoints': checkpoints,
+        'PatrolCompletedCount': completedCount,
+      });
+    }
+  }
+//completed
+
+  Future<void> EndPatrol(
+      String patrolAssignedGuardId,
+      String PatrolCompanyId,
+      String PatrolName,
+      String PatrolArea,
+      String BId,
+      String PatrolId,
+      String EmpName) async {
+    try {
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+      String data = "Patrolling Ended";
+      //Modify the PatrolModifiedAt
+      final patrolRef = FirebaseFirestore.instance
+          .collection('Patrols')
+          .where("PatrolId", isEqualTo: PatrolId);
+
+      final querySnapshot = await patrolRef.get();
+      if (querySnapshot.docs.isNotEmpty) {
+        final documentId = querySnapshot.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('Patrols')
+            .doc(documentId)
+            .update({
+          'PatrolModifiedAt': Timestamp.now(),
+          'PatrolCurrentStatus': "completed"
+        });
+      }
+      String status = "completed";
+      // Create a new document in the "Log" subcollection
+      await generateReport(PatrolArea, data, patrolAssignedGuardId,
+          PatrolCompanyId, data, PatrolCompanyId, status, EmpName);
+      // PatrolModifiedAt
+      print('Shift start logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift start: $e');
+      // Handle the error as needed
+    }
+  }
+
+//Ks8HiOimtf2vfjdIIutG
+//aSvLtwII6Cjs7uCISBRR
+  Future<void> generateReport(
+      String address,
+      String reportName,
+      String Empid,
+      String BranchId,
+      String Data,
+      String CompanyId,
+      String Status,
+      String EmpName) async {
+    final ReportRef = FirebaseFirestore.instance.collection("Reports");
+    String combinationName = (reportName + address).replaceAll(' ', '');
+// Limit the length
+    int maxLength = 10;
+    if (combinationName.length > maxLength) {
+      combinationName = combinationName.substring(0, maxLength);
+    }
+    final newDocRef = await ReportRef.add({
+      "ReportCompanyId": CompanyId,
+      "ReportCompanyBranchId": BranchId,
+      "ReportName":
+          combinationName, //* combination of location and reports name
+      "ReportCategory": "other",
+      "ReportData": Data,
+      "ReportStatus": Status,
+      "ReportEmployeeName": EmpName,
+      "ReportEmployeeId": Empid,
+      "ReportCreatedAt": Timestamp.now(),
+    });
+    await newDocRef.update({"ReportId": newDocRef.id});
+  }
+  //Patrol is Completed
 }

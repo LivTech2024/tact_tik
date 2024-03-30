@@ -19,6 +19,7 @@ import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
+import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -46,10 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
   String _ShiftName = "";
   String _ShiftEndTime = "";
   String _ShiftStartTime = "";
+  String _ShiftCompanyId = "";
+  String _ShiftBranchId = "";
+
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _shiftId = "";
+  String _empEmail = "";
+  String _branchId = "";
+  String _cmpId = "";
   String _patrolArea = "";
   String _patrolCompanyId = "";
   bool _patrolKeepGuardInRadiusOfLocation = true;
@@ -60,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _patrolDate = "";
   bool isWithinRadius = true;
   bool issShift = false;
+  int _shiftRestrictedRadius = 0;
 
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
@@ -118,7 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
-    checkLocation();
+
+    // checkLocation();
+    // Timer.periodic(Duration(seconds: 1), (Timer timer) {
+    //   // checkLocation();
+    // });
     super.initState();
   }
 
@@ -166,58 +178,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.delayed(Duration(seconds: 2));
   }
 
-  Future<void> checkLocation() async {
-    var status = await Permission.locationWhenInUse.status;
-    if (status.isDenied) {
-      // Request location permission
-      await Permission.locationWhenInUse.request();
-    }
-
-    // Check if permission is granted before accessing the device's location
-    if (status.isGranted) {
-      Position currentPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      double distanceInMeters = Geolocator.distanceBetween(
-          currentPosition.latitude,
-          currentPosition.longitude,
-          _shiftLatitude,
-          _shiftLongitude);
-      print(currentPosition.latitude);
-      print(currentPosition.longitude);
-      // Assuming the radius is 100 meters
-      if (distanceInMeters <= 100) {
-        setState(() {
-          isWithinRadius = true;
-        });
-      } else {
-        // Display alert
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: Text('Alert'),
-        //       content: Text('You are not within the shift location radius.'),
-        //       actions: <Widget>[
-        //         TextButton(
-        //           child: Text('OK'),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
-      }
-    }
-  }
-
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (mounted) {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
+        String empEmail = userInfo['EmployeeEmail'];
         _employeeId = EmployeeId;
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
@@ -225,12 +192,14 @@ class _HomeScreenState extends State<HomeScreen> {
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
           _userName = userName;
+          _empEmail = empEmail;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
           String PatrolArea = patrolInfo['PatrolArea'];
           String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
-          // Bool PatrolKeepGuardInRadiusOfLocation = patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+          bool PatrolKeepGuardInRadiusOfLocation =
+              patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
           String PatrolLocationName = patrolInfo['PatrolLocationName'];
           String PatrolName = patrolInfo['PatrolName'];
           int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
@@ -242,13 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
               DateFormat('hh:mm a').format(patrolDateTime);
           String patrolDateString =
               DateFormat('yyyy-MM-dd').format(patrolDateTime);
-          print('Shift Info: ${patrolInfo.data()}');
+          print('Patrol Info: ${patrolInfo.data()}');
 
           setState(() {
             _patrolArea = PatrolArea;
             _patrolCompanyId = PatrolCompanyId;
-            // _patrolKeepGuardInRadiusOfLocation =
-            //     PatrolKeepGuardInRadiusOfLocation;
+            _patrolKeepGuardInRadiusOfLocation =
+                PatrolKeepGuardInRadiusOfLocation;
             _patrolLocationName = PatrolLocationName;
             _patrolRestrictedRadius = PatrolRestrictedRadius;
             _patrolTime = patrolTimeString;
@@ -267,6 +236,12 @@ class _HomeScreenState extends State<HomeScreen> {
           GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'];
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
+          String companyBranchId = shiftInfo["ShiftCompanyBranchId"];
+          String shiftCompanyId = shiftInfo["ShiftCompanyId"];
+          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"];
+          // EmpEmail: _empEmail,
+          //                     Branchid: _branchId,
+          //                     cmpId: _cmpId,
           // String employeeImg = shiftInfo['EmployeeImg'];
           setState(() {
             _ShiftDate = shiftDateStr;
@@ -277,6 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftLatitude = shiftLocationLatitude;
             _shiftLongitude = shiftLocationLongitude;
             _shiftId = shiftId;
+            _shiftRestrictedRadius = ShiftRestrictedRadius;
+            _ShiftCompanyId = shiftCompanyId;
+            _ShiftBranchId = companyBranchId;
             // _employeeImg = employeeImg;
           });
           print('Shift Info: ${shiftInfo.data()}');
@@ -405,6 +383,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           patrolTime: _patrolTime,
                           patrollocation: _patrolArea,
                           issShiftFetched: issShift,
+                          EmpEmail: _empEmail,
+                          Branchid: _branchId,
+                          cmpId: _cmpId,
+                          EmpName: _userName,
+                          ShiftLatitude: _shiftLatitude,
+                          shiftLongitude: _shiftLongitude,
+                          ShiftRadius: _shiftRestrictedRadius,
+                          CheckUserRadius: _patrolKeepGuardInRadiusOfLocation,
+                          ShiftCompanyId: '',
+                          ShiftBranchId: '',
                         ),
                       )
                     /*: ScreenIndex == 2

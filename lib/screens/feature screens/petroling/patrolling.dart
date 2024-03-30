@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -21,11 +23,25 @@ class Movie {
   final String patrolTime;
   final String patrolDate;
   final String patrolId;
-  final String PatrolAssignedGuardId;
+  // final String PatrolAssignedGuardId;
+  // final List<String, dynamic> guardIds;
+  final List<Map<String, dynamic>> guardIds;
+  // final String Empid;
+  final String BranchId;
+  final String CompanyID;
+  final String PatrolCompletedCount;
+  final String PatrolRequiredCount;
+  final double patrolLocationLatitude;
+  final double patrolLocationLongitude;
+  final bool keepINRaius;
+  final int PatrolRadius;
+
+  // String address, String reportName, String Empid,
+  //     String BranchId, String Data, String CompanyId
+
   final List<Map<String, dynamic>> checkpoints;
 
   int get totalCheckpoints => checkpoints.length;
-
   int get completedCheckpoints => checkpoints
       .where((checkpoint) => checkpoint['CheckPointStatus'] == 'checked')
       .length;
@@ -39,15 +55,34 @@ class Movie {
     this.checkpoints,
     this.patrolDate,
     this.patrolId,
-    this.PatrolAssignedGuardId,
+    // this.PatrolAssignedGuardId,
+    // this.Empid,
+    this.BranchId,
+    this.CompanyID,
+    this.guardIds,
+    this.PatrolCompletedCount,
+    this.PatrolRequiredCount,
+    this.patrolLocationLatitude,
+    this.patrolLocationLongitude,
+    this.keepINRaius,
+    this.PatrolRadius,
     // this.patrolCheckPoints
   );
 }
 
 class OpenPatrollingScreen extends StatefulWidget {
   final String empId;
-
-  const OpenPatrollingScreen({super.key, required this.empId});
+  final String empName;
+  final String empEmail;
+  final String BranchId;
+  final String CompanyID;
+  const OpenPatrollingScreen(
+      {super.key,
+      required this.empId,
+      required this.empEmail,
+      required this.BranchId,
+      required this.CompanyID,
+      required this.empName});
 
   @override
   State<OpenPatrollingScreen> createState() => _OpenPatrollingScreenState();
@@ -58,6 +93,8 @@ FireStoreService fireStoreService = FireStoreService();
 class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
   List<Movie> movies = [];
   final LocalStorage storage = LocalStorage('currentUserEmail');
+  late final String EmployeId;
+  late final String EmployeName;
 
   @override
   void initState() {
@@ -71,7 +108,10 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
     if (widget.empId.isNotEmpty) {
       var patrolInfoList = await fireStoreService
           .getAllPatrolsByEmployeeIdFromUserInfo(widget.empId);
-
+      setState(() {
+        EmployeId = widget.empId;
+        EmployeName = widget.empName;
+      });
       List<Movie> updatedMovies = [];
       for (var patrolInfo in patrolInfoList) {
         String PatrolArea = patrolInfo['PatrolArea'];
@@ -79,37 +119,83 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
         String PatrolLocationName = patrolInfo['PatrolLocationName'];
         String PatrolName = patrolInfo['PatrolName'];
         int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
-        String PatrolAssignedGuardId = patrolInfo['PatrolAssignedGuardId'];
-        String patrolId = patrolInfo["PatrolId"];
+        // String PatrolAssignedGuardId = patrolInfo['PatrolAssignedGuardsId'];
+        String _patrolId = patrolInfo["PatrolId"];
         Timestamp PatrolTime = patrolInfo['PatrolTime'];
         DateTime dateTime = PatrolTime.toDate();
         String time = DateFormat.Hms().format(dateTime);
         String date = DateFormat.yMd().format(dateTime);
+        String CompletedCount = patrolInfo['PatrolCompletedCount'].toString();
+        String PatrolRequiredCount =
+            patrolInfo['PatrolRequiredCount'].toString();
+        bool PatrolKeepGuardInRadiusOfLocation =
+            patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+        int patrolradius = patrolInfo['PatrolRestrictedRadius'];
+        GeoPoint patrolGeolocation = patrolInfo['PatrolLocation'];
+        double patrolLocationLatitude = patrolGeolocation.latitude;
+        double patrolLocationLongitude = patrolGeolocation.longitude;
+        // String PatrolAssignedGuardId = patrolInfo['PatrolAssignedGuardsId'];
+
+        // List<String> guardIds = patrolInfo['PatrolAssignedGuardsId'];
+        List<Map<String, dynamic>> guardIds = [];
+        for (var ids in patrolInfo['PatrolAssignedGuardsId']) {
+          print("Guard Ids: {$ids}");
+        }
         List<Map<String, dynamic>> checkpoints = [];
         for (var checkpoint in patrolInfo['PatrolCheckPoints']) {
           String checkpointName = checkpoint['CheckPointName'];
           String checkpointLocation = checkpoint['CheckPointId'];
           String CheckPointStatus = checkpoint['CheckPointStatus'];
+          String CheckPointTime = checkpoint['CheckPointTime'];
           checkpoints.add({
             'CheckPointName': checkpointName,
             'CheckPointId': checkpointLocation,
             'CheckPointStatus': CheckPointStatus,
+            'CheckPointTime': CheckPointTime,
           });
         }
 
-        updatedMovies.add(Movie(PatrolName, PatrolArea, PatrolLocationName,
-            time, checkpoints, date, patrolId, PatrolAssignedGuardId));
+        updatedMovies.add(Movie(
+            PatrolName,
+            PatrolArea,
+            PatrolLocationName,
+            time,
+            checkpoints,
+            date,
+            _patrolId,
+            // PatrolAssignedGuardId,
+            // PatrolAssignedGuardId,
+            widget.BranchId,
+            PatrolCompanyId,
+            guardIds,
+            CompletedCount,
+            PatrolRequiredCount,
+            patrolLocationLatitude,
+            patrolLocationLongitude,
+            PatrolKeepGuardInRadiusOfLocation,
+            patrolradius));
+        if (PatrolKeepGuardInRadiusOfLocation == true) {
+          //           UserLocationChecker locationChecker = UserLocationChecker();
+          // Future<void> CheckUserRaius() async{
+          //    var checker = locationChecker.checkLocation(, _shiftLongitude, Radius)
+          // }
 
+          print("Keep IN radius");
+        }
         print('PatrolArea: $PatrolArea');
         print('PatrolCompanyId: $PatrolCompanyId');
         print('PatrolLocationName: $PatrolLocationName');
         print('PatrolName: $PatrolName');
         print('PatrolRestrictedRadius: $PatrolRestrictedRadius');
-        print('PatrolAssignedGuardId: $PatrolAssignedGuardId');
-        print('patrolId: $patrolId');
+        print('PatrolAssignedGuardId: $guardIds');
+        print('patrolId: $_patrolId');
         print('PatrolTime: $time');
         print('PatrolDate: $date');
         print('Checkpoints: $checkpoints');
+        print('BoolkeepInRadius: $PatrolKeepGuardInRadiusOfLocation');
+        print('Radius: $patrolradius');
+        print('RequiredCount: $PatrolRequiredCount');
+        print('Completed Count: $CompletedCount');
       }
 
       setState(() {
@@ -176,14 +262,23 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     if (movies.isEmpty) {
-                      return Center(child: Text('No Patrols available'));
+                      return Center(
+                          child: Text(
+                        'No Patrols available',
+                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      ));
                     }
 
                     final category = movies[index].patrolLocationName;
                     final categoryMovies = movies
                         .where((movie) => movie.patrolLocationName == category)
                         .toList();
-                    return MovieCategory(category, categoryMovies);
+                    return MovieCategory(
+                      category,
+                      categoryMovies,
+                      EmployeeId: widget.empId,
+                      EmployeeEmail: widget.empName,
+                    );
                   },
                   childCount: movies
                       .map((movie) => movie.patrolLocationName)
@@ -203,11 +298,41 @@ class MovieCategory extends StatefulWidget {
   final String category;
   final List<Movie> movies;
   final Map<String, dynamic>? patrolInfo;
+  final String EmployeeId;
+  final String EmployeeEmail;
 
-  MovieCategory(this.category, this.movies, {this.patrolInfo});
+  MovieCategory(this.category, this.movies,
+      {this.patrolInfo, required this.EmployeeId, required this.EmployeeEmail});
 
   @override
   _MovieCategoryState createState() => _MovieCategoryState();
+}
+
+UserLocationChecker locationChecker = UserLocationChecker();
+void showCustomDialog(BuildContext context, String title, String content) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          content,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class _MovieCategoryState extends State<MovieCategory> {
@@ -291,7 +416,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                     SizedBox(width: width / width20),
                                     InterMedium(
                                       text:
-                                          'Total ${movie.totalCheckpoints}     Completed ${movie.completedCheckpoints}',
+                                          'Total ${movie.PatrolRequiredCount} Completed ${movie.PatrolCompletedCount}',
                                       fontsize: width / width14,
                                       color: color13,
                                     )
@@ -324,7 +449,47 @@ class _MovieCategoryState extends State<MovieCategory> {
                               backgroundcolor: colorGreen,
                               color: Colors.green,
                               borderRadius: 10,
-                              onPressed: () {},
+                              onPressed: () async {
+                                if (movie.keepINRaius == true) {
+                                  bool isWithinRaius =
+                                      await locationChecker.checkLocation(
+                                          movie.patrolLocationLatitude,
+                                          movie.patrolLocationLongitude,
+                                          movie.PatrolRadius);
+                                  if (isWithinRaius) {
+                                    print("WithIn Radius");
+                                  } else {
+                                    showCustomDialog(context, "Radius",
+                                        "Move into Radius to continue");
+                                  }
+                                  if (isWithinRaius) {
+                                  } else {
+                                    showCustomDialog(context, "Raius Error",
+                                        "Move inside the Patrol Radius to start the patrol");
+                                  }
+                                } else {
+                                  // CupertinoAlertDialog()
+                                  print("Started");
+                                  fireStoreService.startPatrol(
+                                    //  Category,
+                                    movie.patrolId,
+                                    // movie.patrolLocationName,
+                                    // movie.PatrolAssignedGuardId,
+                                    // movie.Empid,
+                                    // movie.BranchId,
+                                    // movie.CompanyID,
+                                    // movie.guardIds,
+                                    // movie.CompanyID,
+                                    // movie.Name,
+                                    // movie.patrolLocationName,
+                                    // movie.BranchId,
+
+                                    // movie.s
+                                  );
+                                  //Pop Up of Completion
+                                }
+                                //Save As Report
+                              },
                             ),
                             Column(
                               children: movie.checkpoints
@@ -348,7 +513,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                   checkpoint['CheckPointId']) {
                                                 fireStoreService
                                                     .updatePatrolsStatus(
-                                                  movie.PatrolAssignedGuardId,
+                                                  widget.EmployeeId,
                                                   movie.patrolId,
                                                   checkpoint['CheckPointId'],
                                                 );
@@ -526,13 +691,13 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                                     "Cancel")),
                                                             TextButton(
                                                               onPressed: () {
-                                                                fireStoreService.updatePatrolsReport(
-                                                                    movie
-                                                                        .PatrolAssignedGuardId,
-                                                                    movie
-                                                                        .patrolId,
-                                                                    checkpoint[
-                                                                        'CheckPointId']);
+                                                                // fireStoreService.updatePatrolsReport(
+                                                                //     movie
+                                                                //         .PatrolAssignedGuardId,
+                                                                //     movie
+                                                                //         .patrolId,
+                                                                //     checkpoint[
+                                                                //         'CheckPointId']);
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
@@ -566,12 +731,100 @@ class _MovieCategoryState extends State<MovieCategory> {
                               height: height / height10,
                             ),
                             Button1(
-                              text: 'END',
-                              backgroundcolor: colorRed2,
-                              color: Colors.redAccent,
-                              borderRadius: 10,
-                              onPressed: () {},
-                            ),
+                                text: 'END',
+                                backgroundcolor: colorRed2,
+                                color: Colors.redAccent,
+                                borderRadius: 10,
+                                onPressed: () async {
+                                  if (movie.PatrolRequiredCount ==
+                                      movie.PatrolCompletedCount) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'End Patrolling',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          content: Text(
+                                            'Do you want to end patrolling',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                fireStoreService.EndPatrol(
+                                                  //  Category,
+                                                  // movie.patrolId,
+                                                  // movie.patrolLocationName,
+                                                  // movie.PatrolAssignedGuardId,
+                                                  // movie.Empid,
+                                                  // movie.BranchId,
+                                                  // movie.CompanyID,
+                                                  widget.EmployeeId,
+                                                  movie.CompanyID,
+                                                  movie.Name,
+                                                  movie.patrolLocationName,
+                                                  movie.BranchId,
+                                                  movie.patrolId,
+                                                  widget.EmployeeEmail,
+                                                  // movie.s
+                                                );
+
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                    // Navigator.of(context).pop();
+                                  } else {
+                                    if (movie.totalCheckpoints ==
+                                        movie.completedCheckpoints) {
+                                      await fireStoreService
+                                          .updatePatrolsCounter(
+                                              widget.EmployeeId,
+                                              movie.patrolId);
+                                      //Update the counter and reset the checkpoint status
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              'Patrol Incomplete',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            content: Text(
+                                              'Complete all checkpoints to end patrolling',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  }
+                                }),
                           ],
                         ),
                     ],

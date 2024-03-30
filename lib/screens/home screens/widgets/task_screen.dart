@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
@@ -15,7 +16,11 @@ class TaskScreen extends StatefulWidget {
   final String ShiftEndTime;
   final String ShiftStartTime;
   final String ShiftLocation;
+  final String ShiftCompanyId;
+  final String ShiftBranchId;
   final String ShiftName;
+  final String Branchid;
+  final String cmpId;
   bool isWithINRadius;
   final String empId;
   final String shiftId;
@@ -23,6 +28,12 @@ class TaskScreen extends StatefulWidget {
   final String patrolTime;
   final String patrollocation;
   final bool issShiftFetched;
+  final double ShiftLatitude;
+  final double shiftLongitude;
+  final int ShiftRadius;
+  final bool CheckUserRadius;
+  final String EmpEmail;
+  final String EmpName;
 
   TaskScreen({
     required this.ShiftDate,
@@ -37,17 +48,53 @@ class TaskScreen extends StatefulWidget {
     required this.patrolTime,
     required this.patrollocation,
     required this.issShiftFetched,
+    required this.EmpEmail,
+    required this.Branchid,
+    required this.cmpId,
+    required this.EmpName,
+    required this.ShiftLatitude,
+    required this.shiftLongitude,
+    required this.ShiftRadius,
+    required this.CheckUserRadius,
+    required this.ShiftCompanyId,
+    required this.ShiftBranchId,
   });
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
 }
 
+void showCustomDialog(BuildContext context, String title, String content) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          title,
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          content,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
   bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
-
+  UserLocationChecker locationChecker = UserLocationChecker();
   @override
   void initState() {
     super.initState();
@@ -61,6 +108,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+    UserLocationChecker locationChecker = UserLocationChecker();
 
     return RefreshIndicator(
       onRefresh: _refreshData,
@@ -73,138 +121,173 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftEndTime: widget.ShiftEndTime,
                   EmployeId: widget.empId,
                   ShiftId: widget.shiftId,
+                  ShiftAddressName: widget.ShiftName,
+                  ShiftCompanyId: widget.ShiftCompanyId,
+                  ShiftBranchId: widget.ShiftBranchId,
+                  EmployeeName: widget.EmpName,
                 )
               : Column(
                   children: [
-                    Container(
-                      height: height / height242,
-                      color: WidgetColor,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(top: height / height20, left: width / width26),
-                                width: width / width200,
-                                height: height / height96,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InterBold(
-                                      text: widget.ShiftDate,
-                                      color: Colors.white,
-                                      fontsize: width / width18,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InterMedium(
-                                          text: 'In time',
-                                          color: Colors.white,
-                                          fontsize: width / width18,
-                                        ),
-                                        InterMedium(
-                                          text: widget.ShiftStartTime,
-                                          color: Colors.white,
-                                          fontsize: width / width16,
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InterMedium(
-                                          text: 'Out time',
-                                          color: Colors.white,
-                                          fontsize: width / width18,
-                                        ),
-                                        InterMedium(
-                                          text: widget.ShiftEndTime,
-                                          color: Colors.white,
-                                          fontsize: width / width16,
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(right: width / width12),
-                                height: height / height74,
-                                width: width / width70,
-                                decoration: BoxDecoration(
-                                  // color: Colors.redAccent,
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/log_book.png'),
-                                      fit: BoxFit.fitHeight,
-                                      filterQuality: FilterQuality.high),
-                                ),
-                              )
-                            ],
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: width / width26),
-                            height: height / height90,
-                            color: colorRed,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                    widget.ShiftDate.isNotEmpty
+                        ? Container(
+                            height: height / height242,
+                            color: WidgetColor,
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Colors.redAccent,
-                                      size: width / width20,
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          top: height / height20,
+                                          left: width / width26),
+                                      width: width / width200,
+                                      height: height / height96,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InterBold(
+                                            text: widget.ShiftDate,
+                                            color: Colors.white,
+                                            fontsize: width / width18,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InterMedium(
+                                                text: 'In time',
+                                                color: Colors.white,
+                                                fontsize: width / width18,
+                                              ),
+                                              InterMedium(
+                                                text: widget.ShiftStartTime,
+                                                color: Colors.white,
+                                                fontsize: width / width16,
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InterMedium(
+                                                text: 'Out time',
+                                                color: Colors.white,
+                                                fontsize: width / width18,
+                                              ),
+                                              InterMedium(
+                                                text: widget.ShiftEndTime,
+                                                color: Colors.white,
+                                                fontsize: width / width16,
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(
-                                      height: height / height10,
-                                    ),
-                                    InterMedium(
-                                      text: 'Location',
-                                      color: Colors.white,
-                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          right: width / width12),
+                                      height: height / height74,
+                                      width: width / width70,
+                                      decoration: BoxDecoration(
+                                        // color: Colors.redAccent,
+                                        image: DecorationImage(
+                                            image: AssetImage(
+                                                'assets/images/log_book.png'),
+                                            fit: BoxFit.fitHeight,
+                                            filterQuality: FilterQuality.high),
+                                      ),
+                                    )
                                   ],
                                 ),
-                                SizedBox(width: width / width38),
-                                Flexible(
-                                  child: InterRegular(
-                                    text: widget.ShiftLocation,
-                                    fontsize: width / width16,
-                                    color: Colors.white,
-                                    maxLines: 2,
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width / width26),
+                                  height: height / height90,
+                                  color: colorRed,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.location_on,
+                                            color: Colors.redAccent,
+                                            size: width / width20,
+                                          ),
+                                          SizedBox(
+                                            height: height / height10,
+                                          ),
+                                          InterMedium(
+                                            text: 'Location',
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: width / width38),
+                                      Flexible(
+                                        child: InterRegular(
+                                          text: widget.ShiftLocation,
+                                          fontsize: width / width16,
+                                          color: Colors.white,
+                                          maxLines: 2,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
+                          )
+                        : Container(
+                            child: Text(
+                              "No Shifts",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: width / width18),
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
                     SizedBox(
                       height: height / height22,
                     ),
                     Button1(
                       text: 'Start Shift',
                       fontsize: width / width18,
-                      color: issShift ? color5 : color12,
-                      backgroundcolor:
-                          issShift ? WidgetColor : color11 /*.withOpacity(50)*/,
-                      onPressed: () {
-                        setState(() {
-                          ShiftStarted = true;
-                          fireStoreService.startShiftLog(
-                              widget.empId, widget.shiftId);
-                        });
+                      color: issShift ? color5 : color5,
+                      backgroundcolor: WidgetColor /*.withOpacity(50)*/,
+                      onPressed: () async {
+                        if (widget.CheckUserRadius == true) {
+                          bool status = await locationChecker.checkLocation(
+                              widget.ShiftLatitude,
+                              widget.shiftLongitude,
+                              widget.ShiftRadius);
+                          print("Status :$status");
+                          if (status == true) {
+                            setState(() {
+                              ShiftStarted = true;
+                              fireStoreService.startShiftLog(
+                                  widget.empId, widget.shiftId);
+                            });
+                          } else {
+                            showCustomDialog(context, "Location",
+                                "Move into Shift Radius to continue");
+                          }
+                        }
+
+                        // bool isWithInRaius = locationChecker.checkLocation();
                       },
                     ),
                     SizedBox(
@@ -224,6 +307,10 @@ class _TaskScreenState extends State<TaskScreen> {
                                       builder: (context) =>
                                           OpenPatrollingScreen(
                                             empId: widget.empId,
+                                            empEmail: widget.EmpEmail,
+                                            BranchId: widget.Branchid,
+                                            CompanyID: widget.cmpId,
+                                            empName: widget.EmpName,
                                           )));
                             },
                           ),
