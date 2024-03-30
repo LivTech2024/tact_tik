@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -96,7 +97,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         _employeeId = EmployeeId;
         var shiftInfo =
-        await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
@@ -115,9 +116,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
           // Format DateTime as String
           String patrolTimeString =
-          DateFormat('hh:mm a').format(patrolDateTime);
+              DateFormat('hh:mm a').format(patrolDateTime);
           String patrolDateString =
-          DateFormat('yyyy-MM-dd').format(patrolDateTime);
+              DateFormat('yyyy-MM-dd').format(patrolDateTime);
           print('Shift Info: ${patrolInfo.data()}');
 
           setState(() {
@@ -134,7 +135,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
         }
         if (shiftInfo != null) {
           String shiftDateStr =
-          DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
           String shiftEndTimeStr = shiftInfo['ShiftEndTime'];
           String shiftStartTimeStr = shiftInfo['ShiftStartTime'];
           String shiftLocation = shiftInfo['ShiftAddress'];
@@ -167,14 +168,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -263,68 +258,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
               ScreenIndex == 0
                   ? SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    return AnimatedContainer(
-                      decoration: BoxDecoration(
-                        color: color19,
-                        borderRadius: BorderRadius.circular(12),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return HomeScreenUserCard();
+                        },
+                        childCount: 10
                       ),
-                      margin: EdgeInsets.only(bottom: 10),
-                      width: double.maxFinite,
-                      duration: Duration(microseconds: 500),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 50,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20),
-
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                              'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                                          filterQuality:
-                                          FilterQuality.high,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    InterBold(
-                                      text: 'Harold M. Madrigal',
-                                      letterSpacing: -.3,
-                                      color: color1,
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  height: 16,
-                                  width: 16,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.green,
-                                  ),
-                                )
-                              ],
-                            ),
-
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              )
+                    )
                   : SizedBox(),
             ],
           ),
@@ -333,6 +273,122 @@ class _SHomeScreenState extends State<SHomeScreen> {
     );
   }
 }
+
+
+class HomeScreenUserCard extends StatefulWidget {
+  HomeScreenUserCard({super.key});
+
+  @override
+  State<HomeScreenUserCard> createState() => _HomeScreenUserCardState();
+}
+
+class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          _expanded = !_expanded;
+        });
+      },
+      child: Container(
+        constraints: _expanded
+            ? BoxConstraints(minHeight: 140)
+            : BoxConstraints(minHeight: 60),
+        decoration: BoxDecoration(
+          color: color19,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        margin: EdgeInsets.only(bottom: 10),
+        width: double.maxFinite,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 48,
+              padding:
+              EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
+                            filterQuality:
+                            FilterQuality.high,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      InterBold(
+                        text: 'Harold M. Madrigal',
+                        letterSpacing: -.3,
+                        color: color1,
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 16,
+                    width: 16,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            if (_expanded)
+              Column(
+                children: [
+                  Divider(),
+                  SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        RoundedButton(
+                          icon: Icons.add,
+                        ),
+                        RoundedButton(
+                          icon: Icons.add_card,
+                        ),
+                        RoundedButton(
+                          useSVG: true,
+                          svg:
+                          'assets/images/lab_profile.svg',
+                        ),
+                        RoundedButton(
+                          useSVG: true,
+                          svg:
+                          'assets/images/device_reset.svg',
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 /*SliverToBoxAdapter(
                       child: ListView(

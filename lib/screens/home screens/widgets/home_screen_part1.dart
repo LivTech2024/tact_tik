@@ -17,14 +17,14 @@ import '../../../utils/utils.dart';
 
 class HomeScreenPart1 extends StatelessWidget {
   final String userName;
-  // final String employeeImg;
   final VoidCallback drawerOnClicked;
-  HomeScreenPart1(
-      {Key? key,
-      required this.userName,
-      // required this.employeeImg,
-      required this.drawerOnClicked})
-      : super(key: key);
+
+  HomeScreenPart1({
+    Key? key,
+    required this.userName,
+    // required this.employeeImg,
+    required this.drawerOnClicked,
+  }) : super(key: key);
 
   bool isUnread = true;
 
@@ -32,7 +32,6 @@ class HomeScreenPart1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
