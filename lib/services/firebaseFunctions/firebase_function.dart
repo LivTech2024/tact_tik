@@ -508,5 +508,25 @@ class FireStoreService {
     });
     await newDocRef.update({"ReportId": newDocRef.id});
   }
+
   //Patrol is Completed
+  Future<void> ScheduleShift() async {
+    try {
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+
+      //Modify the PatrolModifiedAt
+      final shiftRef = shifts.doc().set({});
+
+      String status = "completed";
+      // Create a new document in the "Log" subcollection
+      // PatrolModifiedAt
+      print('Shift start logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift start: $e');
+      // Handle the error as needed
+    }
+  }
 }
+
+// Schedule and assign 
