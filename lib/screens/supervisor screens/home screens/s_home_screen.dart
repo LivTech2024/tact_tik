@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 
 import '../../../common/sizes.dart';
@@ -201,11 +203,19 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
               ScreenIndex == 0
                   ? SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        return HomeScreenUserCard(
-                          guardsInfo: _guardsInfo,
-                        );
-                      }, childCount: _guardsInfo.length),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          if (index < _guardsInfo.length) {
+                            return HomeScreenUserCard(
+                              guardsInfo: _guardsInfo[index],
+                              usercompanyId: _CompanyId,
+                            );
+                          } else {
+                            return SizedBox(); // Return an empty SizedBox for index out of bounds
+                          }
+                        },
+                        childCount: _guardsInfo.length,
+                      ),
                     )
                   : SizedBox(),
             ],
@@ -217,9 +227,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
 }
 
 class HomeScreenUserCard extends StatefulWidget {
-  final List<DocumentSnapshot<Object?>> guardsInfo;
-
-  HomeScreenUserCard({Key? key, required this.guardsInfo}) : super(key: key);
+  final DocumentSnapshot<Object?> guardsInfo;
+  final String usercompanyId;
+  HomeScreenUserCard(
+      {Key? key, required this.guardsInfo, required this.usercompanyId})
+      : super(key: key);
 
   @override
   State<HomeScreenUserCard> createState() => _HomeScreenUserCardState();
@@ -230,105 +242,6 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.guardsInfo.length,
-      itemBuilder: (context, index) {
-        final guard = widget.guardsInfo[index];
-        bool cardExpanded = false;
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              _expanded = !_expanded;
-            });
-          },
-          child: Container(
-            constraints: _expanded
-                ? BoxConstraints(minHeight: 140)
-                : BoxConstraints(minHeight: 60),
-            decoration: BoxDecoration(
-              color: color19,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: EdgeInsets.only(bottom: 10),
-            width: double.maxFinite,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 48,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    widget.guardsInfo[0]['EmployeeImg']),
-                                filterQuality: FilterQuality.high,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          InterBold(
-                            text: widget.guardsInfo[0]['EmployeeName'],
-                            letterSpacing: -.3,
-                            color: color1,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 16,
-                        width: 16,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                if (_expanded)
-                  Column(
-                    children: [
-                      Divider(),
-                      SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RoundedButton(
-                              icon: Icons.add,
-                            ),
-                            RoundedButton(
-                              icon: Icons.add_card,
-                            ),
-                            RoundedButton(
-                              useSVG: true,
-                              svg: 'assets/images/lab_profile.svg',
-                            ),
-                            RoundedButton(
-                              useSVG: true,
-                              svg: 'assets/images/device_reset.svg',
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -362,8 +275,8 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage(
-                                widget.guardsInfo[0]['EmployeeImg']),
+                            image:
+                                NetworkImage(widget.guardsInfo['EmployeeImg']),
                             filterQuality: FilterQuality.high,
                             fit: BoxFit.cover,
                           ),
@@ -371,7 +284,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       ),
                       SizedBox(width: 20),
                       InterBold(
-                        text: widget.guardsInfo[0]['EmployeeName'],
+                        text: widget.guardsInfo['EmployeeName'],
                         letterSpacing: -.3,
                         color: color1,
                       ),
@@ -398,8 +311,25 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RoundedButton(
-                          icon: Icons.add,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreateSheduleScreen(
+                                        GuardId:
+                                            widget.guardsInfo["EmployeeId"],
+                                        GuardName:
+                                            widget.guardsInfo["EmployeeName"],
+                                        GuardImg:
+                                            widget.guardsInfo["EmployeeImg"],
+                                        CompanyId: widget.usercompanyId,
+                                      )),
+                            );
+                          },
+                          child: RoundedButton(
+                            icon: Icons.add,
+                          ),
                         ),
                         RoundedButton(
                           icon: Icons.add_card,
@@ -423,141 +353,3 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
     );
   }
 }
-
-
-
-/*SliverToBoxAdapter(
-                      child: ListView(
-                        physics: NeverScrollableScrollPhysics(),
-                        
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InterBold(
-                                text: 'All Guards',
-                                fontsize: 18,
-                                color: color1,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    size: 24,
-                                    color: Primarycolor,
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  InterBold(
-                                    text: 'Add',
-                                    fontsize: 14,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return AnimatedContainer(
-                                  duration: Duration(microseconds: 500),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            InterBold(
-                                              text: 'Harold M. Madrigal',
-                                              letterSpacing: -.3,
-                                              color: color1,
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              height: 16,
-                                              width: 16,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.green,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    )*/
-
-/*AnimatedContainer(
-                                  duration: Duration(microseconds: 500),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            InterBold(
-                                              text: 'Harold M. Madrigal',
-                                              letterSpacing: -.3,
-                                              color: color1,
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              height: 16,
-                                              width: 16,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.green,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-
-                                      )
-                                    ],
-                                  ),
-                                )*/
