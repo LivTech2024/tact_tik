@@ -80,7 +80,7 @@ class HomeScreenPart1 extends StatelessWidget {
                             right: 0,
                             child: Container(
                               padding: EdgeInsets.all(width / width4 / 2),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color:
                                     Primarycolor, // Background color for unread indicator
