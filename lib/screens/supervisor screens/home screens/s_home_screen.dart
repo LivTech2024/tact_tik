@@ -22,14 +22,25 @@ class SHomeScreen extends StatefulWidget {
 
 class _SHomeScreenState extends State<SHomeScreen> {
   List IconColors = [Primarycolor, color4, color4, color4];
-  late final List<DocumentSnapshot<Object?>> _guardsInfo;
-
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final Auth auth = Auth();
   String _userName = "";
+  String _ShiftDate = "";
+  String _ShiftLocation = "";
+  String _ShiftName = "";
+  String _ShiftEndTime = "";
+  String _ShiftStartTime = "";
+  double _shiftLatitude = 0;
+  double _shiftLongitude = 0;
   String _employeeId = "";
-  String _CompanyId = "";
+  String _shiftId = "";
+  String _patrolArea = "";
+  String _patrolTime = "";
+  String _patrolDate = "";
+  String _patrolCompanyId = "";
+  String _patrolLocationName = "";
+  int _patrolRestrictedRadius = 0;
 
   void ChangeScreenIndex(int index) {
     setState(() {
@@ -84,25 +95,71 @@ class _SHomeScreenState extends State<SHomeScreen> {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
-        String CompanyId = userInfo['EmployeeCompanyId'];
-        var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(CompanyId);
+        _employeeId = EmployeeId;
+        var shiftInfo =
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print(doc.data());
-        }
         setState(() {
           _userName = userName;
-          _employeeId = EmployeeId;
-          _CompanyId = CompanyId;
         });
-        if (guardsInfo != null) {
-          _guardsInfo = guardsInfo;
-        } else {
-          print('GUards Info: ${guardsInfo}');
-        }
         print('User Info: ${userInfo.data()}');
+        if (patrolInfo != null) {
+          String PatrolArea = patrolInfo['PatrolArea'];
+          String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
+          // Bool PatrolKeepGuardInRadiusOfLocation = patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+          String PatrolLocationName = patrolInfo['PatrolLocationName'];
+          String PatrolName = patrolInfo['PatrolName'];
+          int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
+          Timestamp PatrolTime = patrolInfo['PatrolTime'];
+          DateTime patrolDateTime = PatrolTime.toDate();
+
+          // Format DateTime as String
+          String patrolTimeString =
+              DateFormat('hh:mm a').format(patrolDateTime);
+          String patrolDateString =
+              DateFormat('yyyy-MM-dd').format(patrolDateTime);
+          print('Shift Info: ${patrolInfo.data()}');
+
+          setState(() {
+            _patrolArea = PatrolArea;
+            _patrolCompanyId = PatrolCompanyId;
+            // _patrolKeepGuardInRadiusOfLocation =
+            //     PatrolKeepGuardInRadiusOfLocation;
+            _patrolLocationName = PatrolLocationName;
+            _patrolRestrictedRadius = PatrolRestrictedRadius;
+            _patrolTime = patrolTimeString;
+            _patrolDate = patrolDateString;
+            // issShift = false;
+          });
+        }
+        if (shiftInfo != null) {
+          String shiftDateStr =
+              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+          String shiftEndTimeStr = shiftInfo['ShiftEndTime'];
+          String shiftStartTimeStr = shiftInfo['ShiftStartTime'];
+          String shiftLocation = shiftInfo['ShiftAddress'];
+          String shiftName = shiftInfo['ShiftName'];
+          String shiftId = shiftInfo['ShiftId'];
+          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'];
+          double shiftLocationLatitude = shiftGeolocation.latitude;
+          double shiftLocationLongitude = shiftGeolocation.longitude;
+          // String employeeImg = shiftInfo['EmployeeImg'];
+          setState(() {
+            _ShiftDate = shiftDateStr;
+            _ShiftEndTime = shiftEndTimeStr;
+            _ShiftStartTime = shiftStartTimeStr;
+            _ShiftLocation = shiftLocation;
+            _ShiftName = shiftName;
+            _shiftLatitude = shiftLocationLatitude;
+            _shiftLongitude = shiftLocationLongitude;
+            _shiftId = shiftId;
+            // _employeeImg = employeeImg;
+          });
+          print('Shift Info: ${shiftInfo.data()}');
+        } else {
+          print('Shift info not found');
+        }
       } else {
         print('User info not found');
       }
@@ -201,11 +258,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
               ScreenIndex == 0
                   ? SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        return HomeScreenUserCard(
-                          guardsInfo: _guardsInfo,
-                        );
-                      }, childCount: _guardsInfo.length),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return HomeScreenUserCard();
+                        },
+                        childCount: 10
+                      ),
                     )
                   : SizedBox(),
             ],
@@ -216,10 +274,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
   }
 }
 
-class HomeScreenUserCard extends StatefulWidget {
-  final List<DocumentSnapshot<Object?>> guardsInfo;
 
-  HomeScreenUserCard({Key? key, required this.guardsInfo}) : super(key: key);
+class HomeScreenUserCard extends StatefulWidget {
+  HomeScreenUserCard({super.key});
 
   @override
   State<HomeScreenUserCard> createState() => _HomeScreenUserCardState();
@@ -230,156 +287,63 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.guardsInfo.length,
-      itemBuilder: (context, index) {
-        final guard = widget.guardsInfo[index];
-        bool cardExpanded = false;
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              _expanded = !_expanded;
-            });
-          },
-          child: Container(
-            constraints: _expanded
-                ? BoxConstraints(minHeight: 140)
-                : BoxConstraints(minHeight: 60),
-            decoration: BoxDecoration(
-              color: color19,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: EdgeInsets.only(bottom: 10),
-            width: double.maxFinite,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 48,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    widget.guardsInfo[0]['EmployeeImg']),
-                                filterQuality: FilterQuality.high,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          InterBold(
-                            text: widget.guardsInfo[0]['EmployeeName'],
-                            letterSpacing: -.3,
-                            color: color1,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 16,
-                        width: 16,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                if (_expanded)
-                  Column(
-                    children: [
-                      Divider(),
-                      SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RoundedButton(
-                              icon: Icons.add,
-                            ),
-                            RoundedButton(
-                              icon: Icons.add_card,
-                            ),
-                            RoundedButton(
-                              useSVG: true,
-                              svg: 'assets/images/lab_profile.svg',
-                            ),
-                            RoundedButton(
-                              useSVG: true,
-                              svg: 'assets/images/device_reset.svg',
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return GestureDetector(
-      onTap: () {
+      onTap: (){
         setState(() {
           _expanded = !_expanded;
         });
       },
       child: Container(
         constraints: _expanded
-            ? BoxConstraints(minHeight: 140)
-            : BoxConstraints(minHeight: 60),
+            ? BoxConstraints(minHeight: height / height140)
+            : BoxConstraints(minHeight: height / height60),
         decoration: BoxDecoration(
           color: color19,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(width / width12),
         ),
-        margin: EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: height / height10),
         width: double.maxFinite,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 48,
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              height: height / height48,
+              padding:
+              EdgeInsets.symmetric(horizontal: width / width20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       Container(
-                        height: 50,
-                        width: 50,
+                        height: height / height50,
+                        width: width / width50,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: NetworkImage(
-                                widget.guardsInfo[0]['EmployeeImg']),
-                            filterQuality: FilterQuality.high,
+                                'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
+                            filterQuality:
+                            FilterQuality.high,
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      SizedBox(width: 20),
+                      SizedBox(width: width / width20),
                       InterBold(
-                        text: widget.guardsInfo[0]['EmployeeName'],
+                        text: 'Harold M. Madrigal',
                         letterSpacing: -.3,
                         color: color1,
                       ),
                     ],
                   ),
                   Container(
-                    height: 16,
-                    width: 16,
+                    height: height / height16,
+                    width: width / width16,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.green,
@@ -392,11 +356,13 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
               Column(
                 children: [
                   Divider(),
-                  SizedBox(height: 5),
+                  SizedBox(height: height / height5),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width / width20),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
                       children: [
                         RoundedButton(
                           icon: Icons.add,
@@ -406,11 +372,13 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         ),
                         RoundedButton(
                           useSVG: true,
-                          svg: 'assets/images/lab_profile.svg',
+                          svg:
+                          'assets/images/lab_profile.svg',
                         ),
                         RoundedButton(
                           useSVG: true,
-                          svg: 'assets/images/device_reset.svg',
+                          svg:
+                          'assets/images/device_reset.svg',
                         ),
                       ],
                     ),
@@ -423,7 +391,6 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
     );
   }
 }
-
 
 
 /*SliverToBoxAdapter(

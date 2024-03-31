@@ -25,9 +25,11 @@ class Movie {
   final String patrolTime;
   final String patrolDate;
   final String patrolId;
+
   // final String PatrolAssignedGuardId;
   // final List<String, dynamic> guardIds;
   final List<Map<String, dynamic>> guardIds;
+
   // final String Empid;
   final String BranchId;
   final String CompanyID;
@@ -44,6 +46,7 @@ class Movie {
   final List<Map<String, dynamic>> checkpoints;
 
   int get totalCheckpoints => checkpoints.length;
+
   int get completedCheckpoints => checkpoints
       .where((checkpoint) => checkpoint['CheckPointStatus'] == 'checked')
       .length;
@@ -78,6 +81,7 @@ class OpenPatrollingScreen extends StatefulWidget {
   final String empEmail;
   final String BranchId;
   final String CompanyID;
+
   const OpenPatrollingScreen(
       {super.key,
       required this.empId,
@@ -105,6 +109,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
   }
 
   UserLocationChecker locationChecker = UserLocationChecker();
+
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
 
@@ -274,10 +279,11 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
                   (BuildContext context, int index) {
                     if (movies.isEmpty) {
                       return Center(
-                          child: Text(
-                        'No Patrols available',
-                        style: TextStyle(color: Colors.white, fontSize: 30),
-                      ));
+                        child: Text(
+                          'No Patrols available',
+                          style: TextStyle(color: Colors.white, fontSize: 30),
+                        ),
+                      );
                     }
 
                     final category = movies[index].patrolLocationName;
@@ -320,6 +326,7 @@ class MovieCategory extends StatefulWidget {
 }
 
 UserLocationChecker locationChecker = UserLocationChecker();
+
 void showCustomDialog(BuildContext context, String title, String content) {
   showDialog(
     context: context,
@@ -464,7 +471,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                               text: 'START',
                               backgroundcolor: colorGreen,
                               color: Colors.green,
-                              borderRadius: 10,
+                              borderRadius: width / width10,
                               onPressed: () async {
                                 if (movie.keepINRaius == true) {
                                   Timer.periodic(Duration(seconds: 60),

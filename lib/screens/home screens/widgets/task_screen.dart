@@ -95,6 +95,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
   UserLocationChecker locationChecker = UserLocationChecker();
+
   @override
   void initState() {
     super.initState();
@@ -104,6 +105,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Future<void> _refreshData() async {
     // Fetch patrol data from Firestore (assuming your logic exists)
   }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -194,7 +196,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(
-                                          right: width / width12),
+                                        right: width / width12,
+                                      ),
                                       height: height / height74,
                                       width: width / width70,
                                       decoration: BoxDecoration(
@@ -234,6 +237,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                           InterMedium(
                                             text: 'Location',
                                             color: Colors.white,
+                                            fontsize: width / width16,
                                           ),
                                         ],
                                       ),
@@ -294,7 +298,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       height: height / height10,
                     ),
                     issShift
-                        ? SizedBox()
+                        ? const SizedBox()
                         : Button1(
                             text: 'Check Patrolling',
                             fontsize: width / width18,

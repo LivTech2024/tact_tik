@@ -30,6 +30,7 @@ class CreateSheduleScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
+              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -49,10 +50,10 @@ class CreateSheduleScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: 65,
+                height: height / height65,
                 width: double.maxFinite,
                 color: color24,
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: height / height16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -63,7 +64,7 @@ class CreateSheduleScreen extends StatelessWidget {
                             child: InterBold(
                               text: 'Shift',
                               color: colors[0],
-                              fontsize: 18,
+                              fontsize: width / width18,
                             ),
                           ),
                         ),
@@ -79,7 +80,7 @@ class CreateSheduleScreen extends StatelessWidget {
                             child: InterBold(
                               text: 'Patrol',
                               color: colors[1],
-                              fontsize: 18,
+                              fontsize: width / width18,
                             ),
                           ),
                         ),
@@ -88,9 +89,9 @@ class CreateSheduleScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: height / height30),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -99,20 +100,20 @@ class CreateSheduleScreen extends StatelessWidget {
                       children: [
                         InterBold(
                           text: 'Select Guards',
-                          fontsize: 16,
+                          fontsize: width / width16,
                           color: color1,
                         ),
                         TextButton(
                           onPressed: () {},
                           child: InterBold(
                             text: 'view all',
-                            fontsize: 14,
+                            fontsize: width / width14,
                             color: color1,
                           ),
                         )
                       ],
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: height / height24),
                     Container(
                       height: height / height64,
                       padding:
@@ -172,14 +173,14 @@ class CreateSheduleScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 20),
-                      height: 80,
+                      margin: EdgeInsets.only(top: height / height20),
+                      height: height / height80,
                       width: double.maxFinite,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
+                            padding: EdgeInsets.only(right: height / height20),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -187,8 +188,8 @@ class CreateSheduleScreen extends StatelessWidget {
                                   clipBehavior: Clip.none,
                                   children: [
                                     Container(
-                                      height: 50,
-                                      width: 50,
+                                      height: height / height26,
+                                      width: width / width50,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
@@ -202,23 +203,23 @@ class CreateSheduleScreen extends StatelessWidget {
                                       top: -1,
                                       right: 2,
                                       child: Container(
-                                        height: 15,
-                                        width: 15,
+                                        height: height / height26,
+                                        width: width / width26,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: color1
                                         ),
                                         child: Center(
-                                          child: Icon(Icons.close , size: 8,color: Secondarycolor,),
+                                          child: Icon(Icons.close , size: width / width8,color: Secondarycolor,),
                                         ),
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(height: 8),
+                                SizedBox(height: height / height8),
                                 InterBold(
                                   text: 'Leslie',
-                                  fontsize: 14,
+                                  fontsize: width / width14,
                                   color: color26,
                                 )
                               ],
@@ -228,14 +229,14 @@ class CreateSheduleScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: height / height30,
                     ),
                     InterBold(
                       text: 'Set Details',
-                      fontsize: 16,
+                      fontsize: width / width16,
                       color: color1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: height / height10),
                     SetDetailsWidget(
                       hintText: 'Clint Name',
                       icon: Icons.account_circle_outlined,
@@ -254,14 +255,14 @@ class CreateSheduleScreen extends StatelessWidget {
                       icon: Icons.access_time_rounded,
                       featureIndex: 2,
                     ),
-                    SizedBox(height: 120),
+                    SizedBox(height: height / height120),
                     Button1(
                       text: 'Done',
                       onPressed: () {},
                       backgroundcolor: Primarycolor,
                       color: color22,
-                      borderRadius: 10,
-                      fontsize: 18,
+                      borderRadius: width / width10,
+                      fontsize: width / width18,
                     ),
                   ],
                 ),

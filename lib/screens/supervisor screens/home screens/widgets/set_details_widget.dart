@@ -76,29 +76,29 @@ class SetDetailsWidget extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Container(
-      height: 50,
+      height: height / height50,
       width: double.maxFinite,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(width / width10),
         border: Border(
           bottom: BorderSide(
             color: color19,
           ),
         ),
       ),
-      margin: EdgeInsets.only(top: 10),
+      margin: EdgeInsets.only(top: height / height10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             children: [
-              SizedBox(width: 10),
+              SizedBox(width: width / width10),
               Icon(
                 icon,
-                size: 24,
+                size: width / width24,
                 color: color1,
               ),
-              SizedBox(width: 10),
+              SizedBox(width: width / width10),
               featureIndex == 0
                   ? Expanded(
                       child: TextField(

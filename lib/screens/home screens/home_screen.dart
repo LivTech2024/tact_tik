@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               DrawerHeader(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(width / width15),
                   color: Primarycolor, // Background color for the drawer header
                 ),
                 child: Text(

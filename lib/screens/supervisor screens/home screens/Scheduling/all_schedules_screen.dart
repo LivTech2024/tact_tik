@@ -33,6 +33,7 @@ class AllSchedulesScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
+              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -48,20 +49,20 @@ class AllSchedulesScreen extends StatelessWidget {
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.only(left: 30.0, right: 30.0),
+          padding: EdgeInsets.only(left: width / width30, right: width / width30),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 30),
+                    SizedBox(height: height / height30),
                     InterBold(
                       text: 'Search',
-                      fontsize: 20,
+                      fontsize: width / width20,
                       color: Colors.white,
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: height / height24),
                     Container(
                       height: height / height64,
                       padding:
@@ -120,13 +121,13 @@ class AllSchedulesScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: height / height30),
                     InterBold(
                       text: 'Today',
-                      fontsize: 20,
+                      fontsize: width / width20,
                       color: Colors.white,
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: height / height24),
                   ],
                 ),
               ),
@@ -135,32 +136,34 @@ class AllSchedulesScreen extends StatelessWidget {
                   (context, index) {
                     return Container(
                       height: 160,
-                      margin: EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: height / height10),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
                         color: Primarycolor,
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(width / width14),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: height / height20),
                       child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                height: 30,
-                                width: 4,
+                                height: height / height30,
+                                width: width / width4,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
+                                    topRight: Radius.circular(width / width10),
+                                    bottomRight:
+                                        Radius.circular(width / width10),
                                   ),
                                   color: color22,
                                 ),
                               ),
-                              SizedBox(width: 14),
+                              SizedBox(width: width / width14),
                               SizedBox(
-                                width: 190,
+                                width: width / width190,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -168,41 +171,43 @@ class AllSchedulesScreen extends StatelessWidget {
                                     InterSemibold(
                                       text: 'Marvin McKinney',
                                       color: color22,
+                                      fontsize: width / width14,
                                     ),
-                                    SizedBox(height: 5),
+                                    SizedBox(height: height / height5),
                                     InterRegular(
                                       text:
                                           '2972 Westheimer Rd.  Anaa xyz road 123 building',
                                       maxLines: 1,
+                                      fontsize: width / width14,
                                     ),
                                   ],
                                 ),
                               )
                             ],
                           ),
-                          SizedBox(height: 18),
+                          SizedBox(height: height / height28),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(left: 18.0, right: 24),
+                            padding: EdgeInsets.only(
+                                left: width / width18, right: width / width24),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: 100,
+                                  width: width / width100,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Guards',
-                                        fontsize: 14,
+                                        fontsize: width / width14,
                                         color: color22,
                                       ),
-                                      SizedBox(height: 12),
+                                      SizedBox(height: height / height12),
                                       Wrap(
-                                        spacing:
-                                            -5.0, // spacing between avatars
+                                        spacing: -5.0,
+                                        // spacing between avatars
                                         // runSpacing: 8.0, // spacing between rows
                                         children: [
                                           for (int i = 0;
@@ -212,17 +217,17 @@ class AllSchedulesScreen extends StatelessWidget {
                                                       : members.length);
                                               i++)
                                             CircleAvatar(
-                                              radius: 10.0,
+                                              radius: width / width10,
                                               backgroundImage: NetworkImage(members[
                                                   i]), // Assuming members list contains URLs of profile photos
                                             ),
                                           if (members.length > 3)
                                             CircleAvatar(
-                                              radius: 10.0,
+                                              radius: width / width10,
                                               backgroundColor: color23,
                                               child: InterMedium(
                                                 text: '+${members.length - 3}',
-                                                fontsize: 12,
+                                                fontsize: width / width12,
                                               ),
                                             ),
                                         ],
@@ -233,7 +238,7 @@ class AllSchedulesScreen extends StatelessWidget {
 
                                 // shift time and date
                                 SizedBox(
-                                  width: 200,
+                                  width: width / width200,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -241,9 +246,9 @@ class AllSchedulesScreen extends StatelessWidget {
                                       InterRegular(
                                         text: 'Shift',
                                         color: color22,
-                                        fontsize: 14,
+                                        fontsize: width / width14,
                                       ),
-                                      SizedBox(height: 5),
+                                      SizedBox(height: height / height5),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -251,23 +256,24 @@ class AllSchedulesScreen extends StatelessWidget {
                                           Row(
                                             children: [
                                               SizedBox(
-                                                height: 14,
-                                                width: 14,
+                                                height: height / height14,
+                                                width: width / width14,
                                                 child: SvgPicture.asset(
                                                     'assets/images/calendar_line.svg'),
                                               ),
-                                              SizedBox(width: 6),
+                                              SizedBox(width: width / width6),
                                               InterMedium(
                                                 text: '12:00pm - 12:30am',
-                                                fontsize: 14,
+                                                fontsize: width / width14,
                                               ),
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 20,
-                                            width: 20,
+                                            height: height / height20,
+                                            width: width / width20,
                                             child: SvgPicture.asset(
-                                                'assets/images/edit_square.svg'),
+                                              'assets/images/edit_square.svg',
+                                            ),
                                           )
                                         ],
                                       )

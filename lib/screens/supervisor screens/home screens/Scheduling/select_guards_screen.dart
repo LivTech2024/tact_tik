@@ -22,6 +22,7 @@ class SelectGuardsScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
+              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -38,27 +39,27 @@ class SelectGuardsScreen extends StatelessWidget {
         ),
         body: ListView.builder(itemBuilder: (context, index) {
           return Container(
-            height: 60,
+            height: height / height60,
             decoration: BoxDecoration(
               color: color19,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(width / width12),
             ),
-            margin: EdgeInsets.only(bottom: 10),
+            margin: EdgeInsets.only(bottom: height / height10),
             width: double.maxFinite,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  height: 48,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  height: height / height48,
+                  padding: EdgeInsets.symmetric(horizontal: width / width20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Container(
-                            height: 50,
-                            width: 50,
+                            height: height / height50,
+                            width: width / width50,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -69,7 +70,7 @@ class SelectGuardsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(width: 20),
+                          SizedBox(width: width / width20),
                           InterBold(
                             text: 'Harold M. Madrigal',
                             letterSpacing: -.3,
@@ -78,9 +79,9 @@ class SelectGuardsScreen extends StatelessWidget {
                         ],
                       ),
                       Container(
-                        height: 16,
-                        width: 16,
-                        decoration: BoxDecoration(
+                        height: height / height16,
+                        width: width / width16,
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.green,
                         ),
