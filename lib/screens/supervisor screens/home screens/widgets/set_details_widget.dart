@@ -16,59 +16,27 @@ extension DateTimeExtension on DateTime {
   bool isBeforeTimeOfDay(TimeOfDay timeOfDay) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final targetTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final targetTime = DateTime(
+        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
     return this.isBefore(targetTime) || this.isBefore(today);
   }
 }
+
 class SetDetailsWidget extends StatelessWidget {
   const SetDetailsWidget({
     super.key,
     required this.hintText,
     required this.icon,
-    this.featureIndex = 0,
+    this.controller,
+    this.useTextField = false,
+    required this.onTap,
   });
 
   final String hintText;
   final IconData icon;
-  final int featureIndex;
-
-
-
-
-  Future<List<TimeOfDay>?> showCustomTimePicker(BuildContext context) async {
-    List<TimeOfDay> selectedTimes = [];
-    bool validTimesSelected = false;
-
-    do {
-      TimeOfDay? selectedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.dark(
-                primary: Primarycolor, // Change primary color to red
-                secondary: Primarycolor,
-              ),
-            ),
-            child: child!,
-          );
-        },
-      );
-
-      if (selectedTime != null) {
-        selectedTimes.add(selectedTime);
-        if (selectedTimes.length == 2) {
-          validTimesSelected = true;
-        }
-      } else {
-        // If user cancels, exit the loop
-        validTimesSelected = true;
-      }
-    } while (!validTimesSelected);
-
-    return selectedTimes.isNotEmpty ? selectedTimes : null;
-  }
+  final bool useTextField;
+  final TextEditingController? controller;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +67,10 @@ class SetDetailsWidget extends StatelessWidget {
                 color: color1,
               ),
               SizedBox(width: width / width10),
-              featureIndex == 0
+              useTextField
                   ? Expanded(
                       child: TextField(
+                        controller: controller,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: width / width18,
@@ -126,45 +95,14 @@ class SetDetailsWidget extends StatelessWidget {
                         cursorColor: Primarycolor,
                       ),
                     )
-                  : featureIndex == 1
-                      ? GestureDetector(
-                          onTap: () async {
-                            DateTime? datePicked = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime(2023),
-                              lastDate: DateTime(3000),
-                              builder: (BuildContext context, Widget? child) {
-                                return Theme(
-                                  data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.dark(
-                                      primary:
-                                          Primarycolor, // Change primary color to red
-                                    ),
-                                  ),
-                                  child: child!,
-                                );
-                              },
-                            );
-                          },
-                          child: InterMedium(
-                            text: hintText,
-                            fontsize: width / width18,
-                            color: color25,
-                          ),
-                        )
-                      : featureIndex == 2
-                          ? GestureDetector(
-                              onTap: () async {
-                                final selectedTime = await showCustomTimePicker(context);
-                                print('Selected times: $selectedTime');
-                              },
-                              child: InterMedium(
-                                text: hintText,
-                                fontsize: width / width18,
-                                color: color25,
-                              ),
-                            )
-                          : SizedBox(),
+                  : GestureDetector(
+                      onTap: onTap,
+                      child: InterMedium(
+                        text: hintText,
+                        fontsize: width / width18,
+                        color: color25,
+                      ),
+                    ),
             ],
           )
         ],

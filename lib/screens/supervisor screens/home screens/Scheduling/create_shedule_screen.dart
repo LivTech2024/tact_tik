@@ -17,6 +17,76 @@ class CreateSheduleScreen extends StatelessWidget {
 
   List colors = [Primarycolor, color25];
 
+  TextEditingController _clientcontrller = TextEditingController();
+  TextEditingController _locationcontrller = TextEditingController();
+
+  DateTime? selectedDate;
+  List<TimeOfDay>? selectedTime;
+
+  void _selectDate(BuildContext context) async {
+    final DateTime? datePicked =  await showDatePicker(
+      context: context,
+      firstDate: DateTime(2023),
+      lastDate: DateTime(3000),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary:
+              Primarycolor, // Change primary color to red
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (datePicked != null) {
+      selectedDate = datePicked;
+    }
+  }
+
+  Future<List<TimeOfDay>?> showCustomTimePicker(BuildContext context) async {
+    List<TimeOfDay> selectedTimes = [];
+    bool validTimesSelected = false;
+
+    do {
+      TimeOfDay? selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: Primarycolor, // Change primary color to red
+                secondary: Primarycolor,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (selectedTime != null) {
+        selectedTimes.add(selectedTime);
+        if (selectedTimes.length == 2) {
+          validTimesSelected = true;
+        }
+      } else {
+        // If user cancels, exit the loop
+        validTimesSelected = true;
+      }
+    } while (!validTimesSelected);
+
+    return selectedTimes.isNotEmpty ? selectedTimes : null;
+  }
+
+  void _selectTime(BuildContext context) async {
+    final timePicked = await showCustomTimePicker(context);;
+    if (timePicked != null) {
+      selectedTime = timePicked;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -193,10 +263,9 @@ class CreateSheduleScreen extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
-                                          image: NetworkImage(
-                                              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg'),
-                                          fit: BoxFit.fitWidth
-                                        ),
+                                            image: NetworkImage(
+                                                'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg'),
+                                            fit: BoxFit.fitWidth),
                                       ),
                                     ),
                                     Positioned(
@@ -206,11 +275,14 @@ class CreateSheduleScreen extends StatelessWidget {
                                         height: height / height26,
                                         width: width / width26,
                                         decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: color1
-                                        ),
+                                            shape: BoxShape.circle,
+                                            color: color1),
                                         child: Center(
-                                          child: Icon(Icons.close , size: width / width8,color: Secondarycolor,),
+                                          child: Icon(
+                                            Icons.close,
+                                            size: width / width8,
+                                            color: Secondarycolor,
+                                          ),
                                         ),
                                       ),
                                     )
@@ -238,22 +310,27 @@ class CreateSheduleScreen extends StatelessWidget {
                     ),
                     SizedBox(height: height / height10),
                     SetDetailsWidget(
-                      hintText: 'Clint Name',
+                      useTextField: true,
+                      hintText: 'client Name',
                       icon: Icons.account_circle_outlined,
+                      controller: _clientcontrller,
+                      onTap: () {},
                     ),
                     SetDetailsWidget(
+                      useTextField: true,
                       hintText: 'Location',
                       icon: Icons.location_on,
+                      onTap: () {},
                     ),
                     SetDetailsWidget(
                       hintText: 'Date',
                       icon: Icons.date_range,
-                      featureIndex: 1,
+                      onTap: () => _selectDate(context),
                     ),
                     SetDetailsWidget(
                       hintText: 'Time',
                       icon: Icons.access_time_rounded,
-                      featureIndex: 2,
+                      onTap: () => _selectTime(context),
                     ),
                     SizedBox(height: height / height120),
                     Button1(
