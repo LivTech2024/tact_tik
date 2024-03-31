@@ -51,10 +51,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   TextEditingController _clientcontrller = TextEditingController();
-  TextEditingController _locationcontrller = TextEditingController();
 
   DateTime? selectedDate;
   List<TimeOfDay>? selectedTime;
+  TextEditingController _locationController = TextEditingController();
+  List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
 
   void _selectDate(BuildContext context) async {
     final DateTime? datePicked = await showDatePicker(
@@ -74,6 +75,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
     if (datePicked != null) {
       selectedDate = datePicked;
+      print(datePicked);
     }
   }
 
@@ -117,6 +119,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     ;
     if (timePicked != null) {
       selectedTime = timePicked;
+      print(selectedTime);
     }
   }
 
@@ -252,8 +255,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: width / width18,
-                                color:
-                                    Colors.white, // Change text color to white
+                                color: Colors.white,
                               ),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -308,13 +310,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           return Padding(
                             padding: EdgeInsets.only(right: height / height20),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Stack(
                                   clipBehavior: Clip.none,
                                   children: [
                                     Container(
-                                      height: height / height26,
+                                      height: height / height50,
                                       width: width / width50,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
@@ -324,11 +326,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ),
                                     ),
                                     Positioned(
-                                      top: -1,
-                                      right: 2,
+                                      top: -4,
+                                      right: -5,
                                       child: Container(
-                                        height: 15,
-                                        width: 15,
+                                        height: height / height20,
+                                        width: width / width20,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: color1),
@@ -371,11 +373,67 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       controller: _clientcontrller,
                       onTap: () {},
                     ),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Location',
-                      icon: Icons.location_on,
-                      onTap: () {},
+                    Container(
+                      height: height / height60,
+                      width: double.maxFinite,
+                      decoration: BoxDecoration(
+                        // color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(width / width10),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: color19,
+                          ),
+                        ),
+                      ),
+                      margin: EdgeInsets.only(top: height / height10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: width / width10),
+                          Icon(
+                            Icons.location_on,
+                            size: width / width24,
+                            color: color1,
+                          ),
+                          SizedBox(width: width / width10),
+                          Expanded(
+                            child: TextField(
+                              onChanged: (value) {
+                                List<String> filteredSuggestions =
+                                    locationSuggestions
+                                        .where((location) => location
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase()))
+                                        .toList();
+                              },
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w300,
+                                fontSize: width / width18,
+                                color:
+                                    Colors.white, // Change text color to white
+                              ),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(width / width10),
+                                  ),
+                                ),
+                                focusedBorder: InputBorder.none,
+                                hintStyle: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: width / width18,
+                                  color: color2, // Change text color to white
+                                ),
+                                hintText: 'Location',
+                                contentPadding:
+                                    EdgeInsets.zero, // Remove padding
+                              ),
+                              cursorColor: Primarycolor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SetDetailsWidget(
                       hintText: 'Date',

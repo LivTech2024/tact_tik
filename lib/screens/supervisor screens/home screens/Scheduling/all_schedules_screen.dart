@@ -7,6 +7,7 @@ import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import '../../../../common/sizes.dart';
 import '../../../../utils/colors.dart';
+import 'create_shedule_screen.dart';
 
 class AllSchedulesScreen extends StatelessWidget {
   AllSchedulesScreen({super.key});
@@ -17,6 +18,10 @@ class AllSchedulesScreen extends StatelessWidget {
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
   ];
+
+  void NavigateScreen(BuildContext context, Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +53,26 @@ class AllSchedulesScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
+        floatingActionButton: Align(
+          alignment: Alignment.bottomCenter,
+          child: FloatingActionButton(
+            shape: const CircleBorder(),
+            backgroundColor: Primarycolor,
+            onPressed: () => NavigateScreen(
+                context,
+                CreateSheduleScreen(
+                  GuardId: '',
+                  GuardName: '',
+                  GuardImg: '',
+                  CompanyId: '',
+                )),
+            child: Icon(Icons.add),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
-          padding: EdgeInsets.only(left: width / width30, right: width / width30),
+          padding:
+              EdgeInsets.only(left: width / width30, right: width / width30),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(

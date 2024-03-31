@@ -15,6 +15,7 @@ import '../../feature screens/petroling/patrolling.dart';
 import '../../get started/getstarted_screen.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
+import 'Scheduling/all_schedules_screen.dart';
 
 class SHomeScreen extends StatefulWidget {
   const SHomeScreen({super.key});
@@ -30,6 +31,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final Auth auth = Auth();
   String _userName = "";
+  String _userImg = "";
+
   String _ShiftDate = "";
   String _ShiftLocation = "";
   String _ShiftName = "";
@@ -68,6 +71,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[1] = color4;
           IconColors[2] = Primarycolor;
           IconColors[3] = color4;
+          NavigateScreen(AllSchedulesScreen());
           break;
         case 3:
           IconColors[0] = color4;
@@ -77,6 +81,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
           break;
       }
     });
+  }
+
+  void NavigateScreen(Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
   @override
@@ -94,12 +102,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
+        String Imgurl = userInfo['EmployeeImg'];
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(CompanyId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
           _userName = userName;
+          _userImg = Imgurl;
           _guardsInfo = guardsInfo;
         });
         print('User Info: ${userInfo.data()}');

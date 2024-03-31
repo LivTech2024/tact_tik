@@ -940,6 +940,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                           .updatePatrolsCounter(
                                               widget.EmployeeId,
                                               movie.patrolId);
+                                      print("Updated");
                                       //Update the counter and reset the checkpoint status
                                     } else {
                                       showDialog(

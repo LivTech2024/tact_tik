@@ -411,6 +411,7 @@ class FireStoreService {
     final querySnapshot = await patrols
         .where("PatrolAssignedGuardsId", arrayContains: empId)
         .where("PatrolCurrentStatus", isEqualTo: "started")
+        .where("PatrolId", isEqualTo: patrolId)
         .orderBy("PatrolTime", descending: false)
         .get();
 

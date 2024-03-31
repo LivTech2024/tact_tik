@@ -17,11 +17,14 @@ import '../../../utils/utils.dart';
 
 class HomeScreenPart1 extends StatelessWidget {
   final String userName;
+  // final String employeeImg;
+  // final String url;
   final VoidCallback drawerOnClicked;
 
   HomeScreenPart1({
     Key? key,
     required this.userName,
+    // required this.url,
     // required this.employeeImg,
     required this.drawerOnClicked,
   }) : super(key: key);
