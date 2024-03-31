@@ -6,16 +6,49 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../widgets/set_details_widget.dart';
 
-class CreateSheduleScreen extends StatelessWidget {
-  CreateSheduleScreen({super.key});
+class CreateSheduleScreen extends StatefulWidget {
+  final String GuardId;
+  final String GuardName;
+  final String GuardImg;
+  final String CompanyId;
 
+  CreateSheduleScreen(
+      {super.key,
+      required this.GuardId,
+      required this.GuardName,
+      required this.GuardImg,
+      required this.CompanyId});
+
+  @override
+  State<CreateSheduleScreen> createState() => _CreateSheduleScreenState();
+}
+
+class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List colors = [Primarycolor, color25];
+  List selectedGuards = [];
+  String compId = "";
+  @override
+  void initState() {
+    super.initState();
+    // Add the initial guard data to selectedGuards if not already present
+    if (!selectedGuards.any((guard) => guard['GuardId'] == widget.GuardId)) {
+      setState(() {
+        selectedGuards.add({
+          'GuardId': widget.GuardId,
+          'GuardName': widget.GuardName,
+          'GuardImg': widget.GuardImg
+        });
+        compId = widget.CompanyId;
+      });
+    }
+  }
 
   TextEditingController _clientcontrller = TextEditingController();
 
@@ -41,7 +74,10 @@ class CreateSheduleScreen extends StatelessWidget {
       },
     );
     if (datePicked != null) {
-      selectedDate = datePicked;
+      setState(() {
+        selectedDate = datePicked;
+      });
+      print(selectedDate);
     }
   }
 
@@ -82,9 +118,11 @@ class CreateSheduleScreen extends StatelessWidget {
 
   void _selectTime(BuildContext context) async {
     final timePicked = await showCustomTimePicker(context);
-    ;
     if (timePicked != null) {
-      selectedTime = timePicked;
+      setState(() {
+        selectedTime = timePicked;
+      });
+      print(selectedTime);
     }
   }
 
@@ -175,7 +213,26 @@ class CreateSheduleScreen extends StatelessWidget {
                           color: color1,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SelectGuardsScreen(
+                                          companyId: widget.CompanyId,
+                                        ))).then((value) => {
+                                  if (value != null)
+                                    {
+                                      print("Value: ${value}"),
+                                      setState(() {
+                                        selectedGuards.add({
+                                          'GuardId': value['id'],
+                                          'GuardName': value['name'],
+                                          'GuardImg': value['url']
+                                        });
+                                      }),
+                                    }
+                                });
+                          },
                           child: InterBold(
                             text: 'view all',
                             fontsize: width / width14,
@@ -248,7 +305,11 @@ class CreateSheduleScreen extends StatelessWidget {
                       width: double.maxFinite,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
+                        itemCount: selectedGuards.length,
                         itemBuilder: (context, index) {
+                          String guardId = selectedGuards[index]['GuardId'];
+                          String guardName = selectedGuards[index]['GuardName'];
+                          String guardImg = selectedGuards[index]['GuardImg'];
                           return Padding(
                             padding: EdgeInsets.only(right: height / height20),
                             child: Column(
@@ -263,25 +324,31 @@ class CreateSheduleScreen extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
-                                            image: NetworkImage(
-                                                'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg'),
+                                            image: NetworkImage(guardImg),
                                             fit: BoxFit.fitWidth),
                                       ),
                                     ),
                                     Positioned(
                                       top: -4,
                                       right: -5,
-                                      child: Container(
-                                        height: height / height20,
-                                        width: width / width20,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: color1),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.close,
-                                            size: width / width8,
-                                            color: Secondarycolor,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedGuards.removeAt(index);
+                                          });
+                                        },
+                                        child: Container(
+                                          height: height / height20,
+                                          width: width / width20,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: color1),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.close,
+                                              size: 8,
+                                              color: Secondarycolor,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -290,7 +357,7 @@ class CreateSheduleScreen extends StatelessWidget {
                                 ),
                                 SizedBox(height: height / height8),
                                 InterBold(
-                                  text: 'Leslie',
+                                  text: guardName,
                                   fontsize: width / width14,
                                   color: color26,
                                 )
@@ -352,7 +419,8 @@ class CreateSheduleScreen extends StatelessWidget {
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: width / width18,
-                                color: Colors.white, // Change text color to white
+                                color:
+                                    Colors.white, // Change text color to white
                               ),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -368,7 +436,8 @@ class CreateSheduleScreen extends StatelessWidget {
                                   color: color2, // Change text color to white
                                 ),
                                 hintText: 'Location',
-                                contentPadding: EdgeInsets.zero, // Remove padding
+                                contentPadding:
+                                    EdgeInsets.zero, // Remove padding
                               ),
                               cursorColor: Primarycolor,
                             ),
@@ -377,19 +446,25 @@ class CreateSheduleScreen extends StatelessWidget {
                       ),
                     ),
                     SetDetailsWidget(
-                      hintText: 'Date',
+                      hintText: selectedDate == null
+                          ? 'Date'
+                          : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
                       icon: Icons.date_range,
                       onTap: () => _selectDate(context),
-                    ),
+                  ),
                     SetDetailsWidget(
-                      hintText: 'Time',
+                      hintText: selectedTime == null
+                          ? 'Time'
+                          : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
                       icon: Icons.access_time_rounded,
                       onTap: () => _selectTime(context),
                     ),
-                    SizedBox(height: height / height120),
+                    SizedBox(height: height / height90),
                     Button1(
                       text: 'Done',
-                      onPressed: () {},
+                      onPressed: () {
+                        print(selectedGuards);
+                      },
                       backgroundcolor: Primarycolor,
                       color: color22,
                       borderRadius: width / width10,

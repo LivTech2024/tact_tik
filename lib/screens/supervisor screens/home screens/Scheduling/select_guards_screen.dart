@@ -40,7 +40,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(CompanyId);
+            await fireStoreService.getGuardForSupervisor(widget.companyId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         for (var doc in guardsInfo) {
@@ -52,7 +52,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
         //   _CompanyId = CompanyId;
         // });
         if (guardsInfo != null) {
-          _guardsInfo = guardsInfo;
+          setState(() {
+            _guardsInfo = guardsInfo;
+          });
         } else {
           print('GUards Info: ${guardsInfo}');
         }

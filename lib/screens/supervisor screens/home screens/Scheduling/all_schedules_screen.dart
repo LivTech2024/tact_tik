@@ -1,16 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+
 import '../../../../common/sizes.dart';
 import '../../../../utils/colors.dart';
 import 'create_shedule_screen.dart';
 
 class AllSchedulesScreen extends StatelessWidget {
-  AllSchedulesScreen({super.key});
+  String BranchId;
+  AllSchedulesScreen({
+    Key? key,
+    required this.BranchId,
+  }) : super(key: key);
 
   final List<String> members = [
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
@@ -20,7 +29,19 @@ class AllSchedulesScreen extends StatelessWidget {
   ];
 
   void NavigateScreen(BuildContext context, Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+  }
+
+  List<DocumentSnapshot<Object?>> _guardsInfo = [];
+  void _getShift() async {
+    FireStoreService fireStoreService = FireStoreService();
+    var userInfo = await fireStoreService.getAllSchedules(BranchId);
+    print("All Schedules: ${userInfo}");
+  }
+
+  void initState() {
+    _getShift();
   }
 
   @override
@@ -42,7 +63,8 @@ class AllSchedulesScreen extends StatelessWidget {
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SHomeScreen()));
             },
           ),
           title: InterRegular(
@@ -58,14 +80,15 @@ class AllSchedulesScreen extends StatelessWidget {
           child: FloatingActionButton(
             shape: const CircleBorder(),
             backgroundColor: Primarycolor,
-            onPressed: () => NavigateScreen(
-                context,
-                CreateSheduleScreen(
-                  GuardId: '',
-                  GuardName: '',
-                  GuardImg: '',
-                  CompanyId: '',
-                )),
+            onPressed: () => {},
+            // NavigateScreen(
+            //     context,
+            //     CreateSheduleScreen(
+            //       GuardId: '',
+            //       GuardName: '',
+            //       GuardImg: '',
+            //       CompanyId: '',
+            //     )),
             child: Icon(Icons.add),
           ),
         ),
@@ -208,7 +231,7 @@ class AllSchedulesScreen extends StatelessWidget {
                               )
                             ],
                           ),
-                          SizedBox(height: height / height28),
+                          SizedBox(height: height / height10),
                           Padding(
                             padding: EdgeInsets.only(
                                 left: width / width18, right: width / width24),

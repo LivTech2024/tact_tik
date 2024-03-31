@@ -511,12 +511,24 @@ class FireStoreService {
   }
 
   //Patrol is Completed
-  Future<void> ScheduleShift() async {
+  Future<void> ScheduleShift(
+    List guards,
+    String Address,
+    String CompanyBranchId,
+    String CompanyId,
+    String Date,
+    String Time,
+    String LocationCordinated,
+    String LocationName,
+  ) async {
     try {
       // Get the current system time
       DateTime currentTime = DateTime.now();
-
-      //Modify the PatrolModifiedAt
+      String CreatedAt;
+      String CurrentStatus = "pending";
+      //TimeStamp
+      // String Position;
+      //Modify the PatrolModified At
       final shiftRef = shifts.doc().set({});
 
       String status = "completed";
@@ -528,6 +540,24 @@ class FireStoreService {
       // Handle the error as needed
     }
   }
+  //Get all the Schedules
+
+  Future<List<DocumentSnapshot>> getAllSchedules(String empId) async {
+    if (empId.isEmpty) {
+      return [];
+    }
+
+    final querySnapshot = await shifts
+        .where("ShiftCompanyId", arrayContains: empId)
+        // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
+        .orderBy("ShiftModifiedAt", descending: false)
+        .get();
+
+    print("Retrieved documents:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    return querySnapshot.docs;
+  }
 }
 
-// Schedule and assign 
+// Schedule and assign
