@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/colors.dart';
 
@@ -14,14 +16,19 @@ class LoginScreen extends StatelessWidget {
 
   TextEditingController _emailcontrller = TextEditingController();
   TextEditingController _passwordcontrller = TextEditingController();
-
+  final LocalStorage storage = LocalStorage('currentUserEmail');
   Future<void> signInEmailPassword(BuildContext context) async {
     try {
-      await Auth().signInWithEmailAndPassword(
+      var data = await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text);
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      String role = storage.getItem("Role");
+      if (role == "SUPERVISOR") {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      }
     } on FirebaseAuthException catch (e) {
       print(e);
     }
@@ -36,7 +43,8 @@ class LoginScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Secondarycolor,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height20),
+          padding: EdgeInsets.symmetric(
+              horizontal: width / width30, vertical: height / height20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

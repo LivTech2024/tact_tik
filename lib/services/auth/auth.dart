@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/riverpod/auth_provider.dart';
 
 class CustomUser {
   final String email;
@@ -40,11 +41,14 @@ class Auth {
         DocumentSnapshot<Map<String, dynamic>> userDoc = query.docs.first;
         String storedPassword = userDoc['EmployeePassword'];
         String EmployeID = userDoc['EmployeeId'];
+        String role = userDoc['EmployeeRole'];
         // Verify password
         if (storedPassword == password) {
           // Passwords match, set the current user
           storage.setItem("CurrentUser", email);
           storage.setItem("CurrentEmployeeId", EmployeID);
+          storage.setItem("Role", role);
+          await FirebaseAuth.instance.authStateChanges();
         } else {
           // Password incorrect
           throw 'Password incorrect';

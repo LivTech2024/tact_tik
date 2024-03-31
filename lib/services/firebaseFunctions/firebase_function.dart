@@ -328,7 +328,7 @@ class FireStoreService {
 //Break
 //Stop push the timer also change the shiftStatus as done
 //get Gaurds for Supervisor Screen
-  String CompanyId = "aSvLtwII6Cjs7uCISBRR"; //sample Company Id
+  // String CompanyId = "aSvLtwII6Cjs7uCISBRR"; //sample Company Id
   Future<List<DocumentSnapshot>> getGuardForSupervisor(String CompanyId) async {
     if (CompanyId.isEmpty) {
       return [];
@@ -336,6 +336,7 @@ class FireStoreService {
 
     final querySnapshot = await userInfo
         .where("EmployeeCompanyId", isEqualTo: CompanyId)
+        .where("EmployeeRole", isEqualTo: "GUARD")
         .orderBy("EmployeeModifiedAt", descending: false)
         .get();
     // Log all retrieved documents

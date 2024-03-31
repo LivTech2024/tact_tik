@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 
 import '../supervisor screens/home screens/Scheduling/all_schedules_screen.dart';
@@ -23,7 +24,7 @@ class AppView extends ConsumerWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: AllSchedulesScreen(),
+      home: AuthChecker(),
     );
   }
 }

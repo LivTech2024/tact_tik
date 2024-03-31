@@ -180,7 +180,7 @@ class AllSchedulesScreen extends StatelessWidget {
                               )
                             ],
                           ),
-                          SizedBox(height: 28),
+                          SizedBox(height: 18),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 18.0, right: 24),
@@ -201,19 +201,29 @@ class AllSchedulesScreen extends StatelessWidget {
                                       ),
                                       SizedBox(height: 12),
                                       Wrap(
-                                        spacing: -5.0, // spacing between avatars
+                                        spacing:
+                                            -5.0, // spacing between avatars
                                         // runSpacing: 8.0, // spacing between rows
                                         children: [
-                                          for (int i = 0; i < (members.length > 3 ? 3 : members.length); i++)
+                                          for (int i = 0;
+                                              i <
+                                                  (members.length > 3
+                                                      ? 3
+                                                      : members.length);
+                                              i++)
                                             CircleAvatar(
                                               radius: 10.0,
-                                              backgroundImage: NetworkImage(members[i]), // Assuming members list contains URLs of profile photos
+                                              backgroundImage: NetworkImage(members[
+                                                  i]), // Assuming members list contains URLs of profile photos
                                             ),
                                           if (members.length > 3)
                                             CircleAvatar(
                                               radius: 10.0,
                                               backgroundColor: color23,
-                                              child: InterMedium(text: '+${members.length - 3}',fontsize: 12,),
+                                              child: InterMedium(
+                                                text: '+${members.length - 3}',
+                                                fontsize: 12,
+                                              ),
                                             ),
                                         ],
                                       ),
