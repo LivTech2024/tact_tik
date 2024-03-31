@@ -129,7 +129,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: width / width98,
+                    width: width / width80,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -156,7 +156,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     ),
                   ),
                   SizedBox(
-                    width: width / width98,
+                    width: width / width80,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -184,7 +184,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(right: 12),
+                    margin: EdgeInsets.only(right: width / width12),
                     height: height / height74,
                     width: width / width70,
                     decoration: BoxDecoration(

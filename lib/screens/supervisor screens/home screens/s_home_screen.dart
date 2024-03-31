@@ -26,12 +26,20 @@ class SHomeScreen extends StatefulWidget {
 class _SHomeScreenState extends State<SHomeScreen> {
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
-  late final List<DocumentSnapshot<Object?>> _guardsInfo;
+  List<DocumentSnapshot<Object?>> _guardsInfo = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final Auth auth = Auth();
   String _userName = "";
+  String _ShiftDate = "";
+  String _ShiftLocation = "";
+  String _ShiftName = "";
+  String _ShiftEndTime = "";
+  String _ShiftStartTime = "";
+  double _shiftLatitude = 0;
+  double _shiftLongitude = 0;
   String _employeeId = "";
   String _CompanyId = "";
+
   void ChangeScreenIndex(int index) {
     setState(() {
       ScreenIndex = index;
@@ -85,25 +93,16 @@ class _SHomeScreenState extends State<SHomeScreen> {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
-        _employeeId = EmployeeId;
         String CompanyId = userInfo['EmployeeCompanyId'];
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(CompanyId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print(doc.data());
-        }
         setState(() {
           _userName = userName;
-          _employeeId = EmployeeId;
-          _CompanyId = CompanyId;
-        });
-        if (guardsInfo != null) {
           _guardsInfo = guardsInfo;
-        } else {
-          print('Shift info not found');
-        }
+        });
+        print('User Info: ${userInfo.data()}');
       } else {
         print('User info not found');
       }
@@ -355,7 +354,6 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
     );
   }
 }
-
 
 
 /*SliverToBoxAdapter(

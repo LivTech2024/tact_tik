@@ -144,13 +144,6 @@ class HomeScreenPart1 extends StatelessWidget {
                         ),
                       ),
                       focusedBorder: InputBorder.none,
-                      // filled: true,
-                      // fillColor: Colors.transparent, // Change background color to red
-                      /*labelStyle: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 18,
-                        color: Colors.white, // Change text color to white
-                      ),*/
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
                         fontSize: width / width18,
@@ -180,7 +173,7 @@ class HomeScreenPart1 extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: height / height10),
           // Container(
           //   height: 64,
           //   padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -233,7 +226,7 @@ class HomeScreenPart1 extends StatelessWidget {
           //         ),
           //         child: Center(
           //           child: Icon(
-          //             Icons.search,
+          //           Icons.search,
           //             size: 20,
           //             color: Colors.black,
           //           ),

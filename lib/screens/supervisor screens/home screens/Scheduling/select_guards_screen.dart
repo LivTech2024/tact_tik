@@ -40,7 +40,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
+            await fireStoreService.getGuardForSupervisor(CompanyId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         for (var doc in guardsInfo) {
@@ -69,40 +69,41 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
     final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.only(left: width / width20),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: InterRegular(
-            text: 'Guards',
-            fontsize: width / width18,
+        child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppBarcolor,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
             color: Colors.white,
-            letterSpacing: -.3,
+            size: width / width24,
           ),
-          centerTitle: true,
+          padding: EdgeInsets.only(left: width / width20),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        body: RefreshIndicator(
-          onRefresh: _refreshdata,
-          child: ListView.builder(
-              itemCount: _guardsInfo.length,
-              itemBuilder: (context, index) {
-                var guardInfo = _guardsInfo[index];
-                String name = guardInfo['EmployeeName'];
-                String id = guardInfo['EmployeeId'];
-                String url = guardInfo['EmployeeImg'];
+        title: InterRegular(
+          text: 'Guards',
+          fontsize: width / width18,
+          color: Colors.white,
+          letterSpacing: -.3,
+        ),
+        centerTitle: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: _refreshdata,
+        child: ListView.builder(
+            itemCount: _guardsInfo.length,
+            itemBuilder: (context, index) {
+              var guardInfo = _guardsInfo[index];
+              String name = guardInfo['EmployeeName'];
+              String id = guardInfo['EmployeeId'];
+              String url = guardInfo['EmployeeImg'];
 
-                print(guardInfo);
-                return GestureDetector(
+              print(guardInfo);
+              return GestureDetector(
                   onTap: () {
                     Navigator.pop(context, {
                       'name': name,
@@ -162,11 +163,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                         ),
                       ],
                     ),
-                  ),
-                );
-              }),
-        ),
+                  ));
+            }),
       ),
-    );
+    ));
   }
 }

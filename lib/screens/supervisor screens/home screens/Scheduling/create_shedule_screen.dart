@@ -50,6 +50,76 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     }
   }
 
+  TextEditingController _clientcontrller = TextEditingController();
+  TextEditingController _locationcontrller = TextEditingController();
+
+  DateTime? selectedDate;
+  List<TimeOfDay>? selectedTime;
+
+  void _selectDate(BuildContext context) async {
+    final DateTime? datePicked = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2023),
+      lastDate: DateTime(3000),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Primarycolor, // Change primary color to red
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (datePicked != null) {
+      selectedDate = datePicked;
+    }
+  }
+
+  Future<List<TimeOfDay>?> showCustomTimePicker(BuildContext context) async {
+    List<TimeOfDay> selectedTimes = [];
+    bool validTimesSelected = false;
+
+    do {
+      TimeOfDay? selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: Primarycolor, // Change primary color to red
+                secondary: Primarycolor,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (selectedTime != null) {
+        selectedTimes.add(selectedTime);
+        if (selectedTimes.length == 2) {
+          validTimesSelected = true;
+        }
+      } else {
+        // If user cancels, exit the loop
+        validTimesSelected = true;
+      }
+    } while (!validTimesSelected);
+
+    return selectedTimes.isNotEmpty ? selectedTimes : null;
+  }
+
+  void _selectTime(BuildContext context) async {
+    final timePicked = await showCustomTimePicker(context);
+    ;
+    if (timePicked != null) {
+      selectedTime = timePicked;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -63,6 +133,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
+              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -82,10 +153,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
           child: Column(
             children: [
               Container(
-                height: 65,
+                height: height / height65,
                 width: double.maxFinite,
                 color: color24,
-                padding: EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: height / height16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -96,7 +167,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             child: InterBold(
                               text: 'Shift',
                               color: colors[0],
-                              fontsize: 18,
+                              fontsize: width / width18,
                             ),
                           ),
                         ),
@@ -112,7 +183,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             child: InterBold(
                               text: 'Patrol',
                               color: colors[1],
-                              fontsize: 18,
+                              fontsize: width / width18,
                             ),
                           ),
                         ),
@@ -121,9 +192,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: height / height30),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -132,7 +203,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       children: [
                         InterBold(
                           text: 'Select Guards',
-                          fontsize: 16,
+                          fontsize: width / width16,
                           color: color1,
                         ),
                         TextButton(
@@ -158,13 +229,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           },
                           child: InterBold(
                             text: 'view all',
-                            fontsize: 14,
+                            fontsize: width / width14,
                             color: color1,
                           ),
                         )
                       ],
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: height / height24),
                     Container(
                       height: height / height64,
                       padding:
@@ -224,7 +295,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       ),
                     ),
                     Container(
-                      // Guards
                       margin: EdgeInsets.only(top: 20),
                       height: 80,
                       width: double.maxFinite,
@@ -236,7 +306,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           String guardName = selectedGuards[index]['GuardName'];
                           String guardImg = selectedGuards[index]['GuardImg'];
                           return Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
+                            padding: EdgeInsets.only(right: height / height20),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -244,8 +314,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   clipBehavior: Clip.none,
                                   children: [
                                     Container(
-                                      height: 50,
-                                      width: 50,
+                                      height: height / height26,
+                                      width: width / width50,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
@@ -256,31 +326,24 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     Positioned(
                                       top: -1,
                                       right: 2,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedGuards.removeAt(index);
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 15,
-                                          width: 15,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: color1),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 8,
-                                              color: Secondarycolor,
-                                            ),
+                                      child: Container(
+                                        height: 15,
+                                        width: 15,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: color1),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.close,
+                                            size: 8,
+                                            color: Secondarycolor,
                                           ),
                                         ),
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(height: 8),
+                                SizedBox(height: height / height8),
                                 InterBold(
                                   text: guardName,
                                   fontsize: 14,
@@ -293,40 +356,45 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: height / height30,
                     ),
                     InterBold(
                       text: 'Set Details',
-                      fontsize: 16,
+                      fontsize: width / width16,
                       color: color1,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: height / height10),
                     SetDetailsWidget(
-                      hintText: 'Clint Name',
+                      useTextField: true,
+                      hintText: 'client Name',
                       icon: Icons.account_circle_outlined,
+                      controller: _clientcontrller,
+                      onTap: () {},
                     ),
                     SetDetailsWidget(
+                      useTextField: true,
                       hintText: 'Location',
                       icon: Icons.location_on,
+                      onTap: () {},
                     ),
                     SetDetailsWidget(
                       hintText: 'Date',
                       icon: Icons.date_range,
-                      featureIndex: 1,
+                      onTap: () => _selectDate(context),
                     ),
                     SetDetailsWidget(
                       hintText: 'Time',
                       icon: Icons.access_time_rounded,
-                      featureIndex: 2,
+                      onTap: () => _selectTime(context),
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 120),
                     Button1(
                       text: 'Done',
                       onPressed: () {},
                       backgroundcolor: Primarycolor,
                       color: color22,
-                      borderRadius: 10,
-                      fontsize: 18,
+                      borderRadius: width / width10,
+                      fontsize: width / width18,
                     ),
                   ],
                 ),
