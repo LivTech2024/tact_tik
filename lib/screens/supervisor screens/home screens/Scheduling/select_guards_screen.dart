@@ -1,61 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class SelectGuardsScreen extends StatefulWidget {
-  final String companyId;
-  const SelectGuardsScreen({super.key, required this.companyId});
-
-  @override
-  State<SelectGuardsScreen> createState() => _SelectGuardsScreenState();
-}
-
-class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
-  @override
-  void initState() {
-    // selectedEvent = events[selectedDay] ?? [];
-    _getUserInfo();
-    // checkLocation();
-    super.initState();
-  }
-
-  late final List<DocumentSnapshot<Object?>> _guardsInfo;
-  void _getUserInfo() async {
-    FireStoreService fireStoreService = FireStoreService();
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    if (mounted) {
-      if (userInfo != null) {
-        String userName = userInfo['EmployeeName'];
-        String EmployeeId = userInfo['EmployeeId'];
-        String CompanyId = userInfo['EmployeeCompanyId'];
-        var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
-        var patrolInfo = await fireStoreService
-            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print("All Guards : ${doc.data()}");
-        }
-        // setState(() {
-        //   _userName = userName;
-        //   _employeeId = EmployeeId;
-        //   _CompanyId = CompanyId;
-        // });
-        if (guardsInfo != null) {
-          _guardsInfo = guardsInfo;
-        } else {
-          print('GUards Info: ${guardsInfo}');
-        }
-        print('User Info: ${userInfo.data()}');
-      } else {
-        print('User info not found');
-      }
-    }
-  }
+class SelectGuardsScreen extends StatelessWidget {
+  const SelectGuardsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,66 +36,62 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
           ),
           centerTitle: true,
         ),
-        body: ListView.builder(
-            itemCount: _guardsInfo.length,
-            itemBuilder: (context, index) {
-              var guardName = _guardsInfo[index].data;
-              print(guardName);
-              return Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: color19,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                margin: EdgeInsets.only(bottom: 10),
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 48,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: ListView.builder(itemBuilder: (context, index) {
+          return Container(
+            height: 60,
+            decoration: BoxDecoration(
+              color: color19,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: EdgeInsets.only(bottom: 10),
+            width: double.maxFinite,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 48,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                                    filterQuality: FilterQuality.high,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              InterBold(
-                                text: 'Harold M. Madrigal',
-                                letterSpacing: -.3,
-                                color: color1,
-                              ),
-                            ],
-                          ),
                           Container(
-                            height: 16,
-                            width: 16,
+                            height: 50,
+                            width: 50,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.green,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                    'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          )
+                          ),
+                          SizedBox(width: 20),
+                          InterBold(
+                            text: 'Harold M. Madrigal',
+                            letterSpacing: -.3,
+                            color: color1,
+                          ),
                         ],
                       ),
-                    ),
-                  ],
+                      Container(
+                        height: 16,
+                        width: 16,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              );
-            }),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

@@ -16,12 +16,10 @@ extension DateTimeExtension on DateTime {
   bool isBeforeTimeOfDay(TimeOfDay timeOfDay) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final targetTime = DateTime(
-        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final targetTime = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
     return this.isBefore(targetTime) || this.isBefore(today);
   }
 }
-
 class SetDetailsWidget extends StatelessWidget {
   const SetDetailsWidget({
     super.key,
@@ -33,6 +31,9 @@ class SetDetailsWidget extends StatelessWidget {
   final String hintText;
   final IconData icon;
   final int featureIndex;
+
+
+
 
   Future<List<TimeOfDay>?> showCustomTimePicker(BuildContext context) async {
     List<TimeOfDay> selectedTimes = [];
@@ -154,8 +155,7 @@ class SetDetailsWidget extends StatelessWidget {
                       : featureIndex == 2
                           ? GestureDetector(
                               onTap: () async {
-                                final selectedTime =
-                                    await showCustomTimePicker(context);
+                                final selectedTime = await showCustomTimePicker(context);
                                 print('Selected times: $selectedTime');
                               },
                               child: InterMedium(

@@ -6,49 +6,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../widgets/set_details_widget.dart';
 
-class CreateSheduleScreen extends StatefulWidget {
-  final String GuardId;
-  final String GuardName;
-  final String GuardImg;
-  final String CompanyId;
+class CreateSheduleScreen extends StatelessWidget {
+  CreateSheduleScreen({super.key});
 
-  CreateSheduleScreen(
-      {super.key,
-      required this.GuardId,
-      required this.GuardName,
-      required this.GuardImg,
-      required this.CompanyId});
-
-  @override
-  State<CreateSheduleScreen> createState() => _CreateSheduleScreenState();
-}
-
-class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List colors = [Primarycolor, color25];
-  List selectedGuards = [];
-  String compId = "";
-  @override
-  void initState() {
-    super.initState();
-    // Add the initial guard data to selectedGuards if not already present
-    if (!selectedGuards.any((guard) => guard['GuardId'] == widget.GuardId)) {
-      setState(() {
-        selectedGuards.add({
-          'GuardId': widget.GuardId,
-          'GuardName': widget.GuardName,
-          'GuardImg': widget.GuardImg
-        });
-        compId = widget.CompanyId;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,14 +103,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           color: color1,
                         ),
                         TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SelectGuardsScreen(
-                                          companyId: widget.CompanyId,
-                                        )));
-                          },
+                          onPressed: () {},
                           child: InterBold(
                             text: 'view all',
                             fontsize: 14,
@@ -212,17 +172,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       ),
                     ),
                     Container(
-                      // Guards
                       margin: EdgeInsets.only(top: 20),
                       height: 80,
                       width: double.maxFinite,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: selectedGuards.length,
                         itemBuilder: (context, index) {
-                          String guardId = selectedGuards[index]['GuardId'];
-                          String guardName = selectedGuards[index]['GuardName'];
-                          String guardImg = selectedGuards[index]['GuardImg'];
                           return Padding(
                             padding: const EdgeInsets.only(right: 20.0),
                             child: Column(
@@ -237,32 +192,24 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
-                                            image: NetworkImage(guardImg),
-                                            fit: BoxFit.fitWidth),
+                                          image: NetworkImage(
+                                              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg'),
+                                          fit: BoxFit.fitWidth
+                                        ),
                                       ),
                                     ),
                                     Positioned(
                                       top: -1,
                                       right: 2,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedGuards.removeAt(index);
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 15,
-                                          width: 15,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: color1),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 8,
-                                              color: Secondarycolor,
-                                            ),
-                                          ),
+                                      child: Container(
+                                        height: 15,
+                                        width: 15,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: color1
+                                        ),
+                                        child: Center(
+                                          child: Icon(Icons.close , size: 8,color: Secondarycolor,),
                                         ),
                                       ),
                                     )
@@ -270,7 +217,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 ),
                                 SizedBox(height: 8),
                                 InterBold(
-                                  text: guardName,
+                                  text: 'Leslie',
                                   fontsize: 14,
                                   color: color26,
                                 )
@@ -307,7 +254,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       icon: Icons.access_time_rounded,
                       featureIndex: 2,
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 120),
                     Button1(
                       text: 'Done',
                       onPressed: () {},
