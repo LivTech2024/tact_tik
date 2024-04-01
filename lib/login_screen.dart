@@ -11,12 +11,20 @@ import 'package:tact_tik/utils/colors.dart';
 import 'common/sizes.dart';
 import 'common/widgets/button1.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailcontrller = TextEditingController();
+
   TextEditingController _passwordcontrller = TextEditingController();
+
   final LocalStorage storage = LocalStorage('currentUserEmail');
+
   Future<void> signInEmailPassword(BuildContext context) async {
     try {
       var data = await Auth().signInWithEmailAndPassword(
@@ -33,6 +41,8 @@ class LoginScreen extends StatelessWidget {
       print(e);
     }
   }
+
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +65,7 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.white, // Change text color to white
                 ),
                 controller: _emailcontrller,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   hintText: 'Enter your email',
                 ),
@@ -69,19 +79,32 @@ class LoginScreen extends StatelessWidget {
                   color: Colors.white, // Change text color to white
                 ),
                 controller: _passwordcontrller,
-                obscureText: true,
+                obscureText: _obscureText,
                 decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    icon: Icon(
+                      _obscureText ? Icons.visibility_off:Icons.visibility,
+                      size: width / width24,
+                      color: color6,
+                    ),
+                  ),
                   labelText: 'Password',
                   hintText: 'Enter your password',
                 ),
               ),
-              SizedBox(height: height / height10),
+              SizedBox(height: height / height20),
               Button1(
                 backgroundcolor: Primarycolor,
                 text: 'Login',
                 color: color1,
+                borderRadius: 10,
                 onPressed: () => signInEmailPassword(context),
-              )
+              ),
             ],
           ),
         ),

@@ -290,26 +290,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         ),
         SizedBox(height: height / height10),
         clickedIn
-            ? Container(
+            ? Button1(
                 height: height / height65,
-                color: WidgetColor,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isPaused = !isPaused;
-                    });
-                    if (isPaused) {
-                      fireStoreService.BreakShiftLog(widget.EmployeId);
-                    } else {
-                      fireStoreService.ResumeShiftLog(widget.EmployeId);
-                    }
-                  },
-                  child: InterBold(
-                    text: isPaused ? 'Resume' : 'Break',
-                    fontsize: width / width18,
-                    color: Primarycolor,
-                  ),
-                ),
+                text: isPaused ? 'Resume' : 'Break',
+                fontsize: width / width18,
+                color: color5,
+                backgroundcolor: WidgetColor,
+                onPressed: () {
+                  setState(() {
+                    isPaused = !isPaused;
+                  });
+                  if (isPaused) {
+                    fireStoreService.BreakShiftLog(widget.EmployeId);
+                  } else {
+                    fireStoreService.ResumeShiftLog(widget.EmployeId);
+                  }
+                },
               )
             : const SizedBox(),
         issShift
@@ -325,3 +321,36 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     );
   }
 }
+
+/*Container(
+                  height: height / height65,
+                  color: WidgetColor,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPaused = !isPaused;
+                      });
+                      if (isPaused) {
+                        fireStoreService.BreakShiftLog(widget.EmployeId);
+                      } else {
+                        fireStoreService.ResumeShiftLog(widget.EmployeId);
+                      }
+                    },
+                    child: InterBold(
+                      text: isPaused ? 'Resume' : 'Break',
+                      fontsize: width / width18,
+                      color: Primarycolor,
+                    ),
+                  ),
+                )*/
+
+/*() {
+                      setState(() {
+                        isPaused = !isPaused;
+                      });
+                      if (isPaused) {
+                        fireStoreService.BreakShiftLog(widget.EmployeId);
+                      } else {
+                        fireStoreService.ResumeShiftLog(widget.EmployeId);
+                      }
+                    }*/
