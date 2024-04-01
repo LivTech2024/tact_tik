@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
@@ -49,7 +51,7 @@ class FireStoreService {
     }
 
     final querySnapshot = await shifts
-        .where("ShiftAssignedUserId", isEqualTo: EmpId)
+        .where("ShiftAssignedUserId", arrayContains: EmpId)
         .where("ShiftCurrentStatus",
             isEqualTo: "pending") // Filter by pending status
         .orderBy("ShiftDate", descending: false)
@@ -517,29 +519,60 @@ class FireStoreService {
     String CompanyBranchId,
     String CompanyId,
     String Date,
-    String Time,
-    String LocationCordinated,
+    List<TimeOfDay> Time,
+    double Latitude,
+    double Longitude,
     String LocationName,
   ) async {
     try {
       // Get the current system time
       DateTime currentTime = DateTime.now();
-      String CreatedAt;
-      String CurrentStatus = "pending";
-      //TimeStamp
-      // String Position;
-      //Modify the PatrolModified At
-      final shiftRef = shifts.doc().set({});
+      List<String> convertToStringArray(List list) {
+        List<String> stringArray = [];
+        for (var element in list) {
+          stringArray.add(element.toString());
+        }
+        return stringArray;
+      }
 
-      String status = "completed";
-      // Create a new document in the "Log" subcollection
-      // PatrolModifiedAt
+      List<String> guardUserIds = convertToStringArray(guards);
+      List<String> selectedGuardIds =
+          guards.map((guard) => guard['GuardId'] as String).toList();
+
+      final DateTime date = DateTime.parse(Date);
+      final DateFormat timeFormatter = DateFormat('HH:mm');
+      final List<String> formattedTimeRanges = Time.map((timeOfDay) =>
+          timeFormatter.format(
+              DateTime(0, 0, 0, timeOfDay.hour, timeOfDay.minute))).toList();
+
+      final newDocRef = await shifts.add({
+        'ShiftName': Address.split(' ')[0],
+        'ShiftPosition': 'GUARD',
+        'ShiftDate': date,
+        'ShiftStartTime': formattedTimeRanges[0],
+        'ShiftEndTime': formattedTimeRanges[1],
+        'ShiftLocation': GeoPoint(Latitude, Longitude),
+        'ShiftLocationName': Address.split(' ')[0],
+        'ShiftAddress': Address,
+        'ShiftDescription': '',
+        'ShiftAssignedUserId': selectedGuardIds,
+        'ShiftClientId': '',
+        'ShiftCompanyId': CompanyId,
+        'ShiftRequiredEmp': selectedGuardIds.length,
+        'ShiftCompanyBranchId': CompanyBranchId,
+        'ShiftCurrentStatus': 'pending',
+        'ShiftCreatedAt': Timestamp.now(),
+        'ShiftModifiedAt': Timestamp.now(),
+      });
+      await newDocRef.update({"ShiftId": newDocRef.id});
+      // Log the shift start time
       print('Shift start logged at $currentTime');
     } catch (e) {
       print('Error logging shift start: $e');
       // Handle the error as needed
     }
   }
+
   //Get all the Schedules
 
   Future<List<DocumentSnapshot>> getAllSchedules(String empId) async {

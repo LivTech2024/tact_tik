@@ -11,7 +11,7 @@ class CustomUser {
   CustomUser({required this.email});
 }
 
-final LocalStorage storage = LocalStorage('UserCred.json');
+final LocalStorage storage = LocalStorage('currentUserEmail');
 
 class Auth {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;

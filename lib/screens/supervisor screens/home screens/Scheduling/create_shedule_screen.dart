@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 
 import '../../../../common/sizes.dart';
@@ -36,6 +39,10 @@ class CreateSheduleScreen extends StatefulWidget {
 class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List colors = [Primarycolor, color25];
   List selectedGuards = [];
+
+  late final String _address;
+  late final double _latitude;
+  late final double _longitude;
   String compId = "";
   @override
   void initState() {
@@ -477,10 +484,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Expanded(
                             child: GooglePlaceAutoCompleteTextField(
                               textEditingController: _locationController,
-                              googleAPIKey: "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
-                              boxDecoration: BoxDecoration(
-                                border: Border()
-                              ),
+                              googleAPIKey:
+                                  "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
+                              boxDecoration: BoxDecoration(border: Border()),
                               inputDecoration: InputDecoration(
                                 border: InputBorder.none,
                                 errorBorder: InputBorder.none,
@@ -498,20 +504,33 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               debounceTime: 400,
                               countries: ["in", "fr"],
                               isLatLngRequired: true,
-                              getPlaceDetailWithLatLng: (Prediction prediction) {
-                                print("placeDetails" + prediction.lat.toString());
+                              getPlaceDetailWithLatLng:
+                                  (Prediction prediction) {
+                                setState(() {
+                                  // Call setState within the build method's scope
+                                  _address = prediction.description.toString();
+                                  _latitude =
+                                      double.parse(prediction.lat.toString());
+                                  _longitude =
+                                      double.parse(prediction.lng.toString());
+                                });
                               },
 
                               itemClick: (Prediction prediction) {
-                                _locationController.text = prediction.description ?? "";
-                                _locationController.selection = TextSelection.fromPosition(
-                                    TextPosition(offset: prediction.description?.length ?? 0));
+                                _locationController.text =
+                                    prediction.description ?? "";
+                                _locationController.selection =
+                                    TextSelection.fromPosition(TextPosition(
+                                        offset:
+                                            prediction.description?.length ??
+                                                0));
                               },
                               seperatedBuilder: Divider(),
                               // containerHorizontalPadding: 10,
 
                               // OPTIONAL// If you want to customize list view item builder
-                              itemBuilder: (context, index, Prediction prediction) {
+                              itemBuilder:
+                                  (context, index, Prediction prediction) {
                                 return Container(
                                   padding: EdgeInsets.all(10),
                                   child: Row(
@@ -520,7 +539,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       SizedBox(
                                         width: 6,
                                       ),
-                                      Expanded(child: InterMedium(text: '${prediction.description ?? ""}' , color: color2,) ,)
+                                      Expanded(
+                                        child: InterMedium(
+                                          text:
+                                              '${prediction.description ?? ""}',
+                                          color: color2,
+                                        ),
+                                      )
                                     ],
                                   ),
                                 );
@@ -552,8 +577,29 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                     SizedBox(height: height / height90),
                     Button1(
                       text: 'Done',
-                      onPressed: () {
+                      onPressed: () async {
                         print(selectedGuards);
+                        print("Date  ${selectedDate}");
+                        print("Time  ${selectedTime}");
+
+                        await fireStoreService.ScheduleShift(
+                            selectedGuards,
+                            _address,
+                            widget.CompanyId,
+                            widget.CompanyId,
+                            selectedDate.toString(),
+                            selectedTime!,
+                            _latitude,
+                            _longitude,
+                            _address);
+                        setState(() {
+                          selectedGuards = [];
+                          _address = "";
+                          _latitude = 0.0;
+                          _longitude = 0.0;
+                          selectedDate = null;
+                          selectedTime = null;
+                        });
                       },
                       backgroundcolor: Primarycolor,
                       color: color22,
