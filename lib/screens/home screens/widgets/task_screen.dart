@@ -268,7 +268,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       height: height / height22,
                     ),
                     Button1(
-                      text: 'Start Shift',
+                      text: issShift ? 'Start Shift' : 'Start Patrolling',
                       fontsize: width / width18,
                       color: issShift ? color5 : color5,
                       backgroundcolor: WidgetColor /*.withOpacity(50)*/,

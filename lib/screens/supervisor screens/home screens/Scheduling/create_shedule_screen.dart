@@ -6,12 +6,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../widgets/set_details_widget.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 
 class CreateSheduleScreen extends StatefulWidget {
   final String GuardId;
@@ -124,6 +127,69 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       });
       print(selectedTime);
     }
+  }
+
+  placesAutoCompleteTextField(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: GooglePlaceAutoCompleteTextField(
+        textEditingController: _locationController,
+        googleAPIKey: "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
+        inputDecoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.all(
+              Radius.circular(width / width10),
+            ),
+          ),
+          focusedBorder: InputBorder.none,
+          hintStyle: GoogleFonts.poppins(
+            fontWeight: FontWeight.w300,
+            fontSize: width / width18,
+            color: color2, // Change text color to white
+          ),
+          hintText: 'Search your location',
+          contentPadding: EdgeInsets.zero, // Remove padding
+        ),
+        debounceTime: 400,
+        countries: ["in", "fr"],
+        isLatLngRequired: true,
+        getPlaceDetailWithLatLng: (Prediction prediction) {
+          print("placeDetails" + prediction.lat.toString());
+        },
+
+        itemClick: (Prediction prediction) {
+          _locationController.text = prediction.description ?? "";
+          _locationController.selection = TextSelection.fromPosition(
+              TextPosition(offset: prediction.description?.length ?? 0));
+        },
+        seperatedBuilder: Divider(),
+        containerHorizontalPadding: 10,
+
+        // OPTIONAL// If you want to customize list view item builder
+        itemBuilder: (context, index, Prediction prediction) {
+          return Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Icon(Icons.location_on),
+                SizedBox(
+                  width: 7,
+                ),
+                Expanded(child: Text("${prediction.description ?? ""}"))
+              ],
+            ),
+          );
+        },
+
+        isCrossBtnShown: true,
+
+        // default 600 ms ,
+      ),
+    );
   }
 
   @override
@@ -383,6 +449,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       controller: _clientcontrller,
                       onTap: () {},
                     ),
+                    // placesAutoCompleteTextField(),
                     Container(
                       height: height / height60,
                       width: double.maxFinite,
@@ -407,39 +474,61 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           ),
                           SizedBox(width: width / width10),
                           Expanded(
-                            child: TextField(
-                              onChanged: (value) {
-                                List<String> filteredSuggestions =
-                                    locationSuggestions
-                                        .where((location) => location
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase()))
-                                        .toList();
-                              },
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w300,
-                                fontSize: width / width18,
-                                color:
-                                    Colors.white, // Change text color to white
+                            child: GooglePlaceAutoCompleteTextField(
+                              textEditingController: _locationController,
+                              googleAPIKey: "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
+                              boxDecoration: BoxDecoration(
+                                border: Border()
                               ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(width / width10),
-                                  ),
-                                ),
+                              inputDecoration: InputDecoration(
+                                border: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
                                   fontSize: width / width18,
                                   color: color2, // Change text color to white
                                 ),
-                                hintText: 'Location',
-                                contentPadding:
-                                    EdgeInsets.zero, // Remove padding
+                                hintText: 'Search your location',
+                                contentPadding: EdgeInsets.zero,
                               ),
-                              cursorColor: Primarycolor,
+                              debounceTime: 400,
+                              countries: ["in", "fr"],
+                              isLatLngRequired: true,
+                              getPlaceDetailWithLatLng: (Prediction prediction) {
+                                print("placeDetails" + prediction.lat.toString());
+                              },
+
+                              itemClick: (Prediction prediction) {
+                                _locationController.text = prediction.description ?? "";
+                                _locationController.selection = TextSelection.fromPosition(
+                                    TextPosition(offset: prediction.description?.length ?? 0));
+                              },
+                              seperatedBuilder: Divider(),
+                              // containerHorizontalPadding: 10,
+
+                              // OPTIONAL// If you want to customize list view item builder
+                              itemBuilder: (context, index, Prediction prediction) {
+                                return Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.location_on),
+                                      SizedBox(
+                                        width: 6,
+                                      ),
+                                      Expanded(child: InterMedium(text: '${prediction.description ?? ""}' , color: color2,) ,)
+                                    ],
+                                  ),
+                                );
+                              },
+
+                              isCrossBtnShown: true,
+                              textStyle: TextStyle(color: Colors.white),
+
+                              // default 600 ms ,
                             ),
                           ),
                         ],

@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   localstorage: ^4.0.0+1
   simple_barcode_scanner: ^0.0.8
+  google_places_flutter: ^2.0.8
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 
+import '../../utils/colors.dart';
 import '../supervisor screens/home screens/Scheduling/all_schedules_screen.dart';
 import '../supervisor screens/home screens/Scheduling/create_shedule_screen.dart';
 import '../supervisor screens/home screens/Scheduling/select_guards_screen.dart';
@@ -18,11 +19,15 @@ class AppView extends ConsumerWidget {
       title: 'Tact Tik',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Primarycolor,
+        ),
         useMaterial3: true,
         brightness: Brightness.dark,
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),
+
       ),
       home: AuthChecker(),
     );
