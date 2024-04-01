@@ -14,30 +14,37 @@ class AuthChecker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
-    return authState.when(
-      data: (data) {
-        if (data != null) {
-          print(data);
-          String role =
-              storage.getItem("Role"); // Get the user's role from local storage
-          switch (role) {
-            case 'SUPERVISOR':
-              return const SHomeScreen();
-            default:
-              return const HomeScreen();
-          }
-        } else {
-          return GetStartedScreens();
-        }
-      },
-      error: (error, stackTrace) {
-        print(stackTrace);
-        return SizedBox.shrink(); // Return an empty SizedBox for now
-      },
-      loading: () {
-        return const CircularProgressIndicator(); // Show a loading indicator
-      },
-    );
+    final LocalStorage storage = LocalStorage('currentUserEmail');
+    // Directly retrieve the role from local storage
+    final role = storage.getItem("Role");
+    //CurrentUser
+    final currentUser = storage.getItem("CurrentUser");
+    List items = [];
+    toJSONEncodable() {
+      return items.map((item) {
+        return item.toJSONEncodable();
+      }).toList();
+    }
+
+    print("User  ${items}");
+    print("Role ${role}");
+    print("currentUser ${currentUser}");
+    if (currentUser != null) {
+      if (currentUser) {
+        HomeScreen();
+      } else {
+        GetStartedScreens();
+      }
+    }
+    return role != null ? _handleAuthenticatedUser(role) : GetStartedScreens();
+  }
+
+  Widget _handleAuthenticatedUser(String role) {
+    switch (role) {
+      case 'SUPERVISOR':
+        return const SHomeScreen();
+      default:
+        return const HomeScreen();
+    }
   }
 }

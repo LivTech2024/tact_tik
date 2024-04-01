@@ -47,6 +47,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         });
         compId = widget.CompanyId;
       });
+      _locationController.addListener(() {});
     }
   }
 
@@ -451,7 +452,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
                       icon: Icons.date_range,
                       onTap: () => _selectDate(context),
-                  ),
+                    ),
                     SetDetailsWidget(
                       hintText: selectedTime == null
                           ? 'Time'
