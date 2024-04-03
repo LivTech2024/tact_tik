@@ -72,6 +72,7 @@ const double width15 = 28.6666666667;
 const double width48 = 8.9583333333;
 const double width44 = 9.7727272727;
 const double width55 = 7.8181818182;
+const double width60 = 7.1666666667;
 const double width35 = 12.2857142857;
 const double width80 = 5.375;
 const double width90 = 4.7777777778;

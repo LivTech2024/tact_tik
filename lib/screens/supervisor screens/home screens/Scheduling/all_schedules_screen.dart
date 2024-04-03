@@ -16,6 +16,7 @@ import 'create_shedule_screen.dart';
 
 class AllSchedulesScreen extends StatelessWidget {
   String BranchId;
+
   AllSchedulesScreen({
     Key? key,
     required this.BranchId,
@@ -34,6 +35,7 @@ class AllSchedulesScreen extends StatelessWidget {
   }
 
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
+
   void _getShift() async {
     FireStoreService fireStoreService = FireStoreService();
     var userInfo = await fireStoreService.getAllSchedules(BranchId);
@@ -46,8 +48,14 @@ class AllSchedulesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return SafeArea(
       child: Scaffold(
@@ -95,8 +103,9 @@ class AllSchedulesScreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
           padding:
-              EdgeInsets.only(left: width / width30, right: width / width30),
+          EdgeInsets.only(left: width / width30, right: width / width30),
           child: CustomScrollView(
+            // physics: ScrollPhysics.,
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
@@ -112,7 +121,7 @@ class AllSchedulesScreen extends StatelessWidget {
                     Container(
                       height: height / height64,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width10),
+                      EdgeInsets.symmetric(horizontal: width / width10),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(width / width13),
@@ -126,7 +135,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w300,
                                 fontSize: width / width18,
                                 color:
-                                    Colors.white, // Change text color to white
+                                Colors.white, // Change text color to white
                               ),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -143,7 +152,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                 ),
                                 hintText: 'Search',
                                 contentPadding:
-                                    EdgeInsets.zero, // Remove padding
+                                EdgeInsets.zero, // Remove padding
                               ),
                               cursorColor: Primarycolor,
                             ),
@@ -154,7 +163,7 @@ class AllSchedulesScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Primarycolor,
                               borderRadius:
-                                  BorderRadius.circular(width / width10),
+                              BorderRadius.circular(width / width10),
                             ),
                             child: Center(
                               child: Icon(
@@ -179,7 +188,8 @@ class AllSchedulesScreen extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) {
+                  childCount: 10,
+                      (context, index) {
                     return Container(
                       height: 160,
                       margin: EdgeInsets.only(top: height / height10),
@@ -189,7 +199,7 @@ class AllSchedulesScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(width / width14),
                       ),
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height20),
+                      EdgeInsets.symmetric(vertical: height / height20),
                       child: Column(
                         children: [
                           Row(
@@ -202,7 +212,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(width / width10),
                                     bottomRight:
-                                        Radius.circular(width / width10),
+                                    Radius.circular(width / width10),
                                   ),
                                   color: color22,
                                 ),
@@ -222,7 +232,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                     SizedBox(height: height / height5),
                                     InterRegular(
                                       text:
-                                          '2972 Westheimer Rd.  Anaa xyz road 123 building',
+                                      '2972 Westheimer Rd.  Anaa xyz road 123 building',
                                       maxLines: 1,
                                       fontsize: width / width14,
                                     ),
@@ -234,7 +244,7 @@ class AllSchedulesScreen extends StatelessWidget {
                           SizedBox(height: height / height10),
                           Padding(
                             padding: EdgeInsets.only(
-                                left: width / width18, right: width / width24),
+                              left: width / width18, right: width / width24,),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,7 +253,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                   width: width / width100,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Guards',
@@ -257,15 +267,15 @@ class AllSchedulesScreen extends StatelessWidget {
                                         // runSpacing: 8.0, // spacing between rows
                                         children: [
                                           for (int i = 0;
-                                              i <
-                                                  (members.length > 3
-                                                      ? 3
-                                                      : members.length);
-                                              i++)
+                                          i <
+                                              (members.length > 3
+                                                  ? 3
+                                                  : members.length);
+                                          i++)
                                             CircleAvatar(
                                               radius: width / width10,
-                                              backgroundImage: NetworkImage(members[
-                                                  i]), // Assuming members list contains URLs of profile photos
+                                              backgroundImage: NetworkImage(
+                                                  members[i]), // Assuming members list contains URLs of profile photos
                                             ),
                                           if (members.length > 3)
                                             CircleAvatar(
@@ -287,7 +297,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                   width: width / width200,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Shift',
@@ -297,7 +307,7 @@ class AllSchedulesScreen extends StatelessWidget {
                                       SizedBox(height: height / height5),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [

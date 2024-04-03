@@ -157,8 +157,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
         body: Padding(
           padding: EdgeInsets.only(
             top: height / height40,
-            left: width / width30,
-            right: width / width30,
           ),
           child: CustomScrollView(
             slivers: [
@@ -170,44 +168,50 @@ class _SHomeScreenState extends State<SHomeScreen> {
                     _scaffoldKey.currentState?.openEndDrawer();
                   }),
               SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () => ChangeScreenIndex(0),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.add_task,
-                            color: IconColors[0],
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: width / width30,
+                    right: width / width30,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () => ChangeScreenIndex(0),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.add_task,
+                              color: IconColors[0],
+                            ),
                           ),
-                        ),
-                        GestureDetector(
-                          // onTap: () => ChangeScreenIndex(1),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.grid_view_rounded,
-                            color: IconColors[1],
+                          GestureDetector(
+                            // onTap: () => ChangeScreenIndex(1),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.grid_view_rounded,
+                              color: IconColors[1],
+                            ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () => ChangeScreenIndex(2),
-                          // onTap: () => ChangeScreenIndex(2),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.calendar_today,
-                            color: IconColors[2],
+                          GestureDetector(
+                            onTap: () => ChangeScreenIndex(2),
+                            // onTap: () => ChangeScreenIndex(2),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.calendar_today,
+                              color: IconColors[2],
+                            ),
                           ),
-                        ),
-                        GestureDetector(
-                          // onTap: () => ChangeScreenIndex(3),
-                          child: HomeScreenCustomNavigation(
-                            icon: Icons.chat_bubble_outline,
-                            color: IconColors[3],
+                          GestureDetector(
+                            // onTap: () => ChangeScreenIndex(3),
+                            child: HomeScreenCustomNavigation(
+                              icon: Icons.chat_bubble_outline,
+                              color: IconColors[3],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height / height30)
-                  ],
+                        ],
+                      ),
+                      SizedBox(height: height / height30)
+                    ],
+                  ),
                 ),
               ),
               ScreenIndex == 0
@@ -215,9 +219,15 @@ class _SHomeScreenState extends State<SHomeScreen> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           if (index < _guardsInfo.length) {
-                            return HomeScreenUserCard(
-                              guardsInfo: _guardsInfo[index],
-                              CompanyId: _CompanyId,
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: width / width30,
+                                right: width / width30,
+                              ),
+                              child: HomeScreenUserCard(
+                                guardsInfo: _guardsInfo[index],
+                                CompanyId: _CompanyId,
+                              ),
                             );
                           } else {
                             return SizedBox(); // Return an empty SizedBox for index out of bounds

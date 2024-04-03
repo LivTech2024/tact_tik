@@ -256,44 +256,47 @@ class _TaskScreenState extends State<TaskScreen> {
                               ],
                             ),
                           )
-                        : Container(
-                            child: Text(
-                              "No Shifts",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: width / width18),
+                        : Center(
+                            child: InterMedium(
+                              text: 'No Shifts',
+                              textAlign: TextAlign.center,
+                              color: color2,
+                              fontsize: width / width18,
                             ),
                           ),
                     SizedBox(
                       height: height / height22,
                     ),
-                    Button1(
-                      text: issShift ? 'Start Shift' : 'Start Patrolling',
-                      fontsize: width / width18,
-                      color: issShift ? color5 : color5,
-                      backgroundcolor: WidgetColor /*.withOpacity(50)*/,
-                      onPressed: () async {
-                        if (widget.CheckUserRadius == true) {
-                          bool status = await locationChecker.checkLocation(
-                              widget.ShiftLatitude,
-                              widget.shiftLongitude,
-                              widget.ShiftRadius);
-                          print("Status :$status");
-                          if (status == true) {
-                            setState(() {
-                              ShiftStarted = true;
-                              fireStoreService.startShiftLog(
-                                  widget.empId, widget.shiftId);
-                            });
-                          } else {
-                            showCustomDialog(context, "Location",
-                                "Move into Shift Radius to continue");
-                          }
-                        }
+                    widget.ShiftDate.isNotEmpty
+                        ? Button1(
+                            text: issShift ? 'Start Shift' : 'Start Patrolling',
+                            fontsize: width / width18,
+                            color: issShift ? color5 : color5,
+                            backgroundcolor: WidgetColor /*.withOpacity(50)*/,
+                            onPressed: () async {
+                              if (widget.CheckUserRadius == true) {
+                                bool status =
+                                    await locationChecker.checkLocation(
+                                        widget.ShiftLatitude,
+                                        widget.shiftLongitude,
+                                        widget.ShiftRadius);
+                                print("Status :$status");
+                                if (status == true) {
+                                  setState(() {
+                                    ShiftStarted = true;
+                                    fireStoreService.startShiftLog(
+                                        widget.empId, widget.shiftId);
+                                  });
+                                } else {
+                                  showCustomDialog(context, "Location",
+                                      "Move into Shift Radius to continue");
+                                }
+                              }
 
-                        // bool isWithInRaius = locationChecker.checkLocation();
-                      },
-                    ),
+                              // bool isWithInRaius = locationChecker.checkLocation();
+                            },
+                          )
+                        : SizedBox(),
                     SizedBox(
                       height: height / height10,
                     ),

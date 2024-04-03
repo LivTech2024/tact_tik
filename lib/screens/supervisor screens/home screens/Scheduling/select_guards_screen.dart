@@ -9,6 +9,7 @@ import '../../../../utils/colors.dart';
 
 class SelectGuardsScreen extends StatefulWidget {
   final String companyId;
+
   const SelectGuardsScreen({super.key, required this.companyId});
 
   @override
@@ -31,6 +32,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
   }
 
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
+
   void _getUserInfo() async {
     FireStoreService fireStoreService = FireStoreService();
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
@@ -72,6 +74,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
 
     return SafeArea(
         child: Scaffold(
+      backgroundColor: Secondarycolor,
       appBar: AppBar(
         backgroundColor: AppBarcolor,
         elevation: 0,

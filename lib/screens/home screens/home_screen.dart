@@ -16,6 +16,8 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/custom_calender.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
@@ -175,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   FireStoreService fireStoreService = FireStoreService();
+
   Future<void> _refresh() {
     return Future.delayed(Duration(seconds: 2));
   }
@@ -280,6 +283,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<List<String>> data = [
+      ['assets/images/panic_mode.png', 'Panic Mode'],
+      ['assets/images/site_tour.png', 'Site Tours'],
+      ['assets/images/dar.png', 'Dar'],
+      ['assets/images/reports.png', 'Reports'],
+      ['assets/images/post_order.png', 'Post Orders'],
+      ['assets/images/task.png', 'Task'],
+      ['assets/images/log_book.png', 'Log Book'],
+      ['assets/images/visitors.png', 'Visitors'],
+      ['assets/images/key&assets.png', 'Key & Assets'],
+    ];
+
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -315,9 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Padding(
           padding: EdgeInsets.only(
-            top: height / height40,
-            left: width / width30,
-            right: width / width30,
+            top: height / height30,
           ),
           child: RefreshIndicator(
             onRefresh: _refreshData,
@@ -325,82 +338,126 @@ class _HomeScreenState extends State<HomeScreen> {
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
-                  employeeImg: employeeImg,
-
+                  // employeeImg: employeeImg,
                   // employeeImg: _employeeImg,
                   drawerOnClicked: () {
                     _scaffoldKey.currentState?.openEndDrawer();
                   },
                 ),
                 SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () => ChangeScreenIndex(0),
-                            child: HomeScreenCustomNavigation(
-                              icon: Icons.add_task,
-                              color: IconColors[0],
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: width / width30,
+                      right: width / width30,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () => ChangeScreenIndex(0),
+                              child: HomeScreenCustomNavigation(
+                                icon: Icons.add_task,
+                                color: IconColors[0],
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            // onTap: () => ChangeScreenIndex(1),
-                            child: HomeScreenCustomNavigation(
-                              icon: Icons.grid_view_rounded,
-                              color: IconColors[1],
+                            GestureDetector(
+                              onTap: () => ChangeScreenIndex(1),
+                              child: HomeScreenCustomNavigation(
+                                icon: Icons.grid_view_rounded,
+                                color: IconColors[1],
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            // onTap: () => ChangeScreenIndex(2),
-                            // onTap: () => ChangeScreenIndex(2),
-                            child: HomeScreenCustomNavigation(
-                              icon: Icons.calendar_today,
-                              color: IconColors[2],
+                            GestureDetector(
+                              onTap: () => ChangeScreenIndex(2),
+                              child: HomeScreenCustomNavigation(
+                                icon: Icons.calendar_today,
+                                color: IconColors[2],
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            // onTap: () => ChangeScreenIndex(3),
-                            child: HomeScreenCustomNavigation(
-                              icon: Icons.chat_bubble_outline,
-                              color: IconColors[3],
+                            GestureDetector(
+                              child: HomeScreenCustomNavigation(
+                                icon: Icons.chat_bubble_outline,
+                                color: IconColors[3],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: height / height30)
-                    ],
+                          ],
+                        ),
+                        SizedBox(height: height / height30)
+                      ],
+                    ),
                   ),
                 ),
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
-                        child: TaskScreen(
-                          ShiftDate: _ShiftDate,
-                          ShiftStartTime: _ShiftStartTime,
-                          ShiftLocation: _ShiftLocation,
-                          ShiftName: _ShiftLocation,
-                          ShiftEndTime: _ShiftEndTime,
-                          isWithINRadius: isWithinRadius,
-                          empId: _employeeId,
-                          shiftId: _shiftId,
-                          patrolDate: _patrolDate,
-                          patrolTime: _patrolTime,
-                          patrollocation: _patrolArea,
-                          issShiftFetched: issShift,
-                          EmpEmail: _empEmail,
-                          Branchid: _branchId,
-                          cmpId: _cmpId,
-                          EmpName: _userName,
-                          ShiftLatitude: _shiftLatitude,
-                          shiftLongitude: _shiftLongitude,
-                          ShiftRadius: _shiftRestrictedRadius,
-                          CheckUserRadius: _patrolKeepGuardInRadiusOfLocation,
-                          ShiftCompanyId: '',
-                          ShiftBranchId: '',
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: width / width30,
+                            right: width / width30,
+                          ),
+                          child: TaskScreen(
+                            ShiftDate: _ShiftDate,
+                            ShiftStartTime: _ShiftStartTime,
+                            ShiftLocation: _ShiftLocation,
+                            ShiftName: _ShiftLocation,
+                            ShiftEndTime: _ShiftEndTime,
+                            isWithINRadius: isWithinRadius,
+                            empId: _employeeId,
+                            shiftId: _shiftId,
+                            patrolDate: _patrolDate,
+                            patrolTime: _patrolTime,
+                            patrollocation: _patrolArea,
+                            issShiftFetched: issShift,
+                            EmpEmail: _empEmail,
+                            Branchid: _branchId,
+                            cmpId: _cmpId,
+                            EmpName: _userName,
+                            ShiftLatitude: _shiftLatitude,
+                            shiftLongitude: _shiftLongitude,
+                            ShiftRadius: _shiftRestrictedRadius,
+                            CheckUserRadius: _patrolKeepGuardInRadiusOfLocation,
+                            ShiftCompanyId: '',
+                            ShiftBranchId: '',
+                          ),
                         ),
                       )
-                    /*: ScreenIndex == 2
+                    : ScreenIndex == 1
+                        ? SliverGrid(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, // Number of columns
+                              // mainAxisSpacing: 10.0, // Spacing between rows
+                              // crossAxisSpacing: 14.0,
+                              // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return gridWidget(
+                                  img: data[index][0],
+                                  tittle: data[0][1],
+                                );
+                              },
+                              childCount: 9,
+                            ),
+                          )
+                        : ScreenIndex == 2
+                            ? SliverToBoxAdapter(
+                                child: Container(
+                                  child: CustomCalender(),
+                                ),
+                              )
+                            : const SizedBox(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*: ScreenIndex == 2
                     /*: ScreenIndex == 2
                         ? SliverToBoxAdapter(
                             child: Container(
@@ -603,15 +660,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         */
                     : SizedBox()
                         */
-                    : const SizedBox()
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 /*padding: EdgeInsets.symmetric(
             vertical: 40.0,
