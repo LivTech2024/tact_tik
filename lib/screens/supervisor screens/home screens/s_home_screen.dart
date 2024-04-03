@@ -163,12 +163,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
           child: CustomScrollView(
             slivers: [
               HomeScreenPart1(
-                userName: _userName,
-                // employeeImg: _employeeImg,
-                drawerOnClicked: () {
-                  _scaffoldKey.currentState?.openEndDrawer();
-                },
-              ),
+                  userName: _userName,
+                  employeeImg: _userImg,
+                  // employeeImg: _employeeImg,
+                  drawerOnClicked: () {
+                    _scaffoldKey.currentState?.openEndDrawer();
+                  }),
               SliverToBoxAdapter(
                 child: Column(
                   children: [

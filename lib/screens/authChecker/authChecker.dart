@@ -10,36 +10,35 @@ import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_scre
 import 'package:tact_tik/services/auth/auth.dart';
 
 class AuthChecker extends ConsumerWidget {
-  const AuthChecker({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final LocalStorage storage = LocalStorage('currentUserEmail');
-    // Directly retrieve the role from local storage
-    final role = storage.getItem("Role");
-    //CurrentUser
-    final currentUser = storage.getItem("CurrentUser");
-    List items = [];
-    toJSONEncodable() {
-      return items.map((item) {
-        return item.toJSONEncodable();
-      }).toList();
-    }
+    final Future<String?> currentUserFuture =
+        storage.ready.then((_) => storage.getItem("CurrentUser"));
+    // final String? role = storage.getItem("Role");
+    // print("Role ${role}");
 
-    print("User  ${items}");
-    print("Role ${role}");
-    print("currentUser ${currentUser}");
-    if (currentUser != null) {
-      if (currentUser) {
-        HomeScreen();
-      } else {
-        GetStartedScreens();
-      }
-    }
-    return role != null ? _handleAuthenticatedUser(role) : GetStartedScreens();
+    return FutureBuilder<String?>(
+      future: currentUserFuture,
+      builder: (context, snapshot) {
+        final String? role = storage.getItem("Role");
+        print("Role $role");
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (snapshot.hasData) {
+          return _handleAuthenticatedUser(role);
+        } else {
+          return GetStartedScreens();
+        }
+      },
+    );
   }
 
-  Widget _handleAuthenticatedUser(String role) {
+  Widget _handleAuthenticatedUser(String? role) {
     switch (role) {
       case 'SUPERVISOR':
         return const SHomeScreen();

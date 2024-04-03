@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _passwordcontrller = TextEditingController();
 
   final LocalStorage storage = LocalStorage('currentUserEmail');
-
+  String _errorMessage = '';
   Future<void> signInEmailPassword(BuildContext context) async {
     try {
       var data = await Auth().signInWithEmailAndPassword(
@@ -37,8 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
-    } on FirebaseAuthException catch (e) {
-      print(e);
+    } catch (e) {
+      // Handle FirebaseAuthException here
+      String errorMessage = 'An error occurred';
+      if (e == 'user-not-found') {
+        errorMessage = 'No user found';
+      } else if (e == 'wrong-password') {
+        errorMessage = 'Incorrect password';
+      } else if (e == 'invalid-email') {
+        errorMessage = 'Invalid email address';
+      }
+      setState(() {
+        _errorMessage = errorMessage;
+      });
     }
   }
 
@@ -88,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                     icon: Icon(
-                      _obscureText ? Icons.visibility_off:Icons.visibility,
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
                       size: width / width24,
                       color: color6,
                     ),
@@ -98,6 +109,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(height: height / height20),
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: width / width24,
+                  ),
+                ),
               Button1(
                 backgroundcolor: Primarycolor,
                 text: 'Login',

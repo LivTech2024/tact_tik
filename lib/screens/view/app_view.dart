@@ -27,7 +27,6 @@ class AppView extends ConsumerWidget {
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,
         ),
-
       ),
       home: AuthChecker(),
     );

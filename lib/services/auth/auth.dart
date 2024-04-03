@@ -48,14 +48,14 @@ class Auth {
           storage.setItem("CurrentUser", email);
           storage.setItem("CurrentEmployeeId", EmployeID);
           storage.setItem("Role", role);
-          await FirebaseAuth.instance.authStateChanges();
+          // await FirebaseAuth.instance.authStateChanges();
         } else {
           // Password incorrect
-          throw 'Password incorrect';
+          throw 'wrong-password';
         }
       } else {
         // User not found
-        throw 'User not found';
+        throw 'user-not-found';
       }
     } catch (e) {
       print('Error signing in: $e');

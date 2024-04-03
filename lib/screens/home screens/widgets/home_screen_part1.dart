@@ -17,13 +17,14 @@ import '../../../utils/utils.dart';
 
 class HomeScreenPart1 extends StatelessWidget {
   final String userName;
-  // final String employeeImg;
+  final String employeeImg;
   // final String url;
   final VoidCallback drawerOnClicked;
 
   HomeScreenPart1({
     Key? key,
     required this.userName,
+    required this.employeeImg,
     // required this.url,
     // required this.employeeImg,
     required this.drawerOnClicked,
@@ -49,8 +50,7 @@ class HomeScreenPart1 extends StatelessWidget {
                   width: width / width55,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(
-                          'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
+                      image: NetworkImage(employeeImg),
                       filterQuality: FilterQuality.high,
                       fit: BoxFit.cover,
                     ),

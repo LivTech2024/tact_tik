@@ -42,12 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
   //Get the current User
   final Auth auth = Auth();
   String _userName = "";
+  String employeeImg = "";
   String _ShiftDate = "";
   String _ShiftLocation = "";
   String _ShiftName = "";
   String _ShiftEndTime = "";
   String _ShiftStartTime = "";
-  String _ShiftCompanyId = "";
+  String? _ShiftCompanyId = "";
   String _ShiftBranchId = "";
 
   double _shiftLatitude = 0;
@@ -185,14 +186,16 @@ class _HomeScreenState extends State<HomeScreen> {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
         String empEmail = userInfo['EmployeeEmail'];
-        _employeeId = EmployeeId;
+        String empImage = userInfo['EmployeeImg'];
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
           _userName = userName;
+          _employeeId = EmployeeId;
           _empEmail = empEmail;
+          employeeImg = empImage;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -322,6 +325,8 @@ class _HomeScreenState extends State<HomeScreen> {
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
+                  employeeImg: employeeImg,
+
                   // employeeImg: _employeeImg,
                   drawerOnClicked: () {
                     _scaffoldKey.currentState?.openEndDrawer();
