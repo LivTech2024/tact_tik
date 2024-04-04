@@ -554,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: width / width278278,
+                                            width: width / width278,
                                             child: IconTextWidget(
                                               icon: Icons.qr_code_scanner,
                                               iconSize: width / width24,
