@@ -163,7 +163,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
               HomeScreenPart1(
                   userName: _userName,
                   // employeeImg: _userImg,
-                  // employeeImg: _employeeImg,
+                  employeeImg: _userImg,
                   drawerOnClicked: () {
                     _scaffoldKey.currentState?.openEndDrawer();
                   }),

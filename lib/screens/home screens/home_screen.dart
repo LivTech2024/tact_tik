@@ -339,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
-                  // employeeImg: employeeImg,
+                  employeeImg: employeeImg,
                   // employeeImg: _employeeImg,
                   drawerOnClicked: () {
                     _scaffoldKey.currentState?.openEndDrawer();
