@@ -579,10 +579,13 @@ class FireStoreService {
     if (empId.isEmpty) {
       return [];
     }
-
+    DateTime now = DateTime.now();
+    DateTime startDate = DateTime(now.year, now.month, now.day);
+    DateTime endDate = startDate.add(Duration(days: 7));
     final querySnapshot = await shifts
-        .where("ShiftCompanyId", arrayContains: empId)
+        .where("ShiftAssignedUserId", arrayContains: empId)
         // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
+        .where("ShiftModifiedAt", isLessThan: endDate)
         .orderBy("ShiftModifiedAt", descending: false)
         .get();
 

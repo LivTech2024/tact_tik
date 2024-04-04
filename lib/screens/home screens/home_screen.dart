@@ -64,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _patrolArea = "";
   String _patrolCompanyId = "";
   bool _patrolKeepGuardInRadiusOfLocation = true;
+  bool _shiftKeepGuardInRadiusOfLocation = true;
+
   String _patrolLocationName = "";
   String _patrolName = "";
   int _patrolRestrictedRadius = 0;
@@ -76,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
-
+  List<DocumentSnapshot> schedules_list = [];
   final LatLng _center =
       const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
@@ -130,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
-
+    getAndPrintAllSchedules();
     // checkLocation();
     // Timer.periodic(Duration(seconds: 1), (Timer timer) {
     //   // checkLocation();
@@ -235,17 +237,18 @@ class _HomeScreenState extends State<HomeScreen> {
         if (shiftInfo != null) {
           String shiftDateStr =
               DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
-          String shiftEndTimeStr = shiftInfo['ShiftEndTime'];
-          String shiftStartTimeStr = shiftInfo['ShiftStartTime'];
-          String shiftLocation = shiftInfo['ShiftAddress'];
-          String shiftName = shiftInfo['ShiftName'];
-          String shiftId = shiftInfo['ShiftId'];
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'];
+          String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
+          String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
+          String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
+          String shiftName = shiftInfo['ShiftName'] ?? " ";
+          String shiftId = shiftInfo['ShiftId'] ?? " ";
+          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? " ";
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
-          String companyBranchId = shiftInfo["ShiftCompanyBranchId"];
-          String shiftCompanyId = shiftInfo["ShiftCompanyId"];
-          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"];
+          String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
+          String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
+          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
+          bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
           // EmpEmail: _empEmail,
           //                     Branchid: _branchId,
           //                     cmpId: _cmpId,
@@ -262,24 +265,43 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftRestrictedRadius = ShiftRestrictedRadius;
             _ShiftCompanyId = shiftCompanyId;
             _ShiftBranchId = companyBranchId;
+            _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             // _employeeImg = employeeImg;
           });
           print('Shift Info: ${shiftInfo.data()}');
+
+          var getAllSchedules = fireStoreService.getAllSchedules(_employeeId);
+          print(getAllSchedules);
         } else {
           setState(() {
             issShift = true; //To validate that shift exists for the user.
           });
           print('Shift info not found');
         }
+        getAndPrintAllSchedules();
       } else {
         print('User info not found');
       }
     }
   }
 
+  void getAndPrintAllSchedules() async {
+    List<DocumentSnapshot> schedules =
+        await fireStoreService.getAllSchedules(_employeeId);
+    print("All Schedules:");
+    schedules.forEach((schedule) {
+      setState(() {
+        schedules_list.add(schedule);
+      });
+      print(
+          "Schedule docs ${schedule.data()}"); // Print the data of each document
+    });
+  }
+
   Future<void> _refreshData() async {
     // Fetch patrol data from Firestore (assuming your logic exists)
     _getUserInfo();
+    getAndPrintAllSchedules();
   }
 
   @override
@@ -417,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ShiftLatitude: _shiftLatitude,
                             shiftLongitude: _shiftLongitude,
                             ShiftRadius: _shiftRestrictedRadius,
-                            CheckUserRadius: _patrolKeepGuardInRadiusOfLocation,
+                            CheckUserRadius: _shiftKeepGuardInRadiusOfLocation,
                             ShiftCompanyId: '',
                             ShiftBranchId: '',
                           ),
@@ -457,6 +479,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
+                            var schedules = schedules_list[index];
+                            Timestamp shifttimestamp = schedules['ShiftDate'];
+                            DateTime dateTime = shifttimestamp.toDate();
+                            String shiftDate =
+                                DateFormat('dd-MM-yyy').format(dateTime);
+                            print('Shift Date: $shiftDate');
+                            String dayOfWeek =
+                                DateFormat('EEEE').format(dateTime);
+                            if (dateTime.year == DateTime.now().year &&
+                                dateTime.month == DateTime.now().month &&
+                                dateTime.day == DateTime.now().day) {
+                              shiftDate = '$shiftDate*';
+                              print(shiftDate);
+                            }
                             return Container(
                               margin: EdgeInsets.only(
                                 top: height / height10,
@@ -486,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width / width10),
                                           ),
                                           child: InterBold(
-                                            text: '14  03  2024',
+                                            text: shiftDate,
                                             color: color2,
                                             fontsize: width / width18,
                                           ),
@@ -504,7 +540,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width / width10),
                                           ),
                                           child: InterBold(
-                                            text: 'Monday',
+                                            text: dayOfWeek,
                                             color: color2,
                                             fontsize: width / width14,
                                           ),
@@ -533,8 +569,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: IconTextWidget(
                                               icon: Icons.location_on,
                                               iconSize: width / width24,
-                                              text:
-                                                  '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                              text: schedules[
+                                                  'ShiftLocationAddress'],
                                               color: color22,
                                               Iconcolor: color22,
                                               space: width / width8,
@@ -546,7 +582,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: IconTextWidget(
                                               iconSize: width / width24,
                                               icon: Icons.access_time,
-                                              text: '12:00 am - 12:00 pm',
+                                              text:
+                                                  '${schedules['ShiftStartTime']} - ${schedules['ShiftEndTime']}',
                                               color: color22,
                                               Iconcolor: color22,
                                               space: width / width8,
@@ -573,7 +610,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           },
-                          childCount: 10,
+                          childCount: schedules_list.length,
                         ),
                       )
                     : SliverToBoxAdapter()
@@ -591,7 +628,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? SliverToBoxAdapter(
                             child: Container(
                               height: 470,
-                              decoration: BoxDecoration(
+                            decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(40),
                                 color: Secondarycolor,
                               ),

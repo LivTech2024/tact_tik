@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -92,14 +93,14 @@ void showCustomDialog(BuildContext context, String title, String content) {
 
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
-  bool issShift = false;
+  // bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
   UserLocationChecker locationChecker = UserLocationChecker();
 
   @override
   void initState() {
     super.initState();
-    issShift = widget.issShiftFetched;
+    // issShift = widget.issShiftFetched;
   }
 
   Future<void> _refreshData() async {
@@ -269,11 +270,12 @@ class _TaskScreenState extends State<TaskScreen> {
                     ),
                     widget.ShiftDate.isNotEmpty
                         ? Button1(
-                            text: issShift ? 'Start Shift' : 'Start Patrolling',
+                            text: 'Start Shift',
                             fontsize: width / width18,
-                            color: issShift ? color5 : color5,
+                            color: color5,
                             backgroundcolor: WidgetColor /*.withOpacity(50)*/,
                             onPressed: () async {
+                              print(widget.CheckUserRadius);
                               if (widget.CheckUserRadius == true) {
                                 bool status =
                                     await locationChecker.checkLocation(
@@ -291,6 +293,21 @@ class _TaskScreenState extends State<TaskScreen> {
                                   showCustomDialog(context, "Location",
                                       "Move into Shift Radius to continue");
                                 }
+                              } else {
+                                Map<String, dynamic> emailParams = {
+                                  'to_email': 'recipient@example.com',
+                                  'from_name': 'Your Name',
+                                  'reply_to': 'your_email@example.com',
+                                  'subject': 'Your Subject',
+                                  'message': 'Your Message',
+                                };
+                                // bool result = await sendEmail(emailParams);
+                                // print('Email sent: $result');s
+                                setState(() {
+                                  ShiftStarted = true;
+                                });
+
+                                //if the check user radius is off we can start the shift
                               }
 
                               // bool isWithInRaius = locationChecker.checkLocation();
@@ -300,30 +317,6 @@ class _TaskScreenState extends State<TaskScreen> {
                     SizedBox(
                       height: height / height10,
                     ),
-                    widget.ShiftDate.isNotEmpty
-                        ? issShift
-                            ? const SizedBox()
-                            : Button1(
-                                text: 'Check Patrolling',
-                                fontsize: width / width18,
-                                color: color5,
-                                backgroundcolor: WidgetColor,
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              OpenPatrollingScreen(
-                                                empId: widget.empId,
-                                                empEmail: widget.EmpEmail,
-                                                BranchId: widget.Branchid,
-                                                CompanyID: widget.cmpId,
-                                                empName: widget.EmpName,
-                                              )));
-                                },
-                              )
-                        : const SizedBox(),
-
                     /*GestureDetector(
                       onTap: () {
                         setState(() {
