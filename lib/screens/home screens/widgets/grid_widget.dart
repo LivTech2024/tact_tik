@@ -20,16 +20,16 @@ class gridWidget extends StatelessWidget {
       //     MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          height: height / height100,
-          width: width / width100,
+          height: height / height80,
+          width: width / width80,
           decoration: BoxDecoration(
             color: WidgetColor,
             borderRadius: BorderRadius.circular(width / width18),
           ),
           child: Center(
             child: SizedBox(
-              height: height/ height60,
-              width: width / width60,
+              height: height/ height40,
+              width: width / width40,
               child: Image.asset(img),
             ),
           ),

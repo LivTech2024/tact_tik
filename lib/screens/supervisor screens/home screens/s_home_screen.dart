@@ -162,7 +162,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
             slivers: [
               HomeScreenPart1(
                   userName: _userName,
-                  employeeImg: _userImg,
+                  // employeeImg: _userImg,
                   // employeeImg: _employeeImg,
                   drawerOnClicked: () {
                     _scaffoldKey.currentState?.openEndDrawer();

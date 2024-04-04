@@ -20,6 +20,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/custom_calender.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -435,7 +436,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               (BuildContext context, int index) {
                                 return gridWidget(
                                   img: data[index][0],
-                                  tittle: data[0][1],
+                                  tittle: data[index][1],
                                 );
                               },
                               childCount: 9,
@@ -443,11 +444,139 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         : ScreenIndex == 2
                             ? SliverToBoxAdapter(
-                                child: Container(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: width / width30,
+                                    right: width / width30,
+                                  ),
                                   child: CustomCalender(),
                                 ),
                               )
                             : const SizedBox(),
+                ScreenIndex == 2
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            return Container(
+                              margin: EdgeInsets.only(
+                                top: height / height10,
+                                left: width / width30,
+                                right: width / width30,
+                              ),
+                              height: height / height230,
+                              width: double.maxFinite,
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          width: width / width120,
+                                          height: height / height50,
+                                          padding: EdgeInsets.only(
+                                            top: height / height3,
+                                            left: width / width9,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: WidgetColor,
+                                            borderRadius: BorderRadius.circular(
+                                                width / width10),
+                                          ),
+                                          child: InterBold(
+                                            text: '14  03  2024',
+                                            color: color2,
+                                            fontsize: width / width18,
+                                          ),
+                                        ),
+                                        Container(
+                                          width: width / width82,
+                                          height: height / height46,
+                                          padding: EdgeInsets.only(
+                                            top: height / height3,
+                                            left: width / width12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: WidgetColor,
+                                            borderRadius: BorderRadius.circular(
+                                                width / width10),
+                                          ),
+                                          child: InterBold(
+                                            text: 'Monday',
+                                            color: color2,
+                                            fontsize: width / width14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      width: double.maxFinite,
+                                      height: height / height198,
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 30),
+                                      decoration: BoxDecoration(
+                                        color: Primarycolor,
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: 278,
+                                            child: IconTextWidget(
+                                              icon: Icons.location_on,
+                                              iconSize: width / width24,
+                                              text:
+                                                  '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                              color: color22,
+                                              Iconcolor: color22,
+                                              space: width / width8,
+                                              fontsize: width / width14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 278,
+                                            child: IconTextWidget(
+                                              iconSize: width / width24,
+                                              icon: Icons.access_time,
+                                              text: '12:00 am - 12:00 pm',
+                                              color: color22,
+                                              Iconcolor: color22,
+                                              space: width / width8,
+                                              fontsize: width / width14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 278,
+                                            child: IconTextWidget(
+                                              icon: Icons.qr_code_scanner,
+                                              iconSize: width / width24,
+                                              text: 'Total 6     Completed 4',
+                                              color: color22,
+                                              Iconcolor: color22,
+                                              space: width / width8,
+                                              fontsize: width / width14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          childCount: 10,
+                        ),
+                      )
+                    : SliverToBoxAdapter()
               ],
             ),
           ),

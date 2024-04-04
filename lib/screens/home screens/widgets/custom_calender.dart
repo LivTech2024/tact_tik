@@ -6,19 +6,17 @@ import '../../../utils/colors.dart';
 final today = DateUtils.dateOnly(DateTime.now());
 
 class CustomCalender extends StatefulWidget {
-  const CustomCalender({super.key});
+  const CustomCalender({Key? key}) : super(key: key);
 
   @override
   State<CustomCalender> createState() => _CustomCalenderState();
 }
 
 class _CustomCalenderState extends State<CustomCalender> {
+  DateTime? selectedDate; // Variable to store the selected date
 
-
-  String _getValueText(CalendarDatePicker2Type datePickerType,
-      List<DateTime?> values,) {
-    values =
-        values.map((e) => e != null ? DateUtils.dateOnly(e) : null).toList();
+  String _getValueText(CalendarDatePicker2Type datePickerType, List<DateTime?> values) {
+    values = values.map((e) => e != null ? DateUtils.dateOnly(e) : null).toList();
     var valueText = (values.isNotEmpty ? values[0] : null)
         .toString()
         .replaceAll('00:00:00.000', '');
@@ -56,7 +54,7 @@ class _CustomCalenderState extends State<CustomCalender> {
     return Container(
       decoration: BoxDecoration(
         color: Primarycolor,
-        borderRadius: BorderRadius.circular(10)
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Theme(
         data: ThemeData.dark().copyWith(
@@ -92,8 +90,18 @@ class _CustomCalenderState extends State<CustomCalender> {
                     50), // Set day border radius
               ),
               value: _multiDatePickerValueWithDefaultValue,
-              onValueChanged: (dates) =>
-                  setState(() => _multiDatePickerValueWithDefaultValue = dates),
+              onValueChanged: (dates) {
+                setState(() {
+                  _multiDatePickerValueWithDefaultValue = dates;
+                  if (dates.isNotEmpty) {
+                    // Update the selectedDate variable with the first date in the list
+                    selectedDate = dates[0];
+                  } else {
+                    // If no date is selected, set selectedDate to null
+                    selectedDate = null;
+                  }
+                });
+              },
             ),
             const SizedBox(height: 25),
           ],
@@ -101,7 +109,6 @@ class _CustomCalenderState extends State<CustomCalender> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
