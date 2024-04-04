@@ -517,8 +517,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Container(
                                       width: double.maxFinite,
                                       height: height / height198,
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 30),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: height / height30),
                                       decoration: BoxDecoration(
                                         color: Primarycolor,
                                         borderRadius: BorderRadius.circular(
@@ -529,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           SizedBox(
-                                            width: 278,
+                                            width: width / width278,
                                             child: IconTextWidget(
                                               icon: Icons.location_on,
                                               iconSize: width / width24,
@@ -542,7 +542,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 278,
+                                            width: width / width278,
                                             child: IconTextWidget(
                                               iconSize: width / width24,
                                               icon: Icons.access_time,
@@ -554,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 278,
+                                            width: width / width278,
                                             child: IconTextWidget(
                                               icon: Icons.qr_code_scanner,
                                               iconSize: width / width24,

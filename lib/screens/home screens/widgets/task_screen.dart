@@ -300,27 +300,29 @@ class _TaskScreenState extends State<TaskScreen> {
                     SizedBox(
                       height: height / height10,
                     ),
-                    issShift
-                        ? const SizedBox()
-                        : Button1(
-                            text: 'Check Patrolling',
-                            fontsize: width / width18,
-                            color: color5,
-                            backgroundcolor: WidgetColor,
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          OpenPatrollingScreen(
-                                            empId: widget.empId,
-                                            empEmail: widget.EmpEmail,
-                                            BranchId: widget.Branchid,
-                                            CompanyID: widget.cmpId,
-                                            empName: widget.EmpName,
-                                          )));
-                            },
-                          ),
+                    widget.ShiftDate.isNotEmpty
+                        ? issShift
+                            ? const SizedBox()
+                            : Button1(
+                                text: 'Check Patrolling',
+                                fontsize: width / width18,
+                                color: color5,
+                                backgroundcolor: WidgetColor,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              OpenPatrollingScreen(
+                                                empId: widget.empId,
+                                                empEmail: widget.EmpEmail,
+                                                BranchId: widget.Branchid,
+                                                CompanyID: widget.cmpId,
+                                                empName: widget.EmpName,
+                                              )));
+                                },
+                              )
+                        : const SizedBox(),
 
                     /*GestureDetector(
                       onTap: () {

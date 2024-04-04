@@ -94,3 +94,4 @@ const double width100 = 4.3;
 const double width120 = 3.5833333333;
 const double width190 = 2.2631578947;
 const double width230 = 1.869562174;
+const double width278 = 1.5467625899;

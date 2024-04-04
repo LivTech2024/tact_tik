@@ -127,6 +127,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
         backgroundColor: Secondarycolor,
         endDrawer: Drawer(
           child: ListView(
