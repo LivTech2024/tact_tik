@@ -160,7 +160,13 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                 width: 16,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.green,
+                                  color: guardInfo['EmployeeIsAvailable'] ==
+                                          "available"
+                                      ? Colors.green
+                                      : guardInfo['EmployeeIsAvailable'] ==
+                                              "on_shift"
+                                          ? Colors.orange
+                                          : Colors.red,
                                 ),
                               )
                             ],

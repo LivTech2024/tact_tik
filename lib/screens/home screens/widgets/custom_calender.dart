@@ -15,8 +15,10 @@ class CustomCalender extends StatefulWidget {
 class _CustomCalenderState extends State<CustomCalender> {
   DateTime? selectedDate; // Variable to store the selected date
 
-  String _getValueText(CalendarDatePicker2Type datePickerType, List<DateTime?> values) {
-    values = values.map((e) => e != null ? DateUtils.dateOnly(e) : null).toList();
+  String _getValueText(
+      CalendarDatePicker2Type datePickerType, List<DateTime?> values) {
+    values =
+        values.map((e) => e != null ? DateUtils.dateOnly(e) : null).toList();
     var valueText = (values.isNotEmpty ? values[0] : null)
         .toString()
         .replaceAll('00:00:00.000', '');
@@ -24,8 +26,8 @@ class _CustomCalenderState extends State<CustomCalender> {
     if (datePickerType == CalendarDatePicker2Type.multi) {
       valueText = values.isNotEmpty
           ? values
-          .map((v) => v.toString().replaceAll('00:00:00.000', ''))
-          .join(', ')
+              .map((v) => v.toString().replaceAll('00:00:00.000', ''))
+              .join(', ')
           : 'null';
     } else if (datePickerType == CalendarDatePicker2Type.range) {
       if (values.isNotEmpty) {
@@ -49,6 +51,12 @@ class _CustomCalenderState extends State<CustomCalender> {
     DateTime(today.year, today.month, 17),
     DateTime(today.year, today.month, 25),
   ];
+  void _onDateSelected(List<DateTime?> dates) {
+    setState(() {
+      _multiDatePickerValueWithDefaultValue = dates;
+    });
+    Navigator.pop(context, dates);
+  }
 
   Widget _buildDefaultMultiDatePickerWithValue() {
     return Container(
@@ -86,8 +94,8 @@ class _CustomCalenderState extends State<CustomCalender> {
                 // Set current date
                 selectableDayPredicate: (DateTime date) => true,
                 // All days are selectable
-                dayBorderRadius: BorderRadius.circular(
-                    50), // Set day border radius
+                dayBorderRadius:
+                    BorderRadius.circular(50), // Set day border radius
               ),
               value: _multiDatePickerValueWithDefaultValue,
               onValueChanged: (dates) {

@@ -91,6 +91,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     Duration difference = currentTime.difference(shiftStartTime);
     bool isLate = currentTime.isAfter(shiftStartTime);
     String lateTime = isLate ? '${difference.inMinutes.abs()}m Late' : '';
+    String employeeCurrentStatus = "";
     return Column(
       children: [
         Container(

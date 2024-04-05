@@ -101,6 +101,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
         String Imgurl = userInfo['EmployeeImg'];
+        // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(CompanyId);
         var patrolInfo = await fireStoreService
@@ -110,6 +111,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           _userImg = Imgurl;
           _guardsInfo = guardsInfo;
           _CompanyId = CompanyId;
+          _employeeId = EmployeeId;
         });
         print('User Info: ${userInfo.data()}');
       } else {
@@ -149,7 +151,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 title: Text('Logout', style: TextStyle(color: Colors.red)),
                 // Logout text in red color
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens());
+                  auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
             ],
@@ -219,6 +221,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
+                          String guardStatus = "";
+
                           if (index < _guardsInfo.length) {
                             return Padding(
                               padding: EdgeInsets.only(
@@ -320,7 +324,13 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                     width: width / width16,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.green,
+                      color: widget.guardsInfo['EmployeeIsAvailable'] ==
+                              "available"
+                          ? Colors.green
+                          : widget.guardsInfo['EmployeeIsAvailable'] ==
+                                  "on_shift"
+                              ? Colors.orange
+                              : Colors.red,
                     ),
                   )
                 ],

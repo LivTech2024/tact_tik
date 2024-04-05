@@ -48,6 +48,9 @@ class Auth {
           storage.setItem("CurrentUser", email);
           storage.setItem("CurrentEmployeeId", EmployeID);
           storage.setItem("Role", role);
+          await _firestore.collection('Employees').doc(EmployeID).set({
+            'EmployeeIsAvailable': 'available',
+          }, SetOptions(merge: true));
           // await FirebaseAuth.instance.authStateChanges();
         } else {
           // Password incorrect
@@ -64,8 +67,12 @@ class Auth {
   }
 
   //Add the userCred to the employee collection
-  Future<void> signOut(context, screen) async {
+  Future<void> signOut(context, screen, String EmployeId) async {
     await _firebaseAuth.signOut();
+    await _firestore.collection('Employees').doc(EmployeId).set({
+      'EmployeeIsAvailable': 'out_of_reach',
+    }, SetOptions(merge: true));
+    //change EmployeeIsAvailable
     storage.clear();
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => (screen)));

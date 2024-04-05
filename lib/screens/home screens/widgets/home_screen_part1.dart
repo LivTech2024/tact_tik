@@ -30,11 +30,21 @@ class HomeScreenPart1 extends StatelessWidget {
   }) : super(key: key);
 
   bool isUnread = true;
+  DateTime now = DateTime.now();
+  int hour = DateTime.now().hour;
+  String greeting = '';
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+    if (hour < 12) {
+      greeting = 'Good Morning,';
+    } else if (hour < 18) {
+      greeting = 'Good Afternoon,';
+    } else {
+      greeting = 'Good Evening,';
+    }
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.only(
@@ -114,7 +124,7 @@ class HomeScreenPart1 extends StatelessWidget {
             ),
             SizedBox(height: height / height60),
             PoppinsSemibold(
-              text: 'Good Morning,',
+              text: '${greeting}',
               color: Primarycolor,
               letterSpacing: -.5,
               fontsize: width / width35,

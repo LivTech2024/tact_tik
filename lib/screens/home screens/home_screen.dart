@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isWithinRadius = true;
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
-
+  int scheduleCount = 0;
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
@@ -345,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text('Logout', style: TextStyle(color: Colors.red)),
                 // Logout text in red color
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens());
+                  auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
             ],
@@ -467,13 +467,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         : ScreenIndex == 2
                             ? SliverToBoxAdapter(
                                 child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: width / width30,
-                                    right: width / width30,
-                                  ),
+                                padding: EdgeInsets.only(
+                                  left: width / width30,
+                                  right: width / width30,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final List<DateTime?>? selectedDates =
+                                        await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CustomCalender(),
+                                      ),
+                                    );
+
+                                    // Print the popped value
+                                    if (selectedDates != null) {
+                                      print(selectedDates);
+                                    }
+                                  },
                                   child: CustomCalender(),
                                 ),
-                              )
+                              ))
                             : const SizedBox(),
                 ScreenIndex == 2
                     ? SliverList(
@@ -484,7 +500,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             DateTime dateTime = shifttimestamp.toDate();
                             String shiftDate =
                                 DateFormat('dd-MM-yyy').format(dateTime);
+
                             print('Shift Date: $shiftDate');
+                            print("Schedule COunt ${schedules_list.length}");
                             String dayOfWeek =
                                 DateFormat('EEEE').format(dateTime);
                             if (dateTime.year == DateTime.now().year &&

@@ -573,9 +573,30 @@ class FireStoreService {
     }
   }
 
-  //Get all the Schedules
+  //Get all the Schedules for Guards
 
   Future<List<DocumentSnapshot>> getAllSchedules(String empId) async {
+    if (empId.isEmpty) {
+      return [];
+    }
+    DateTime now = DateTime.now();
+    DateTime startDate = DateTime(now.year, now.month, now.day);
+    DateTime endDate = startDate.add(Duration(days: 7));
+    final querySnapshot = await shifts
+        .where("ShiftAssignedUserId", arrayContains: empId)
+        // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
+        .where("ShiftModifiedAt", isLessThan: endDate)
+        .orderBy("ShiftModifiedAt", descending: false)
+        .get();
+
+    print("Retrieved documents:");
+    print(querySnapshot.docs); // Log all retrieved documents
+
+    return querySnapshot.docs;
+  }
+
+  //Get all Schedules of Supervisor
+  Future<List<DocumentSnapshot>> getAllSchedulesSupervisor(String empId) async {
     if (empId.isEmpty) {
       return [];
     }
