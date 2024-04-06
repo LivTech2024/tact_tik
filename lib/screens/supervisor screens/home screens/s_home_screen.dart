@@ -162,6 +162,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
             top: height / height40,
           ),
           child: CustomScrollView(
+            physics: PageScrollPhysics(),
             slivers: [
               HomeScreenPart1(
                   userName: _userName,

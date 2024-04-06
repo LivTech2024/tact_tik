@@ -73,33 +73,34 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
     final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: Secondarycolor,
-      appBar: AppBar(
-        backgroundColor: AppBarcolor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: width / width24,
+      child: Scaffold(
+        backgroundColor: Secondarycolor,
+        appBar: AppBar(
+          backgroundColor: AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: width / width24,
+            ),
+            padding: EdgeInsets.only(left: width / width20),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          padding: EdgeInsets.only(left: width / width20),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          title: InterRegular(
+            text: 'Guards',
+            fontsize: width / width18,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
         ),
-        title: InterRegular(
-          text: 'Guards',
-          fontsize: width / width18,
-          color: Colors.white,
-          letterSpacing: -.3,
-        ),
-        centerTitle: true,
-      ),
-      body: RefreshIndicator(
-        onRefresh: _refreshdata,
-        child: ListView.builder(
+        body: RefreshIndicator(
+          onRefresh: _refreshdata,
+          child: ListView.builder(
+            physics: PageScrollPhysics(),
             itemCount: _guardsInfo.length,
             itemBuilder: (context, index) {
               var guardInfo = _guardsInfo[index];
@@ -110,11 +111,14 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
               print(guardInfo);
               return GestureDetector(
                   onTap: () {
-                    Navigator.pop(context, {
-                      'name': name,
-                      'id': id,
-                      'url': url,
-                    });
+                    Navigator.pop(
+                      context,
+                      {
+                        'name': name,
+                        'id': id,
+                        'url': url,
+                      },
+                    );
                   },
                   child: Container(
                     height: 60,
@@ -175,8 +179,10 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                       ],
                     ),
                   ));
-            }),
+            },
+          ),
+        ),
       ),
-    ));
+    );
   }
 }
