@@ -16,7 +16,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
-import 'package:tact_tik/screens/home%20screens/widgets/custom_calender.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
@@ -471,24 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   left: width / width30,
                                   right: width / width30,
                                 ),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    final List<DateTime?>? selectedDates =
-                                        await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CustomCalender(),
-                                      ),
-                                    );
-
-                                    // Print the popped value
-                                    if (selectedDates != null) {
-                                      print(selectedDates);
-                                    }
-                                  },
-                                  // child: CustomCalendar(),
-                                ),
+                                child: CustomCalendar(),
                               ))
                             : const SizedBox(),
                 ScreenIndex == 2

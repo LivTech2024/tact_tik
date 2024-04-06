@@ -29,7 +29,7 @@ class AppView extends ConsumerWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: MyPatrolsList(),
+      home: AuthChecker(),
     );
   }
 }
