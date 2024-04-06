@@ -561,13 +561,13 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                   if (Result ==
                                                       checkpoint[
                                                           'CheckPointId']) {
-                                                    fireStoreService
-                                                        .updatePatrolsStatus(
-                                                      widget.EmployeeId,
-                                                      movie.patrolId,
-                                                      checkpoint[
-                                                          'CheckPointId'],
-                                                    );
+                                                    // fireStoreService
+                                                    //     .updatePatrolsStatus(
+                                                    //   widget.EmployeeId,
+                                                    //   movie.patrolId,
+                                                    //   checkpoint[
+                                                    //       'CheckPointId'],
+                                                    // );
                                                     // Show an alert indicating a match
                                                     showDialog(
                                                       context: context,
@@ -655,12 +655,12 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                 if (Result ==
                                                     checkpoint[
                                                         'CheckPointId']) {
-                                                  fireStoreService
-                                                      .updatePatrolsStatus(
-                                                    widget.EmployeeId,
-                                                    movie.patrolId,
-                                                    checkpoint['CheckPointId'],
-                                                  );
+                                                  // fireStoreService
+                                                  //     .updatePatrolsStatus(
+                                                  //   widget.EmployeeId,
+                                                  //   movie.patrolId,
+                                                  //   checkpoint['CheckPointId'],
+                                                  // );
                                                   // Show an alert indicating a match
                                                   showDialog(
                                                     context: context,

@@ -28,8 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> signInEmailPassword(BuildContext context) async {
     try {
       var data = await Auth().signInWithEmailAndPassword(
-          _emailcontrller.text, _passwordcontrller.text);
-      String role = storage.getItem("Role");
+          _emailcontrller.text, _passwordcontrller.text, context);
+      // String role = await storage.getItem("Role");
+      final Future<String?> currentUserFuture =
+          storage.ready.then((_) => storage.getItem("Role"));
+      print("Future ${currentUserFuture}");
+
+      final String? role = storage.getItem("Role");
+      print("Normal Role  ${role}");
+
       if (role == "SUPERVISOR") {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SHomeScreen()));
@@ -130,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: 10,
                 onPressed: () {
                   Auth().signInWithEmailAndPassword(
-                      _emailcontrller.text, _passwordcontrller.text);
+                      _emailcontrller.text, _passwordcontrller.text, context);
                 },
               ),
             ],

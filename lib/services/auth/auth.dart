@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/riverpod/auth_provider.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 
 class CustomUser {
   final String email;
@@ -69,7 +71,8 @@ class Auth {
     }
   }
 
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(
+      String email, String password, context) async {
     try {
       var data = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -101,10 +104,12 @@ class Auth {
           }, SetOptions(merge: true));
 
           // Check role here and navigate accordingly
-          if (role == 'SUPERVISOR') {
-            // Navigate to supervisor screen
+          if (role == "SUPERVISOR") {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => SHomeScreen()));
           } else {
-            // Navigate to home screen
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
           }
         } else {
           // Password incorrect
