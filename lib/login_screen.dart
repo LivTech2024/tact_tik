@@ -29,6 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var data = await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text);
+      String role = storage.getItem("Role");
+      if (role == "SUPERVISOR") {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      }
     } on FirebaseAuthException catch (e) {
       // Handle FirebaseAuthException here
       String errorMessage = 'An error occurred';

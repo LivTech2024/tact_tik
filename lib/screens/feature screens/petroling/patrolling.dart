@@ -120,6 +120,10 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
         EmployeId = widget.empId;
         EmployeName = widget.empName;
       });
+      setState(() {
+        EmployeId = widget.empId;
+        EmployeName = widget.empName;
+      });
       List<Movie> updatedMovies = [];
       for (var patrolInfo in patrolInfoList) {
         String PatrolArea = patrolInfo['PatrolArea'];

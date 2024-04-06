@@ -105,13 +105,13 @@ class FireStoreService {
     }
 
     final querySnapshot = await patrols
-        .where("PatrolAssignedGuardsId", arrayContains: empId)
-        .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
+        .where("PatrolLocationId", isEqualTo: empId)
+        // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
         .orderBy("PatrolTime", descending: false)
         .get();
 
     print("Retrieved documents:");
-    print(querySnapshot.docs); // Log all retrieved documents
+    print("Get Patrol INfor ${querySnapshot.docs}"); // Log all retrieved documents
 
     return querySnapshot.docs;
   }

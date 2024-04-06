@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
   String _employeeId = "";
+  String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
   String _branchId = "";
@@ -240,6 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
           String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
           String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
+          String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
+
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
           GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? " ";
@@ -266,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _ShiftCompanyId = shiftCompanyId;
             _ShiftBranchId = companyBranchId;
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
+            _shiftLocationId = shiftLocationId;
             // _employeeImg = employeeImg;
           });
           print('Shift Info: ${shiftInfo.data()}');
@@ -442,6 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             CheckUserRadius: _shiftKeepGuardInRadiusOfLocation,
                             ShiftCompanyId: '',
                             ShiftBranchId: '',
+                            ShiftLocationId: _shiftLocationId,
                           ),
                         ),
                       )

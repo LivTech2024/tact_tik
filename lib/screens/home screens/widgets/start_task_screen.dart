@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/eg_patrolling.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -23,6 +25,7 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftCompanyId;
   final String ShiftBranchId;
   final String EmployeeName;
+  final String ShiftLocationId;
 
   // final String ShiftLocation;
   // final String ShiftName;
@@ -37,6 +40,7 @@ class StartTaskScreen extends StatefulWidget {
     required this.ShiftCompanyId,
     required this.ShiftBranchId,
     required this.EmployeeName,
+    required this.ShiftLocationId,
 
     // required this.ShiftLocation,
     // required this.ShiftName,
@@ -95,7 +99,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: height / height200,
+          height: height / height242,
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
@@ -125,7 +129,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   )
                 ],
               ),
-              SizedBox(height: height / height20),
+              SizedBox(height: height / height10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -157,7 +161,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     ),
                   ),
                   SizedBox(
-                    width: width / width80,
+                    width: width / width70,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -318,6 +322,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 backgroundcolor: WidgetColor,
                 onPressed: () {},
               ),
+        Button1(
+          text: 'Check Patrolling',
+          fontsize: width / width18,
+          color: color5,
+          backgroundcolor: WidgetColor,
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyPatrolsList(
+                          ShiftLocationId: widget.ShiftLocationId,
+                        )));
+          },
+        )
       ],
     );
   }
