@@ -143,7 +143,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InterBold(
-          text: widget.p.title,
+          text: "Today",
           fontsize: width / width18,
           color: color1,
         ),
