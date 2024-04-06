@@ -94,6 +94,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             vertical: height / height30,
           ),
           child: CustomScrollView(
+            physics: PageScrollPhysics(),
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(

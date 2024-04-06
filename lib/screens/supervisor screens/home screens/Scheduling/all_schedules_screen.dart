@@ -99,7 +99,7 @@ class AllSchedulesScreen extends StatelessWidget {
           padding:
               EdgeInsets.only(left: width / width30, right: width / width30),
           child: CustomScrollView(
-            // physics: ScrollPhysics.,
+            physics: PageScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: Column(

@@ -222,6 +222,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         ),
         backgroundColor: Secondarycolor,
         body: SingleChildScrollView(
+          physics: PageScrollPhysics(),
           child: Column(
             children: [
               Container(

@@ -362,6 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: RefreshIndicator(
             onRefresh: _refreshData,
             child: CustomScrollView(
+              physics: PageScrollPhysics(),
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
@@ -483,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
-                            var schedules = schedules_list[index];
+                            /*var schedules = schedules_list[index];
                             Timestamp shifttimestamp = schedules['ShiftDate'];
                             DateTime dateTime = shifttimestamp.toDate();
                             String shiftDate =
@@ -498,73 +499,62 @@ class _HomeScreenState extends State<HomeScreen> {
                                 dateTime.day == DateTime.now().day) {
                               shiftDate = '$shiftDate*';
                               print(shiftDate);
-                            }
+                            }*/
                             return Container(
                               margin: EdgeInsets.only(
-                                top: height / height10,
+                                top: height / height20,
                                 left: width / width30,
                                 right: width / width30,
                               ),
-                              height: height / height230,
+                              height: height / height180,
                               width: double.maxFinite,
                               child: Stack(
                                 children: [
                                   Align(
                                     alignment: Alignment.topLeft,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          width: width / width120,
-                                          height: height / height50,
-                                          padding: EdgeInsets.only(
-                                            top: height / height3,
-                                            left: width / width9,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: WidgetColor,
-                                            borderRadius: BorderRadius.circular(
-                                              width / width10,
-                                            ),
-                                          ),
-                                          child: InterBold(
-                                            text: shiftDate,
-                                            color: color2,
-                                            fontsize: width / width18,
-                                          ),
+                                    child: Container(
+                                      width: width / width200,
+                                      height: height / height50,
+                                      padding: EdgeInsets.only(
+                                        top: height / height3,
+                                        left: width / width10,
+                                        right: width / width10,
+                                        bottom: height / height20
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: color31,
+                                        borderRadius: BorderRadius.circular(
+                                          width / width10,
                                         ),
-                                        Container(
-                                          width: width / width82,
-                                          height: height / height46,
-                                          padding: EdgeInsets.only(
-                                            top: height / height3,
-                                            left: width / width12,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          InterBold(
+                                            text: '14/03/2024',
+                                            color: color30,
+                                            fontsize: width / width16,
                                           ),
-                                          decoration: BoxDecoration(
-                                            color: WidgetColor,
-                                            borderRadius: BorderRadius.circular(
-                                                width / width10),
+                                          InterBold(
+                                            text: 'Mon',
+                                            color: color30,
+                                            fontsize: width / width12,
                                           ),
-                                          child: InterBold(
-                                            text: dayOfWeek,
-                                            color: color2,
-                                            fontsize: width / width14,
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Container(
                                       width: double.maxFinite,
-                                      height: height / height198,
+                                      height: height / height150,
                                       padding: EdgeInsets.symmetric(
                                         vertical: height / height30,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Primarycolor,
+                                        color: color27,
                                         borderRadius: BorderRadius.circular(
                                             width / width10),
                                       ),
@@ -577,10 +567,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: IconTextWidget(
                                               icon: Icons.location_on,
                                               iconSize: width / width24,
-                                              text: schedules[
-                                                  'ShiftLocationAddress'],
-                                              color: color22,
-                                              Iconcolor: color22,
+                                              text: '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                              color: color30,
+                                              Iconcolor: Colors.redAccent,
                                               space: width / width8,
                                               fontsize: width / width14,
                                             ),
@@ -590,22 +579,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: IconTextWidget(
                                               iconSize: width / width24,
                                               icon: Icons.access_time,
-                                              text:
-                                                  '${schedules['ShiftStartTime']} - ${schedules['ShiftEndTime']}',
-                                              color: color22,
-                                              Iconcolor: color22,
-                                              space: width / width8,
-                                              fontsize: width / width14,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / width278,
-                                            child: IconTextWidget(
-                                              icon: Icons.qr_code_scanner,
-                                              iconSize: width / width24,
-                                              text: 'Total 6     Completed 4',
-                                              color: color22,
-                                              Iconcolor: color22,
+                                              text: '12:00 am - 12:00 pm',
+                                              color: color30,
+                                              Iconcolor: Primarycolor,
                                               space: width / width8,
                                               fontsize: width / width14,
                                             ),
