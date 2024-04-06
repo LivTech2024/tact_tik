@@ -29,26 +29,24 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       var data = await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text);
-      String role = storage.getItem("Role");
-      if (role == "SUPERVISOR") {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
-      } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       // Handle FirebaseAuthException here
       String errorMessage = 'An error occurred';
-      if (e == 'user-not-found') {
+      if (e.code == 'user-not-found') {
         errorMessage = 'No user found';
-      } else if (e == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         errorMessage = 'Incorrect password';
-      } else if (e == 'invalid-email') {
+      } else if (e.code == 'invalid-email') {
         errorMessage = 'Invalid email address';
       }
       setState(() {
         _errorMessage = errorMessage;
+      });
+    } catch (e) {
+      // Handle other errors
+      print('Error signing in: $e');
+      setState(() {
+        _errorMessage = 'An unexpected error occurred';
       });
     }
   }
@@ -122,7 +120,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'Login',
                 color: color1,
                 borderRadius: 10,
-                onPressed: () => signInEmailPassword(context),
+                onPressed: () {
+                  Auth().signInWithEmailAndPassword(
+                      _emailcontrller.text, _passwordcontrller.text);
+                },
               ),
             ],
           ),

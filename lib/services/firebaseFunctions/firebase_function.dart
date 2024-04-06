@@ -52,8 +52,8 @@ class FireStoreService {
 
     final querySnapshot = await shifts
         .where("ShiftAssignedUserId", arrayContains: EmpId)
-        .where("ShiftCurrentStatus",
-            isEqualTo: "pending") // Filter by pending status
+        // .where("ShiftCurrentStatus",
+        //     isEqualTo: "pending") // Filter by pending status
         .orderBy("ShiftDate", descending: false)
         .limit(1)
         .get();
