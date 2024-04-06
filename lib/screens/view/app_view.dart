@@ -5,6 +5,7 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 
 import '../../utils/colors.dart';
+import '../feature screens/petroling/eg_patrolling.dart';
 import '../supervisor screens/home screens/Scheduling/all_schedules_screen.dart';
 import '../supervisor screens/home screens/Scheduling/create_shedule_screen.dart';
 import '../supervisor screens/home screens/Scheduling/select_guards_screen.dart';
@@ -28,7 +29,7 @@ class AppView extends ConsumerWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: AuthChecker(),
+      home: MyPatrolsList(),
     );
   }
 }

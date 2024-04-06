@@ -487,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       print(selectedDates);
                                     }
                                   },
-                                  child: CustomCalender(),
+                                  // child: CustomCalendar(),
                                 ),
                               ))
                             : const SizedBox(),
@@ -537,7 +537,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           decoration: BoxDecoration(
                                             color: WidgetColor,
                                             borderRadius: BorderRadius.circular(
-                                                width / width10),
+                                              width / width10,
+                                            ),
                                           ),
                                           child: InterBold(
                                             text: shiftDate,
@@ -572,7 +573,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: double.maxFinite,
                                       height: height / height198,
                                       padding: EdgeInsets.symmetric(
-                                          vertical: height / height30),
+                                        vertical: height / height30,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: Primarycolor,
                                         borderRadius: BorderRadius.circular(
