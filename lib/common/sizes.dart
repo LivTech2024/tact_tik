@@ -20,6 +20,7 @@ const double height4 = 99.5;
 const double height20 = 46.9;
 const double height22 = 42.6363636364;
 const double height24 = 39.0833333333;
+const double height25 = 38.72;
 const double height26 = 36.0769230769;
 const double height46 = 20.3913043478;
 const double height64 = 14.65625;
