@@ -93,6 +93,7 @@ void showCustomDialog(BuildContext context, String title, String content) {
 
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
+
   // bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
   UserLocationChecker locationChecker = UserLocationChecker();
@@ -145,8 +146,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                   children: [
                                     Container(
                                       margin: EdgeInsets.only(
-                                          top: height / height20,
-                                          left: width / width26),
+                                        top: height / height20,
+                                        left: width / width26,
+                                      ),
                                       width: width / width200,
                                       height: height / height96,
                                       child: Column(
@@ -183,12 +185,12 @@ class _TaskScreenState extends State<TaskScreen> {
                                               InterMedium(
                                                 text: 'Out time',
                                                 color: Colors.white,
-                                                fontsize: width / width18,
+                                                fontsize: width / width14,
                                               ),
                                               InterMedium(
                                                 text: widget.ShiftEndTime,
                                                 color: Colors.white,
-                                                fontsize: width / width16,
+                                                fontsize: width / width12,
                                               )
                                             ],
                                           ),

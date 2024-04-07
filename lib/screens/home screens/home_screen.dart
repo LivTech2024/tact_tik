@@ -234,6 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // issShift = false;
           });
         }
+
         if (shiftInfo != null) {
           String shiftDateStr =
               DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
