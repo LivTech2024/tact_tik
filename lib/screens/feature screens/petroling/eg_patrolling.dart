@@ -14,9 +14,14 @@ import '../../home screens/widgets/icon_text_widget.dart';
 FireStoreService fireStoreService = FireStoreService();
 
 class MyPatrolsList extends StatefulWidget {
+  final String EmployeeID;
   final String ShiftLocationId;
+  final String EmployeeName;
 
-  const MyPatrolsList({required this.ShiftLocationId});
+  const MyPatrolsList(
+      {required this.ShiftLocationId,
+      required this.EmployeeID,
+      required this.EmployeeName});
 
   @override
   State<MyPatrolsList> createState() => _MyPatrolsListState();
@@ -25,6 +30,7 @@ class MyPatrolsList extends StatefulWidget {
 class _MyPatrolsListState extends State<MyPatrolsList> {
   // late Map<String, dynamic> patrolsData = "";
   late List<Patrol> patrolsData = [];
+  String _PatrolId = '';
   @override
   void initState() {
     super.initState();
@@ -43,7 +49,9 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
       String patrolTime = data['PatrolTime'];
-
+      setState(() {
+        _PatrolId = patrolId;
+      });
       List<Category> categories = [];
       for (var checkpoint in data['PatrolCheckPoints']) {
         String checkpointCategory = checkpoint['CheckPointCategory'];
@@ -74,6 +82,9 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           description: patrolLocationName,
           categories: categories,
           time: patrolTime,
+          PatrolId: _PatrolId,
+          EmpId: widget.EmployeeID,
+          EmployeeName: widget.EmployeeName,
         ),
       );
     }
@@ -217,7 +228,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 color: Colors.green,
                 borderRadius: width / width10,
                 onPressed: () async {
-                  // await fireStoreService.updatePatrolCurrentStatus();
+                  await fireStoreService.updatePatrolCurrentStatus(
+                    widget.p.PatrolId,
+                    "started",
+                    widget.p.EmpId,
+                    widget.p.EmployeeName,
+                  );
                   setState(() {
                     // clickedIIndex = index;
                     // print(clickedIIndex);
@@ -557,13 +573,20 @@ class Patrol {
   final String title;
   final String description;
   final String time;
+  final String PatrolId;
+  final String EmpId;
+  final String EmployeeName;
   final List<Category> categories;
 
-  Patrol(
-      {required this.title,
-      required this.description,
-      required this.categories,
-      required this.time});
+  Patrol({
+    required this.title,
+    required this.description,
+    required this.categories,
+    required this.time,
+    required this.PatrolId,
+    required this.EmpId,
+    required this.EmployeeName,
+  });
 }
 
 class Category {

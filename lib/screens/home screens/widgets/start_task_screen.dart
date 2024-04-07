@@ -333,6 +333,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 MaterialPageRoute(
                     builder: (context) => MyPatrolsList(
                           ShiftLocationId: widget.ShiftLocationId,
+                          EmployeeID: widget.EmployeId,
+                          EmployeeName: widget.EmployeeName,
                         )));
           },
         )

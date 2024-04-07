@@ -165,24 +165,33 @@ class FireStoreService {
   }
 
   Future<void> updatePatrolCurrentStatus(
-      String docId, String status, int statusCompletedCount,
-      {String? statusReportedById,
-      String? statusReportedByName,
-      Timestamp? statusReportedTime}) async {
+    String docId,
+    String status,
+    String? statusReportedById,
+    String? statusReportedByName,
+  ) async {
     try {
-      // Get a reference to the Firestore collection
-      CollectionReference<Map<String, dynamic>> patrolCurrentStatusCollection =
-          FirebaseFirestore.instance.collection('Patrols');
+      // Get a reference to the Firestore document
+      DocumentReference<Map<String, dynamic>> patrolDocument =
+          FirebaseFirestore.instance.collection('Patrols').doc(docId);
 
-      // Update the document
-      await patrolCurrentStatusCollection.doc(docId).update({
+      // Fetch the current document data
+      var documentSnapshot = await patrolDocument.get();
+      var data = documentSnapshot.data();
+
+      // Increment the current count by 1
+      int currentCount = data?['StatusCompletedCount'] ?? 0;
+      int newCount = currentCount + 1;
+
+      // Update the document with the new count and other status details
+      await patrolDocument.update({
         'Status': status,
-        'StatusCompletedCount': statusCompletedCount,
+        'StatusCompletedCount': newCount,
         'StatusReportedById': statusReportedById,
         'StatusReportedByName': statusReportedByName,
-        'StatusReportedTime': statusReportedTime,
+        'StatusReportedTime': Timestamp.now(),
       });
-      print('Document updated successfully!');
+      print('Document updated successfully with new count: $newCount');
     } catch (e) {
       print('Error updating document: $e');
     }
