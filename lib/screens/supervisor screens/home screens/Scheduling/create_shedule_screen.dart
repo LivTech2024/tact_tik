@@ -13,9 +13,6 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import '../widgets/set_details_widget.dart';
 import 'select_guards_screen.dart';
 
-
-import 'package:flutter/material.dart';
-
 class MultiDateSelectionDialog extends StatefulWidget {
   @override
   _MultiDateSelectionDialogState createState() =>
@@ -30,7 +27,11 @@ class _MultiDateSelectionDialogState extends State<MultiDateSelectionDialog> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return AlertDialog(
-      title: InterMedium(text:'Select Dates' , color: color2,fontsize: width / width20,),
+      title: InterMedium(
+        text: 'Select Dates',
+        color: color2,
+        fontsize: width / width20,
+      ),
       content: Container(
         width: double.minPositive,
         child: SingleChildScrollView(
@@ -41,16 +42,16 @@ class _MultiDateSelectionDialogState extends State<MultiDateSelectionDialog> {
                 Column(
                   children: selectedDates
                       .map((date) => ListTile(
-                    title: Text(date.toString()),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        setState(() {
-                          selectedDates.remove(date);
-                        });
-                      },
-                    ),
-                  ))
+                            title: Text(date.toString()),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                setState(() {
+                                  selectedDates.remove(date);
+                                });
+                              },
+                            ),
+                          ))
                       .toList(),
                 ),
               // Date picker for selecting new dates
@@ -58,7 +59,11 @@ class _MultiDateSelectionDialogState extends State<MultiDateSelectionDialog> {
                 onPressed: () {
                   _selectDate(context);
                 },
-                child: InterMedium(text:'Select Date', color: Primarycolor,fontsize: width / width16,),
+                child: InterMedium(
+                  text: 'Select Date',
+                  color: Primarycolor,
+                  fontsize: width / width16,
+                ),
               ),
             ],
           ),
@@ -69,12 +74,15 @@ class _MultiDateSelectionDialogState extends State<MultiDateSelectionDialog> {
           onPressed: () {
             Navigator.of(context).pop(selectedDates);
           },
-          child: InterMedium(text: 'OK' , color: Primarycolor,fontsize: width / width18,),
+          child: InterMedium(
+            text: 'OK',
+            color: Primarycolor,
+            fontsize: width / width18,
+          ),
         ),
       ],
     );
   }
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? datePicked = await showDatePicker(
@@ -99,11 +107,7 @@ class _MultiDateSelectionDialogState extends State<MultiDateSelectionDialog> {
       });
     }
   }
-
 }
-
-
-
 
 class CreateSheduleScreen extends StatefulWidget {
   final String GuardId;
@@ -172,8 +176,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       print('Selected Dates: $selectedDates');
     }
   }
-
-
 
 /*
   void _selectDate(BuildContext context) async {
@@ -311,6 +313,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
+  bool nextScreen = false;
+  List<String> taskNames = [];
+
+  void _addNewTask() {
+    setState(() {
+      taskNames.add('');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -385,395 +396,494 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                 ),
               ),
               SizedBox(height: height / height30),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InterBold(
-                          text: 'Select Guards',
-                          fontsize: width / width16,
-                          color: color1,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SelectGuardsScreen(
-                                          companyId: widget.CompanyId,
-                                        ))).then((value) => {
-                                  if (value != null)
-                                    {
-                                      print("Value: ${value}"),
-                                      setState(() {
-                                        selectedGuards.add({
-                                          'GuardId': value['id'],
-                                          'GuardName': value['name'],
-                                          'GuardImg': value['url']
-                                        });
-                                      }),
-                                    }
-                                });
-                          },
-                          child: InterBold(
-                            text: 'view all',
-                            fontsize: width / width14,
-                            color: color1,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: height / height24),
-                    Container(
-                      height: height / height64,
+              nextScreen
+                  ? Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width10),
-                      decoration: BoxDecoration(
-                        color: WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width13),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          EdgeInsets.symmetric(horizontal: width / width30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: TextField(
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w300,
-                                fontSize: width / width18,
-                                color: Colors.white,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InterBold(
+                                text: 'Select Guards',
+                                fontsize: width / width16,
+                                color: color1,
                               ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(width / width10),
-                                  ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectGuardsScreen(
+                                                companyId: widget.CompanyId,
+                                              ))).then((value) => {
+                                        if (value != null)
+                                          {
+                                            print("Value: ${value}"),
+                                            setState(() {
+                                              selectedGuards.add({
+                                                'GuardId': value['id'],
+                                                'GuardName': value['name'],
+                                                'GuardImg': value['url']
+                                              });
+                                            }),
+                                          }
+                                      });
+                                },
+                                child: InterBold(
+                                  text: 'view all',
+                                  fontsize: width / width14,
+                                  color: color1,
                                 ),
-                                focusedBorder: InputBorder.none,
-                                hintStyle: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: width / width18,
-                                  color: color2, // Change text color to white
-                                ),
-                                hintText: 'Search Guard',
-                                contentPadding:
-                                    EdgeInsets.zero, // Remove padding
-                              ),
-                              cursorColor: Primarycolor,
-                            ),
+                              )
+                            ],
                           ),
+                          SizedBox(height: height / height24),
                           Container(
-                            height: height / height44,
-                            width: width / width44,
+                            height: height / height64,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width10),
                             decoration: BoxDecoration(
-                              color: Primarycolor,
+                              color: WidgetColor,
                               borderRadius:
-                                  BorderRadius.circular(width / width10),
+                                  BorderRadius.circular(width / width13),
                             ),
-                            child: Center(
-                              child: Icon(
-                                Icons.search,
-                                size: width / width20,
-                                color: Colors.black,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: height / height20),
-                      height: height / height80,
-                      width: double.maxFinite,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: selectedGuards.length,
-                        itemBuilder: (context, index) {
-                          String guardId = selectedGuards[index]['GuardId'];
-                          String guardName = selectedGuards[index]['GuardName'];
-                          String guardImg = selectedGuards[index]['GuardImg'];
-                          return Padding(
-                            padding: EdgeInsets.only(right: height / height20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    Container(
-                                      height: height / height50,
-                                      width: width / width50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                            image: NetworkImage(guardImg),
-                                            fit: BoxFit.fitWidth),
-                                      ),
+                                Expanded(
+                                  child: TextField(
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: width / width18,
+                                      color: Colors.white,
                                     ),
-                                    Positioned(
-                                      top: -4,
-                                      right: -5,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedGuards.removeAt(index);
-                                          });
-                                        },
-                                        child: Container(
-                                          height: height / height20,
-                                          width: width / width20,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: color1),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 8,
-                                              color: Secondarycolor,
-                                            ),
-                                          ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(width / width10),
                                         ),
                                       ),
-                                    )
-                                  ],
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: width / width18,
+                                        color:
+                                            color2, // Change text color to white
+                                      ),
+                                      hintText: 'Search Guard',
+                                      contentPadding:
+                                          EdgeInsets.zero, // Remove padding
+                                    ),
+                                    cursorColor: Primarycolor,
+                                  ),
                                 ),
-                                SizedBox(height: height / height8),
-                                InterBold(
-                                  text: guardName,
-                                  fontsize: width / width14,
-                                  color: color26,
+                                Container(
+                                  height: height / height44,
+                                  width: width / width44,
+                                  decoration: BoxDecoration(
+                                    color: Primarycolor,
+                                    borderRadius:
+                                        BorderRadius.circular(width / width10),
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.search,
+                                      size: width / width20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: height / height30,
-                    ),
-                    InterBold(
-                      text: 'Set Details',
-                      fontsize: width / width16,
-                      color: color1,
-                    ),
-                    SizedBox(height: height / height10),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Shift Position',
-                      icon: Icons.control_camera,
-                      controller: _ShiftPosition,
-                      onTap: () {},
-                    ),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Shift Name',
-                      icon: Icons.map_outlined,
-                      controller: _ShiftName,
-                      onTap: () {},
-                    ),
-
-                    // Multiple Date To Do
-                    SetDetailsWidget(
-                      hintText: selectedDate == null
-                          ? 'Date'
-                          : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
-                      icon: Icons.date_range,
-                      onTap: () => _selectDate(context),
-                    ),
-                    // Seperate Time
-                    SetDetailsWidget(
-                      hintText: selectedTime == null
-                          ? 'Start Time'
-                          : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
-                      icon: Icons.access_time_rounded,
-                      onTap: () => _selectTime(context, true),
-                    ),
-                    SetDetailsWidget(
-                      hintText: selectedTime == null
-                          ? 'End Time'
-                          : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
-                      icon: Icons.access_time_rounded,
-                      onTap: () => _selectTime(context, false),
-                    ),
-
-                    Container(
-                      height: height / height60,
-                      width: double.maxFinite,
-                      decoration: BoxDecoration(
-                        // color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(width / width10),
-                        border: Border(
-                          bottom: BorderSide(
-                            color: color19,
                           ),
-                        ),
-                      ),
-                      margin: EdgeInsets.only(top: height / height10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: width / width10),
-                          Icon(
-                            Icons.location_on,
-                            size: width / width24,
-                            color: color1,
-                          ),
-                          SizedBox(width: width / width10),
-                          Expanded(
-                            child: GooglePlaceAutoCompleteTextField(
-                              textEditingController: _locationController,
-                              googleAPIKey:
-                                  "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
-                              boxDecoration: BoxDecoration(border: Border()),
-                              inputDecoration: InputDecoration(
-                                border: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                hintStyle: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: width / width18,
-                                  color: color2, // Change text color to white
-                                ),
-                                hintText: 'Search your location',
-                                contentPadding: EdgeInsets.zero,
-                              ),
-                              debounceTime: 400,
-                              countries: ["in", "fr"],
-                              isLatLngRequired: true,
-                              getPlaceDetailWithLatLng:
-                                  (Prediction prediction) {
-                                print(
-                                    "placeDetails" + prediction.lat.toString());
-                              },
-
-                              itemClick: (Prediction prediction) {
-                                _locationController.text =
-                                    prediction.description ?? "";
-                                _locationController.selection =
-                                    TextSelection.fromPosition(TextPosition(
-                                        offset:
-                                            prediction.description?.length ??
-                                                0));
-                              },
-                              seperatedBuilder: Divider(),
-                              // containerHorizontalPadding: 10,
-
-                              // OPTIONAL// If you want to customize list view item builder
-                              itemBuilder:
-                                  (context, index, Prediction prediction) {
-                                return Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Row(
+                          Container(
+                            margin: EdgeInsets.only(top: height / height20),
+                            height: height / height80,
+                            width: double.maxFinite,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: selectedGuards.length,
+                              itemBuilder: (context, index) {
+                                String guardId =
+                                    selectedGuards[index]['GuardId'];
+                                String guardName =
+                                    selectedGuards[index]['GuardName'];
+                                String guardImg =
+                                    selectedGuards[index]['GuardImg'];
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.only(right: height / height20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Icon(Icons.location_on),
-                                      SizedBox(
-                                        width: 6,
+                                      Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Container(
+                                            height: height / height50,
+                                            width: width / width50,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                  image: NetworkImage(guardImg),
+                                                  fit: BoxFit.fitWidth),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: -4,
+                                            right: -5,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedGuards
+                                                      .removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                height: height / height20,
+                                                width: width / width20,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: color1),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    size: 8,
+                                                    color: Secondarycolor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: InterMedium(
-                                          text:
-                                              '${prediction.description ?? ""}',
-                                          color: color2,
-                                        ),
+                                      SizedBox(height: height / height8),
+                                      InterBold(
+                                        text: guardName,
+                                        fontsize: width / width14,
+                                        color: color26,
                                       )
                                     ],
                                   ),
                                 );
                               },
+                            ),
+                          ),
+                          SizedBox(
+                            height: height / height30,
+                          ),
+                          InterBold(
+                            text: 'Set Details',
+                            fontsize: width / width16,
+                            color: color1,
+                          ),
+                          SizedBox(height: height / height10),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Shift Position',
+                            icon: Icons.control_camera,
+                            controller: _ShiftPosition,
+                            onTap: () {},
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Shift Name',
+                            icon: Icons.map_outlined,
+                            controller: _ShiftName,
+                            onTap: () {},
+                          ),
 
-                              isCrossBtnShown: true,
-                              textStyle: TextStyle(color: Colors.white),
+                          // Multiple Date To Do
+                          SetDetailsWidget(
+                            hintText: selectedDate == null
+                                ? 'Date'
+                                : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
+                            icon: Icons.date_range,
+                            onTap: () => _selectDate(context),
+                          ),
+                          // Seperate Time
+                          SetDetailsWidget(
+                            hintText: selectedTime == null
+                                ? 'Start Time'
+                                : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
+                            icon: Icons.access_time_rounded,
+                            onTap: () => _selectTime(context, true),
+                          ),
+                          SetDetailsWidget(
+                            hintText: selectedTime == null
+                                ? 'End Time'
+                                : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
+                            icon: Icons.access_time_rounded,
+                            onTap: () => _selectTime(context, false),
+                          ),
 
-                              // default 600 ms ,
+                          Container(
+                            height: height / height60,
+                            width: double.maxFinite,
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
+                            ),
+                            margin: EdgeInsets.only(top: height / height10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(width: width / width10),
+                                Icon(
+                                  Icons.location_on,
+                                  size: width / width24,
+                                  color: color1,
+                                ),
+                                SizedBox(width: width / width10),
+                                Expanded(
+                                  child: GooglePlaceAutoCompleteTextField(
+                                    textEditingController: _locationController,
+                                    googleAPIKey:
+                                        "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
+                                    boxDecoration:
+                                        BoxDecoration(border: Border()),
+                                    inputDecoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: width / width18,
+                                        color:
+                                            color2, // Change text color to white
+                                      ),
+                                      hintText: 'Search your location',
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                    debounceTime: 400,
+                                    countries: ["in", "fr"],
+                                    isLatLngRequired: true,
+                                    getPlaceDetailWithLatLng:
+                                        (Prediction prediction) {
+                                      print("placeDetails" +
+                                          prediction.lat.toString());
+                                    },
+
+                                    itemClick: (Prediction prediction) {
+                                      _locationController.text =
+                                          prediction.description ?? "";
+                                      _locationController.selection =
+                                          TextSelection.fromPosition(
+                                              TextPosition(
+                                                  offset: prediction.description
+                                                          ?.length ??
+                                                      0));
+                                    },
+                                    seperatedBuilder: Divider(),
+                                    // containerHorizontalPadding: 10,
+
+                                    // OPTIONAL// If you want to customize list view item builder
+                                    itemBuilder: (context, index,
+                                        Prediction prediction) {
+                                      return Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.location_on),
+                                            SizedBox(
+                                              width: 6,
+                                            ),
+                                            Expanded(
+                                              child: InterMedium(
+                                                text:
+                                                    '${prediction.description ?? ""}',
+                                                color: color2,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+
+                                    isCrossBtnShown: true,
+                                    textStyle: TextStyle(color: Colors.white),
+
+                                    // default 600 ms ,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'client Name',
+                            icon: Icons.account_circle_outlined,
+                            controller: _clientcontrller,
+                            onTap: () {},
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Required no. of Employees ',
+                            icon: Icons.onetwothree,
+                            controller: _RequirednoofEmployees,
+                            onTap: () {},
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Restricted Radius(in meter)',
+                            icon: Icons.attribution,
+                            controller: _RestrictedRadius,
+                            onTap: () {},
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _isRestrictedChecked,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _isRestrictedChecked = value ?? false;
+                                  });
+                                },
+                              ),
+                              InterMedium(
+                                text: 'Enable Restricted Radius',
+                                fontsize: width / width16,
+                                color: color2,
+                              ),
+                            ],
+                          ),
+
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Branch(Optional)',
+                            icon: Icons.apartment,
+                            controller: _Branch,
+                            onTap: () {},
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Photo Upload interval in minutes ',
+                            icon: Icons.backup_outlined,
+                            controller: _PhotoUploadIntervalInMinutes,
+                            onTap: () {},
+                          ),
+                          SetDetailsWidget(
+                            useTextField: true,
+                            hintText: 'Description(Optional)',
+                            icon: Icons.draw_outlined,
+                            controller: _Description,
+                            onTap: () {},
+                          ),
+                          // placesAutoCompleteTextField(),
+
+                          SizedBox(height: height / height90),
+                          Button1(
+                            text: 'Done',
+                            onPressed: () {
+                              print(selectedGuards);
+                            },
+                            backgroundcolor: Primarycolor,
+                            color: color22,
+                            borderRadius: width / width10,
+                            fontsize: width / width18,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: taskNames.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Container(
+                                  padding:
+                                      EdgeInsets.only(left: width / width10),
+                                  decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                          width / width10)),
+                                  child: TextField(
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: width / width18,
+                                      color: Colors
+                                          .white, // Change text color to white
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(width / width10),
+                                        ),
+                                      ),
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: width / width18,
+                                        color:
+                                            color2, // Change text color to white
+                                      ),
+                                      hintText: 'Task ${index + 1}',
+                                      contentPadding:
+                                          EdgeInsets.zero, // Remove padding
+                                    ),
+                                    cursorColor: Primarycolor,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.redAccent,
+                                    size: width / width24,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      taskNames.removeAt(index);
+                                    });
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: height / height20),
+                          SizedBox(
+                            width: width / width120,
+                            child: Button1(
+                              borderRadius: width/width10,
+                              onPressed: () {
+                                // if (nextScreen == false) {
+                                //   setState(() {
+                                //     nextScreen = true;
+                                //   });
+                                // }  else
+                                _addNewTask();
+                              },
+                              height: height/ height50,
+                              backgroundcolor: Primarycolor,
+                              text: nextScreen == false
+                                  ? 'Fist screen'
+                                  : 'Second Screen',
+                              color: Colors.black,
                             ),
                           ),
                         ],
                       ),
                     ),
-
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'client Name',
-                      icon: Icons.account_circle_outlined,
-                      controller: _clientcontrller,
-                      onTap: () {},
-                    ),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Required no. of Employees ',
-                      icon: Icons.onetwothree,
-                      controller: _RequirednoofEmployees,
-                      onTap: () {},
-                    ),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Restricted Radius(in meter)',
-                      icon: Icons.attribution,
-                      controller: _RestrictedRadius,
-                      onTap: () {},
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: _isRestrictedChecked,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isRestrictedChecked = value ?? false;
-                            });
-                          },
-                        ),
-                        InterMedium(
-                          text: 'Enable Restricted Radius',
-                          fontsize: width / width16,
-                          color: color2,
-                        ),
-                      ],
-                    ),
-
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Branch(Optional)',
-                      icon: Icons.apartment,
-                      controller: _Branch,
-                      onTap: () {},
-                    ),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Photo Upload interval in minutes ',
-                      icon: Icons.backup_outlined,
-                      controller: _PhotoUploadIntervalInMinutes,
-                      onTap: () {},
-                    ),
-                    SetDetailsWidget(
-                      useTextField: true,
-                      hintText: 'Description(Optional)',
-                      icon: Icons.draw_outlined,
-                      controller: _Description,
-                      onTap: () {},
-                    ),
-                    // placesAutoCompleteTextField(),
-
-                    SizedBox(height: height / height90),
-                    Button1(
-                      text: 'Done',
-                      onPressed: () {
-                        print(selectedGuards);
-                      },
-                      backgroundcolor: Primarycolor,
-                      color: color22,
-                      borderRadius: width / width10,
-                      fontsize: width / width18,
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),
