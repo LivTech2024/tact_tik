@@ -52,8 +52,8 @@ class FireStoreService {
 
     final querySnapshot = await shifts
         .where("ShiftAssignedUserId", arrayContains: EmpId)
-        .where("ShiftCurrentStatus",
-            isEqualTo: "pending") // Filter by pending status
+        // .where("ShiftCurrentStatus",
+        //     isEqualTo: "pending") // Filter by pending status
         .orderBy("ShiftDate", descending: false)
         .limit(1)
         .get();
@@ -105,13 +105,14 @@ class FireStoreService {
     }
 
     final querySnapshot = await patrols
-        .where("PatrolAssignedGuardsId", arrayContains: empId)
-        .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
+        .where("PatrolLocationId", isEqualTo: empId)
+        // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
         .orderBy("PatrolTime", descending: false)
         .get();
 
     print("Retrieved documents:");
-    print(querySnapshot.docs); // Log all retrieved documents
+    print(
+        "Get Patrol INfor ${querySnapshot.docs}"); // Log all retrieved documents
 
     return querySnapshot.docs;
   }
@@ -125,35 +126,150 @@ class FireStoreService {
     return patrolStream;
   }
 
-  Future<void> updatePatrolsStatus(
-      String EmpId, String PatrolId, String CheckPointId) async {
-    if (EmpId.isEmpty || PatrolId.isEmpty || CheckPointId.isEmpty) {
+  Future<void> updatePatrolsStatus(String patrolId, String checkPointId) async {
+    if (patrolId.isEmpty || checkPointId.isEmpty) {
       return;
     }
 
-    final querySnapshot = await patrols
-        .where("PatrolAssignedGuardId", isEqualTo: EmpId)
-        .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
-        .orderBy("PatrolTime", descending: false)
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Patrols')
+        .where("PatrolId", isEqualTo: patrolId)
+        .where("PatrolCurrentStatus", whereIn: ["pending", "started", []])
+        // .orderBy("PatrolTime", descending: false)
         .get();
 
     print("Retrieved documents:");
     print(querySnapshot.docs); // Log all retrieved documents
 
     for (var doc in querySnapshot.docs) {
-      var checkpoints = doc.get('PatrolCheckPoints');
-      for (var checkpoint in checkpoints) {
-        if (checkpoint['CheckPointId'] == CheckPointId) {
-          // Update the CheckPointStatus to "checked"
-          checkpoint['CheckPointStatus'] = 'checked';
-          checkpoint['CheckPointCheckedTime'] =
-              Timestamp.now(); //Update the timestamp
-        }
+      var checkpoints = List.from(doc.get('PatrolCheckPoints'));
+
+      // Find the checkpoint to update
+      var checkpointToUpdate = checkpoints.firstWhere(
+          (checkpoint) => checkpoint['CheckPointId'] == checkPointId,
+          orElse: () => null);
+
+      if (checkpointToUpdate != null) {
+        // Update the CheckPointStatus to "checked"
+        checkpointToUpdate['CheckPointStatus'] = [
+          {
+            'Status': 'checked',
+            'StatusReportedTime': Timestamp.now(),
+          }
+        ];
+
+        // Update the document in Firestore
+        await doc.reference.update({'PatrolCheckPoints': checkpoints});
+      }
+    }
+  }
+
+  Future<void> updatePatrolCurrentStatus(
+    String docId,
+    String status,
+    String? statusReportedById,
+    String? statusReportedByName,
+  ) async {
+    try {
+      // Get a reference to the Firestore document
+      DocumentReference<Map<String, dynamic>> patrolDocument =
+          FirebaseFirestore.instance.collection('Patrols').doc(docId);
+
+      // Fetch the current document data
+      var documentSnapshot = await patrolDocument.get();
+      var data = documentSnapshot.data();
+
+      // Check if the status entry already exists
+      List<Map<String, dynamic>> currentStatusList =
+          List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
+      int existingIndex = currentStatusList.indexWhere(
+          (entry) => entry['StatusReportedById'] == statusReportedById);
+
+      if (existingIndex != -1) {
+        // If the status entry exists, update it
+        currentStatusList[existingIndex]['Status'] = status;
+        currentStatusList[existingIndex]['StatusReportedByName'] =
+            statusReportedByName;
+        currentStatusList[existingIndex]['StatusReportedTime'] =
+            Timestamp.now();
+        // Optionally, increment the count
+        // currentStatusList[existingIndex]['StatusCompletedCount'] =
+        //     (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
+      } else {
+        // If the status entry doesn't exist, add a new entry
+        currentStatusList.add({
+          'Status': status,
+          'StatusReportedById': statusReportedById,
+          'StatusReportedByName': statusReportedByName,
+          // 'StatusCompletedCount': 1, // Start count from 1 for new entry
+          'StatusReportedTime': Timestamp.now(),
+        });
       }
 
-      // Update the document in Firestore
-      await doc.reference.update({'PatrolCheckPoints': checkpoints});
+      // Update the document with the updated status array
+      await patrolDocument.update({
+        'PatrolCurrentStatus': currentStatusList,
+      });
+
+      print('Document updated successfully');
+    } catch (e) {
+      print('Error updating document: $e');
     }
+  }
+
+  Future<void> EndPatrolupdatePatrolsStatus(String patrolId,
+      String statusReportedById, String statusReportedByName) async {
+    if (patrolId.isEmpty) {
+      return;
+    }
+    DocumentReference<Map<String, dynamic>> patrolDocument =
+        FirebaseFirestore.instance.collection('Patrols').doc(patrolId);
+
+    // Fetch the current document data
+    var documentSnapshot = await patrolDocument.get();
+    var data = documentSnapshot.data();
+
+    // Update the status entry for the given statusReportedById
+
+    // Update checkpoint statuses to "not_checked"
+    List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
+    checkpoints.forEach((checkpoint) {
+      List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
+      status.forEach((entry) {
+        entry['Status'] = 'not_checked';
+        entry['StatusReportedTime'] = Timestamp.now();
+      });
+    });
+    List<Map<String, dynamic>> currentStatusList =
+        List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
+    int existingIndex = currentStatusList.indexWhere(
+        (entry) => entry['StatusReportedById'] == statusReportedById);
+
+    if (existingIndex != -1) {
+      // If the status entry exists, update it
+      currentStatusList[existingIndex]['Status'] = "completed";
+      currentStatusList[existingIndex]['StatusReportedByName'] =
+          statusReportedByName;
+      currentStatusList[existingIndex]['StatusReportedTime'] = Timestamp.now();
+      currentStatusList[existingIndex]['StatusCompletedCount'] =
+          (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
+    } else {
+      // If the status entry doesn't exist, add a new entry
+      currentStatusList.add({
+        'Status': "completed",
+        'StatusReportedById': statusReportedById,
+        'StatusReportedByName': statusReportedByName,
+        'StatusCompletedCount': 1,
+        'StatusReportedTime': Timestamp.now(),
+      });
+    }
+    await patrolDocument.update({
+      'PatrolCheckPoints': checkpoints,
+      'PatrolCurrentStatus': currentStatusList,
+    });
+    // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
+
+    print("Patrol and checkpoint statuses updated successfully");
   }
 
   Future<void> updatePatrolsReport(

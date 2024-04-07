@@ -21,6 +21,7 @@ class TaskScreen extends StatefulWidget {
   final String ShiftBranchId;
   final String ShiftName;
   final String Branchid;
+  final String ShiftLocationId;
   final String cmpId;
   bool isWithINRadius;
   final String empId;
@@ -59,6 +60,7 @@ class TaskScreen extends StatefulWidget {
     required this.CheckUserRadius,
     required this.ShiftCompanyId,
     required this.ShiftBranchId,
+    required this.ShiftLocationId,
   });
 
   @override
@@ -129,6 +131,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftCompanyId: widget.ShiftCompanyId,
                   ShiftBranchId: widget.ShiftBranchId,
                   EmployeeName: widget.EmpName,
+                  ShiftLocationId: widget.ShiftLocationId,
                 )
               : Column(
                   children: [

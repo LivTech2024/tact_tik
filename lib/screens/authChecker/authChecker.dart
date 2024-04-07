@@ -12,38 +12,41 @@ import 'package:tact_tik/services/auth/auth.dart';
 class AuthChecker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final _authState = ref.watch(authStateProvider);
     final LocalStorage storage = LocalStorage('currentUserEmail');
     final Future<String?> currentUserFuture =
         storage.ready.then((_) => storage.getItem("CurrentUser"));
-    // final String? role = storage.getItem("Role");
-    // print("Role ${role}");
 
     return FutureBuilder<String?>(
       future: currentUserFuture,
       builder: (context, snapshot) {
-        final String? role = storage.getItem("Role");
-        print("Role $role");
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (snapshot.hasData) {
+        } else if (snapshot.hasData && _authState != null) {
+          final String? role = storage.getItem("Role");
+          print("Role: $role");
           return _handleAuthenticatedUser(role);
         } else {
-          return GetStartedScreens();
+          return LoginScreen();
         }
       },
     );
   }
 
   Widget _handleAuthenticatedUser(String? role) {
-    switch (role) {
-      case 'SUPERVISOR':
-        return const SHomeScreen();
-      default:
-        return const HomeScreen();
+    if (role != null) {
+      switch (role) {
+        case 'SUPERVISOR':
+          return const SHomeScreen(); // Navigate to supervisor screen
+        default:
+          return const HomeScreen(); // Navigate to home screen
+      }
+    } else {
+      return const CircularProgressIndicator(); // Or any other loading indicator
     }
   }
 }

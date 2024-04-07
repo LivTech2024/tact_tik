@@ -28,8 +28,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> signInEmailPassword(BuildContext context) async {
     try {
       var data = await Auth().signInWithEmailAndPassword(
-          _emailcontrller.text, _passwordcontrller.text);
-      String role = storage.getItem("Role");
+          _emailcontrller.text, _passwordcontrller.text, context);
+      // String role = await storage.getItem("Role");
+      final Future<String?> currentUserFuture =
+          storage.ready.then((_) => storage.getItem("Role"));
+      print("Future ${currentUserFuture}");
+
+      final String? role = storage.getItem("Role");
+      print("Normal Role  ${role}");
+
       if (role == "SUPERVISOR") {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SHomeScreen()));
@@ -37,18 +44,24 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       // Handle FirebaseAuthException here
       String errorMessage = 'An error occurred';
-      if (e == 'user-not-found') {
+      if (e.code == 'user-not-found') {
         errorMessage = 'No user found';
-      } else if (e == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         errorMessage = 'Incorrect password';
-      } else if (e == 'invalid-email') {
+      } else if (e.code == 'invalid-email') {
         errorMessage = 'Invalid email address';
       }
       setState(() {
         _errorMessage = errorMessage;
+      });
+    } catch (e) {
+      // Handle other errors
+      print('Error signing in: $e');
+      setState(() {
+        _errorMessage = 'An unexpected error occurred';
       });
     }
   }
@@ -122,7 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: 'Login',
                 color: color1,
                 borderRadius: 10,
-                onPressed: () => signInEmailPassword(context),
+                onPressed: () {
+                  Auth().signInWithEmailAndPassword(
+                      _emailcontrller.text, _passwordcontrller.text, context);
+                },
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/riverpod/auth_provider.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 
