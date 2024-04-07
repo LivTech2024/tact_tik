@@ -31,6 +31,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   // late Map<String, dynamic> patrolsData = "";
   late List<Patrol> patrolsData = [];
   String _PatrolId = '';
+  int totalCount = 0;
   @override
   void initState() {
     super.initState();
@@ -49,15 +50,68 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
       String patrolTime = data['PatrolTime'];
+      int requiredCount = data['PatrolRequiredCount'];
+      List<dynamic>? patrolStatusDynamic =
+          data['PatrolCurrentStatus'] is List<dynamic>
+              ? data['PatrolCurrentStatus'] as List<dynamic>?
+              : null;
+      if (patrolStatusDynamic != null) {
+        List<Map<String, dynamic>> patrolStatus =
+            patrolStatusDynamic.cast<Map<String, dynamic>>();
+
+        int getCompletedCount(
+            List<Map<String, dynamic>> patrolCurrentStatus, String emplid) {
+          List<Map<String, dynamic>> statusList =
+              patrolCurrentStatus.cast<Map<String, dynamic>>();
+
+          List<Map<String, dynamic>> filteredStatusList = statusList
+              .where((status) => status['StatusReportedById'] == emplid)
+              .toList();
+
+          int completedCount = filteredStatusList.fold(
+              0,
+              (sum, status) =>
+                  sum + (status['StatusCompletedCount'] as int? ?? 0));
+          return completedCount;
+        }
+
+        int completedCount = getCompletedCount(patrolStatus, widget.EmployeeID);
+        setState(() {
+          totalCount = completedCount;
+        });
+        print('Completed count for : $completedCount');
+      } else {
+        print('Patrol status is null or not a List<dynamic>');
+      }
+
       setState(() {
         _PatrolId = patrolId;
       });
       List<Category> categories = [];
+      bool allChecked = true;
       for (var checkpoint in data['PatrolCheckPoints']) {
         String checkpointCategory = checkpoint['CheckPointCategory'];
         String checkpointId = checkpoint['CheckPointId'];
         String checkpointName = checkpoint['CheckPointName'];
-
+        List<CheckPointStatus> checkPointStatuses =
+            (checkpoint['CheckPointStatus'] as List<dynamic> ?? [])
+                .map((status) {
+          // setState(() {
+          //   totalCount = status['StatusCompletedCount'] ?? 0;
+          // });
+          if (status['Status'] != 'checked') {
+            setState(() {
+              allChecked = false; // At least one checkpoint is not checked
+            });
+          }
+          return CheckPointStatus(
+            status: status['Status'],
+            StatusCompletedCount: status['StatusCompletedCount'],
+            reportedTime: status['StatusReportedTime'],
+            reportedById: status['StatusReportedById'],
+            reportedByName: status['StatusReportedByName'],
+          );
+        }).toList();
         // Assuming CheckPointStatus is not used in this context
         Category category = categories.firstWhere(
             (element) => element.title == checkpointCategory, orElse: () {
@@ -71,7 +125,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           title: checkpointName,
           description: 'Description of $checkpointName',
           id: checkpointId,
-          checkPointStatus: [],
+          checkPointStatus: checkPointStatuses,
           patrolId: patrolId,
         ));
       }
@@ -85,6 +139,9 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           PatrolId: _PatrolId,
           EmpId: widget.EmployeeID,
           EmployeeName: widget.EmployeeName,
+          PatrolRequiredCount: requiredCount,
+          CompletedCount: totalCount,
+          Allchecked: allChecked,
         ),
       );
     }
@@ -214,7 +271,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     IconTextWidget(
                       iconSize: width / width24,
                       icon: Icons.qr_code_scanner,
-                      text: 'Total       Completed',
+                      text:
+                          'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
                       useBold: false,
                       color: color13,
                     ),
@@ -444,13 +502,23 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   color: color2,
                                                 ),
                                                 child: Icon(
-                                                  checkpoint.getFirstStatus() ==
-                                                          'checked'
+                                                  checkpoint.checkPointStatus
+                                                              .isNotEmpty &&
+                                                          checkpoint
+                                                                  .checkPointStatus
+                                                                  .first
+                                                                  .status ==
+                                                              'checked'
                                                       ? Icons.done
                                                       : Icons.qr_code,
                                                   color: checkpoint
-                                                              .getFirstStatus() ==
-                                                          'checked'
+                                                              .checkPointStatus
+                                                              .isNotEmpty &&
+                                                          checkpoint
+                                                                  .checkPointStatus
+                                                                  .first
+                                                                  .status ==
+                                                              'checked'
                                                       ? Colors.green
                                                       : Colors.red,
                                                 ),
@@ -557,7 +625,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       backgroundcolor: colorRed2,
                       color: Colors.redAccent,
                       borderRadius: 10,
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (widget.p.Allchecked) {
+                          await fireStoreService.EndPatrolupdatePatrolsStatus(
+                              widget.p.PatrolId,
+                              widget.p.EmpId,
+                              widget.p.EmployeeName);
+                          print("All checked");
+                        } else {
+                          print("not checked");
+                        }
+                      },
                     )
                   : const SizedBox(),
             ],
@@ -576,6 +654,9 @@ class Patrol {
   final String PatrolId;
   final String EmpId;
   final String EmployeeName;
+  final int PatrolRequiredCount;
+  final int CompletedCount;
+  final bool Allchecked;
   final List<Category> categories;
 
   Patrol({
@@ -586,6 +667,9 @@ class Patrol {
     required this.PatrolId,
     required this.EmpId,
     required this.EmployeeName,
+    required this.PatrolRequiredCount,
+    required this.CompletedCount,
+    required this.Allchecked,
   });
 }
 
@@ -624,6 +708,7 @@ class CheckPointStatus {
   final String? reportedByName;
   final Timestamp? reportedTime;
   final String? failureReason;
+  final int? StatusCompletedCount;
 
   CheckPointStatus({
     required this.status,
@@ -631,6 +716,7 @@ class CheckPointStatus {
     this.reportedByName,
     this.reportedTime,
     this.failureReason,
+    this.StatusCompletedCount,
   });
 }
 
