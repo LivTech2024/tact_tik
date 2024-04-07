@@ -317,87 +317,82 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             child: Column(
                               children: category.checkpoints.map((checkpoint) {
                                 return GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     fireStoreService.updatePatrolsStatus(
                                         checkpoint.patrolId, checkpoint.id);
+                                    var res = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SimpleBarcodeScannerPage(),
+                                        ));
+                                    setState(() {
+                                      if (res is String) {
+                                        Result = res;
+                                        print(res);
+                                        if (Result == checkpoint.id) {
+                                          fireStoreService.updatePatrolsStatus(
+                                              checkpoint.patrolId,
+                                              checkpoint.id);
+                                          // Show an alert indicating a match
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Checkpoint Match',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                content: Text(
+                                                  'The scanned QR code matches the checkpoint ID.',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text('OK'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          // Show an alert indicating no match
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Checkpoint Mismatch',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                content: Text(
+                                                  'The scanned QR code does not match the checkpoint ID.',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text('OK'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    });
                                   },
-                                  // onTap: () async {
-                                  //   fireStoreService.updatePatrolsStatus(
-                                  //       checkpoint.patrolId, checkpoint.id);
-                                  //   var res = await Navigator.push(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             const SimpleBarcodeScannerPage(),
-                                  //       ));
-                                  //   setState(() {
-                                  //     if (res is String) {
-                                  //       Result = res;
-                                  //       print(res);
-
-                                  //       if (Result == checkpoint.id) {
-                                  //         fireStoreService.updatePatrolsStatus(
-                                  //             checkpoint.patrolId,
-                                  //             checkpoint.id);
-                                  //         // Show an alert indicating a match
-                                  //         showDialog(
-                                  //           context: context,
-                                  //           builder: (BuildContext context) {
-                                  //             return AlertDialog(
-                                  //               title: Text(
-                                  //                 'Checkpoint Match',
-                                  //                 style: TextStyle(
-                                  //                     color: Colors.white),
-                                  //               ),
-                                  //               content: Text(
-                                  //                 'The scanned QR code matches the checkpoint ID.',
-                                  //                 style: TextStyle(
-                                  //                     color: Colors.white),
-                                  //               ),
-                                  //               actions: [
-                                  //                 TextButton(
-                                  //                   onPressed: () {
-                                  //                     Navigator.of(context)
-                                  //                         .pop();
-                                  //                   },
-                                  //                   child: Text('OK'),
-                                  //                 ),
-                                  //               ],
-                                  //             );
-                                  //           },
-                                  //         );
-                                  //       } else {
-                                  //         // Show an alert indicating no match
-                                  //         showDialog(
-                                  //           context: context,
-                                  //           builder: (BuildContext context) {
-                                  //             return AlertDialog(
-                                  //               title: Text(
-                                  //                 'Checkpoint Mismatch',
-                                  //                 style: TextStyle(
-                                  //                     color: Colors.white),
-                                  //               ),
-                                  //               content: Text(
-                                  //                 'The scanned QR code does not match the checkpoint ID.',
-                                  //                 style: TextStyle(
-                                  //                     color: Colors.white),
-                                  //               ),
-                                  //               actions: [
-                                  //                 TextButton(
-                                  //                   onPressed: () {
-                                  //                     Navigator.of(context)
-                                  //                         .pop();
-                                  //                   },
-                                  //                   child: Text('OK'),
-                                  //                 ),
-                                  //               ],
-                                  //             );
-                                  //           },
-                                  //         );
-                                  //       }
-                                  //     }
-                                  //   });
-                                  // },
                                   child: Container(
                                     height: height / height70,
                                     padding: EdgeInsets.symmetric(
