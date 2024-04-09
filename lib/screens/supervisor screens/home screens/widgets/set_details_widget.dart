@@ -29,7 +29,7 @@ class SetDetailsWidget extends StatelessWidget {
     required this.icon,
     this.controller,
     this.useTextField = false,
-    required this.onTap,
+    required this.onTap, this.keyboardType,
   });
 
   final String hintText;
@@ -38,7 +38,7 @@ class SetDetailsWidget extends StatelessWidget {
   final TextEditingController? controller;
   final VoidCallback onTap;
   String? selectedLocation;
-
+  final TextInputType? keyboardType;
   final List<String> suggestions = ['Location 1', 'Location 2', 'Location 3'];
 
   @override
@@ -72,6 +72,7 @@ class SetDetailsWidget extends StatelessWidget {
           useTextField
               ? Expanded(
                   child: TextField(
+                    keyboardType: keyboardType,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
                       fontSize: width / width18,

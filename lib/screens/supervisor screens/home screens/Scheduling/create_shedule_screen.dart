@@ -164,6 +164,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   bool _isRestrictedChecked = false;
   List<DateTime> selectedDates = []; // Define and initialize selectedDates list
 
+  List<Map<String, dynamic>> tasks = [];
   List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
 
   void _selectDate(BuildContext context) async {
@@ -313,12 +314,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
-  bool nextScreen = true;
-  List<String> taskNames = [];
+  bool nextScreen = false;
 
   void _addNewTask() {
     setState(() {
-      taskNames.add('');
+      tasks.add({'name': '', 'isChecked': false});
     });
   }
 
@@ -650,7 +650,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   child: GooglePlaceAutoCompleteTextField(
                                     textEditingController: _locationController,
                                     googleAPIKey:
-                                        "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc", // hide this api key
+                                        "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
                                     boxDecoration:
                                         BoxDecoration(border: Border()),
                                     inputDecoration: InputDecoration(
@@ -790,9 +790,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             text: 'Done',
                             onPressed: () {
                               print(selectedGuards);
-                              setState(() {
-                                nextScreen = false;
-                              });
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
@@ -810,56 +807,81 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                         children: [
                           ListView.builder(
                             shrinkWrap: true,
-                            itemCount: taskNames.length,
+                            itemCount: tasks.length,
                             itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Container(
-                                  padding:
-                                      EdgeInsets.only(left: width / width10),
-                                  decoration: BoxDecoration(
-                                      color: WidgetColor,
-                                      borderRadius: BorderRadius.circular(
-                                          width / width10)),
-                                  child: TextField(
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: width / width18,
-                                      color: Colors
-                                          .white, // Change text color to white
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(width / width10),
+                              String taskName = tasks[index]['name'];
+                              bool isChecked = tasks[index]['isChecked'] ??
+                                  false; // Default value is false
+
+                              return Column(
+                                children: [
+                                  ListTile(
+                                    title: Container(
+                                      padding: EdgeInsets.only(
+                                          left: width / width10),
+                                      decoration: BoxDecoration(
+                                        color: WidgetColor,
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                      ),
+                                      child: TextField(
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: width / width18,
+                                          color: Colors.white,
                                         ),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(width / width10),
+                                            ),
+                                          ),
+                                          focusedBorder: InputBorder.none,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: width / width18,
+                                            color: color2,
+                                          ),
+                                          hintText: 'Task ${index + 1}',
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        cursorColor: Primarycolor,
                                       ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: width / width18,
-                                        color:
-                                            color2, // Change text color to white
-                                      ),
-                                      hintText: 'Task ${index + 1}',
-                                      contentPadding:
-                                          EdgeInsets.zero, // Remove padding
                                     ),
-                                    cursorColor: Primarycolor,
+                                    trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                        size: width / width24,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          tasks.removeAt(index);
+                                        });
+                                      },
+                                    ),
                                   ),
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.redAccent,
-                                    size: width / width24,
+                                  SizedBox(height: height / height10),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tasks[index]['isChecked'] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                      InterMedium(
+                                        text: 'QR Code Required',
+                                        fontsize: width / width16,
+                                        color: color2,
+                                      ),
+                                    ],
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      taskNames.removeAt(index);
-                                    });
-                                  },
-                                ),
+                                ],
                               );
                             },
                           ),

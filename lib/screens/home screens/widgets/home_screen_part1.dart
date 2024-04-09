@@ -1,32 +1,25 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../common/sizes.dart';
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../utils/utils.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../utils/utils.dart';
 
 class HomeScreenPart1 extends StatelessWidget {
   final String userName;
   final String employeeImg;
   // final String url;
   final VoidCallback drawerOnClicked;
+  bool? showWish;
 
   HomeScreenPart1({
     Key? key,
     required this.userName,
     // required this.url,
     required this.employeeImg,
-    required this.drawerOnClicked,
+    required this.drawerOnClicked, this.showWish = true,
   }) : super(key: key);
 
   bool isUnread = true;
@@ -123,19 +116,24 @@ class HomeScreenPart1 extends StatelessWidget {
               ),
             ),
             SizedBox(height: height / height60),
-            PoppinsSemibold(
-              text: '${greeting}',
-              color: Primarycolor,
-              letterSpacing: -.5,
-              fontsize: width / width35,
-            ),
-            SizedBox(height: height / height10),
-            PoppinsLight(
-              text: userName,
-              color: Primarycolor,
-              fontsize: width / width30,
-            ),
-            SizedBox(height: height / height46),
+            showWish! ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PoppinsSemibold(
+                  text: '${greeting}',
+                  color: Primarycolor,
+                  letterSpacing: -.5,
+                  fontsize: width / width35,
+                ),
+                SizedBox(height: height / height10),
+                PoppinsLight(
+                  text: userName,
+                  color: Primarycolor,
+                  fontsize: width / width30,
+                ),
+                SizedBox(height: height / height46),
+              ],
+            ) : SizedBox(),
             Container(
               height: height / height64,
               padding: EdgeInsets.symmetric(horizontal: width / width10),

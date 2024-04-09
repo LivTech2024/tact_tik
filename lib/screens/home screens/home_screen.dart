@@ -85,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  bool _showWish = true;
 
   // void _shoeDatePicker(BuildContext context) {
   //   showDatePicker(
@@ -147,6 +148,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ScreenIndex = index;
       ChangeIconColor(index);
       print(ScreenIndex);
+      if (index == 1) {
+        _showWish = false;
+      }  else
+        _showWish = true;
     });
   }
 
@@ -374,6 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   userName: _userName,
                   employeeImg: employeeImg,
                   // employeeImg: _employeeImg,
+                  showWish: _showWish,
                   drawerOnClicked: () {
                     _scaffoldKey.currentState?.openEndDrawer();
                   },

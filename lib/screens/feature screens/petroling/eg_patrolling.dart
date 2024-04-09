@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -220,7 +221,7 @@ class PatrollingWidget extends StatefulWidget {
 
 class _PatrollingWidgetState extends State<PatrollingWidget> {
   bool _expand = false;
-  bool _expand2 = false;
+  // bool _expand2 = false;
   late Map<String, bool> _expandCategoryMap;
 
   @override
@@ -266,6 +267,19 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 child: Column(
                   children: [
                     SizedBox(height: height / height5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InterBold(text: 'Patrol 1     Devon Lane', color: Primarycolor,fontsize: width / width14,),
+                        CircularPercentIndicator(
+                          radius: width / width10,
+                          lineWidth: 3,
+                          percent: 10 / 100,
+                          progressColor: Primarycolor,
+                        )
+                      ],
+                    ),
+                    SizedBox(height: height / height10),
                     IconTextWidget(
                       iconSize: width / width24,
                       icon: Icons.location_on,
@@ -280,7 +294,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     SizedBox(height: height / height5),
                     IconTextWidget(
                       iconSize: width / width24,
-                      icon: Icons.access_time,
+                      icon: Icons.description,
                       text: widget.p.description,
                       useBold: false,
                       color: color13,

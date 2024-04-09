@@ -99,7 +99,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: height / height242,
+          height: height / height180,
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
@@ -140,13 +140,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       children: [
                         InterMedium(
                           text: 'In time',
-                          fontsize: width / width28,
+                          fontsize: width / width18,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftStartTime,
-                          fontsize: width / width19,
+                          fontsize: width / width16,
                           color: color7,
                         ),
                         SizedBox(height: height / height20),
@@ -154,7 +154,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             ? InterSemibold(
                                 text: lateTime,
                                 color: Colors.redAccent,
-                                fontsize: width / width10,
+                                fontsize: width / width12,
                               )
                             : SizedBox()
                       ],
@@ -167,13 +167,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       children: [
                         InterMedium(
                           text: 'Out time',
-                          fontsize: width / width20,
+                          fontsize: width / width18,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftEndTime,
-                          fontsize: width / width19,
+                          fontsize: width / width16,
                           color: color7,
                         ),
                         SizedBox(height: height / height20),
@@ -182,7 +182,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 text:
                                     '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
                                 color: color8,
-                                fontsize: width / width14,
+                                fontsize: width / width12,
                               )
                             : SizedBox()
                       ],
@@ -200,7 +200,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         filterQuality: FilterQuality.high,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -313,31 +313,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 },
               )
             : const SizedBox(),
-        issShift
-            ? const SizedBox()
-            : Button1(
+        Button1(
                 text: 'Check Patrolling',
                 fontsize: width / width18,
                 color: color5,
                 backgroundcolor: WidgetColor,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyPatrolsList(
+                                ShiftLocationId: widget.ShiftLocationId,
+                                EmployeeID: widget.EmployeId,
+                                EmployeeName: widget.EmployeeName,
+                              )));
+                },
               ),
-        Button1(
-          text: 'Check Patrolling',
-          fontsize: width / width18,
-          color: color5,
-          backgroundcolor: WidgetColor,
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyPatrolsList(
-                          ShiftLocationId: widget.ShiftLocationId,
-                          EmployeeID: widget.EmployeId,
-                          EmployeeName: widget.EmployeeName,
-                        )));
-          },
-        )
       ],
     );
   }
