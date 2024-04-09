@@ -8,21 +8,17 @@ import '../../../utils/colors.dart';
 final today = DateUtils.dateOnly(DateTime.now());
 
 class CustomCalendar extends StatefulWidget {
-  const CustomCalendar({Key? key}) : super(key: key);
+  final List<DateTime?> selectedDates;
+  const CustomCalendar({Key? key, required this.selectedDates})
+      : super(key: key);
 
   @override
   State<CustomCalendar> createState() => _CustomCalenderState();
 }
 
 class _CustomCalenderState extends State<CustomCalendar> {
-
-
   // Get Thia List From Screen..
-  List<DateTime?> _selectedDates = [
-    DateTime(today.year, today.month, 1),
-    DateTime(today.year, today.month, 5),
-    DateTime(today.year, today.month, 14),
-  ];
+  List<DateTime?> _selectedDates = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +37,8 @@ class _CustomCalenderState extends State<CustomCalendar> {
             data: ThemeData.dark().copyWith(
               colorScheme: ColorScheme.dark(
                 primary: const Color(0xFFCBA76B), // Background color
-                onPrimary: const Color(0xFF704600), // Text color for selected dates
+                onPrimary:
+                    const Color(0xFF704600), // Text color for selected dates
               ),
             ),
             child: Column(
@@ -62,9 +59,10 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     selectedDayHighlightColor: Color(0xFF704600),
                     currentDate: DateTime.now(),
                     selectableDayPredicate: _selectableDayPredicate,
-                    dayBorderRadius: BorderRadius.circular(width / width50), // Set day border radius
+                    dayBorderRadius: BorderRadius.circular(
+                        width / width50), // Set day border radius
                   ),
-                  value: _selectedDates,
+                  value: widget.selectedDates,
                   // onValueChanged: (List<DateTime?>? dates) {
                   //   if (dates != null) {
                   //     setState(() {
@@ -77,8 +75,12 @@ class _CustomCalenderState extends State<CustomCalendar> {
             ),
           ),
         ),
-        SizedBox(height: height/ height25),
-        InterBold(text: 'Weekly Shifts' , fontsize: width / width18,color: Color(0xFFE9E9E9),)
+        SizedBox(height: height / height25),
+        InterBold(
+          text: 'Weekly Shifts',
+          fontsize: width / width18,
+          color: Color(0xFFE9E9E9),
+        )
       ],
     );
   }

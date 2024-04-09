@@ -1,14 +1,20 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
 class FireStoreService {
   final Auth auth = Auth();
   final LocalStorage storage = LocalStorage('currentUserEmail');
-
+  // FirebaseStorage firebaseStorage = FirebaseStorage.instance.ref();
   //Read LoggedIN User Information
   final CollectionReference userInfo =
       FirebaseFirestore.instance.collection("Employees");
@@ -16,6 +22,8 @@ class FireStoreService {
       FirebaseFirestore.instance.collection("Shifts");
   final CollectionReference patrols =
       FirebaseFirestore.instance.collection("Patrols");
+  final CollectionReference setting =
+      FirebaseFirestore.instance.collection("Settings");
   //Get userinfo based on the useremailid
   Future<DocumentSnapshot?> getUserInfoByCurrentUserEmail() async {
     String? currentUser = storage.getItem("CurrentUser");
@@ -42,8 +50,6 @@ class FireStoreService {
     }
   }
 
-  //get the assigned shifts
-  //Check the
   Future<DocumentSnapshot?> getShiftByEmployeeIdFromUserInfo(
       String EmpId) async {
     if (EmpId.isEmpty) {
@@ -107,7 +113,7 @@ class FireStoreService {
     final querySnapshot = await patrols
         .where("PatrolLocationId", isEqualTo: empId)
         // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
-        .orderBy("PatrolTime", descending: false)
+        // .orderBy("PatrolModifiedAt", descending: false)
         .get();
 
     print("Retrieved documents:");
@@ -730,6 +736,113 @@ class FireStoreService {
     print(querySnapshot.docs); // Log all retrieved documents
 
     return querySnapshot.docs;
+  }
+
+  Future<int> wellnessFetch(String companyId) async {
+    try {
+      FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+      User? currentUser = _firebaseAuth.currentUser;
+      String companyID = "";
+      String EmpId = "";
+      if (currentUser != null) {
+        print(" Current User: ${currentUser.email}");
+        String userEmail = currentUser.email.toString();
+        QuerySnapshot companyIdSnapshot =
+            await userInfo.where('EmployeeEmail', isEqualTo: userEmail).get();
+        if (companyIdSnapshot.docs.isNotEmpty) {
+          companyID = companyIdSnapshot.docs.first['EmployeeCompanyId'];
+          EmpId = companyIdSnapshot.docs.first['EmployeeId'];
+        }
+      }
+      if (companyID.isEmpty) {
+        return 0;
+      }
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Settings')
+          .where('SettingCompanyId', isEqualTo: companyID)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        print(
+            "Timer : ${querySnapshot.docs.first['SettingEmpWellnessIntervalInMins']}");
+        return querySnapshot.docs.first['SettingEmpWellnessIntervalInMins'];
+      } else {
+        // Handle case where document is not found
+        return 0; // or any default value
+      }
+    } catch (e) {
+      print('Error fetching wellness interval: $e');
+      // Handle the error as needed
+      return 0; // or any default value
+    }
+  }
+
+  //Add the images to storage and add its link to firestore collection
+  Future<bool> AddImageToStorage(File file) async {
+    try {
+      String uniqueName = DateTime.now().toString();
+      Reference storgaeRef = FirebaseStorage.instance.ref();
+
+      Reference uploadRef =
+          storgaeRef.child("employees/wellness/$uniqueName.jpg");
+      Reference reference = uploadRef.child(uniqueName);
+      //compress the image
+      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        quality: 50, // Adjust the quality as needed
+      );
+
+      // Upload the compressed image to Firebase Storage
+      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+
+      // Get the download URL of the uploaded image
+      String downloadURL = await uploadRef.getDownloadURL();
+      print("Download URL: $downloadURL");
+
+      // addImagesToShiftGuardWellnessReport();
+      return true;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  //add wellness to the collection
+  Future<void> addImagesToShiftGuardWellnessReport(
+      List<Map<String, dynamic>> imageUrls, String? comment) async {
+    try {
+      // Check if comment is null, and provide a default value if it is
+      comment ??= "";
+      final LocalStorage storage = LocalStorage('ShiftDetails');
+      String ShiftId = storage.getItem('shiftId');
+      final querySnapshot =
+          await shifts.where("ShiftId", isEqualTo: ShiftId).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+
+        List<Map<String, dynamic>> wellnessReports =
+            List.from(doc["ShiftGuardWellnessReport"]);
+
+        Map<String, dynamic> wellnessReport = {
+          // "EmployeeId": EmpId,
+          "timestamp": FieldValue.serverTimestamp(),
+          "comment": comment,
+          "images": imageUrls,
+        };
+
+        wellnessReports.add(wellnessReport);
+
+        await doc.reference.update({
+          "ShiftGuardWellnessReport": wellnessReports,
+        });
+      } else {
+        print("No document found with shiftId: $ShiftId");
+      }
+    } catch (e) {
+      print('Error adding images to ShiftGuardWellnessReport: $e');
+      throw e;
+    }
   }
 }
 

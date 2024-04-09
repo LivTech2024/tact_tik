@@ -39,6 +39,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   }
 
   void _getUserInfo() async {
+    print("Shift Id : ${widget.ShiftLocationId}");
     var patrolInfoList = await fireStoreService
         .getAllPatrolsByEmployeeIdFromUserInfo(widget.ShiftLocationId);
 
@@ -49,7 +50,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
-      String patrolTime = data['PatrolTime'];
+      // String patrolTime = data['PatrolTime'];
       int requiredCount = data['PatrolRequiredCount'];
       List<dynamic>? patrolStatusDynamic =
           data['PatrolCurrentStatus'] is List<dynamic>
@@ -135,7 +136,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           title: patrolName,
           description: patrolLocationName,
           categories: categories,
-          time: patrolTime,
+          // time: patrolTime,
           PatrolId: _PatrolId,
           EmpId: widget.EmployeeID,
           EmployeeName: widget.EmployeeName,
@@ -280,7 +281,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     IconTextWidget(
                       iconSize: width / width24,
                       icon: Icons.access_time,
-                      text: widget.p.time,
+                      text: widget.p.description,
                       useBold: false,
                       color: color13,
                     ),
@@ -671,7 +672,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 class Patrol {
   final String title;
   final String description;
-  final String time;
+  // final String time;
   final String PatrolId;
   final String EmpId;
   final String EmployeeName;
@@ -684,7 +685,7 @@ class Patrol {
     required this.title,
     required this.description,
     required this.categories,
-    required this.time,
+    // required this.time,
     required this.PatrolId,
     required this.EmpId,
     required this.EmployeeName,

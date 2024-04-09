@@ -69,7 +69,13 @@ class ShiftTaskScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   childCount: 5,
                   (context, index) {
-                    List data = [ShiftTaskEnum.upload,ShiftTaskEnum.scan,ShiftTaskEnum.upload,ShiftTaskEnum.scan,ShiftTaskEnum.upload];
+                    List data = [
+                      ShiftTaskEnum.upload,
+                      ShiftTaskEnum.scan,
+                      ShiftTaskEnum.upload,
+                      ShiftTaskEnum.scan,
+                      ShiftTaskEnum.upload
+                    ];
                     return ShiftTaskTypeWidget(
                       type: data[index],
                     );

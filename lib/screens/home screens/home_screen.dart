@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
@@ -40,6 +39,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+final LocalStorage storage = LocalStorage('ShiftDetails');
 
 class _HomeScreenState extends State<HomeScreen> {
   //Get the current User
@@ -181,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   FireStoreService fireStoreService = FireStoreService();
-
+  final List<DateTime?> selectedDates = [];
   Future<void> _refresh() {
     return Future.delayed(Duration(seconds: 2));
   }
@@ -232,6 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _patrolRestrictedRadius = PatrolRestrictedRadius;
             _patrolTime = patrolTimeString;
             _patrolDate = patrolDateString;
+
             // issShift = false;
           });
         }
@@ -271,6 +273,9 @@ class _HomeScreenState extends State<HomeScreen> {
             _ShiftBranchId = companyBranchId;
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             _shiftLocationId = shiftLocationId;
+            // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
+            selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+            storage.setItem("shiftId", shiftId);
             // _employeeImg = employeeImg;
           });
           print('Shift Info: ${shiftInfo.data()}');
@@ -478,14 +483,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   left: width / width30,
                                   right: width / width30,
                                 ),
-                                child: CustomCalendar(),
+                                child: CustomCalendar(
+                                  selectedDates: selectedDates,
+                                ),
                               ))
                             : const SizedBox(),
                 ScreenIndex == 2
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
-                            /*var schedules = schedules_list[index];
+                            var schedules = schedules_list[index];
                             Timestamp shifttimestamp = schedules['ShiftDate'];
                             DateTime dateTime = shifttimestamp.toDate();
                             String shiftDate =
@@ -500,7 +507,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 dateTime.day == DateTime.now().day) {
                               shiftDate = '$shiftDate*';
                               print(shiftDate);
-                            }*/
+                            }
                             return Container(
                               margin: EdgeInsets.only(
                                 top: height / height20,
@@ -517,11 +524,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: width / width200,
                                       height: height / height50,
                                       padding: EdgeInsets.only(
-                                        top: height / height3,
-                                        left: width / width10,
-                                        right: width / width10,
-                                        bottom: height / height20
-                                      ),
+                                          top: height / height3,
+                                          left: width / width10,
+                                          right: width / width10,
+                                          bottom: height / height20),
                                       decoration: BoxDecoration(
                                         color: color31,
                                         borderRadius: BorderRadius.circular(
@@ -529,16 +535,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
                                           InterBold(
-                                            text: '14/03/2024',
+                                            text: shiftDate,
                                             color: color30,
                                             fontsize: width / width16,
                                           ),
                                           InterBold(
-                                            text: 'Mon',
+                                            text: dayOfWeek,
                                             color: color30,
                                             fontsize: width / width12,
                                           ),
@@ -568,7 +576,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: IconTextWidget(
                                               icon: Icons.location_on,
                                               iconSize: width / width24,
-                                              text: '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                              text: schedules[
+                                                  'ShiftLocationAddress'],
                                               color: color30,
                                               Iconcolor: Colors.redAccent,
                                               space: width / width8,
@@ -580,7 +589,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: IconTextWidget(
                                               iconSize: width / width24,
                                               icon: Icons.access_time,
-                                              text: '12:00 am - 12:00 pm',
+                                              text:
+                                                  '${schedules['ShiftStartTime']} - ${schedules['ShiftEndTime']}',
                                               color: color30,
                                               Iconcolor: Primarycolor,
                                               space: width / width8,

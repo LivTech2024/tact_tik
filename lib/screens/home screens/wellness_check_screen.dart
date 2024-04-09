@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
 import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
@@ -18,18 +21,30 @@ class WellnessCheckScreen extends StatefulWidget {
 }
 
 class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
-
   List<Map<String, dynamic>> uploads = [];
   TextEditingController _controller = TextEditingController();
 
   Future<void> _addImage() async {
-    final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
+
+      // fireStoreService.AddImageToStorage(File(pickedFile.path));
     }
+  }
+
+  void _uploadImages() async {
+    for (var upload in uploads) {
+      if (upload['type'] == 'image') {
+        File file = upload['file'];
+        fireStoreService.AddImageToStorage(file);
+      }
+    }
+    await fireStoreService.addImagesToShiftGuardWellnessReport(
+        uploads, _controller.text);
   }
 
   Future<void> _addVideo() async {
@@ -49,6 +64,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
       uploads.removeAt(index);
     });
   }
+
   void _toggleSelection(int index) {
     setState(() {
       if (uploads[index].containsKey('isSelected')) {
@@ -59,13 +75,12 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    final DateTime date = DateTime.now();
+    final String formattedTime = DateFormat('hh:mm a').format(date);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -82,7 +97,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
             },
           ),
           title: InterRegular(
-            text: 'Shift Task',
+            text: 'Wellness Check',
             fontsize: width / width18,
             color: Colors.white,
             letterSpacing: -.3,
@@ -95,7 +110,11 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: height / height30),
-              InterBold(text: '09.00 PM' , fontsize: width / width18,color: Primarycolor,),
+              InterBold(
+                text: formattedTime,
+                fontsize: width / width18,
+                color: Primarycolor,
+              ),
               SizedBox(height: height / height30),
               Container(
                 height: height / height70,
@@ -115,8 +134,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                       width: width / width48,
                       decoration: BoxDecoration(
                         color: color16,
-                        borderRadius:
-                        BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Center(
                         child: Icon(
@@ -180,16 +198,16 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                             margin: EdgeInsets.all(width / width8),
                             child: upload['type'] == 'image'
                                 ? Image.file(
-                              upload['file'],
-                              fit: BoxFit.cover,
-                            )
+                                    upload['file'],
+                                    fit: BoxFit.cover,
+                                  )
                                 : Icon(Icons.videocam),
                           ),
                           Positioned(
                             top: -5,
                             right: -5,
                             child: IconButton(
-                              onPressed: () =>  _deleteItem(index),
+                              onPressed: () => _deleteItem(index),
                               icon: Icon(
                                 Icons.delete,
                                 color: Colors.black,
@@ -199,8 +217,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           ),
                         ],
                       );
-                    })
-                        .toList(),
+                    }).toList(),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -234,8 +251,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                       width: width / width66,
                       decoration: BoxDecoration(
                           color: WidgetColor,
-                          borderRadius:
-                          BorderRadius.circular(width / width8)),
+                          borderRadius: BorderRadius.circular(width / width8)),
                       child: Center(
                         child: Icon(Icons.add),
                       ),
@@ -245,6 +261,10 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _uploadImages,
+          child: Icon(Icons.cloud_upload),
         ),
       ),
     );

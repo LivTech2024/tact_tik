@@ -313,7 +313,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
-  bool nextScreen = false;
+  bool nextScreen = true;
   List<String> taskNames = [];
 
   void _addNewTask() {
@@ -650,7 +650,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   child: GooglePlaceAutoCompleteTextField(
                                     textEditingController: _locationController,
                                     googleAPIKey:
-                                        "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
+                                        "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc", // hide this api key
                                     boxDecoration:
                                         BoxDecoration(border: Border()),
                                     inputDecoration: InputDecoration(
@@ -790,6 +790,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             text: 'Done',
                             onPressed: () {
                               print(selectedGuards);
+                              setState(() {
+                                nextScreen = false;
+                              });
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
@@ -864,7 +867,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           SizedBox(
                             width: width / width120,
                             child: Button1(
-                              borderRadius: width/width10,
+                              borderRadius: width / width10,
                               onPressed: () {
                                 // if (nextScreen == false) {
                                 //   setState(() {
@@ -873,7 +876,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 // }  else
                                 _addNewTask();
                               },
-                              height: height/ height50,
+                              height: height / height50,
                               backgroundcolor: Primarycolor,
                               text: nextScreen == false
                                   ? 'Fist screen'
