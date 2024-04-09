@@ -188,12 +188,12 @@ class _TaskScreenState extends State<TaskScreen> {
                                               InterMedium(
                                                 text: 'Out time',
                                                 color: Colors.white,
-                                                fontsize: width / width14,
+                                                fontsize: width / width18,
                                               ),
                                               InterMedium(
                                                 text: widget.ShiftEndTime,
                                                 color: Colors.white,
-                                                fontsize: width / width12,
+                                                fontsize: width / width16,
                                               )
                                             ],
                                           ),
