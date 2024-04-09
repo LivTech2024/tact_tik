@@ -24,6 +24,7 @@ class ShiftTaskScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
+              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {

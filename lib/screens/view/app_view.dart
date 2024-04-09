@@ -12,6 +12,7 @@ import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../utils/colors.dart';
+import '../feature screens/Report/create_report_screen.dart';
 import '../feature screens/Report/report_screen.dart';
 import '../feature screens/petroling/eg_patrolling.dart';
 import '../home screens/shift_task_screen.dart';
@@ -96,7 +97,7 @@ class AppView extends ConsumerWidget {
               Theme.of(context).textTheme,
             ),
           ),
-          home: ReportScreen(),
+          home: CreateReportScreen(),
         );
       },
     );
