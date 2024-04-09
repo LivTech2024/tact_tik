@@ -276,6 +276,8 @@ class _HomeScreenState extends State<HomeScreen> {
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
             storage.setItem("shiftId", shiftId);
+            storage.setItem("EmpId", EmployeeId);
+
             // _employeeImg = employeeImg;
           });
           print('Shift Info: ${shiftInfo.data()}');

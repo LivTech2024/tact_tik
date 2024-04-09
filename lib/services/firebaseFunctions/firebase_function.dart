@@ -778,15 +778,14 @@ class FireStoreService {
   }
 
   //Add the images to storage and add its link to firestore collection
-  Future<bool> AddImageToStorage(File file) async {
+  Future<List<Map<String, dynamic>>> addImageToStorage(File file) async {
     try {
       String uniqueName = DateTime.now().toString();
-      Reference storgaeRef = FirebaseStorage.instance.ref();
+      Reference storageRef = FirebaseStorage.instance.ref();
 
       Reference uploadRef =
-          storgaeRef.child("employees/wellness/$uniqueName.jpg");
-      Reference reference = uploadRef.child(uniqueName);
-      //compress the image
+          storageRef.child("employees/wellness/$uniqueName.jpg");
+      // Compress the image
       Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
         file.absolute.path,
         quality: 50, // Adjust the quality as needed
@@ -799,8 +798,10 @@ class FireStoreService {
       String downloadURL = await uploadRef.getDownloadURL();
       print("Download URL: $downloadURL");
 
-      // addImagesToShiftGuardWellnessReport();
-      return true;
+      // Return the download URL in a list
+      return [
+        {'downloadURL': downloadURL}
+      ];
     } catch (e) {
       print(e);
       throw e;
@@ -809,35 +810,46 @@ class FireStoreService {
 
   //add wellness to the collection
   Future<void> addImagesToShiftGuardWellnessReport(
-      List<Map<String, dynamic>> imageUrls, String? comment) async {
+      List<Map<String, dynamic>> uploads, String comment) async {
     try {
-      // Check if comment is null, and provide a default value if it is
-      comment ??= "";
+      // final LocalStorage Userstorage = LocalStorage('currentUserEmail');
       final LocalStorage storage = LocalStorage('ShiftDetails');
-      String ShiftId = storage.getItem('shiftId');
+      String shiftId = storage.getItem('shiftId');
+      String empId = storage.getItem('EmpId') ?? "";
       final querySnapshot =
-          await shifts.where("ShiftId", isEqualTo: ShiftId).get();
+          await shifts.where("ShiftId", isEqualTo: shiftId).get();
 
       if (querySnapshot.docs.isNotEmpty) {
         final doc = querySnapshot.docs.first;
 
         List<Map<String, dynamic>> wellnessReports =
             List.from(doc["ShiftGuardWellnessReport"]);
+        List<Map<String, dynamic>> imgUrls = [];
+        for (var upload in uploads) {
+          if (upload['type'] == 'image') {
+            File file = upload['file'];
 
-        Map<String, dynamic> wellnessReport = {
-          // "EmployeeId": EmpId,
-          "timestamp": FieldValue.serverTimestamp(),
+            // Upload the image file and get the download URL
+            List<Map<String, dynamic>> downloadURL =
+                await addImageToStorage(file);
+            // Add the wellness report entry to the list
+            for (var url in downloadURL) {
+              imgUrls.add(url as Map<String, dynamic>);
+            }
+          }
+        }
+        wellnessReports.add({
+          "WellnessEmployeeID": empId,
+          "timestamp": DateTime.now(),
           "comment": comment,
-          "images": imageUrls,
-        };
-
-        wellnessReports.add(wellnessReport);
-
+          "imageURL": imgUrls,
+        });
+        // Update the Firestore document with the new wellness reports
         await doc.reference.update({
           "ShiftGuardWellnessReport": wellnessReports,
         });
       } else {
-        print("No document found with shiftId: $ShiftId");
+        print("No document found with shiftId: $shiftId");
       }
     } catch (e) {
       print('Error adding images to ShiftGuardWellnessReport: $e');

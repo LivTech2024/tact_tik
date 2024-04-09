@@ -172,7 +172,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
           title: InterRegular(

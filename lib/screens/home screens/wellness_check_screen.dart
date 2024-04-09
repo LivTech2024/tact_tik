@@ -37,14 +37,14 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
   }
 
   void _uploadImages() async {
-    for (var upload in uploads) {
-      if (upload['type'] == 'image') {
-        File file = upload['file'];
-        fireStoreService.AddImageToStorage(file);
-      }
-    }
-    await fireStoreService.addImagesToShiftGuardWellnessReport(
-        uploads, _controller.text);
+    print("Uploads ${uploads}");
+    try {
+      await fireStoreService.addImagesToShiftGuardWellnessReport(
+          uploads, _controller.text);
+      uploads.clear();
+      _controller.clear();
+      Navigator.pop(context);
+    } catch (e) {}
   }
 
   Future<void> _addVideo() async {
