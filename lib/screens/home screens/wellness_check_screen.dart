@@ -264,6 +264,8 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: _uploadImages,
+          backgroundColor: Primarycolor,
+          shape: CircleBorder(),
           child: Icon(Icons.cloud_upload),
         ),
       ),

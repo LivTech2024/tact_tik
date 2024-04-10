@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 
@@ -38,6 +39,7 @@ class _ReportScreenState extends State<ReportScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
+              size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -53,55 +55,66 @@ class _ReportScreenState extends State<ReportScreen> {
           centerTitle: true,
         ),
         backgroundColor: Secondarycolor,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width / width30),
-            child: Column(
-              children: [
-                SizedBox(height: height / height30),
-                SizedBox(
-                  height: 40,
-                  child: ListView.builder(
-                    itemCount: tittles.length,
-                    // shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            currentIndex = index;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          margin: EdgeInsets.only(right: width / width10),
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          constraints: BoxConstraints(
-                            minWidth: 70,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(width / width20),
-                            color: currentIndex == index
-                                ? Primarycolor
-                                : WidgetColor,
-                          ),
-                          duration: Duration(microseconds: 500),
-                          child: Center(
-                            child: InterRegular(
-                              text: tittles[index],
-                              fontsize: width / width16,
-                              color: color18,
-                            ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){},
+          backgroundColor: Primarycolor,
+          shape: CircleBorder(),
+          child: Icon(Icons.add),
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          child: Column(
+            children: [
+              SizedBox(height: height / height30),
+              SizedBox(
+                height: 40,
+                child: ListView.builder(
+                  itemCount: tittles.length,
+                  // shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        margin: EdgeInsets.only(right: width / width10),
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        constraints: BoxConstraints(
+                          minWidth: 70,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(width / width20),
+                          color: currentIndex == index
+                              ? Primarycolor
+                              : WidgetColor,
+                        ),
+                        duration: const Duration(microseconds: 500),
+                        child: Center(
+                          child: InterRegular(
+                            text: tittles[index],
+                            fontsize: width / width16,
+                            color: color18,
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
-                ListView.builder(
+              ),
+              SizedBox(height: height / height20),
+              Expanded(
+                child: ListView.builder(
+                  // physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
+                  itemCount: tittles.length,
                   itemBuilder: (context, index) {
                     return Container(
+                      margin: EdgeInsets.only(bottom: 10),
                       height: height / height100,
                       decoration: BoxDecoration(
                         color: WidgetColor,
@@ -109,18 +122,29 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.picture_as_pdf),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 24 , right: 20),
+                            child: Icon(Icons.picture_as_pdf),
+                          ),
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              InterMedium(
-                                text: 'Clark Place - Lost & Found Item Report',
-                                fontsize: width / width20,
-                                color: color2,
+                              Flexible(
+                                child: SizedBox(
+                                  width: 280,
+                                  child: InterMedium(
+                                    text: 'Clark Place - Lost & Found Item Report',
+                                    fontsize: width / width20,
+                                    color: color2,
+                                  ),
+                                ),
                               ),
+                              SizedBox(height: height / height10),
                               Row(
                                 children: [
                                   InterMedium(
-                                    text: 'CATEGORY:',
+                                    text: 'CATEGORY: ',
                                     fontsize: width / width14,
                                     color: color32,
                                   ),
@@ -130,16 +154,16 @@ class _ReportScreenState extends State<ReportScreen> {
                                     color: color26,
                                   ),
                                 ],
-                              )
+                              ),
                             ],
                           )
                         ],
                       ),
                     );
                   },
-                )
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
