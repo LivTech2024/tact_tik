@@ -205,16 +205,16 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         Result = res;
                       });
                       if (Result == widget.taskId) {
+                        await fireStoreService
+                            .updateShiftTaskStatus(widget.taskId);
                         //Update in firebase and change the color of icon
-                        showCustomDialog(
-                            context, "Task Scan", "Task Scan SuccessFull");
+                        showCustomDialog(context, "Task Scan",
+                            "Task Scan SuccessFull for ${widget.taskName}");
                         print("${Result} ${widget.taskId}");
                       } else {
                         showCustomDialog(context, "Task Scan",
-                            "Shift Task Scan UnsuccessFull");
+                            "Shift Task Scan UnsuccessFull for ${widget.taskName}");
                         print("UNcessfull Scan");
-                        await fireStoreService
-                            .updateShiftTaskStatus(widget.ShiftId);
                       }
                     },
                     child: Container(
