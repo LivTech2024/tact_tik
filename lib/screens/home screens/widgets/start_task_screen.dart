@@ -272,6 +272,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         widget.ShiftBranchId,
                         widget.ShiftCompanyId,
                         widget.EmployeeName);
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

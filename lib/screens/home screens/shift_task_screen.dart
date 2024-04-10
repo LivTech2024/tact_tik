@@ -22,6 +22,8 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
     fetchData();
   }
 
+  int completedTaskCount = 0;
+  int totalTaskCount = 0;
   List<Map<String, dynamic>>? fetchedTasks = [];
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
@@ -30,6 +32,25 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
       setState(() {
         fetchedTasks = fetchedData;
         print("Fetched Shift Tasks  ${fetchedData}");
+      });
+      int completedTaskCount = 0;
+      int totalTaskCount = 0;
+
+      for (int i = 0; i < fetchedData.length; i++) {
+        final task = fetchedData[i];
+        if (task.containsKey('ShiftTaskStatus') &&
+            task['ShiftTaskStatus'] is List &&
+            task['ShiftTaskStatus'].isNotEmpty &&
+            task['ShiftTaskStatus'][0].containsKey('TaskStatus') &&
+            task['ShiftTaskStatus'][0]['TaskStatus'] == 'completed') {
+          completedTaskCount++;
+        }
+        totalTaskCount++;
+      }
+
+      setState(() {
+        this.completedTaskCount = completedTaskCount;
+        this.totalTaskCount = totalTaskCount;
       });
       print(fetchedData);
     } else {
@@ -85,7 +106,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         color: Primarycolor,
                       ),
                       InterBold(
-                        text: '03/03',
+                        text: '$completedTaskCount/$totalTaskCount',
                         fontsize: width / width18,
                         color: Primarycolor,
                       ),
@@ -98,6 +119,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                   (context, index) {
                     // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
                     ShiftTaskEnum? taskType;
+                    String? taskStatu;
                     if (fetchedTasks != null && index < fetchedTasks!.length) {
                       final task = fetchedTasks![index];
                       if (task.containsKey('ShiftTaskQrCodeReq') &&
@@ -111,7 +133,9 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                     return ShiftTaskTypeWidget(
                       type: taskType ?? ShiftTaskEnum.upload,
                       taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
-                      taskId: fetchedTasks?[index]['ShiftTaskId'] ??
+                      taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
+                      ShiftId: widget.shiftId ?? "",
+                      taskStatus: taskStatu ??
                           "", // Default to upload if taskType is null
                     );
                   },

@@ -19,11 +19,15 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.type,
     required this.taskName,
     required this.taskId,
+    required this.ShiftId,
+    required this.taskStatus,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
+  final String taskStatus;
   final String taskName;
   final String taskId;
+  final String ShiftId;
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
 }
@@ -33,12 +37,21 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
 
   Future<void> _addImage() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
     }
+  }
+
+  void _uploadImages() async {
+    print("Uploads ${uploads}");
+    try {
+      await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId);
+      uploads.clear();
+      // Navigator.pop(context);
+    } catch (e) {}
   }
 
   Future<void> _addVideo() async {
@@ -190,15 +203,19 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                           ));
                       setState(() {
                         Result = res;
-                        if (Result == widget.taskId) {
-                          showCustomDialog(
-                              context, "Task Scan", "Task Scan SuccessFull");
-                          print("${Result} ${widget.taskId}");
-                        } else {
-                          showCustomDialog(context, "Task Scan",
-                              "Shift Task Scan SuccessFull");
-                        }
                       });
+                      if (Result == widget.taskId) {
+                        //Update in firebase and change the color of icon
+                        showCustomDialog(
+                            context, "Task Scan", "Task Scan SuccessFull");
+                        print("${Result} ${widget.taskId}");
+                      } else {
+                        showCustomDialog(context, "Task Scan",
+                            "Shift Task Scan UnsuccessFull");
+                        print("UNcessfull Scan");
+                        await fireStoreService
+                            .updateShiftTaskStatus(widget.ShiftId);
+                      }
                     },
                     child: Container(
                       height: height / height70,
@@ -353,7 +370,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ListTile(
-                                  leading: Icon(Icons.photo),
+                                  leading: Icon(Icons.camera),
                                   title: Text('Add Image'),
                                   onTap: () {
                                     Navigator.pop(context);
@@ -383,6 +400,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             child: Icon(Icons.add),
                           ),
                         ),
+                      ),
+                      FloatingActionButton(
+                        onPressed: _uploadImages,
+                        backgroundColor: Primarycolor,
+                        shape: CircleBorder(),
+                        child: Icon(Icons.cloud_upload),
                       )
                     ],
                   ),
