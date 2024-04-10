@@ -6,8 +6,9 @@ Future<bool> sendEmail(dynamic templateParams) async {
       'service_6mmak1z',
       'template_lm9ftk9',
       templateParams,
-      const Options(
+      Options(
         publicKey: 'DAtUR9kGOvEyWhbq-',
+        privateKey: 'RLNEcycnFNHoR4oPXIXUN',
       ),
     );
     print('SUCCESS!');

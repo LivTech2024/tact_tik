@@ -125,7 +125,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                     color: color32,
                                   ),
                                   InterRegular(
-                                    text: tittles[index],
+                                    text: tittles[1],
                                     fontsize: width / width14,
                                     color: color26,
                                   ),

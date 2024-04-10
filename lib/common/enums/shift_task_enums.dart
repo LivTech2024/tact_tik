@@ -1,7 +1,4 @@
-enum ShiftTaskEnum {
-  scan,
-  upload,
-}
+enum ShiftTaskEnum { scan, upload, both }
 
 extension ConvertMessage on String {
   ShiftTaskEnum toEnum() {
@@ -10,6 +7,8 @@ extension ConvertMessage on String {
         return ShiftTaskEnum.scan;
       case 'upload':
         return ShiftTaskEnum.upload;
+      case 'both':
+        return ShiftTaskEnum.both;
       default:
         return ShiftTaskEnum.scan;
     }

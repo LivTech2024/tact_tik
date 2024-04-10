@@ -51,30 +51,41 @@ class FireStoreService {
   }
 
   Future<DocumentSnapshot?> getShiftByEmployeeIdFromUserInfo(
-      String EmpId) async {
-    if (EmpId.isEmpty) {
+      String empId) async {
+    if (empId.isEmpty) {
       return null;
     }
 
     final querySnapshot = await shifts
-        .where("ShiftAssignedUserId", arrayContains: EmpId)
-        // .where("ShiftCurrentStatus",
-        //     isEqualTo: "pending") // Filter by pending status
+        .where("ShiftAssignedUserId", arrayContains: empId)
         .orderBy("ShiftDate", descending: false)
-        .limit(1)
         .get();
 
-    print("Retrieved documents:");
+    print("Retrieved documents Shift for EmployeeId: $empId:");
     print(querySnapshot.docs); // Log all retrieved documents
 
-    if (querySnapshot.docs.isNotEmpty) {
-      // Return the first document with pending status
-      print(querySnapshot.docs.first);
-      return querySnapshot.docs.first;
-    } else {
-      print("No pending shift found for EmployeeId: $EmpId");
-      return null;
+    for (var doc in querySnapshot.docs) {
+      final shiftData = doc.data() as Map<String, dynamic>;
+      final shiftTasks = shiftData['ShiftCurrentStatus'] ?? [];
+
+      if (shiftTasks.isEmpty) {
+        print("ShiftCurrentStatus is empty for Document ID: ${doc.id}");
+        return doc;
+      }
+
+      final statusDoc = shiftTasks.any((status) =>
+          status['StatusReportedById'] == empId &&
+          status['Status'] == 'pending');
+
+      if (statusDoc) {
+        print(
+            "Found shift with status pending for EmployeeId: $empId in Document ID: ${doc.id}");
+        return doc;
+      }
     }
+
+    print("No shift found for EmployeeId: $empId");
+    return null;
   }
 
   Future<DocumentSnapshot?> getPatrolsByEmployeeIdFromUserInfo(
@@ -412,39 +423,41 @@ class FireStoreService {
         throw ArgumentError('Invalid shiftId: $shiftId');
       }
 
-      // final userRef = FirebaseFirestore.instance
-      //     .collection('Employees')
-      //     .doc(employeeId)
-      //     .collection('Log');
-
       // Update the shift status in Firestore
-      final updateShiftStatus =
-          await shifts.where('ShiftId', isEqualTo: shiftId).get();
-      if (updateShiftStatus.docs.isNotEmpty) {
-        final documentId = updateShiftStatus.docs.first.id;
-        await shifts.doc(documentId).update({
-          'ShiftCurrentStatus': 'completed',
-        });
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+      final statusData = {
+        'Status': 'completed',
+        'StatusReportedById': employeeId,
+        'StatusReportedByName': EmpNames,
+        'StatusReportedTime': DateTime.now().toUtc().toString(),
+      };
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'completed');
+      if (index != -1) {
+        // If the map already exists in the array, update it
+        currentArray[index] = statusData;
       } else {
-        throw Exception('Shift with id $shiftId not found.');
+        // If the map doesn't exist, add it to the array
+        currentArray.add(statusData);
       }
+      await documentReference.update({'ShiftCurrentStatus': currentArray});
+
+      // Generate report
       String Title = "Shift Ended";
       String Data = "Shift Ended ";
       await generateReport(LocationName, Title, employeeId, BrachId, Data,
           CompyId, "other", EmpNames);
+
       // Get the current system time
       DateTime currentTime = DateTime.now();
-
-      // Create a new document in the "Log" subcollection
-      // await userRef.doc('ShiftEnd').set({
-      //   'type': 'ShiftEnd',
-      //   'time': currentTime,
-      //   'totalTime': Stopwatch,
-      // });
-
-      print('Shift start logged at $currentTime');
+      print('Shift end logged at $currentTime');
     } catch (e) {
-      print('Error logging shift start: $e');
+      print('Error logging shift end: $e');
     }
   }
 
@@ -854,6 +867,69 @@ class FireStoreService {
     } catch (e) {
       print('Error adding images to ShiftGuardWellnessReport: $e');
       throw e;
+    }
+  }
+
+  //validate if the shift task are completef
+  Future<bool?> checkShiftTaskStatus(String empId, String shiftID) async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection("Shifts")
+          .doc(shiftID)
+          .get();
+
+      if (documentSnapshot.exists) {
+        print('SHift Task exists');
+        final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        if (shiftTasks.isNotEmpty) {
+          print("Shift Task is not empty");
+          for (var shiftTask in shiftTasks) {
+            final taskStatusList =
+                shiftTask['ShiftTaskStatus'] as List<dynamic>;
+            if (taskStatusList.isNotEmpty) {
+              print("ShiftTaskStatus is not empty");
+              for (var shiftTaskStatus in taskStatusList) {
+                if (shiftTaskStatus['TaskCompletedById'] == empId &&
+                    (shiftTaskStatus['TaskStatus'] == "pending" ||
+                        shiftTaskStatus['TaskStatus'] == null)) {
+                  return false; // If any task matches the condition, return false
+                }
+              }
+            } else {
+              return false;
+            }
+          }
+        } else {
+          return true; // If ShiftTaskStatus array is empty, return true
+        }
+      } else {
+        return false; // If document doesn't exist, return false
+      }
+      return true; // If no task matches the condition, return true
+    } catch (e) {
+      print("Error checking shift task status: $e");
+      return null; // Return null in case of error
+    }
+  }
+
+  //Fetch shift task
+  Future<List<Map<String, dynamic>>?> fetchShiftTask(String shiftID) async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection("Shifts")
+          .doc(shiftID)
+          .get();
+
+      if (documentSnapshot.exists) {
+        final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        if (shiftTasks.isNotEmpty) {
+          return List<Map<String, dynamic>>.from(shiftTasks);
+        }
+      }
+      return null; // Return null if no tasks or document doesn't exist
+    } catch (e) {
+      print("Error fetching shift tasks: $e");
+      return null; // Return null in case of error
     }
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
 import '../../../common/enums/shift_task_enums.dart';
 import '../../../common/sizes.dart';
@@ -12,10 +14,16 @@ import '../../../utils/colors.dart';
 final today = DateUtils.dateOnly(DateTime.now());
 
 class ShiftTaskTypeWidget extends StatefulWidget {
-  ShiftTaskTypeWidget({super.key, required this.type});
+  ShiftTaskTypeWidget({
+    Key? key,
+    required this.type,
+    required this.taskName,
+    required this.taskId,
+  }) : super(key: key);
 
   final ShiftTaskEnum type;
-
+  final String taskName;
+  final String taskId;
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
 }
@@ -50,6 +58,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
       uploads.removeAt(index);
     });
   }
+
   void _toggleSelection(int index) {
     setState(() {
       if (uploads[index].containsKey('isSelected')) {
@@ -64,7 +73,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    String Result = "";
     return widget.type == ShiftTaskEnum.scan
         ? Container(
             height: height / height70,
@@ -101,7 +110,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       width: width / width20,
                     ),
                     InterRegular(
-                      text: 'Keys',
+                      text: widget.taskName,
                       color: color17,
                       fontsize: width / width18,
                     ),
@@ -167,35 +176,29 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
               ],
             ),
           )
-        : widget.type == ShiftTaskEnum.upload
+        : widget.type ==
+                ShiftTaskEnum.upload //this will be used for both Scan and qr
             ? Column(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.photo),
-                              title: Text('Add Image'),
-                              onTap: () {
-                                Navigator.pop(context);
-                                _addImage();
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.video_collection),
-                              title: Text('Add Video'),
-                              onTap: () {
-                                Navigator.pop(context);
-                                _addVideo();
-                              },
-                            ),
-                          ],
-                        ),
-                      );
+                    onTap: () async {
+                      var res = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const SimpleBarcodeScannerPage(),
+                          ));
+                      setState(() {
+                        Result = res;
+                        if (Result == widget.taskId) {
+                          showCustomDialog(
+                              context, "Task Scan", "Task Scan SuccessFull");
+                          print("${Result} ${widget.taskId}");
+                        } else {
+                          showCustomDialog(context, "Task Scan",
+                              "Shift Task Scan SuccessFull");
+                        }
+                      });
                     },
                     child: Container(
                       height: height / height70,
@@ -233,7 +236,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 width: width / width20,
                               ),
                               InterRegular(
-                                text: 'Car Image',
+                                text: widget.taskName,
                                 color: color17,
                                 fontsize: width / width18,
                               ),
@@ -308,40 +311,39 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                           final index = entry.key;
                           final upload = entry.value;
                           return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    height: height / height66,
-                                    width: width / width66,
-                                    decoration: BoxDecoration(
-                                        color: WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                          width / width10,
-                                        )),
-                                    margin: EdgeInsets.all(width / width8),
-                                    child: upload['type'] == 'image'
-                                        ? Image.file(
-                                            upload['file'],
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Icon(Icons.videocam),
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: height / height66,
+                                width: width / width66,
+                                decoration: BoxDecoration(
+                                    color: WidgetColor,
+                                    borderRadius: BorderRadius.circular(
+                                      width / width10,
+                                    )),
+                                margin: EdgeInsets.all(width / width8),
+                                child: upload['type'] == 'image'
+                                    ? Image.file(
+                                        upload['file'],
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Icon(Icons.videocam),
+                              ),
+                              Positioned(
+                                top: -5,
+                                right: -5,
+                                child: IconButton(
+                                  onPressed: () => _deleteItem(index),
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.black,
                                   ),
-                                  Positioned(
-                                    top: -5,
-                                    right: -5,
-                                    child: IconButton(
-                                      onPressed: () =>  _deleteItem(index),
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                  ),
-                                ],
-                              );
-  })
-                            .toList(),
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
                       ),
                       GestureDetector(
                         onTap: () {

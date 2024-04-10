@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
@@ -273,52 +274,79 @@ class _TaskScreenState extends State<TaskScreen> {
                     SizedBox(
                       height: height / height22,
                     ),
-                    widget.ShiftDate.isNotEmpty
-                        ? Button1(
-                            text: 'Start Shift',
-                            fontsize: width / width18,
-                            color: color5,
-                            backgroundcolor: WidgetColor /*.withOpacity(50)*/,
-                            onPressed: () async {
-                              print(widget.CheckUserRadius);
-                              if (widget.CheckUserRadius == true) {
-                                bool status =
-                                    await locationChecker.checkLocation(
-                                        widget.ShiftLatitude,
-                                        widget.shiftLongitude,
-                                        widget.ShiftRadius);
-                                print("Status :$status");
-                                if (status == true) {
-                                  setState(() {
-                                    ShiftStarted = true;
-                                    fireStoreService.startShiftLog(
-                                        widget.empId, widget.shiftId);
-                                  });
-                                } else {
-                                  showCustomDialog(context, "Location",
-                                      "Move into Shift Radius to continue");
-                                }
+                    if (widget.ShiftDate.isNotEmpty)
+                      Button1(
+                        text: 'Start Shift',
+                        fontsize: width / width18,
+                        color: color5,
+                        backgroundcolor: WidgetColor /*.withOpacity(50)*/,
+                        onPressed: () async {
+                          print(widget.CheckUserRadius);
+                          if (widget.CheckUserRadius == true) {
+                            bool status = await locationChecker.checkLocation(
+                                widget.ShiftLatitude,
+                                widget.shiftLongitude,
+                                widget.ShiftRadius);
+                            bool? taskStatus =
+                                await fireStoreService.checkShiftTaskStatus(
+                                    widget.empId, widget.shiftId);
+                            print("Status :$status");
+                            if (status == true) {
+                              if (taskStatus == false) {
+                                print("taskStaus ${taskStatus}");
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ShiftTaskScreen(
+                                              shiftId: widget.shiftId,
+                                            )));
                               } else {
-                                Map<String, dynamic> emailParams = {
-                                  'to_email': 'recipient@example.com',
-                                  'from_name': 'Your Name',
-                                  'reply_to': 'your_email@example.com',
-                                  'subject': 'Your Subject',
-                                  'message': 'Your Message',
-                                };
-                                // bool result = await sendEmail(emailParams);
-                                // print('Email sent: $result');s
                                 setState(() {
                                   ShiftStarted = true;
+                                  fireStoreService.startShiftLog(
+                                      widget.empId, widget.shiftId);
                                 });
-
-                                //if the check user radius is off we can start the shift
                               }
+                            } else {
+                              showCustomDialog(context, "Location",
+                                  "Move into Shift Radius to continue");
+                            }
+                          } else {
+                            bool? taskStatus =
+                                await fireStoreService.checkShiftTaskStatus(
+                                    widget.empId, widget.shiftId);
+                            if (taskStatus == false) {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ShiftTaskScreen(
+                                            shiftId: widget.shiftId,
+                                          )));
+                              print("Task Status false");
+                            } else {
+                              Map<String, dynamic> emailParams = {
+                                'to_email': 'sutarvaibhav37@gmail.com',
+                                'from_name': 'Your Name',
+                                'reply_to': 'sutarvaibhav37@gmail.com',
+                                'subject':
+                                    'Your Shift has been Started ${widget.ShiftLocation}',
+                                'message': 'Your Message',
+                              };
+                              // await sendEmail(emailParams);
+                              // print('Email sent: $result');s
+                              setState(() {
+                                ShiftStarted = true;
+                              });
+                            }
 
-                              // bool isWithInRaius = locationChecker.checkLocation();
-                            },
-                          )
-                        : SizedBox(),
+                            //if the check user radius is off we can start the shift
+                          }
+
+                          // bool isWithInRaius = locationChecker.checkLocation();
+                        },
+                      )
+                    else
+                      SizedBox(),
                     SizedBox(
                       height: height / height10,
                     ),

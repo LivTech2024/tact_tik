@@ -260,11 +260,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               ),*/
               Expanded(
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     setState(() {
                       isPaused = !isPaused;
                     });
-                    fireStoreService.EndShiftLog(
+                    await fireStoreService.EndShiftLog(
                         widget.EmployeId,
                         formattedStopwatchTime,
                         widget.ShiftId,
@@ -314,21 +314,21 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               )
             : const SizedBox(),
         Button1(
-                text: 'Check Patrolling',
-                fontsize: width / width18,
-                color: color5,
-                backgroundcolor: WidgetColor,
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyPatrolsList(
-                                ShiftLocationId: widget.ShiftLocationId,
-                                EmployeeID: widget.EmployeId,
-                                EmployeeName: widget.EmployeeName,
-                              )));
-                },
-              ),
+          text: 'Check Patrolling',
+          fontsize: width / width18,
+          color: color5,
+          backgroundcolor: WidgetColor,
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyPatrolsList(
+                          ShiftLocationId: widget.ShiftLocationId,
+                          EmployeeID: widget.EmployeId,
+                          EmployeeName: widget.EmployeeName,
+                        )));
+          },
+        ),
       ],
     );
   }

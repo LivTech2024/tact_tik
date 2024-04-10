@@ -270,7 +270,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        InterBold(text: 'Patrol 1     Devon Lane', color: Primarycolor,fontsize: width / width14,),
+                        InterBold(
+                          text: 'Patrol 1     Devon Lane',
+                          color: Primarycolor,
+                          fontsize: width / width14,
+                        ),
                         CircularPercentIndicator(
                           radius: width / width10,
                           lineWidth: 3,

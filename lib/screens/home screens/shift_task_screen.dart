@@ -2,13 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
 import '../../utils/colors.dart';
 
-class ShiftTaskScreen extends StatelessWidget {
-  const ShiftTaskScreen({super.key});
+class ShiftTaskScreen extends StatefulWidget {
+  final String shiftId;
+  const ShiftTaskScreen({super.key, required this.shiftId});
+
+  @override
+  State<ShiftTaskScreen> createState() => _ShiftTaskScreenState();
+}
+
+class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
+  FireStoreService fireStoreService = FireStoreService();
+  void initState() {
+    fetchData();
+  }
+
+  List<Map<String, dynamic>>? fetchedTasks = [];
+  void fetchData() async {
+    List<Map<String, dynamic>>? fetchedData =
+        await fireStoreService.fetchShiftTask(widget.shiftId);
+    if (fetchedData != null) {
+      setState(() {
+        fetchedTasks = fetchedData;
+        print("Fetched Shift Tasks  ${fetchedData}");
+      });
+      print(fetchedData);
+    } else {
+      print('No tasks fetched');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +54,7 @@ class ShiftTaskScreen extends StatelessWidget {
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
           title: InterRegular(
@@ -67,19 +94,27 @@ class ShiftTaskScreen extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  childCount: 5,
                   (context, index) {
-                    List data = [
-                      ShiftTaskEnum.upload,
-                      ShiftTaskEnum.scan,
-                      ShiftTaskEnum.upload,
-                      ShiftTaskEnum.scan,
-                      ShiftTaskEnum.upload
-                    ];
+                    // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
+                    ShiftTaskEnum? taskType;
+                    if (fetchedTasks != null && index < fetchedTasks!.length) {
+                      final task = fetchedTasks![index];
+                      if (task.containsKey('ShiftTaskQrCodeReq') &&
+                          task['ShiftTaskQrCodeReq']) {
+                        taskType = ShiftTaskEnum.upload;
+                      } else {
+                        taskType = ShiftTaskEnum.scan;
+                      }
+                    }
+
                     return ShiftTaskTypeWidget(
-                      type: data[index],
+                      type: taskType ?? ShiftTaskEnum.upload,
+                      taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
+                      taskId: fetchedTasks?[index]['ShiftTaskId'] ??
+                          "", // Default to upload if taskType is null
                     );
                   },
+                  childCount: fetchedTasks?.length ?? 0,
                 ),
               ),
             ],
