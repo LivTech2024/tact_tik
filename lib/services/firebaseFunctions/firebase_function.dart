@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -1071,6 +1072,7 @@ class FireStoreService {
       String downloadURL = await uploadRef.getDownloadURL();
 
       // Return the download URL in a list
+      print({'downloadURL': downloadURL});
       return [
         {'downloadURL': downloadURL}
       ];
@@ -1081,67 +1083,66 @@ class FireStoreService {
   }
 
   //add wellness to the collection
-  Future<void> addImagesToShiftTasks(
-      List<Map<String, dynamic>> uploads, String ShiftTaskId) async {
-    if (uploads.isEmpty || uploads == null) {
-      print("Uploads is  null or empty");
-    }
+  Future<void> addImagesToShiftTasks(List<Map<String, dynamic>> uploads,
+      String ShiftTaskId, String ShiftId, String EmpId) async {
     try {
+      print("Uploads from FIrebase: $uploads");
+      print("Shift Task ID from FIrebase: $ShiftTaskId");
+
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
-      String empId = storage.getItem('EmpId') ?? "";
-      print("ShiftID firebase: ${shiftId}");
-      print("Uploads from Firebase : ${uploads}");
+      if (shiftId.isEmpty) {
+        print("Shift ID from FIrebase: $shiftId");
+      } else {
+        print("Shift ID is empty");
+      }
+
+      // String empId = storage.getItem('EmpId') ?? "";
+      if (shiftId.isEmpty) {
+        print("LocalStorage shiftId is null or empty");
+      }
       final DocumentReference shiftDocRef =
-          FirebaseFirestore.instance.collection("Shifts").doc(shiftId);
+          FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
+      print(DocumentSnapshot);
       if (shiftDoc.exists) {
         List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
-
+        print("Shift Doc exists");
+        print(shiftTasks.length);
         for (int i = 0; i < shiftTasks.length; i++) {
-          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
-            List<String> imgUrls = [];
-            for (var upload in uploads) {
-              if (upload['file'] is File) {
-                File file = upload['file'] as File;
-
-                // Upload the image file and get the download URL
-                List<Map<String, dynamic>> downloadURLs =
-                    await addImageToStorageShiftTask(file);
-                // Add the image URLs to the list
-                if (downloadURLs != null && downloadURLs.isNotEmpty) {
-                  // Add the image URLs to the list
-                  for (var urlMap in downloadURLs) {
-                    if (urlMap != null && urlMap.containsKey('downloadURL')) {
-                      imgUrls.add(urlMap['downloadURL'] as String);
-                    }
-                  }
+          print("Success: $ShiftTaskId");
+          List<String> imgUrls = [];
+          for (var upload in uploads) {
+            if (upload['type'] == 'image') {
+              File file = upload['file'];
+              print(file);
+              // Upload the image file and get the download URL
+              List<Map<String, dynamic>> downloadURLs =
+                  await addImageToStorageShiftTask(file);
+              // Add the image URLs to the list
+              for (var urlMap in downloadURLs) {
+                if (urlMap.containsKey('downloadURL')) {
+                  imgUrls.add(urlMap['downloadURL'] as String);
                 }
               }
             }
+          }
 
+          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
             // Create ShiftTaskStatus object with image URLs
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
-              "TaskCompletedById": empId != null ? empId : "",
+              "TaskCompletedById": EmpId,
               "TaskCompletedByName": "",
               "TaskCompletionTime": DateTime.now(),
-              "ShiftTaskPhotos": imgUrls != null ? imgUrls : [],
+              "ShiftTaskPhotos": imgUrls,
             };
-            print("ShiftTaskStatus: $shiftTaskStatus");
+
             // Update the ShiftTaskStatus array with the new object
             shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
-            print("Updated shiftTasks: $shiftTasks");
+
             // Update the Firestore document with the new ShiftTaskStatus
-            // await shiftDocRef.update({'ShiftTask': shiftTasks});
-
-            if (imgUrls != null) {
-              // Update the Firestore document with the new ShiftTaskStatus
-              await shiftDocRef.update({'ShiftTask': shiftTasks});
-            } else {
-              print('Image URLs are null. Aborting update.');
-            }
-
+            await shiftDocRef.update({'ShiftTask': shiftTasks});
             break; // Exit loop after updating
           }
         }
@@ -1152,7 +1153,6 @@ class FireStoreService {
       print('Error adding images to ShiftTaskPhotos: $e');
       throw e;
     }
-    print("Uploads from Firebase : ${uploads}");
   }
 
   //Update the shift status when the qr is scanned correctly

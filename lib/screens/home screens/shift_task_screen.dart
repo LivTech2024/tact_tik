@@ -10,8 +10,13 @@ import '../../utils/colors.dart';
 
 class ShiftTaskScreen extends StatefulWidget {
   final String shiftId;
+  final String EmpId;
   final String Name;
-  const ShiftTaskScreen({super.key, required this.shiftId, required this.Name});
+  const ShiftTaskScreen(
+      {super.key,
+      required this.shiftId,
+      required this.Name,
+      required this.EmpId});
 
   @override
   State<ShiftTaskScreen> createState() => _ShiftTaskScreenState();
@@ -130,20 +135,24 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         taskType = ShiftTaskEnum.upload;
                       }
 
+                      print("Shift Task Status Filtering  : ${task}");
                       // Filter ShiftTaskStatus by TaskCompletedById
                       final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
                       final filteredStatus = shiftTaskStatus
                           .where((status) =>
-                              status['TaskCompletedById'] == 'emp id')
+                              status['TaskCompletedById'] == widget.EmpId)
                           .toList();
+                      print("Task FilteredStatus Status : - ${filteredStatus}");
 
                       // Extract TaskStatus if document is present
                       if (filteredStatus.isNotEmpty) {
-                        setState(() {
-                          taskStatu = filteredStatus[index]['TaskStatus'];
-                        });
-                        print("Task Completion Status : - ${taskStatu}");
+                        String taskStatus = filteredStatus.first['TaskStatus'];
+
+                        print("Task Completion Status : - ${taskStatus}");
                       }
+                      print("Task Completion Status : - ${taskStatu}");
+
+                      // print("Task Completion Status : - ${taskStatu}");
                     }
 
                     return ShiftTaskTypeWidget(
@@ -151,8 +160,9 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                       taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
                       taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
                       ShiftId: widget.shiftId ?? "",
-                      taskStatus: taskStatu?[index] ??
-                          "", // Default to upload if taskType is null
+                      taskStatus: taskStatu?[index] ?? "",
+                      EmpID:
+                          widget.EmpId, // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

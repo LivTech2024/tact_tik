@@ -21,6 +21,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.taskId,
     required this.ShiftId,
     required this.taskStatus,
+    required this.EmpID,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -28,6 +29,8 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final String taskName;
   final String taskId;
   final String ShiftId;
+  final String EmpID;
+
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
 }
@@ -39,10 +42,13 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
+      // await fireStoreService
+      //     .addImageToStorageShiftTask(File(pickedFile.path));
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
     }
+    print("Statis ${widget.taskStatus}");
   }
 
   void _uploadImages() async {
@@ -50,7 +56,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
       print("Uploads Images  ${uploads}");
       try {
         print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId);
+        await fireStoreService.addImagesToShiftTasks(
+            uploads, widget.taskId, widget.ShiftId, widget.EmpID);
         uploads.clear();
         // Navigator.pop(context);
       } catch (e) {

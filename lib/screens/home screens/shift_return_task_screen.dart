@@ -135,8 +135,8 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
                       taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
                       ShiftId: widget.shiftId ?? "",
-                      taskStatus: taskStatu ??
-                          "", // Default to upload if taskType is null
+                      taskStatus: taskStatu ?? "",
+                      EmpID: "", // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,
