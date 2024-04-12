@@ -314,7 +314,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
-  bool nextScreen = false;
+  bool nextScreen = true;
 
   void _addNewTask() {
     setState(() {

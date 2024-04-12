@@ -115,22 +115,44 @@ class FireStoreService {
     }
   }
 
-  Future<List<DocumentSnapshot>> getAllPatrolsByEmployeeIdFromUserInfo(
-      String empId) async {
-    if (empId.isEmpty) {
+  Future<List<DocumentSnapshot>> getAllPatrolsByShiftId(String shiftId) async {
+    if (shiftId.isEmpty) {
+      return [];
+    }
+    print("Shift Id");
+    // Fetch the Shift document
+    final shiftDoc = await shifts.doc(shiftId).get();
+    if (!shiftDoc.exists) {
+      print("Shift doc in Patrol is null");
       return [];
     }
 
-    final querySnapshot = await patrols
-        .where("PatrolLocationId", isEqualTo: empId)
-        // .where("PatrolCurrentStatus", whereIn: ["pending", "started"])
-        // .orderBy("PatrolModifiedAt", descending: false)
-        .get();
+    // Cast the result of shiftDoc.data() to a Map<String, dynamic>
+    final shiftData = shiftDoc.data() as Map<String, dynamic>?;
+    if (shiftData == null) {
+      print("Shift data is null");
+      return [];
+    }
 
-    print("Retrieved documents:");
+    // Print the shiftData for debugging
+    print("Shift Data:");
+    print(shiftData);
+    // Extract the ShiftLinkedPatrolIds array from the Shift document
+    final shiftLinkedPatrolIds =
+        List<String>.from(shiftData["ShiftLinkedPatrolIds"] ?? []);
+
+    print("Patrol Linked IDS fetched: ${shiftLinkedPatrolIds}");
+    // Fetch the Patrols using the ShiftLinkedPatrolIds
+    final querySnapshot =
+        await patrols.where("PatrolId", whereIn: shiftLinkedPatrolIds).get();
+
+    print("Retrieved documents Patrols:");
     print(
-        "Get Patrol INfor ${querySnapshot.docs}"); // Log all retrieved documents
-
+        "Get Patrol Info ${querySnapshot.docs}"); // Log all retrieved documents
+    querySnapshot.docs.forEach((doc) {
+      print("Patrols Fetched");
+      print(doc.data());
+    });
     return querySnapshot.docs;
   }
 
@@ -912,6 +934,40 @@ class FireStoreService {
     }
   }
 
+  //Check Shift Return Task
+  Future<bool?> checkShiftReturnTaskStatus(String empId, String shiftID) async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection("Shifts")
+          .doc(shiftID)
+          .get();
+
+      if (documentSnapshot.exists) {
+        print('Shift exists');
+        final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        if (shiftTasks.isEmpty) {
+          return true; // If ShiftTask array is empty, return true
+        }
+        for (var shiftTask in shiftTasks) {
+          final taskStatusList = shiftTask['ShiftTaskStatus'] as List<dynamic>;
+          for (var shiftTaskStatus in taskStatusList) {
+            if (shiftTaskStatus['TaskCompletedById'] == empId &&
+                (shiftTaskStatus['ShiftTaskReturnReq'] == true ||
+                    shiftTaskStatus['TaskStatus'] == null)) {
+              return false; // If any task matches the condition, return false
+            }
+          }
+        }
+        return true; // If no task matches the condition, return true
+      } else {
+        return false; // If document doesn't exist, return false
+      }
+    } catch (e) {
+      print("Error checking shift task status: $e");
+      return null; // Return null in case of error
+    }
+  }
+
   //Fetch shift task
   Future<List<Map<String, dynamic>>?> fetchShiftTask(String shiftID) async {
     try {
@@ -943,11 +999,14 @@ class FireStoreService {
           .get();
 
       if (documentSnapshot.exists) {
+        print("Document return shift exists");
         final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
         if (shiftTasks.isNotEmpty) {
           final tasks = List<Map<String, dynamic>>.from(shiftTasks)
               .where((task) => task['ShiftTaskReturnReq'] == true)
               .toList();
+          print("Document return shift exists");
+          print("Tasks ${tasks}");
           return tasks.isNotEmpty ? tasks : null;
         }
       }
@@ -1024,15 +1083,18 @@ class FireStoreService {
   //add wellness to the collection
   Future<void> addImagesToShiftTasks(
       List<Map<String, dynamic>> uploads, String ShiftTaskId) async {
+    if (uploads.isEmpty || uploads == null) {
+      print("Uploads is  null or empty");
+    }
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
       String empId = storage.getItem('EmpId') ?? "";
-
+      print("ShiftID firebase: ${shiftId}");
+      print("Uploads from Firebase : ${uploads}");
       final DocumentReference shiftDocRef =
           FirebaseFirestore.instance.collection("Shifts").doc(shiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
-
       if (shiftDoc.exists) {
         List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
 
@@ -1040,16 +1102,19 @@ class FireStoreService {
           if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
             List<String> imgUrls = [];
             for (var upload in uploads) {
-              if (upload['type'] == 'image') {
-                File file = upload['file'];
+              if (upload['file'] is File) {
+                File file = upload['file'] as File;
 
                 // Upload the image file and get the download URL
                 List<Map<String, dynamic>> downloadURLs =
                     await addImageToStorageShiftTask(file);
                 // Add the image URLs to the list
-                for (var urlMap in downloadURLs) {
-                  if (urlMap.containsKey('downloadURL')) {
-                    imgUrls.add(urlMap['downloadURL'] as String);
+                if (downloadURLs != null && downloadURLs.isNotEmpty) {
+                  // Add the image URLs to the list
+                  for (var urlMap in downloadURLs) {
+                    if (urlMap != null && urlMap.containsKey('downloadURL')) {
+                      imgUrls.add(urlMap['downloadURL'] as String);
+                    }
                   }
                 }
               }
@@ -1058,17 +1123,25 @@ class FireStoreService {
             // Create ShiftTaskStatus object with image URLs
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
-              "TaskCompletedById": empId,
+              "TaskCompletedById": empId != null ? empId : "",
               "TaskCompletedByName": "",
               "TaskCompletionTime": DateTime.now(),
-              "ShiftTaskPhotos": imgUrls,
+              "ShiftTaskPhotos": imgUrls != null ? imgUrls : [],
             };
-
+            print("ShiftTaskStatus: $shiftTaskStatus");
             // Update the ShiftTaskStatus array with the new object
             shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
-
+            print("Updated shiftTasks: $shiftTasks");
             // Update the Firestore document with the new ShiftTaskStatus
-            await shiftDocRef.update({'ShiftTask': shiftTasks});
+            // await shiftDocRef.update({'ShiftTask': shiftTasks});
+
+            if (imgUrls != null) {
+              // Update the Firestore document with the new ShiftTaskStatus
+              await shiftDocRef.update({'ShiftTask': shiftTasks});
+            } else {
+              print('Image URLs are null. Aborting update.');
+            }
+
             break; // Exit loop after updating
           }
         }
@@ -1079,6 +1152,7 @@ class FireStoreService {
       print('Error adding images to ShiftTaskPhotos: $e');
       throw e;
     }
+    print("Uploads from Firebase : ${uploads}");
   }
 
   //Update the shift status when the qr is scanned correctly

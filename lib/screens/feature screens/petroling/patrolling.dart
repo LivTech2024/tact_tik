@@ -114,8 +114,8 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
 
     if (widget.empId.isNotEmpty) {
-      var patrolInfoList = await fireStoreService
-          .getAllPatrolsByEmployeeIdFromUserInfo(widget.empId);
+      var patrolInfoList =
+          await fireStoreService.getAllPatrolsByShiftId(widget.empId);
       setState(() {
         EmployeId = widget.empId;
         EmployeName = widget.empName;

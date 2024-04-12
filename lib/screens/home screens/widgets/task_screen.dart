@@ -107,6 +107,17 @@ class _TaskScreenState extends State<TaskScreen> {
     // issShift = widget.issShiftFetched;
   }
 
+  List<Map<String, dynamic>>? data;
+  void fetchData() async {
+    List<Map<String, dynamic>>? fetchedData =
+        await fireStoreService.fetchShiftTask(widget.shiftId);
+    if (fetchedData != null) {
+      setState(() {
+        data = fetchedData;
+      });
+    }
+  }
+
   Future<void> _refreshData() async {
     // Fetch patrol data from Firestore (assuming your logic exists)
   }
@@ -218,48 +229,50 @@ class _TaskScreenState extends State<TaskScreen> {
                                     )
                                   ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / width26),
-                                  height: height / height90,
-                                  color: colorRed,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.location_on,
-                                            color: Colors.redAccent,
-                                            size: width / width20,
-                                          ),
-                                          SizedBox(
-                                            height: height / height10,
-                                          ),
-                                          InterMedium(
-                                            text: 'Location',
-                                            color: Colors.white,
-                                            fontsize: width / width16,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(width: width / width38),
-                                      Flexible(
-                                        child: InterRegular(
-                                          text: widget.ShiftLocation,
-                                          fontsize: width / width16,
-                                          color: Colors.white,
-                                          maxLines: 2,
+                                widget.ShiftLocation.isEmpty
+                                    ? Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width / width26),
+                                        height: height / height90,
+                                        color: colorRed,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.redAccent,
+                                                  size: width / width20,
+                                                ),
+                                                SizedBox(
+                                                  height: height / height10,
+                                                ),
+                                                InterMedium(
+                                                  text: 'Location',
+                                                  color: Colors.white,
+                                                  fontsize: width / width16,
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: width / width38),
+                                            Flexible(
+                                              child: InterRegular(
+                                                text: widget.ShiftLocation,
+                                                fontsize: width / width16,
+                                                color: Colors.white,
+                                                maxLines: 2,
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       )
-                                    ],
-                                  ),
-                                ),
+                                    : SizedBox(),
                               ],
                             ),
                           )
@@ -299,6 +312,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     MaterialPageRoute(
                                         builder: (context) => ShiftTaskScreen(
                                               shiftId: widget.shiftId,
+                                              Name: "Shift Task",
                                             )));
                               } else {
                                 setState(() {
@@ -321,6 +335,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => ShiftTaskScreen(
                                             shiftId: widget.shiftId,
+                                            Name: "Shift Task",
                                           )));
                               print("Task Status false");
                             } else {

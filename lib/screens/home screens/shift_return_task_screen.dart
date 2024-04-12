@@ -8,16 +8,15 @@ import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
 import '../../utils/colors.dart';
 
-class ShiftTaskScreen extends StatefulWidget {
+class ShiftReturnTaskScreen extends StatefulWidget {
   final String shiftId;
-  final String Name;
-  const ShiftTaskScreen({super.key, required this.shiftId, required this.Name});
+  const ShiftReturnTaskScreen({super.key, required this.shiftId});
 
   @override
-  State<ShiftTaskScreen> createState() => _ShiftTaskScreenState();
+  State<ShiftReturnTaskScreen> createState() => _ShiftTaskReturnScreenState();
 }
 
-class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
+class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
   FireStoreService fireStoreService = FireStoreService();
   void initState() {
     fetchData();
@@ -28,7 +27,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
   List<Map<String, dynamic>>? fetchedTasks = [];
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
-        await fireStoreService.fetchShiftTask(widget.shiftId);
+        await fireStoreService.fetchreturnShiftTasks(widget.shiftId);
     if (fetchedData != null) {
       setState(() {
         fetchedTasks = fetchedData;
@@ -81,7 +80,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
             },
           ),
           title: InterRegular(
-            text: "${widget.Name}",
+            text: "Return Shift Task",
             fontsize: width / width18,
             color: Colors.white,
             letterSpacing: -.3,
@@ -127,22 +126,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                           task['ShiftTaskQrCodeReq']) {
                         taskType = ShiftTaskEnum.upload;
                       } else {
-                        taskType = ShiftTaskEnum.upload;
-                      }
-
-                      // Filter ShiftTaskStatus by TaskCompletedById
-                      final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
-                      final filteredStatus = shiftTaskStatus
-                          .where((status) =>
-                              status['TaskCompletedById'] == 'emp id')
-                          .toList();
-
-                      // Extract TaskStatus if document is present
-                      if (filteredStatus.isNotEmpty) {
-                        setState(() {
-                          taskStatu = filteredStatus[index]['TaskStatus'];
-                        });
-                        print("Task Completion Status : - ${taskStatu}");
+                        taskType = ShiftTaskEnum.scan;
                       }
                     }
 
@@ -151,7 +135,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                       taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
                       taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
                       ShiftId: widget.shiftId ?? "",
-                      taskStatus: taskStatu?[index] ??
+                      taskStatus: taskStatu ??
                           "", // Default to upload if taskType is null
                     );
                   },

@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
           int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
           bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
-          String ShiftClientId = shiftInfo['ShiftClientId'];
+          // String ShiftClientId = shiftInfo['ShiftClientId'];
           // EmpEmail: _empEmail,
           //                     Branchid: _branchId,
           //                     cmpId: _cmpId,
@@ -279,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _ShiftBranchId = companyBranchId;
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             _shiftLocationId = shiftLocationId;
-            _shiftCLientId = ShiftClientId;
+            // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
 
             if (!selectedDates

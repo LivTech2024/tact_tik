@@ -17,12 +17,14 @@ FireStoreService fireStoreService = FireStoreService();
 class MyPatrolsList extends StatefulWidget {
   final String EmployeeID;
   final String ShiftLocationId;
+  final String ShiftId;
   final String EmployeeName;
 
   const MyPatrolsList(
       {required this.ShiftLocationId,
       required this.EmployeeID,
-      required this.EmployeeName});
+      required this.EmployeeName,
+      required this.ShiftId});
 
   @override
   State<MyPatrolsList> createState() => _MyPatrolsListState();
@@ -41,8 +43,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
   void _getUserInfo() async {
     print("Shift Id : ${widget.ShiftLocationId}");
-    var patrolInfoList = await fireStoreService
-        .getAllPatrolsByEmployeeIdFromUserInfo(widget.ShiftLocationId);
+    var patrolInfoList =
+        await fireStoreService.getAllPatrolsByShiftId(widget.ShiftId);
 
     List<Patrol> patrols = [];
     for (var patrol in patrolInfoList) {
@@ -92,7 +94,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       List<Category> categories = [];
       bool allChecked = true;
       for (var checkpoint in data['PatrolCheckPoints']) {
-        String checkpointCategory = checkpoint['CheckPointCategory'];
+        String checkpointCategory = checkpoint['CheckPointCategory'] ?? "";
         String checkpointId = checkpoint['CheckPointId'];
         String checkpointName = checkpoint['CheckPointName'];
         List<CheckPointStatus> checkPointStatuses =
@@ -174,6 +176,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
               Navigator.pop(context);
+              print("Navigtor debug: ${Navigator.of(context).toString()}");
             },
           ),
           title: InterRegular(
@@ -271,7 +274,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InterBold(
-                          text: 'Patrol 1     Devon Lane',
+                          text: 'Patrol   ${widget.p.title}',
                           color: Primarycolor,
                           fontsize: width / width14,
                         ),

@@ -46,12 +46,19 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   }
 
   void _uploadImages() async {
-    print("Uploads ${uploads}");
-    try {
-      await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId);
-      uploads.clear();
-      // Navigator.pop(context);
-    } catch (e) {}
+    if (uploads.isNotEmpty) {
+      print("Uploads Images  ${uploads}");
+      try {
+        print("Task Id : ${widget.taskId}");
+        await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId);
+        uploads.clear();
+        // Navigator.pop(context);
+      } catch (e) {
+        print('Error uploading images: $e');
+      }
+    } else {
+      print('No images to upload.');
+    }
   }
 
   Future<void> _addVideo() async {
@@ -243,7 +250,9 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    Icons.add_a_photo,
+                                    widget.taskStatus == "completed"
+                                        ? Icons.done
+                                        : Icons.add_a_photo,
                                     size: width / width24,
                                     color: Primarycolor,
                                   ),

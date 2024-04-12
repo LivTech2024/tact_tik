@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/eg_patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/home%20screens/shift_return_task_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
@@ -76,6 +78,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     _stopwatchTimer.cancel();
     super.dispose();
   }
+
+  final LocalStorage storage = LocalStorage('ShiftDetails');
 
   @override
   Widget build(BuildContext context) {
@@ -218,11 +222,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    bool? status =
+                        await fireStoreService.checkShiftReturnTaskStatus(
+                            widget.EmployeId, widget.ShiftId);
                     setState(() {
                       if (!clickedIn) {
                         clickedIn = true;
                         fireStoreService.INShiftLog(widget.EmployeId);
+                        if (status == false) {
+                          print("Staus is false");
+                        } else {
+                          print("Staus is true");
+                        }
+                        fireStoreService.fetchreturnShiftTasks(widget.ShiftId);
                       } else {
                         print('already clicked');
                       }
@@ -261,6 +274,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ShiftReturnTaskScreen(
+                                shiftId: '',
+                              )),
+                    );
                     setState(() {
                       isPaused = !isPaused;
                     });
@@ -272,7 +292,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         widget.ShiftBranchId,
                         widget.ShiftCompanyId,
                         widget.EmployeeName);
-
+                    storage.clear();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -325,8 +345,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 MaterialPageRoute(
                     builder: (context) => MyPatrolsList(
                           ShiftLocationId: widget.ShiftLocationId,
-                          EmployeeID: widget.EmployeId,
+                          EmployeeID: widget.ShiftId,
                           EmployeeName: widget.EmployeeName,
+                          ShiftId: widget.ShiftId,
                         )));
           },
         ),
