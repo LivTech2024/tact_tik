@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
@@ -41,6 +42,14 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
     _getUserInfo();
   }
 
+  Future<void> _refreshData() async {
+    // Fetch patrol data from Firestore (assuming your logic exists)
+    // var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    // ... (existing data fetching logic based on user ID)
+
+    _getUserInfo();
+  }
+
   void _getUserInfo() async {
     print("Shift Id : ${widget.ShiftLocationId}");
     var patrolInfoList =
@@ -53,6 +62,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
+      String patrolClientId = data['PatrolClientId'];
       // String patrolTime = data['PatrolTime'];
       int requiredCount = data['PatrolRequiredCount'];
       List<dynamic>? patrolStatusDynamic =
@@ -103,10 +113,17 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           // setState(() {
           //   totalCount = status['StatusCompletedCount'] ?? 0;
           // });
-          if (status['Status'] != 'checked') {
-            setState(() {
-              allChecked = false; // At least one checkpoint is not checked
-            });
+          // if (status['Status'] != 'checked') {
+          //   setState(() {
+          //     allChecked = false; // At least one checkpoint is not checked
+          //   });
+          // }
+          List<dynamic> checkPointStatuses =
+              checkpoint['CheckPointStatus'] ?? [];
+          if (checkPointStatuses.isEmpty ||
+              !checkPointStatuses
+                  .every((status) => status.status == 'checked')) {
+            allChecked = false; // At least one checkpoint is not checked
           }
           return CheckPointStatus(
             status: status['Status'],
@@ -146,6 +163,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           PatrolRequiredCount: requiredCount,
           CompletedCount: totalCount,
           Allchecked: allChecked,
+          PatrolCompanyID: patrolCompanyId,
+          PatrolClientID: patrolClientId,
         ),
       );
     }
@@ -188,24 +207,27 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           centerTitle: true,
         ),
         backgroundColor: Secondarycolor,
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: width / width30,
-            vertical: height / height30,
-          ),
-          child: CustomScrollView(
-            physics: PageScrollPhysics(),
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    Patrol p = patrolsData[index];
-                    return PatrollingWidget(p: p);
-                  },
-                  childCount: patrolsData.length,
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width / width30,
+              vertical: height / height30,
+            ),
+            child: CustomScrollView(
+              physics: PageScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      Patrol p = patrolsData[index];
+                      return PatrollingWidget(p: p);
+                    },
+                    childCount: patrolsData.length,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -240,6 +262,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+    double completionPercentage =
+        widget.p.CompletedCount / widget.p.PatrolRequiredCount;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -281,7 +306,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         CircularPercentIndicator(
                           radius: width / width10,
                           lineWidth: 3,
-                          percent: 10 / 100,
+                          percent: completionPercentage.clamp(0.0, 1.0),
                           progressColor: Primarycolor,
                         )
                       ],
@@ -670,12 +695,34 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       borderRadius: 10,
                       onPressed: () async {
                         if (widget.p.Allchecked) {
+                          var ClientEmail = await fireStoreService
+                              .getClientEmail(widget.p.PatrolClientID);
+                          var AdminEmail = await fireStoreService
+                              .getAdminEmail(widget.p.PatrolCompanyID);
+                          var TestinEmail = "sutarvaibhav37@gmail.com";
+                          if (ClientEmail != null && AdminEmail != null) {
+                            Map<String, dynamic> emailParams = {
+                              'to_email':
+                                  '$ClientEmail, $AdminEmail , $TestinEmail',
+                              'from_name': '${widget.p.EmployeeName}',
+                              'reply_to': '$ClientEmail',
+                              'subject':
+                                  'Patrol is completed ${widget.p.description}',
+                              'message':
+                                  'Patrol for ${widget.p.description} is completed ${DateTime.now()}. Total Patrol Count ${widget.p.PatrolRequiredCount} Completed Patrol Count ${widget.p.CompletedCount}',
+                            };
+                            // sendEmail(emailParams);
+                          }
                           await fireStoreService.EndPatrolupdatePatrolsStatus(
                               widget.p.PatrolId,
                               widget.p.EmpId,
                               widget.p.EmployeeName);
                           print("All checked");
                         } else {
+                          // await fireStoreService.EndPatrolupdatePatrolsStatus(
+                          //     widget.p.PatrolId,
+                          //     widget.p.EmpId,
+                          //     widget.p.EmployeeName);
                           print("not checked");
                         }
                       },
@@ -696,6 +743,9 @@ class Patrol {
   // final String time;
   final String PatrolId;
   final String EmpId;
+  final String PatrolCompanyID;
+  final String PatrolClientID;
+
   final String EmployeeName;
   final int PatrolRequiredCount;
   final int CompletedCount;
@@ -704,6 +754,8 @@ class Patrol {
 
   Patrol({
     required this.title,
+    required this.PatrolCompanyID,
+    required this.PatrolClientID,
     required this.description,
     required this.categories,
     // required this.time,

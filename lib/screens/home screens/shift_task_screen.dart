@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -64,6 +65,14 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
     }
   }
 
+  Future<void> _refreshData() async {
+    // Fetch patrol data from Firestore (assuming your logic exists)
+    // var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    // ... (existing data fetching logic based on user ID)
+
+    fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -93,82 +102,88 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: width / width30,
-            // vertical: height / height30,
-          ),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: height / height60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InterBold(
-                        text: 'Westheimer',
-                        fontsize: width / width18,
-                        color: Primarycolor,
-                      ),
-                      InterBold(
-                        text: '$completedTaskCount/$totalTaskCount',
-                        fontsize: width / width18,
-                        color: Primarycolor,
-                      ),
-                    ],
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width / width30,
+              // vertical: height / height30,
+            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: height / height60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InterBold(
+                          text: '',
+                          fontsize: width / width18,
+                          color: Primarycolor,
+                        ),
+                        InterBold(
+                          text: '$completedTaskCount/$totalTaskCount',
+                          fontsize: width / width18,
+                          color: Primarycolor,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
-                    ShiftTaskEnum? taskType;
-                    String? taskStatu;
-                    if (fetchedTasks != null && index < fetchedTasks!.length) {
-                      final task = fetchedTasks![index];
-                      if (task.containsKey('ShiftTaskQrCodeReq') &&
-                          task['ShiftTaskQrCodeReq']) {
-                        taskType = ShiftTaskEnum.upload;
-                      } else {
-                        taskType = ShiftTaskEnum.upload;
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
+                      ShiftTaskEnum? taskType;
+                      String? taskStatu;
+                      if (fetchedTasks != null &&
+                          index < fetchedTasks!.length) {
+                        final task = fetchedTasks![index];
+                        if (task.containsKey('ShiftTaskQrCodeReq') &&
+                            task['ShiftTaskQrCodeReq']) {
+                          taskType = ShiftTaskEnum.upload;
+                        } else {
+                          taskType = ShiftTaskEnum.upload;
+                        }
+
+                        print("Shift Task Status Filtering  : ${task}");
+                        // Filter ShiftTaskStatus by TaskCompletedById
+                        final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
+                        final filteredStatus = shiftTaskStatus
+                            .where((status) =>
+                                status['TaskCompletedById'] == widget.EmpId)
+                            .toList();
+                        print(
+                            "Task FilteredStatus Status : - ${filteredStatus}");
+
+                        // Extract TaskStatus if document is present
+                        if (filteredStatus.isNotEmpty) {
+                          taskStatu = filteredStatus.first['TaskStatus'];
+
+                          // print("Task Completion Status : - ${taskStatus}");
+                        }
+                        print("Task Completion Status : - ${taskStatu}");
+
+                        // print("Task Completion Status : - ${taskStatu}");
                       }
 
-                      print("Shift Task Status Filtering  : ${task}");
-                      // Filter ShiftTaskStatus by TaskCompletedById
-                      final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
-                      final filteredStatus = shiftTaskStatus
-                          .where((status) =>
-                              status['TaskCompletedById'] == widget.EmpId)
-                          .toList();
-                      print("Task FilteredStatus Status : - ${filteredStatus}");
-
-                      // Extract TaskStatus if document is present
-                      if (filteredStatus.isNotEmpty) {
-                        String taskStatus = filteredStatus.first['TaskStatus'];
-
-                        print("Task Completion Status : - ${taskStatus}");
-                      }
-                      print("Task Completion Status : - ${taskStatu}");
-
-                      // print("Task Completion Status : - ${taskStatu}");
-                    }
-
-                    return ShiftTaskTypeWidget(
-                      type: taskType ?? ShiftTaskEnum.upload,
-                      taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
-                      taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
-                      ShiftId: widget.shiftId ?? "",
-                      taskStatus: taskStatu?[index] ?? "",
-                      EmpID:
-                          widget.EmpId, // Default to upload if taskType is null
-                    );
-                  },
-                  childCount: fetchedTasks?.length ?? 0,
+                      return ShiftTaskTypeWidget(
+                        type: taskType ?? ShiftTaskEnum.upload,
+                        taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
+                        taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
+                        ShiftId: widget.shiftId ?? "",
+                        taskStatus: taskStatu ?? "",
+                        EmpID: widget.EmpId,
+                        shiftReturnTask:
+                            false, // Default to upload if taskType is null
+                      );
+                    },
+                    childCount: fetchedTasks?.length ?? 0,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

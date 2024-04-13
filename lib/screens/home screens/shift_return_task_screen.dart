@@ -10,7 +10,13 @@ import '../../utils/colors.dart';
 
 class ShiftReturnTaskScreen extends StatefulWidget {
   final String shiftId;
-  const ShiftReturnTaskScreen({super.key, required this.shiftId});
+  final String Empid;
+  final String ShiftName;
+  const ShiftReturnTaskScreen(
+      {super.key,
+      required this.shiftId,
+      required this.Empid,
+      required this.ShiftName});
 
   @override
   State<ShiftReturnTaskScreen> createState() => _ShiftTaskReturnScreenState();
@@ -101,7 +107,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InterBold(
-                        text: 'Westheimer',
+                        text: "${widget.ShiftName}",
                         fontsize: width / width18,
                         color: Primarycolor,
                       ),
@@ -126,7 +132,20 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                           task['ShiftTaskQrCodeReq']) {
                         taskType = ShiftTaskEnum.upload;
                       } else {
-                        taskType = ShiftTaskEnum.scan;
+                        taskType = ShiftTaskEnum.upload;
+                      }
+                      final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
+                      final filteredStatus = shiftTaskStatus
+                          .where((status) =>
+                              status['TaskCompletedById'] == widget.Empid)
+                          .toList();
+                      print("Task FilteredStatus Status : - ${filteredStatus}");
+
+                      // Extract TaskStatus if document is present
+                      if (filteredStatus.isNotEmpty) {
+                        taskStatu = filteredStatus.first['TaskStatus'];
+
+                        // print("Task Completion Status : - ${taskStatus}");
                       }
                     }
 
@@ -136,7 +155,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
                       ShiftId: widget.shiftId ?? "",
                       taskStatus: taskStatu ?? "",
-                      EmpID: "", // Default to upload if taskType is null
+                      EmpID: "",
+                      shiftReturnTask:
+                          true, // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

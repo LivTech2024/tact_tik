@@ -21,6 +21,7 @@ class TaskScreen extends StatefulWidget {
   final String ShiftCompanyId;
   final String ShiftBranchId;
   final String ShiftName;
+  final String ShiftClientId;
   final String Branchid;
   final String ShiftLocationId;
   final String cmpId;
@@ -62,6 +63,7 @@ class TaskScreen extends StatefulWidget {
     required this.ShiftCompanyId,
     required this.ShiftBranchId,
     required this.ShiftLocationId,
+    required this.ShiftClientId,
   });
 
   @override
@@ -144,6 +146,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftBranchId: widget.ShiftBranchId,
                   EmployeeName: widget.EmpName,
                   ShiftLocationId: widget.ShiftLocationId,
+                  ShiftClientID: widget.ShiftClientId,
                 )
               : Column(
                   children: [
@@ -331,7 +334,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                 await fireStoreService.checkShiftTaskStatus(
                                     widget.empId, widget.shiftId);
                             if (taskStatus == false) {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => ShiftTaskScreen(

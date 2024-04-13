@@ -22,6 +22,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.ShiftId,
     required this.taskStatus,
     required this.EmpID,
+    required this.shiftReturnTask,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -30,6 +31,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final String taskId;
   final String ShiftId;
   final String EmpID;
+  final bool shiftReturnTask;
 
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
@@ -56,8 +58,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
       print("Uploads Images  ${uploads}");
       try {
         print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
-            uploads, widget.taskId, widget.ShiftId, widget.EmpID);
+        await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId,
+            widget.ShiftId, widget.EmpID, widget.shiftReturnTask);
         uploads.clear();
         // Navigator.pop(context);
       } catch (e) {
@@ -393,14 +395,14 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                     _addImage();
                                   },
                                 ),
-                                ListTile(
-                                  leading: Icon(Icons.video_collection),
-                                  title: Text('Add Video'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _addVideo();
-                                  },
-                                ),
+                                // ListTile(
+                                //   leading: Icon(Icons.video_collection),
+                                //   title: Text('Add Video'),
+                                //   onTap: () {
+                                //     Navigator.pop(context);
+                                //     _addVideo();
+                                //   },
+                                // ),
                               ],
                             ),
                           );
