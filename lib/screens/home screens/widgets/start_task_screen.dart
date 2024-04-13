@@ -9,6 +9,7 @@ import 'package:tact_tik/screens/feature%20screens/petroling/eg_patrolling.dart'
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/shift_return_task_screen.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
@@ -23,6 +24,7 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftStartTime;
   final String EmployeId;
   final String ShiftId;
+  final String ShiftClientID;
   final String ShiftAddressName;
   final String ShiftCompanyId;
   final String ShiftBranchId;
@@ -34,6 +36,7 @@ class StartTaskScreen extends StatefulWidget {
 
   StartTaskScreen({
     required this.ShiftDate,
+    required this.ShiftClientID,
     required this.ShiftEndTime,
     required this.ShiftStartTime,
     required this.EmployeId,
@@ -58,7 +61,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   bool issShift = true;
   late Timer _stopwatchTimer;
   int _stopwatchSeconds = 0;
-
+  String stopwatchtime = "";
   bool isPaused = false;
 
   @override
@@ -71,6 +74,25 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         });
       }
     });
+  }
+
+  void send_mail_onOut() async {
+    var ClientEmail =
+        await fireStoreService.getClientEmail(widget.ShiftClientID);
+    var AdminEmail =
+        await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
+    // var TestinEmail = "sutarvaibhav37@gmail.com";
+    if (ClientEmail != null && AdminEmail != null) {
+      Map<String, dynamic> emailParams = {
+        'to_email': '$ClientEmail, $AdminEmail',
+        'from_name': '${widget.EmployeeName}',
+        'reply_to': '$AdminEmail',
+        'subject': 'Shift is completed ${widget.ShiftAddressName}',
+        'message':
+            'Shift for ${widget.ShiftAddressName} is completed at ${DateTime.now()}. Start Time:- ${widget.ShiftStartTime} End Time:- ${stopwatchtime} ',
+      };
+      sendEmail(emailParams);
+    }
   }
 
   @override
@@ -87,9 +109,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final double width = MediaQuery.of(context).size.width;
     DateFormat format = DateFormat.jm(); // "h:mm a" format
     DateTime dateTime = format.parse(widget.ShiftStartTime);
-
     String formattedStopwatchTime =
         '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
+    setState(() {
+      stopwatchtime = formattedStopwatchTime;
+    });
 // Get current time
     DateTime currentTime = DateTime.now();
     // Duration difference = currentTime.difference(dateTime);
@@ -274,30 +298,38 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               Expanded(
                 child: GestureDetector(
                   onTap: () async {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ShiftReturnTaskScreen(
-                                shiftId: '',
-                              )),
-                    );
-                    setState(() {
-                      isPaused = !isPaused;
-                    });
-                    await fireStoreService.EndShiftLog(
-                        widget.EmployeId,
-                        formattedStopwatchTime,
-                        widget.ShiftId,
-                        widget.ShiftAddressName,
-                        widget.ShiftBranchId,
-                        widget.ShiftCompanyId,
-                        widget.EmployeeName);
-                    storage.clear();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
+                    bool? status =
+                        await fireStoreService.checkShiftReturnTaskStatus(
+                            widget.EmployeId, widget.ShiftId);
+                    if (status == false) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ShiftReturnTaskScreen(
+                                  shiftId: widget.ShiftId,
+                                  Empid: widget.EmployeId,
+                                  ShiftName: widget.ShiftAddressName,
+                                )),
+                      );
+                    } else {
+                      setState(() {
+                        isPaused = !isPaused;
+                      });
+                      await fireStoreService.EndShiftLog(
+                          widget.EmployeId,
+                          formattedStopwatchTime,
+                          widget.ShiftId,
+                          widget.ShiftAddressName,
+                          widget.ShiftBranchId,
+                          widget.ShiftCompanyId,
+                          widget.EmployeeName);
+                      send_mail_onOut();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
+                      );
+                    }
                   },
                   child: Container(
                     color: WidgetColor,
@@ -340,7 +372,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           color: color5,
           backgroundcolor: WidgetColor,
           onPressed: () {
-            Navigator.pushReplacement(
+            Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => MyPatrolsList(

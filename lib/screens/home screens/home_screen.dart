@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 PatrolKeepGuardInRadiusOfLocation;
             _patrolLocationName = PatrolLocationName;
             _patrolRestrictedRadius = PatrolRestrictedRadius;
-            _patrolTime = patrolTimeString;
+            // _patrolTime = patrolTimeString;
             _patrolDate = patrolDateString;
 
             // issShift = false;
@@ -258,6 +258,8 @@ class _HomeScreenState extends State<HomeScreen> {
           double shiftLocationLongitude = shiftGeolocation.longitude;
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
           String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
+          String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+
           int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
           bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
           // String ShiftClientId = shiftInfo['ShiftClientId'];
@@ -279,12 +281,19 @@ class _HomeScreenState extends State<HomeScreen> {
             _ShiftBranchId = companyBranchId;
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             _shiftLocationId = shiftLocationId;
+            _shiftCLientId = shiftClientId;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
-
+            DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
             if (!selectedDates
                 .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
               selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+            }
+            if (!selectedDates.any((date) =>
+                date!.year == shiftDateTime.year &&
+                date.month == shiftDateTime.month &&
+                date.day == shiftDateTime.day)) {
+              selectedDates.add(shiftDateTime);
             }
             storage.setItem("shiftId", shiftId);
             storage.setItem("EmpId", EmployeeId);
@@ -465,9 +474,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             shiftLongitude: _shiftLongitude,
                             ShiftRadius: _shiftRestrictedRadius,
                             CheckUserRadius: _shiftKeepGuardInRadiusOfLocation,
-                            ShiftCompanyId: '',
-                            ShiftBranchId: '',
+                            ShiftCompanyId: _ShiftCompanyId ?? "",
+                            ShiftBranchId: _ShiftBranchId ?? "",
                             ShiftLocationId: _shiftLocationId,
+                            ShiftClientId: _shiftCLientId,
                           ),
                         ),
                       )
@@ -591,7 +601,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                               icon: Icons.location_on,
                                               iconSize: width / width24,
                                               text: schedules[
-                                                  'ShiftLocationAddress'],
+                                                      'ShiftLocationAddress'] ??
+                                                  "",
                                               color: color30,
                                               Iconcolor: Colors.redAccent,
                                               space: width / width8,
@@ -604,7 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               iconSize: width / width24,
                                               icon: Icons.access_time,
                                               text:
-                                                  '${schedules['ShiftStartTime']} - ${schedules['ShiftEndTime']}',
+                                                  '${schedules['ShiftStartTime'] ?? ""} - ${schedules['ShiftEndTime'] ?? ""}',
                                               color: color30,
                                               Iconcolor: Primarycolor,
                                               space: width / width8,

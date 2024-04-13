@@ -456,7 +456,7 @@ class FireStoreService {
         'Status': 'completed',
         'StatusReportedById': employeeId,
         'StatusReportedByName': EmpNames,
-        'StatusReportedTime': DateTime.now().toUtc().toString(),
+        'StatusReportedTime': DateTime.now().toString(),
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
@@ -598,21 +598,33 @@ class FireStoreService {
 //completed
 
   Future<void> EndPatrol(
-      String patrolAssignedGuardId,
-      String PatrolCompanyId,
-      String PatrolName,
-      String PatrolArea,
-      String BId,
-      String PatrolId,
-      String EmpName) async {
+    String patrolAssignedGuardId,
+    String PatrolCompanyId,
+    String PatrolName,
+    String PatrolArea,
+    String BId,
+    String PatrolId,
+    String EmpName,
+  ) async {
     try {
+      print('Ending patrol...');
       // Get the current system time
       DateTime currentTime = DateTime.now();
       String data = "Patrolling Ended";
-      //Modify the PatrolModifiedAt
+      // Modify the PatrolModifiedAt
       final patrolRef = FirebaseFirestore.instance
           .collection('Patrols')
           .where("PatrolId", isEqualTo: PatrolId);
+      await generateReport(
+        PatrolArea,
+        PatrolName,
+        patrolAssignedGuardId,
+        BId,
+        data,
+        PatrolCompanyId,
+        "completed",
+        EmpName,
+      );
 
       final querySnapshot = await patrolRef.get();
       if (querySnapshot.docs.isNotEmpty) {
@@ -625,49 +637,67 @@ class FireStoreService {
           'PatrolCurrentStatus': "completed"
         });
       }
+
       String status = "completed";
       // Create a new document in the "Log" subcollection
-      await generateReport(PatrolArea, data, patrolAssignedGuardId,
-          PatrolCompanyId, data, PatrolCompanyId, status, EmpName);
       // PatrolModifiedAt
       print('Shift start logged at $currentTime');
+      print('Patrol ended successfully');
     } catch (e) {
-      print('Error logging shift start: $e');
+      print('Error ending patrol: $e');
       // Handle the error as needed
     }
   }
 
-//Ks8HiOimtf2vfjdIIutG
-//aSvLtwII6Cjs7uCISBRR
   Future<void> generateReport(
-      String address,
-      String reportName,
-      String Empid,
-      String BranchId,
-      String Data,
-      String CompanyId,
-      String Status,
-      String EmpName) async {
-    final ReportRef = FirebaseFirestore.instance.collection("Reports");
-    String combinationName = (reportName + address).replaceAll(' ', '');
-// Limit the length
-    int maxLength = 10;
-    if (combinationName.length > maxLength) {
-      combinationName = combinationName.substring(0, maxLength);
+    String address,
+    String reportName,
+    String Empid,
+    String BranchId,
+    String Data,
+    String CompanyId,
+    String Status,
+    String EmpName,
+  ) async {
+    try {
+      print('Generating report...');
+      final ReportCategoryRef =
+          FirebaseFirestore.instance.collection("ReportCategories");
+      final newCategoryDocRef = await ReportCategoryRef.add({
+        "ReportCategoryName": "Patrol",
+        "ReportCategoryCreatedAt": DateTime.now(),
+        // Add other fields if needed
+      });
+      await newCategoryDocRef
+          .update({'ReportCategoryId': newCategoryDocRef.id});
+      String ReportCategoryId = newCategoryDocRef.id;
+      print('ReportCategoryId: $ReportCategoryId');
+      final ReportRef = FirebaseFirestore.instance.collection("Reports");
+      String combinationName = (reportName + address).replaceAll(' ', '');
+      print('Combination Name: $combinationName');
+      // Limit the length
+      int maxLength = 10;
+      if (combinationName.length > maxLength) {
+        combinationName = combinationName.substring(0, maxLength);
+      }
+      print('Report Name: $combinationName');
+      final newDocRef = await ReportRef.add({
+        "ReportCompanyId": CompanyId,
+        "ReportCompanyBranchId": BranchId,
+        "ReportName": combinationName,
+        "ReportCategoryName": "Shift",
+        "ReportData": Data,
+        "ReportStatus": Status,
+        "ReportEmployeeName": EmpName,
+        "ReportEmployeeId": Empid,
+        "ReportCreatedAt": Timestamp.now(),
+      });
+      print('Report generated successfully');
+      await newDocRef.update({"ReportCategoryId": newDocRef.id});
+    } catch (e) {
+      print('Error generating report: $e');
+      // Handle the error as needed
     }
-    final newDocRef = await ReportRef.add({
-      "ReportCompanyId": CompanyId,
-      "ReportCompanyBranchId": BranchId,
-      "ReportName":
-          combinationName, //* combination of location and reports name
-      "ReportCategory": "other",
-      "ReportData": Data,
-      "ReportStatus": Status,
-      "ReportEmployeeName": EmpName,
-      "ReportEmployeeId": Empid,
-      "ReportCreatedAt": Timestamp.now(),
-    });
-    await newDocRef.update({"ReportId": newDocRef.id});
   }
 
   //Patrol is Completed
@@ -952,14 +982,12 @@ class FireStoreService {
         for (var shiftTask in shiftTasks) {
           final taskStatusList = shiftTask['ShiftTaskStatus'] as List<dynamic>;
           for (var shiftTaskStatus in taskStatusList) {
-            if (shiftTaskStatus['TaskCompletedById'] == empId &&
-                (shiftTaskStatus['ShiftTaskReturnReq'] == true ||
-                    shiftTaskStatus['TaskStatus'] == null)) {
-              return false; // If any task matches the condition, return false
+            if (shiftTaskStatus['ShiftTaskReturnStatus'] == true) {
+              return true; // If any ShiftTaskReturnStatus is true, return true
             }
           }
         }
-        return true; // If no task matches the condition, return true
+        return false; // If no ShiftTaskReturnStatus is true, return false
       } else {
         return false; // If document doesn't exist, return false
       }
@@ -1083,8 +1111,12 @@ class FireStoreService {
   }
 
   //add wellness to the collection
-  Future<void> addImagesToShiftTasks(List<Map<String, dynamic>> uploads,
-      String ShiftTaskId, String ShiftId, String EmpId) async {
+  Future<void> addImagesToShiftTasks(
+      List<Map<String, dynamic>> uploads,
+      String ShiftTaskId,
+      String ShiftId,
+      String EmpId,
+      bool shiftTaskReturnStatus) async {
     try {
       print("Uploads from FIrebase: $uploads");
       print("Shift Task ID from FIrebase: $ShiftTaskId");
@@ -1136,8 +1168,11 @@ class FireStoreService {
               "TaskCompletedByName": "",
               "TaskCompletionTime": DateTime.now(),
               "ShiftTaskPhotos": imgUrls,
+              // "ShiftTaskReturnStatus": true,
             };
-
+            if (shiftTaskReturnStatus) {
+              shiftTaskStatus["ShiftTaskReturnStatus"] = true;
+            }
             // Update the ShiftTaskStatus array with the new object
             shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
 
@@ -1196,6 +1231,70 @@ class FireStoreService {
       throw e;
     }
   }
+
+  //Fetch mails
+  Future<String?> getClientEmail(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        String clientEmail = clientData['ClientEmail'];
+        print('Client Email: $clientEmail');
+        return clientEmail;
+      } else {
+        print('Client not found');
+        return null; // Return null if client is not found
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getAdminEmail(String companyId) async {
+    try {
+      QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
+          .collection('Admins')
+          .where('AdminCompanyId', isEqualTo: companyId)
+          .get();
+
+      if (adminSnapshot.docs.isNotEmpty) {
+        String adminEmail = adminSnapshot.docs.first['AdminEmail'];
+        print('Admin Email: $adminEmail');
+        return adminEmail;
+      } else {
+        print('Admin not found');
+        return null; // Return null if admin is not found
+      }
+    } catch (e) {
+      print('Error fetching admin: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  void getClientID(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        String? clientEmail = clientData['ClientEmail'];
+        print('Client Email: $clientEmail');
+      } else {
+        print('Client not found');
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+    }
+  }
+  //PatrolClientId
 }
 
 // Schedule and assign
