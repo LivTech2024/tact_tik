@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
 import '../../../common/enums/shift_task_enums.dart';
@@ -39,7 +40,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
 
 class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   List<Map<String, dynamic>> uploads = [];
-
+  bool _isLoading = false;
   Future<void> _addImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
@@ -55,6 +56,9 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
 
   void _uploadImages() async {
     if (uploads.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
       print("Uploads Images  ${uploads}");
       try {
         print("Task Id : ${widget.taskId}");
@@ -68,6 +72,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
     } else {
       print('No images to upload.');
     }
+    setState(() {
+      _isLoading = false;
+    });
+    showSuccessToast(context, "Uploaded Successfully");
   }
 
   Future<void> _addVideo() async {
@@ -227,6 +235,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         showCustomDialog(context, "Task Scan",
                             "Task Scan SuccessFull for ${widget.taskName}");
                         print("${Result} ${widget.taskId}");
+                        // showSuccessToast(context, "${widget.}")
                       } else {
                         showCustomDialog(context, "Task Scan",
                             "Shift Task Scan UnsuccessFull for ${widget.taskName}");
@@ -427,6 +436,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       )
                     ],
                   ),
+                  if (_isLoading)
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 10),
+                      child: CircularProgressIndicator(),
+                    ),
                 ],
               )
             : SizedBox();
