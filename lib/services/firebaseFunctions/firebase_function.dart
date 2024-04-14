@@ -1133,14 +1133,14 @@ class FireStoreService {
 
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
-      if (shiftId.isEmpty) {
-        print("Shift ID from FIrebase: $shiftId");
+      if (ShiftId.isEmpty) {
+        print("Shift ID from FIrebase: $ShiftId");
       } else {
         print("Shift ID is empty");
       }
 
       // String empId = storage.getItem('EmpId') ?? "";
-      if (shiftId.isEmpty) {
+      if (ShiftId.isEmpty) {
         print("LocalStorage shiftId is null or empty");
       }
       final DocumentReference shiftDocRef =
@@ -1199,6 +1199,33 @@ class FireStoreService {
       throw e;
     }
   }
+
+  Future<List<Map<String, dynamic>>> addImageToStoragePatrol(File file) async {
+    try {
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+
+      Reference uploadRef =
+          storageRef.child("employees/patrol/$uniqueName.jpg");
+
+      // Upload the image file and get the download URL
+      await uploadRef.putFile(file);
+
+      // Get the download URL of the uploaded image
+      String downloadURL = await uploadRef.getDownloadURL();
+
+      // Return the download URL in a list
+      print({'downloadURL': downloadURL});
+      return [
+        {'downloadURL': downloadURL}
+      ];
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  // Add images and comment
 
   //Update the shift status when the qr is scanned correctly
   Future<void> updateShiftTaskStatus(String ShiftTaskId) async {

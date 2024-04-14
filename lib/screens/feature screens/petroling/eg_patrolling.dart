@@ -927,16 +927,20 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           var TestinEmail = "sutarvaibhav37@gmail.com";
                           if (ClientEmail != null && AdminEmail != null) {
                             Map<String, dynamic> emailParams = {
-                              'to_email':
-                                  '$ClientEmail, $AdminEmail , $TestinEmail',
+                              // 'to_email':
+                              //     '$ClientEmail, $AdminEmail , $TestinEmail',
+                              'to_email': '$TestinEmail',
                               'from_name': '${widget.p.EmployeeName}',
                               'reply_to': '$ClientEmail',
-                              'subject':
-                                  'Patrol is completed ${widget.p.description}',
-                              'message':
-                                  'Patrol for ${widget.p.description} is completed ${DateTime.now()}. Total Patrol Count ${widget.p.PatrolRequiredCount} Completed Patrol Count ${widget.p.CompletedCount}',
+                              'type': 'Patrol',
+                              'Location': '${widget.p.description}',
+                              'Status': 'Completed',
+                              'GuardName': '${widget.p.EmployeeName}',
+                              'StartTime': '',
+                              'EndTime': DateTime.now().toString(),
+                              'CompanyName': 'Tacttik',
                             };
-                            sendEmail(emailParams);
+                            sendFormattedEmail(emailParams);
                           }
                         }
                         if (widget.p.Allchecked) {
