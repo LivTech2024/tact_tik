@@ -14,7 +14,9 @@ import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import '../../utils/colors.dart';
 import '../feature screens/Report/create_report_screen.dart';
 import '../feature screens/Report/report_screen.dart';
+import '../feature screens/dar/create_dar_screen.dart';
 import '../feature screens/petroling/eg_patrolling.dart';
+import '../feature screens/petroling/patrolling.dart';
 import '../home screens/shift_task_screen.dart';
 import '../supervisor screens/home screens/Scheduling/all_schedules_screen.dart';
 import '../supervisor screens/home screens/Scheduling/create_shedule_screen.dart';
@@ -48,42 +50,46 @@ class AppView extends ConsumerWidget {
           int interval = snapshot.data ?? 0;
           if (interval > 0) {
             // Use the interval value to set up your Timer and show the popup
-            Timer.periodic(Duration(minutes: interval), (timer) {
-              // Show popup alert
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Popup Alert'),
-                    content: Text(
-                      'This is a popup alert displayed after $interval minutes.',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('Close'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+            Timer.periodic(
+              Duration(minutes: interval),
+              (timer) {
+                // Show popup alert
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Popup Alert'),
+                      content: Text(
+                        'This is a popup alert displayed after $interval minutes.',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      TextButton(
-                        child: Text('Open'),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const WellnessCheckScreen(),
-                              ));
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            });
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('Open'),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const WellnessCheckScreen(),
+                                ));
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            );
           }
         }
+
         return MaterialApp(
           title: 'Tact Tik',
           debugShowCheckedModeBanner: false,

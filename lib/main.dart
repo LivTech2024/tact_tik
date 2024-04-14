@@ -10,7 +10,6 @@ import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/screens/view/app_view.dart';
-
 import 'firebase_options.dart';
 
 Future<void> main() async {

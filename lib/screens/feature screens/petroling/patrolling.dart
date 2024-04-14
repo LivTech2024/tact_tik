@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,6 +19,7 @@ import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
+import '../widgets/custome_textfield.dart';
 
 class Movie {
   final String Name;
@@ -105,134 +108,29 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    // _getUserInfo();
   }
 
   UserLocationChecker locationChecker = UserLocationChecker();
 
-  void _getUserInfo() async {
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
 
-    if (widget.empId.isNotEmpty) {
-      var patrolInfoList =
-          await fireStoreService.getAllPatrolsByShiftId(widget.empId);
-      setState(() {
-        EmployeId = widget.empId;
-        EmployeName = widget.empName;
-      });
-      setState(() {
-        EmployeId = widget.empId;
-        EmployeName = widget.empName;
-      });
-      List<Movie> updatedMovies = [];
-      for (var patrolInfo in patrolInfoList) {
-        String PatrolArea = patrolInfo['PatrolArea'];
-        String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
-        String PatrolLocationName = patrolInfo['PatrolLocationName'];
-        String PatrolName = patrolInfo['PatrolName'];
-        int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
-        // String PatrolAssignedGuardId = patrolInfo['PatrolAssignedGuardsId'];
-        String _patrolId = patrolInfo["PatrolId"];
-        Timestamp PatrolTime = patrolInfo['PatrolTime'];
-        DateTime dateTime = PatrolTime.toDate();
-        String time = DateFormat.Hms().format(dateTime);
-        String date = DateFormat.yMd().format(dateTime);
-        String CompletedCount = patrolInfo['PatrolCompletedCount'].toString();
-        String PatrolRequiredCount =
-            patrolInfo['PatrolRequiredCount'].toString();
-        bool PatrolKeepGuardInRadiusOfLocation =
-            patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
-        int patrolradius = patrolInfo['PatrolRestrictedRadius'];
-        GeoPoint patrolGeolocation = patrolInfo['PatrolLocation'];
-        double patrolLocationLatitude = patrolGeolocation.latitude;
-        double patrolLocationLongitude = patrolGeolocation.longitude;
-        // String PatrolAssignedGuardId = patrolInfo['PatrolAssignedGuardsId'];
+  List<Map<String, dynamic>> uploads = [];
 
-        // List<String> guardIds = patrolInfo['PatrolAssignedGuardsId'];
-        List<Map<String, dynamic>> guardIds = [];
-        for (var ids in patrolInfo['PatrolAssignedGuardsId']) {
-          print("Guard Ids: {$ids}");
-        }
-        List<Map<String, dynamic>> checkpoints = [];
-        for (var checkpoint in patrolInfo['PatrolCheckPoints']) {
-          String checkpointName = checkpoint['CheckPointName'];
-          String checkpointLocation = checkpoint['CheckPointId'];
-          String CheckPointStatus = checkpoint['CheckPointStatus'];
-          String CheckPointTime = checkpoint['CheckPointTime'];
-          checkpoints.add({
-            'CheckPointName': checkpointName,
-            'CheckPointId': checkpointLocation,
-            'CheckPointStatus': CheckPointStatus,
-            'CheckPointTime': CheckPointTime,
-          });
-        }
-
-        updatedMovies.add(Movie(
-            PatrolName,
-            PatrolArea,
-            PatrolLocationName,
-            time,
-            checkpoints,
-            date,
-            _patrolId,
-            // PatrolAssignedGuardId,
-            // PatrolAssignedGuardId,
-            widget.BranchId,
-            PatrolCompanyId,
-            guardIds,
-            CompletedCount,
-            PatrolRequiredCount,
-            patrolLocationLatitude,
-            patrolLocationLongitude,
-            PatrolKeepGuardInRadiusOfLocation,
-            patrolradius));
-        if (PatrolKeepGuardInRadiusOfLocation == true) {
-          // void checkLocation() async {
-          //   bool status = await locationChecker.checkLocation(
-          //       patrolLocationLatitude, patrolLocationLongitude, patrolradius);
-          //   if (status == false) {
-          //     showCustomDialog(
-          //         context, "Patrol Radius", "You are out of Patrolling");
-          //   }
-          // }
-
-          // Timer.periodic(Duration(seconds: 1), (Timer timer) {
-          //   checkLocation();
-          // });
-
-          print("Keep IN radius");
-        }
-        print('PatrolArea: $PatrolArea');
-        print('PatrolCompanyId: $PatrolCompanyId');
-        print('PatrolLocationName: $PatrolLocationName');
-        print('PatrolName: $PatrolName');
-        print('PatrolRestrictedRadius: $PatrolRestrictedRadius');
-        print('PatrolAssignedGuardId: $guardIds');
-        print('patrolId: $_patrolId');
-        print('PatrolTime: $time');
-        print('PatrolDate: $date');
-        print('Checkpoints: $checkpoints');
-        print('BoolkeepInRadius: $PatrolKeepGuardInRadiusOfLocation');
-        print('Radius: $patrolradius');
-        print('RequiredCount: $PatrolRequiredCount');
-        print('Completed Count: $CompletedCount');
-      }
-
-      setState(() {
-        movies = updatedMovies;
-      });
-      print("Updated Movies: ${updatedMovies}");
-    } else {
-      print('Patrol info not found');
-    }
+  void _deleteItem(int index) {
+    setState(() {
+      uploads.removeAt(index);
+    });
   }
 
-  Future<void> _refreshData() async {
-    // Fetch patrol data from Firestore (assuming your logic exists)
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    // ... (existing data fetching logic based on user ID)
 
-    _getUserInfo();
+  Future<void> _addImage() async {
+    final pickedFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+      });
+    }
   }
 
   @override
@@ -274,7 +172,8 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
           ),
         ),*/
 
-        body: RefreshIndicator(
+        // body:
+        /*body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
             slivers: [
@@ -309,7 +208,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
               ),
             ],
           ),
-        ),
+        ),*/
       ),
     );
   }

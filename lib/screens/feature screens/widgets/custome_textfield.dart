@@ -4,11 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
-
 class CustomeTextField extends StatelessWidget {
-  const CustomeTextField({super.key, required this.hint, this.isExpanded = false});
+  const CustomeTextField({
+    super.key,
+    required this.hint,
+    this.isExpanded = false,
+    this.showIcon = true,
+    this.controller,
+  });
+
   final String hint;
   final bool isExpanded;
+  final bool showIcon;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -16,25 +24,31 @@ class CustomeTextField extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Container(
-      padding: EdgeInsets.only(left: width / width20, top: height / height5, bottom: height / height5),
+      padding: EdgeInsets.only(
+          left: width / width20,
+          top: height / height5,
+          bottom: height / height5),
       decoration: BoxDecoration(
         color: WidgetColor,
         borderRadius: BorderRadius.circular(width / width10),
       ),
       constraints: isExpanded
-          ? BoxConstraints() : BoxConstraints(minHeight: height / height60,),
+          ? BoxConstraints()
+          : BoxConstraints(
+              minHeight: height / height60,
+            ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: TextField(
+              controller: controller,
               maxLines: isExpanded ? null : 1,
               // keyboardType: Key,
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
                 fontSize: width / width18,
                 color: Colors.white, // Change text color to white
-
               ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -55,13 +69,14 @@ class CustomeTextField extends StatelessWidget {
               cursorColor: Primarycolor,
             ),
           ),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.mic,
-                color: color33,
-                size: width / width24,
-              ))
+          if (showIcon)
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.mic,
+                  color: color33,
+                  size: width / width24,
+                ))
         ],
       ),
     );

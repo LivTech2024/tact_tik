@@ -38,6 +38,7 @@ const Color color32 = Color(0xFFDCDCDC);
 const Color color33 = Color(0xFF454545);
 const Color colorRed = Color(0x14EA4335);
 const Color colorRed2 = Color(0xFF442525);
+const Color colorRed3 = Color(0xFFDD4247);
 const Color colorGreen = Color(0xFF1F291C);
 
 

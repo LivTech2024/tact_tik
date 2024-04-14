@@ -166,41 +166,51 @@ class FireStoreService {
     return patrolStream;
   }
 
-  Future<void> updatePatrolsStatus(String patrolId, String checkPointId) async {
+  Future<void> updatePatrolsStatus(
+      String patrolId, String checkPointId, String Empid) async {
     if (patrolId.isEmpty || checkPointId.isEmpty) {
+      print('Patrol ID is empthy');
       return;
     }
 
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('Patrols')
-        .where("PatrolId", isEqualTo: patrolId)
-        .where("PatrolCurrentStatus", whereIn: ["pending", "started", []])
-        // .orderBy("PatrolTime", descending: false)
-        .get();
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where("PatrolId", isEqualTo: patrolId)
+          // .where("PatrolCurrentStatus",
+          //     whereIn: ["pending", "started", []])
+          .get();
 
-    print("Retrieved documents:");
-    print(querySnapshot.docs); // Log all retrieved documents
+      print("Retrieved documents:");
+      print(querySnapshot.docs); // Log all retrieved documents
 
-    for (var doc in querySnapshot.docs) {
-      var checkpoints = List.from(doc.get('PatrolCheckPoints'));
+      for (var doc in querySnapshot.docs) {
+        var checkpoints = List.from(doc.get('PatrolCheckPoints'));
 
-      // Find the checkpoint to update
-      var checkpointToUpdate = checkpoints.firstWhere(
+        // Find the checkpoint to update
+        var checkpointToUpdate = checkpoints.firstWhere(
           (checkpoint) => checkpoint['CheckPointId'] == checkPointId,
-          orElse: () => null);
+          orElse: () => null,
+        );
 
-      if (checkpointToUpdate != null) {
-        // Update the CheckPointStatus to "checked"
-        checkpointToUpdate['CheckPointStatus'] = [
-          {
-            'Status': 'checked',
-            'StatusReportedTime': Timestamp.now(),
-          }
-        ];
+        if (checkpointToUpdate != null) {
+          // Update the CheckPointStatus to "checked"
+          checkpointToUpdate['CheckPointStatus'] = [
+            {
+              'Status': 'checked',
+              'StatusReportedTime': Timestamp.now(),
+              'StatusReportedById': Empid,
+            }
+          ];
 
-        // Update the document in Firestore
-        await doc.reference.update({'PatrolCheckPoints': checkpoints});
+          // Update the document in Firestore
+          await doc.reference.update({'PatrolCheckPoints': checkpoints});
+        }
+        print("Updated Patrol Status");
       }
+    } catch (e) {
+      print("Error updating patrols status: $e");
+      // Handle the error as needed
     }
   }
 
