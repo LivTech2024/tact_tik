@@ -15,6 +15,7 @@ import '../../../utils/colors.dart';
 final today = DateUtils.dateOnly(DateTime.now());
 
 class ShiftTaskTypeWidget extends StatefulWidget {
+  final Function refreshDataCallback;
   ShiftTaskTypeWidget({
     Key? key,
     required this.type,
@@ -24,6 +25,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.taskStatus,
     required this.EmpID,
     required this.shiftReturnTask,
+    required this.refreshDataCallback,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -65,16 +67,19 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
         await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId,
             widget.ShiftId, widget.EmpID, widget.shiftReturnTask);
         uploads.clear();
+        widget.refreshDataCallback();
         // Navigator.pop(context);
       } catch (e) {
         print('Error uploading images: $e');
       }
     } else {
+      widget.refreshDataCallback();
       print('No images to upload.');
     }
     setState(() {
       _isLoading = false;
     });
+    widget.refreshDataCallback();
     showSuccessToast(context, "Uploaded Successfully");
   }
 
@@ -94,6 +99,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
     setState(() {
       uploads.removeAt(index);
     });
+    widget.refreshDataCallback();
   }
 
   void _toggleSelection(int index) {
@@ -104,6 +110,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
         uploads[index]['isSelected'] = true;
       }
     });
+    // widget.refreshDataCallback();
   }
 
   @override
@@ -200,6 +207,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                           },
                         );
                         print("Info Icon Pressed");
+                        widget.refreshDataCallback();
                       },
                       icon: Icon(
                         Icons.info,
@@ -235,11 +243,13 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         showCustomDialog(context, "Task Scan",
                             "Task Scan SuccessFull for ${widget.taskName}");
                         print("${Result} ${widget.taskId}");
+                        widget.refreshDataCallback();
                         // showSuccessToast(context, "${widget.}")
                       } else {
                         showCustomDialog(context, "Task Scan",
                             "Shift Task Scan UnsuccessFull for ${widget.taskName}");
                         print("UNcessfull Scan");
+                        widget.refreshDataCallback();
                       }
                     },
                     child: Container(
@@ -333,6 +343,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                     },
                                   );
                                   print("Info Icon Pressed");
+                                  widget.refreshDataCallback();
                                 },
                                 icon: Icon(
                                   Icons.info,

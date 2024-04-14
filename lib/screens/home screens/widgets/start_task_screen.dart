@@ -82,14 +82,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var AdminEmail =
         await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
     var TestinEmail = "sutarvaibhav37@gmail.com";
+    var defaultEmail = "tacttikofficial@gmail.com";
     // var TestinEmail = "sutarvaibhav37@gmail.com";
     if (ClientEmail != null && AdminEmail != null) {
       Map<String, dynamic> emailParams = {
-        // 'to_email':
-        //     '$ClientEmail, $AdminEmail , $TestinEmail',
-        'to_email': '$TestinEmail',
+        'to_email': '$ClientEmail, $AdminEmail ,$defaultEmail',
+        // 'to_email': '$TestinEmail',
         'from_name': '${widget.EmployeeName}',
-        'reply_to': '$ClientEmail',
+        'reply_to': '$defaultEmail',
         'type': 'Shift ',
         'Location': '${widget.ShiftAddressName}',
         'Status': 'Completed',
@@ -109,12 +109,23 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   }
 
   final LocalStorage storage = LocalStorage('ShiftDetails');
+  int calculateTimeDifference(DateTime startTime) {
+    DateTime currentTime = DateTime.now();
+    Duration difference = currentTime.difference(startTime);
+    return difference.inMinutes.abs();
+  }
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    DateFormat format = DateFormat.jm(); // "h:mm a" format
+    DateFormat format = DateFormat.jm();
+    DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
+    int differenceInMinutes = calculateTimeDifference(shiftStartTime);
+    String lateTime = differenceInMinutes > 5
+        ? '${differenceInMinutes}m Late'
+        : ''; // "h:mm a" format
+    print(lateTime);
     DateTime dateTime = format.parse(widget.ShiftStartTime);
     String formattedStopwatchTime =
         '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
@@ -123,13 +134,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     });
 // Get current time
     DateTime currentTime = DateTime.now();
-    // Duration difference = currentTime.difference(dateTime);
+    // Duration difference = currentTime.difference(dateTime);s
     // bool isLate = currentTime.isAfter(dateTime);
 
-    DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
+    // DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
     Duration difference = currentTime.difference(shiftStartTime);
     bool isLate = currentTime.isAfter(shiftStartTime);
-    String lateTime = isLate ? '${difference.inMinutes.abs()}m Late' : '';
+    // String lateTime = isLate ? '${difference.inMinutes.abs()}m Late' : '';
     String employeeCurrentStatus = "";
     return Column(
       children: [
@@ -308,7 +319,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     bool? status =
                         await fireStoreService.checkShiftReturnTaskStatus(
                             widget.EmployeId, widget.ShiftId);
-                    if (status == false) {
+                    if (status == true) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -984,20 +984,19 @@ class FireStoreService {
           .get();
 
       if (documentSnapshot.exists) {
-        print('Shift exists');
         final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
-        if (shiftTasks.isEmpty) {
-          return true; // If ShiftTask array is empty, return true
-        }
         for (var shiftTask in shiftTasks) {
-          final taskStatusList = shiftTask['ShiftTaskStatus'] as List<dynamic>;
-          for (var shiftTaskStatus in taskStatusList) {
-            if (shiftTaskStatus['ShiftTaskReturnStatus'] == true) {
-              return true; // If any ShiftTaskReturnStatus is true, return true
+          if (shiftTask['ShiftTaskReturnReq'] == true) {
+            final taskStatusList =
+                shiftTask['ShiftTaskStatus'] as List<dynamic>;
+            for (var shiftTaskStatus in taskStatusList) {
+              if (shiftTaskStatus['ShiftTaskReturnStatus'] == true) {
+                return true; // If ShiftTaskReturnStatus is true, return true
+              }
             }
           }
         }
-        return false; // If no ShiftTaskReturnStatus is true, return false
+        return false; // If no task has both ShiftTaskReturnReq and ShiftTaskReturnStatus as true, return false
       } else {
         return false; // If document doesn't exist, return false
       }

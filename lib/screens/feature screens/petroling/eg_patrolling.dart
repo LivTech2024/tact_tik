@@ -50,10 +50,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   }
 
   Future<void> _refreshData() async {
-    // Fetch patrol data from Firestore (assuming your logic exists)
-    // var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    // ... (existing data fetching logic based on user ID)
-
     _getUserInfo();
   }
 
@@ -234,7 +230,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       Patrol p = patrolsData[index];
-                      return PatrollingWidget(p: p);
+                      return PatrollingWidget(p: p, onRefresh: _refreshData);
                     },
                     childCount: patrolsData.length,
                   ),
@@ -249,10 +245,10 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 }
 
 class PatrollingWidget extends StatefulWidget {
-  const PatrollingWidget({super.key, required this.p});
+  const PatrollingWidget({super.key, required this.p, required this.onRefresh});
 
   final Patrol p;
-
+  final VoidCallback onRefresh;
   @override
   State<PatrollingWidget> createState() => _PatrollingWidgetState();
 }
@@ -271,7 +267,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         key: (category) => category.title, value: (_) => false);
   }
 
+  Future<void> _refreshData() async {
+    // Fetch updated data
+
+    setState(() {}); // Update the state to rebuild the widget
+  }
+
   String Result = "";
+  void _refresh() {
+    widget.onRefresh();
+  }
 
   List<Map<String, dynamic>> uploads = [];
 
@@ -562,6 +567,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       );
                                       showSuccessToast(context,
                                           "${checkpoint.description} scanned ");
+                                      _refresh();
                                     } else {
                                       // await fireStoreService
                                       //     .updatePatrolsStatus(
@@ -569,7 +575,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       //         checkpoint.id,
                                       //         widget.p.EmpId);
                                       // Show an alert indicating no match
-
+                                      _refresh();
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -763,7 +769,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           return AlertDialog(
                                                             title: InterRegular(
                                                               text:
-                                                                  'Add Report',
+                                                                  'Add Image/Comment',
                                                               color: color2,
                                                               fontsize: width /
                                                                   width12,
@@ -775,7 +781,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                               children: [
                                                                 CustomeTextField(
                                                                   hint:
-                                                                      'Report Title',
+                                                                      'Add Comment',
                                                                   showIcon:
                                                                       false,
                                                                   controller:
@@ -916,7 +922,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                     type: ToastificationType
                                                                         .success,
                                                                     title: Text(
-                                                                        "Report Submitted"),
+                                                                        "Submitted"),
                                                                     autoCloseDuration:
                                                                         const Duration(
                                                                             seconds:
@@ -927,10 +933,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                       .clear();
                                                                   Controller
                                                                       .clear();
-
-                                                                  // Navigator.of(
-                                                                  //         context)
-                                                                  //     .pop();
                                                                 },
                                                                 child: InterRegular(
                                                                     text:
@@ -980,40 +982,65 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               .getClientEmail(widget.p.PatrolClientID);
                           var AdminEmail = await fireStoreService
                               .getAdminEmail(widget.p.PatrolCompanyID);
-                          var TestinEmail = "sutarvaibhav37@gmail.com";
-                          if (ClientEmail != null && AdminEmail != null) {
-                            Map<String, dynamic> emailParams = {
-                              // 'to_email':
-                              //     '$ClientEmail, $AdminEmail , $TestinEmail',
-                              'to_email': '$TestinEmail',
-                              'from_name': '${widget.p.EmployeeName}',
-                              'reply_to': '$ClientEmail',
-                              'type': 'Patrol',
-                              'Location': '${widget.p.description}',
-                              'Status': 'Completed',
-                              'GuardName': '${widget.p.EmployeeName}',
-                              'StartTime': '',
-                              'EndTime': DateTime.now().toString(),
-                              'CompanyName': 'Tacttik',
-                            };
-                            sendFormattedEmail(emailParams);
-                          }
+                          // var TestinEmail = "sutarvaibhav37@gmail.com";
+                          var defaultEmail = "tacttikofficial@gmail.com";
+                          Map<String, dynamic> emailParams = {
+                            'to_email':
+                                '$ClientEmail, $AdminEmail ,$defaultEmail',
+                            // 'to_email': '$TestinEmail',
+                            'from_name': '${widget.p.EmployeeName}',
+                            'reply_to': '$ClientEmail',
+                            'type': 'Patrol',
+                            'Location': '${widget.p.description}',
+                            'Status': 'Completed',
+                            'GuardName': '${widget.p.EmployeeName}',
+                            'StartTime': '',
+                            'EndTime': DateTime.now().toString(),
+                            'CompanyName': 'Tacttik',
+                          };
+                          _refreshData();
+                          sendFormattedEmail(emailParams);
                         } else {
+                          _refreshData();
                           showCustomDialog(context, "Checkpoints Incomplete !!",
                               "Complete all the checkpoints  to end");
                         }
 
                         if (widget.p.Allchecked) {
+                          _refreshData();
                           await fireStoreService.EndPatrolupdatePatrolsStatus(
                               widget.p.PatrolId,
                               widget.p.EmpId,
                               widget.p.EmployeeName);
                           print("All checked");
+                          var ClientEmail = await fireStoreService
+                              .getClientEmail(widget.p.PatrolClientID);
+                          var AdminEmail = await fireStoreService
+                              .getAdminEmail(widget.p.PatrolCompanyID);
+                          var TestinEmail = "sutarvaibhav37@gmail.com";
+                          var defaultEmail = "tacttikofficial@gmail.com";
+                          Map<String, dynamic> emailParams = {
+                            'to_email':
+                                '$ClientEmail, $AdminEmail , $defaultEmail',
+                            // 'to_email': '$TestinEmail',
+                            'from_name': '${widget.p.EmployeeName}',
+                            'reply_to': '$ClientEmail',
+                            'type': 'Patrol',
+                            'Location': '${widget.p.description}',
+                            'Status': 'Completed',
+                            'GuardName': '${widget.p.EmployeeName}',
+                            'StartTime': '',
+                            'EndTime': DateTime.now().toString(),
+                            'CompanyName': 'Tacttik',
+                          };
+
+                          sendFormattedEmail(emailParams);
+                          _refreshData();
+                          // sendFormattedEmail(emailParams);
                         } else {
-                          // await fireStoreService.EndPatrolupdatePatrolsStatus(
-                          //     widget.p.PatrolId,
-                          //     widget.p.EmpId,
-                          //     widget.p.EmployeeName);
+                          _refreshData();
+                          showErrorToast(
+                              context, "Complete all the Checkpoints");
                           print("not checked");
                         }
                       },

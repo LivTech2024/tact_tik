@@ -64,6 +64,10 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
     }
   }
 
+  Future<void> _refreshData() async {
+    fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -156,8 +160,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       ShiftId: widget.shiftId ?? "",
                       taskStatus: taskStatu ?? "",
                       EmpID: "",
-                      shiftReturnTask:
-                          true, // Default to upload if taskType is null
+                      shiftReturnTask: true,
+                      refreshDataCallback:
+                          _refreshData, // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

@@ -232,7 +232,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     )
                                   ],
                                 ),
-                                widget.ShiftLocation.isEmpty
+                                widget.ShiftLocation.isNotEmpty
                                     ? Container(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: width / width26),
