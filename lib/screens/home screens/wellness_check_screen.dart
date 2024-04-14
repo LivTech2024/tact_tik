@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
@@ -43,6 +44,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           uploads, _controller.text);
       uploads.clear();
       _controller.clear();
+      showSuccessToast(context, "Uploaded");
       Navigator.pop(context);
     } catch (e) {}
   }

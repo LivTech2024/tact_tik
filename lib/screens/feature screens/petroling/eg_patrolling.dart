@@ -299,8 +299,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+    bool startTimeUpdated = false;
+    bool _isLoading = false;
     double completionPercentage =
         widget.p.CompletedCount / widget.p.PatrolRequiredCount;
+    String StartTime = '';
     void showSuccessToast(BuildContext context, String message) {
       toastification.show(
         context: context,
@@ -424,6 +427,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     // print(clickedIIndex);
                     _expand = !_expand;
                   });
+                  if (!startTimeUpdated) {
+                    startTimeUpdated = true;
+                    StartTime = DateTime.now().toString();
+                  }
                 },
               ),
               Visibility(
@@ -904,6 +911,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                               ElevatedButton(
                                                                 onPressed:
                                                                     () async {
+                                                                  setState(() {
+                                                                    _isLoading =
+                                                                        true;
+                                                                  });
                                                                   // Logic to submit the report
                                                                   await fireStoreService.addImagesToPatrol(
                                                                       uploads,
@@ -928,7 +939,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                             seconds:
                                                                                 5),
                                                                   );
-
+                                                                  setState(() {
+                                                                    _isLoading =
+                                                                        false;
+                                                                  });
                                                                   uploads
                                                                       .clear();
                                                                   Controller
@@ -953,6 +967,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 ),
                                               ),
                                             ),
+                                            if (_isLoading)
+                                              Container(
+                                                alignment: Alignment.center,
+                                                margin:
+                                                    EdgeInsets.only(top: 10),
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
                                           ],
                                         )
                                       ],
@@ -1002,8 +1024,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           sendFormattedEmail(emailParams);
                         } else {
                           _refreshData();
-                          showCustomDialog(context, "Checkpoints Incomplete !!",
-                              "Complete all the checkpoints  to end");
+                          if (!widget.p.Allchecked) {
+                            showCustomDialog(
+                                context,
+                                "Checkpoints Incomplete !!",
+                                "Complete all the checkpoints  to end");
+                          }
                         }
 
                         if (widget.p.Allchecked) {
@@ -1029,7 +1055,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             'Location': '${widget.p.description}',
                             'Status': 'Completed',
                             'GuardName': '${widget.p.EmployeeName}',
-                            'StartTime': '',
+                            'StartTime': StartTime,
                             'EndTime': DateTime.now().toString(),
                             'CompanyName': 'Tacttik',
                           };

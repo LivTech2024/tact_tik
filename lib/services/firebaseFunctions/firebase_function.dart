@@ -1102,8 +1102,15 @@ class FireStoreService {
       Reference uploadRef =
           storageRef.child("employees/shifttask/$uniqueName.jpg");
 
+      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        quality: 50, // Adjust the quality as needed
+      );
+
+      // Upload the compressed image to Firebase Storage
+      await uploadRef.putData(Uint8List.fromList(compressedImage!));
       // Upload the image file and get the download URL
-      await uploadRef.putFile(file);
+      // await uploadRef.putFile(file);
 
       // Get the download URL of the uploaded image
       String downloadURL = await uploadRef.getDownloadURL();
@@ -1208,11 +1215,17 @@ class FireStoreService {
           storageRef.child("employees/patrol/$uniqueName.jpg");
 
       // Upload the image file and get the download URL
-      await uploadRef.putFile(file);
+      // await uploadRef.putFile(file);
 
       // Get the download URL of the uploaded image
-      String downloadURL = await uploadRef.getDownloadURL();
+      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        quality: 50, // Adjust the quality as needed
+      );
 
+      // Upload the compressed image to Firebase Storage
+      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+      String downloadURL = await uploadRef.getDownloadURL();
       // Return the download URL in a list
       print({'downloadURL': downloadURL});
       return [
