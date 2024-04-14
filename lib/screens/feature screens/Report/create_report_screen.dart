@@ -22,6 +22,7 @@ class CreateReportScreen extends StatefulWidget {
 
 class _CreateReportScreenState extends State<CreateReportScreen> {
   String dropdownValue = 'Select';
+  bool dropdownShoe = false;
 
   List<Map<String, dynamic>> uploads = [];
 
@@ -127,15 +128,27 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       onChanged: (String? newValue) {
                         setState(() {
                           dropdownValue = newValue!;
+                          if (dropdownValue == 'Other') {
+                            dropdownShoe = true;
+                          }  else{
+                            dropdownShoe = false;
+                          }
+                          // if (newValue == 'Other') {
+                            // Perform any action needed when 'Other' is selected
+                            // For example, show a dialog, navigate to another screen, etc.
+                            // Here, we'll just print a debug message
+                            print('Other selected');
+
+
                         });
                       },
                       items: <String?>[
                         'Select',
                         'All',
                         'available',
-                        'unavailable'
-                      ] // Add your options here
-                          .map<DropdownMenuItem<String>>((String? value) {
+                        'unavailable',
+                        'Other'
+                      ].map<DropdownMenuItem<String>>((String? value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value ?? ''),
@@ -144,8 +157,16 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     ),
                   ),
                 ),
+                if (dropdownShoe)
+                SizedBox(height: height / height20),
+                if (dropdownShoe)
+                  CustomeTextField(
+                    hint: 'Create category',
+                    isExpanded: true,
+                    showIcon: false,
+                  ),
                 SizedBox(height: height / height30),
-                CustomeTextField(
+                const CustomeTextField(
                   hint: 'Explain',
                   isExpanded: true,
                 ),
@@ -163,17 +184,21 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                  color: WidgetColor,
-                                  borderRadius: BorderRadius.circular(
-                                    width / width10,
-                                  )),
+                                color: WidgetColor,
+                                borderRadius: BorderRadius.circular(
+                                  width / width10,
+                                ),
+                              ),
                               margin: EdgeInsets.all(width / width8),
                               child: upload['type'] == 'image'
                                   ? Image.file(
                                       upload['file'],
                                       fit: BoxFit.cover,
                                     )
-                                  : Icon(Icons.videocam),
+                                  : Icon(
+                                      Icons.videocam,
+                                      size: width / width20,
+                                    ),
                             ),
                             Positioned(
                               top: -5,
@@ -183,6 +208,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 icon: Icon(
                                   Icons.delete,
                                   color: Colors.black,
+                                  size: width / width20,
                                 ),
                                 padding: EdgeInsets.zero,
                               ),
@@ -199,16 +225,28 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ListTile(
-                                leading: Icon(Icons.photo),
-                                title: Text('Add Image'),
+                                leading: Icon(
+                                  Icons.photo,
+                                  size: width / width20,
+                                ),
+                                title: InterRegular(
+                                  text: 'Add Image',
+                                  fontsize: width / width14,
+                                ),
                                 onTap: () {
                                   Navigator.pop(context);
                                   _addImage();
                                 },
                               ),
                               ListTile(
-                                leading: Icon(Icons.video_collection),
-                                title: Text('Add Video'),
+                                leading: Icon(
+                                  Icons.video_collection,
+                                  size: width / width20,
+                                ),
+                                title: InterRegular(
+                                  text: 'Add Video',
+                                  fontsize: width / width14,
+                                ),
                                 onTap: () {
                                   Navigator.pop(context);
                                   _addVideo();
@@ -222,11 +260,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         height: height / height66,
                         width: width / width66,
                         decoration: BoxDecoration(
-                            color: WidgetColor,
-                            borderRadius:
-                                BorderRadius.circular(width / width8)),
+                          color: WidgetColor,
+                          borderRadius: BorderRadius.circular(width / width8),
+                        ),
                         child: Center(
-                          child: Icon(Icons.add),
+                          child: Icon(
+                            Icons.add,
+                            size: width / width20,
+                          ),
                         ),
                       ),
                     )

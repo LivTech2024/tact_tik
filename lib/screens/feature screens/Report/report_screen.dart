@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 
 import '../../../common/sizes.dart';
+import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
@@ -57,7 +59,7 @@ class _ReportScreenState extends State<ReportScreen> {
         backgroundColor: Secondarycolor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
-          onPressed: (){},
+          onPressed: () {},
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
@@ -68,7 +70,7 @@ class _ReportScreenState extends State<ReportScreen> {
             children: [
               SizedBox(height: height / height30),
               SizedBox(
-                height: 40,
+                height: height / height40,
                 child: ListView.builder(
                   itemCount: tittles.length,
                   // shrinkWrap: true,
@@ -82,13 +84,13 @@ class _ReportScreenState extends State<ReportScreen> {
                       },
                       child: AnimatedContainer(
                         margin: EdgeInsets.only(right: width / width10),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: width / width20),
                         constraints: BoxConstraints(
-                          minWidth: 70,
+                          minWidth: width / width70,
                         ),
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(width / width20),
+                          borderRadius: BorderRadius.circular(width / width20),
                           color: currentIndex == index
                               ? Primarycolor
                               : WidgetColor,
@@ -113,52 +115,105 @@ class _ReportScreenState extends State<ReportScreen> {
                   shrinkWrap: true,
                   itemCount: tittles.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      height: height / height100,
-                      decoration: BoxDecoration(
-                        color: WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width10),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 24 , right: 20),
-                            child: Icon(Icons.picture_as_pdf),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: SizedBox(
-                                  width: 280,
-                                  child: InterMedium(
-                                    text: 'Clark Place - Lost & Found Item Report',
-                                    fontsize: width / width20,
-                                    color: color2,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // SizedBox(height: height / height20,),
+                        InterBold(
+                          text: 'Today',
+                          color: Primarycolor,
+                          fontsize: width / width20,
+                        ),
+                        SizedBox(
+                          height: height / height10,
+                        ),
+                        Column(
+                          children: tittles
+                              .map(
+                                (title) => Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: height / height10,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: width / width20,
+                                  ),
+                                  height: height / height100,
+                                  decoration: BoxDecoration(
+                                    color: WidgetColor,
+                                    borderRadius:
+                                        BorderRadius.circular(width / width10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          // left: width / width24,
+                                          right: width / width20,
+                                        ),
+                                        child: SvgPicture.asset(
+                                          'assets/images/report_icon.svg',
+                                          height: height / height24,
+                                          fit: BoxFit.fitHeight,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: width / width280,
+                                              child: Text(
+                                                'Clark Place - Lost & Found Item Report',
+                                                style: TextStyle(
+                                                  fontSize: width / width20,
+                                                  color: color2,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: height / height10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    InterMedium(
+                                                      text: 'CATEGORY: ',
+                                                      fontsize: width / width14,
+                                                      color: color32,
+                                                    ),
+                                                    InterRegular(
+                                                      text: title,
+                                                      fontsize: width / width14,
+                                                      color: color26,
+                                                    ),
+                                                  ],
+                                                ),
+                                                InterRegular(
+                                                  text: '11.36pm',
+                                                  color: color26,
+                                                  fontsize: width / width14,
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: height / height10),
-                              Row(
-                                children: [
-                                  InterMedium(
-                                    text: 'CATEGORY: ',
-                                    fontsize: width / width14,
-                                    color: color32,
-                                  ),
-                                  InterRegular(
-                                    text: tittles[1],
-                                    fontsize: width / width14,
-                                    color: color26,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                              )
+                              .toList(),
+                        ),
+                        SizedBox(
+                          height: height / height20,
+                        )
+                      ],
                     );
                   },
                 ),
