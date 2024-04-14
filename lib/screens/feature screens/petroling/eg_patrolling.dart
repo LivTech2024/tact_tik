@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -938,7 +939,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             };
                             sendEmail(emailParams);
                           }
+                        } else {
+                          showCustomDialog(context, "Checkpoints Incomplete !!",
+                              "Complete all the checkpoints  to end");
                         }
+
                         if (widget.p.Allchecked) {
                           await fireStoreService.EndPatrolupdatePatrolsStatus(
                               widget.p.PatrolId,
