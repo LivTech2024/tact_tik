@@ -275,8 +275,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   }
 
   Future<void> _addImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
@@ -619,7 +618,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   .status ==
                                                               'checked'
                                                       ? Colors.green
-                                                      : Colors.red,
+                                                      : Primarycolor,
                                                 ),
                                               ),
                                             ),

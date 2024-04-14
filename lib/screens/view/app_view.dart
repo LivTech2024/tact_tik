@@ -103,7 +103,7 @@ class AppView extends ConsumerWidget {
               Theme.of(context).textTheme,
             ),
           ),
-          home: OpenPatrollingScreen(empId: '', empEmail: '', BranchId: '', CompanyID: '', empName: '',),
+          home: GetStartedScreens(),
         );
       },
     );
