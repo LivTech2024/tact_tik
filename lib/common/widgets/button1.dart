@@ -27,28 +27,31 @@ class Button1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        decoration: BoxDecoration(
-          color: backgroundcolor,
-          borderRadius: BorderRadius.circular(borderRadius)
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundcolor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
+      ),
+      child: Container(
         height: height,
         child: Center(
           child: useBold
               ? InterBold(
-                  text: text,
-                  fontsize: fontsize,
-                  color: color,
-                )
+            text: text,
+            fontsize: fontsize,
+            color: color,
+          )
               : InterSemibold(
-                  text: text,
-                  fontsize: fontsize,
-                  color: color,
-                ),
+            text: text,
+            fontsize: fontsize,
+            color: color,
+          ),
         ),
       ),
     );
+
   }
 }

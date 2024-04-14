@@ -22,20 +22,15 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailcontrller = TextEditingController();
 
   TextEditingController _passwordcontrller = TextEditingController();
-
   final LocalStorage storage = LocalStorage('currentUserEmail');
   String _errorMessage = '';
   Future<void> signInEmailPassword(BuildContext context) async {
     try {
       var data = await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text, context);
-      // String role = await storage.getItem("Role");
-      final Future<String?> currentUserFuture =
-          storage.ready.then((_) => storage.getItem("Role"));
-      print("Future ${currentUserFuture}");
 
+      await storage.ready;
       final String? role = storage.getItem("Role");
-      print("Normal Role  ${role}");
 
       if (role == "SUPERVISOR") {
         Navigator.pushReplacement(

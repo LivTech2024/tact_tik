@@ -7,6 +7,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -279,12 +280,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   Future<void> _addImage() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
     }
+    print("Statis ${uploads}");
   }
 
   @override
@@ -293,6 +295,23 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     final double width = MediaQuery.of(context).size.width;
     double completionPercentage =
         widget.p.CompletedCount / widget.p.PatrolRequiredCount;
+    void showSuccessToast(BuildContext context, String message) {
+      toastification.show(
+        context: context,
+        type: ToastificationType.success,
+        title: Text(message),
+        autoCloseDuration: const Duration(seconds: 5),
+      );
+    }
+
+    void showErrorToast(BuildContext context, String message) {
+      toastification.show(
+        context: context,
+        type: ToastificationType.error,
+        title: Text(message),
+        autoCloseDuration: const Duration(seconds: 5),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,6 +412,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     widget.p.EmpId,
                     widget.p.EmployeeName,
                   );
+                  showSuccessToast(context, "Patrol Started");
                   setState(() {
                     // clickedIIndex = index;
                     // print(clickedIIndex);
@@ -539,6 +559,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           );
                                         },
                                       );
+                                      showSuccessToast(context,
+                                          "${checkpoint.description} scanned ");
                                     } else {
                                       // await fireStoreService
                                       //     .updatePatrolsStatus(
@@ -546,6 +568,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       //         checkpoint.id,
                                       //         widget.p.EmpId);
                                       // Show an alert indicating no match
+
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -571,6 +594,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           );
                                         },
                                       );
+                                      showErrorToast(context,
+                                          "${checkpoint.description} scanned unsuccessfull");
                                     }
                                     // }
                                   },
@@ -627,7 +652,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   .status ==
                                                               'checked'
                                                       ? Colors.green
-                                                      : Colors.red,
+                                                      : Primarycolor,
                                                 ),
                                               ),
                                             ),
@@ -870,11 +895,41 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                 ),
                                                               ),
                                                               ElevatedButton(
-                                                                onPressed: () {
+                                                                onPressed:
+                                                                    () async {
                                                                   // Logic to submit the report
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
+                                                                  await fireStoreService.addImagesToPatrol(
+                                                                      uploads,
+                                                                      Controller
+                                                                          .text,
+                                                                      widget.p
+                                                                          .PatrolId,
+                                                                      widget.p
+                                                                          .EmpId,
+                                                                      checkpoint
+                                                                          .id);
+                                                                  toastification
+                                                                      .show(
+                                                                    context:
+                                                                        context,
+                                                                    type: ToastificationType
+                                                                        .success,
+                                                                    title: Text(
+                                                                        "Report Submitted"),
+                                                                    autoCloseDuration:
+                                                                        const Duration(
+                                                                            seconds:
+                                                                                5),
+                                                                  );
+
+                                                                  uploads
+                                                                      .clear();
+                                                                  Controller
+                                                                      .clear();
+
+                                                                  // Navigator.of(
+                                                                  //         context)
+                                                                  //     .pop();
                                                                 },
                                                                 child: InterRegular(
                                                                     text:
@@ -927,17 +982,23 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           var TestinEmail = "sutarvaibhav37@gmail.com";
                           if (ClientEmail != null && AdminEmail != null) {
                             Map<String, dynamic> emailParams = {
-                              'to_email':
-                                  '$ClientEmail, $AdminEmail , $TestinEmail',
+                              // 'to_email':
+                              //     '$ClientEmail, $AdminEmail , $TestinEmail',
+                              'to_email': '$TestinEmail',
                               'from_name': '${widget.p.EmployeeName}',
                               'reply_to': '$ClientEmail',
-                              'subject':
-                                  'Patrol is completed ${widget.p.description}',
-                              'message':
-                                  'Patrol for ${widget.p.description} is completed ${DateTime.now()}. Total Patrol Count ${widget.p.PatrolRequiredCount} Completed Patrol Count ${widget.p.CompletedCount}',
+                              'type': 'Patrol',
+                              'Location': '${widget.p.description}',
+                              'Status': 'Completed',
+                              'GuardName': '${widget.p.EmployeeName}',
+                              'StartTime': '',
+                              'EndTime': DateTime.now().toString(),
+                              'CompanyName': 'Tacttik',
                             };
-                            sendEmail(emailParams);
+                            sendFormattedEmail(emailParams);
                           }
+                          showSuccessToast(
+                              context, "${widget.p.title} patrol ended ");
                         }
                         if (widget.p.Allchecked) {
                           await fireStoreService.EndPatrolupdatePatrolsStatus(

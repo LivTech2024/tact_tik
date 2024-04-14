@@ -1133,14 +1133,14 @@ class FireStoreService {
 
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
-      if (shiftId.isEmpty) {
-        print("Shift ID from FIrebase: $shiftId");
+      if (ShiftId.isEmpty) {
+        print("Shift ID from FIrebase: $ShiftId");
       } else {
         print("Shift ID is empty");
       }
 
       // String empId = storage.getItem('EmpId') ?? "";
-      if (shiftId.isEmpty) {
+      if (ShiftId.isEmpty) {
         print("LocalStorage shiftId is null or empty");
       }
       final DocumentReference shiftDocRef =
@@ -1177,7 +1177,7 @@ class FireStoreService {
               "TaskCompletedById": EmpId,
               "TaskCompletedByName": "",
               "TaskCompletionTime": DateTime.now(),
-              "ShiftTaskPhotos": imgUrls,
+              "TaskPhotos": imgUrls,
               // "ShiftTaskReturnStatus": true,
             };
             if (shiftTaskReturnStatus) {
@@ -1196,6 +1196,106 @@ class FireStoreService {
       }
     } catch (e) {
       print('Error adding images to ShiftTaskPhotos: $e');
+      throw e;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> addImageToStoragePatrol(File file) async {
+    try {
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+
+      Reference uploadRef =
+          storageRef.child("employees/patrol/$uniqueName.jpg");
+
+      // Upload the image file and get the download URL
+      await uploadRef.putFile(file);
+
+      // Get the download URL of the uploaded image
+      String downloadURL = await uploadRef.getDownloadURL();
+
+      // Return the download URL in a list
+      print({'downloadURL': downloadURL});
+      return [
+        {'downloadURL': downloadURL}
+      ];
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  // Add images and comment
+  Future<void> addImagesToPatrol(
+      List<Map<String, dynamic>> uploads,
+      String comment,
+      String PatrolID,
+      String EmpId,
+      String PatrolCheckPointId) async {
+    try {
+      final querySnapshot = await patrols.doc(PatrolID).get();
+
+      if (querySnapshot.exists) {
+        final doc = querySnapshot.data() as Map<String, dynamic>;
+
+        List<Map<String, dynamic>> wellnessReports =
+            List.from(doc["PatrolReport"] ?? []);
+
+        // Check if PatrolCheckPoints is null or not properly initialized
+        List<dynamic> patrolCheckPoints = doc["PatrolCheckPoints"] ?? [];
+
+        // Find the specific CheckPoint within PatrolCheckPoints
+        var checkPoint = patrolCheckPoints.firstWhere(
+            (cp) => cp["CheckPointId"] == PatrolCheckPointId,
+            orElse: () => null);
+
+        if (checkPoint != null) {
+          // Ensure that CheckPointStatus is correctly initialized and cast to List<dynamic>
+          List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
+
+          // Find the specific status within CheckPointStatus where StatusReportedById matches EmpId
+          var status = checkPointStatus.firstWhere(
+              (s) => s["StatusReportedById"] == EmpId,
+              orElse: () => null);
+
+          if (status != null) {
+            List<Map<String, dynamic>> imgUrls = [];
+            for (var upload in uploads) {
+              if (upload['type'] == 'image') {
+                File file = upload['file'];
+
+                // Upload the image file and get the download URL
+                List<Map<String, dynamic>> downloadURL =
+                    await addImageToStoragePatrol(file);
+
+                // Add the download URLs to the imgUrls list
+                for (var url in downloadURL) {
+                  imgUrls.add(url);
+                }
+              }
+            }
+
+            // Add the new image and comment map to the status
+            status["StatusImage"] =
+                imgUrls.map((url) => url['downloadURL']).toList();
+            status["StatusComment"] = comment;
+
+            // Update the Firestore document with the new wellness reports
+            await patrols.doc(PatrolID).update({
+              "PatrolReport": wellnessReports,
+              "PatrolCheckPoints": patrolCheckPoints,
+            });
+          } else {
+            print("No status found for EmpId: $EmpId");
+          }
+        } else {
+          print("No CheckPoint found with CheckPointId: $PatrolCheckPointId");
+        }
+      } else {
+        print("No document found with PatrolID: $PatrolID");
+      }
+    } catch (e) {
+      print('Error adding images to PatrolReport: $e');
       throw e;
     }
   }

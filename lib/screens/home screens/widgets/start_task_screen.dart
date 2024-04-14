@@ -81,17 +81,24 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         await fireStoreService.getClientEmail(widget.ShiftClientID);
     var AdminEmail =
         await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
+    var TestinEmail = "sutarvaibhav37@gmail.com";
     // var TestinEmail = "sutarvaibhav37@gmail.com";
     if (ClientEmail != null && AdminEmail != null) {
       Map<String, dynamic> emailParams = {
-        'to_email': '$ClientEmail, $AdminEmail',
+        // 'to_email':
+        //     '$ClientEmail, $AdminEmail , $TestinEmail',
+        'to_email': '$TestinEmail',
         'from_name': '${widget.EmployeeName}',
-        'reply_to': '$AdminEmail',
-        'subject': 'Shift is completed ${widget.ShiftAddressName}',
-        'message':
-            'Shift for ${widget.ShiftAddressName} is completed at ${DateTime.now()}. Start Time:- ${widget.ShiftStartTime} End Time:- ${stopwatchtime} ',
+        'reply_to': '$ClientEmail',
+        'type': 'Shift ',
+        'Location': '${widget.ShiftAddressName}',
+        'Status': 'Completed',
+        'GuardName': '${widget.EmployeeName}',
+        'StartTime': '${widget.ShiftStartTime}',
+        'EndTime': '${stopwatchtime}',
+        'CompanyName': 'Tacttik',
       };
-      sendEmail(emailParams);
+      sendFormattedEmail(emailParams);
     }
   }
 
