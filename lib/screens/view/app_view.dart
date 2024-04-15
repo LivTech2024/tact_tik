@@ -58,9 +58,9 @@ class AppView extends ConsumerWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Popup Alert'),
+                      title: Text('Wellness Pop UP'),
                       content: Text(
-                        'This is a popup alert displayed after $interval minutes.',
+                        'Please upload ur wellness report.',
                         style: TextStyle(color: Colors.white),
                       ),
                       actions: <Widget>[
