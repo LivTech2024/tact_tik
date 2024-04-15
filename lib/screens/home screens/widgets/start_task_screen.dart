@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
@@ -154,13 +155,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   SizedBox(
                     width: width / width12,
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.contact_support_outlined,
-                      size: width / width20,
+                  Bounce(
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.contact_support_outlined,
+                        size: width / width20,
+                      ),
+                      padding: EdgeInsets.zero,
                     ),
-                    padding: EdgeInsets.zero,
                   )
                 ],
               ),
@@ -252,7 +255,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           child: Row(
             children: [
               Expanded(
-                child: GestureDetector(
+                child: Bounce(
                   onTap: () async {
                     bool? status =
                         await fireStoreService.checkShiftReturnTaskStatus(
@@ -303,7 +306,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 },
               ),*/
               Expanded(
-                child: GestureDetector(
+                child: Bounce(
                   onTap: () async {
                     bool? status =
                         await fireStoreService.checkShiftReturnTaskStatus(

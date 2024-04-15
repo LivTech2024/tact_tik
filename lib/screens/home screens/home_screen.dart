@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -412,28 +413,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
+                            Bounce(
                               onTap: () => ChangeScreenIndex(0),
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.add_task,
                                 color: IconColors[0],
                               ),
                             ),
-                            GestureDetector(
+                            Bounce(
                               onTap: () => ChangeScreenIndex(1),
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.grid_view_rounded,
                                 color: IconColors[1],
                               ),
                             ),
-                            GestureDetector(
+                            Bounce(
                               onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.calendar_today,
                                 color: IconColors[2],
                               ),
                             ),
-                            GestureDetector(
+                            Bounce(
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.chat_bubble_outline,
                                 color: IconColors[3],
@@ -484,7 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : ScreenIndex == 1
                         ? SliverGrid(
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3, // Number of columns
                               // mainAxisSpacing: 10.0, // Spacing between rows
                               // crossAxisSpacing: 14.0,
@@ -492,9 +493,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                                return gridWidget(
-                                  img: data[index][0],
-                                  tittle: data[index][1],
+                                return Bounce(
+                                  onTap: (){},
+                                  child: gridWidget(
+                                    img: data[index][0],
+                                    tittle: data[index][1],
+                                  ),
                                 );
                               },
                               childCount: 9,

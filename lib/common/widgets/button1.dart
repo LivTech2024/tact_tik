@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
-
+import 'package:bounce/bounce.dart';
 import '../../fonts/inter_bold.dart';
 import '../../utils/colors.dart';
 
@@ -27,15 +27,13 @@ class Button1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundcolor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-      ),
+    return Bounce(
+      onTap: onPressed,
       child: Container(
+        decoration: BoxDecoration(
+            color: backgroundcolor,
+            borderRadius: BorderRadius.circular(borderRadius)
+        ),
         height: height,
         child: Center(
           child: useBold
@@ -52,6 +50,5 @@ class Button1 extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
