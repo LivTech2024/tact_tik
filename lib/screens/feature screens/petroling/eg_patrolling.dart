@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
@@ -303,13 +304,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     bool _isLoading = false;
     double completionPercentage =
         widget.p.CompletedCount / widget.p.PatrolRequiredCount;
-    String StartTime = '';
+    String StartTime = DateTime.now().toString();
     void showSuccessToast(BuildContext context, String message) {
       toastification.show(
         context: context,
         type: ToastificationType.success,
         title: Text(message),
-        autoCloseDuration: const Duration(seconds: 5),
+        autoCloseDuration: const Duration(seconds: 2),
       );
     }
 
@@ -318,7 +319,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         context: context,
         type: ToastificationType.error,
         title: Text(message),
-        autoCloseDuration: const Duration(seconds: 5),
+        autoCloseDuration: const Duration(seconds: 2),
       );
     }
 
@@ -417,21 +418,36 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                   color: Colors.green,
                   borderRadius: width / width10,
                   onPressed: () async {
-                    await fireStoreService.updatePatrolCurrentStatus(
-                      widget.p.PatrolId,
-                      "started",
-                      widget.p.EmpId,
-                      widget.p.EmployeeName,
-                    );
-                    showSuccessToast(context, "Patrol Started");
-                    setState(() {
-                      // clickedIIndex = index;
-                      // print(clickedIIndex);
-                      _expand = !_expand;
-                    });
-                    if (!startTimeUpdated) {
-                      startTimeUpdated = true;
-                      StartTime = DateTime.now().toString();
+                    if (widget.p.CompletedCount == 0) {
+                      await fireStoreService.updatePatrolCurrentStatus(
+                        widget.p.PatrolId,
+                        "started",
+                        widget.p.EmpId,
+                        widget.p.EmployeeName,
+                      );
+                      setState(() {
+                        // clickedIIndex = index;
+                        // print(clickedIIndex);
+                        StartTime = DateTime.now().toString();
+                        _expand = !_expand;
+                      });
+
+                      _refresh();
+                      showSuccessToast(context, "Patrol Started");
+                    } else if (widget.p.CompletedCount ==
+                        widget.p.PatrolRequiredCount) {
+                      return null;
+                    } else {
+                      _refresh();
+                      setState(() {
+                        // clickedIIndex = index;
+                        // print(clickedIIndex);
+                        _expand = !_expand;
+                      });
+                      if (!startTimeUpdated) {
+                        startTimeUpdated = true;
+                        StartTime = DateTime.now().toString();
+                      }
                     }
                   },
                 ),
@@ -551,31 +567,31 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 checkpoint.id,
                                                 widget.p.EmpId);
                                         // Show an alert indicating a match
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Checkpoint Match',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              content: Text(
-                                                'The scanned QR code matches the checkpoint ID.',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('OK'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       title: Text(
+                                        //         'Checkpoint Match',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       content: Text(
+                                        //         'The scanned QR code matches the checkpoint ID.',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           onPressed: () {
+                                        //             Navigator.of(context).pop();
+                                        //           },
+                                        //           child: Text('OK'),
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
                                         showSuccessToast(context,
                                             "${checkpoint.description} scanned ");
                                         _refresh();
@@ -587,31 +603,31 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         //         widget.p.EmpId);
                                         // Show an alert indicating no match
                                         _refresh();
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Checkpoint Mismatch',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              content: Text(
-                                                'The scanned QR code does not match the checkpoint ID.',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('OK'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       title: Text(
+                                        //         'Checkpoint Mismatch',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       content: Text(
+                                        //         'The scanned QR code does not match the checkpoint ID.',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           onPressed: () {
+                                        //             Navigator.of(context).pop();
+                                        //           },
+                                        //           child: Text('OK'),
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
                                         showErrorToast(context,
                                             "${checkpoint.description} scanned unsuccessfull");
                                       }
@@ -943,7 +959,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                           "Submitted"),
                                                                       autoCloseDuration:
                                                                           const Duration(
-                                                                              seconds: 5),
+                                                                              seconds: 2),
                                                                     );
                                                                     setState(
                                                                         () {
@@ -1005,46 +1021,71 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         color: Colors.redAccent,
                         borderRadius: 10,
                         onPressed: () async {
+                          _refresh();
                           if (widget.p.CompletedCount ==
                               widget.p.PatrolRequiredCount) {
                             var ClientEmail = await fireStoreService
                                 .getClientEmail(widget.p.PatrolClientID);
                             var AdminEmail = await fireStoreService
                                 .getAdminEmail(widget.p.PatrolCompanyID);
-                            // var TestinEmail = "sutarvaibhav37@gmail.com";
+                            var TestinEmail = "sutarvaibhav37@gmail.com";
                             var defaultEmail = "tacttikofficial@gmail.com";
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
                             Map<String, dynamic> emailParams = {
                               'to_email':
                                   '$ClientEmail, $AdminEmail ,$defaultEmail',
                               // 'to_email': '$TestinEmail',
+                              "startDate": DateTime.now(),
+                              "endDate": DateTime.now(),
                               'from_name': '${widget.p.EmployeeName}',
-                              'reply_to': '$ClientEmail',
+                              'reply_to': '$defaultEmail',
                               'type': 'Patrol',
                               'Location': '${widget.p.description}',
                               'Status': 'Completed',
                               'GuardName': '${widget.p.EmployeeName}',
-                              'StartTime': '',
+                              'StartTime': StartTime,
                               'EndTime': DateTime.now().toString(),
                               'CompanyName': 'Tacttik',
                             };
                             _refreshData();
                             sendFormattedEmail(emailParams);
+                            Navigator.pop(context);
                           } else {
                             _refreshData();
                             if (!widget.p.Allchecked) {
-                              showCustomDialog(
-                                  context,
-                                  "Checkpoints Incomplete !!",
-                                  "Complete all the checkpoints  to end");
+                              // showCustomDialog(
+                              //     context,
+                              //     "Checkpoints Incomplete !!",
+                              //     "Complete all the checkpoints  to end");
                             }
                           }
 
                           if (widget.p.Allchecked) {
                             _refreshData();
-                            await fireStoreService.EndPatrolupdatePatrolsStatus(
-                                widget.p.PatrolId,
-                                widget.p.EmpId,
-                                widget.p.EmployeeName);
+                            if (widget.p.CompletedCount ==
+                                widget.p.PatrolRequiredCount - 1) {
+                              await fireStoreService
+                                  .LastEndPatrolupdatePatrolsStatus(
+                                      widget.p.PatrolId,
+                                      widget.p.EmpId,
+                                      widget.p.EmployeeName);
+
+                              Navigator.pop(context);
+                            } else {
+                              await fireStoreService
+                                  .EndPatrolupdatePatrolsStatus(
+                                      widget.p.PatrolId,
+                                      widget.p.EmpId,
+                                      widget.p.EmployeeName);
+                            }
+                            showSuccessToast(context, "Patrol Completed");
                             print("All checked");
                             var ClientEmail = await fireStoreService
                                 .getClientEmail(widget.p.PatrolClientID);
@@ -1052,6 +1093,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 .getAdminEmail(widget.p.PatrolCompanyID);
                             var TestinEmail = "sutarvaibhav37@gmail.com";
                             var defaultEmail = "tacttikofficial@gmail.com";
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
                             Map<String, dynamic> emailParams = {
                               'to_email':
                                   '$ClientEmail, $AdminEmail , $defaultEmail',
@@ -1064,6 +1113,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               'GuardName': '${widget.p.EmployeeName}',
                               'StartTime': StartTime,
                               'EndTime': DateTime.now().toString(),
+                              'patrolCount': widget.p.CompletedCount,
+                              'patrolTImein': StartTime,
+                              'patrolTImeout': DateTime.now().toString(),
                               'CompanyName': 'Tacttik',
                             };
 

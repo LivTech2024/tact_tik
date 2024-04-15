@@ -84,10 +84,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var TestinEmail = "sutarvaibhav37@gmail.com";
     var defaultEmail = "tacttikofficial@gmail.com";
     // var TestinEmail = "sutarvaibhav37@gmail.com";
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+    String formattedStartDate = dateFormat.format(DateTime.now());
+    String formattedEndDate = dateFormat.format(DateTime.now());
+    String formattedEndTime = dateFormat.format(DateTime.now());
     if (ClientEmail != null && AdminEmail != null) {
       Map<String, dynamic> emailParams = {
         'to_email': '$ClientEmail, $AdminEmail ,$defaultEmail',
         // 'to_email': '$TestinEmail',
+        "startDate": "",
+        "endDate": "",
         'from_name': '${widget.EmployeeName}',
         'reply_to': '$defaultEmail',
         'type': 'Shift ',

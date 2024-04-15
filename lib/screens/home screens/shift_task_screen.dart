@@ -13,11 +13,13 @@ class ShiftTaskScreen extends StatefulWidget {
   final String shiftId;
   final String EmpId;
   final String Name;
+  final String EmpName;
   const ShiftTaskScreen(
       {super.key,
       required this.shiftId,
       required this.Name,
-      required this.EmpId});
+      required this.EmpId,
+      required this.EmpName});
 
   @override
   State<ShiftTaskScreen> createState() => _ShiftTaskScreenState();
@@ -137,6 +139,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                       // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
                       ShiftTaskEnum? taskType;
                       String? taskStatu;
+                      bool ShiftTaskReturnStatus = false;
                       if (fetchedTasks != null &&
                           index < fetchedTasks!.length) {
                         final task = fetchedTasks![index];
@@ -160,7 +163,9 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         // Extract TaskStatus if document is present
                         if (filteredStatus.isNotEmpty) {
                           taskStatu = filteredStatus.first['TaskStatus'];
-
+                          ShiftTaskReturnStatus =
+                              filteredStatus.first['ShiftTaskReturnStatus'] ??
+                                  false;
                           // print("Task Completion Status : - ${taskStatus}");
                         }
                         print("Task Completion Status : - ${taskStatu}");
@@ -177,8 +182,9 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         EmpID: widget.EmpId,
                         shiftReturnTask: false,
                         refreshDataCallback: _refreshData,
-                        EmpName: widget
-                            .Name, // Default to upload if taskType is null
+                        EmpName: widget.EmpName,
+                        ShiftTaskReturnStatus:
+                            ShiftTaskReturnStatus, // Default to upload if taskType is null
                       );
                     },
                     childCount: fetchedTasks?.length ?? 0,

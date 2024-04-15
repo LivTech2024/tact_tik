@@ -317,6 +317,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                               shiftId: widget.shiftId,
                                               Name: "Shift Task",
                                               EmpId: widget.empId,
+                                              EmpName: widget.EmpName,
                                             )));
                               } else {
                                 setState(() {
@@ -341,6 +342,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                             shiftId: widget.shiftId,
                                             Name: "Shift Task",
                                             EmpId: widget.empId,
+                                            EmpName: widget.EmpName,
                                           )));
                               print("Task Status false");
                             } else {

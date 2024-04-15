@@ -322,6 +322,61 @@ class FireStoreService {
     print("Patrol and checkpoint statuses updated successfully");
   }
 
+  Future<void> LastEndPatrolupdatePatrolsStatus(String patrolId,
+      String statusReportedById, String statusReportedByName) async {
+    if (patrolId.isEmpty) {
+      return;
+    }
+    DocumentReference<Map<String, dynamic>> patrolDocument =
+        FirebaseFirestore.instance.collection('Patrols').doc(patrolId);
+
+    // Fetch the current document data
+    var documentSnapshot = await patrolDocument.get();
+    var data = documentSnapshot.data();
+
+    // Update the status entry for the given statusReportedById
+
+    // Update checkpoint statuses to "not_checked"
+    List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
+    checkpoints.forEach((checkpoint) {
+      List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
+      status.forEach((entry) {
+        // entry['Status'] = 'not_checked';
+        entry['StatusReportedTime'] = Timestamp.now();
+      });
+    });
+    List<Map<String, dynamic>> currentStatusList =
+        List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
+    int existingIndex = currentStatusList.indexWhere(
+        (entry) => entry['StatusReportedById'] == statusReportedById);
+
+    if (existingIndex != -1) {
+      // If the status entry exists, update it
+      currentStatusList[existingIndex]['Status'] = "completed";
+      currentStatusList[existingIndex]['StatusReportedByName'] =
+          statusReportedByName;
+      currentStatusList[existingIndex]['StatusReportedTime'] = Timestamp.now();
+      currentStatusList[existingIndex]['StatusCompletedCount'] =
+          (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
+    } else {
+      // If the status entry doesn't exist, add a new entry
+      currentStatusList.add({
+        'Status': "completed",
+        'StatusReportedById': statusReportedById,
+        'StatusReportedByName': statusReportedByName,
+        'StatusCompletedCount': 1,
+        'StatusReportedTime': Timestamp.now(),
+      });
+    }
+    await patrolDocument.update({
+      'PatrolCheckPoints': checkpoints,
+      'PatrolCurrentStatus': currentStatusList,
+    });
+    // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
+
+    print("Patrol and checkpoint statuses updated successfully");
+  }
+
   Future<void> updatePatrolsReport(
       String EmpId, String PatrolId, String CheckPointId) async {
     if (EmpId.isEmpty || PatrolId.isEmpty || CheckPointId.isEmpty) {
@@ -887,7 +942,11 @@ class FireStoreService {
 
   //add wellness to the collection
   Future<void> addImagesToShiftGuardWellnessReport(
-      List<Map<String, dynamic>> uploads, String comment) async {
+    List<Map<String, dynamic>> uploads,
+    String comment,
+    // String ShiftID,
+    // String EmpID
+  ) async {
     try {
       // final LocalStorage Userstorage = LocalStorage('currentUserEmail');
       final LocalStorage storage = LocalStorage('ShiftDetails');
@@ -1134,6 +1193,7 @@ class FireStoreService {
       String ShiftTaskId,
       String ShiftId,
       String EmpId,
+      String EmpName,
       bool shiftTaskReturnStatus) async {
     try {
       print("Uploads from FIrebase: $uploads");
@@ -1181,7 +1241,7 @@ class FireStoreService {
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
               "TaskCompletedById": EmpId ?? "",
-              "TaskCompletedByName": "",
+              "TaskCompletedByName": EmpName,
               "TaskCompletionTime": DateTime.now(),
               "TaskPhotos": imgUrls,
               // "ShiftTaskReturnStatus": true,
