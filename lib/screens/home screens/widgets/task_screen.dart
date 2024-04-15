@@ -152,6 +152,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   children: [
                     widget.ShiftDate.isNotEmpty
                         ? Container(
+                      constraints: BoxConstraints(),
                             height: height / height242,
                             color: WidgetColor,
                             child: Column(
@@ -368,7 +369,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         },
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     SizedBox(
                       height: height / height10,
                     ),

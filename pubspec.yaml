@@ -58,6 +58,7 @@ dependencies:
   flutter_image_compress: ^2.2.0
   # firebase_app_check: ^0.2.2+1
   toastification: ^1.2.1
+  bounce: ^1.0.2
   firebase_app_check: ^0.2.2+1
 
 dev_dependencies:

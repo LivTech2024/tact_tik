@@ -1,14 +1,14 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/sizes.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/utils/colors.dart';
-
 import '../../../fonts/inter_regular.dart';
 import '../widgets/custome_textfield.dart';
+
 
 class CreateDarScreen extends StatefulWidget {
   const CreateDarScreen({super.key});
@@ -183,7 +183,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     )
                   ],
                 ),
-                SizedBox(height: height / height30),
+                /*SizedBox(height: height / height30),
                 InterBold(
                   text: 'Reports',
                   fontsize: width / width20,
@@ -224,7 +224,14 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                       ),
                     );
                   },
-                )
+                ),*/
+                SizedBox(height: height / height30),
+                Button1(
+                  text: 'Submit',
+                  onPressed: () {},
+                  backgroundcolor: Primarycolor,
+                  borderRadius: 20,
+                ),
               ],
             ),
           ),
