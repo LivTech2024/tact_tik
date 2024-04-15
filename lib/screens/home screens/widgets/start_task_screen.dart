@@ -327,6 +327,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   shiftId: widget.ShiftId,
                                   Empid: widget.EmployeId,
                                   ShiftName: widget.ShiftAddressName,
+                                  EmpName: widget.EmployeeName,
                                 )),
                       );
                     } else {

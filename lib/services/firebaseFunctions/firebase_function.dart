@@ -678,6 +678,7 @@ class FireStoreService {
         "ReportCategoryCreatedAt": DateTime.now(),
         // Add other fields if needed
       });
+      //report Categories fetch the id according to the
       await newCategoryDocRef
           .update({'ReportCategoryId': newCategoryDocRef.id});
       String ReportCategoryId = newCategoryDocRef.id;
@@ -990,7 +991,8 @@ class FireStoreService {
             final taskStatusList =
                 shiftTask['ShiftTaskStatus'] as List<dynamic>;
             for (var shiftTaskStatus in taskStatusList) {
-              if (shiftTaskStatus['ShiftTaskReturnStatus'] == true) {
+              if (shiftTaskStatus['ShiftTaskReturnStatus'] == false ||
+                  shiftTaskStatus['ShiftTaskReturnStatus'] == null) {
                 return true; // If ShiftTaskReturnStatus is true, return true
               }
             }
@@ -1137,8 +1139,6 @@ class FireStoreService {
       print("Uploads from FIrebase: $uploads");
       print("Shift Task ID from FIrebase: $ShiftTaskId");
 
-      final LocalStorage storage = LocalStorage('ShiftDetails');
-      String shiftId = storage.getItem('shiftId');
       if (ShiftId.isEmpty) {
         print("Shift ID from FIrebase: $ShiftId");
       } else {
@@ -1180,7 +1180,7 @@ class FireStoreService {
             // Create ShiftTaskStatus object with image URLs
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
-              "TaskCompletedById": EmpId,
+              "TaskCompletedById": EmpId ?? "",
               "TaskCompletedByName": "",
               "TaskCompletionTime": DateTime.now(),
               "TaskPhotos": imgUrls,
@@ -1313,7 +1313,8 @@ class FireStoreService {
   }
 
   //Update the shift status when the qr is scanned correctly
-  Future<void> updateShiftTaskStatus(String ShiftTaskId) async {
+  Future<void> updateShiftTaskStatus(
+      String ShiftTaskId, String EmpID, String EmpName) async {
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
@@ -1331,8 +1332,8 @@ class FireStoreService {
             // Create ShiftTaskStatus object without images
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
-              "TaskCompletedById": empId,
-              "TaskCompletedByName": "",
+              "TaskCompletedById": EmpID,
+              "TaskCompletedByName": EmpName,
               "TaskCompletionTime": DateTime.now(),
             };
 

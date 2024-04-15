@@ -12,11 +12,13 @@ class ShiftReturnTaskScreen extends StatefulWidget {
   final String shiftId;
   final String Empid;
   final String ShiftName;
+  final String EmpName;
   const ShiftReturnTaskScreen(
       {super.key,
       required this.shiftId,
       required this.Empid,
-      required this.ShiftName});
+      required this.ShiftName,
+      required this.EmpName});
 
   @override
   State<ShiftReturnTaskScreen> createState() => _ShiftTaskReturnScreenState();
@@ -159,10 +161,11 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
                       ShiftId: widget.shiftId ?? "",
                       taskStatus: taskStatu ?? "",
-                      EmpID: "",
+                      EmpID: widget.Empid ?? "",
                       shiftReturnTask: true,
-                      refreshDataCallback:
-                          _refreshData, // Default to upload if taskType is null
+                      refreshDataCallback: _refreshData,
+                      EmpName: widget
+                          .EmpName, // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

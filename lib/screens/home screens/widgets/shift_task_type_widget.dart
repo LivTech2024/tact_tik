@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
@@ -26,6 +27,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.EmpID,
     required this.shiftReturnTask,
     required this.refreshDataCallback,
+    required this.EmpName,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -34,6 +36,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final String taskId;
   final String ShiftId;
   final String EmpID;
+  final String EmpName;
   final bool shiftReturnTask;
 
   @override
@@ -57,30 +60,41 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   }
 
   void _uploadImages() async {
-    if (uploads.isNotEmpty) {
+    if (uploads.isNotEmpty ||
+        widget.ShiftId.isNotEmpty ||
+        widget.taskId.isNotEmpty ||
+        widget.EmpID.isNotEmpty) {
       setState(() {
         _isLoading = true;
       });
       print("Uploads Images  ${uploads}");
       try {
         print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(uploads, widget.taskId,
-            widget.ShiftId, widget.EmpID, widget.shiftReturnTask);
+        await fireStoreService.addImagesToShiftTasks(
+            uploads,
+            widget.taskId ?? "",
+            widget.ShiftId ?? "",
+            widget.EmpID ?? "",
+            widget.shiftReturnTask);
         uploads.clear();
+        showSuccessToast(context, "Uploaded Successfully");
         widget.refreshDataCallback();
+        // widget.refreshDataCallback();
+
         // Navigator.pop(context);
       } catch (e) {
+        showErrorToast(context, "${e}");
         print('Error uploading images: $e');
       }
+      setState(() {
+        _isLoading = false;
+      });
+      widget.refreshDataCallback();
     } else {
       widget.refreshDataCallback();
+      showErrorToast(context, "No Images found");
       print('No images to upload.');
     }
-    setState(() {
-      _isLoading = false;
-    });
-    widget.refreshDataCallback();
-    showSuccessToast(context, "Uploaded Successfully");
   }
 
   Future<void> _addVideo() async {
@@ -237,8 +251,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         Result = res;
                       });
                       if (Result == widget.taskId) {
-                        await fireStoreService
-                            .updateShiftTaskStatus(widget.taskId);
+                        await fireStoreService.updateShiftTaskStatus(
+                            widget.taskId, widget.EmpID, widget.EmpName);
                         //Update in firebase and change the color of icon
                         showCustomDialog(context, "Task Scan",
                             "Task Scan SuccessFull for ${widget.taskName}");
