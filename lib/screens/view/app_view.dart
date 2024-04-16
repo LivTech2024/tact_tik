@@ -15,6 +15,7 @@ import '../../utils/colors.dart';
 import '../feature screens/Report/create_report_screen.dart';
 import '../feature screens/Report/report_screen.dart';
 import '../feature screens/dar/create_dar_screen.dart';
+import '../feature screens/dar/dar_screen.dart';
 import '../feature screens/petroling/eg_patrolling.dart';
 import '../feature screens/petroling/patrolling.dart';
 import '../home screens/shift_task_screen.dart';
@@ -94,7 +95,7 @@ class AppView extends ConsumerWidget {
           title: 'Tact Tik',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            textSelectionTheme: TextSelectionThemeData(
+            textSelectionTheme: const TextSelectionThemeData(
               cursorColor: Primarycolor,
             ),
             useMaterial3: true,
@@ -103,7 +104,7 @@ class AppView extends ConsumerWidget {
               Theme.of(context).textTheme,
             ),
           ),
-          home: GetStartedScreens(),
+          home: DarDisplayScreen(),
         );
       },
     );

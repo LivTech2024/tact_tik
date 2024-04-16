@@ -110,9 +110,10 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   List<Map<String, dynamic>>? data;
+
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
-        await fireStoreService.fetchShiftTask(widget.shiftId);
+    await fireStoreService.fetchShiftTask(widget.shiftId);
     if (fetchedData != null) {
       setState(() {
         data = fetchedData;
@@ -126,8 +127,14 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     UserLocationChecker locationChecker = UserLocationChecker();
 
     return RefreshIndicator(
@@ -136,242 +143,244 @@ class _TaskScreenState extends State<TaskScreen> {
         children: [
           ShiftStarted
               ? StartTaskScreen(
-                  ShiftDate: widget.ShiftDate,
-                  ShiftStartTime: widget.ShiftStartTime,
-                  ShiftEndTime: widget.ShiftEndTime,
-                  EmployeId: widget.empId,
-                  ShiftId: widget.shiftId,
-                  ShiftAddressName: widget.ShiftName,
-                  ShiftCompanyId: widget.ShiftCompanyId,
-                  ShiftBranchId: widget.ShiftBranchId,
-                  EmployeeName: widget.EmpName,
-                  ShiftLocationId: widget.ShiftLocationId,
-                  ShiftClientID: widget.ShiftClientId,
-                )
+            ShiftDate: widget.ShiftDate,
+            ShiftStartTime: widget.ShiftStartTime,
+            ShiftEndTime: widget.ShiftEndTime,
+            EmployeId: widget.empId,
+            ShiftId: widget.shiftId,
+            ShiftAddressName: widget.ShiftName,
+            ShiftCompanyId: widget.ShiftCompanyId,
+            ShiftBranchId: widget.ShiftBranchId,
+            EmployeeName: widget.EmpName,
+            ShiftLocationId: widget.ShiftLocationId,
+            ShiftClientID: widget.ShiftClientId,
+          )
               : Column(
+            children: [
+              widget.ShiftDate.isNotEmpty
+                  ? Container(
+                constraints: const BoxConstraints(),
+                height: height / height242,
+                color: WidgetColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    widget.ShiftDate.isNotEmpty
+                    Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: height / height20,
+                            left: width / width26,
+                          ),
+                          width: width / width200,
+                          height: height / height96,
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              InterBold(
+                                text: widget.ShiftDate,
+                                color: Colors.white,
+                                fontsize: width / width18,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InterMedium(
+                                    text: 'In time',
+                                    color: Colors.white,
+                                    fontsize: width / width18,
+                                  ),
+                                  InterMedium(
+                                    text: widget.ShiftStartTime,
+                                    color: Colors.white,
+                                    fontsize: width / width16,
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InterMedium(
+                                    text: 'Out time',
+                                    color: Colors.white,
+                                    fontsize: width / width18,
+                                  ),
+                                  InterMedium(
+                                    text: widget.ShiftEndTime,
+                                    color: Colors.white,
+                                    fontsize: width / width16,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            right: width / width12,
+                          ),
+                          height: height / height74,
+                          width: width / width70,
+                          decoration: BoxDecoration(
+                            // color: Colors.redAccent,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/log_book.png'),
+                                fit: BoxFit.fitHeight,
+                                filterQuality: FilterQuality.high),
+                          ),
+                        )
+                      ],
+                    ),
+                    widget.ShiftLocation.isEmpty
                         ? Container(
-                      constraints: BoxConstraints(),
-                            height: height / height242,
-                            color: WidgetColor,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        top: height / height20,
-                                        left: width / width26,
-                                      ),
-                                      width: width / width200,
-                                      height: height / height96,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InterBold(
-                                            text: widget.ShiftDate,
-                                            color: Colors.white,
-                                            fontsize: width / width18,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InterMedium(
-                                                text: 'In time',
-                                                color: Colors.white,
-                                                fontsize: width / width18,
-                                              ),
-                                              InterMedium(
-                                                text: widget.ShiftStartTime,
-                                                color: Colors.white,
-                                                fontsize: width / width16,
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InterMedium(
-                                                text: 'Out time',
-                                                color: Colors.white,
-                                                fontsize: width / width18,
-                                              ),
-                                              InterMedium(
-                                                text: widget.ShiftEndTime,
-                                                color: Colors.white,
-                                                fontsize: width / width16,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        right: width / width12,
-                                      ),
-                                      height: height / height74,
-                                      width: width / width70,
-                                      decoration: BoxDecoration(
-                                        // color: Colors.redAccent,
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/log_book.png'),
-                                            fit: BoxFit.fitHeight,
-                                            filterQuality: FilterQuality.high),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                widget.ShiftLocation.isEmpty
-                                    ? Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: width / width26),
-                                        height: height / height90,
-                                        color: colorRed,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.redAccent,
-                                                  size: width / width20,
-                                                ),
-                                                SizedBox(
-                                                  height: height / height10,
-                                                ),
-                                                InterMedium(
-                                                  text: 'Location',
-                                                  color: Colors.white,
-                                                  fontsize: width / width16,
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(width: width / width38),
-                                            Flexible(
-                                              child: InterRegular(
-                                                text: widget.ShiftLocation,
-                                                fontsize: width / width16,
-                                                color: Colors.white,
-                                                maxLines: 2,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    : SizedBox(),
-                              ],
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width / width26),
+                      height: height / height90,
+                      color: colorRed,
+                      child: Row(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.center,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: Colors.redAccent,
+                                size: width / width20,
+                              ),
+                              SizedBox(
+                                height: height / height10,
+                              ),
+                              InterMedium(
+                                text: 'Location',
+                                color: Colors.white,
+                                fontsize: width / width16,
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: width / width38),
+                          Flexible(
+                            child: InterRegular(
+                              text: widget.ShiftLocation,
+                              fontsize: width / width16,
+                              color: Colors.white,
+                              maxLines: 2,
                             ),
                           )
-                        : Center(
-                            child: InterMedium(
-                              text: 'No Shifts',
-                              textAlign: TextAlign.center,
-                              color: color2,
-                              fontsize: width / width18,
-                            ),
-                          ),
-                    SizedBox(
-                      height: height / height22,
-                    ),
-                    if (widget.ShiftDate.isNotEmpty)
-                      Button1(
-                        text: 'Start Shift',
-                        fontsize: width / width18,
-                        color: color5,
-                        backgroundcolor: WidgetColor /*.withOpacity(50)*/,
-                        onPressed: () async {
-                          print(widget.CheckUserRadius);
-                          if (widget.CheckUserRadius == true) {
-                            bool status = await locationChecker.checkLocation(
-                                widget.ShiftLatitude,
-                                widget.shiftLongitude,
-                                widget.ShiftRadius);
-                            bool? taskStatus =
-                                await fireStoreService.checkShiftTaskStatus(
-                                    widget.empId, widget.shiftId);
-                            print("Status :$status");
-                            if (status == true) {
-                              if (taskStatus == false) {
-                                print("taskStaus ${taskStatus}");
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ShiftTaskScreen(
-                                              shiftId: widget.shiftId,
-                                              Name: "Shift Task",
-                                              EmpId: widget.empId,
-                                            )));
-                              } else {
-                                setState(() {
-                                  ShiftStarted = true;
-                                  fireStoreService.startShiftLog(
-                                      widget.empId, widget.shiftId);
-                                });
-                              }
-                            } else {
-                              showCustomDialog(context, "Location",
-                                  "Move into Shift Radius to continue");
-                            }
-                          } else {
-                            bool? taskStatus =
-                                await fireStoreService.checkShiftTaskStatus(
-                                    widget.empId, widget.shiftId);
-                            if (taskStatus == false) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ShiftTaskScreen(
-                                            shiftId: widget.shiftId,
-                                            Name: "Shift Task",
-                                            EmpId: widget.empId,
-                                          )));
-                              print("Task Status false");
-                            } else {
-                              Map<String, dynamic> emailParams = {
-                                'to_email': 'sutarvaibhav37@gmail.com',
-                                'from_name': 'Your Name',
-                                'reply_to': 'sutarvaibhav37@gmail.com',
-                                'subject':
-                                    'Your Shift has been Started ${widget.ShiftLocation}',
-                                'message': 'Your Message',
-                              };
-                              // await sendEmail(emailParams);
-                              // print('Email sent: $result');s
-                              setState(() {
-                                ShiftStarted = true;
-                              });
-                            }
+                        ],
+                      ),
+                    )
+                        : SizedBox(),
+                  ],
+                ),
+              )
+                  : Center(
+                child: InterMedium(
+                  text: 'No Shifts',
+                  textAlign: TextAlign.center,
+                  color: color2,
+                  fontsize: width / width18,
+                ),
+              ),
+              SizedBox(
+                height: height / height22,
+              ),
+              if (widget.ShiftDate.isNotEmpty)
+                Button1(
+                  text: 'Start Shift',
+                  fontsize: width / width18,
+                  color: color5,
+                  backgroundcolor: WidgetColor /*.withOpacity(50)*/,
+                  onPressed: () async {
+                    print(widget.CheckUserRadius);
+                    if (widget.CheckUserRadius == true) {
+                      bool status = await locationChecker.checkLocation(
+                          widget.ShiftLatitude,
+                          widget.shiftLongitude,
+                          widget.ShiftRadius);
+                      bool? taskStatus =
+                      await fireStoreService.checkShiftTaskStatus(
+                          widget.empId, widget.shiftId);
+                      print("Status :$status");
+                      if (status == true) {
+                        if (taskStatus == false) {
+                          print("taskStaus ${taskStatus}");
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ShiftTaskScreen(
+                                        shiftId: widget.shiftId,
+                                        Name: "Shift Task",
+                                        EmpId: widget.empId,
+                                      )));
+                        } else {
+                          setState(() {
+                            ShiftStarted = true;
+                            fireStoreService.startShiftLog(
+                                widget.empId, widget.shiftId);
+                          });
+                        }
+                      } else {
+                        showCustomDialog(context, "Location",
+                            "Move into Shift Radius to continue");
+                      }
+                    } else {
+                      bool? taskStatus =
+                      await fireStoreService.checkShiftTaskStatus(
+                          widget.empId, widget.shiftId);
+                      if (taskStatus == false) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ShiftTaskScreen(
+                                      shiftId: widget.shiftId,
+                                      Name: "Shift Task",
+                                      EmpId: widget.empId,
+                                    )));
+                        print("Task Status false");
+                      } else {
+                        Map<String, dynamic> emailParams = {
+                          'to_email': 'sutarvaibhav37@gmail.com',
+                          'from_name': 'Your Name',
+                          'reply_to': 'sutarvaibhav37@gmail.com',
+                          'subject':
+                          'Your Shift has been Started ${widget.ShiftLocation}',
+                          'message': 'Your Message',
+                        };
+                        // await sendEmail(emailParams);
+                        // print('Email sent: $result');s
+                        setState(() {
+                          ShiftStarted = true;
+                        });
+                      }
 
-                            //if the check user radius is off we can start the shift
-                          }
+                      //if the check user radius is off we can start the shift
+                    }
 
-                          // bool isWithInRaius = locationChecker.checkLocation();
-                        },
-                      )
-                    else
-                      const SizedBox(),
-                    SizedBox(
-                      height: height / height10,
-                    ),
-                    /*GestureDetector(
+                    // bool isWithInRaius = locationChecker.checkLocation();
+                  },
+                )
+              else
+                const SizedBox(),
+              SizedBox(
+                height: height / height10,
+              ),
+              /*GestureDetector(
                       onTap: () {
                         setState(() {
                           ShiftStarted = true;
@@ -389,8 +398,8 @@ class _TaskScreenState extends State<TaskScreen> {
                         ),
                       ),
                     )*/
-                  ],
-                )
+            ],
+          )
         ],
       ),
     );
