@@ -494,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 return Bounce(
-                                  onTap: (){},
+                                  onTap: () {},
                                   child: gridWidget(
                                     img: data[index][0],
                                     tittle: data[index][1],

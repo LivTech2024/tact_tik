@@ -93,8 +93,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       Map<String, dynamic> emailParams = {
         'to_email': '$ClientEmail, $AdminEmail ,$defaultEmail',
         // 'to_email': '$TestinEmail',
-        "startDate": "",
-        "endDate": "",
+        "startDate": '${widget.ShiftDate}',
+        "endDate": '${widget.ShiftDate}',
         'from_name': '${widget.EmployeeName}',
         'reply_to': '$defaultEmail',
         'type': 'Shift ',
@@ -126,33 +126,46 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    DateFormat format = DateFormat.jm();
+    // Get the current time
+    DateTime currentTime = DateTime.now();
+    DateFormat format = DateFormat('hh:mm a');
+// Parse the shift start time from the widget
     DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
-    int differenceInMinutes = calculateTimeDifference(shiftStartTime);
-    String lateTime = differenceInMinutes > 5
-        ? '${differenceInMinutes}m Late'
-        : ''; // "h:mm a" format
+
+// Convert shift start time to current date for comparison
+    shiftStartTime = DateTime(
+      currentTime.year,
+      currentTime.month,
+      currentTime.day,
+      shiftStartTime.hour,
+      shiftStartTime.minute,
+    );
+
+// Calculate the difference in minutes
+    Duration difference = shiftStartTime.difference(currentTime);
+    int differenceInMinutes = difference.inMinutes.abs();
+
+// Calculate the late time if the difference is greater than 5 minutes
+    String lateTime =
+        differenceInMinutes > 5 ? '${differenceInMinutes}m Late' : '';
+
     print(lateTime);
-    DateTime dateTime = format.parse(widget.ShiftStartTime);
+    // DateTime dateTime = format.parse(widget.ShiftStartTime);
     String formattedStopwatchTime =
         '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
     setState(() {
       stopwatchtime = formattedStopwatchTime;
     });
 // Get current time
-    DateTime currentTime = DateTime.now();
-    // Duration difference = currentTime.difference(dateTime);s
-    // bool isLate = currentTime.isAfter(dateTime);
-
-    // DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
-    Duration difference = currentTime.difference(shiftStartTime);
-    bool isLate = currentTime.isAfter(shiftStartTime);
+    // DateTime currentTime = DateTime.now();
+    // Duration difference = currentTime.difference(shiftStartTime);
+    // bool isLate = currentTime.isAfter(shiftStartTime);
     // String lateTime = isLate ? '${difference.inMinutes.abs()}m Late' : '';
     String employeeCurrentStatus = "";
     return Column(
       children: [
         Container(
-          height: height / height180,
+          height: height / height200,
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
@@ -184,18 +197,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   )
                 ],
               ),
-              SizedBox(height: height / height10),
+              // SizedBox(height: height / height10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: width / width80,
+                    width: width / width100,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'In time',
-                          fontsize: width / width18,
+                          fontsize: width / width14,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
@@ -216,13 +229,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     ),
                   ),
                   SizedBox(
-                    width: width / width70,
+                    width: width / width100,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'Out time',
-                          fontsize: width / width18,
+                          fontsize: width / width14,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
