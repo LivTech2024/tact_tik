@@ -193,6 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.delayed(Duration(seconds: 2));
   }
 
+  Future<void> _refreshScreen() async {
+    _getUserInfo();
+  }
+
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (mounted) {
@@ -450,37 +454,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.only(
-                            left: width / width30,
-                            right: width / width30,
-                          ),
-                          child: TaskScreen(
-                            ShiftDate: _ShiftDate,
-                            ShiftStartTime: _ShiftStartTime,
-                            ShiftLocation: _ShiftLocation,
-                            ShiftName: _ShiftLocation,
-                            ShiftEndTime: _ShiftEndTime,
-                            isWithINRadius: isWithinRadius,
-                            empId: _employeeId,
-                            shiftId: _shiftId,
-                            patrolDate: _patrolDate,
-                            patrolTime: _patrolTime,
-                            patrollocation: _patrolArea,
-                            issShiftFetched: issShift,
-                            EmpEmail: _empEmail,
-                            Branchid: _branchId,
-                            cmpId: _cmpId,
-                            EmpName: _userName,
-                            ShiftLatitude: _shiftLatitude,
-                            shiftLongitude: _shiftLongitude,
-                            ShiftRadius: _shiftRestrictedRadius,
-                            CheckUserRadius: _shiftKeepGuardInRadiusOfLocation,
-                            ShiftCompanyId: _ShiftCompanyId ?? "",
-                            ShiftBranchId: _ShiftBranchId ?? "",
-                            ShiftLocationId: _shiftLocationId,
-                            ShiftClientId: _shiftCLientId,
-                          ),
-                        ),
+                            padding: EdgeInsets.only(
+                              left: width / width30,
+                              right: width / width30,
+                            ),
+                            child: PageStorage(
+                              bucket: PageStorageBucket(),
+                              child: TaskScreen(
+                                ShiftDate: _ShiftDate,
+                                ShiftStartTime: _ShiftStartTime,
+                                ShiftLocation: _ShiftLocation,
+                                ShiftName: _ShiftLocation,
+                                ShiftEndTime: _ShiftEndTime,
+                                isWithINRadius: isWithinRadius,
+                                empId: _employeeId,
+                                shiftId: _shiftId,
+                                patrolDate: _patrolDate,
+                                patrolTime: _patrolTime,
+                                patrollocation: _patrolArea,
+                                issShiftFetched: issShift,
+                                EmpEmail: _empEmail,
+                                Branchid: _branchId,
+                                cmpId: _cmpId,
+                                EmpName: _userName,
+                                ShiftLatitude: _shiftLatitude,
+                                shiftLongitude: _shiftLongitude,
+                                ShiftRadius: _shiftRestrictedRadius,
+                                CheckUserRadius:
+                                    _shiftKeepGuardInRadiusOfLocation,
+                                ShiftCompanyId: _ShiftCompanyId ?? "",
+                                ShiftBranchId: _ShiftBranchId ?? "",
+                                ShiftLocationId: _shiftLocationId,
+                                ShiftClientId: _shiftCLientId,
+                                onRefreshHomeScreen: _refreshScreen,
+                                onEndTask: _refreshScreen,
+                              ),
+                            )),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(

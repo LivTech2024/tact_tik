@@ -214,7 +214,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                     padding: EdgeInsets.only(left: width / width20),
                     onPressed: () {
                       Navigator.pop(context);
-                      print("Navigtor debug: ${Navigator.of(context).toString()}");
+                      print(
+                          "Navigtor debug: ${Navigator.of(context).toString()}");
                     },
                   ),
                   title: InterRegular(
@@ -969,6 +970,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         .clear();
                                                                     Controller
                                                                         .clear();
+                                                                    Navigator.pop(
+                                                                        context);
                                                                   },
                                                                   child: InterRegular(
                                                                       text:
@@ -1031,6 +1034,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             var defaultEmail = "tacttikofficial@gmail.com";
                             DateFormat dateFormat =
                                 DateFormat("yyyy-MM-dd HH:mm:ss");
+
                             String formattedStartDate =
                                 dateFormat.format(DateTime.now());
                             String formattedEndDate =
@@ -1041,9 +1045,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               // 'to_email':
                               //     '$ClientEmail, $AdminEmail ,$defaultEmail',
                               'to_email': '$TestinEmail',
-                              "startDate": DateTime.now(),
+                              "startDate": formattedStartDate,
                               "endDate": DateTime.now(),
-                              'from_name': '${widget.p.EmployeeName}',
+                              'from_name': formattedEndDate,
                               'reply_to': '$defaultEmail',
                               'type': 'Patrol',
                               'Location': '${widget.p.description}',
@@ -1054,7 +1058,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               'CompanyName': 'Tacttik',
                             };
                             _refreshData();
-                            sendFormattedEmail(emailParams);
+                            // sendFormattedEmail(emailParams);
                             Navigator.pop(context);
                           } else {
                             _refreshData();
@@ -1086,6 +1090,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             // }
                             showSuccessToast(context, "Patrol Completed");
                             print("All checked");
+                            List<String> emails = [];
                             var ClientEmail = await fireStoreService
                                 .getClientEmail(widget.p.PatrolClientID);
                             var AdminEmail = await fireStoreService
@@ -1093,9 +1098,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             var imageUrls =
                                 await fireStoreService.getImageUrlsForPatrol(
                                     widget.p.PatrolId, widget.p.EmpId);
+
                             print(imageUrls);
                             var TestinEmail = "sutarvaibhav37@gmail.com";
                             var defaultEmail = "tacttikofficial@gmail.com";
+                            emails.add(ClientEmail!);
+                            emails.add(AdminEmail!);
 
                             DateFormat dateFormat =
                                 DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1105,6 +1113,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 dateFormat.format(DateTime.now());
                             String formattedEndTime =
                                 dateFormat.format(DateTime.now());
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(DateTime.now());
                             Map<String, dynamic> emailParams = {
                               // 'to_email':
                               //     '$ClientEmail, $AdminEmail , $defaultEmail',
@@ -1131,7 +1141,26 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               'CompanyName': 'Tacttik',
                             };
 
-                            sendFormattedEmail(emailParams);
+                            // sendFormattedEmail(emailParams);
+                            sendapiEmail(
+                              emails,
+                              "test",
+                              widget.p.EmployeeName,
+                              "Data",
+                              'Shift ',
+                              formattedStartDate,
+                              "",
+                              "",
+                              widget.p.EmployeeName,
+                              DateTime.now().toString(),
+                              DateTime.now().toString(),
+                              widget.p.CompletedCount.toString(),
+                              widget.p.description,
+                              "Completed",
+                              DateTime.now().toString(),
+                              DateTime.now().toString(),
+                            );
+                            // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                             _refreshData();
                             // sendFormattedEmail(emailParams);
                           } else {

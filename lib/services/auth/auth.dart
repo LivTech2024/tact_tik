@@ -38,7 +38,6 @@ class Auth {
           .limit(1)
           .get();
 
-      await FirebaseAuth.instance.signInAnonymously();
       if (query.docs.isNotEmpty) {
         // User found, verify password
         DocumentSnapshot<Map<String, dynamic>> userDoc = query.docs.first;

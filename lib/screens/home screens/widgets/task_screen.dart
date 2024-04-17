@@ -39,6 +39,8 @@ class TaskScreen extends StatefulWidget {
   final bool CheckUserRadius;
   final String EmpEmail;
   final String EmpName;
+  final Function() onRefreshHomeScreen;
+  final Function() onEndTask;
 
   TaskScreen({
     required this.ShiftDate,
@@ -65,6 +67,8 @@ class TaskScreen extends StatefulWidget {
     required this.ShiftBranchId,
     required this.ShiftLocationId,
     required this.ShiftClientId,
+    required this.onRefreshHomeScreen,
+    required this.onEndTask,
   });
 
   @override
@@ -131,7 +135,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
-    await fireStoreService.fetchShiftTask(widget.shiftId);
+        await fireStoreService.fetchShiftTask(widget.shiftId);
     if (fetchedData != null) {
       setState(() {
         data = fetchedData;
@@ -140,19 +144,15 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Future<void> _refreshData() async {
+    fetchData();
+    widget.onRefreshHomeScreen();
     // Fetch patrol data from Firestore (assuming your logic exists)
   }
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
     UserLocationChecker locationChecker = UserLocationChecker();
 
     return RefreshIndicator(
@@ -395,18 +395,18 @@ class _TaskScreenState extends State<TaskScreen> {
                               prefs.setBool('ShiftStarted', ShiftStarted);
                             }
 
-                      //if the check user radius is off we can start the shift
-                    }
+                            //if the check user radius is off we can start the shift
+                          }
 
-                    // bool isWithInRaius = locationChecker.checkLocation();
-                  },
-                )
-              else
-                const SizedBox(),
-              SizedBox(
-                height: height / height10,
-              ),
-              /*GestureDetector(
+                          // bool isWithInRaius = locationChecker.checkLocation();
+                        },
+                      )
+                    else
+                      const SizedBox(),
+                    SizedBox(
+                      height: height / height10,
+                    ),
+                    /*GestureDetector(
                       onTap: () {
                         setState(() {
                           ShiftStarted = true;
@@ -424,8 +424,8 @@ class _TaskScreenState extends State<TaskScreen> {
                         ),
                       ),
                     )*/
-            ],
-          )
+                  ],
+                )
         ],
       ),
     );

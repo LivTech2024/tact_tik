@@ -25,12 +25,6 @@ import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_semibold.dart';
 
-final clickedInProvider = StateProvider<bool>((ref) => false);
-final stopwatchSecondsProvider = StateProvider<int>((ref) => 0);
-final isPausedProvider = StateProvider<bool>((ref) => false);
-final stopwatchTimeProvider = StateProvider<String>((ref) => "");
-final taskScreenProvider = StateNotifierProvider((ref) => TaskScreenState());
-
 class StartTaskScreen extends StatefulWidget {
   final String ShiftDate;
   final String ShiftEndTime;
@@ -90,18 +84,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   // late SharedPreferences prefs;
   void send_mail_onOut() async {
+    List<String> emails = [];
     var ClientEmail =
         await fireStoreService.getClientEmail(widget.ShiftClientID);
     var AdminEmail =
         await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
     var TestinEmail = "sutarvaibhav37@gmail.com";
     var defaultEmail = "tacttikofficial@gmail.com";
+    emails.add(ClientEmail!);
     // var TestinEmail = "sutarvaibhav37@gmail.com";
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     String formattedStartDate = dateFormat.format(DateTime.now());
     String formattedEndDate = dateFormat.format(DateTime.now());
     String formattedEndTime = dateFormat.format(DateTime.now());
     if (ClientEmail != null && AdminEmail != null) {
+      emails.add(AdminEmail);
+      emails.add(TestinEmail);
       Map<String, dynamic> emailParams = {
         'to_email': '$ClientEmail, $AdminEmail ,$defaultEmail',
         // 'to_email': '$TestinEmail',
@@ -139,7 +137,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   }
 
   void initPrefs() async {
-    prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? savedClickedIn = prefs.getBool('clickedIn');
     bool? pauseState = prefs.getBool('paused');
     bool? breakState = prefs.getBool('onBreak');
@@ -186,7 +184,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     print("ELapsedTime: ${_elapsedTime}");
   }
 
-  void startStopwatch() {
+  void startStopwatch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     if (clickedIn && !isPaused) {
       _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
         setState(() {
@@ -198,7 +198,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  void resetStopwatch() {
+  void resetStopwatch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     setState(() {
       _stopwatchSeconds = 0;
       prefs.setInt('stopwatchSeconds', _stopwatchSeconds);
@@ -206,7 +208,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   }
 
   void resetClickedState() async {
-    prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       clickedIn = false;
       prefs.setBool('clickedIn', clickedIn);
@@ -437,13 +439,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               Expanded(
                 child: Bounce(
                   onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
                     bool? status =
                         await fireStoreService.checkShiftReturnTaskStatus(
                             widget.EmployeId, widget.ShiftId);
                     setState(() {
                       if (!clickedIn) {
                         clickedIn = true;
-                        prefs.setBool('clickedIn', clickedIn);
+                        prefs.setBool('clickedIn', true);
                         DateTime currentTime = DateTime.now();
                         inTime = currentTime;
                         prefs.setInt(
@@ -480,6 +484,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               Expanded(
                 child: Bounce(
                   onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
                     bool? status =
                         await fireStoreService.checkShiftReturnTaskStatus(
                             widget.EmployeId, widget.ShiftId);
@@ -512,7 +518,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           widget.ShiftBranchId,
                           widget.ShiftCompanyId,
                           widget.EmployeeName);
-                      // send_mail_onOut();
+                      send_mail_onOut();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -543,7 +549,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 fontsize: width / width18,
                 color: color5,
                 backgroundcolor: WidgetColor,
-                onPressed: () {
+                onPressed: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+
                   setState(() {
                     isPaused = !isPaused;
                     onBreak = false;

@@ -1299,13 +1299,14 @@ class FireStoreService {
 
   // Add images and comment
   Future<void> addImagesToPatrol(
-      List<Map<String, dynamic>> uploads,
-      String comment,
-      String PatrolID,
-      String EmpId,
-      String PatrolCheckPointId) async {
+    List<Map<String, dynamic>> uploads,
+    String comment,
+    String patrolID,
+    String empId,
+    String patrolCheckPointId,
+  ) async {
     try {
-      final querySnapshot = await patrols.doc(PatrolID).get();
+      final querySnapshot = await patrols.doc(patrolID).get();
 
       if (querySnapshot.exists) {
         final doc = querySnapshot.data() as Map<String, dynamic>;
@@ -1318,53 +1319,64 @@ class FireStoreService {
 
         // Find the specific CheckPoint within PatrolCheckPoints
         var checkPoint = patrolCheckPoints.firstWhere(
-            (cp) => cp["CheckPointId"] == PatrolCheckPointId,
-            orElse: () => null);
+          (cp) => cp["CheckPointId"] == patrolCheckPointId,
+          orElse: () => null,
+        );
 
         if (checkPoint != null) {
           // Ensure that CheckPointStatus is correctly initialized and cast to List<dynamic>
           List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
 
-          // Find the specific status within CheckPointStatus where StatusReportedById matches EmpId
+          // Find the specific status within CheckPointStatus where StatusReportedById matches empId
           var status = checkPointStatus.firstWhere(
-              (s) => s["StatusReportedById"] == EmpId,
-              orElse: () => null);
+            (s) => s["StatusReportedById"] == empId,
+            orElse: () => null,
+          );
 
-          if (status != null) {
-            List<Map<String, dynamic>> imgUrls = [];
-            for (var upload in uploads) {
-              if (upload['type'] == 'image') {
-                File file = upload['file'];
+          if (status == null) {
+            // Create a new status entry for the empId
+            status = {
+              "Status": "checked",
+              "StatusReportedById": empId,
+              "StatusImage": [],
+              "StatusComment": "",
+              "StatusReportedTime": Timestamp.now()
+            };
+            checkPointStatus.add(status);
+          }
 
-                // Upload the image file and get the download URL
-                List<Map<String, dynamic>> downloadURL =
-                    await addImageToStoragePatrol(file);
+          List<Map<String, dynamic>> imgUrls = [];
+          for (var upload in uploads) {
+            if (upload['type'] == 'image') {
+              File file = upload['file'];
 
-                // Add the download URLs to the imgUrls list
-                for (var url in downloadURL) {
-                  imgUrls.add(url);
-                }
+              // Upload the image file and get the download URL
+              List<Map<String, dynamic>> downloadURL =
+                  await addImageToStoragePatrol(file);
+
+              // Add the download URLs to the imgUrls list
+              for (var url in downloadURL) {
+                imgUrls.add(url);
               }
             }
-
-            // Add the new image and comment map to the status
-            status["StatusImage"] =
-                imgUrls.map((url) => url['downloadURL']).toList();
-            status["StatusComment"] = comment;
-
-            // Update the Firestore document with the new wellness reports
-            await patrols.doc(PatrolID).update({
-              "PatrolReport": wellnessReports,
-              "PatrolCheckPoints": patrolCheckPoints,
-            });
-          } else {
-            print("No status found for EmpId: $EmpId");
           }
+
+          // Add the new image and comment map to the status
+          status["StatusImage"] =
+              imgUrls.map((url) => url['downloadURL']).toList();
+          status["StatusComment"] = comment;
+          status['StatusReportedTime'] = Timestamp.now();
+
+          // Update the Firestore document with the new wellness reports
+          await patrols.doc(patrolID).update({
+            "PatrolReport": wellnessReports,
+            "PatrolCheckPoints": patrolCheckPoints,
+          });
         } else {
-          print("No CheckPoint found with CheckPointId: $PatrolCheckPointId");
+          print("No CheckPoint found with CheckPointId: $patrolCheckPointId");
         }
       } else {
-        print("No document found with PatrolID: $PatrolID");
+        print("No document found with PatrolID: $patrolID");
       }
     } catch (e) {
       print('Error adding images to PatrolReport: $e');
