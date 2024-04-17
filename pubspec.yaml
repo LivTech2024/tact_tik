@@ -60,6 +60,9 @@ dependencies:
   toastification: ^1.2.1
   bounce: ^1.0.2
   firebase_app_check: ^0.2.2+1
+  shared_preferences: ^2.2.3
+  flutter_local_notifications: ^17.0.1
+  workmanager: ^0.5.2
 
 dev_dependencies:
   flutter_test:

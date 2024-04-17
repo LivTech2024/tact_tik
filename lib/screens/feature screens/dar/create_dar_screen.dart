@@ -9,7 +9,6 @@ import 'package:tact_tik/utils/colors.dart';
 import '../../../fonts/inter_regular.dart';
 import '../widgets/custome_textfield.dart';
 
-
 class CreateDarScreen extends StatefulWidget {
   const CreateDarScreen({super.key});
 

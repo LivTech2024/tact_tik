@@ -1415,6 +1415,59 @@ class FireStoreService {
     }
   }
 
+  //fetch images from patrol
+  Future<List<Map<String, dynamic>>> getImageUrlsForPatrol(
+      String PatrolID, String EmpId) async {
+    try {
+      final querySnapshot = await patrols.doc(PatrolID).get();
+
+      if (querySnapshot.exists) {
+        final doc = querySnapshot.data() as Map<String, dynamic>;
+
+        List<dynamic> patrolCheckPoints = doc["PatrolCheckPoints"] ?? [];
+        List<Map<String, dynamic>> imageData = [];
+
+        for (var checkPoint in patrolCheckPoints) {
+          List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
+
+          var status = checkPointStatus.firstWhere(
+            (s) => s["StatusReportedById"] == EmpId,
+            orElse: () => null,
+          );
+
+          if (status != null) {
+            List<String> statusImageUrls =
+                List<String>.from(status["StatusImage"] ?? []);
+            Timestamp statusReportedTime = status["StatusReportedTime"];
+            String formattedTime = statusReportedTime
+                .toDate()
+                .toString(); // Convert Timestamp to DateTime and then to String
+
+            if (statusImageUrls.isNotEmpty) {
+              imageData.add({
+                "StatusReportedTime": formattedTime,
+                "ImageUrls": statusImageUrls,
+              });
+            }
+          }
+        }
+
+        if (imageData.isNotEmpty) {
+          return imageData;
+        } else {
+          print("No image URLs found for EmpId: $EmpId in PatrolID: $PatrolID");
+        }
+      } else {
+        print("No document found with PatrolID: $PatrolID");
+      }
+
+      return [];
+    } catch (e) {
+      print('Error fetching image URLs: $e');
+      throw e;
+    }
+  }
+
   //Fetch mails
   Future<String?> getClientEmail(String clientId) async {
     try {
