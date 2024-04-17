@@ -191,29 +191,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
-            ),
-            padding: EdgeInsets.only(left: width / width20),
-            onPressed: () {
-              Navigator.pop(context);
-              print("Navigtor debug: ${Navigator.of(context).toString()}");
-            },
-          ),
-          title: InterRegular(
-            text: 'Patrolling',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
-          ),
-          centerTitle: true,
-        ),
         backgroundColor: Secondarycolor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
@@ -225,6 +202,30 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             child: CustomScrollView(
               // physics: const PageScrollPhysics(),
               slivers: [
+                SliverAppBar(
+                  backgroundColor: AppBarcolor,
+                  elevation: 0,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: width / width24,
+                    ),
+                    padding: EdgeInsets.only(left: width / width20),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print("Navigtor debug: ${Navigator.of(context).toString()}");
+                    },
+                  ),
+                  title: InterRegular(
+                    text: 'Patrolling',
+                    fontsize: width / width18,
+                    color: Colors.white,
+                    letterSpacing: -.3,
+                  ),
+                  centerTitle: true,
+                  floating: true, // Makes the app bar float above the content
+                ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {

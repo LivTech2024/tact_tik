@@ -128,9 +128,10 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   List<Map<String, dynamic>>? data;
+
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
-        await fireStoreService.fetchShiftTask(widget.shiftId);
+    await fireStoreService.fetchShiftTask(widget.shiftId);
     if (fetchedData != null) {
       setState(() {
         data = fetchedData;
@@ -144,8 +145,14 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
     UserLocationChecker locationChecker = UserLocationChecker();
 
     return RefreshIndicator(
@@ -388,18 +395,18 @@ class _TaskScreenState extends State<TaskScreen> {
                               prefs.setBool('ShiftStarted', ShiftStarted);
                             }
 
-                            //if the check user radius is off we can start the shift
-                          }
+                      //if the check user radius is off we can start the shift
+                    }
 
-                          // bool isWithInRaius = locationChecker.checkLocation();
-                        },
-                      )
-                    else
-                      const SizedBox(),
-                    SizedBox(
-                      height: height / height10,
-                    ),
-                    /*GestureDetector(
+                    // bool isWithInRaius = locationChecker.checkLocation();
+                  },
+                )
+              else
+                const SizedBox(),
+              SizedBox(
+                height: height / height10,
+              ),
+              /*GestureDetector(
                       onTap: () {
                         setState(() {
                           ShiftStarted = true;
@@ -417,8 +424,8 @@ class _TaskScreenState extends State<TaskScreen> {
                         ),
                       ),
                     )*/
-                  ],
-                )
+            ],
+          )
         ],
       ),
     );
