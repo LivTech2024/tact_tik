@@ -15,6 +15,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
@@ -488,6 +490,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ShiftClientId: _shiftCLientId,
                                 onRefreshHomeScreen: _refreshScreen,
                                 onEndTask: _refreshScreen,
+                                onRefreshStartTaskScreen: () {},
                               ),
                             )),
                       )
@@ -503,7 +506,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 return Bounce(
-                                  onTap: () {},
+                                  onTap: () {
+                                    switch (index) {
+                                      case 2:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateDarScreen()));
+                                        break;
+                                      default:
+                                    }
+                                  },
                                   child: gridWidget(
                                     img: data[index][0],
                                     tittle: data[index][1],

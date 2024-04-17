@@ -41,6 +41,7 @@ class TaskScreen extends StatefulWidget {
   final String EmpName;
   final Function() onRefreshHomeScreen;
   final Function() onEndTask;
+  final VoidCallback onRefreshStartTaskScreen;
 
   TaskScreen({
     required this.ShiftDate,
@@ -69,6 +70,7 @@ class TaskScreen extends StatefulWidget {
     required this.ShiftClientId,
     required this.onRefreshHomeScreen,
     required this.onEndTask,
+    required this.onRefreshStartTaskScreen,
   });
 
   @override
@@ -103,7 +105,7 @@ void showCustomDialog(BuildContext context, String title, String content) {
 
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
-
+  bool ShiftIn = false;
   // bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
   UserLocationChecker locationChecker = UserLocationChecker();
@@ -113,13 +115,23 @@ class _TaskScreenState extends State<TaskScreen> {
     super.initState();
 
     _loadShiftStartedState();
+    widget;
     // issShift = widget.issShiftFetched;
   }
 
+  void reload() async {
+    _loadShiftStartedState();
+  }
+
+  void refreshStartTaskScreen() {}
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       ShiftStarted = prefs.getBool('ShiftStarted') ?? false;
+    });
+    bool? savedClickedIn = prefs.getBool('clickedIn') ?? false;
+    setState(() {
+      ShiftIn = savedClickedIn;
     });
   }
 
@@ -173,6 +185,8 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftLocationId: widget.ShiftLocationId,
                   ShiftClientID: widget.ShiftClientId,
                   resetShiftStarted: resetShiftStarted,
+                  ShiftIN: ShiftIn, onRefresh: resetShiftStarted,
+                  // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                 )
               : Column(
                   children: [

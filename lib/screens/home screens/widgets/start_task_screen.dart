@@ -37,7 +37,9 @@ class StartTaskScreen extends StatefulWidget {
   final String ShiftBranchId;
   final String EmployeeName;
   final String ShiftLocationId;
+  final bool ShiftIN;
   final VoidCallback resetShiftStarted;
+  final VoidCallback onRefresh;
 
   // final String ShiftLocation;
   // final String ShiftName;
@@ -55,6 +57,8 @@ class StartTaskScreen extends StatefulWidget {
     required this.EmployeeName,
     required this.ShiftLocationId,
     required this.resetShiftStarted,
+    required this.ShiftIN,
+    required this.onRefresh,
 
     // required this.ShiftLocation,
     // required this.ShiftName,
@@ -80,7 +84,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   bool onBreak = false;
   DateTime inTime = DateTime.now();
   int _elapsedTime = 0;
-  late SharedPreferences prefs;
 
   // late SharedPreferences prefs;
   void send_mail_onOut() async {
@@ -123,17 +126,23 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   void initState() {
     super.initState();
     inTime = DateTime.now();
-    // Access prefs only after it's initialized within the then bloc
-    // _stopwatchTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-    //   if (clickedIn && !isPaused) {
-    //     setState(() {
-    //       _stopwatchSeconds++;
-    //     });
-    //   }
-    // });
+
     initPrefs();
     initStopwatch();
     startStopwatch();
+  }
+
+  void reload() {
+    initPrefs();
+    initState();
+  }
+
+  void _loadState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? savedClickedIn = prefs.getBool('clickedIn');
+    setState(() {
+      clickedIn = savedClickedIn!;
+    });
   }
 
   void initPrefs() async {
@@ -141,11 +150,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     bool? savedClickedIn = prefs.getBool('clickedIn');
     bool? pauseState = prefs.getBool('paused');
     bool? breakState = prefs.getBool('onBreak');
-    if (savedClickedIn != null) {
-      setState(() {
-        clickedIn = savedClickedIn;
-      });
-    }
+    setState(() {
+      clickedIn = savedClickedIn!;
+    });
     if (pauseState != null) {
       setState(() {
         isPaused = pauseState;
@@ -447,7 +454,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     setState(() {
                       if (!clickedIn) {
                         clickedIn = true;
-                        prefs.setBool('clickedIn', true);
+                        prefs.setBool('clickedIn', clickedIn);
                         DateTime currentTime = DateTime.now();
                         inTime = currentTime;
                         prefs.setInt(
