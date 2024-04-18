@@ -416,30 +416,30 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ListTile(
-                                  leading: Icon(Icons.camera),
-                                  title: Text('Add Image'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _addImage();
-                                  },
-                                ),
-                                // ListTile(
-                                //   leading: Icon(Icons.video_collection),
-                                //   title: Text('Add Video'),
-                                //   onTap: () {
-                                //     Navigator.pop(context);
-                                //     _addVideo();
-                                //   },
-                                // ),
-                              ],
-                            ),
-                          );
+                          _addImage();
+                          // showModalBottomSheet(
+                          //   context: context,
+                          //   builder: (context) => Column(
+                          //     mainAxisSize: MainAxisSize.min,
+                          //     children: [
+                          //       ListTile(
+                          //         leading: Icon(Icons.camera),
+                          //         title: Text('Add Image'),
+                          //         onTap: () {
+                          //           Navigator.pop(context);
+                          //         },
+                          //       ),
+                          //       // ListTile(
+                          //       //   leading: Icon(Icons.video_collection),
+                          //       //   title: Text('Add Video'),
+                          //       //   onTap: () {
+                          //       //     Navigator.pop(context);
+                          //       //     _addVideo();
+                          //       //   },
+                          //       // ),
+                          //     ],
+                          //   ),
+                          // );
                         },
                         child: Container(
                           height: height / height66,
