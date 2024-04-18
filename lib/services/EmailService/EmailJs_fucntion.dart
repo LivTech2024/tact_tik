@@ -113,11 +113,11 @@ Future<void> sendapiEmail(
                     <td style="border-bottom: 1px solid rgb(221, 221, 221); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; text-align: center; vertical-align: middle; width: 15.0466%;">${Status}</td>
                     <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 5.47779%;">${StartTime}</td>
                     <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 6.93391%;">${EndTime}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 6.17118%;">${patrolCount}</td>
+                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 6.17118%;">"2"</td>
                     <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 10.0542%;">${patrolTImein}</td>
                     <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 8.32913%;">${patrolTImeout}</td>
                     <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 16.4249%;">
-                        <p>Safe and secure</p>
+                        <p>no qr code scanner on Level 6 right side</p>
                     </td>
                 </tr>
                 <tr></tr>
@@ -166,9 +166,9 @@ Future<void> sendapiEmail(
     Uri.parse(url),
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
-      'to_email': 'sutarvaibhav37@gmail.com',
+      'to_email': "Sales@tpssolution.com",
       'subject': "Testing",
-      'from_name': "vaibhav Sutar",
+      'from_name': GuardName,
       'html': htmlContent,
     }),
   );

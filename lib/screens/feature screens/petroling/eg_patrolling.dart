@@ -1054,9 +1054,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             String formattedDate =
                                 DateFormat('yyyy-MM-dd').format(DateTime.now());
                             Map<String, dynamic> emailParams = {
-                              // 'to_email':
-                              //     '$ClientEmail, $AdminEmail , $defaultEmail',
-                              'to_email': '$TestinEmail',
+                              'to_email':
+                                  '$ClientEmail, $AdminEmail , $defaultEmail',
+                              // 'to_email': '$TestinEmail',
                               'from_name': '${widget.p.EmployeeName}',
                               'reply_to': '$ClientEmail',
                               'type': 'Patrol',
@@ -1150,9 +1150,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               String formattedDate = DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now());
                               Map<String, dynamic> emailParams = {
-                                // 'to_email':
-                                //     '$ClientEmail, $AdminEmail , $defaultEmail',
-                                'to_email': '$TestinEmail',
+                                'to_email':
+                                    '$ClientEmail, $AdminEmail , $defaultEmail',
+                                // 'to_email': '$TestinEmail',
                                 'from_name': '${widget.p.EmployeeName}',
                                 'reply_to': '$ClientEmail',
                                 'type': 'Patrol',
@@ -1187,13 +1187,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 "",
                                 "",
                                 widget.p.EmployeeName,
-                                DateTime.now().toString(),
-                                DateTime.now().toString(),
+                                "20:51",
+                                "21:01",
                                 widget.p.CompletedCount.toString(),
                                 widget.p.description,
                                 "Completed",
-                                DateTime.now().toString(),
-                                DateTime.now().toString(),
+                                "20:51",
+                                "21:01",
                               );
                               Navigator.pop(context);
                             } else {
@@ -1219,6 +1219,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               var defaultEmail = "tacttikofficial@gmail.com";
                               emails.add(ClientEmail!);
                               emails.add(AdminEmail!);
+                              emails.add("sutarvaibhav37@gmail.com");
 
                               DateFormat dateFormat =
                                   DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1231,17 +1232,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               String formattedDate = DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now());
                               Map<String, dynamic> emailParams = {
-                                // 'to_email':
-                                //     '$ClientEmail, $AdminEmail , $defaultEmail',
-                                'to_email': '$TestinEmail',
+                                'to_email':
+                                    '$ClientEmail, $AdminEmail , $defaultEmail',
+                                // 'to_email': '$TestinEmail',
                                 'from_name': '${widget.p.EmployeeName}',
                                 'reply_to': '$ClientEmail',
                                 'type': 'Patrol',
                                 'Location': '${widget.p.description}',
                                 'Status': 'Completed',
                                 'GuardName': '${widget.p.EmployeeName}',
-                                'StartTime': StartTime,
-                                'EndTime': DateTime.now().toString(),
+                                'StartTime': "20:51",
+                                'EndTime': "21:01",
                                 'patrolCount': widget.p.CompletedCount,
                                 'patrolTImein': StartTime,
                                 'patrolTImeout': DateTime.now().toString(),
@@ -1268,19 +1269,102 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 "",
                                 "",
                                 widget.p.EmployeeName,
-                                DateTime.now().toString(),
-                                DateTime.now().toString(),
+                                "20:51",
+                                "21:01",
                                 widget.p.CompletedCount.toString(),
                                 widget.p.description,
                                 "Completed",
-                                DateTime.now().toString(),
-                                DateTime.now().toString(),
+                                "20:51",
+                                "21:01",
                               );
                               // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                               _refreshData();
                             }
                             // sendFormattedEmail(emailParams);
+                            showSuccessToast(context, "Patrol Completed");
+                            Navigator.pop(context);
                           } else {
+                            await fireStoreService.EndPatrolupdatePatrolsStatus(
+                                widget.p.PatrolId,
+                                widget.p.EmpId,
+                                widget.p.EmployeeName);
+
+                            // showSuccessToast(context, "Patrol Completed");
+                            print("All checked");
+                            List<String> emails = [];
+                            var ClientEmail = await fireStoreService
+                                .getClientEmail(widget.p.PatrolClientID);
+                            var AdminEmail = await fireStoreService
+                                .getAdminEmail(widget.p.PatrolCompanyID);
+                            var imageUrls =
+                                await fireStoreService.getImageUrlsForPatrol(
+                                    widget.p.PatrolId, widget.p.EmpId);
+
+                            print(imageUrls);
+                            var TestinEmail = "sutarvaibhav37@gmail.com";
+                            var defaultEmail = "tacttikofficial@gmail.com";
+                            emails.add(ClientEmail!);
+                            emails.add(AdminEmail!);
+                            emails.add("sutarvaibhav37@gmail.com");
+
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(DateTime.now());
+                            Map<String, dynamic> emailParams = {
+                              'to_email':
+                                  '$ClientEmail, $AdminEmail , $defaultEmail',
+                              // 'to_email': '$TestinEmail',
+                              'from_name': '${widget.p.EmployeeName}',
+                              'reply_to': '$ClientEmail',
+                              'type': 'Patrol',
+                              'Location': '${widget.p.description}',
+                              'Status': 'Completed',
+                              'GuardName': '${widget.p.EmployeeName}',
+                              'StartTime': "20:51",
+                              'EndTime': "21:01",
+                              'patrolCount': widget.p.CompletedCount,
+                              'patrolTImein': StartTime,
+                              'patrolTImeout': DateTime.now().toString(),
+                              'imageData': imageUrls
+                                  .map((map) => {
+                                        'StatusReportedTime':
+                                            map['StatusReportedTime']
+                                                .toString(),
+                                        'ImageUrls': map['ImageUrls'].join(', ')
+                                      })
+                                  .toList(),
+                              'CompanyName': 'Tacttik',
+                            };
+
+                            // sendFormattedEmail(emailParams);
+                            sendapiEmail(
+                              emails,
+                              "test",
+                              widget.p.EmployeeName,
+                              "Data",
+                              'Shift ',
+                              formattedStartDate,
+                              "",
+                              "",
+                              widget.p.EmployeeName,
+                              "9pm",
+                              "23:12",
+                              widget.p.CompletedCount.toString(),
+                              widget.p.description,
+                              "Completed",
+                              "23:00",
+                              "23:12",
+                            );
+                            // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
+                            _refreshData();
+
                             _refreshData();
                             showErrorToast(
                                 context, "Complete all the Checkpoints");
