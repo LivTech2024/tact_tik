@@ -459,8 +459,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           prefs.setBool('clickedIn', clickedIn);
                           DateTime currentTime = DateTime.now();
                           inTime = currentTime;
-                          prefs.setInt(
-                              'savedInTime', currentTime.millisecondsSinceEpoch);
+                          prefs.setInt('savedInTime',
+                              currentTime.millisecondsSinceEpoch);
 
                           fireStoreService.INShiftLog(widget.EmployeId);
                           if (status == false) {
@@ -468,7 +468,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           } else {
                             print("Staus is true");
                           }
-                          fireStoreService.fetchreturnShiftTasks(widget.ShiftId);
+                          fireStoreService
+                              .fetchreturnShiftTasks(widget.ShiftId);
                           startStopwatch();
                         } else {
                           print('already clicked');
@@ -522,30 +523,29 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         prefs.setBool('ShiftStarted', false);
                       });
 
-                        await fireStoreService.EndShiftLog(
-                            widget.EmployeId,
-                            formattedStopwatchTime,
-                            widget.ShiftId,
-                            widget.ShiftAddressName,
-                            widget.ShiftBranchId,
-                            widget.ShiftCompanyId,
-                            widget.EmployeeName);
-                        send_mail_onOut();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
-                      }
-                    },
-                    child: Container(
-                      color: WidgetColor,
-                      child: Center(
-                        child: InterBold(
-                          text: 'End Shift',
-                          fontsize: width / width18,
-                          color: clickedIn ? Primarycolor : Primarycolorlight,
-                        ),
+                      await fireStoreService.EndShiftLog(
+                          widget.EmployeId,
+                          formattedStopwatchTime,
+                          widget.ShiftId,
+                          widget.ShiftAddressName,
+                          widget.ShiftBranchId,
+                          widget.ShiftCompanyId,
+                          widget.EmployeeName);
+                      send_mail_onOut();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
+                      );
+                    }
+                  },
+                  child: Container(
+                    color: WidgetColor,
+                    child: Center(
+                      child: InterBold(
+                        text: 'End Shift',
+                        fontsize: width / width18,
+                        color: clickedIn ? Primarycolor : Primarycolorlight,
                       ),
                     ),
                   ),
