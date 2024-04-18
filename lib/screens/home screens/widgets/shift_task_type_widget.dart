@@ -28,12 +28,14 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.shiftReturnTask,
     required this.refreshDataCallback,
     required this.EmpName,
+    required this.ShiftTaskReturnStatus,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
   final String taskStatus;
   final String taskName;
   final String taskId;
+  final bool ShiftTaskReturnStatus;
   final String ShiftId;
   final String EmpID;
   final String EmpName;
@@ -71,11 +73,13 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
       try {
         print("Task Id : ${widget.taskId}");
         await fireStoreService.addImagesToShiftTasks(
-            uploads,
-            widget.taskId ?? "",
-            widget.ShiftId ?? "",
-            widget.EmpID ?? "",
-            widget.shiftReturnTask);
+          uploads,
+          widget.taskId ?? "",
+          widget.ShiftId ?? "",
+          widget.EmpID ?? "",
+          widget.EmpName,
+          widget.shiftReturnTask,
+        );
         uploads.clear();
         showSuccessToast(context, "Uploaded Successfully");
         widget.refreshDataCallback();
@@ -254,14 +258,18 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         await fireStoreService.updateShiftTaskStatus(
                             widget.taskId, widget.EmpID, widget.EmpName);
                         //Update in firebase and change the color of icon
-                        showCustomDialog(context, "Task Scan",
+                        // showCustomDialog(context, "Task Scan",
+                        //     "Task Scan SuccessFull for ${widget.taskName}");
+                        showSuccessToast(context,
                             "Task Scan SuccessFull for ${widget.taskName}");
                         print("${Result} ${widget.taskId}");
                         widget.refreshDataCallback();
                         // showSuccessToast(context, "${widget.}")
                       } else {
-                        showCustomDialog(context, "Task Scan",
-                            "Shift Task Scan UnsuccessFull for ${widget.taskName}");
+                        // showCustomDialog(context, "Task Scan",
+                        //     "Shift Task Scan UnsuccessFull for ${widget.taskName}");
+                        showErrorToast(context,
+                            "Task Scan Unsuccessfull for ${widget.taskName}");
                         print("UNcessfull Scan");
                         widget.refreshDataCallback();
                       }
@@ -292,9 +300,15 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    widget.taskStatus == "completed"
-                                        ? Icons.done
-                                        : Icons.add_a_photo,
+                                    widget.shiftReturnTask == true
+                                        ? widget.ShiftTaskReturnStatus == true
+                                            ? Icons.done
+                                            : Icons.add_a_photo
+                                        : widget.taskStatus == "completed" ||
+                                                widget.ShiftTaskReturnStatus ==
+                                                    true
+                                            ? Icons.done
+                                            : Icons.add_a_photo,
                                     size: width / width24,
                                     color: Primarycolor,
                                   ),

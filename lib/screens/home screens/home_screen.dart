@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +15,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
@@ -190,6 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<DateTime?> selectedDates = [];
   Future<void> _refresh() {
     return Future.delayed(Duration(seconds: 2));
+  }
+
+  Future<void> _refreshScreen() async {
+    _getUserInfo();
   }
 
   void _getUserInfo() async {
@@ -412,28 +419,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
+                            Bounce(
                               onTap: () => ChangeScreenIndex(0),
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.add_task,
                                 color: IconColors[0],
                               ),
                             ),
-                            GestureDetector(
+                            Bounce(
                               onTap: () => ChangeScreenIndex(1),
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.grid_view_rounded,
                                 color: IconColors[1],
                               ),
                             ),
-                            GestureDetector(
+                            Bounce(
                               onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.calendar_today,
                                 color: IconColors[2],
                               ),
                             ),
-                            GestureDetector(
+                            Bounce(
                               child: HomeScreenCustomNavigation(
                                 icon: Icons.chat_bubble_outline,
                                 color: IconColors[3],
@@ -449,42 +456,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.only(
-                            left: width / width30,
-                            right: width / width30,
-                          ),
-                          child: TaskScreen(
-                            ShiftDate: _ShiftDate,
-                            ShiftStartTime: _ShiftStartTime,
-                            ShiftLocation: _ShiftLocation,
-                            ShiftName: _ShiftLocation,
-                            ShiftEndTime: _ShiftEndTime,
-                            isWithINRadius: isWithinRadius,
-                            empId: _employeeId,
-                            shiftId: _shiftId,
-                            patrolDate: _patrolDate,
-                            patrolTime: _patrolTime,
-                            patrollocation: _patrolArea,
-                            issShiftFetched: issShift,
-                            EmpEmail: _empEmail,
-                            Branchid: _branchId,
-                            cmpId: _cmpId,
-                            EmpName: _userName,
-                            ShiftLatitude: _shiftLatitude,
-                            shiftLongitude: _shiftLongitude,
-                            ShiftRadius: _shiftRestrictedRadius,
-                            CheckUserRadius: _shiftKeepGuardInRadiusOfLocation,
-                            ShiftCompanyId: _ShiftCompanyId ?? "",
-                            ShiftBranchId: _ShiftBranchId ?? "",
-                            ShiftLocationId: _shiftLocationId,
-                            ShiftClientId: _shiftCLientId,
-                          ),
-                        ),
+                            padding: EdgeInsets.only(
+                              left: width / width30,
+                              right: width / width30,
+                            ),
+                            child: PageStorage(
+                              bucket: PageStorageBucket(),
+                              child: TaskScreen(
+                                ShiftDate: _ShiftDate,
+                                ShiftStartTime: _ShiftStartTime,
+                                ShiftLocation: _ShiftLocation,
+                                ShiftName: _ShiftLocation,
+                                ShiftEndTime: _ShiftEndTime,
+                                isWithINRadius: isWithinRadius,
+                                empId: _employeeId,
+                                shiftId: _shiftId,
+                                patrolDate: _patrolDate,
+                                patrolTime: _patrolTime,
+                                patrollocation: _patrolArea,
+                                issShiftFetched: issShift,
+                                EmpEmail: _empEmail,
+                                Branchid: _branchId,
+                                cmpId: _cmpId,
+                                EmpName: _userName,
+                                ShiftLatitude: _shiftLatitude,
+                                shiftLongitude: _shiftLongitude,
+                                ShiftRadius: _shiftRestrictedRadius,
+                                CheckUserRadius:
+                                    _shiftKeepGuardInRadiusOfLocation,
+                                ShiftCompanyId: _ShiftCompanyId ?? "",
+                                ShiftBranchId: _ShiftBranchId ?? "",
+                                ShiftLocationId: _shiftLocationId,
+                                ShiftClientId: _shiftCLientId,
+                                onRefreshHomeScreen: _refreshScreen,
+                                onEndTask: _refreshScreen,
+                                onRefreshStartTaskScreen: () {},
+                              ),
+                            )),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3, // Number of columns
                               // mainAxisSpacing: 10.0, // Spacing between rows
                               // crossAxisSpacing: 14.0,
@@ -492,9 +505,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                                return gridWidget(
-                                  img: data[index][0],
-                                  tittle: data[index][1],
+                                return Bounce(
+                                  onTap: () {
+                                    switch (index) {
+                                      case 2:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateDarScreen()));
+                                        break;
+                                      default:
+                                    }
+                                  },
+                                  child: gridWidget(
+                                    img: data[index][0],
+                                    tittle: data[index][1],
+                                  ),
                                 );
                               },
                               childCount: 9,

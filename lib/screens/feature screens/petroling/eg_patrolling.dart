@@ -1,15 +1,14 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:toastification/toastification.dart';
-
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
@@ -192,29 +191,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
-            ),
-            padding: EdgeInsets.only(left: width / width20),
-            onPressed: () {
-              Navigator.pop(context);
-              print("Navigtor debug: ${Navigator.of(context).toString()}");
-            },
-          ),
-          title: InterRegular(
-            text: 'Patrolling',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
-          ),
-          centerTitle: true,
-        ),
         backgroundColor: Secondarycolor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
@@ -224,8 +200,33 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
               vertical: height / height30,
             ),
             child: CustomScrollView(
-              physics: const PageScrollPhysics(),
+              // physics: const PageScrollPhysics(),
               slivers: [
+                SliverAppBar(
+                  backgroundColor: AppBarcolor,
+                  elevation: 0,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: width / width24,
+                    ),
+                    padding: EdgeInsets.only(left: width / width20),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print(
+                          "Navigtor debug: ${Navigator.of(context).toString()}");
+                    },
+                  ),
+                  title: InterRegular(
+                    text: 'Patrolling',
+                    fontsize: width / width18,
+                    color: Colors.white,
+                    letterSpacing: -.3,
+                  ),
+                  centerTitle: true,
+                  floating: true, // Makes the app bar float above the content
+                ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
@@ -303,13 +304,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     bool _isLoading = false;
     double completionPercentage =
         widget.p.CompletedCount / widget.p.PatrolRequiredCount;
-    String StartTime = '';
+    String StartTime = DateTime.now().toString();
     void showSuccessToast(BuildContext context, String message) {
       toastification.show(
         context: context,
         type: ToastificationType.success,
         title: Text(message),
-        autoCloseDuration: const Duration(seconds: 5),
+        autoCloseDuration: const Duration(seconds: 2),
       );
     }
 
@@ -318,7 +319,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         context: context,
         type: ToastificationType.error,
         title: Text(message),
-        autoCloseDuration: const Duration(seconds: 5),
+        autoCloseDuration: const Duration(seconds: 2),
       );
     }
 
@@ -417,21 +418,36 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                   color: Colors.green,
                   borderRadius: width / width10,
                   onPressed: () async {
-                    await fireStoreService.updatePatrolCurrentStatus(
-                      widget.p.PatrolId,
-                      "started",
-                      widget.p.EmpId,
-                      widget.p.EmployeeName,
-                    );
-                    showSuccessToast(context, "Patrol Started");
-                    setState(() {
-                      // clickedIIndex = index;
-                      // print(clickedIIndex);
-                      _expand = !_expand;
-                    });
-                    if (!startTimeUpdated) {
-                      startTimeUpdated = true;
-                      StartTime = DateTime.now().toString();
+                    if (widget.p.CompletedCount == 0) {
+                      await fireStoreService.updatePatrolCurrentStatus(
+                        widget.p.PatrolId,
+                        "started",
+                        widget.p.EmpId,
+                        widget.p.EmployeeName,
+                      );
+                      setState(() {
+                        // clickedIIndex = index;
+                        // print(clickedIIndex);
+                        StartTime = DateTime.now().toString();
+                        _expand = !_expand;
+                      });
+
+                      _refresh();
+                      showSuccessToast(context, "Patrol Started");
+                    } else if (widget.p.CompletedCount ==
+                        widget.p.PatrolRequiredCount) {
+                      return null;
+                    } else {
+                      _refresh();
+                      setState(() {
+                        // clickedIIndex = index;
+                        // print(clickedIIndex);
+                        _expand = !_expand;
+                      });
+                      if (!startTimeUpdated) {
+                        startTimeUpdated = true;
+                        StartTime = DateTime.now().toString();
+                      }
                     }
                   },
                 ),
@@ -551,31 +567,31 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 checkpoint.id,
                                                 widget.p.EmpId);
                                         // Show an alert indicating a match
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Checkpoint Match',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              content: Text(
-                                                'The scanned QR code matches the checkpoint ID.',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('OK'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       title: Text(
+                                        //         'Checkpoint Match',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       content: Text(
+                                        //         'The scanned QR code matches the checkpoint ID.',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           onPressed: () {
+                                        //             Navigator.of(context).pop();
+                                        //           },
+                                        //           child: Text('OK'),
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
                                         showSuccessToast(context,
                                             "${checkpoint.description} scanned ");
                                         _refresh();
@@ -587,31 +603,31 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         //         widget.p.EmpId);
                                         // Show an alert indicating no match
                                         _refresh();
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Checkpoint Mismatch',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              content: Text(
-                                                'The scanned QR code does not match the checkpoint ID.',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('OK'),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       title: Text(
+                                        //         'Checkpoint Mismatch',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       content: Text(
+                                        //         'The scanned QR code does not match the checkpoint ID.',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           onPressed: () {
+                                        //             Navigator.of(context).pop();
+                                        //           },
+                                        //           child: Text('OK'),
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
                                         showErrorToast(context,
                                             "${checkpoint.description} scanned unsuccessfull");
                                       }
@@ -943,7 +959,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                           "Submitted"),
                                                                       autoCloseDuration:
                                                                           const Duration(
-                                                                              seconds: 5),
+                                                                              seconds: 2),
                                                                     );
                                                                     setState(
                                                                         () {
@@ -954,6 +970,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         .clear();
                                                                     Controller
                                                                         .clear();
+                                                                    Navigator.pop(
+                                                                        context);
                                                                   },
                                                                   child: InterRegular(
                                                                       text:
@@ -1005,59 +1023,32 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         color: Colors.redAccent,
                         borderRadius: 10,
                         onPressed: () async {
+                          _refresh();
                           if (widget.p.CompletedCount ==
                               widget.p.PatrolRequiredCount) {
                             var ClientEmail = await fireStoreService
                                 .getClientEmail(widget.p.PatrolClientID);
                             var AdminEmail = await fireStoreService
                                 .getAdminEmail(widget.p.PatrolCompanyID);
-                            // var TestinEmail = "sutarvaibhav37@gmail.com";
-                            var defaultEmail = "tacttikofficial@gmail.com";
-                            Map<String, dynamic> emailParams = {
-                              'to_email':
-                                  '$ClientEmail, $AdminEmail ,$defaultEmail',
-                              // 'to_email': '$TestinEmail',
-                              'from_name': '${widget.p.EmployeeName}',
-                              'reply_to': '$ClientEmail',
-                              'type': 'Patrol',
-                              'Location': '${widget.p.description}',
-                              'Status': 'Completed',
-                              'GuardName': '${widget.p.EmployeeName}',
-                              'StartTime': '',
-                              'EndTime': DateTime.now().toString(),
-                              'CompanyName': 'Tacttik',
-                            };
-                            _refreshData();
-                            sendFormattedEmail(emailParams);
-                          } else {
-                            _refreshData();
-                            if (!widget.p.Allchecked) {
-                              showCustomDialog(
-                                  context,
-                                  "Checkpoints Incomplete !!",
-                                  "Complete all the checkpoints  to end");
-                            }
-                          }
-
-                          if (widget.p.Allchecked) {
-                            _refreshData();
-                            await fireStoreService.EndPatrolupdatePatrolsStatus(
-                                widget.p.PatrolId,
-                                widget.p.EmpId,
-                                widget.p.EmployeeName);
-                            print("All checked");
-                            var ClientEmail = await fireStoreService
-                                .getClientEmail(widget.p.PatrolClientID);
-                            var AdminEmail = await fireStoreService
-                                .getAdminEmail(widget.p.PatrolCompanyID);
                             var TestinEmail = "sutarvaibhav37@gmail.com";
                             var defaultEmail = "tacttikofficial@gmail.com";
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
                             Map<String, dynamic> emailParams = {
-                              'to_email':
-                                  '$ClientEmail, $AdminEmail , $defaultEmail',
-                              // 'to_email': '$TestinEmail',
-                              'from_name': '${widget.p.EmployeeName}',
-                              'reply_to': '$ClientEmail',
+                              // 'to_email':
+                              //     '$ClientEmail, $AdminEmail ,$defaultEmail',
+                              'to_email': '$TestinEmail',
+                              "startDate": formattedStartDate,
+                              "endDate": DateTime.now(),
+                              'from_name': formattedEndDate,
+                              'reply_to': '$defaultEmail',
                               'type': 'Patrol',
                               'Location': '${widget.p.description}',
                               'Status': 'Completed',
@@ -1066,8 +1057,110 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               'EndTime': DateTime.now().toString(),
                               'CompanyName': 'Tacttik',
                             };
+                            _refreshData();
+                            // sendFormattedEmail(emailParams);
+                            Navigator.pop(context);
+                          } else {
+                            _refreshData();
+                            if (!widget.p.Allchecked) {
+                              // showCustomDialog(
+                              //     context,
+                              //     "Checkpoints Incomplete !!",
+                              //     "Complete all the checkpoints  to end");
+                            }
+                          }
 
-                            sendFormattedEmail(emailParams);
+                          if (widget.p.Allchecked) {
+                            _refreshData();
+                            // if (widget.p.CompletedCount ==
+                            //     widget.p.PatrolRequiredCount - 1) {
+                            //   await fireStoreService
+                            //       .LastEndPatrolupdatePatrolsStatus(
+                            //           widget.p.PatrolId,
+                            //           widget.p.EmpId,
+                            //           widget.p.EmployeeName);
+
+                            //   Navigator.pop(context);
+                            // } else {
+                            //   await fireStoreService
+                            //       .EndPatrolupdatePatrolsStatus(
+                            //           widget.p.PatrolId,
+                            //           widget.p.EmpId,
+                            //           widget.p.EmployeeName);
+                            // }
+                            showSuccessToast(context, "Patrol Completed");
+                            print("All checked");
+                            List<String> emails = [];
+                            var ClientEmail = await fireStoreService
+                                .getClientEmail(widget.p.PatrolClientID);
+                            var AdminEmail = await fireStoreService
+                                .getAdminEmail(widget.p.PatrolCompanyID);
+                            var imageUrls =
+                                await fireStoreService.getImageUrlsForPatrol(
+                                    widget.p.PatrolId, widget.p.EmpId);
+
+                            print(imageUrls);
+                            var TestinEmail = "sutarvaibhav37@gmail.com";
+                            var defaultEmail = "tacttikofficial@gmail.com";
+                            emails.add(ClientEmail!);
+                            emails.add(AdminEmail!);
+
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(DateTime.now());
+                            Map<String, dynamic> emailParams = {
+                              // 'to_email':
+                              //     '$ClientEmail, $AdminEmail , $defaultEmail',
+                              'to_email': '$TestinEmail',
+                              'from_name': '${widget.p.EmployeeName}',
+                              'reply_to': '$ClientEmail',
+                              'type': 'Patrol',
+                              'Location': '${widget.p.description}',
+                              'Status': 'Completed',
+                              'GuardName': '${widget.p.EmployeeName}',
+                              'StartTime': StartTime,
+                              'EndTime': DateTime.now().toString(),
+                              'patrolCount': widget.p.CompletedCount,
+                              'patrolTImein': StartTime,
+                              'patrolTImeout': DateTime.now().toString(),
+                              'imageData': imageUrls
+                                  .map((map) => {
+                                        'StatusReportedTime':
+                                            map['StatusReportedTime']
+                                                .toString(),
+                                        'ImageUrls': map['ImageUrls'].join(', ')
+                                      })
+                                  .toList(),
+                              'CompanyName': 'Tacttik',
+                            };
+
+                            // sendFormattedEmail(emailParams);
+                            sendapiEmail(
+                              emails,
+                              "test",
+                              widget.p.EmployeeName,
+                              "Data",
+                              'Shift ',
+                              formattedStartDate,
+                              "",
+                              "",
+                              widget.p.EmployeeName,
+                              DateTime.now().toString(),
+                              DateTime.now().toString(),
+                              widget.p.CompletedCount.toString(),
+                              widget.p.description,
+                              "Completed",
+                              DateTime.now().toString(),
+                              DateTime.now().toString(),
+                            );
+                            // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                             _refreshData();
                             // sendFormattedEmail(emailParams);
                           } else {

@@ -322,6 +322,61 @@ class FireStoreService {
     print("Patrol and checkpoint statuses updated successfully");
   }
 
+  Future<void> LastEndPatrolupdatePatrolsStatus(String patrolId,
+      String statusReportedById, String statusReportedByName) async {
+    if (patrolId.isEmpty) {
+      return;
+    }
+    DocumentReference<Map<String, dynamic>> patrolDocument =
+        FirebaseFirestore.instance.collection('Patrols').doc(patrolId);
+
+    // Fetch the current document data
+    var documentSnapshot = await patrolDocument.get();
+    var data = documentSnapshot.data();
+
+    // Update the status entry for the given statusReportedById
+
+    // Update checkpoint statuses to "not_checked"
+    List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
+    checkpoints.forEach((checkpoint) {
+      List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
+      status.forEach((entry) {
+        // entry['Status'] = 'not_checked';
+        entry['StatusReportedTime'] = Timestamp.now();
+      });
+    });
+    List<Map<String, dynamic>> currentStatusList =
+        List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
+    int existingIndex = currentStatusList.indexWhere(
+        (entry) => entry['StatusReportedById'] == statusReportedById);
+
+    if (existingIndex != -1) {
+      // If the status entry exists, update it
+      currentStatusList[existingIndex]['Status'] = "completed";
+      currentStatusList[existingIndex]['StatusReportedByName'] =
+          statusReportedByName;
+      currentStatusList[existingIndex]['StatusReportedTime'] = Timestamp.now();
+      currentStatusList[existingIndex]['StatusCompletedCount'] =
+          (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
+    } else {
+      // If the status entry doesn't exist, add a new entry
+      currentStatusList.add({
+        'Status': "completed",
+        'StatusReportedById': statusReportedById,
+        'StatusReportedByName': statusReportedByName,
+        'StatusCompletedCount': 1,
+        'StatusReportedTime': Timestamp.now(),
+      });
+    }
+    await patrolDocument.update({
+      'PatrolCheckPoints': checkpoints,
+      'PatrolCurrentStatus': currentStatusList,
+    });
+    // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
+
+    print("Patrol and checkpoint statuses updated successfully");
+  }
+
   Future<void> updatePatrolsReport(
       String EmpId, String PatrolId, String CheckPointId) async {
     if (EmpId.isEmpty || PatrolId.isEmpty || CheckPointId.isEmpty) {
@@ -887,7 +942,11 @@ class FireStoreService {
 
   //add wellness to the collection
   Future<void> addImagesToShiftGuardWellnessReport(
-      List<Map<String, dynamic>> uploads, String comment) async {
+    List<Map<String, dynamic>> uploads,
+    String comment,
+    // String ShiftID,
+    // String EmpID
+  ) async {
     try {
       // final LocalStorage Userstorage = LocalStorage('currentUserEmail');
       final LocalStorage storage = LocalStorage('ShiftDetails');
@@ -1134,6 +1193,7 @@ class FireStoreService {
       String ShiftTaskId,
       String ShiftId,
       String EmpId,
+      String EmpName,
       bool shiftTaskReturnStatus) async {
     try {
       print("Uploads from FIrebase: $uploads");
@@ -1181,7 +1241,7 @@ class FireStoreService {
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
               "TaskCompletedById": EmpId ?? "",
-              "TaskCompletedByName": "",
+              "TaskCompletedByName": EmpName,
               "TaskCompletionTime": DateTime.now(),
               "TaskPhotos": imgUrls,
               // "ShiftTaskReturnStatus": true,
@@ -1239,13 +1299,14 @@ class FireStoreService {
 
   // Add images and comment
   Future<void> addImagesToPatrol(
-      List<Map<String, dynamic>> uploads,
-      String comment,
-      String PatrolID,
-      String EmpId,
-      String PatrolCheckPointId) async {
+    List<Map<String, dynamic>> uploads,
+    String comment,
+    String patrolID,
+    String empId,
+    String patrolCheckPointId,
+  ) async {
     try {
-      final querySnapshot = await patrols.doc(PatrolID).get();
+      final querySnapshot = await patrols.doc(patrolID).get();
 
       if (querySnapshot.exists) {
         final doc = querySnapshot.data() as Map<String, dynamic>;
@@ -1258,53 +1319,64 @@ class FireStoreService {
 
         // Find the specific CheckPoint within PatrolCheckPoints
         var checkPoint = patrolCheckPoints.firstWhere(
-            (cp) => cp["CheckPointId"] == PatrolCheckPointId,
-            orElse: () => null);
+          (cp) => cp["CheckPointId"] == patrolCheckPointId,
+          orElse: () => null,
+        );
 
         if (checkPoint != null) {
           // Ensure that CheckPointStatus is correctly initialized and cast to List<dynamic>
           List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
 
-          // Find the specific status within CheckPointStatus where StatusReportedById matches EmpId
+          // Find the specific status within CheckPointStatus where StatusReportedById matches empId
           var status = checkPointStatus.firstWhere(
-              (s) => s["StatusReportedById"] == EmpId,
-              orElse: () => null);
+            (s) => s["StatusReportedById"] == empId,
+            orElse: () => null,
+          );
 
-          if (status != null) {
-            List<Map<String, dynamic>> imgUrls = [];
-            for (var upload in uploads) {
-              if (upload['type'] == 'image') {
-                File file = upload['file'];
+          if (status == null) {
+            // Create a new status entry for the empId
+            status = {
+              "Status": "checked",
+              "StatusReportedById": empId,
+              "StatusImage": [],
+              "StatusComment": "",
+              "StatusReportedTime": Timestamp.now()
+            };
+            checkPointStatus.add(status);
+          }
 
-                // Upload the image file and get the download URL
-                List<Map<String, dynamic>> downloadURL =
-                    await addImageToStoragePatrol(file);
+          List<Map<String, dynamic>> imgUrls = [];
+          for (var upload in uploads) {
+            if (upload['type'] == 'image') {
+              File file = upload['file'];
 
-                // Add the download URLs to the imgUrls list
-                for (var url in downloadURL) {
-                  imgUrls.add(url);
-                }
+              // Upload the image file and get the download URL
+              List<Map<String, dynamic>> downloadURL =
+                  await addImageToStoragePatrol(file);
+
+              // Add the download URLs to the imgUrls list
+              for (var url in downloadURL) {
+                imgUrls.add(url);
               }
             }
-
-            // Add the new image and comment map to the status
-            status["StatusImage"] =
-                imgUrls.map((url) => url['downloadURL']).toList();
-            status["StatusComment"] = comment;
-
-            // Update the Firestore document with the new wellness reports
-            await patrols.doc(PatrolID).update({
-              "PatrolReport": wellnessReports,
-              "PatrolCheckPoints": patrolCheckPoints,
-            });
-          } else {
-            print("No status found for EmpId: $EmpId");
           }
+
+          // Add the new image and comment map to the status
+          status["StatusImage"] =
+              imgUrls.map((url) => url['downloadURL']).toList();
+          status["StatusComment"] = comment;
+          status['StatusReportedTime'] = Timestamp.now();
+
+          // Update the Firestore document with the new wellness reports
+          await patrols.doc(patrolID).update({
+            "PatrolReport": wellnessReports,
+            "PatrolCheckPoints": patrolCheckPoints,
+          });
         } else {
-          print("No CheckPoint found with CheckPointId: $PatrolCheckPointId");
+          print("No CheckPoint found with CheckPointId: $patrolCheckPointId");
         }
       } else {
-        print("No document found with PatrolID: $PatrolID");
+        print("No document found with PatrolID: $patrolID");
       }
     } catch (e) {
       print('Error adding images to PatrolReport: $e');
@@ -1351,6 +1423,59 @@ class FireStoreService {
       }
     } catch (e) {
       print('Error updating ShiftTaskStatus: $e');
+      throw e;
+    }
+  }
+
+  //fetch images from patrol
+  Future<List<Map<String, dynamic>>> getImageUrlsForPatrol(
+      String PatrolID, String EmpId) async {
+    try {
+      final querySnapshot = await patrols.doc(PatrolID).get();
+
+      if (querySnapshot.exists) {
+        final doc = querySnapshot.data() as Map<String, dynamic>;
+
+        List<dynamic> patrolCheckPoints = doc["PatrolCheckPoints"] ?? [];
+        List<Map<String, dynamic>> imageData = [];
+
+        for (var checkPoint in patrolCheckPoints) {
+          List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
+
+          var status = checkPointStatus.firstWhere(
+            (s) => s["StatusReportedById"] == EmpId,
+            orElse: () => null,
+          );
+
+          if (status != null) {
+            List<String> statusImageUrls =
+                List<String>.from(status["StatusImage"] ?? []);
+            Timestamp statusReportedTime = status["StatusReportedTime"];
+            String formattedTime = statusReportedTime
+                .toDate()
+                .toString(); // Convert Timestamp to DateTime and then to String
+
+            if (statusImageUrls.isNotEmpty) {
+              imageData.add({
+                "StatusReportedTime": formattedTime,
+                "ImageUrls": statusImageUrls,
+              });
+            }
+          }
+        }
+
+        if (imageData.isNotEmpty) {
+          return imageData;
+        } else {
+          print("No image URLs found for EmpId: $EmpId in PatrolID: $PatrolID");
+        }
+      } else {
+        print("No document found with PatrolID: $PatrolID");
+      }
+
+      return [];
+    } catch (e) {
+      print('Error fetching image URLs: $e');
       throw e;
     }
   }

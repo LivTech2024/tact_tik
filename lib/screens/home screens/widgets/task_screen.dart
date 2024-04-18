@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
@@ -38,6 +39,9 @@ class TaskScreen extends StatefulWidget {
   final bool CheckUserRadius;
   final String EmpEmail;
   final String EmpName;
+  final Function() onRefreshHomeScreen;
+  final Function() onEndTask;
+  final VoidCallback onRefreshStartTaskScreen;
 
   TaskScreen({
     required this.ShiftDate,
@@ -64,6 +68,9 @@ class TaskScreen extends StatefulWidget {
     required this.ShiftBranchId,
     required this.ShiftLocationId,
     required this.ShiftClientId,
+    required this.onRefreshHomeScreen,
+    required this.onEndTask,
+    required this.onRefreshStartTaskScreen,
   });
 
   @override
@@ -98,7 +105,7 @@ void showCustomDialog(BuildContext context, String title, String content) {
 
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
-
+  bool ShiftIn = false;
   // bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
   UserLocationChecker locationChecker = UserLocationChecker();
@@ -106,10 +113,38 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void initState() {
     super.initState();
+
+    _loadShiftStartedState();
+    widget;
     // issShift = widget.issShiftFetched;
   }
 
+  void reload() async {
+    _loadShiftStartedState();
+  }
+
+  void refreshStartTaskScreen() {}
+  void _loadShiftStartedState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      ShiftStarted = prefs.getBool('ShiftStarted') ?? false;
+    });
+    bool? savedClickedIn = prefs.getBool('clickedIn') ?? false;
+    setState(() {
+      ShiftIn = savedClickedIn;
+    });
+  }
+
+  void resetShiftStarted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      ShiftStarted = false;
+      prefs.setBool('ShiftStarted', ShiftStarted);
+    });
+  }
+
   List<Map<String, dynamic>>? data;
+
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
         await fireStoreService.fetchShiftTask(widget.shiftId);
@@ -121,6 +156,8 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Future<void> _refreshData() async {
+    fetchData();
+    widget.onRefreshHomeScreen();
     // Fetch patrol data from Firestore (assuming your logic exists)
   }
 
@@ -147,11 +184,15 @@ class _TaskScreenState extends State<TaskScreen> {
                   EmployeeName: widget.EmpName,
                   ShiftLocationId: widget.ShiftLocationId,
                   ShiftClientID: widget.ShiftClientId,
+                  resetShiftStarted: resetShiftStarted,
+                  ShiftIN: ShiftIn, onRefresh: resetShiftStarted,
+                  // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                 )
               : Column(
                   children: [
                     widget.ShiftDate.isNotEmpty
                         ? Container(
+                            constraints: BoxConstraints(),
                             height: height / height242,
                             color: WidgetColor,
                             child: Column(
@@ -317,6 +358,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                               shiftId: widget.shiftId,
                                               Name: "Shift Task",
                                               EmpId: widget.empId,
+                                              EmpName: widget.EmpName,
                                             )));
                               } else {
                                 setState(() {
@@ -324,6 +366,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                   fireStoreService.startShiftLog(
                                       widget.empId, widget.shiftId);
                                 });
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setBool('ShiftStarted', ShiftStarted);
                               }
                             } else {
                               showCustomDialog(context, "Location",
@@ -341,6 +386,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                             shiftId: widget.shiftId,
                                             Name: "Shift Task",
                                             EmpId: widget.empId,
+                                            EmpName: widget.EmpName,
                                           )));
                               print("Task Status false");
                             } else {
@@ -357,6 +403,10 @@ class _TaskScreenState extends State<TaskScreen> {
                               setState(() {
                                 ShiftStarted = true;
                               });
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              // Your existing logic
+                              prefs.setBool('ShiftStarted', ShiftStarted);
                             }
 
                             //if the check user radius is off we can start the shift
@@ -366,7 +416,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         },
                       )
                     else
-                      SizedBox(),
+                      const SizedBox(),
                     SizedBox(
                       height: height / height10,
                     ),

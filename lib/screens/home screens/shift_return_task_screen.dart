@@ -132,6 +132,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                     // Assuming your data structure is correct, extract the ShiftTaskEnum for each task
                     ShiftTaskEnum? taskType;
                     String? taskStatu;
+                    bool ShiftTaskReturnStatus = false;
                     if (fetchedTasks != null && index < fetchedTasks!.length) {
                       final task = fetchedTasks![index];
                       if (task.containsKey('ShiftTaskQrCodeReq') &&
@@ -149,8 +150,11 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
 
                       // Extract TaskStatus if document is present
                       if (filteredStatus.isNotEmpty) {
-                        taskStatu = filteredStatus.first['TaskStatus'];
-
+                        taskStatu =
+                            filteredStatus.first['TaskStatus'] ?? "unchecked";
+                        ShiftTaskReturnStatus =
+                            filteredStatus.first['ShiftTaskReturnStatus'] ??
+                                false;
                         // print("Task Completion Status : - ${taskStatus}");
                       }
                     }
@@ -164,8 +168,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       EmpID: widget.Empid ?? "",
                       shiftReturnTask: true,
                       refreshDataCallback: _refreshData,
-                      EmpName: widget
-                          .EmpName, // Default to upload if taskType is null
+                      EmpName: widget.EmpName,
+                      ShiftTaskReturnStatus: ShiftTaskReturnStatus ??
+                          false, // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

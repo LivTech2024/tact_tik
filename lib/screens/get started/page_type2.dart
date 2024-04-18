@@ -1,3 +1,4 @@
+import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/login_screen.dart';
 
@@ -95,7 +96,7 @@ class PageType2 extends StatelessWidget {
           ),
           Visibility(
             visible: true,
-            child: GestureDetector(
+            child: Bounce(
               onTap: () {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => LoginScreen()));
