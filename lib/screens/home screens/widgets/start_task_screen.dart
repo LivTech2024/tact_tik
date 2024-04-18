@@ -290,7 +290,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final double width = MediaQuery.of(context).size.width;
     // Get the current time
     DateTime currentTime = DateTime.now();
-    DateFormat format = DateFormat('hh:mm a');
+    DateFormat format = DateFormat('h:mm a');
 // Parse the shift start time from the widget
     DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
 
@@ -492,35 +492,35 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 color: Colors.white,
               ),
               Expanded(
-                child: IgnorePointer(
-                  ignoring: !clickedIn,
-                  child: Bounce(
-                    onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      bool? status =
-                          await fireStoreService.checkShiftReturnTaskStatus(
-                              widget.EmployeId, widget.ShiftId);
-                      if (status == true) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ShiftReturnTaskScreen(
-                                    shiftId: widget.ShiftId,
-                                    Empid: widget.EmployeId,
-                                    ShiftName: widget.ShiftAddressName,
-                                    EmpName: widget.EmployeeName,
-                                  )),
-                        );
-                      } else {
-                        setState(() {
-                          // isPaused = !isPaused;
-                          // prefs.setBool("pauseState", isPaused);
-                          clickedIn = false;
-                          resetStopwatch();
-                          resetClickedState();
-                          widget.resetShiftStarted();
-                        });
+                child: Bounce(
+                  onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+
+                    bool? status =
+                        await fireStoreService.checkShiftReturnTaskStatus(
+                            widget.EmployeId, widget.ShiftId);
+                    if (status == true) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ShiftReturnTaskScreen(
+                                  shiftId: widget.ShiftId,
+                                  Empid: widget.EmployeId,
+                                  ShiftName: widget.ShiftAddressName,
+                                  EmpName: widget.EmployeeName,
+                                )),
+                      );
+                    } else {
+                      setState(() {
+                        // isPaused = !isPaused;
+                        // prefs.setBool("pauseState", isPaused);
+                        clickedIn = false;
+                        resetStopwatch();
+                        resetClickedState();
+                        widget.resetShiftStarted();
+                        prefs.setBool('ShiftStarted', false);
+                      });
 
                         await fireStoreService.EndShiftLog(
                             widget.EmployeId,

@@ -363,8 +363,8 @@ class _TaskScreenState extends State<TaskScreen> {
                               } else {
                                 setState(() {
                                   ShiftStarted = true;
-                                  fireStoreService.startShiftLog(
-                                      widget.empId, widget.shiftId);
+                                  fireStoreService.startShiftLog(widget.empId,
+                                      widget.shiftId, widget.EmpName);
                                 });
                                 SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
@@ -389,7 +389,37 @@ class _TaskScreenState extends State<TaskScreen> {
                                             EmpName: widget.EmpName,
                                           )));
                               print("Task Status false");
+                              setState(() {
+                                ShiftStarted = true;
+                                fireStoreService.startShiftLog(widget.empId,
+                                    widget.shiftId, widget.EmpName);
+                              });
                             } else {
+                              bool? taskStatus =
+                                  await fireStoreService.checkShiftTaskStatus(
+                                      widget.empId, widget.shiftId);
+
+                              if (taskStatus == false) {
+                                print("taskStaus ${taskStatus}");
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ShiftTaskScreen(
+                                              shiftId: widget.shiftId,
+                                              Name: "Shift Task",
+                                              EmpId: widget.empId,
+                                              EmpName: widget.EmpName,
+                                            )));
+                              } else {
+                                setState(() {
+                                  ShiftStarted = true;
+                                  fireStoreService.startShiftLog(widget.empId,
+                                      widget.shiftId, widget.EmpName);
+                                });
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setBool('ShiftStarted', ShiftStarted);
+                              }
                               Map<String, dynamic> emailParams = {
                                 'to_email': 'sutarvaibhav37@gmail.com',
                                 'from_name': 'Your Name',
