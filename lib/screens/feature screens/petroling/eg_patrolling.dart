@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
@@ -267,9 +268,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   @override
   void initState() {
     super.initState();
+    _loadShiftStartedState();
     // Initialize expand state for each category
     _expandCategoryMap = Map.fromIterable(widget.p.categories,
         key: (category) => category.title, value: (_) => false);
+  }
+
+  void _loadShiftStartedState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _expand = prefs.getBool('expand') ?? false;
+    });
   }
 
   Future<void> _refreshData() async {
@@ -298,6 +307,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       });
     }
     print("Statis ${uploads}");
+  }
+
+  Future<void> _addGallery() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      // await fireStoreService
+      //     .addImageToStorageShiftTask(File(pickedFile.path));
+      setState(() {
+        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+      });
+    }
   }
 
   @override
@@ -429,11 +450,15 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         widget.p.EmpId,
                         widget.p.EmployeeName,
                       );
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       setState(() {
                         // clickedIIndex = index;
                         // print(clickedIIndex);
                         StartTime = DateTime.now();
+
                         _expand = !_expand;
+                        prefs.setBool("expand", _expand);
                       });
 
                       _refresh();
@@ -891,7 +916,30 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                           onTap:
                                                                               () {
                                                                             Navigator.pop(context);
-                                                                            _addImage();
+                                                                            showModalBottomSheet(
+                                                                              context: context,
+                                                                              builder: (context) => Column(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                children: [
+                                                                                  ListTile(
+                                                                                    leading: Icon(Icons.camera),
+                                                                                    title: Text('Add Image'),
+                                                                                    onTap: () {
+                                                                                      _addImage();
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                  ),
+                                                                                  ListTile(
+                                                                                    leading: Icon(Icons.image),
+                                                                                    title: Text('Add from Gallery'),
+                                                                                    onTap: () {
+                                                                                      Navigator.pop(context);
+                                                                                      _addGallery();
+                                                                                    },
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            );
                                                                           },
                                                                           child:
                                                                               Container(
@@ -965,6 +1013,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                           const Duration(
                                                                               seconds: 2),
                                                                     );
+                                                                    _refresh();
                                                                     setState(
                                                                         () {
                                                                       _isLoading =
@@ -975,7 +1024,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                     Controller
                                                                         .clear();
 
-                                                                    _refreshData();
                                                                     Navigator.pop(
                                                                         context);
                                                                   },
@@ -1029,9 +1077,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         color: Colors.redAccent,
                         borderRadius: 10,
                         onPressed: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
                           _refresh();
                           if (widget.p.CompletedCount ==
                               widget.p.PatrolRequiredCount) {
+                            _expand = false;
+                            prefs.setBool("expand", _expand);
+                            //If the count is equal
                             List<String> emails = [];
                             var ClientEmail = await fireStoreService
                                 .getClientEmail(widget.p.PatrolClientID);
@@ -1044,8 +1097,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             print(imageUrls);
                             var TestinEmail = "sutarvaibhav37@gmail.com";
                             var defaultEmail = "tacttikofficial@gmail.com";
+                            var testEmail3 = "yashsinghs077@gmail.com";
+                            emails.add(TestinEmail);
+                            // emails.add(testEmail3);
                             emails.add(ClientEmail!);
                             emails.add(AdminEmail!);
+                            emails.add(defaultEmail!);
 
                             DateFormat dateFormat =
                                 DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1093,7 +1150,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               return {
                                 'StatusReportedTime': formattedEndDate,
                                 'ImageUrls': url['ImageUrls'],
-                                ' StatusComment': url['StatusComment']
+                                'StatusComment': url['StatusComment']
                               };
                             }).toList();
                             // sendFormattedEmail(emailParams);
@@ -1123,13 +1180,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             if (!widget.p.Allchecked) {
                               showErrorToast(
                                   context, "Complete all the Checkpoints");
-                              // showCustomDialog(
-                              //     context,
-                              //     "Checkpoints Incomplete !!",
-                              //     "Complete all the checkpoints  to end");
                             }
-                            // showErrorToast(
-                            //     context, "Complete all the Checkpoints");
                           }
 
                           if (widget.p.Allchecked) {
@@ -1141,6 +1192,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       widget.p.PatrolId,
                                       widget.p.EmpId,
                                       widget.p.EmployeeName);
+                              _expand = false;
+                              prefs.setBool("expand", _expand);
                               List<String> emails = [];
                               var ClientEmail = await fireStoreService
                                   .getClientEmail(widget.p.PatrolClientID);
@@ -1153,6 +1206,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               print(imageUrls);
                               var TestinEmail = "sutarvaibhav37@gmail.com";
                               var defaultEmail = "tacttikofficial@gmail.com";
+                              var testEmail3 = "yashsinghs077@gmail.com";
+                              emails.add(TestinEmail);
+                              // emails.add(testEmail3);
+                              emails.add(defaultEmail!);
+
                               emails.add(ClientEmail!);
                               emails.add(AdminEmail!);
 
@@ -1204,7 +1262,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 return {
                                   'StatusReportedTime': formattedEndDate,
                                   'ImageUrls': url['ImageUrls'],
-                                  ' StatusComment': url['StatusComment']
+                                  'StatusComment': url['StatusComment']
                                 };
                               }).toList();
                               // sendFormattedEmail(emailParams);
@@ -1233,6 +1291,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       widget.p.PatrolId,
                                       widget.p.EmpId,
                                       widget.p.EmployeeName);
+                              _expand = false;
+                              prefs.setBool("expand", _expand);
 
                               // showSuccessToast(context, "Patrol Completed");
                               print("All checked");
@@ -1248,8 +1308,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               print(imageUrls);
                               var TestinEmail = "sutarvaibhav37@gmail.com";
                               var defaultEmail = "tacttikofficial@gmail.com";
+                              // var defaultEmail = "tacttikofficial@gmail.com";
+                              var testEmail3 = "yashsinghs077@gmail.com";
+                              emails.add(TestinEmail);
                               emails.add(ClientEmail!);
                               emails.add(AdminEmail!);
+                              emails.add(defaultEmail!);
+
+                              // emails.add(testEmail3);
 
                               DateFormat dateFormat =
                                   DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1299,7 +1365,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 return {
                                   'StatusReportedTime': formattedEndDate,
                                   'ImageUrls': url['ImageUrls'],
-                                  ' StatusComment': url['StatusComment']
+                                  'StatusComment': url['StatusComment']
                                 };
                               }).toList();
                               // sendFormattedEmail(emailParams);
@@ -1308,7 +1374,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 "Patrol update for ${widget.p.description} Date:- formattedStartDate",
                                 widget.p.EmployeeName,
                                 "",
-                                'Shift ',
+                                'Patrol',
                                 formattedStartDate,
                                 formattedImageUrls,
                                 widget.p.EmployeeName,
@@ -1328,72 +1394,72 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             showSuccessToast(context, "Patrol Completed");
                             Navigator.pop(context);
                           } else {
-                            await fireStoreService.EndPatrolupdatePatrolsStatus(
-                                widget.p.PatrolId,
-                                widget.p.EmpId,
-                                widget.p.EmployeeName);
+                            // await fireStoreService.EndPatrolupdatePatrolsStatus(
+                            //     widget.p.PatrolId,
+                            //     widget.p.EmpId,
+                            //     widget.p.EmployeeName);
 
-                            // showSuccessToast(context, "Patrol Completed");
-                            print("All checked");
-                            List<String> emails = [];
-                            var ClientEmail = await fireStoreService
-                                .getClientEmail(widget.p.PatrolClientID);
-                            var AdminEmail = await fireStoreService
-                                .getAdminEmail(widget.p.PatrolCompanyID);
-                            var imageUrls =
-                                await fireStoreService.getImageUrlsForPatrol(
-                                    widget.p.PatrolId, widget.p.EmpId);
+                            // // showSuccessToast(context, "Patrol Completed");
+                            // print("All checked");
+                            // List<String> emails = [];
+                            // var ClientEmail = await fireStoreService
+                            //     .getClientEmail(widget.p.PatrolClientID);
+                            // var AdminEmail = await fireStoreService
+                            //     .getAdminEmail(widget.p.PatrolCompanyID);
+                            // var imageUrls =
+                            //     await fireStoreService.getImageUrlsForPatrol(
+                            //         widget.p.PatrolId, widget.p.EmpId);
 
-                            print(imageUrls);
-                            var TestinEmail = "sutarvaibhav37@gmail.com";
-                            var defaultEmail = "tacttikofficial@gmail.com";
-                            emails.add(ClientEmail!);
-                            emails.add(AdminEmail!);
+                            // print(imageUrls);
+                            // var TestinEmail = "sutarvaibhav37@gmail.com";
+                            // var defaultEmail = "tacttikofficial@gmail.com";
+                            // emails.add(ClientEmail!);
+                            // emails.add(AdminEmail!);
 
-                            DateFormat dateFormat =
-                                DateFormat("yyyy-MM-dd HH:mm:ss");
-                            String formattedStartDate =
-                                dateFormat.format(DateTime.now());
-                            String formattedEndDate =
-                                dateFormat.format(DateTime.now());
-                            String formattedEndTime =
-                                dateFormat.format(DateTime.now());
-                            DateFormat timeformat = DateFormat(
-                                "HH:mm"); // Define the format for time
-                            String formattedPatrolInTime =
-                                timeformat.format(StartTime);
-                            String formattedPatrolOutTime =
-                                timeformat.format(DateTime.now());
-                            String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(DateTime.now());
+                            // DateFormat dateFormat =
+                            //     DateFormat("yyyy-MM-dd HH:mm:ss");
+                            // String formattedStartDate =
+                            //     dateFormat.format(DateTime.now());
+                            // String formattedEndDate =
+                            //     dateFormat.format(DateTime.now());
+                            // String formattedEndTime =
+                            //     dateFormat.format(DateTime.now());
+                            // DateFormat timeformat = DateFormat(
+                            //     "HH:mm"); // Define the format for time
+                            // String formattedPatrolInTime =
+                            //     timeformat.format(StartTime);
+                            // String formattedPatrolOutTime =
+                            //     timeformat.format(DateTime.now());
+                            // String formattedDate =
+                            //     DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-                            List<Map<String, dynamic>> formattedImageUrls =
-                                imageUrls.map((url) {
-                              return {
-                                'StatusReportedTime': formattedEndDate,
-                                'ImageUrls': url['ImageUrls'],
-                                ' StatusComment': url['StatusComment']
-                              };
-                            }).toList();
-                            // sendFormattedEmail(emailParams);
-                            sendapiEmail(
-                              emails,
-                              "Patrol update for ${widget.p.description} Date:- formattedStartDate",
-                              widget.p.EmployeeName,
-                              "",
-                              'Shift ',
-                              formattedStartDate,
-                              formattedImageUrls,
-                              widget.p.EmployeeName,
-                              formattedPatrolInTime.toString(),
-                              formattedPatrolOutTime.toString(),
-                              widget.p.CompletedCount.toString(),
-                              widget.p.PatrolRequiredCount.toString(),
-                              widget.p.description,
-                              "Completed",
-                              formattedPatrolInTime.toString(),
-                              formattedPatrolOutTime.toString(),
-                            );
+                            // List<Map<String, dynamic>> formattedImageUrls =
+                            //     imageUrls.map((url) {
+                            //   return {
+                            //     'StatusReportedTime': formattedEndDate,
+                            //     'ImageUrls': url['ImageUrls'],
+                            //     ' StatusComment': url['StatusComment']
+                            //   };
+                            // }).toList();
+                            // // sendFormattedEmail(emailParams);
+                            // sendapiEmail(
+                            //   emails,
+                            //   "Patrol update for ${widget.p.description} Date:- formattedStartDate",
+                            //   widget.p.EmployeeName,
+                            //   "",
+                            //   'Shift ',
+                            //   formattedStartDate,
+                            //   formattedImageUrls,
+                            //   widget.p.EmployeeName,
+                            //   formattedPatrolInTime.toString(),
+                            //   formattedPatrolOutTime.toString(),
+                            //   widget.p.CompletedCount.toString(),
+                            //   widget.p.PatrolRequiredCount.toString(),
+                            //   widget.p.description,
+                            //   "Completed",
+                            //   formattedPatrolInTime.toString(),
+                            //   formattedPatrolOutTime.toString(),
+                            // );
                             // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                             _refreshData();
 

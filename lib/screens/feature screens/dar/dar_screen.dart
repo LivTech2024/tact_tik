@@ -4,12 +4,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
 
 class DarDisplayScreen extends StatelessWidget {
-  DarDisplayScreen({super.key});
+  final String EmpEmail;
+  DarDisplayScreen({super.key, required this.EmpEmail});
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -159,6 +161,21 @@ class DarDisplayScreen extends StatelessWidget {
               );
             }
           },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateDarScreen(
+                    EmpEmail: EmpEmail,
+                  ),
+                ));
+          },
+          backgroundColor: Primarycolor,
+          shape: CircleBorder(),
+          child: Icon(Icons.add),
         ),
       ),
     );

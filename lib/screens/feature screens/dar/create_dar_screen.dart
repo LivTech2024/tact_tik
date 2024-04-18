@@ -11,7 +11,8 @@ import '../../../fonts/inter_regular.dart';
 import '../widgets/custome_textfield.dart';
 
 class CreateDarScreen extends StatefulWidget {
-  const CreateDarScreen({super.key});
+  final String EmpEmail;
+  const CreateDarScreen({super.key, required this.EmpEmail});
 
   @override
   State<CreateDarScreen> createState() => _CreateDarScreenState();

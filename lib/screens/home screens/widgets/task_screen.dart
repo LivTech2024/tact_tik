@@ -390,7 +390,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                           )));
                               print("Task Status false");
                               setState(() {
-                                ShiftStarted = true;
+                                // ShiftStarted = true;
                                 fireStoreService.startShiftLog(widget.empId,
                                     widget.shiftId, widget.EmpName);
                               });
@@ -430,13 +430,13 @@ class _TaskScreenState extends State<TaskScreen> {
                               };
                               // await sendEmail(emailParams);
                               // print('Email sent: $result');s
-                              setState(() {
-                                ShiftStarted = true;
-                              });
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              // Your existing logic
-                              prefs.setBool('ShiftStarted', ShiftStarted);
+                              // setState(() {
+                              //   ShiftStarted = true;
+                              // });
+                              // SharedPreferences prefs =
+                              //     await SharedPreferences.getInstance();
+                              // // Your existing logic
+                              // prefs.setBool('ShiftStarted', ShiftStarted);
                             }
 
                             //if the check user radius is off we can start the shift

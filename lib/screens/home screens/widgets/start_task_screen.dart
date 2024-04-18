@@ -87,6 +87,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   // late SharedPreferences prefs;
   void send_mail_onOut() async {
+    //fetch all the patrol ids assigned to him using
     List<String> emails = [];
     var ClientEmail =
         await fireStoreService.getClientEmail(widget.ShiftClientID);
@@ -94,19 +95,25 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
     var TestinEmail = "sutarvaibhav37@gmail.com";
     var defaultEmail = "tacttikofficial@gmail.com";
-    emails.add(ClientEmail!);
+    var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
+    // emails.add(ClientEmail!);
+    emails.add("sutarvaibhav37@student.sfit.ac.in");
+    emails.add("sutarvaibhav37@gmail.com");
     // var TestinEmail = "sutarvaibhav37@gmail.com";
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     String formattedStartDate = dateFormat.format(DateTime.now());
     String formattedEndDate = dateFormat.format(DateTime.now());
     String formattedEndTime = dateFormat.format(DateTime.now());
+    await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
+
     if (ClientEmail != null && AdminEmail != null) {
-      emails.add(AdminEmail);
-      emails.add(TestinEmail);
+      // emails.add(AdminEmail);
+      // sendShiftEmail(
+      // emails.add(TestinEmail);
       Map<String, dynamic> emailParams = {
         'to_email': '$ClientEmail, $AdminEmail ,$defaultEmail',
         // 'to_email': '$TestinEmail',
-        "startDate": '${widget.ShiftDate}',
+        "startDate": '${widget.ShiftId}',
         "endDate": '${widget.ShiftDate}',
         'from_name': '${widget.EmployeeName}',
         'reply_to': '$defaultEmail',
@@ -118,6 +125,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         'EndTime': '${stopwatchtime}',
         'CompanyName': 'Tacttik',
       };
+      //     emails,
+      //     "Update on Shift",
+      //     widget.EmployeeName,
+      //     "",
+      //     "Shift",
+      //     widget.ShiftDate,
+      //     imageData,
+      //     widget.EmployeeName,
+      //     widget.ShiftStartTime,
+      //     widget.ShiftEndTime,
+      //     widget.ShiftAddressName,
+      //     "Completed",
+      //     "ShiftInTime",
+      //     "ShiftOutTime");
       // sendFormattedEmail(emailParams);
     }
   }
@@ -148,6 +169,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? savedClickedIn = prefs.getBool('clickedIn');
+    print("saved Clicked in values: ${savedClickedIn}");
     bool? pauseState = prefs.getBool('paused');
     bool? breakState = prefs.getBool('onBreak');
     setState(() {
@@ -233,52 +255,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     _stopwatchTimer.cancel(); // Stop the stopwatch timer
   }
 
-  int countdownSeconds = 180; //total timer limit in seconds
-  late CountdownTimer countdownTimer;
-  bool isTimerRunning = false;
-
-  void initTimerOperation() {
-//timer callbacks
-    countdownTimer = CountdownTimer(
-      seconds: countdownSeconds,
-      onTick: (seconds) {
-        isTimerRunning = true;
-        countdownSeconds = seconds; //this will return the timer values
-      },
-      onFinished: () {
-        isTimerRunning = false;
-        countdownTimer.stop();
-        // Handle countdown finished
-      },
-    );
-
-//native app life cycle
-    SystemChannels.lifecycle.setMessageHandler((msg) {
-// On AppLifecycleState: paused
-      if (msg == AppLifecycleState.paused.toString()) {
-        if (isTimerRunning) {
-          countdownTimer.pause(countdownSeconds); //setting end time on pause
-        }
-      }
-
-// On AppLifecycleState: resumed
-      if (msg == AppLifecycleState.resumed.toString()) {
-        if (isTimerRunning) {
-          countdownTimer.resume();
-        }
-      }
-      return Future(() => null);
-    });
-
-//starting timer
-    isTimerRunning = true;
-    countdownTimer?.start();
-  }
-
   @override
   void dispose() {
     _stopwatchTimer.cancel();
-    resetClickedState();
+    // resetClickedState();
     super.dispose();
   }
 
@@ -290,7 +270,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final double width = MediaQuery.of(context).size.width;
     // Get the current time
     DateTime currentTime = DateTime.now();
-    DateFormat format = DateFormat('h:mm a');
+    DateFormat format = DateFormat('HH:mm');
 // Parse the shift start time from the widget
     DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
 
@@ -531,6 +511,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           widget.ShiftBranchId,
                           widget.ShiftCompanyId,
                           widget.EmployeeName);
+
                       send_mail_onOut();
                       Navigator.push(
                         context,
@@ -620,7 +601,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         isPaused = !isPaused;
                       });
                       if (isPaused) {
-                        fireStoreService.BreakShiftLog(widget.EmployeId);
+                        fireStoreService.BreakShiftLog(widget.EmployeIad);
                       } else {
                         fireStoreService.ResumeShiftLog(widget.EmployeId);
                       }

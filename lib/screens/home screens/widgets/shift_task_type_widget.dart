@@ -61,7 +61,60 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
     print("Statis ${widget.taskStatus}");
   }
 
+  Future<void> _addGallery() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      // await fireStoreService
+      //     .addImageToStorageShiftTask(File(pickedFile.path));
+      setState(() {
+        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+      });
+    }
+    print("Statis ${widget.taskStatus}");
+  }
+
   void _uploadImages() async {
+    if (uploads.isNotEmpty ||
+        widget.ShiftId.isNotEmpty ||
+        widget.taskId.isNotEmpty ||
+        widget.EmpID.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
+      print("Uploads Images  ${uploads}");
+      try {
+        print("Task Id : ${widget.taskId}");
+        await fireStoreService.addImagesToShiftTasks(
+          uploads,
+          widget.taskId ?? "",
+          widget.ShiftId ?? "",
+          widget.EmpID ?? "",
+          widget.EmpName,
+          widget.shiftReturnTask,
+        );
+        uploads.clear();
+        showSuccessToast(context, "Uploaded Successfully");
+        widget.refreshDataCallback();
+        // widget.refreshDataCallback();
+
+        // Navigator.pop(context);
+      } catch (e) {
+        showErrorToast(context, "${e}");
+        print('Error uploading images: $e');
+      }
+      setState(() {
+        _isLoading = false;
+      });
+      widget.refreshDataCallback();
+    } else {
+      widget.refreshDataCallback();
+      showErrorToast(context, "No Images found");
+      print('No images to upload.');
+    }
+  }
+
+  void _uploadfromGallery() async {
     if (uploads.isNotEmpty ||
         widget.ShiftId.isNotEmpty ||
         widget.taskId.isNotEmpty ||
@@ -430,30 +483,31 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          _addImage();
-                          // showModalBottomSheet(
-                          //   context: context,
-                          //   builder: (context) => Column(
-                          //     mainAxisSize: MainAxisSize.min,
-                          //     children: [
-                          //       ListTile(
-                          //         leading: Icon(Icons.camera),
-                          //         title: Text('Add Image'),
-                          //         onTap: () {
-                          //           Navigator.pop(context);
-                          //         },
-                          //       ),
-                          //       // ListTile(
-                          //       //   leading: Icon(Icons.video_collection),
-                          //       //   title: Text('Add Video'),
-                          //       //   onTap: () {
-                          //       //     Navigator.pop(context);
-                          //       //     _addVideo();
-                          //       //   },
-                          //       // ),
-                          //     ],
-                          //   ),
-                          // );
+                          // _addImage();
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) => Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.camera),
+                                  title: Text('Add Image'),
+                                  onTap: () {
+                                    _addImage();
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.image),
+                                  title: Text('Add from Gallery'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    _addGallery();
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         child: Container(
                           height: height / height66,

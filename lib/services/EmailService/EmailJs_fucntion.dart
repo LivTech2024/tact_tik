@@ -90,23 +90,24 @@ Future<void> sendapiEmail(
 ) async {
   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
 
-  String imagesHTML = '';
-  for (var data in imageData) {
-    String statusReportedTime = data['StatusReportedTime'];
-    List<String> imageUrls = List<String>.from(data['ImageUrls']);
-    String statusComment = data['StatusComment'] ?? "";
+  for (var toEmail in toEmails) {
+    String imagesHTML = '';
+    for (var data in imageData) {
+      String statusReportedTime = data['StatusReportedTime'];
+      List<String> imageUrls = List<String>.from(data['ImageUrls']);
+      String statusComment = data['StatusComment'] ?? "";
 
-    // Add a paragraph with the StatusReportedTime and StatusComment
-    imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
-    imagesHTML += '<p>StatusComment: $statusComment</p>';
+      // Add a paragraph with the StatusReportedTime and StatusComment
+      imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
+      imagesHTML += '<p>StatusComment: $statusComment</p>';
 
-    // Add image tags for each ImageUrl with a specific size
-    for (var imageUrl in imageUrls) {
-      imagesHTML +=
-          '<img src="$imageUrl" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
+      // Add image tags for each ImageUrl with a specific size
+      for (var imageUrl in imageUrls) {
+        imagesHTML +=
+            '<img src="$imageUrl" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
+      }
     }
-  }
-  final htmlcontent2 = """
+    final htmlcontent2 = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -201,6 +202,154 @@ Future<void> sendapiEmail(
 
 
 """;
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'to_email': toEmail,
+        'subject': "Testing",
+        'from_name': GuardName,
+        'html': htmlcontent2,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print('Email sent successfully');
+      // Handle success
+    } else {
+      print('Failed to send email. Status code: ${response.statusCode} ');
+      // Handle failure
+    }
+  }
+}
+
+Future<void> sendShiftEmail(
+  List<String> toEmails,
+  String Subject,
+  String fromName,
+  String Data,
+  String type,
+  String date,
+  List<Map<String, dynamic>> imageData,
+  String GuardName,
+  String StartTime,
+  String EndTime,
+  String Location,
+  String Status,
+  String patrolTimein,
+  String patrolTimeout,
+) async {
+  final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
+
+  String imagesHTML = '';
+  for (var data in imageData) {
+    String statusReportedTime = data['StatusReportedTime'];
+    List<String> imageUrls = List<String>.from(data['ImageUrls']);
+    String statusComment = data['StatusComment'] ?? "";
+
+    // Add a paragraph with the StatusReportedTime and StatusComment
+    imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
+    imagesHTML += '<p>StatusComment: $statusComment</p>';
+
+    // Add image tags for each ImageUrl with a specific size
+    for (var imageUrl in imageUrls) {
+      imagesHTML +=
+          '<img src="$imageUrl" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
+    }
+  }
+  final htmlcontent2 = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrol Report</title>
+    <style>
+        body {
+            background-image: url('path/to/your/background/image.jpg');
+            background-size: cover; /* Ensure the background image covers the entire body */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            font-family: Arial, sans-serif; /* Use a readable font */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        #shift-patrol-report {
+            width: 100%;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .patrol-section {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem; /* Add some space between sections */
+            background-color: #fff; /* Set a white background color for sections */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .details {
+            white-space: pre-line; /* Preserve line breaks in the 'Data' field */
+        }
+        img {
+            max-width: 100%; /* Ensure images don't exceed their container width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Prevent inline images from affecting layout */
+            margin-bottom: 0.5rem; /* Add some space between images */
+        }
+    </style>
+</head>
+<body>
+    <div id="shift-patrol-report">
+        <h2>SHIFT/PATROL REPORT</h2>
+        <div class="patrol-section">
+            <h3>Patrol Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Guard name</th>
+                        <th>Patrol time in</th>
+                        <th>Patrol time out</th>
+                        <th>Total Patrol Count</th>
+                        <th>Total hits</th>
+                        <th>Status</th>
+                        <th>Incident</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$GuardName</td>
+                        <td>$patrolTimein</td>
+                        <td>$patrolTimeout</td>
+                        <td>$Status</td>
+                        <td class="details">$Data</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="patrol-section">
+            <h3>Patrol with Photos</h3>
+            <p id="patrol-details"></p>
+            $imagesHTML
+        </div>
+        <div class="report-section">
+            <h3>Important Note</h3>
+            <p id="important-note"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+""";
   final response = await http.post(
     Uri.parse(url),
     headers: {'Content-Type': 'application/json'},
@@ -220,7 +369,6 @@ Future<void> sendapiEmail(
     // Handle failure
   }
 }
-
 
 // final htmlContent = '''
 //   <!DOCTYPE html>

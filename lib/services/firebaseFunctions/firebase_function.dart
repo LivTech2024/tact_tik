@@ -433,7 +433,11 @@ class FireStoreService {
         // If the map doesn't exist, add it to the array
         currentArray.add(statusData);
       }
+      //acknowledge
       await documentReference.update({'ShiftCurrentStatus': currentArray});
+      await documentReference.update({
+        'ShiftAcknowledgedByEmpId': FieldValue.arrayUnion([employeeId])
+      });
     } catch (e) {
       print('Error logging shift start: $e');
       // Handle the error as needed
@@ -1510,6 +1514,80 @@ class FireStoreService {
     } catch (e) {
       print('Error fetching client: $e');
       return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getClientName(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        String clientName = clientData['ClientName'];
+        print('Client Email: $clientName');
+        return clientName;
+      } else {
+        print('Client not found');
+        return null; // Return null if client is not found
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  //fetch the patrol images and its data
+  Future<void> fetchPatrolData(String shiftId, String empid) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      // Step 1: Get ShiftLinkedPatrolIds
+      DocumentSnapshot shiftDoc =
+          await firestore.collection('Shifts').doc(shiftId).get();
+      List<String> shiftLinkedPatrolIds =
+          List<String>.from(shiftDoc.get('ShiftLinkedPatrolIds'));
+
+      // Step 2: Iterate over ShiftLinkedPatrolIds
+      for (String patrolId in shiftLinkedPatrolIds) {
+        // Step 3: Get PatrolName
+        DocumentSnapshot patrolDoc =
+            await firestore.collection('Patrols').doc(patrolId).get();
+        String patrolName = patrolDoc.get('PatrolName');
+
+        // Step 4: Query PatrolCheckPoints
+        QuerySnapshot checkPointsQuery = await firestore
+            .collection('PatrolCheckPoints')
+            .where('PatrolId', isEqualTo: patrolId)
+            .get();
+
+        // Step 5: Iterate over matching CheckPoints
+        for (QueryDocumentSnapshot checkPointDoc in checkPointsQuery.docs) {
+          List<dynamic> checkPointStatusList =
+              checkPointDoc.get('CheckPointStatus');
+          var status = checkPointStatusList.firstWhere(
+            (s) => s["StatusReportedById"] == empid,
+            orElse: () => null,
+          );
+
+          if (status != null) {
+            // Get StatusComment
+            String statusComment = status['StatusComment'];
+
+            // Get StatusImage URLs
+            List<String> statusImageUrls =
+                List<String>.from(status['StatusImage']);
+
+            // Process statusComment and statusImageUrls as needed
+            print(
+                'Patrol: $patrolName, StatusComment: $statusComment, StatusImageUrls: $statusImageUrls');
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching patrol data: $e');
     }
   }
 
