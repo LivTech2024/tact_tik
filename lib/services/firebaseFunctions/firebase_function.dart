@@ -1460,14 +1460,15 @@ class FireStoreService {
             List<String> statusImageUrls =
                 List<String>.from(status["StatusImage"] ?? []);
             Timestamp statusReportedTime = status["StatusReportedTime"];
-            String formattedTime = statusReportedTime
-                .toDate()
-                .toString(); // Convert Timestamp to DateTime and then to String
+            String formattedTime = statusReportedTime.toDate().toString();
+
+            String statusComment = status["StatusComment"] ?? "";
 
             if (statusImageUrls.isNotEmpty) {
               imageData.add({
                 "StatusReportedTime": formattedTime,
                 "ImageUrls": statusImageUrls,
+                "StatusComment": statusComment,
               });
             }
           }

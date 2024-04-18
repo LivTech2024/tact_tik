@@ -304,7 +304,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     bool _isLoading = false;
     double completionPercentage =
         widget.p.CompletedCount / widget.p.PatrolRequiredCount;
-    String StartTime = DateTime.now().toString();
+    DateTime StartTime = DateTime.now();
     void showSuccessToast(BuildContext context, String message) {
       toastification.show(
         context: context,
@@ -428,7 +428,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       setState(() {
                         // clickedIIndex = index;
                         // print(clickedIIndex);
-                        StartTime = DateTime.now().toString();
+                        StartTime = DateTime.now();
                         _expand = !_expand;
                       });
 
@@ -446,7 +446,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       });
                       if (!startTimeUpdated) {
                         startTimeUpdated = true;
-                        StartTime = DateTime.now().toString();
+                        StartTime = DateTime.now();
                       }
                     }
                   },
@@ -1051,6 +1051,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 dateFormat.format(DateTime.now());
                             String formattedEndTime =
                                 dateFormat.format(DateTime.now());
+                            DateFormat timeformat = DateFormat(
+                                "HH:mm"); // Define the format for time
+                            String formattedPatrolInTime =
+                                timeformat.format(StartTime);
+                            String formattedPatrolOutTime =
+                                timeformat.format(DateTime.now());
                             String formattedDate =
                                 DateFormat('yyyy-MM-dd').format(DateTime.now());
                             Map<String, dynamic> emailParams = {
@@ -1078,25 +1084,32 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   .toList(),
                               'CompanyName': 'Tacttik',
                             };
-
+                            List<Map<String, dynamic>> formattedImageUrls =
+                                imageUrls.map((url) {
+                              return {
+                                'StatusReportedTime': formattedEndDate,
+                                'ImageUrls': url['ImageUrls'],
+                                ' StatusComment': url['StatusComment']
+                              };
+                            }).toList();
                             // sendFormattedEmail(emailParams);
                             sendapiEmail(
                               emails,
-                              "test",
+                              "Patrol update for ${widget.p.description} Date:- formattedStartDate",
                               widget.p.EmployeeName,
-                              "Data",
+                              "",
                               'Shift ',
                               formattedStartDate,
-                              "",
-                              "",
+                              formattedImageUrls,
                               widget.p.EmployeeName,
-                              DateTime.now().toString(),
-                              DateTime.now().toString(),
+                              formattedPatrolInTime,
+                              formattedEndTime,
                               widget.p.CompletedCount.toString(),
+                              widget.p.PatrolRequiredCount.toString(),
                               widget.p.description,
                               "Completed",
-                              DateTime.now().toString(),
-                              DateTime.now().toString(),
+                              formattedPatrolInTime,
+                              formattedPatrolOutTime,
                             );
                             _refreshData();
                             // sendFormattedEmail(emailParams);
@@ -1147,6 +1160,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   dateFormat.format(DateTime.now());
                               String formattedEndTime =
                                   dateFormat.format(DateTime.now());
+                              DateFormat timeformat = DateFormat(
+                                  "HH:mm"); // Define the format for time
+                              String formattedPatrolInTime =
+                                  timeformat.format(StartTime);
+                              String formattedPatrolOutTime =
+                                  timeformat.format(DateTime.now());
                               String formattedDate = DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now());
                               Map<String, dynamic> emailParams = {
@@ -1176,24 +1195,32 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 'CompanyName': 'Tacttik',
                               };
 
+                              List<Map<String, dynamic>> formattedImageUrls =
+                                  imageUrls.map((url) {
+                                return {
+                                  'StatusReportedTime': formattedEndDate,
+                                  'ImageUrls': url['ImageUrls'],
+                                  ' StatusComment': url['StatusComment']
+                                };
+                              }).toList();
                               // sendFormattedEmail(emailParams);
                               sendapiEmail(
                                 emails,
-                                "test",
+                                "Patrol update for ${widget.p.description} Date:- formattedStartDate",
                                 widget.p.EmployeeName,
-                                "Data",
+                                "",
                                 'Shift ',
                                 formattedStartDate,
-                                "",
-                                "",
+                                formattedImageUrls,
                                 widget.p.EmployeeName,
-                                "20:51",
-                                "21:01",
+                                formattedPatrolInTime,
+                                formattedEndTime,
+                                widget.p.CompletedCount.toString(),
                                 widget.p.CompletedCount.toString(),
                                 widget.p.description,
                                 "Completed",
-                                "20:51",
-                                "21:01",
+                                formattedPatrolInTime,
+                                formattedPatrolOutTime,
                               );
                               Navigator.pop(context);
                             } else {
@@ -1219,7 +1246,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               var defaultEmail = "tacttikofficial@gmail.com";
                               emails.add(ClientEmail!);
                               emails.add(AdminEmail!);
-                              emails.add("sutarvaibhav37@gmail.com");
 
                               DateFormat dateFormat =
                                   DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1229,6 +1255,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   dateFormat.format(DateTime.now());
                               String formattedEndTime =
                                   dateFormat.format(DateTime.now());
+                              DateFormat timeformat = DateFormat(
+                                  "HH:mm"); // Define the format for time
+                              String formattedPatrolInTime =
+                                  timeformat.format(StartTime);
+                              String formattedPatrolOutTime =
+                                  timeformat.format(DateTime.now());
                               String formattedDate = DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now());
                               Map<String, dynamic> emailParams = {
@@ -1241,8 +1273,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 'Location': '${widget.p.description}',
                                 'Status': 'Completed',
                                 'GuardName': '${widget.p.EmployeeName}',
-                                'StartTime': "20:51",
-                                'EndTime': "21:01",
+                                'StartTime': StartTime,
+                                'EndTime': DateTime.now().toString(),
                                 'patrolCount': widget.p.CompletedCount,
                                 'patrolTImein': StartTime,
                                 'patrolTImeout': DateTime.now().toString(),
@@ -1258,24 +1290,32 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 'CompanyName': 'Tacttik',
                               };
 
+                              List<Map<String, dynamic>> formattedImageUrls =
+                                  imageUrls.map((url) {
+                                return {
+                                  'StatusReportedTime': formattedEndDate,
+                                  'ImageUrls': url['ImageUrls'],
+                                  ' StatusComment': url['StatusComment']
+                                };
+                              }).toList();
                               // sendFormattedEmail(emailParams);
                               sendapiEmail(
                                 emails,
-                                "test",
+                                "Patrol update for ${widget.p.description} Date:- formattedStartDate",
                                 widget.p.EmployeeName,
-                                "Data",
+                                "",
                                 'Shift ',
                                 formattedStartDate,
-                                "",
-                                "",
+                                formattedImageUrls,
                                 widget.p.EmployeeName,
-                                "20:51",
-                                "21:01",
+                                formattedPatrolInTime,
+                                formattedEndTime,
                                 widget.p.CompletedCount.toString(),
+                                widget.p.PatrolRequiredCount.toString(),
                                 widget.p.description,
                                 "Completed",
-                                "20:51",
-                                "21:01",
+                                formattedPatrolInTime,
+                                formattedPatrolOutTime,
                               );
                               // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                               _refreshData();
@@ -1305,7 +1345,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             var defaultEmail = "tacttikofficial@gmail.com";
                             emails.add(ClientEmail!);
                             emails.add(AdminEmail!);
-                            emails.add("sutarvaibhav37@gmail.com");
 
                             DateFormat dateFormat =
                                 DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1315,57 +1354,46 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 dateFormat.format(DateTime.now());
                             String formattedEndTime =
                                 dateFormat.format(DateTime.now());
+                            DateFormat timeformat = DateFormat(
+                                "HH:mm"); // Define the format for time
+                            String formattedPatrolInTime =
+                                timeformat.format(StartTime);
+                            String formattedPatrolOutTime =
+                                timeformat.format(DateTime.now());
                             String formattedDate =
                                 DateFormat('yyyy-MM-dd').format(DateTime.now());
-                            Map<String, dynamic> emailParams = {
-                              'to_email':
-                                  '$ClientEmail, $AdminEmail , $defaultEmail',
-                              // 'to_email': '$TestinEmail',
-                              'from_name': '${widget.p.EmployeeName}',
-                              'reply_to': '$ClientEmail',
-                              'type': 'Patrol',
-                              'Location': '${widget.p.description}',
-                              'Status': 'Completed',
-                              'GuardName': '${widget.p.EmployeeName}',
-                              'StartTime': "20:51",
-                              'EndTime': "21:01",
-                              'patrolCount': widget.p.CompletedCount,
-                              'patrolTImein': StartTime,
-                              'patrolTImeout': DateTime.now().toString(),
-                              'imageData': imageUrls
-                                  .map((map) => {
-                                        'StatusReportedTime':
-                                            map['StatusReportedTime']
-                                                .toString(),
-                                        'ImageUrls': map['ImageUrls'].join(', ')
-                                      })
-                                  .toList(),
-                              'CompanyName': 'Tacttik',
-                            };
 
+                            List<Map<String, dynamic>> formattedImageUrls =
+                                imageUrls.map((url) {
+                              return {
+                                'StatusReportedTime': formattedEndDate,
+                                'ImageUrls': url['ImageUrls'],
+                                ' StatusComment': url['StatusComment']
+                              };
+                            }).toList();
                             // sendFormattedEmail(emailParams);
                             sendapiEmail(
                               emails,
-                              "test",
+                              "Patrol update for ${widget.p.description} Date:- formattedStartDate",
                               widget.p.EmployeeName,
-                              "Data",
+                              "",
                               'Shift ',
                               formattedStartDate,
-                              "",
-                              "",
+                              formattedImageUrls,
                               widget.p.EmployeeName,
-                              "9pm",
-                              "23:12",
+                              formattedPatrolInTime.toString(),
+                              formattedPatrolOutTime.toString(),
                               widget.p.CompletedCount.toString(),
+                              widget.p.PatrolRequiredCount.toString(),
                               widget.p.description,
                               "Completed",
-                              "23:00",
-                              "23:12",
+                              formattedPatrolInTime.toString(),
+                              formattedPatrolOutTime.toString(),
                             );
                             // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                             _refreshData();
 
-                            _refreshData();
+                            // _refreshData();
                             showErrorToast(
                                 context, "Complete all the Checkpoints");
                             print("not checked");

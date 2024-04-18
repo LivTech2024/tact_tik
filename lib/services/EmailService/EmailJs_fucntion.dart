@@ -71,105 +71,144 @@ Future<bool> sendFormattedEmail(dynamic templateParams) async {
 // }
 
 Future<void> sendapiEmail(
-    List<String> toEmails,
-    String Subject,
-    String fromName,
-    String Data,
-    String type,
-    String date,
-    String StatusReportedTime,
-    String ImageUrls,
-    String GuardName,
-    String StartTime,
-    String EndTime,
-    String patrolCount,
-    String Location,
-    String Status,
-    String patrolTImein,
-    String patrolTImeout) async {
+  List<String> toEmails,
+  String Subject,
+  String fromName,
+  String Data,
+  String type,
+  String date,
+  List<Map<String, dynamic>> imageData,
+  String GuardName,
+  String StartTime,
+  String EndTime,
+  String patrolCount,
+  String TotalpatrolCount,
+  String Location,
+  String Status,
+  String patrolTimein,
+  String patrolTimeout,
+) async {
   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
-  final htmlContent = '''
-    <p>Hello Sir/Madam,</p>
-    <p>You have received a new update on the ${type} Activity on ${date}</p>
-    <div style="overflow-x: auto;">
-        <table style="width: 99.9861%; border-collapse: collapse; margin: 0px auto; height: 182.898px;" border="0" cellspacing="0" cellpadding="8">
-            <thead>
-                <tr style="height: 76.3984px;">
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 14.0065%;">Guard Name</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 17.5428%;">Location</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 15.0466%;">Status</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 5.47779%;">Start Time</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 6.93391%;">End Time</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 6.17118%;">Count</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 10.0542%;">Time in</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 8.32913%;">Time out</th>
-                    <th style="border-bottom: 2px solid rgb(221, 221, 221); padding: 10px; text-align: center; background-color: #f2f2f2; width: 16.4249%;">Comments</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="height: 106.5px;">
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 14.0065%;">${GuardName}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; text-align: center; vertical-align: middle; width: 17.5428%;">${Location}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; text-align: center; vertical-align: middle; width: 15.0466%;">${Status}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 5.47779%;">${StartTime}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 6.93391%;">${EndTime}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 6.17118%;">"2"</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 10.0542%;">${patrolTImein}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 8.32913%;">${patrolTImeout}</td>
-                    <td style="border-bottom: 1px solid rgb(221, 221, 221); padding: 10px; text-align: center; vertical-align: middle; width: 16.4249%;">
-                        <p>no qr code scanner on Level 6 right side</p>
-                    </td>
-                </tr>
-                <tr></tr>
-                <tr>
-                    <td style="text-align: center; vertical-align: middle;" colspan="9">Images:</td>
-                </tr>
-                {{#imageData}}
-                <tr>
-                    <td style="text-align: center; vertical-align: middle;" colspan="9">
-                        <p>StatusReportedTime: ${StatusReportedTime}</p>
-                        <p>ImageUrls: ${ImageUrls}</p>
-                    </td>
-                </tr>
-                {{/imageData}}
-            </tbody>
-        </table>
-    </div>
-    <p>Best wishes,<br>Team tacttik</p>
+
+  String imagesHTML = '';
+  for (var data in imageData) {
+    String statusReportedTime = data['StatusReportedTime'];
+    List<String> imageUrls = List<String>.from(data['ImageUrls']);
+    String statusComment = data['StatusComment'] ?? "";
+
+    // Add a paragraph with the StatusReportedTime and StatusComment
+    imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
+    imagesHTML += '<p>StatusComment: $statusComment</p>';
+
+    // Add image tags for each ImageUrl with a specific size
+    for (var imageUrl in imageUrls) {
+      imagesHTML +=
+          '<img src="$imageUrl" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
+    }
+  }
+  final htmlcontent2 = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrol Report</title>
     <style>
-        @media screen and (max-width: 600px) {
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-            }
-
-            th,
-            td {
-                border: none;
-                text-align: left;
-                padding: 8px;
-            }
-
-            th {
-                background-color: #f2f2f2;
-            }
-
-            td {
-                font-size: 14px;
-            }
+        body {
+            background-image: url('path/to/your/background/image.jpg');
+            background-size: cover; /* Ensure the background image covers the entire body */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            font-family: Arial, sans-serif; /* Use a readable font */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        #shift-patrol-report {
+            width: 100%;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .patrol-section {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem; /* Add some space between sections */
+            background-color: #fff; /* Set a white background color for sections */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .details {
+            white-space: pre-line; /* Preserve line breaks in the 'Data' field */
+        }
+        img {
+            max-width: 100%; /* Ensure images don't exceed their container width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Prevent inline images from affecting layout */
+            margin-bottom: 0.5rem; /* Add some space between images */
         }
     </style>
-  ''';
-  // final encodedHtmlContent = base64Encode(utf8.encode(htmlContent));
+</head>
+<body>
+    <div id="shift-patrol-report">
+        <h2>SHIFT/PATROL REPORT</h2>
+        <div class="patrol-section">
+            <h3>Patrol Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Guard name</th>
+                        <th>Patrol time in</th>
+                        <th>Patrol time out</th>
+                        <th>Total Patrol Count</th>
+                        <th>Total hits</th>
+                        <th>Status</th>
+                        <th>Incident</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$GuardName</td>
+                        <td>$patrolTimein</td>
+                        <td>$patrolTimeout</td>
+                        <td>$TotalpatrolCount</td>
+                        <td>$patrolCount</td>
+                        <td>$Status</td>
+                        <td class="details">$Data</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="patrol-section">
+            <h3>Patrol with Photos</h3>
+            <p id="patrol-details"></p>
+            $imagesHTML
+        </div>
+        <div class="report-section">
+            <h3>Important Note</h3>
+            <p id="important-note"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+""";
   final response = await http.post(
     Uri.parse(url),
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
-      'to_email': "Sales@tpssolution.com",
+      'to_email': "sutarvaibhav37@gmail.com",
       'subject': "Testing",
       'from_name': GuardName,
-      'html': htmlContent,
+      'html': htmlcontent2,
     }),
   );
 
@@ -181,3 +220,75 @@ Future<void> sendapiEmail(
     // Handle failure
   }
 }
+
+
+// final htmlContent = '''
+//   <!DOCTYPE html>
+// <html>
+//   <head>
+//     <style>
+//       /* Add some basic styling */
+//       body {
+//         font-family: Arial, sans-serif;
+//       }
+//       table {
+//         border-collapse: collapse;
+//         width: 100%;
+//       }
+//       th, td {
+//         border: 1px solid black;
+//         padding: 8px;
+//         text-align: left;
+//       }
+//       th {
+//         background-color: #f2f2f2;
+//       }
+//       .images {
+//         height: 150px;
+//         width: 150px;
+//         object-fit: cover;
+//         border: 1px solid #ccc;
+//         margin-right: 8px;
+//       }
+//       .details {
+//         margin-top: 8px;
+//       }
+//     </style>
+//   </head>
+//   <body>
+//     <h2>SHIFT/PATROL REPORT</h2>
+//     <table>
+//       <thead>
+//         <tr>
+//           <th>guard name</th>
+//           <th>shift Time in</th>
+//           <th>shift Time out</th>
+//           <th>patrol time in</th>
+//           <th>patrol time out</th>
+//           <th>total hits</th>
+//           <th>any incident</th>
+//           <th>patrol details</th>
+//           <th>patrol time</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         <tr>
+//           <td>$GuardName</td>
+//           <td>6:00pm</td>
+//           <td>$EndTime</td>
+//           <td>6:00pm</td>
+//           <td>6:20pm</td>
+//           <td>$patrolCount</td>
+//           <td>$Status</td>
+//           <td class="details">
+//             $Data<br>
+//             $imagesHTML
+//           </td>
+//           <td>$patrolTimein to $patrolTimeout</td>
+//         </tr>
+//       </tbody>
+//     </table>
+//     <p>Important Note: SHIFT / PATROL REPORT guard name shift Time in Shift Time out patrol time in patrol time out total hits any incident patrol details patrol time 6:00 pm to 6:20 pm Patrol with photos Details Looks all good IMAGES</p>
+//   </body>
+// </html>
+//   ''';
