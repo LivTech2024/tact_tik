@@ -94,6 +94,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     });
   }
 
+  //keep this code in firebase_function file  and handle its errors here
   Future<void> _submitDAR() async {
     if (_isSubmitting) return;
 
@@ -120,6 +121,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
         _darController.clear();
 
         showCustomSnackbar(context, 'DAR saved successfully');
+        Navigator.pop(context);
       } catch (e) {
         showCustomSnackbar(context, 'Error saving DAR: $e');
       } finally {
@@ -141,6 +143,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     );
   }
 
+  //use the toast notification here instead of this
   @override
   void dispose() {
     _titleController.dispose();
