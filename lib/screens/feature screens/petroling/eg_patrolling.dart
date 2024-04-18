@@ -197,11 +197,15 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: width / width30,
-              vertical: height / height30,
             ),
             child: CustomScrollView(
               // physics: const PageScrollPhysics(),
               slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: height / height30,
+                  ),
+                ),
                 SliverAppBar(
                   backgroundColor: AppBarcolor,
                   elevation: 0,

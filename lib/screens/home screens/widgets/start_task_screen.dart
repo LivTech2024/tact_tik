@@ -444,42 +444,45 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           child: Row(
             children: [
               Expanded(
-                child: Bounce(
-                  onTap: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    bool? status =
-                        await fireStoreService.checkShiftReturnTaskStatus(
-                            widget.EmployeId, widget.ShiftId);
-                    setState(() {
-                      if (!clickedIn) {
-                        clickedIn = true;
-                        prefs.setBool('clickedIn', clickedIn);
-                        DateTime currentTime = DateTime.now();
-                        inTime = currentTime;
-                        prefs.setInt(
-                            'savedInTime', currentTime.millisecondsSinceEpoch);
+                child: IgnorePointer(
+                  ignoring: clickedIn,
+                  child: Bounce(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      bool? status =
+                          await fireStoreService.checkShiftReturnTaskStatus(
+                              widget.EmployeId, widget.ShiftId);
+                      setState(() {
+                        if (!clickedIn) {
+                          clickedIn = true;
+                          prefs.setBool('clickedIn', clickedIn);
+                          DateTime currentTime = DateTime.now();
+                          inTime = currentTime;
+                          prefs.setInt(
+                              'savedInTime', currentTime.millisecondsSinceEpoch);
 
-                        fireStoreService.INShiftLog(widget.EmployeId);
-                        if (status == false) {
-                          print("Staus is false");
+                          fireStoreService.INShiftLog(widget.EmployeId);
+                          if (status == false) {
+                            print("Staus is false");
+                          } else {
+                            print("Staus is true");
+                          }
+                          fireStoreService.fetchreturnShiftTasks(widget.ShiftId);
+                          startStopwatch();
                         } else {
-                          print("Staus is true");
+                          print('already clicked');
                         }
-                        fireStoreService.fetchreturnShiftTasks(widget.ShiftId);
-                        startStopwatch();
-                      } else {
-                        print('already clicked');
-                      }
-                    });
-                  },
-                  child: Container(
-                    color: WidgetColor,
-                    child: Center(
-                      child: InterBold(
-                        text: 'IN',
-                        fontsize: width / width18,
-                        color: clickedIn ? Primarycolorlight : Primarycolor,
+                      });
+                    },
+                    child: Container(
+                      color: WidgetColor,
+                      child: Center(
+                        child: InterBold(
+                          text: 'Start Shift',
+                          fontsize: width / width18,
+                          color: clickedIn ? Primarycolorlight : Primarycolor,
+                        ),
                       ),
                     ),
                   ),
@@ -489,57 +492,60 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 color: Colors.white,
               ),
               Expanded(
-                child: Bounce(
-                  onTap: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    bool? status =
-                        await fireStoreService.checkShiftReturnTaskStatus(
-                            widget.EmployeId, widget.ShiftId);
-                    if (status == true) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ShiftReturnTaskScreen(
-                                  shiftId: widget.ShiftId,
-                                  Empid: widget.EmployeId,
-                                  ShiftName: widget.ShiftAddressName,
-                                  EmpName: widget.EmployeeName,
-                                )),
-                      );
-                    } else {
-                      setState(() {
-                        // isPaused = !isPaused;
-                        // prefs.setBool("pauseState", isPaused);
-                        clickedIn = false;
-                        resetStopwatch();
-                        resetClickedState();
-                        widget.resetShiftStarted();
-                      });
+                child: IgnorePointer(
+                  ignoring: !clickedIn,
+                  child: Bounce(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      bool? status =
+                          await fireStoreService.checkShiftReturnTaskStatus(
+                              widget.EmployeId, widget.ShiftId);
+                      if (status == true) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ShiftReturnTaskScreen(
+                                    shiftId: widget.ShiftId,
+                                    Empid: widget.EmployeId,
+                                    ShiftName: widget.ShiftAddressName,
+                                    EmpName: widget.EmployeeName,
+                                  )),
+                        );
+                      } else {
+                        setState(() {
+                          // isPaused = !isPaused;
+                          // prefs.setBool("pauseState", isPaused);
+                          clickedIn = false;
+                          resetStopwatch();
+                          resetClickedState();
+                          widget.resetShiftStarted();
+                        });
 
-                      await fireStoreService.EndShiftLog(
-                          widget.EmployeId,
-                          formattedStopwatchTime,
-                          widget.ShiftId,
-                          widget.ShiftAddressName,
-                          widget.ShiftBranchId,
-                          widget.ShiftCompanyId,
-                          widget.EmployeeName);
-                      send_mail_onOut();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
-                      );
-                    }
-                  },
-                  child: Container(
-                    color: WidgetColor,
-                    child: Center(
-                      child: InterBold(
-                        text: 'OUT',
-                        fontsize: width / width18,
-                        color: clickedIn ? Primarycolor : Primarycolorlight,
+                        await fireStoreService.EndShiftLog(
+                            widget.EmployeId,
+                            formattedStopwatchTime,
+                            widget.ShiftId,
+                            widget.ShiftAddressName,
+                            widget.ShiftBranchId,
+                            widget.ShiftCompanyId,
+                            widget.EmployeeName);
+                        send_mail_onOut();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      color: WidgetColor,
+                      child: Center(
+                        child: InterBold(
+                          text: 'End Shift',
+                          fontsize: width / width18,
+                          color: clickedIn ? Primarycolor : Primarycolorlight,
+                        ),
                       ),
                     ),
                   ),
