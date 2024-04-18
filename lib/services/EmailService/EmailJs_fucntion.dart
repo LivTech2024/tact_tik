@@ -207,8 +207,8 @@ Future<void> sendapiEmail(
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'to_email': toEmail,
-        'subject': "Testing",
-        'from_name': GuardName,
+        'subject': Subject,
+        'from_name': "TactTik Reports",
         'html': htmlcontent2,
       }),
     );

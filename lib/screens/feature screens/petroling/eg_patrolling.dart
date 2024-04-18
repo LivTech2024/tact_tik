@@ -7,6 +7,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:toastification/toastification.dart';
@@ -1124,7 +1125,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               'to_email':
                                   '$ClientEmail, $AdminEmail , $defaultEmail',
                               // 'to_email': '$TestinEmail',
-                              'from_name': '${widget.p.EmployeeName}',
+                              'from_name': '',
                               'reply_to': '$ClientEmail',
                               'type': 'Patrol',
                               'Location': '${widget.p.description}',
@@ -1156,7 +1157,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             // sendFormattedEmail(emailParams);
                             sendapiEmail(
                               emails,
-                              "Patrol update for ${widget.p.description} Date:- formattedStartDate",
+                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
                               widget.p.EmployeeName,
                               "",
                               'Shift ',
@@ -1174,7 +1175,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             );
                             _refreshData();
                             // sendFormattedEmail(emailParams);
-                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
                           } else {
                             _refreshData();
                             if (!widget.p.Allchecked) {
@@ -1234,7 +1238,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 'to_email':
                                     '$ClientEmail, $AdminEmail , $defaultEmail',
                                 // 'to_email': '$TestinEmail',
-                                'from_name': '${widget.p.EmployeeName}',
+                                'from_name': '',
                                 'reply_to': '$ClientEmail',
                                 'type': 'Patrol',
                                 'Location': '${widget.p.description}',
@@ -1268,7 +1272,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               // sendFormattedEmail(emailParams);
                               sendapiEmail(
                                 emails,
-                                "Patrol update for ${widget.p.description} Date:- formattedStartDate",
+                                "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
                                 widget.p.EmployeeName,
                                 "",
                                 'Shift ',
@@ -1371,7 +1375,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               // sendFormattedEmail(emailParams);
                               sendapiEmail(
                                 emails,
-                                "Patrol update for ${widget.p.description} Date:- formattedStartDate",
+                                "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
                                 widget.p.EmployeeName,
                                 "",
                                 'Patrol',
