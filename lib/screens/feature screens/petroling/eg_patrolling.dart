@@ -970,6 +970,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         .clear();
                                                                     Controller
                                                                         .clear();
+
+                                                                    _refreshData();
                                                                     Navigator.pop(
                                                                         context);
                                                                   },
@@ -1026,70 +1028,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           _refresh();
                           if (widget.p.CompletedCount ==
                               widget.p.PatrolRequiredCount) {
-                            var ClientEmail = await fireStoreService
-                                .getClientEmail(widget.p.PatrolClientID);
-                            var AdminEmail = await fireStoreService
-                                .getAdminEmail(widget.p.PatrolCompanyID);
-                            var TestinEmail = "sutarvaibhav37@gmail.com";
-                            var defaultEmail = "tacttikofficial@gmail.com";
-                            DateFormat dateFormat =
-                                DateFormat("yyyy-MM-dd HH:mm:ss");
-
-                            String formattedStartDate =
-                                dateFormat.format(DateTime.now());
-                            String formattedEndDate =
-                                dateFormat.format(DateTime.now());
-                            String formattedEndTime =
-                                dateFormat.format(DateTime.now());
-                            Map<String, dynamic> emailParams = {
-                              // 'to_email':
-                              //     '$ClientEmail, $AdminEmail ,$defaultEmail',
-                              'to_email': '$TestinEmail',
-                              "startDate": formattedStartDate,
-                              "endDate": DateTime.now(),
-                              'from_name': formattedEndDate,
-                              'reply_to': '$defaultEmail',
-                              'type': 'Patrol',
-                              'Location': '${widget.p.description}',
-                              'Status': 'Completed',
-                              'GuardName': '${widget.p.EmployeeName}',
-                              'StartTime': StartTime,
-                              'EndTime': DateTime.now().toString(),
-                              'CompanyName': 'Tacttik',
-                            };
-                            _refreshData();
-                            // sendFormattedEmail(emailParams);
-                            Navigator.pop(context);
-                          } else {
-                            _refreshData();
-                            if (!widget.p.Allchecked) {
-                              // showCustomDialog(
-                              //     context,
-                              //     "Checkpoints Incomplete !!",
-                              //     "Complete all the checkpoints  to end");
-                            }
-                          }
-
-                          if (widget.p.Allchecked) {
-                            _refreshData();
-                            // if (widget.p.CompletedCount ==
-                            //     widget.p.PatrolRequiredCount - 1) {
-                            //   await fireStoreService
-                            //       .LastEndPatrolupdatePatrolsStatus(
-                            //           widget.p.PatrolId,
-                            //           widget.p.EmpId,
-                            //           widget.p.EmployeeName);
-
-                            //   Navigator.pop(context);
-                            // } else {
-                            //   await fireStoreService
-                            //       .EndPatrolupdatePatrolsStatus(
-                            //           widget.p.PatrolId,
-                            //           widget.p.EmpId,
-                            //           widget.p.EmployeeName);
-                            // }
-                            showSuccessToast(context, "Patrol Completed");
-                            print("All checked");
                             List<String> emails = [];
                             var ClientEmail = await fireStoreService
                                 .getClientEmail(widget.p.PatrolClientID);
@@ -1160,8 +1098,187 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               DateTime.now().toString(),
                               DateTime.now().toString(),
                             );
-                            // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
                             _refreshData();
+                            // sendFormattedEmail(emailParams);
+                            Navigator.pop(context);
+                          } else {
+                            _refreshData();
+                            if (!widget.p.Allchecked) {
+                              showErrorToast(
+                                  context, "Complete all the Checkpoints");
+                              // showCustomDialog(
+                              //     context,
+                              //     "Checkpoints Incomplete !!",
+                              //     "Complete all the checkpoints  to end");
+                            }
+                            // showErrorToast(
+                            //     context, "Complete all the Checkpoints");
+                          }
+
+                          if (widget.p.Allchecked) {
+                            _refreshData();
+                            if (widget.p.CompletedCount ==
+                                widget.p.PatrolRequiredCount - 1) {
+                              await fireStoreService
+                                  .LastEndPatrolupdatePatrolsStatus(
+                                      widget.p.PatrolId,
+                                      widget.p.EmpId,
+                                      widget.p.EmployeeName);
+                              List<String> emails = [];
+                              var ClientEmail = await fireStoreService
+                                  .getClientEmail(widget.p.PatrolClientID);
+                              var AdminEmail = await fireStoreService
+                                  .getAdminEmail(widget.p.PatrolCompanyID);
+                              var imageUrls =
+                                  await fireStoreService.getImageUrlsForPatrol(
+                                      widget.p.PatrolId, widget.p.EmpId);
+
+                              print(imageUrls);
+                              var TestinEmail = "sutarvaibhav37@gmail.com";
+                              var defaultEmail = "tacttikofficial@gmail.com";
+                              emails.add(ClientEmail!);
+                              emails.add(AdminEmail!);
+
+                              DateFormat dateFormat =
+                                  DateFormat("yyyy-MM-dd HH:mm:ss");
+                              String formattedStartDate =
+                                  dateFormat.format(DateTime.now());
+                              String formattedEndDate =
+                                  dateFormat.format(DateTime.now());
+                              String formattedEndTime =
+                                  dateFormat.format(DateTime.now());
+                              String formattedDate = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
+                              Map<String, dynamic> emailParams = {
+                                // 'to_email':
+                                //     '$ClientEmail, $AdminEmail , $defaultEmail',
+                                'to_email': '$TestinEmail',
+                                'from_name': '${widget.p.EmployeeName}',
+                                'reply_to': '$ClientEmail',
+                                'type': 'Patrol',
+                                'Location': '${widget.p.description}',
+                                'Status': 'Completed',
+                                'GuardName': '${widget.p.EmployeeName}',
+                                'StartTime': StartTime,
+                                'EndTime': DateTime.now().toString(),
+                                'patrolCount': widget.p.CompletedCount,
+                                'patrolTImein': StartTime,
+                                'patrolTImeout': DateTime.now().toString(),
+                                'imageData': imageUrls
+                                    .map((map) => {
+                                          'StatusReportedTime':
+                                              map['StatusReportedTime']
+                                                  .toString(),
+                                          'ImageUrls':
+                                              map['ImageUrls'].join(', ')
+                                        })
+                                    .toList(),
+                                'CompanyName': 'Tacttik',
+                              };
+
+                              // sendFormattedEmail(emailParams);
+                              sendapiEmail(
+                                emails,
+                                "test",
+                                widget.p.EmployeeName,
+                                "Data",
+                                'Shift ',
+                                formattedStartDate,
+                                "",
+                                "",
+                                widget.p.EmployeeName,
+                                DateTime.now().toString(),
+                                DateTime.now().toString(),
+                                widget.p.CompletedCount.toString(),
+                                widget.p.description,
+                                "Completed",
+                                DateTime.now().toString(),
+                                DateTime.now().toString(),
+                              );
+                              Navigator.pop(context);
+                            } else {
+                              await fireStoreService
+                                  .EndPatrolupdatePatrolsStatus(
+                                      widget.p.PatrolId,
+                                      widget.p.EmpId,
+                                      widget.p.EmployeeName);
+
+                              // showSuccessToast(context, "Patrol Completed");
+                              print("All checked");
+                              List<String> emails = [];
+                              var ClientEmail = await fireStoreService
+                                  .getClientEmail(widget.p.PatrolClientID);
+                              var AdminEmail = await fireStoreService
+                                  .getAdminEmail(widget.p.PatrolCompanyID);
+                              var imageUrls =
+                                  await fireStoreService.getImageUrlsForPatrol(
+                                      widget.p.PatrolId, widget.p.EmpId);
+
+                              print(imageUrls);
+                              var TestinEmail = "sutarvaibhav37@gmail.com";
+                              var defaultEmail = "tacttikofficial@gmail.com";
+                              emails.add(ClientEmail!);
+                              emails.add(AdminEmail!);
+
+                              DateFormat dateFormat =
+                                  DateFormat("yyyy-MM-dd HH:mm:ss");
+                              String formattedStartDate =
+                                  dateFormat.format(DateTime.now());
+                              String formattedEndDate =
+                                  dateFormat.format(DateTime.now());
+                              String formattedEndTime =
+                                  dateFormat.format(DateTime.now());
+                              String formattedDate = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
+                              Map<String, dynamic> emailParams = {
+                                // 'to_email':
+                                //     '$ClientEmail, $AdminEmail , $defaultEmail',
+                                'to_email': '$TestinEmail',
+                                'from_name': '${widget.p.EmployeeName}',
+                                'reply_to': '$ClientEmail',
+                                'type': 'Patrol',
+                                'Location': '${widget.p.description}',
+                                'Status': 'Completed',
+                                'GuardName': '${widget.p.EmployeeName}',
+                                'StartTime': StartTime,
+                                'EndTime': DateTime.now().toString(),
+                                'patrolCount': widget.p.CompletedCount,
+                                'patrolTImein': StartTime,
+                                'patrolTImeout': DateTime.now().toString(),
+                                'imageData': imageUrls
+                                    .map((map) => {
+                                          'StatusReportedTime':
+                                              map['StatusReportedTime']
+                                                  .toString(),
+                                          'ImageUrls':
+                                              map['ImageUrls'].join(', ')
+                                        })
+                                    .toList(),
+                                'CompanyName': 'Tacttik',
+                              };
+
+                              // sendFormattedEmail(emailParams);
+                              sendapiEmail(
+                                emails,
+                                "test",
+                                widget.p.EmployeeName,
+                                "Data",
+                                'Shift ',
+                                formattedStartDate,
+                                "",
+                                "",
+                                widget.p.EmployeeName,
+                                DateTime.now().toString(),
+                                DateTime.now().toString(),
+                                widget.p.CompletedCount.toString(),
+                                widget.p.description,
+                                "Completed",
+                                DateTime.now().toString(),
+                                DateTime.now().toString(),
+                              );
+                              // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
+                              _refreshData();
+                            }
                             // sendFormattedEmail(emailParams);
                           } else {
                             _refreshData();

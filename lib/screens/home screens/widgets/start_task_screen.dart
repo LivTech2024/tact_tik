@@ -290,7 +290,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final double width = MediaQuery.of(context).size.width;
     // Get the current time
     DateTime currentTime = DateTime.now();
-    DateFormat format = DateFormat('hh:mm a');
+    DateFormat format = DateFormat('h:mm a');
 // Parse the shift start time from the widget
     DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
 
@@ -493,6 +493,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   onTap: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
+
                     bool? status =
                         await fireStoreService.checkShiftReturnTaskStatus(
                             widget.EmployeId, widget.ShiftId);
@@ -515,6 +516,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         resetStopwatch();
                         resetClickedState();
                         widget.resetShiftStarted();
+                        prefs.setBool('ShiftStarted', false);
                       });
 
                       await fireStoreService.EndShiftLog(

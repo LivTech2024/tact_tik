@@ -55,4 +55,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'livtech-dbcf2.appspot.com',
     iosBundleId: 'com.avocadotech.tacttik.tactTik',
   );
+
 }

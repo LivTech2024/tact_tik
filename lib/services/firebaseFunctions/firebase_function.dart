@@ -76,8 +76,7 @@ class FireStoreService {
 
       final statusDoc = shiftTasks.any((status) =>
           status['StatusReportedById'] == empId &&
-          status['Status'] == 'pending');
-
+          (status['Status'] == 'pending' || status['Status'] == 'started'));
       if (statusDoc) {
         print(
             "Found shift with status pending for EmployeeId: $empId in Document ID: ${doc.id}");
@@ -409,23 +408,32 @@ class FireStoreService {
   }
 
 //Update the User Shift Status
-  Future<void> startShiftLog(String employeeId, String shiftId) async {
+  Future<void> startShiftLog(
+      String employeeId, String shiftId, String EmpName) async {
     try {
       // Get the current system time
-      DateTime currentTime = DateTime.now();
-
-      // Create a new document in the "Log" subcollection
-      // await generateReport(address, reportName, Empid, BranchId, Data, CompanyId, Status, EmpName)
-      final updateShiftStatus =
-          await shifts.where('ShiftId', isEqualTo: shiftId).get();
-      if (updateShiftStatus.docs.isNotEmpty) {
-        final documentId = updateShiftStatus.docs.first.id;
-        await shifts.doc(documentId).update(
-            {'ShiftAcknowledged': true, 'ShiftCurrentStatus': "started"});
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+      final statusData = {
+        'Status': 'started',
+        'StatusReportedById': employeeId,
+        'StatusReportedByName': EmpName,
+        'StatusReportedTime': DateTime.now().toString(),
+      };
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'started');
+      if (index != -1) {
+        // If the map already exists in the array, update it
+        currentArray[index] = statusData;
       } else {
-        throw Exception('Shift with id $shiftId not found.');
+        // If the map doesn't exist, add it to the array
+        currentArray.add(statusData);
       }
-      print('Shift start logged at $currentTime');
+      await documentReference.update({'ShiftCurrentStatus': currentArray});
     } catch (e) {
       print('Error logging shift start: $e');
       // Handle the error as needed
@@ -525,7 +533,7 @@ class FireStoreService {
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
-          element['Status'] == 'completed');
+          element['Status'] == 'started');
       if (index != -1) {
         // If the map already exists in the array, update it
         currentArray[index] = statusData;
@@ -1366,6 +1374,7 @@ class FireStoreService {
               imgUrls.map((url) => url['downloadURL']).toList();
           status["StatusComment"] = comment;
           status['StatusReportedTime'] = Timestamp.now();
+          status["Status"] = "checked";
 
           // Update the Firestore document with the new wellness reports
           await patrols.doc(patrolID).update({
