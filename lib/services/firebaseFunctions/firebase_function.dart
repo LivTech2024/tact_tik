@@ -254,10 +254,56 @@ class FireStoreService {
           'StatusReportedTime': Timestamp.now(),
         });
       }
-
+      await updatePatrolCheckpointStatus(docId, statusReportedById);
       // Update the document with the updated status array
       await patrolDocument.update({
         'PatrolCurrentStatus': currentStatusList,
+      });
+
+      print('Document updated successfully');
+    } catch (e) {
+      print('Error updating document: $e');
+    }
+  }
+
+  Future<void> updatePatrolCheckpointStatus(
+    String docId,
+    String? statusReportedById,
+  ) async {
+    try {
+      // Get a reference to the Firestore document
+      DocumentReference<Map<String, dynamic>> patrolDocument =
+          FirebaseFirestore.instance.collection('Patrols').doc(docId);
+
+      // Fetch the current document data
+      var documentSnapshot = await patrolDocument.get();
+      var data = documentSnapshot.data();
+
+      // Check if the PatrolCheckPoints array exists
+      List<Map<String, dynamic>> checkPointsList =
+          List<Map<String, dynamic>>.from(data?['PatrolCheckPoints'] ?? []);
+
+      // Update CheckPointStatus for each checkpoint
+      checkPointsList.forEach((checkpoint) {
+        List<Map<String, dynamic>> checkPointStatuses =
+            List<Map<String, dynamic>>.from(
+                checkpoint['CheckPointStatus'] ?? []);
+
+        // Update CheckPointStatus if it is empty or null
+        if (checkPointStatuses.isEmpty) {
+          checkPointStatuses.add({
+            'Status': 'unchecked',
+            'StatusReportedById': statusReportedById,
+          });
+        }
+
+        // Update the CheckPointStatus in the checkpoint
+        checkpoint['CheckPointStatus'] = checkPointStatuses;
+      });
+
+      // Update the document with the updated CheckPoints array
+      await patrolDocument.update({
+        'PatrolCheckPoints': checkPointsList,
       });
 
       print('Document updated successfully');
@@ -374,6 +420,55 @@ class FireStoreService {
     // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
 
     print("Patrol and checkpoint statuses updated successfully");
+  }
+
+  //Generate Patrol Logs
+  Future<void> fetchAndCreatePatrolLogs(
+      String patrolId,
+      String empId,
+      String EmpName,
+      String PatrolCount,
+      String ShiftDate,
+      String StartTime,
+      String EndTime) async {
+    // Assuming Firestore is initialized
+    var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
+    var patrolDoc = await patrolsCollection.doc(patrolId).get();
+    var patrolData = patrolDoc.data() as Map<String, dynamic>;
+    print("Patrol Data from Fetch = ${patrolData}");
+    // Filter and extract relevant checkpoint status information
+    List<Map<String, dynamic>> relevantCheckpoints = [];
+    for (var checkpoint in patrolData['PatrolCheckPoints']) {
+      for (var status in checkpoint['CheckPointStatus']) {
+        if (status['StatusReportedById'] == empId) {
+          relevantCheckpoints.add({
+            'CheckPointName': checkpoint['CheckPointName'],
+            'CheckPointStatus': status['Status'],
+            'CheckPointComment': status['StatusComment'],
+            'CheckPointImage': status['StatusImage'],
+            'CheckPointReportedAt': status['StatusReportedTime']
+          });
+          break; // Stop iterating through CheckPointStatus once a match is found
+        }
+      }
+    }
+
+    // Save relevant checkpoint status information to Firestore in the PatrolLogs collection
+    var patrolLogsCollection =
+        FirebaseFirestore.instance.collection('PatrolLogs');
+    var docRef = await patrolLogsCollection.add({
+      'PatrolId': patrolData['PatrolId'],
+      'PatrolDate': ShiftDate,
+      'PatrolLogGuardId': empId,
+      'PatrolLogGuardName': EmpName,
+      'PatrolLogPatrolCount': PatrolCount,
+      'PatrolLogCheckPoints': relevantCheckpoints,
+      'PatrolLogStatus': "completed",
+      'PatrolLogStartedAt': StartTime,
+      'PatrolLogEndedAt': EndTime,
+      'PatrolLogCreatedAt': DateTime.now(),
+    });
+    await docRef.update({'PatrolLogId': docRef.id});
   }
 
   Future<void> updatePatrolsReport(
@@ -845,8 +940,9 @@ class FireStoreService {
     if (empId.isEmpty) {
       return [];
     }
+    DateTime now = DateTime.now();
 
-    DateTime startDate = DateTime.now();
+    DateTime startDate = DateTime(now.year, now.month, now.day);
     DateTime endDate = startDate.add(Duration(days: 7));
 
     final querySnapshot = await shifts

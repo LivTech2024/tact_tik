@@ -75,43 +75,39 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   }
 
   void _uploadImages() async {
-    if (uploads.isNotEmpty ||
-        widget.ShiftId.isNotEmpty ||
-        widget.taskId.isNotEmpty ||
-        widget.EmpID.isNotEmpty) {
-      setState(() {
-        _isLoading = true;
-      });
-      print("Uploads Images  ${uploads}");
-      try {
-        print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
-          uploads,
-          widget.taskId ?? "",
-          widget.ShiftId ?? "",
-          widget.EmpID ?? "",
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
-        uploads.clear();
-        showSuccessToast(context, "Uploaded Successfully");
-        widget.refreshDataCallback();
-        // widget.refreshDataCallback();
-
-        // Navigator.pop(context);
-      } catch (e) {
-        showErrorToast(context, "${e}");
-        print('Error uploading images: $e');
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      widget.refreshDataCallback();
-    } else {
-      widget.refreshDataCallback();
-      showErrorToast(context, "No Images found");
-      print('No images to upload.');
+    if (uploads.isEmpty ||
+        widget.ShiftId.isEmpty ||
+        widget.taskId.isEmpty ||
+        widget.EmpID.isEmpty) {
+      showErrorToast(context, "No Images found or missing data");
+      print('No images to upload or missing data.');
+      return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
+    print("Uploads Images  $uploads");
+    try {
+      print("Task Id : ${widget.taskId}");
+      await fireStoreService.addImagesToShiftTasks(
+        uploads,
+        widget.taskId,
+        widget.ShiftId,
+        widget.EmpID,
+        widget.EmpName,
+        widget.shiftReturnTask,
+      );
+      uploads.clear();
+      showSuccessToast(context, "Uploaded Successfully");
+      widget.refreshDataCallback();
+    } catch (e) {
+      showErrorToast(context, "$e");
+      print('Error uploading images: $e');
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _uploadfromGallery() async {

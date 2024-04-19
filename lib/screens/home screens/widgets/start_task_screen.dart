@@ -288,7 +288,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       );
       Duration difference = shiftStartTime.difference(inTime!);
       int differenceInMinutes = difference.inMinutes.abs();
-      lateTime = differenceInMinutes > 5 ? '${differenceInMinutes}m Late' : '';
+
+      if (differenceInMinutes > 5) {
+        int hours = differenceInMinutes ~/ 60;
+        int minutes = differenceInMinutes % 60;
+        lateTime = '$hours ${minutes}m Late';
+      }
     }
     print("IN Time : ${inTime}");
     print("Elapsed  : ${_elapsedTime}");
@@ -584,6 +589,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           EmployeeID: widget.EmployeId,
                           EmployeeName: widget.EmployeeName,
                           ShiftId: widget.ShiftId,
+                          ShiftDate: widget.ShiftDate,
                         )));
           },
         ),
