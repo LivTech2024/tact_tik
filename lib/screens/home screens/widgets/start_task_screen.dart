@@ -473,60 +473,63 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 color: Colors.white,
               ),
               Expanded(
-                child: Bounce(
-                  onTap: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
+                child: IgnorePointer(
+                  ignoring: !clickedIn,
+                  child: Bounce(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
 
-                    bool? status =
-                        await fireStoreService.checkShiftReturnTaskStatus(
-                            widget.EmployeId, widget.ShiftId);
-                    if (status == true) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ShiftReturnTaskScreen(
-                                  shiftId: widget.ShiftId,
-                                  Empid: widget.EmployeId,
-                                  ShiftName: widget.ShiftAddressName,
-                                  EmpName: widget.EmployeeName,
-                                )),
-                      );
-                    } else {
-                      setState(() {
-                        // isPaused = !isPaused;
-                        // prefs.setBool("pauseState", isPaused);
-                        clickedIn = false;
-                        resetStopwatch();
-                        resetClickedState();
-                        widget.resetShiftStarted();
-                        prefs.setBool('ShiftStarted', false);
-                      });
+                      bool? status =
+                          await fireStoreService.checkShiftReturnTaskStatus(
+                              widget.EmployeId, widget.ShiftId);
+                      if (status == true) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ShiftReturnTaskScreen(
+                                    shiftId: widget.ShiftId,
+                                    Empid: widget.EmployeId,
+                                    ShiftName: widget.ShiftAddressName,
+                                    EmpName: widget.EmployeeName,
+                                  )),
+                        );
+                      } else {
+                        setState(() {
+                          // isPaused = !isPaused;
+                          // prefs.setBool("pauseState", isPaused);
+                          clickedIn = false;
+                          resetStopwatch();
+                          resetClickedState();
+                          widget.resetShiftStarted();
+                          prefs.setBool('ShiftStarted', false);
+                        });
 
-                      await fireStoreService.EndShiftLog(
-                          widget.EmployeId,
-                          formattedStopwatchTime,
-                          widget.ShiftId,
-                          widget.ShiftAddressName,
-                          widget.ShiftBranchId,
-                          widget.ShiftCompanyId,
-                          widget.EmployeeName);
+                        await fireStoreService.EndShiftLog(
+                            widget.EmployeId,
+                            formattedStopwatchTime,
+                            widget.ShiftId,
+                            widget.ShiftAddressName,
+                            widget.ShiftBranchId,
+                            widget.ShiftCompanyId,
+                            widget.EmployeeName);
 
-                      send_mail_onOut();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
-                      );
-                    }
-                  },
-                  child: Container(
-                    color: WidgetColor,
-                    child: Center(
-                      child: InterBold(
-                        text: 'End Shift',
-                        fontsize: width / width18,
-                        color: clickedIn ? Primarycolor : Primarycolorlight,
+                        send_mail_onOut();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      color: WidgetColor,
+                      child: Center(
+                        child: InterBold(
+                          text: 'End Shift',
+                          fontsize: width / width18,
+                          color: clickedIn ? Primarycolor : Primarycolorlight,
+                        ),
                       ),
                     ),
                   ),
@@ -537,55 +540,61 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         ),
         SizedBox(height: height / height10),
         clickedIn
-            ? Button1(
-                height: height / height65,
-                text: isPaused ? 'Resume' : (onBreak ? 'Resume' : 'Break'),
-                fontsize: width / width18,
-                color: color5,
-                backgroundcolor: WidgetColor,
-                onPressed: () async {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
+            ? IgnorePointer(
+                ignoring: !clickedIn,
+                child: Button1(
+                  height: height / height65,
+                  text: isPaused ? 'Resume' : (onBreak ? 'Resume' : 'Break'),
+                  fontsize: width / width18,
+                  color: color5,
+                  backgroundcolor: WidgetColor,
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
 
-                  setState(() {
-                    isPaused = !isPaused;
-                    onBreak = false;
-                    prefs.setBool('pauseState', isPaused);
-                  });
-                  // isPaused ? stopStopwatch() : startStopwatch();
-                  if (isPaused) {
-                    stopStopwatch();
                     setState(() {
-                      onBreak = true;
-                      prefs.setBool('onBreak', onBreak);
+                      isPaused = !isPaused;
+                      onBreak = false;
+                      prefs.setBool('pauseState', isPaused);
                     });
-                    fireStoreService.BreakShiftLog(widget.EmployeId);
-                  } else {
-                    onBreak = false;
+                    // isPaused ? stopStopwatch() : startStopwatch();
+                    if (isPaused) {
+                      stopStopwatch();
+                      setState(() {
+                        onBreak = true;
+                        prefs.setBool('onBreak', onBreak);
+                      });
+                      fireStoreService.BreakShiftLog(widget.EmployeId);
+                    } else {
+                      onBreak = false;
 
-                    prefs.setBool('onBreak', onBreak);
-                    startStopwatch();
-                    fireStoreService.ResumeShiftLog(widget.EmployeId);
-                  }
-                },
+                      prefs.setBool('onBreak', onBreak);
+                      startStopwatch();
+                      fireStoreService.ResumeShiftLog(widget.EmployeId);
+                    }
+                  },
+                ),
               )
             : const SizedBox(),
-        Button1(
-          text: 'Check Patrolling',
-          fontsize: width / width18,
-          color: color5,
-          backgroundcolor: WidgetColor,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyPatrolsList(
-                          ShiftLocationId: widget.ShiftLocationId,
-                          EmployeeID: widget.EmployeId,
-                          EmployeeName: widget.EmployeeName,
-                          ShiftId: widget.ShiftId,
-                        )));
-          },
+        IgnorePointer(
+          ignoring: !clickedIn,
+          child: Button1(
+            text: 'Check Patrolling',
+            fontsize: width / width18,
+            color: color5,
+            backgroundcolor: WidgetColor,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyPatrolsList(
+                            ShiftLocationId: widget.ShiftLocationId,
+                            EmployeeID: widget.EmployeId,
+                            EmployeeName: widget.EmployeeName,
+                            ShiftId: widget.ShiftId,
+                          )));
+            },
+          ),
         ),
       ],
     );

@@ -348,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
-      ['assets/images/dar.png', 'Dar'],
+      ['assets/images/dar.png', 'DAR'],
       ['assets/images/reports.png', 'Reports'],
       ['assets/images/post_order.png', 'Post Orders'],
       ['assets/images/task.png', 'Task'],
