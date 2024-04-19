@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1014048520427",
-    "project_id": "security-app-3b156",
-    "storage_bucket": "security-app-3b156.appspot.com"
+    "project_number": "972076944226",
+    "project_id": "livtech-dbcf2",
+    "storage_bucket": "livtech-dbcf2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1014048520427:android:8955e3bc11dc5fce0566ae",
+        "mobilesdk_app_id": "1:972076944226:android:64a33df2f1c91bb8687a3b",
         "android_client_info": {
           "package_name": "com.avocadotech.tacttik.tact_tik"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBeY7NcY56pFXFyE3Yw0uaBWG5pA9ZerY4"
+          "current_key": "AIzaSyBjCuAhZPuvU8avLd3t8RMaaVuUi_L7Hng"
         }
       ],
       "services": {
