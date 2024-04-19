@@ -498,7 +498,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         StartTime = DateTime.now();
                         _expand = true;
                         // _expand = !_expand;
-
                         prefs.setBool("expand", _expand);
                       });
 
@@ -1220,25 +1219,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 'StatusComment': url['StatusComment']
                               };
                             }).toList();
-                            // sendFormattedEmail(emailParams);
-                            // sendapiEmail(
-                            //   emails,
-                            //   "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                            //   widget.p.EmployeeName,
-                            //   "",
-                            //   'Shift ',
-                            //   formattedStartDate,
-                            //   formattedImageUrls,
-                            //   widget.p.EmployeeName,
-                            //   formattedPatrolInTime,
-                            //   formattedEndTime,
-                            //   widget.p.CompletedCount.toString(),
-                            //   widget.p.PatrolRequiredCount.toString(),
-                            //   widget.p.description,
-                            //   "Completed",
-                            //   formattedPatrolInTime,
-                            //   formattedPatrolOutTime,
-                            // );
+                            sendFormattedEmail(emailParams);
+                            sendapiEmail(
+                              emails,
+                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                              widget.p.EmployeeName,
+                              "",
+                              'Shift ',
+                              formattedStartDate,
+                              formattedImageUrls,
+                              widget.p.EmployeeName,
+                              formattedPatrolInTime,
+                              formattedEndTime,
+                              widget.p.CompletedCount.toString(),
+                              widget.p.PatrolRequiredCount.toString(),
+                              widget.p.description,
+                              "Completed",
+                              formattedPatrolInTime,
+                              formattedPatrolOutTime,
+                            );
                             _refresh();
                             // sendFormattedEmail(emailParams);
                             Navigator.pushReplacement(
@@ -1339,25 +1338,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     'StatusComment': url['StatusComment']
                                   };
                                 }).toList();
-                                // sendFormattedEmail(emailParams);
-                                // sendapiEmail(
-                                //   emails,
-                                //   "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                //   widget.p.EmployeeName,
-                                //   "",
-                                //   'Shift ',
-                                //   formattedStartDate,
-                                //   formattedImageUrls,
-                                //   widget.p.EmployeeName,
-                                //   formattedPatrolInTime,
-                                //   formattedEndTime,
-                                //   widget.p.CompletedCount.toString(),
-                                //   widget.p.CompletedCount.toString(),
-                                //   widget.p.description,
-                                //   "Completed",
-                                //   formattedPatrolInTime,
-                                //   formattedPatrolOutTime,
-                                // );
+                                sendFormattedEmail(emailParams);
+                                sendapiEmail(
+                                  emails,
+                                  "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                  widget.p.EmployeeName,
+                                  "",
+                                  'Shift ',
+                                  formattedStartDate,
+                                  formattedImageUrls,
+                                  widget.p.EmployeeName,
+                                  formattedPatrolInTime,
+                                  formattedEndTime,
+                                  widget.p.CompletedCount.toString(),
+                                  widget.p.CompletedCount.toString(),
+                                  widget.p.description,
+                                  "Completed",
+                                  formattedPatrolInTime,
+                                  formattedPatrolOutTime,
+                                );
                                 await fireStoreService.fetchAndCreatePatrolLogs(
                                     widget.p.PatrolId,
                                     widget.p.EmpId,
