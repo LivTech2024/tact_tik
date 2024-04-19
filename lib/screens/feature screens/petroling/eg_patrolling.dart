@@ -814,9 +814,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                       //         .patrolId,
                                                                       //     checkpoint[
                                                                       //         'CheckPointId']);
-                                                                      Navigator.of(
+                                                                          setState(() {
+
+                                                                          });
+                                                                      /*Navigator.of(
                                                                               context)
-                                                                          .pop();
+                                                                          .pop();*/
                                                                     },
                                                                     child: Text(
                                                                         'Submit'),
