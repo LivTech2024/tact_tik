@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -446,48 +447,51 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       ],
                     ),
                   ),
-                  Button1(
-                    text: 'START',
-                    backgroundcolor: colorGreen,
-                    color: Colors.green,
-                    borderRadius: width / width10,
-                    onPressed: () async {
-                      if (widget.p.CompletedCount == 0) {
-                        await fireStoreService.updatePatrolCurrentStatus(
-                          widget.p.PatrolId,
-                          "started",
-                          widget.p.EmpId,
-                          widget.p.EmployeeName,
-                        );
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        setState(() {
-                          // clickedIIndex = index;
-                          // print(clickedIIndex);
-                          StartTime = DateTime.now();
+                  IgnorePointer(
+                    ignoring: !_expand,
+                    child: Button1(
+                      text: 'START',
+                      backgroundcolor: colorGreen,
+                      color: Colors.green,
+                      borderRadius: width / width10,
+                      onPressed: () async {
+                        if (widget.p.CompletedCount == 0) {
+                          await fireStoreService.updatePatrolCurrentStatus(
+                            widget.p.PatrolId,
+                            "started",
+                            widget.p.EmpId,
+                            widget.p.EmployeeName,
+                          );
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          setState(() {
+                            // clickedIIndex = index;
+                            // print(clickedIIndex);
+                            StartTime = DateTime.now();
 
-                          _expand = !_expand;
-                          prefs.setBool("expand", _expand);
-                        });
+                            _expand = !_expand;
+                            prefs.setBool("expand", _expand);
+                          });
 
-                        _refresh();
-                        showSuccessToast(context, "Patrol Started");
-                      } else if (widget.p.CompletedCount ==
-                          widget.p.PatrolRequiredCount) {
-                        return null;
-                      } else {
-                        _refresh();
-                        setState(() {
-                          // clickedIIndex = index;
-                          // print(clickedIIndex);
-                          _expand = !_expand;
-                        });
-                        if (!startTimeUpdated) {
-                          startTimeUpdated = true;
-                          StartTime = DateTime.now();
+                          _refresh();
+                          showSuccessToast(context, "Patrol Started");
+                        } else if (widget.p.CompletedCount ==
+                            widget.p.PatrolRequiredCount) {
+                          return null;
+                        } else {
+                          _refresh();
+                          setState(() {
+                            // clickedIIndex = index;
+                            // print(clickedIIndex);
+                            _expand = !_expand;
+                          });
+                          if (!startTimeUpdated) {
+                            startTimeUpdated = true;
+                            StartTime = DateTime.now();
+                          }
                         }
-                      }
-                    },
+                      },
+                    ),
                   ),
                   Visibility(
                       visible: _expand,
@@ -742,11 +746,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 ),
                                                 SizedBox(
                                                   width: width / width140,
-                                                  child: InterRegular(
-                                                    text: checkpoint.title,
-                                                    //Subcheckpoint
-                                                    color: color17,
-                                                    fontsize: width / width18,
+                                                  child: Column(
+                                                    children: [
+                                                      InterRegular(
+                                                        text: checkpoint.title,
+                                                        //Subcheckpoint
+                                                        color: color17,
+                                                        fontsize: width / width18,
+                                                      ),
+                                                      SizedBox(height: height / height2),
+                                                      InterRegular(text: '09:23' , color: Primarycolor,fontsize: width / width12,)
+                                                    ],
                                                   ),
                                                 ),
                                               ],
