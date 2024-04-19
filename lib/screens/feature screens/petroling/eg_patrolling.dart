@@ -43,15 +43,31 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   late List<Patrol> patrolsData = [];
   String _PatrolId = '';
   int totalCount = 0;
-
+  bool? newExpand = false;
   @override
   void initState() {
     super.initState();
     _getUserInfo();
+    initiateState();
+    _loadShiftStartedState();
+  }
+
+  void _loadShiftStartedState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool? expandState = prefs.getBool('expand');
+    if (expandState != null) {
+      newExpand = expandState;
+    }
+    setState(() {});
   }
 
   Future<void> _refreshData() async {
     _getUserInfo();
+  }
+
+  void initiateState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
   void _getUserInfo() async {
@@ -237,7 +253,11 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       Patrol p = patrolsData[index];
-                      return PatrollingWidget(p: p, onRefresh: _refreshData);
+                      return PatrollingWidget(
+                        p: p,
+                        onRefresh: _refreshData,
+                        expand: newExpand,
+                      );
                     },
                     childCount: patrolsData.length,
                   ),
@@ -252,10 +272,16 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 }
 
 class PatrollingWidget extends StatefulWidget {
-  const PatrollingWidget({super.key, required this.p, required this.onRefresh});
+  const PatrollingWidget({
+    super.key,
+    required this.p,
+    required this.onRefresh,
+    required this.expand,
+  });
 
   final Patrol p;
   final VoidCallback onRefresh;
+  final bool? expand;
   @override
   State<PatrollingWidget> createState() => _PatrollingWidgetState();
 }
@@ -272,14 +298,19 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     _loadShiftStartedState();
     // Initialize expand state for each category
     _expandCategoryMap = Map.fromIterable(widget.p.categories,
-        key: (category) => category.title, value: (_) => false);
+        key: (category) => category.title, value: (_) => true);
   }
 
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _expand = prefs.getBool('expand') ?? false;
-    });
+
+    bool? expandState = prefs.getBool('expand');
+    print("Expand State: ${expandState}");
+    if (expandState != null) {
+      setState(() {
+        _expand = expandState;
+      });
+    }
   }
 
   Future<void> _refreshData() async {
@@ -457,8 +488,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         // clickedIIndex = index;
                         // print(clickedIIndex);
                         StartTime = DateTime.now();
+                        _expand = true;
+                        // _expand = !_expand;
 
-                        _expand = !_expand;
                         prefs.setBool("expand", _expand);
                       });
 
@@ -468,11 +500,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         widget.p.PatrolRequiredCount) {
                       return null;
                     } else {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
                       _refresh();
                       setState(() {
                         // clickedIIndex = index;
                         // print(clickedIIndex);
                         _expand = !_expand;
+
+                        setState(() {
+                          // clickedIIndex = index;
+                          // print(clickedIIndex);
+                          _expand = true;
+                          prefs.setBool("expand", _expand);
+
+                          // _expand = !_expand;
+                        });
                       });
                       if (!startTimeUpdated) {
                         startTimeUpdated = true;
@@ -1198,6 +1241,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       widget.p.EmployeeName);
                               _expand = false;
                               prefs.setBool("expand", _expand);
+                              // prefs.setBool("expand", _expand);
                               List<String> emails = [];
                               var ClientEmail = await fireStoreService
                                   .getClientEmail(widget.p.PatrolClientID);
@@ -1288,7 +1332,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 formattedPatrolInTime,
                                 formattedPatrolOutTime,
                               );
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeScreen()));
                             } else {
                               await fireStoreService
                                   .EndPatrolupdatePatrolsStatus(
@@ -1396,7 +1443,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             }
                             // sendFormattedEmail(emailParams);
                             showSuccessToast(context, "Patrol Completed");
-                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
                           } else {
                             // await fireStoreService.EndPatrolupdatePatrolsStatus(
                             //     widget.p.PatrolId,
@@ -1446,7 +1496,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             //   };
                             // }).toList();
                             // // sendFormattedEmail(emailParams);
-                            // sendapiEmail(
+                            // sendapiEmail(s
                             //   emails,
                             //   "Patrol update for ${widget.p.description} Date:- formattedStartDate",
                             //   widget.p.EmployeeName,

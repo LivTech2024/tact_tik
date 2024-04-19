@@ -294,13 +294,17 @@ class _HomeScreenState extends State<HomeScreen> {
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
             if (!selectedDates
                 .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
-              selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+              setState(() {
+                selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+              });
             }
             if (!selectedDates.any((date) =>
                 date!.year == shiftDateTime.year &&
                 date.month == shiftDateTime.month &&
                 date.day == shiftDateTime.day)) {
-              selectedDates.add(shiftDateTime);
+              setState(() {
+                selectedDates.add(shiftDateTime);
+              });
             }
             storage.setItem("shiftId", shiftId);
             storage.setItem("EmpId", EmployeeId);
@@ -309,8 +313,32 @@ class _HomeScreenState extends State<HomeScreen> {
           });
           print('Shift Info: ${shiftInfo.data()}');
 
-          var getAllSchedules = fireStoreService.getAllSchedules(_employeeId);
-          print(getAllSchedules);
+          Future<void> printAllSchedules(String empId) async {
+            var getAllSchedules = await fireStoreService.getAllSchedules(empId);
+            if (getAllSchedules.isNotEmpty) {
+              getAllSchedules.forEach((doc) {
+                var data = doc.data() as Map<String, dynamic>?;
+                if (data != null && data['ShiftDate'] != null) {
+                  var shiftDate = data['ShiftDate'] as Timestamp;
+                  var date = DateTime.fromMillisecondsSinceEpoch(
+                      shiftDate.seconds * 1000);
+                  var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                  setState(() {
+                    selectedDates.add(DateTime.parse(formattedDate));
+                  });
+                  // Format the date
+                  print("ShiftDate: $formattedDate");
+                }
+
+                print(
+                    "All Schedule date : ${doc.data()}"); // Print data of each document
+              });
+            } else {
+              print("No schedules found.");
+            }
+          }
+
+          printAllSchedules(EmployeeId);
         } else {
           setState(() {
             issShift = true; //To validate that shift exists for the user.
