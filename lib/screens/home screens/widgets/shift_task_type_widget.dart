@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -439,100 +440,103 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Row(
-                        children: uploads.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final upload = entry.value;
-                          return Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                height: height / height66,
-                                width: width / width66,
-                                decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius: BorderRadius.circular(
-                                      width / width10,
-                                    )),
-                                margin: EdgeInsets.all(width / width8),
-                                child: upload['type'] == 'image'
-                                    ? Image.file(
-                                        upload['file'],
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Icon(Icons.videocam),
-                              ),
-                              Positioned(
-                                top: -5,
-                                right: -5,
-                                child: IconButton(
-                                  onPressed: () => _deleteItem(index),
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // _addImage();
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) => Column(
-                              mainAxisSize: MainAxisSize.min,
+                  SizedBox(height: height / height10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Row(
+                          children: uploads.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final upload = entry.value;
+                            return Stack(
+                              clipBehavior: Clip.none,
                               children: [
-                                ListTile(
-                                  leading: Icon(Icons.camera),
-                                  title: Text('Add Image'),
-                                  onTap: () {
-                                    _addImage();
-                                    Navigator.pop(context);
-                                  },
+                                Container(
+                                  height: height / height66,
+                                  width: width / width66,
+                                  decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      )),
+                                  margin: EdgeInsets.all(width / width8),
+                                  child: upload['type'] == 'image'
+                                      ? Image.file(
+                                          upload['file'],
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Icon(Icons.videocam),
                                 ),
-                                ListTile(
-                                  leading: Icon(Icons.image),
-                                  title: Text('Add from Gallery'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _addGallery();
-                                  },
+                                Positioned(
+                                  top: -5,
+                                  right: -5,
+                                  child: IconButton(
+                                    onPressed: () => _deleteItem(index),
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                  ),
                                 ),
                               ],
+                            );
+                          }).toList(),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // _addImage();
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.camera),
+                                    title: Text('Add Image'),
+                                    onTap: () {
+                                      _addImage();
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.image),
+                                    title: Text('Add from Gallery'),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _addGallery();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                                color: WidgetColor,
+                                borderRadius:
+                                    BorderRadius.circular(width / width8)),
+                            child: Center(
+                              child: Icon(Icons.add),
                             ),
-                          );
-                        },
-                        child: Container(
-                          height: height / height66,
-                          width: width / width66,
-                          decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width8)),
-                          child: Center(
-                            child: Icon(Icons.add),
                           ),
                         ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: _uploadImages,
-                        backgroundColor: Primarycolor,
-                        shape: CircleBorder(),
-                        child: Icon(Icons.cloud_upload),
-                      )
-                    ],
+                        FloatingActionButton(
+                          onPressed: _uploadImages,
+                          backgroundColor: Primarycolor,
+                          shape: CircleBorder(),
+                          child: Icon(Icons.cloud_upload),
+                        )
+                      ],
+                    ),
                   ),
                   if (_isLoading)
                     Container(
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: height / height10),
                       child: CircularProgressIndicator(),
                     ),
                 ],

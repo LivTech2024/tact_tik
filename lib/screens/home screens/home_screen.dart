@@ -35,6 +35,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
+import '../feature screens/pani button/panic_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -536,6 +537,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Bounce(
                                   onTap: () {
                                     switch (index) {
+                                      case 0:
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return PanicAlertDialog();
+                                          },
+                                        );
+                                        break;
                                       case 2:
                                         Navigator.push(
                                             context,

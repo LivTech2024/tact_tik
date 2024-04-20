@@ -106,7 +106,7 @@ class AppView extends ConsumerWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: LogBookScreen(),
+      home: AuthChecker(),
     );
     // },
     // );
