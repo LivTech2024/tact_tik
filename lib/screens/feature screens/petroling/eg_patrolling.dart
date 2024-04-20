@@ -28,12 +28,14 @@ class MyPatrolsList extends StatefulWidget {
   final String ShiftLocationId;
   final String ShiftId;
   final String EmployeeName;
+  final String ShiftDate;
 
   const MyPatrolsList(
       {required this.ShiftLocationId,
       required this.EmployeeID,
       required this.EmployeeName,
-      required this.ShiftId});
+      required this.ShiftId,
+      required this.ShiftDate});
 
   @override
   State<MyPatrolsList> createState() => _MyPatrolsListState();
@@ -44,6 +46,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   late List<Patrol> patrolsData = [];
   String _PatrolId = '';
   int totalCount = 0;
+  bool buttonClicked = false;
 
   @override
   void initState() {
@@ -107,31 +110,37 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
         _PatrolId = patrolId;
       });
       List<Category> categories = [];
-      bool allChecked = true;
+      bool allChecked = false;
       for (var checkpoint in data['PatrolCheckPoints']) {
         String checkpointCategory = checkpoint['CheckPointCategory'] ?? "";
         String checkpointId = checkpoint['CheckPointId'];
         String checkpointName = checkpoint['CheckPointName'];
+
         List<CheckPointStatus> checkPointStatuses =
             (checkpoint['CheckPointStatus'] as List<dynamic> ?? [])
                 .map((status) {
-          // setState(() {
-          //   totalCount = status['StatusCompletedCount'] ?? 0;
-          // });
-          // if (status['Status'] != 'checked') {
-          //   setState(() {
-          //     allChecked = false; // At least one checkpoint is not checked
-          //   });
-          // }
           List<dynamic> checkPointStatuses =
               checkpoint['CheckPointStatus'] ?? [];
-          if (checkPointStatuses.isEmpty ||
-              !checkPointStatuses.every((status) =>
-                  status['Status'] == 'checked' &&
-                  status['StatusReportedById'] == widget.EmployeeID)) {
-            allChecked =
-                false; // At least one checkpoint is not checked or does not have the specified 'empid'
+          if (checkPointStatuses == null ||
+              checkPointStatuses.isEmpty ||
+              checkPointStatuses.any((status) =>
+                  status['Status'] == 'unchecked' &&
+                  status['StatusReportedById'] == widget.EmployeeID) ||
+              checkPointStatuses.any((status) =>
+                  status['Status'] != 'unchecked' &&
+                  checkPointStatuses.every(
+                      (s) => s['StatusReportedById'] != widget.EmployeeID))) {
+            setState(() {
+              allChecked =
+                  false; // At least one checkpoint is not checked or does not have the specified 'empid'
+            });
+          } else {
+            setState(() {
+              allChecked =
+                  true; // All checkpoints have at least one status and all statuses are checked
+            });
           }
+          // ... rest of the code
           //  List<Map<String, dynamic>> filteredStatusList = statusList
           // .where((status) => status['StatusReportedById'] == emplid)
           // .toList();
@@ -174,7 +183,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           CompletedCount: totalCount,
           Allchecked: allChecked,
           PatrolCompanyID: patrolCompanyId,
-          PatrolClientID: patrolClientId,
+          PatrolClientID: patrolClientId, ShiftDate: widget.ShiftDate,
         ),
       );
     }
@@ -264,7 +273,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
   TextEditingController CommentController = TextEditingController();
-
+  bool buttonClicked = true;
   @override
   void initState() {
     super.initState();
@@ -324,13 +333,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool buttonEnabled = true;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     bool startTimeUpdated = false;
     bool _isLoading = false;
     double completionPercentage =
         widget.p.CompletedCount / widget.p.PatrolRequiredCount;
-    DateTime StartTime = DateTime.now();
+    String StartTime;
     void showSuccessToast(BuildContext context, String message) {
       toastification.show(
         context: context,
@@ -338,6 +348,43 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         title: Text(message),
         autoCloseDuration: const Duration(seconds: 2),
       );
+    }
+
+    void handleStartButton() async {
+      print("ButtonEnabled : ${buttonEnabled}");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      // setState(() {
+      //   StartTime = DateTime.now();
+      //   _expand = true;
+      //   prefs.setBool("expand", _expand);
+      // });
+      if (buttonEnabled && !_expand) {
+        setState(() {
+          buttonEnabled = false; // Disable the button
+        });
+
+        await fireStoreService.updatePatrolCurrentStatus(
+          widget.p.PatrolId,
+          "started",
+          widget.p.EmpId,
+          widget.p.EmployeeName,
+        );
+        DateTime now = DateTime.now();
+        String formattedTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+        setState(() {
+          StartTime = formattedTime;
+          _expand = true;
+          prefs.setBool("expand", _expand);
+          prefs.setString("StartTime", StartTime.toString());
+        });
+
+        _refresh();
+        showSuccessToast(context, "Patrol Started");
+      } else if (widget.p.CompletedCount == widget.p.PatrolRequiredCount) {
+        return null;
+      } else {
+        return null;
+      }
     }
 
     void showErrorToast(BuildContext context, String message) {
@@ -351,921 +398,877 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: width / width30,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InterBold(
-              text: "Today",
-              fontsize: width / width18,
-              color: color1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InterBold(
+            text: "Today",
+            fontsize: width / width18,
+            color: color1,
+          ),
+          SizedBox(height: height / height30),
+          AnimatedContainer(
+            margin: EdgeInsets.only(bottom: height / height30),
+            duration: const Duration(milliseconds: 300),
+            decoration: BoxDecoration(
+              color: WidgetColor,
+              borderRadius: BorderRadius.circular(width / width10),
             ),
-            SizedBox(height: height / height30),
-            AnimatedContainer(
-              margin: EdgeInsets.only(bottom: height / height30),
-              duration: const Duration(milliseconds: 300),
-              decoration: BoxDecoration(
-                color: WidgetColor,
-                borderRadius: BorderRadius.circular(width / width10),
-              ),
-              constraints: _expand
-                  ? BoxConstraints(minHeight: height / height200)
-                  : const BoxConstraints(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width / width10,
-                      vertical: height / height20,
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(height: height / height5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: width / width230,
-                              child: InterBold(
-                                text: 'Patrol   ${widget.p.title}',
-                                color: Primarycolor,
-                                fontsize: width / width14,
-                                maxLine: 1,
-                              ),
-                            ),
-                            InterBold(
-                              text: '90%',
+            constraints: _expand
+                ? BoxConstraints(minHeight: height / height200)
+                : const BoxConstraints(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: width / width10,
+                    vertical: height / height20,
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: height / height5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: width / width120,
+                            child: InterBold(
+                              text: 'Patrol   ${widget.p.title}',
                               color: Primarycolor,
-                              fontsize: width / width18,
+                              fontsize: width / width14,
+                              maxLine: 1,
                             ),
-                            /*CircularPercentIndicator(
-                              radius: width / width10,
-                              lineWidth: 3,
-                              percent: completionPercentage.clamp(0.0, 1.0),
-                              progressColor: Primarycolor,
-                            ),*/
-                          ],
-                        ),
-                        SizedBox(height: height / height10),
-                        IconTextWidget(
-                          iconSize: width / width24,
-                          icon: Icons.location_on,
-                          text: widget.p.title,
-                          useBold: false,
-                          color: color13,
-                        ),
-                        SizedBox(height: height / height16),
-                        Divider(
-                          color: color14,
-                        ),
-                        SizedBox(height: height / height5),
-                        IconTextWidget(
-                          iconSize: width / width24,
-                          icon: Icons.description,
-                          text: widget.p.description,
-                          useBold: false,
-                          color: color13,
-                        ),
-                        SizedBox(height: height / height16),
-                        Divider(
-                          color: color14,
-                        ),
-                        SizedBox(height: height / height5),
-                        IconTextWidget(
-                          iconSize: width / width24,
-                          icon: Icons.qr_code_scanner,
-                          text:
-                              'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
-                          useBold: false,
-                          color: color13,
-                        ),
-                        SizedBox(height: height / height20),
-                      ],
-                    ),
+                          ),
+                          CircularPercentIndicator(
+                            radius: width / width10,
+                            lineWidth: 3,
+                            percent: completionPercentage.clamp(0.0, 1.0),
+                            progressColor: Primarycolor,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: height / height10),
+                      IconTextWidget(
+                        iconSize: width / width24,
+                        icon: Icons.location_on,
+                        text: widget.p.title,
+                        useBold: false,
+                        color: color13,
+                      ),
+                      SizedBox(height: height / height16),
+                      Divider(
+                        color: color14,
+                      ),
+                      SizedBox(height: height / height5),
+                      IconTextWidget(
+                        iconSize: width / width24,
+                        icon: Icons.description,
+                        text: widget.p.description,
+                        useBold: false,
+                        color: color13,
+                      ),
+                      SizedBox(height: height / height16),
+                      Divider(
+                        color: color14,
+                      ),
+                      SizedBox(height: height / height5),
+                      IconTextWidget(
+                        iconSize: width / width24,
+                        icon: Icons.qr_code_scanner,
+                        text:
+                            'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
+                        useBold: false,
+                        color: color13,
+                      ),
+                      SizedBox(height: height / height20),
+                    ],
                   ),
-                  IgnorePointer(
-                    ignoring: !_expand,
-                    child: Button1(
-                      text: 'START',
-                      backgroundcolor: colorGreen,
-                      color: Colors.green,
-                      borderRadius: width / width10,
-                      onPressed: () async {
-                        if (widget.p.CompletedCount == 0) {
-                          await fireStoreService.updatePatrolCurrentStatus(
-                            widget.p.PatrolId,
-                            "started",
-                            widget.p.EmpId,
-                            widget.p.EmployeeName,
-                          );
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          setState(() {
-                            // clickedIIndex = index;
-                            // print(clickedIIndex);
-                            StartTime = DateTime.now();
+                ),
+                Button1(
+                  text: 'START',
+                  backgroundcolor: colorGreen,
+                  color: Colors.green,
+                  borderRadius: width / width10,
+                  onPressed: buttonClicked ? handleStartButton : () {},
+                ),
+                Visibility(
+                    visible: _expand,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.p.categories.map((category) {
+                        print("_expandCategoryMap: $category");
+                        final expand =
+                            _expandCategoryMap.containsKey(category.title)
+                                ? _expandCategoryMap[category.title]!
+                                : false;
 
-                            _expand = !_expand;
-                            prefs.setBool("expand", _expand);
-                          });
-
-                          _refresh();
-                          showSuccessToast(context, "Patrol Started");
-                        } else if (widget.p.CompletedCount ==
-                            widget.p.PatrolRequiredCount) {
-                          return null;
-                        } else {
-                          _refresh();
-                          setState(() {
-                            // clickedIIndex = index;
-                            // print(clickedIIndex);
-                            _expand = !_expand;
-                          });
-                          if (!startTimeUpdated) {
-                            startTimeUpdated = true;
-                            StartTime = DateTime.now();
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                  Visibility(
-                      visible: _expand,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: widget.p.categories.map((category) {
-                          print("_expandCategoryMap: $category");
-                          final expand =
-                              _expandCategoryMap.containsKey(category.title)
-                                  ? _expandCategoryMap[category.title]!
-                                  : false;
-
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  // Handle tap action to expand checkpoints
-                                  // Toggle visibility of checkpoints associated with this category
-                                  setState(() {
-                                    if (_expandCategoryMap[category.title] !=
-                                        null) {
-                                      _expandCategoryMap[category.title] =
-                                          !_expandCategoryMap[category.title]!;
-                                    }
-                                    // _expand2 = !_expand2;
-                                  });
-                                },
-                                child: Container(
-                                  height: height / height70,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
-                                      vertical: height / height11),
-                                  margin:
-                                      EdgeInsets.only(top: height / height10),
-                                  decoration: BoxDecoration(
-                                    color: color15,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            height: height / height48,
-                                            width: width / width48,
-                                            decoration: BoxDecoration(
-                                              color: color16,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
-                                            ),
-                                            child: Icon(
-                                              Icons.home_sharp,
-                                              size: width / width24,
-                                              color: Primarycolor,
-                                            ),
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                // Handle tap action to expand checkpoints
+                                // Toggle visibility of checkpoints associated with this category
+                                setState(() {
+                                  if (_expandCategoryMap[category.title] !=
+                                      null) {
+                                    _expandCategoryMap[category.title] =
+                                        !_expandCategoryMap[category.title]!;
+                                  }
+                                  // _expand2 = !_expand2;
+                                });
+                              },
+                              child: Container(
+                                height: height / height70,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width / width20,
+                                    vertical: height / height11),
+                                margin: EdgeInsets.only(top: height / height10),
+                                decoration: BoxDecoration(
+                                  color: color15,
+                                  borderRadius:
+                                      BorderRadius.circular(width / width10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: height / height48,
+                                          width: width / width48,
+                                          decoration: BoxDecoration(
+                                            color: color16,
+                                            borderRadius: BorderRadius.circular(
+                                                width / width10),
                                           ),
-                                          SizedBox(
-                                            width: width / width20,
+                                          child: Icon(
+                                            Icons.home_sharp,
+                                            size: width / width24,
+                                            color: Primarycolor,
                                           ),
-                                          SizedBox(
-                                            width: width / width190,
-                                            child: InterRegular(
-                                              text: category.title,
-                                              color: color17,
-                                              fontsize: width / width18,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _expandCategoryMap[
-                                                    category.title] !=
-                                                _expandCategoryMap[
-                                                    category.title];
-                                          });
-                                        },
-                                        icon: Icon(
-                                          expand
-                                              ? Icons.arrow_circle_up_outlined
-                                              : Icons
-                                                  .arrow_circle_down_outlined,
-                                          size: width / width24,
-                                          color: Primarycolor,
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                        SizedBox(
+                                          width: width / width20,
+                                        ),
+                                        SizedBox(
+                                          width: width / width190,
+                                          child: InterRegular(
+                                            text: category.title,
+                                            color: color17,
+                                            fontsize: width / width18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _expandCategoryMap[category.title] !=
+                                              _expandCategoryMap[
+                                                  category.title];
+                                        });
+                                      },
+                                      icon: Icon(
+                                        expand
+                                            ? Icons.arrow_circle_up_outlined
+                                            : Icons.arrow_circle_down_outlined,
+                                        size: width / width24,
+                                        color: Primarycolor,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Visibility(
-                                visible: expand,
-                                child: Column(
-                                  children:
-                                      category.checkpoints.map((checkpoint) {
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        // await fireStoreService.updatePatrolsStatus(
-                                        //     checkpoint.patrolId,
-                                        //     checkpoint.id,
-                                        //     widget.p.EmpId);
-                                        var res = await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SimpleBarcodeScannerPage(),
-                                            ));
-                                        setState(() {
-                                          Result = res;
-                                        });
-                                        // if (Result) {
-                                        print(res);
-                                        if (res == checkpoint.id) {
-                                          await fireStoreService
-                                              .updatePatrolsStatus(
-                                                  checkpoint.patrolId,
-                                                  checkpoint.id,
-                                                  widget.p.EmpId);
-                                          // Show an alert indicating a match
-                                          // showDialog(
-                                          //   context: context,
-                                          //   builder: (BuildContext context) {
-                                          //     return AlertDialog(
-                                          //       title: Text(
-                                          //         'Checkpoint Match',
-                                          //         style: TextStyle(
-                                          //             color: Colors.white),
-                                          //       ),
-                                          //       content: Text(
-                                          //         'The scanned QR code matches the checkpoint ID.',
-                                          //         style: TextStyle(
-                                          //             color: Colors.white),
-                                          //       ),
-                                          //       actions: [
-                                          //         TextButton(
-                                          //           onPressed: () {
-                                          //             Navigator.of(context).pop();
-                                          //           },
-                                          //           child: Text('OK'),
-                                          //         ),
-                                          //       ],
-                                          //     );
-                                          //   },
-                                          // );
-                                          showSuccessToast(context,
-                                              "${checkpoint.description} scanned ");
-                                          _refresh();
-                                        } else {
-                                          // await fireStoreService
-                                          //     .updatePatrolsStatus(
-                                          //         checkpoint.patrolId,
-                                          //         checkpoint.id,
-                                          //         widget.p.EmpId);
-                                          // Show an alert indicating no match
-                                          _refresh();
-                                          // showDialog(
-                                          //   context: context,
-                                          //   builder: (BuildContext context) {
-                                          //     return AlertDialog(
-                                          //       title: Text(
-                                          //         'Checkpoint Mismatch',
-                                          //         style: TextStyle(
-                                          //             color: Colors.white),
-                                          //       ),
-                                          //       content: Text(
-                                          //         'The scanned QR code does not match the checkpoint ID.',
-                                          //         style: TextStyle(
-                                          //             color: Colors.white),
-                                          //       ),
-                                          //       actions: [
-                                          //         TextButton(
-                                          //           onPressed: () {
-                                          //             Navigator.of(context).pop();
-                                          //           },
-                                          //           child: Text('OK'),
-                                          //         ),
-                                          //       ],
-                                          //     );
-                                          //   },
-                                          // );
-                                          showErrorToast(context,
-                                              "${checkpoint.description} scanned unsuccessfull");
-                                        }
-                                        // }
-                                      },
-                                      child: Container(
-                                        height: height / height70,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: width / width20,
-                                          vertical: height / height11,
-                                        ),
-                                        margin: EdgeInsets.only(
-                                            top: height / height10),
-                                        decoration: BoxDecoration(
-                                          color: color15,
-                                          borderRadius: BorderRadius.circular(
-                                              width / width10),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  height: height / height48,
-                                                  width: width / width48,
-                                                  decoration: BoxDecoration(
+                            ),
+                            Visibility(
+                              visible: expand,
+                              child: Column(
+                                children:
+                                    category.checkpoints.map((checkpoint) {
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      // await fireStoreService.updatePatrolsStatus(
+                                      //     checkpoint.patrolId,
+                                      //     checkpoint.id,
+                                      //     widget.p.EmpId);
+                                      var res = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SimpleBarcodeScannerPage(),
+                                          ));
+                                      setState(() {
+                                        Result = res;
+                                      });
+                                      // if (Result) {
+                                      print(res);
+                                      if (res == checkpoint.id) {
+                                        await fireStoreService
+                                            .updatePatrolsStatus(
+                                                checkpoint.patrolId,
+                                                checkpoint.id,
+                                                widget.p.EmpId);
+                                        // Show an alert indicating a match
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       title: Text(
+                                        //         'Checkpoint Match',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       content: Text(
+                                        //         'The scanned QR code matches the checkpoint ID.',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           onPressed: () {
+                                        //             Navigator.of(context).pop();
+                                        //           },
+                                        //           child: Text('OK'),
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
+                                        showSuccessToast(context,
+                                            "${checkpoint.description} scanned ");
+                                        _refresh();
+                                      } else {
+                                        // await fireStoreService
+                                        //     .updatePatrolsStatus(
+                                        //         checkpoint.patrolId,
+                                        //         checkpoint.id,
+                                        //         widget.p.EmpId);
+                                        // Show an alert indicating no match
+                                        _refresh();
+                                        // showDialog(
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       title: Text(
+                                        //         'Checkpoint Mismatch',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       content: Text(
+                                        //         'The scanned QR code does not match the checkpoint ID.',
+                                        //         style: TextStyle(
+                                        //             color: Colors.white),
+                                        //       ),
+                                        //       actions: [
+                                        //         TextButton(
+                                        //           onPressed: () {
+                                        //             Navigator.of(context).pop();
+                                        //           },
+                                        //           child: Text('OK'),
+                                        //         ),
+                                        //       ],
+                                        //     );
+                                        //   },
+                                        // );
+                                        showErrorToast(context,
+                                            "${checkpoint.description} scanned unsuccessfull");
+                                      }
+                                      // }
+                                    },
+                                    child: Container(
+                                      height: height / height70,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width / width20,
+                                        vertical: height / height11,
+                                      ),
+                                      margin: EdgeInsets.only(
+                                          top: height / height10),
+                                      decoration: BoxDecoration(
+                                        color: color15,
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: height / height48,
+                                                width: width / width48,
+                                                decoration: BoxDecoration(
+                                                  color: color16,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          width / width10),
+                                                ),
+                                                child: Container(
+                                                  height: height / height30,
+                                                  width: width / width30,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: color2,
+                                                  ),
+                                                  child: Icon(
+                                                    checkpoint.getFirstStatus(
+                                                                widget
+                                                                    .p.EmpId) ==
+                                                            'checked'
+                                                        ? Icons.done
+                                                        : Icons.qr_code,
+                                                    color: checkpoint
+                                                                .getFirstStatus(
+                                                                    widget.p
+                                                                        .EmpId) ==
+                                                            'checked'
+                                                        ? Colors.green
+                                                        : Primarycolor,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / width20,
+                                              ),
+                                              SizedBox(
+                                                width: width / width140,
+                                                child: Column(
+                                                  children: [
+                                                    InterRegular(
+                                                      text: checkpoint.title,
+                                                      //Subcheckpoint
+                                                      color: color17,
+                                                      fontsize: width / width18,
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            height / height2),
+                                                    InterRegular(
+                                                      text: '09:23',
+                                                      color: Primarycolor,
+                                                      fontsize: width / width12,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Container(
+                                                  height: height / height34,
+                                                  width: width / width34,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    shape: BoxShape.circle,
                                                     color: color16,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            width / width10),
                                                   ),
-                                                  child: Container(
-                                                    height: height / height30,
-                                                    width: width / width30,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: color2,
-                                                    ),
-                                                    child: Icon(
-                                                      checkpoint.checkPointStatus
-                                                                  .isNotEmpty &&
-                                                              checkpoint
-                                                                      .checkPointStatus
-                                                                      .first
-                                                                      .status ==
-                                                                  'checked'
-                                                          ? Icons.done
-                                                          : Icons.qr_code,
-                                                      color: checkpoint
-                                                                  .checkPointStatus
-                                                                  .isNotEmpty &&
-                                                              checkpoint
-                                                                      .checkPointStatus
-                                                                      .first
-                                                                      .status ==
-                                                                  'checked'
-                                                          ? Colors.green
-                                                          : Primarycolor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: width / width20,
-                                                ),
-                                                SizedBox(
-                                                  width: width / width140,
-                                                  child: Column(
-                                                    children: [
-                                                      InterRegular(
-                                                        text: checkpoint.title,
-                                                        //Subcheckpoint
-                                                        color: color17,
-                                                        fontsize: width / width18,
-                                                      ),
-                                                      SizedBox(height: height / height2),
-                                                      InterRegular(text: '09:23' , color: Primarycolor,fontsize: width / width12,)
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Container(
-                                                    height: height / height34,
-                                                    width: width / width34,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: color16,
-                                                    ),
-                                                    child: Center(
-                                                      child: IconButton(
-                                                        onPressed: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return AlertDialog(
-                                                                title: Text(
-                                                                  'Report Qr',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                                content: Text(
-                                                                  'The scanned QR code does not work.',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                                actions: [
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                      },
-                                                                      child: Text(
-                                                                          "Cancel")),
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      // fireStoreService.updatePatrolsReport(
-                                                                      //     movie
-                                                                      //         .PatrolAssignedGuardId,
-                                                                      //     movie
-                                                                      //         .patrolId,
-                                                                      //     checkpoint[
-                                                                      //         'CheckPointId']);
-                                                                          setState(() {
-
-                                                                          });
-                                                                      /*Navigator.of(
-                                                                              context)
-                                                                          .pop();*/
-                                                                    },
-                                                                    child: Text(
-                                                                        'Submit'),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            },
-                                                          );
-                                                          print(
-                                                              "Info Icon Pressed");
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.info,
-                                                          color: color18,
-                                                          size: width / width24,
-                                                        ),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(
-                                                    width / width8,
-                                                  ),
-                                                  child: Container(
-                                                    height: height / height34,
-                                                    width: width / width34,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: color16,
-                                                    ),
-                                                    child: Center(
-                                                      child: IconButton(
-                                                        onPressed: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return AlertDialog(
-                                                                title:
-                                                                    InterRegular(
-                                                                  text:
-                                                                      'Add Image/Comment',
-                                                                  color: color2,
-                                                                  fontsize:
-                                                                      width /
-                                                                          width12,
-                                                                ),
-                                                                content: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    CustomeTextField(
-                                                                      hint:
-                                                                          'Add Comment',
-                                                                      showIcon:
-                                                                          false,
-                                                                      controller:
-                                                                          Controller,
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height: height /
-                                                                            height10),
-                                                                    SingleChildScrollView(
-                                                                      // Wrap the Row with SingleChildScrollView
-                                                                      scrollDirection:
-                                                                          Axis.horizontal,
-                                                                      // Set scroll direction to horizontal
-                                                                      child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Row(
-                                                                            children:
-                                                                                uploads.asMap().entries.map((entry) {
-                                                                              final index = entry.key;
-                                                                              final upload = entry.value;
-                                                                              return Stack(
-                                                                                clipBehavior: Clip.none,
-                                                                                children: [
-                                                                                  Container(
-                                                                                    height: height / height66,
-                                                                                    width: width / width66,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: WidgetColor,
-                                                                                      borderRadius: BorderRadius.circular(
-                                                                                        width / width10,
-                                                                                      ),
-                                                                                    ),
-                                                                                    margin: EdgeInsets.all(width / width8),
-                                                                                    child: upload['type'] == 'image'
-                                                                                        ? Image.file(
-                                                                                            upload['file'],
-                                                                                            fit: BoxFit.cover,
-                                                                                          )
-                                                                                        : Icon(
-                                                                                            Icons.videocam,
-                                                                                            size: width / width20,
-                                                                                          ),
-                                                                                  ),
-                                                                                  Positioned(
-                                                                                    top: -5,
-                                                                                    right: -5,
-                                                                                    child: IconButton(
-                                                                                      onPressed: () {
-                                                                                        setState(() {
-                                                                                          _deleteItem(index);
-                                                                                        });
-                                                                                      },
-                                                                                      icon: Icon(
-                                                                                        Icons.delete,
-                                                                                        color: Colors.black,
-                                                                                        size: width / width20,
-                                                                                      ),
-                                                                                      padding: EdgeInsets.zero,
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              );
-                                                                            }).toList(),
-                                                                          ),
-                                                                          GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              Navigator.pop(context);
-                                                                              showModalBottomSheet(
-                                                                                context: context,
-                                                                                builder: (context) => Column(
-                                                                                  mainAxisSize: MainAxisSize.min,
-                                                                                  children: [
-                                                                                    ListTile(
-                                                                                      leading: Icon(Icons.camera),
-                                                                                      title: Text('Add Image'),
-                                                                                      onTap: () {
-                                                                                        _addImage();
-                                                                                        Navigator.pop(context);
-                                                                                      },
-                                                                                    ),
-                                                                                    ListTile(
-                                                                                      leading: Icon(Icons.image),
-                                                                                      title: Text('Add from Gallery'),
-                                                                                      onTap: () {
-                                                                                        Navigator.pop(context);
-                                                                                        _addGallery();
-                                                                                      },
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              );
-                                                                            },
-                                                                            child:
-                                                                                Container(
-                                                                              height: height / height66,
-                                                                              width: width / width66,
-                                                                              decoration: BoxDecoration(
-                                                                                color: WidgetColor,
-                                                                                borderRadius: BorderRadius.circular(width / width8),
-                                                                              ),
-                                                                              child: Center(
-                                                                                child: Icon(
-                                                                                  Icons.add,
-                                                                                  size: width / width20,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                actions: [
-                                                                  TextButton(
+                                                  child: Center(
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                'Report Qr',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                              content: Text(
+                                                                'The scanned QR code does not work.',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                              actions: [
+                                                                TextButton(
                                                                     onPressed:
                                                                         () {
                                                                       Navigator.of(
                                                                               context)
                                                                           .pop();
                                                                     },
-                                                                    child:
-                                                                        InterRegular(
-                                                                      text:
-                                                                          'Cancel',
-                                                                      color:
-                                                                          Primarycolor,
-                                                                    ),
-                                                                  ),
-                                                                  ElevatedButton(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      setState(
-                                                                          () {
-                                                                        _isLoading =
-                                                                            true;
-                                                                      });
-                                                                      // Logic to submit the report
-                                                                      await fireStoreService.addImagesToPatrol(
-                                                                          uploads,
-                                                                          Controller
-                                                                              .text,
-                                                                          widget
-                                                                              .p
-                                                                              .PatrolId,
-                                                                          widget
-                                                                              .p
-                                                                              .EmpId,
-                                                                          checkpoint
-                                                                              .id);
-                                                                      toastification
-                                                                          .show(
-                                                                        context:
-                                                                            context,
-                                                                        type: ToastificationType
-                                                                            .success,
-                                                                        title: Text(
-                                                                            "Submitted"),
-                                                                        autoCloseDuration:
-                                                                            const Duration(seconds: 2),
-                                                                      );
-                                                                      _refresh();
-                                                                      setState(
-                                                                          () {
-                                                                        _isLoading =
-                                                                            false;
-                                                                      });
-                                                                      uploads
-                                                                          .clear();
-                                                                      Controller
-                                                                          .clear();
-
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    },
-                                                                    child: InterRegular(
-                                                                        text:
-                                                                            'Submit'),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.add_circle,
-                                                          color: Primarycolor,
-                                                          size: width / width24,
-                                                        ),
-                                                        padding:
-                                                            EdgeInsets.zero,
+                                                                    child: Text(
+                                                                        "Cancel")),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    // fireStoreService.updatePatrolsReport(
+                                                                    //     movie
+                                                                    //         .PatrolAssignedGuardId,
+                                                                    //     movie
+                                                                    //         .patrolId,
+                                                                    //     checkpoint[
+                                                                    //         'CheckPointId']);
+                                                                    setState(
+                                                                        () {});
+                                                                    /*Navigator.of(
+                                                                              context)
+                                                                          .pop();*/
+                                                                  },
+                                                                  child: Text(
+                                                                      'Submit'),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                        print(
+                                                            "Info Icon Pressed");
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.info,
+                                                        color: color18,
+                                                        size: width / width24,
                                                       ),
+                                                      padding: EdgeInsets.zero,
                                                     ),
                                                   ),
                                                 ),
-                                                if (_isLoading)
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    margin: EdgeInsets.only(
-                                                        top: 10),
-                                                    child:
-                                                        CircularProgressIndicator(),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(
+                                                  width / width8,
+                                                ),
+                                                child: Container(
+                                                  height: height / height34,
+                                                  width: width / width34,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: color16,
                                                   ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                                                  child: Center(
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                              title:
+                                                                  InterRegular(
+                                                                text:
+                                                                    'Add Image/Comment',
+                                                                color: color2,
+                                                                fontsize:
+                                                                    width /
+                                                                        width12,
+                                                              ),
+                                                              content: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  CustomeTextField(
+                                                                    hint:
+                                                                        'Add Comment',
+                                                                    showIcon:
+                                                                        false,
+                                                                    controller:
+                                                                        Controller,
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height: height /
+                                                                          height10),
+                                                                  SingleChildScrollView(
+                                                                    // Wrap the Row with SingleChildScrollView
+                                                                    scrollDirection:
+                                                                        Axis.horizontal,
+                                                                    // Set scroll direction to horizontal
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Row(
+                                                                          children: uploads
+                                                                              .asMap()
+                                                                              .entries
+                                                                              .map((entry) {
+                                                                            final index =
+                                                                                entry.key;
+                                                                            final upload =
+                                                                                entry.value;
+                                                                            return Stack(
+                                                                              clipBehavior: Clip.none,
+                                                                              children: [
+                                                                                Container(
+                                                                                  height: height / height66,
+                                                                                  width: width / width66,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: WidgetColor,
+                                                                                    borderRadius: BorderRadius.circular(
+                                                                                      width / width10,
+                                                                                    ),
+                                                                                  ),
+                                                                                  margin: EdgeInsets.all(width / width8),
+                                                                                  child: upload['type'] == 'image'
+                                                                                      ? Image.file(
+                                                                                          upload['file'],
+                                                                                          fit: BoxFit.cover,
+                                                                                        )
+                                                                                      : Icon(
+                                                                                          Icons.videocam,
+                                                                                          size: width / width20,
+                                                                                        ),
+                                                                                ),
+                                                                                Positioned(
+                                                                                  top: -5,
+                                                                                  right: -5,
+                                                                                  child: IconButton(
+                                                                                    onPressed: () {
+                                                                                      setState(() {
+                                                                                        _deleteItem(index);
+                                                                                      });
+                                                                                    },
+                                                                                    icon: Icon(
+                                                                                      Icons.delete,
+                                                                                      color: Colors.black,
+                                                                                      size: width / width20,
+                                                                                    ),
+                                                                                    padding: EdgeInsets.zero,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          }).toList(),
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            print("Patrol Checkpoint Status ${widget.p.Allchecked}");
+                                                                            Navigator.pop(context);
+                                                                            showModalBottomSheet(
+                                                                              context: context,
+                                                                              builder: (context) => Column(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                children: [
+                                                                                  ListTile(
+                                                                                    leading: Icon(Icons.camera),
+                                                                                    title: Text('Add Image'),
+                                                                                    onTap: () {
+                                                                                      _addImage();
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                  ),
+                                                                                  ListTile(
+                                                                                    leading: Icon(Icons.image),
+                                                                                    title: Text('Add from Gallery'),
+                                                                                    onTap: () {
+                                                                                      Navigator.pop(context);
+                                                                                      _addGallery();
+                                                                                    },
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                height / height66,
+                                                                            width:
+                                                                                width / width66,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: WidgetColor,
+                                                                              borderRadius: BorderRadius.circular(width / width8),
+                                                                            ),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Icon(
+                                                                                Icons.add,
+                                                                                size: width / width20,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  child:
+                                                                      InterRegular(
+                                                                    text:
+                                                                        'Cancel',
+                                                                    color:
+                                                                        Primarycolor,
+                                                                  ),
+                                                                ),
+                                                                ElevatedButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    if (uploads ==
+                                                                            null ||
+                                                                        uploads
+                                                                            .isEmpty) {
+                                                                      showErrorToast(
+                                                                          context,
+                                                                          "No images found");
+                                                                      return;
+                                                                    }
+                                                                    setState(
+                                                                        () {
+                                                                      _isLoading =
+                                                                          true;
+                                                                    });
+
+                                                                    // Logic to submit the report
+
+                                                                    await fireStoreService.addImagesToPatrol(
+                                                                        uploads,
+                                                                        Controller
+                                                                            .text,
+                                                                        widget.p
+                                                                            .PatrolId,
+                                                                        widget.p
+                                                                            .EmpId,
+                                                                        checkpoint
+                                                                            .id);
+                                                                    toastification
+                                                                        .show(
+                                                                      context:
+                                                                          context,
+                                                                      type: ToastificationType
+                                                                          .success,
+                                                                      title: Text(
+                                                                          "Submitted"),
+                                                                      autoCloseDuration:
+                                                                          const Duration(
+                                                                              seconds: 2),
+                                                                    );
+                                                                    _refresh();
+                                                                    setState(
+                                                                        () {
+                                                                      _isLoading =
+                                                                          false;
+                                                                    });
+                                                                    uploads
+                                                                        .clear();
+                                                                    Controller
+                                                                        .clear();
+
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: InterRegular(
+                                                                      text:
+                                                                          'Submit'),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.add_circle,
+                                                        color: Primarycolor,
+                                                        size: width / width24,
+                                                      ),
+                                                      padding: EdgeInsets.zero,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              if (_isLoading)
+                                                Container(
+                                                  alignment: Alignment.center,
+                                                  margin:
+                                                      EdgeInsets.only(top: 10),
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                            ],
+                                          )
+                                        ],
                                       ),
-                                    );
-                                  }).toList(),
-                                ),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                            ],
-                          );
-                        }).toList(),
-                      )),
-                  SizedBox(
-                    height: height / height10,
-                  ),
-                  _expand
-                      ? Button1(
-                          text: 'END',
-                          backgroundcolor: colorRed2,
-                          color: Colors.redAccent,
-                          borderRadius: 10,
-                          onPressed: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: InterRegular(
-                                    text: 'Add Comment',
-                                    color: color2,
-                                    fontsize: width / width12,
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomeTextField(
-                                        hint: 'Add Comment',
-                                        showIcon: false,
-                                        controller: CommentController,
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: InterRegular(
-                                        text: 'Cancel',
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                      },
-                                      child: InterRegular(
-                                        text: 'Submit',
-                                        fontsize: width / width18,
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    )),
+                SizedBox(
+                  height: height / height10,
+                ),
+                _expand
+                    ? Button1(
+                        text: 'END',
+                        backgroundcolor: colorRed2,
+                        color: Colors.redAccent,
+                        borderRadius: 10,
+                        onPressed: () async {
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (BuildContext context) {
+                          //     return AlertDialog(
+                          //       title: InterRegular(
+                          //         text: 'Add Comment',
+                          //         color: color2,
+                          //         fontsize: width / width12,
+                          //       ),
+                          //       content: Column(
+                          //         mainAxisSize: MainAxisSize.min,
+                          //         children: [
+                          //           CustomeTextField(
+                          //             hint: 'Add Comment',
+                          //             showIcon: false,
+                          //             controller: CommentController,
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       actions: [
+                          //         TextButton(
+                          //           onPressed: () {
+                          //             Navigator.of(context).pop();
+                          //           },
+                          //           child: InterRegular(
+                          //             text: 'Cancel',
+                          //             color: Primarycolor,
+                          //           ),
+                          //         ),
+                          //         ElevatedButton(
+                          //           onPressed: () async {
+                          //             Navigator.pop(context);
+                          //           },
+                          //           child: InterRegular(
+                          //             text: 'Submit',
+                          //             fontsize: width / width18,
+                          //             color: Primarycolor,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     );
+                          //   },
+                          // );
 
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            _refresh();
-                            if (widget.p.CompletedCount ==
-                                widget.p.PatrolRequiredCount) {
+                          _refresh();
+                          print("Allchecked = ${widget.p.Allchecked}");
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          _refresh();
+                          if (widget.p.CompletedCount ==
+                              widget.p.PatrolRequiredCount) {
+                            print("Patrol count == Required COunt");
+                            setState(() {
                               _expand = false;
+
                               prefs.setBool("expand", _expand);
-                              //If the count is equal
-                              List<String> emails = [];
-                              var ClientEmail = await fireStoreService
-                                  .getClientEmail(widget.p.PatrolClientID);
-                              var AdminEmail = await fireStoreService
-                                  .getAdminEmail(widget.p.PatrolCompanyID);
-                              var imageUrls =
-                                  await fireStoreService.getImageUrlsForPatrol(
-                                      widget.p.PatrolId, widget.p.EmpId);
+                            });
+                            //If the count is equal
+                            List<String> emails = [];
+                            var ClientEmail = await fireStoreService
+                                .getClientEmail(widget.p.PatrolClientID);
+                            var AdminEmail = await fireStoreService
+                                .getAdminEmail(widget.p.PatrolCompanyID);
+                            var imageUrls =
+                                await fireStoreService.getImageUrlsForPatrol(
+                                    widget.p.PatrolId, widget.p.EmpId);
 
-                              print(imageUrls);
-                              var TestinEmail = "sutarvaibhav37@gmail.com";
-                              var defaultEmail = "tacttikofficial@gmail.com";
-                              var testEmail3 = "yashsinghs077@gmail.com";
-                              emails.add(TestinEmail);
-                              // emails.add(testEmail3);
-                              emails.add(ClientEmail!);
-                              emails.add(AdminEmail!);
-                              emails.add(defaultEmail!);
+                            print(imageUrls);
+                            var TestinEmail = "sutarvaibhav37@gmail.com";
+                            var defaultEmail = "tacttikofficial@gmail.com";
+                            var testEmail3 = "Swastikbthiramdas@gmail.com";
+                            emails.add(TestinEmail);
+                            // emails.add(testEmail3);
+                            // emails.add(testEmail3);
+                            emails.add(ClientEmail!);
+                            emails.add(AdminEmail!);
+                            emails.add(defaultEmail!);
 
-                              DateFormat dateFormat =
-                                  DateFormat("yyyy-MM-dd HH:mm:ss");
-                              String formattedStartDate =
-                                  dateFormat.format(DateTime.now());
-                              String formattedEndDate =
-                                  dateFormat.format(DateTime.now());
-                              String formattedEndTime =
-                                  dateFormat.format(DateTime.now());
-                              DateFormat timeformat = DateFormat(
-                                  "HH:mm"); // Define the format for time
-                              String formattedPatrolInTime =
-                                  timeformat.format(StartTime);
-                              String formattedPatrolOutTime =
-                                  timeformat.format(DateTime.now());
-                              String formattedDate = DateFormat('yyyy-MM-dd')
-                                  .format(DateTime.now());
-                              Map<String, dynamic> emailParams = {
-                                'to_email':
-                                    '$ClientEmail, $AdminEmail , $defaultEmail',
-                                // 'to_email': '$TestinEmail',
-                                'from_name': '',
-                                'reply_to': '$ClientEmail',
-                                'type': 'Patrol',
-                                'Location': '${widget.p.description}',
-                                'Status': 'Completed',
-                                'GuardName': '${widget.p.EmployeeName}',
-                                'StartTime': StartTime,
-                                'EndTime': DateTime.now().toString(),
-                                'patrolCount': widget.p.CompletedCount,
-                                'patrolTImein': StartTime,
-                                'patrolTImeout': DateTime.now().toString(),
-                                'imageData': imageUrls
-                                    .map((map) => {
-                                          'StatusReportedTime':
-                                              map['StatusReportedTime']
-                                                  .toString(),
-                                          'ImageUrls':
-                                              map['ImageUrls'].join(', ')
-                                        })
-                                    .toList(),
-                                'CompanyName': 'Tacttik',
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
+                            DateFormat timeformat = DateFormat(
+                                "HH:mm"); // Define the format for time
+                            // if (InTime != null) {
+                            //   String formattedPatrolInTime =
+                            //       timeformat.format(InTime);
+                            // }
+                            String formattedPatrolOutTime =
+                                timeformat.format(DateTime.now());
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+                            List<Map<String, dynamic>> formattedImageUrls =
+                                imageUrls.map((url) {
+                              return {
+                                'StatusReportedTime': formattedEndDate,
+                                'ImageUrls': url['ImageUrls'],
+                                'StatusComment': url['StatusComment']
                               };
-                              List<Map<String, dynamic>> formattedImageUrls =
-                                  imageUrls.map((url) {
-                                return {
-                                  'StatusReportedTime': formattedEndDate,
-                                  'ImageUrls': url['ImageUrls'],
-                                  'StatusComment': url['StatusComment']
-                                };
-                              }).toList();
-                              // sendFormattedEmail(emailParams);
-                              sendapiEmail(
-                                emails,
-                                "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                widget.p.EmployeeName,
-                                "",
-                                'Shift ',
-                                formattedStartDate,
-                                formattedImageUrls,
-                                widget.p.EmployeeName,
-                                formattedPatrolInTime,
-                                formattedEndTime,
-                                widget.p.CompletedCount.toString(),
-                                widget.p.PatrolRequiredCount.toString(),
-                                widget.p.description,
-                                "Completed",
-                                formattedPatrolInTime,
-                                formattedPatrolOutTime,
-                              );
-                              _refreshData();
-                              // sendFormattedEmail(emailParams);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeScreen()));
-                            } else {
-                              _refreshData();
-                              if (!widget.p.Allchecked) {
-                                showErrorToast(
-                                    context, "Complete all the Checkpoints");
-                              }
-                            }
+                            }).toList();
 
-                            if (widget.p.Allchecked) {
-                              _refreshData();
-                              if (widget.p.CompletedCount ==
-                                  widget.p.PatrolRequiredCount - 1) {
+                            String? InTime = prefs.getString("StartTime");
+                            sendapiEmail(
+                              emails,
+                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                              widget.p.EmployeeName,
+                              "",
+                              'Shift ',
+                              formattedStartDate,
+                              formattedImageUrls,
+                              widget.p.EmployeeName,
+                              InTime,
+                              formattedEndTime,
+                              widget.p.CompletedCount.toString(),
+                              widget.p.PatrolRequiredCount.toString(),
+                              widget.p.description,
+                              "Completed",
+                              InTime,
+                              formattedPatrolOutTime,
+                            );
+                            _refresh();
+                            // sendFormattedEmail(emailParams);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          } else {
+                            _refresh();
+                            if (!widget.p.Allchecked) {
+                              showErrorToast(
+                                  context, "Complete all the Checkpoints");
+                            }
+                          }
+
+                          if (widget.p.Allchecked) {
+                            _refreshData();
+                            if (widget.p.CompletedCount ==
+                                widget.p.PatrolRequiredCount - 1) {
+                              setState(() {
+                                _expand = false;
+                                buttonEnabled = false;
+
+                                prefs.setBool("expand", _expand);
+                              });
+                              if (widget.p.Allchecked) {
+                                print("all checked and last patrol -1");
+                                showSuccessToast(context, "Patrol Completed");
                                 await fireStoreService
                                     .LastEndPatrolupdatePatrolsStatus(
                                         widget.p.PatrolId,
@@ -1273,6 +1276,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         widget.p.EmployeeName);
                                 _expand = false;
                                 prefs.setBool("expand", _expand);
+                                // prefs.setBool("expand", _expand);
                                 List<String> emails = [];
                                 var ClientEmail = await fireStoreService
                                     .getClientEmail(widget.p.PatrolClientID);
@@ -1285,11 +1289,15 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 print(imageUrls);
                                 var TestinEmail = "sutarvaibhav37@gmail.com";
                                 var defaultEmail = "tacttikofficial@gmail.com";
-                                var testEmail3 = "yashsinghs077@gmail.com";
+                                var testEmail3 = "Swastikbthiramdas@gmail.com";
                                 emails.add(TestinEmail);
+                                // emails.add(testEmail3);
+
                                 // emails.add(testEmail3);
                                 emails.add(defaultEmail!);
 
+                                emails.add(ClientEmail!);
+                                emails.add(AdminEmail!);
                                 emails.add(ClientEmail!);
                                 emails.add(AdminEmail!);
 
@@ -1303,38 +1311,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     dateFormat.format(DateTime.now());
                                 DateFormat timeformat = DateFormat(
                                     "HH:mm"); // Define the format for time
-                                String formattedPatrolInTime =
-                                    timeformat.format(StartTime);
+                                // String formattedPatrolInTime =
+                                //     timeformat.format(StartTime);
                                 String formattedPatrolOutTime =
                                     timeformat.format(DateTime.now());
                                 String formattedDate = DateFormat('yyyy-MM-dd')
                                     .format(DateTime.now());
-                                Map<String, dynamic> emailParams = {
-                                  'to_email':
-                                      '$ClientEmail, $AdminEmail , $defaultEmail',
-                                  // 'to_email': '$TestinEmail',
-                                  'from_name': '',
-                                  'reply_to': '$ClientEmail',
-                                  'type': 'Patrol',
-                                  'Location': '${widget.p.description}',
-                                  'Status': 'Completed',
-                                  'GuardName': '${widget.p.EmployeeName}',
-                                  'StartTime': StartTime,
-                                  'EndTime': DateTime.now().toString(),
-                                  'patrolCount': widget.p.CompletedCount,
-                                  'patrolTImein': StartTime,
-                                  'patrolTImeout': DateTime.now().toString(),
-                                  'imageData': imageUrls
-                                      .map((map) => {
-                                            'StatusReportedTime':
-                                                map['StatusReportedTime']
-                                                    .toString(),
-                                            'ImageUrls':
-                                                map['ImageUrls'].join(', ')
-                                          })
-                                      .toList(),
-                                  'CompanyName': 'Tacttik',
-                                };
 
                                 List<Map<String, dynamic>> formattedImageUrls =
                                     imageUrls.map((url) {
@@ -1345,6 +1327,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   };
                                 }).toList();
                                 // sendFormattedEmail(emailParams);
+                                String? InTime = prefs.getString("StartTime");
                                 sendapiEmail(
                                   emails,
                                   "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
@@ -1354,24 +1337,24 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   formattedStartDate,
                                   formattedImageUrls,
                                   widget.p.EmployeeName,
-                                  formattedPatrolInTime,
+                                  InTime,
                                   formattedEndTime,
                                   widget.p.CompletedCount.toString(),
-                                  widget.p.CompletedCount.toString(),
+                                  widget.p.PatrolRequiredCount.toString(),
                                   widget.p.description,
                                   "Completed",
-                                  formattedPatrolInTime,
+                                  InTime,
                                   formattedPatrolOutTime,
                                 );
                                 Navigator.pop(context);
                               } else {
-                                await fireStoreService
-                                    .EndPatrolupdatePatrolsStatus(
-                                        widget.p.PatrolId,
-                                        widget.p.EmpId,
-                                        widget.p.EmployeeName);
-                                _expand = false;
-                                prefs.setBool("expand", _expand);
+                                // await fireStoreService
+                                //     .EndPatrolupdatePatrolsStatus(
+                                //         widget.p.PatrolId,
+                                //         widget.p.EmpId,
+                                //         widget.p.EmployeeName);
+                                // _expand = false;
+                                // prefs.setBool("expand", _expand);
 
                                 // showSuccessToast(context, "Patrol Completed");
                                 print("All checked");
@@ -1388,173 +1371,176 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 var TestinEmail = "sutarvaibhav37@gmail.com";
                                 var defaultEmail = "tacttikofficial@gmail.com";
                                 // var defaultEmail = "tacttikofficial@gmail.com";
-                                var testEmail3 = "yashsinghs077@gmail.com";
+                                var testEmail3 = "Swastikbthiramdas@gmail.com";
                                 emails.add(TestinEmail);
+                                // emails.add(testEmail3);
+
                                 emails.add(ClientEmail!);
                                 emails.add(AdminEmail!);
                                 emails.add(defaultEmail!);
 
                                 // emails.add(testEmail3);
+                                // emails.add(testEmail3);
 
-                                DateFormat dateFormat =
-                                    DateFormat("yyyy-MM-dd HH:mm:ss");
-                                String formattedStartDate =
-                                    dateFormat.format(DateTime.now());
-                                String formattedEndDate =
-                                    dateFormat.format(DateTime.now());
-                                String formattedEndTime =
-                                    dateFormat.format(DateTime.now());
-                                DateFormat timeformat = DateFormat(
-                                    "HH:mm"); // Define the format for time
-                                String formattedPatrolInTime =
-                                    timeformat.format(StartTime);
-                                String formattedPatrolOutTime =
-                                    timeformat.format(DateTime.now());
-                                String formattedDate = DateFormat('yyyy-MM-dd')
-                                    .format(DateTime.now());
-                                Map<String, dynamic> emailParams = {
-                                  'to_email':
-                                      '$ClientEmail, $AdminEmail , $defaultEmail',
-                                  // 'to_email': '$TestinEmail',
-                                  'from_name': '${widget.p.EmployeeName}',
-                                  'reply_to': '$ClientEmail',
-                                  'type': 'Patrol',
-                                  'Location': '${widget.p.description}',
-                                  'Status': 'Completed',
-                                  'GuardName': '${widget.p.EmployeeName}',
-                                  'StartTime': StartTime,
-                                  'EndTime': DateTime.now().toString(),
-                                  'patrolCount': widget.p.CompletedCount,
-                                  'patrolTImein': StartTime,
-                                  'patrolTImeout': DateTime.now().toString(),
-                                  'imageData': imageUrls
-                                      .map((map) => {
-                                            'StatusReportedTime':
-                                                map['StatusReportedTime']
-                                                    .toString(),
-                                            'ImageUrls':
-                                                map['ImageUrls'].join(', ')
-                                          })
-                                      .toList(),
-                                  'CompanyName': 'Tacttik',
-                                };
-
-                                List<Map<String, dynamic>> formattedImageUrls =
-                                    imageUrls.map((url) {
-                                  return {
-                                    'StatusReportedTime': formattedEndDate,
-                                    'ImageUrls': url['ImageUrls'],
-                                    'StatusComment': url['StatusComment']
-                                  };
-                                }).toList();
+                                // List<Map<String, dynamic>> formattedImageUrls =
+                                //     imageUrls.map((url) {
+                                //   return {
+                                //     'StatusReportedTime': formattedEndDate,
+                                //     'ImageUrls': url['ImageUrls'],
+                                //     'StatusComment': url['StatusComment']
+                                //   };
+                                // }).toList();
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => HomeScreen()));
                                 // sendFormattedEmail(emailParams);
-                                sendapiEmail(
-                                  emails,
-                                  "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                  widget.p.EmployeeName,
-                                  "",
-                                  'Patrol',
-                                  formattedStartDate,
-                                  formattedImageUrls,
-                                  widget.p.EmployeeName,
-                                  formattedPatrolInTime,
-                                  formattedEndTime,
-                                  widget.p.CompletedCount.toString(),
-                                  widget.p.PatrolRequiredCount.toString(),
-                                  widget.p.description,
-                                  "Completed",
-                                  formattedPatrolInTime,
-                                  formattedPatrolOutTime,
-                                );
+                                // sendapiEmail(
+                                //   emails,
+                                //   "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                //   widget.p.EmployeeName,
+                                //   "",
+                                //   'Patrol',
+                                //   formattedStartDate,
+                                //   formattedImageUrls,
+                                //   widget.p.EmployeeName,
+                                //   formattedPatrolInTime,
+                                //   formattedEndTime,
+                                //   widget.p.CompletedCount.toString(),
+                                //   widget.p.PatrolRequiredCount.toString(),
+                                //   widget.p.description,
+                                //   "Completed",
+                                //   formattedPatrolInTime,
+                                //   formattedPatrolOutTime,
+                                // );
                                 // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
-                                _refreshData();
+                                _refresh();
+                                return;
                               }
                               // sendFormattedEmail(emailParams);
-                              showSuccessToast(context, "Patrol Completed");
-                              Navigator.pop(context);
-                            } else {
-                              // await fireStoreService.EndPatrolupdatePatrolsStatus(
-                              //     widget.p.PatrolId,
-                              //     widget.p.EmpId,
-                              //     widget.p.EmployeeName);
+                              // showErrorToast(
+                              //     context, "Complete all Checkpoints to end 1");
+                              return;
+                            }
+                            if (widget.p.Allchecked) {
+                              showSuccessToast(context,
+                                  "All checked and also not the last patrol");
+                              // setState(() {
+                              //   buttonEnabled = false;
+                              // });
+                              setState(() {
+                                _expand = false;
+                                buttonEnabled = false;
 
-                              // // showSuccessToast(context, "Patrol Completed");
-                              // print("All checked");
-                              // List<String> emails = [];
-                              // var ClientEmail = await fireStoreService
-                              //     .getClientEmail(widget.p.PatrolClientID);
-                              // var AdminEmail = await fireStoreService
-                              //     .getAdminEmail(widget.p.PatrolCompanyID);
-                              // var imageUrls =
-                              //     await fireStoreService.getImageUrlsForPatrol(
-                              //         widget.p.PatrolId, widget.p.EmpId);
-
-                              // print(imageUrls);
-                              // var TestinEmail = "sutarvaibhav37@gmail.com";
-                              // var defaultEmail = "tacttikofficial@gmail.com";
-                              // emails.add(ClientEmail!);
-                              // emails.add(AdminEmail!);
-
-                              // DateFormat dateFormat =
-                              //     DateFormat("yyyy-MM-dd HH:mm:ss");
-                              // String formattedStartDate =
-                              //     dateFormat.format(DateTime.now());
-                              // String formattedEndDate =
-                              //     dateFormat.format(DateTime.now());
-                              // String formattedEndTime =
-                              //     dateFormat.format(DateTime.now());
-                              // DateFormat timeformat = DateFormat(
-                              //     "HH:mm"); // Define the format for time
+                                prefs.setBool("expand", _expand);
+                              });
+                              DateFormat dateFormat =
+                                  DateFormat("yyyy-MM-dd HH:mm:ss");
+                              String formattedStartDate =
+                                  dateFormat.format(DateTime.now());
+                              String formattedEndDate =
+                                  dateFormat.format(DateTime.now());
+                              String formattedEndTime =
+                                  dateFormat.format(DateTime.now());
+                              DateFormat timeformat = DateFormat(
+                                  "HH:mm"); // Define the format for time
                               // String formattedPatrolInTime =
                               //     timeformat.format(StartTime);
-                              // String formattedPatrolOutTime =
-                              //     timeformat.format(DateTime.now());
-                              // String formattedDate =
-                              //     DateFormat('yyyy-MM-dd').format(DateTime.now());
+                              String formattedPatrolOutTime =
+                                  timeformat.format(DateTime.now());
+                              String formattedDate = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
+                              List<String> emails = [];
+                              var ClientEmail = await fireStoreService
+                                  .getClientEmail(widget.p.PatrolClientID);
+                              var AdminEmail = await fireStoreService
+                                  .getAdminEmail(widget.p.PatrolCompanyID);
+                              var imageUrls =
+                                  await fireStoreService.getImageUrlsForPatrol(
+                                      widget.p.PatrolId, widget.p.EmpId);
 
-                              // List<Map<String, dynamic>> formattedImageUrls =
-                              //     imageUrls.map((url) {
-                              //   return {
-                              //     'StatusReportedTime': formattedEndDate,
-                              //     'ImageUrls': url['ImageUrls'],
-                              //     ' StatusComment': url['StatusComment']
-                              //   };
-                              // }).toList();
-                              // // sendFormattedEmail(emailParams);
-                              // sendapiEmail(
-                              //   emails,
-                              //   "Patrol update for ${widget.p.description} Date:- formattedStartDate",
-                              //   widget.p.EmployeeName,
-                              //   "",
-                              //   'Shift ',
-                              //   formattedStartDate,
-                              //   formattedImageUrls,
-                              //   widget.p.EmployeeName,
-                              //   formattedPatrolInTime.toString(),
-                              //   formattedPatrolOutTime.toString(),
-                              //   widget.p.CompletedCount.toString(),
-                              //   widget.p.PatrolRequiredCount.toString(),
-                              //   widget.p.description,
-                              //   "Completed",
-                              //   formattedPatrolInTime.toString(),
-                              //   formattedPatrolOutTime.toString(),
-                              // );
-                              // sendapiEmail("Testing", "Vaibhav Sutar", "asdfas");
-                              _refreshData();
+                              List<Map<String, dynamic>> formattedImageUrls =
+                                  imageUrls.map((url) {
+                                return {
+                                  'StatusReportedTime': formattedEndDate,
+                                  'ImageUrls': url['ImageUrls'],
+                                  'StatusComment': url['StatusComment']
+                                };
+                              }).toList();
+                              print(imageUrls);
+                              var TestinEmail = "sutarvaibhav37@gmail.com";
+                              var defaultEmail = "tacttikofficial@gmail.com";
+                              // var defaultEmail = "tacttikofficial@gmail.com";
+                              var testEmail3 = "Swastikbthiramdas@gmail.com";
+                              emails.add(TestinEmail);
+                              // emails.add(testEmail3);
 
-                              // _refreshData();
-                              showErrorToast(
-                                  context, "Complete all the Checkpoints");
-                              print("not checked");
+                              emails.add(ClientEmail!);
+                              emails.add(AdminEmail!);
+                              emails.add(defaultEmail!);
+                              String? InTime = prefs.getString("StartTime");
+                              sendapiEmail(
+                                emails,
+                                "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                widget.p.EmployeeName,
+                                "",
+                                'Shift ',
+                                formattedStartDate,
+                                formattedImageUrls,
+                                widget.p.EmployeeName,
+                                InTime,
+                                formattedEndTime,
+                                widget.p.CompletedCount.toString(),
+                                widget.p.PatrolRequiredCount.toString(),
+                                widget.p.description,
+                                "Completed",
+                                InTime,
+                                formattedPatrolOutTime,
+                              );
+                              await fireStoreService
+                                  .EndPatrolupdatePatrolsStatus(
+                                      widget.p.PatrolId,
+                                      widget.p.EmpId,
+                                      widget.p.EmployeeName);
+                              Navigator.pop(context);
+                              // _expand = false;
                             }
-                          },
-                        )
-                      : const SizedBox(),
-                ],
-              ),
+                            // prefs.setBool("expand", _expand);
+                            // setState(() {
+                            //   buttonEnabled = false;
+                            // });
+                            //Generate log for this
+                          } else {
+                            DateFormat dateFormat =
+                                DateFormat("yyyy-MM-dd HH:mm:ss");
+                            String formattedStartDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndDate =
+                                dateFormat.format(DateTime.now());
+                            String formattedEndTime =
+                                dateFormat.format(DateTime.now());
+                            DateFormat timeformat = DateFormat(
+                                "HH:mm"); // Define the format for time
+                            // String formattedPatrolInTime =
+                            //     timeformat.format(StartTime);
+                            String formattedPatrolOutTime =
+                                timeformat.format(DateTime.now());
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(DateTime.now());
+                            _refreshData();
+
+                            // _refreshData();
+                            showErrorToast(
+                                context, "Complete all the Checkpoints");
+                            print("not checked");
+                          }
+                        },
+                      )
+                    : const SizedBox(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1572,10 +1558,12 @@ class Patrol {
   final String PatrolClientID;
 
   final String EmployeeName;
+
   final int PatrolRequiredCount;
   final int CompletedCount;
   final bool Allchecked;
   final List<Category> categories;
+  final String ShiftDate;
 
   Patrol({
     required this.title,
@@ -1583,6 +1571,7 @@ class Patrol {
     required this.PatrolClientID,
     required this.description,
     required this.categories,
+
     // required this.time,
     required this.PatrolId,
     required this.EmpId,
@@ -1590,6 +1579,7 @@ class Patrol {
     required this.PatrolRequiredCount,
     required this.CompletedCount,
     required this.Allchecked,
+    required this.ShiftDate,
   });
 }
 
@@ -1615,9 +1605,13 @@ class Checkpoint {
     required this.checkPointStatus,
   });
 
-  String? getFirstStatus() {
+  String? getFirstStatus(String empId) {
     if (checkPointStatus.isNotEmpty) {
-      return checkPointStatus[0].status;
+      for (var status in checkPointStatus) {
+        if (status.reportedById == empId) {
+          return status.status;
+        }
+      }
     }
     return null;
   }

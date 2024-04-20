@@ -288,7 +288,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       );
       Duration difference = shiftStartTime.difference(inTime!);
       int differenceInMinutes = difference.inMinutes.abs();
-      lateTime = differenceInMinutes > 5 ? '${differenceInMinutes}m Late' : '';
+
+      if (differenceInMinutes > 5) {
+        int hours = differenceInMinutes ~/ 60;
+        int minutes = differenceInMinutes % 60;
+        lateTime = '${hours}Hr ${minutes}m Late';
+      }
     }
     print("IN Time : ${inTime}");
     print("Elapsed  : ${_elapsedTime}");
@@ -514,7 +519,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             widget.ShiftCompanyId,
                             widget.EmployeeName);
 
-                        send_mail_onOut();
+                        var ClientName = fireStoreService
+                            .getClientName(widget.ShiftClientID);
+                        var ClientEmail = fireStoreService
+                            .getClientEmail(widget.ShiftClientID);
+                        var AdminEmal = fireStoreService
+                            .getAdminEmail(widget.ShiftCompanyId);
+                        //fetch the data from Patrol Logs and generate email from it
+                        var data = await fireStoreService.fetchDataForPdf(
+                            widget.EmployeId, widget.ShiftId);
+                        //generate the pdf
+                        //add to firebase storage and then mail too
+                        // String? pdfLink = fireStoreService.uploadPdfToStorage(
+                        //     file, widget.ShiftId);
+                        // send_mail_onOut();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -549,6 +567,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   color: color5,
                   backgroundcolor: WidgetColor,
                   onPressed: () async {
+                    var data = await fireStoreService.fetchDataForPdf(
+                        widget.EmployeId, widget.ShiftId);
+                    print(data);
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
 
@@ -576,25 +597,23 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 ),
               )
             : const SizedBox(),
-        IgnorePointer(
-          ignoring: !clickedIn,
-          child: Button1(
-            text: 'Check Patrolling',
-            fontsize: width / width18,
-            color: color5,
-            backgroundcolor: WidgetColor,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyPatrolsList(
-                            ShiftLocationId: widget.ShiftLocationId,
-                            EmployeeID: widget.EmployeId,
-                            EmployeeName: widget.EmployeeName,
-                            ShiftId: widget.ShiftId,
-                          )));
-            },
-          ),
+        Button1(
+          text: 'Check Patrolling',
+          fontsize: width / width18,
+          color: color5,
+          backgroundcolor: WidgetColor,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MyPatrolsList(
+                          ShiftLocationId: widget.ShiftLocationId,
+                          EmployeeID: widget.EmployeId,
+                          EmployeeName: widget.EmployeeName,
+                          ShiftId: widget.ShiftId,
+                          ShiftDate: widget.ShiftDate,
+                        )));
+          },
         ),
       ],
     );
