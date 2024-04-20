@@ -1529,14 +1529,14 @@ class FireStoreService {
 
   //Update the shift status when the qr is scanned correctly
   Future<void> updateShiftTaskStatus(
-      String ShiftTaskId, String EmpID, String EmpName) async {
+      String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
       String empId = storage.getItem('EmpId') ?? "";
 
       final DocumentReference shiftDocRef =
-          FirebaseFirestore.instance.collection("Shifts").doc(shiftId);
+          FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
 
       if (shiftDoc.exists) {
@@ -1544,6 +1544,12 @@ class FireStoreService {
 
         for (int i = 0; i < shiftTasks.length; i++) {
           if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+            // Check if ShiftTaskStatus array is empty or null
+            if (shiftTasks[i]['ShiftTaskStatus'] == null ||
+                shiftTasks[i]['ShiftTaskStatus'].isEmpty) {
+              shiftTasks[i]['ShiftTaskStatus'] = [];
+            }
+
             // Create ShiftTaskStatus object without images
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
@@ -1553,7 +1559,7 @@ class FireStoreService {
             };
 
             // Update the ShiftTaskStatus array with the new object
-            shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+            shiftTasks[i]['ShiftTaskStatus'].add(shiftTaskStatus);
 
             // Update the Firestore document with the new ShiftTaskStatus
             await shiftDocRef.update({'ShiftTask': shiftTasks});
@@ -1571,14 +1577,12 @@ class FireStoreService {
   }
 
   Future<void> updateShiftReturnTaskStatus(
-      String ShiftTaskId, String EmpID, String EmpName) async {
+      String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
-      String shiftId = storage.getItem('shiftId');
-      String empId = storage.getItem('EmpId') ?? "";
 
       final DocumentReference shiftDocRef =
-          FirebaseFirestore.instance.collection("Shifts").doc(shiftId);
+          FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
 
       if (shiftDoc.exists) {
@@ -1586,24 +1590,23 @@ class FireStoreService {
 
         for (int i = 0; i < shiftTasks.length; i++) {
           if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
-            // Create ShiftTaskStatus object without images
-            Map<String, dynamic> shiftTaskStatus = {
-              "TaskStatus": "completed",
-              "TaskCompletedById": EmpID,
-              "TaskCompletedByName": EmpName,
-              "TaskCompletionTime": DateTime.now(),
-              "ShiftTaskReturnStatus": true
-            };
+            // Find the ShiftTaskStatus object in the array
+            List<dynamic> shiftTaskStatuses = shiftTasks[i]['ShiftTaskStatus'];
+            for (int j = 0; j < shiftTaskStatuses.length; j++) {
+              // Update ShiftTaskReturnStatus if TaskCompletedById and TaskCompletedByName match
+              if (shiftTaskStatuses[j]['TaskCompletedById'] == EmpID &&
+                  shiftTaskStatuses[j]['TaskCompletedByName'] == EmpName) {
+                shiftTaskStatuses[j]['ShiftTaskReturnStatus'] = true;
+                break; // Exit loop after updating
+              }
+            }
 
-            // Update the ShiftTaskStatus array with the new object
-            shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
-
-            // Update the Firestore document with the new ShiftTaskStatus
+            // Update the Firestore document with the updated ShiftTaskStatus array
             await shiftDocRef.update({'ShiftTask': shiftTasks});
-            break; // Exit loop after updating
+            print('Updated Status');
+            break; // Exit loop after finding the ShiftTaskId
           }
         }
-        print('Updated Status');
       } else {
         print("Shift document not found");
       }

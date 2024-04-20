@@ -310,7 +310,10 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
 
                       if (Result.toString() == widget.taskId.toString()) {
                         await fireStoreService.updateShiftReturnTaskStatus(
-                            widget.taskId, widget.EmpID, widget.EmpName);
+                            widget.taskId,
+                            widget.EmpID,
+                            widget.ShiftId,
+                            widget.EmpName);
 
                         //Update in firebase and change the color of icon
                         // showCustomDialog(context, "Task Scan",

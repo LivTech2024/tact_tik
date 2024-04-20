@@ -307,9 +307,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       showSuccessToast(context, "Scanned Id ${res}");
                       showSuccessToast(context, "Task Id ${widget.taskId}");
 
-                      if (Result.toString() == widget.taskId.toString()) {
+                      if (Result == widget.taskId) {
                         await fireStoreService.updateShiftTaskStatus(
-                            widget.taskId, widget.EmpID, widget.EmpName);
+                            widget.taskId,
+                            widget.EmpID,
+                            widget.ShiftId,
+                            widget.EmpName);
 
                         //Update in firebase and change the color of icon
                         // showCustomDialog(context, "Task Scan",
@@ -354,13 +357,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    widget.shiftReturnTask == true
-                                        ? widget.ShiftTaskReturnStatus == true
+                                    widget.taskStatus == true
+                                        ? widget.taskStatus == true
                                             ? Icons.done
                                             : Icons.add_a_photo
                                         : widget.taskStatus == "completed" ||
-                                                widget.ShiftTaskReturnStatus ==
-                                                    true
+                                                widget.taskStatus == true
                                             ? Icons.done
                                             : Icons.add_a_photo,
                                     size: width / width24,

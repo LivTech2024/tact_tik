@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
@@ -557,6 +558,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DarDisplayScreen(
                                                       EmpEmail: _employeeId,
                                                     )));
+                                        break;
+                                      case 6:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LogBookScreen()));
                                         break;
                                       default:
                                     }
