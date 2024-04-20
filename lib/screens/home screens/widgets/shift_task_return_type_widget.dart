@@ -16,9 +16,9 @@ import '../../../utils/colors.dart';
 
 final today = DateUtils.dateOnly(DateTime.now());
 
-class ShiftTaskTypeWidget extends StatefulWidget {
+class ShiftTaskReturnTypeWidget extends StatefulWidget {
   final Function refreshDataCallback;
-  ShiftTaskTypeWidget({
+  ShiftTaskReturnTypeWidget({
     Key? key,
     required this.type,
     required this.taskName,
@@ -43,10 +43,11 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final bool shiftReturnTask;
 
   @override
-  State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
+  State<ShiftTaskReturnTypeWidget> createState() =>
+      _ShiftTaskReturnTypeWidgetState();
 }
 
-class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
+class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
   List<Map<String, dynamic>> uploads = [];
   bool _isLoading = false;
   Future<void> _addImage() async {
@@ -308,7 +309,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       showSuccessToast(context, "Task Id ${widget.taskId}");
 
                       if (Result.toString() == widget.taskId.toString()) {
-                        await fireStoreService.updateShiftTaskStatus(
+                        await fireStoreService.updateShiftReturnTaskStatus(
                             widget.taskId, widget.EmpID, widget.EmpName);
 
                         //Update in firebase and change the color of icon

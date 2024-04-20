@@ -55,5 +55,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'security-app-3b156.appspot.com',
     iosBundleId: 'com.avocadotech.tacttik.tactTik',
   );
-
 }

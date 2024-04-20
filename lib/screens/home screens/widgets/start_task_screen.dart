@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
@@ -612,23 +613,26 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 ),
               )
             : const SizedBox(),
-        Button1(
-          text: 'Check Patrolling',
-          fontsize: width / width18,
-          color: color5,
-          backgroundcolor: WidgetColor,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyPatrolsList(
-                          ShiftLocationId: widget.ShiftLocationId,
-                          EmployeeID: widget.EmployeId,
-                          EmployeeName: widget.EmployeeName,
-                          ShiftId: widget.ShiftId,
-                          ShiftDate: widget.ShiftDate,
-                        )));
-          },
+        IgnorePointer(
+          ignoring: !clickedIn,
+          child: Button1(
+            text: 'Check Patrolling',
+            fontsize: width / width18,
+            color: color5,
+            backgroundcolor: WidgetColor,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyPatrolsList(
+                            ShiftLocationId: widget.ShiftLocationId,
+                            EmployeeID: widget.EmployeId,
+                            EmployeeName: widget.EmployeeName,
+                            ShiftId: widget.ShiftId,
+                            ShiftDate: widget.ShiftDate,
+                          )));
+            },
+          ),
         ),
       ],
     );
