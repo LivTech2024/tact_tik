@@ -523,11 +523,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             .getClientName(widget.ShiftClientID);
                         var ClientEmail = fireStoreService
                             .getClientEmail(widget.ShiftClientID);
+                        var AdminEmal = fireStoreService
+                            .getAdminEmail(widget.ShiftCompanyId);
                         //fetch the data from Patrol Logs and generate email from it
                         var data = await fireStoreService.fetchDataForPdf(
                             widget.EmployeId, widget.ShiftId);
-
-                        send_mail_onOut();
+                        //generate the pdf
+                        //add to firebase storage and then mail too
+                        // String? pdfLink = fireStoreService.uploadPdfToStorage(
+                        //     file, widget.ShiftId);
+                        // send_mail_onOut();
                         Navigator.push(
                           context,
                           MaterialPageRoute(

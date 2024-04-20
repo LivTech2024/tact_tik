@@ -1406,6 +1406,39 @@ class FireStoreService {
     }
   }
 
+  //Add report pdf to storage
+  Future<String> uploadPdfToStorage(File file, String ShiftId) async {
+    try {
+      // Generate a unique name for the document
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+
+      // Determine the file extension (e.g., pdf, docx, txt)
+      String extension = file.path.split('.').last;
+      String compressedFileName = '$ShiftId.$extension';
+
+      // Compress the document (adjust the quality as needed)
+      Uint8List? compressedDocument =
+          await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        quality: 50, // Adjust the quality as needed
+      );
+
+      // Upload the compressed document to Firebase Storage
+      Reference uploadRef =
+          storageRef.child("employees/ShiftReport/$compressedFileName");
+      await uploadRef.putData(Uint8List.fromList(compressedDocument!));
+
+      // Get the download URL of the uploaded document
+      String downloadURL = await uploadRef.getDownloadURL();
+
+      return downloadURL;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   // Add images and comment
   Future<void> addImagesToPatrol(
     List<Map<String, dynamic>> uploads,
