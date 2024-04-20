@@ -331,7 +331,7 @@ class FireStoreService {
     checkpoints.forEach((checkpoint) {
       List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
       status.forEach((entry) {
-        entry['Status'] = 'not_checked';
+        entry['Status'] = 'unchecked';
         entry['StatusReportedTime'] = Timestamp.now();
       });
     });
@@ -1727,7 +1727,42 @@ class FireStoreService {
       print('Error fetching client: $e');
     }
   }
+
   //PatrolClientId
+
+  // Fetch the the PatrolLogs using PatrolShiftIds
+  Future<List<Map<String, dynamic>>> fetchDataForPdf(
+      String empId, String ShiftId) async {
+    List<Map<String, dynamic>> pdfDataList = [];
+    try {
+      // Get the array of ShiftLinkedPatrolIds
+      print("Search for pdf Data");
+      var shiftDoc = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(ShiftId)
+          .get();
+      print("Shift Doc : ${shiftDoc.data()}");
+      var shiftLinkedPatrolIds =
+          List<String>.from(shiftDoc.data()?['ShiftLinkedPatrolIds'] ?? []);
+      print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
+      // Query PatrolLogs for data
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('PatrolLogs')
+          .where('PatrolId', whereIn: shiftLinkedPatrolIds)
+          .where('PatrolLogGuardId', isEqualTo: empId)
+          .get();
+
+      // Process query results
+      querySnapshot.docs.forEach((doc) {
+        // Handle each document as needed
+        pdfDataList.add(doc.data());
+        print("Data for Pdf: ${doc.data()}");
+      });
+    } catch (e) {
+      print(e);
+    }
+    return pdfDataList;
+  }
 }
 
 // Schedule and assign

@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? " ";
+          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
@@ -380,7 +380,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
-      ['assets/images/dar.png', 'Dar'],
+      ['assets/images/dar.png', 'DAR'],
       ['assets/images/reports.png', 'Reports'],
       ['assets/images/post_order.png', 'Post Orders'],
       ['assets/images/task.png', 'Task'],

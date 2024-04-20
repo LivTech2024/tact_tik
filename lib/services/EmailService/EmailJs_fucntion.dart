@@ -79,13 +79,13 @@ Future<void> sendapiEmail(
   String date,
   List<Map<String, dynamic>> imageData,
   String GuardName,
-  String StartTime,
+  String? StartTime,
   String EndTime,
   String patrolCount,
   String TotalpatrolCount,
   String Location,
   String Status,
-  String patrolTimein,
+  String? patrolTimein,
   String patrolTimeout,
 ) async {
   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
