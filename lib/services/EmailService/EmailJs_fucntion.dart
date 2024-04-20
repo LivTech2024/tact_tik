@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:emailjs/emailjs.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<bool> sendEmail(dynamic templateParams) async {
@@ -71,23 +72,23 @@ Future<bool> sendFormattedEmail(dynamic templateParams) async {
 // }
 
 Future<void> sendapiEmail(
-  List<String> toEmails,
-  String Subject,
-  String fromName,
-  String Data,
-  String type,
-  String date,
-  List<Map<String, dynamic>> imageData,
-  String GuardName,
-  String StartTime,
-  String EndTime,
-  String patrolCount,
-  String TotalpatrolCount,
-  String Location,
-  String Status,
-  String patrolTimein,
-  String patrolTimeout,
-) async {
+    List<String> toEmails,
+    String Subject,
+    String fromName,
+    String Data,
+    String type,
+    String date,
+    List<Map<String, dynamic>> imageData,
+    String GuardName,
+    String? StartTime,
+    String EndTime,
+    String patrolCount,
+    String TotalpatrolCount,
+    String Location,
+    String Status,
+    String? patrolTimein,
+    String patrolTimeout,
+    String feedback) async {
   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
 
   for (var toEmail in toEmails) {
@@ -192,6 +193,10 @@ Future<void> sendapiEmail(
         <div class="report-section">
             <h3>Important Note</h3>
             <p id="important-note"></p>
+
+            <h3>Feedback Note</h3>
+            <p id="important-note"></p>
+            $feedback
         </div>
     </div>
     <script src="script.js"></script>

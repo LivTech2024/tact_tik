@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
@@ -35,6 +36,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
+import '../feature screens/pani button/panic_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -260,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? " ";
+          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
@@ -323,9 +325,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   var date = DateTime.fromMillisecondsSinceEpoch(
                       shiftDate.seconds * 1000);
                   var formattedDate = DateFormat('yyyy-MM-dd').format(date);
-                  setState(() {
-                    selectedDates.add(DateTime.parse(formattedDate));
-                  });
+                  if (!selectedDates.contains(DateTime.parse(formattedDate))) {
+                    setState(() {
+                      selectedDates.add(DateTime.parse(formattedDate));
+                    });
+                  }
                   // Format the date
                   print("ShiftDate: $formattedDate");
                 }
@@ -357,9 +361,11 @@ class _HomeScreenState extends State<HomeScreen> {
         await fireStoreService.getAllSchedules(_employeeId);
     print("All Schedules:");
     schedules.forEach((schedule) {
-      setState(() {
-        schedules_list.add(schedule);
-      });
+      if (!schedules_list.any((element) => element.id == schedule.id)) {
+        setState(() {
+          schedules_list.add(schedule);
+        });
+      }
       print(
           "Schedule docs ${schedule.data()}"); // Print the data of each document
     });
@@ -376,7 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
-      ['assets/images/dar.png', 'Dar'],
+      ['assets/images/dar.png', 'DAR'],
       ['assets/images/reports.png', 'Reports'],
       ['assets/images/post_order.png', 'Post Orders'],
       ['assets/images/task.png', 'Task'],
@@ -536,6 +542,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Bounce(
                                   onTap: () {
                                     switch (index) {
+                                      case 0:
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return PanicAlertDialog();
+                                          },
+                                        );
+                                        break;
                                       case 2:
                                         Navigator.push(
                                             context,
@@ -544,6 +558,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DarDisplayScreen(
                                                       EmpEmail: _employeeId,
                                                     )));
+                                        break;
+                                      case 6:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LogBookScreen()));
                                         break;
                                       default:
                                     }
@@ -583,12 +604,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             print("Schedule COunt ${schedules_list.length}");
                             String dayOfWeek =
                                 DateFormat('EEEE').format(dateTime);
-                            if (dateTime.year == DateTime.now().year &&
-                                dateTime.month == DateTime.now().month &&
-                                dateTime.day == DateTime.now().day) {
-                              shiftDate = '$shiftDate*';
-                              print(shiftDate);
-                            }
+                            // if (dateTime.year == DateTime.now().year &&
+                            //     dateTime.month == DateTime.now().month &&
+                            //     dateTime.day == DateTime.now().day) {
+                            //   if (!shiftDate.endsWith('*')) {
+                            //     shiftDate = '$shiftDate*';
+                            //     print(shiftDate);
+                            //   }
+                            // }
                             return Container(
                               margin: EdgeInsets.only(
                                 top: height / height20,

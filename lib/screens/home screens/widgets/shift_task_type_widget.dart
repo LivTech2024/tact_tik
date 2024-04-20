@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -75,43 +76,39 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   }
 
   void _uploadImages() async {
-    if (uploads.isNotEmpty ||
-        widget.ShiftId.isNotEmpty ||
-        widget.taskId.isNotEmpty ||
-        widget.EmpID.isNotEmpty) {
-      setState(() {
-        _isLoading = true;
-      });
-      print("Uploads Images  ${uploads}");
-      try {
-        print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
-          uploads,
-          widget.taskId ?? "",
-          widget.ShiftId ?? "",
-          widget.EmpID ?? "",
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
-        uploads.clear();
-        showSuccessToast(context, "Uploaded Successfully");
-        widget.refreshDataCallback();
-        // widget.refreshDataCallback();
-
-        // Navigator.pop(context);
-      } catch (e) {
-        showErrorToast(context, "${e}");
-        print('Error uploading images: $e');
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      widget.refreshDataCallback();
-    } else {
-      widget.refreshDataCallback();
-      showErrorToast(context, "No Images found");
-      print('No images to upload.');
+    if (uploads.isEmpty ||
+        widget.ShiftId.isEmpty ||
+        widget.taskId.isEmpty ||
+        widget.EmpID.isEmpty) {
+      showErrorToast(context, "No Images found or missing data");
+      print('No images to upload or missing data.');
+      return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
+    print("Uploads Images  $uploads");
+    try {
+      print("Task Id : ${widget.taskId}");
+      await fireStoreService.addImagesToShiftTasks(
+        uploads,
+        widget.taskId,
+        widget.ShiftId,
+        widget.EmpID,
+        widget.EmpName,
+        widget.shiftReturnTask,
+      );
+      uploads.clear();
+      showSuccessToast(context, "Uploaded Successfully");
+      widget.refreshDataCallback();
+    } catch (e) {
+      showErrorToast(context, "$e");
+      print('Error uploading images: $e');
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _uploadfromGallery() async {
@@ -307,14 +304,21 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       setState(() {
                         Result = res;
                       });
+                      showSuccessToast(context, "Scanned Id ${res}");
+                      showSuccessToast(context, "Task Id ${widget.taskId}");
+
                       if (Result == widget.taskId) {
                         await fireStoreService.updateShiftTaskStatus(
-                            widget.taskId, widget.EmpID, widget.EmpName);
+                            widget.taskId,
+                            widget.EmpID,
+                            widget.ShiftId,
+                            widget.EmpName);
+
                         //Update in firebase and change the color of icon
                         // showCustomDialog(context, "Task Scan",
                         //     "Task Scan SuccessFull for ${widget.taskName}");
                         showSuccessToast(context,
-                            "Task Scan SuccessFull for ${widget.taskName}");
+                            "Task Scan SuccessFull for ${widget.taskId}");
                         print("${Result} ${widget.taskId}");
                         widget.refreshDataCallback();
                         // showSuccessToast(context, "${widget.}")
@@ -322,7 +326,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         // showCustomDialog(context, "Task Scan",
                         //     "Shift Task Scan UnsuccessFull for ${widget.taskName}");
                         showErrorToast(context,
-                            "Task Scan Unsuccessfull for ${widget.taskName}");
+                            "Task Scan Unsuccessfull for ${widget.taskId}");
                         print("UNcessfull Scan");
                         widget.refreshDataCallback();
                       }
@@ -353,13 +357,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    widget.shiftReturnTask == true
-                                        ? widget.ShiftTaskReturnStatus == true
+                                    widget.taskStatus == true
+                                        ? widget.taskStatus == true
                                             ? Icons.done
                                             : Icons.add_a_photo
                                         : widget.taskStatus == "completed" ||
-                                                widget.ShiftTaskReturnStatus ==
-                                                    true
+                                                widget.taskStatus == true
                                             ? Icons.done
                                             : Icons.add_a_photo,
                                     size: width / width24,
@@ -439,100 +442,103 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Row(
-                        children: uploads.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final upload = entry.value;
-                          return Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                height: height / height66,
-                                width: width / width66,
-                                decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius: BorderRadius.circular(
-                                      width / width10,
-                                    )),
-                                margin: EdgeInsets.all(width / width8),
-                                child: upload['type'] == 'image'
-                                    ? Image.file(
-                                        upload['file'],
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Icon(Icons.videocam),
-                              ),
-                              Positioned(
-                                top: -5,
-                                right: -5,
-                                child: IconButton(
-                                  onPressed: () => _deleteItem(index),
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // _addImage();
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) => Column(
-                              mainAxisSize: MainAxisSize.min,
+                  SizedBox(height: height / height10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Row(
+                          children: uploads.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final upload = entry.value;
+                            return Stack(
+                              clipBehavior: Clip.none,
                               children: [
-                                ListTile(
-                                  leading: Icon(Icons.camera),
-                                  title: Text('Add Image'),
-                                  onTap: () {
-                                    _addImage();
-                                    Navigator.pop(context);
-                                  },
+                                Container(
+                                  height: height / height66,
+                                  width: width / width66,
+                                  decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      )),
+                                  margin: EdgeInsets.all(width / width8),
+                                  child: upload['type'] == 'image'
+                                      ? Image.file(
+                                          upload['file'],
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Icon(Icons.videocam),
                                 ),
-                                ListTile(
-                                  leading: Icon(Icons.image),
-                                  title: Text('Add from Gallery'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _addGallery();
-                                  },
+                                Positioned(
+                                  top: -5,
+                                  right: -5,
+                                  child: IconButton(
+                                    onPressed: () => _deleteItem(index),
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                  ),
                                 ),
                               ],
+                            );
+                          }).toList(),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // _addImage();
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.camera),
+                                    title: Text('Add Image'),
+                                    onTap: () {
+                                      _addImage();
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.image),
+                                    title: Text('Add from Gallery'),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _addGallery();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                                color: WidgetColor,
+                                borderRadius:
+                                    BorderRadius.circular(width / width8)),
+                            child: Center(
+                              child: Icon(Icons.add),
                             ),
-                          );
-                        },
-                        child: Container(
-                          height: height / height66,
-                          width: width / width66,
-                          decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width8)),
-                          child: Center(
-                            child: Icon(Icons.add),
                           ),
                         ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: _uploadImages,
-                        backgroundColor: Primarycolor,
-                        shape: CircleBorder(),
-                        child: Icon(Icons.cloud_upload),
-                      )
-                    ],
+                        FloatingActionButton(
+                          onPressed: _uploadImages,
+                          backgroundColor: Primarycolor,
+                          shape: CircleBorder(),
+                          child: Icon(Icons.cloud_upload),
+                        )
+                      ],
+                    ),
                   ),
                   if (_isLoading)
                     Container(
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: height / height10),
                       child: CircularProgressIndicator(),
                     ),
                 ],

@@ -106,6 +106,7 @@ void showCustomDialog(BuildContext context, String title, String content) {
 class _TaskScreenState extends State<TaskScreen> {
   bool ShiftStarted = false;
   bool ShiftIn = false;
+
   // bool issShift = false;
   FireStoreService fireStoreService = FireStoreService();
   UserLocationChecker locationChecker = UserLocationChecker();
@@ -124,6 +125,7 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   void refreshStartTaskScreen() {}
+
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -185,7 +187,8 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftLocationId: widget.ShiftLocationId,
                   ShiftClientID: widget.ShiftClientId,
                   resetShiftStarted: resetShiftStarted,
-                  ShiftIN: ShiftIn, onRefresh: resetShiftStarted,
+                  ShiftIN: ShiftIn,
+                  onRefresh: resetShiftStarted,
                   // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                 )
               : Column(

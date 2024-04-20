@@ -254,10 +254,56 @@ class FireStoreService {
           'StatusReportedTime': Timestamp.now(),
         });
       }
-
+      await updatePatrolCheckpointStatus(docId, statusReportedById);
       // Update the document with the updated status array
       await patrolDocument.update({
         'PatrolCurrentStatus': currentStatusList,
+      });
+
+      print('Document updated successfully');
+    } catch (e) {
+      print('Error updating document: $e');
+    }
+  }
+
+  Future<void> updatePatrolCheckpointStatus(
+    String docId,
+    String? statusReportedById,
+  ) async {
+    try {
+      // Get a reference to the Firestore document
+      DocumentReference<Map<String, dynamic>> patrolDocument =
+          FirebaseFirestore.instance.collection('Patrols').doc(docId);
+
+      // Fetch the current document data
+      var documentSnapshot = await patrolDocument.get();
+      var data = documentSnapshot.data();
+
+      // Check if the PatrolCheckPoints array exists
+      List<Map<String, dynamic>> checkPointsList =
+          List<Map<String, dynamic>>.from(data?['PatrolCheckPoints'] ?? []);
+
+      // Update CheckPointStatus for each checkpoint
+      checkPointsList.forEach((checkpoint) {
+        List<Map<String, dynamic>> checkPointStatuses =
+            List<Map<String, dynamic>>.from(
+                checkpoint['CheckPointStatus'] ?? []);
+
+        // Update CheckPointStatus if it is empty or null
+        if (checkPointStatuses.isEmpty) {
+          checkPointStatuses.add({
+            'Status': 'unchecked',
+            'StatusReportedById': statusReportedById,
+          });
+        }
+
+        // Update the CheckPointStatus in the checkpoint
+        checkpoint['CheckPointStatus'] = checkPointStatuses;
+      });
+
+      // Update the document with the updated CheckPoints array
+      await patrolDocument.update({
+        'PatrolCheckPoints': checkPointsList,
       });
 
       print('Document updated successfully');
@@ -285,7 +331,7 @@ class FireStoreService {
     checkpoints.forEach((checkpoint) {
       List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
       status.forEach((entry) {
-        entry['Status'] = 'not_checked';
+        entry['Status'] = 'unchecked';
         entry['StatusReportedTime'] = Timestamp.now();
       });
     });
@@ -374,6 +420,55 @@ class FireStoreService {
     // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
 
     print("Patrol and checkpoint statuses updated successfully");
+  }
+
+  //Generate Patrol Logs
+  Future<void> fetchAndCreatePatrolLogs(
+      String patrolId,
+      String empId,
+      String EmpName,
+      String PatrolCount,
+      String ShiftDate,
+      String StartTime,
+      String EndTime) async {
+    // Assuming Firestore is initialized
+    var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
+    var patrolDoc = await patrolsCollection.doc(patrolId).get();
+    var patrolData = patrolDoc.data() as Map<String, dynamic>;
+    print("Patrol Data from Fetch = ${patrolData}");
+    // Filter and extract relevant checkpoint status information
+    List<Map<String, dynamic>> relevantCheckpoints = [];
+    for (var checkpoint in patrolData['PatrolCheckPoints']) {
+      for (var status in checkpoint['CheckPointStatus']) {
+        if (status['StatusReportedById'] == empId) {
+          relevantCheckpoints.add({
+            'CheckPointName': checkpoint['CheckPointName'],
+            'CheckPointStatus': status['Status'],
+            'CheckPointComment': status['StatusComment'],
+            'CheckPointImage': status['StatusImage'],
+            'CheckPointReportedAt': status['StatusReportedTime']
+          });
+          break; // Stop iterating through CheckPointStatus once a match is found
+        }
+      }
+    }
+
+    // Save relevant checkpoint status information to Firestore in the PatrolLogs collection
+    var patrolLogsCollection =
+        FirebaseFirestore.instance.collection('PatrolLogs');
+    var docRef = await patrolLogsCollection.add({
+      'PatrolId': patrolData['PatrolId'],
+      'PatrolDate': ShiftDate,
+      'PatrolLogGuardId': empId,
+      'PatrolLogGuardName': EmpName,
+      'PatrolLogPatrolCount': PatrolCount,
+      'PatrolLogCheckPoints': relevantCheckpoints,
+      'PatrolLogStatus': "completed",
+      'PatrolLogStartedAt': StartTime,
+      'PatrolLogEndedAt': EndTime,
+      'PatrolLogCreatedAt': DateTime.now(),
+    });
+    await docRef.update({'PatrolLogId': docRef.id});
   }
 
   Future<void> updatePatrolsReport(
@@ -845,8 +940,9 @@ class FireStoreService {
     if (empId.isEmpty) {
       return [];
     }
+    DateTime now = DateTime.now();
 
-    DateTime startDate = DateTime.now();
+    DateTime startDate = DateTime(now.year, now.month, now.day);
     DateTime endDate = startDate.add(Duration(days: 7));
 
     final querySnapshot = await shifts
@@ -1310,6 +1406,39 @@ class FireStoreService {
     }
   }
 
+  //Add report pdf to storage
+  Future<String> uploadPdfToStorage(File file, String ShiftId) async {
+    try {
+      // Generate a unique name for the document
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+
+      // Determine the file extension (e.g., pdf, docx, txt)
+      String extension = file.path.split('.').last;
+      String compressedFileName = '$ShiftId.$extension';
+
+      // Compress the document (adjust the quality as needed)
+      Uint8List? compressedDocument =
+          await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        quality: 50, // Adjust the quality as needed
+      );
+
+      // Upload the compressed document to Firebase Storage
+      Reference uploadRef =
+          storageRef.child("employees/ShiftReport/$compressedFileName");
+      await uploadRef.putData(Uint8List.fromList(compressedDocument!));
+
+      // Get the download URL of the uploaded document
+      String downloadURL = await uploadRef.getDownloadURL();
+
+      return downloadURL;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   // Add images and comment
   Future<void> addImagesToPatrol(
     List<Map<String, dynamic>> uploads,
@@ -1349,7 +1478,7 @@ class FireStoreService {
           if (status == null) {
             // Create a new status entry for the empId
             status = {
-              "Status": "checked",
+              // "Status": "checked",
               "StatusReportedById": empId,
               "StatusImage": [],
               "StatusComment": "",
@@ -1379,7 +1508,7 @@ class FireStoreService {
               imgUrls.map((url) => url['downloadURL']).toList();
           status["StatusComment"] = comment;
           status['StatusReportedTime'] = Timestamp.now();
-          status["Status"] = "checked";
+          // status["Status"] = "checked";
 
           // Update the Firestore document with the new wellness reports
           await patrols.doc(patrolID).update({
@@ -1400,14 +1529,14 @@ class FireStoreService {
 
   //Update the shift status when the qr is scanned correctly
   Future<void> updateShiftTaskStatus(
-      String ShiftTaskId, String EmpID, String EmpName) async {
+      String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
       String empId = storage.getItem('EmpId') ?? "";
 
       final DocumentReference shiftDocRef =
-          FirebaseFirestore.instance.collection("Shifts").doc(shiftId);
+          FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
 
       if (shiftDoc.exists) {
@@ -1415,6 +1544,12 @@ class FireStoreService {
 
         for (int i = 0; i < shiftTasks.length; i++) {
           if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+            // Check if ShiftTaskStatus array is empty or null
+            if (shiftTasks[i]['ShiftTaskStatus'] == null ||
+                shiftTasks[i]['ShiftTaskStatus'].isEmpty) {
+              shiftTasks[i]['ShiftTaskStatus'] = [];
+            }
+
             // Create ShiftTaskStatus object without images
             Map<String, dynamic> shiftTaskStatus = {
               "TaskStatus": "completed",
@@ -1424,7 +1559,7 @@ class FireStoreService {
             };
 
             // Update the ShiftTaskStatus array with the new object
-            shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+            shiftTasks[i]['ShiftTaskStatus'].add(shiftTaskStatus);
 
             // Update the Firestore document with the new ShiftTaskStatus
             await shiftDocRef.update({'ShiftTask': shiftTasks});
@@ -1432,6 +1567,46 @@ class FireStoreService {
           }
         }
         print('Updated Status');
+      } else {
+        print("Shift document not found");
+      }
+    } catch (e) {
+      print('Error updating ShiftTaskStatus: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateShiftReturnTaskStatus(
+      String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {
+    try {
+      final LocalStorage storage = LocalStorage('ShiftDetails');
+
+      final DocumentReference shiftDocRef =
+          FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
+      final DocumentSnapshot shiftDoc = await shiftDocRef.get();
+
+      if (shiftDoc.exists) {
+        List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+
+        for (int i = 0; i < shiftTasks.length; i++) {
+          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+            // Find the ShiftTaskStatus object in the array
+            List<dynamic> shiftTaskStatuses = shiftTasks[i]['ShiftTaskStatus'];
+            for (int j = 0; j < shiftTaskStatuses.length; j++) {
+              // Update ShiftTaskReturnStatus if TaskCompletedById and TaskCompletedByName match
+              if (shiftTaskStatuses[j]['TaskCompletedById'] == EmpID &&
+                  shiftTaskStatuses[j]['TaskCompletedByName'] == EmpName) {
+                shiftTaskStatuses[j]['ShiftTaskReturnStatus'] = true;
+                break; // Exit loop after updating
+              }
+            }
+
+            // Update the Firestore document with the updated ShiftTaskStatus array
+            await shiftDocRef.update({'ShiftTask': shiftTasks});
+            print('Updated Status');
+            break; // Exit loop after finding the ShiftTaskId
+          }
+        }
       } else {
         print("Shift document not found");
       }
@@ -1631,7 +1806,42 @@ class FireStoreService {
       print('Error fetching client: $e');
     }
   }
+
   //PatrolClientId
+
+  // Fetch the the PatrolLogs using PatrolShiftIds
+  Future<List<Map<String, dynamic>>> fetchDataForPdf(
+      String empId, String ShiftId) async {
+    List<Map<String, dynamic>> pdfDataList = [];
+    try {
+      // Get the array of ShiftLinkedPatrolIds
+      print("Search for pdf Data");
+      var shiftDoc = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(ShiftId)
+          .get();
+      print("Shift Doc : ${shiftDoc.data()}");
+      var shiftLinkedPatrolIds =
+          List<String>.from(shiftDoc.data()?['ShiftLinkedPatrolIds'] ?? []);
+      print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
+      // Query PatrolLogs for data
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('PatrolLogs')
+          .where('PatrolId', whereIn: shiftLinkedPatrolIds)
+          .where('PatrolLogGuardId', isEqualTo: empId)
+          .get();
+
+      // Process query results
+      querySnapshot.docs.forEach((doc) {
+        // Handle each document as needed
+        pdfDataList.add(doc.data());
+        print("Data for Pdf: ${doc.data()}");
+      });
+    } catch (e) {
+      print(e);
+    }
+    return pdfDataList;
+  }
 }
 
 // Schedule and assign
