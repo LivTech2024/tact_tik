@@ -304,14 +304,22 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       setState(() {
                         Result = res;
                       });
-                      if (Result == widget.taskId) {
-                        await fireStoreService.updateShiftTaskStatus(
-                            widget.taskId, widget.EmpID, widget.EmpName);
+                      showSuccessToast(context, "Scanned Id ${res}");
+                      showSuccessToast(context, "Task Id ${widget.taskId}");
+
+                      if (Result.toString() == widget.taskId.toString()) {
+                        if (widget.shiftReturnTask) {
+                          await fireStoreService.updateShiftReturnTaskStatus(
+                              widget.taskId, widget.EmpID, widget.EmpName);
+                        } else {
+                          await fireStoreService.updateShiftTaskStatus(
+                              widget.taskId, widget.EmpID, widget.EmpName);
+                        }
                         //Update in firebase and change the color of icon
                         // showCustomDialog(context, "Task Scan",
                         //     "Task Scan SuccessFull for ${widget.taskName}");
                         showSuccessToast(context,
-                            "Task Scan SuccessFull for ${widget.taskName}");
+                            "Task Scan SuccessFull for ${widget.taskId}");
                         print("${Result} ${widget.taskId}");
                         widget.refreshDataCallback();
                         // showSuccessToast(context, "${widget.}")
@@ -319,7 +327,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         // showCustomDialog(context, "Task Scan",
                         //     "Shift Task Scan UnsuccessFull for ${widget.taskName}");
                         showErrorToast(context,
-                            "Task Scan Unsuccessfull for ${widget.taskName}");
+                            "Task Scan Unsuccessfull for ${widget.taskId}");
                         print("UNcessfull Scan");
                         widget.refreshDataCallback();
                       }

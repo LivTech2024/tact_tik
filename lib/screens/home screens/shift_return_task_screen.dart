@@ -60,6 +60,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
         this.completedTaskCount = completedTaskCount;
         this.totalTaskCount = totalTaskCount;
       });
+
       print(fetchedData);
     } else {
       print('No tasks fetched');

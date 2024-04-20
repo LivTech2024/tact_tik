@@ -1478,7 +1478,7 @@ class FireStoreService {
           if (status == null) {
             // Create a new status entry for the empId
             status = {
-              "Status": "checked",
+              // "Status": "checked",
               "StatusReportedById": empId,
               "StatusImage": [],
               "StatusComment": "",
@@ -1508,7 +1508,7 @@ class FireStoreService {
               imgUrls.map((url) => url['downloadURL']).toList();
           status["StatusComment"] = comment;
           status['StatusReportedTime'] = Timestamp.now();
-          status["Status"] = "checked";
+          // status["Status"] = "checked";
 
           // Update the Firestore document with the new wellness reports
           await patrols.doc(patrolID).update({
@@ -1550,6 +1550,49 @@ class FireStoreService {
               "TaskCompletedById": EmpID,
               "TaskCompletedByName": EmpName,
               "TaskCompletionTime": DateTime.now(),
+            };
+
+            // Update the ShiftTaskStatus array with the new object
+            shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+
+            // Update the Firestore document with the new ShiftTaskStatus
+            await shiftDocRef.update({'ShiftTask': shiftTasks});
+            break; // Exit loop after updating
+          }
+        }
+        print('Updated Status');
+      } else {
+        print("Shift document not found");
+      }
+    } catch (e) {
+      print('Error updating ShiftTaskStatus: $e');
+      throw e;
+    }
+  }
+
+  Future<void> updateShiftReturnTaskStatus(
+      String ShiftTaskId, String EmpID, String EmpName) async {
+    try {
+      final LocalStorage storage = LocalStorage('ShiftDetails');
+      String shiftId = storage.getItem('shiftId');
+      String empId = storage.getItem('EmpId') ?? "";
+
+      final DocumentReference shiftDocRef =
+          FirebaseFirestore.instance.collection("Shifts").doc(shiftId);
+      final DocumentSnapshot shiftDoc = await shiftDocRef.get();
+
+      if (shiftDoc.exists) {
+        List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+
+        for (int i = 0; i < shiftTasks.length; i++) {
+          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+            // Create ShiftTaskStatus object without images
+            Map<String, dynamic> shiftTaskStatus = {
+              "TaskStatus": "completed",
+              "TaskCompletedById": EmpID,
+              "TaskCompletedByName": EmpName,
+              "TaskCompletionTime": DateTime.now(),
+              "ShiftTaskReturnStatus": true
             };
 
             // Update the ShiftTaskStatus array with the new object

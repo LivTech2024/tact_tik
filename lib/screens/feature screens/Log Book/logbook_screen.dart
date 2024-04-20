@@ -18,14 +18,12 @@ class LogBookScreen extends StatefulWidget {
 }
 
 class _LogBookScreenState extends State<LogBookScreen> {
-
   List<Logs> logs = [
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +65,9 @@ class _LogBookScreenState extends State<LogBookScreen> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return LogBookWidget(logs: logs,);
+                return LogBookWidget(
+                  logs: logs,
+                );
               },
               childCount: 10,
             ),
@@ -76,7 +76,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
       ),
     );
   }
-
 }
 
 class LogBookWidget extends StatefulWidget {
@@ -96,8 +95,6 @@ class _LogBookWidgetState extends State<LogBookWidget> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
-
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width / width30),
       child: Column(
@@ -105,7 +102,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 expand = !expand;
               });
@@ -143,7 +140,9 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: widget.logs.map((l) {
-                return LogTypeWidget(type: LogBookEnum.CheckPoint,);
+                return LogTypeWidget(
+                  type: LogBookEnum.CheckPoint,
+                );
               }).toList(),
             ),
           ),

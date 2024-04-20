@@ -19,6 +19,14 @@ import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/backgroundService/countDownTimer.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:open_file/open_file.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -528,6 +536,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         //fetch the data from Patrol Logs and generate email from it
                         var data = await fireStoreService.fetchDataForPdf(
                             widget.EmployeId, widget.ShiftId);
+
+                        generateAndOpenPDF(
+                            'Vaibhav',
+                            "sutarvaibhav37@gmail.com",
+                            "sutarvaibhav37@gmail.com",
+                            data);
+
                         //generate the pdf
                         //add to firebase storage and then mail too
                         // String? pdfLink = fireStoreService.uploadPdfToStorage(
@@ -618,7 +633,406 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       ],
     );
   }
-}
+
+  Future<void> generateAndOpenPDF(ClientName, ClientEmail, AdminEmal,
+      List<Map<String, dynamic>> data) async {
+    try {
+      final pdf = pw.Document();
+
+      final ByteData logoImageData1 =
+          await rootBundle.load('assets/TPS RGB.png');
+      final ByteData logoImageData2 =
+          await rootBundle.load('assets/Tactik.jpeg');
+      final Uint8List logoImageBytes1 = logoImageData1.buffer.asUint8List();
+      final Uint8List logoImageBytes2 = logoImageData2.buffer.asUint8List();
+      final logo1 = pw.MemoryImage(logoImageBytes1);
+      final logo2 = pw.MemoryImage(logoImageBytes2);
+
+      String patrolDate = data[0]['PatrolDate'];
+      String patrolId = data[0]['PatrolId'];
+      List<dynamic> patrolLogCheckPoints = data[0]['PatrolLogCheckPoints'];
+
+      String patrolLogPatrolCount = data[0]['PatrolLogPatrolCount'];
+      String patrolLogStartedAt = data[0]['PatrolLogStartedAt'];
+      String patrolLogEndedAt = data[0]['PatrolLogEndedAt'];
+
+      final List<Map<String, dynamic>> patrolEntries = [
+        {
+          'timeIn': patrolLogStartedAt,
+          'timeOut': patrolLogEndedAt,
+          'comment': 'Hello',
+        },
+      ];
+
+      List<Map<String, dynamic>> detailedPatrolReport = [];
+      for (int i = 0; i < patrolLogCheckPoints.length; i++) {
+        Map<String, dynamic> checkPoint = patrolLogCheckPoints[i];
+        String checkPointName = checkPoint['CheckPointName'];
+        String checkPointComment = checkPoint['CheckPointComment'];
+        String checkPointImage = checkPoint['CheckPointImage'][0];
+
+        detailedPatrolReport.add({
+          'patrol': patrolLogPatrolCount,
+          'checkpointName': checkPointName,
+          'comment': checkPointComment,
+          'image': checkPointImage,
+        });
+      }
+
+      final List<pw.MemoryImage> images = [];
+      for (var entry in detailedPatrolReport) {
+        final response = await http.get(Uri.parse(entry['image']));
+        if (response.statusCode == 200) {
+          final Uint8List imageBytes = response.bodyBytes;
+          images.add(pw.MemoryImage(imageBytes));
+        }
+      }
+
+      pdf.addPage(
+        pw.MultiPage(
+          pageTheme: pw.PageTheme(
+            pageFormat: PdfPageFormat.a4,
+            buildBackground: (context) => pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Stack(
+                children: [
+                  pw.Positioned(
+                    left: 0,
+                    top: 0,
+                    child: pw.Image(logo1, width: 150, height: 150),
+                  ),
+                  pw.Positioned(
+                    right: 10,
+                    top: 15,
+                    child: pw.Image(logo2, width: 100, height: 90),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          build: (context) => [
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'SHIFT/PATROL REPORT',
+                  style: pw.TextStyle(
+                    fontSize: 18,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 50),
+                pw.Text(
+                  'Dear $ClientName,\n\nI hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted:',
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                pw.SizedBox(height: 40),
+                pw.Text(
+                  '** Shift Information:**',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Container(
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(
+                      color: PdfColors.black,
+                      width: 2,
+                    ),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Table(
+                    border: null,
+                    children: [
+                      pw.TableRow(
+                        decoration: pw.BoxDecoration(
+                          color: PdfColors.blue100,
+                        ),
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Guard Name',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Shift Time In',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Shift Time Out',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Date',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.TableRow(
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text('$ClientName'),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text('20:00'),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text('06:00'),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text('April 17, 2024 - April 18, 2024'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  '** Patrol Information:**',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Container(
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(
+                      color: PdfColors.black,
+                      width: 2,
+                    ),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Table(
+                    border: null,
+                    children: [
+                      pw.TableRow(
+                        decoration: pw.BoxDecoration(
+                          color: PdfColors.blue100,
+                        ),
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Patrol Count',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Patrol Time In ',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Patrol Time Out',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Comments',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      for (var i = 0; i < patrolEntries.length; i++)
+                        pw.TableRow(
+                          children: [
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text((i + 1).toString()),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child:
+                                  pw.Text(patrolEntries[i]['timeIn'] as String),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                  patrolEntries[i]['timeOut'] as String),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                  patrolEntries[i]['comment'] as String),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  '** Detailed Patrol Report:**',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Container(
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(
+                      color: PdfColors.black,
+                      width: 2,
+                    ),
+                    borderRadius: pw.BorderRadius.circular(8),
+                  ),
+                  child: pw.Table(
+                    border: null,
+                    children: [
+                      pw.TableRow(
+                        decoration: pw.BoxDecoration(
+                          color: PdfColors.blue100,
+                        ),
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Patrol',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Checkpoint Name',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Time',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Comment',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Image',
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      for (var i = 0; i < detailedPatrolReport.length; i++)
+                        pw.TableRow(
+                          children: [
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                  detailedPatrolReport[i]['patrol'] as String),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(detailedPatrolReport[i]
+                                  ['checkpointName'] as String),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                  detailedPatrolReport[i]['time'] as String),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                  detailedPatrolReport[i]['comment'] as String),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child:
+                                  pw.Image(images[i], width: 100, height: 100),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+      final output = await getExternalStorageDirectory();
+      if (output != null) {
+        final downloadsDirectory = Directory('${output.path}/Download');
+        await downloadsDirectory.create(recursive: true);
+        final file = File('${downloadsDirectory.path}/shift_patrol_report.pdf');
+        final Uint8List pdfBytes = await pdf.save();
+        await file.writeAsBytes(pdfBytes);
+        print('PDF Generated');
+        print('PDF Generated at: ${file.path}');
+        // Open the PDF file
+        OpenFile.open(file.path);
+      } else {
+        print('Error: Unable to get external storage directory.');
+      }
+    } catch (e) {
+      print('Error generating PDF: $e');
+    }
+  }
 
 /*Container(
                   height: height / height65,
@@ -652,3 +1066,4 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         fireStoreService.ResumeShiftLog(widget.EmployeId);
                       }
                     }*/
+}
