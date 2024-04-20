@@ -292,7 +292,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       if (differenceInMinutes > 5) {
         int hours = differenceInMinutes ~/ 60;
         int minutes = differenceInMinutes % 60;
-        lateTime = '$hours ${minutes}m Late';
+        lateTime = '${hours}Hr ${minutes}m Late';
       }
     }
     print("IN Time : ${inTime}");
