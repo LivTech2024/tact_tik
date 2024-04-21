@@ -1,4 +1,11 @@
-enum LogBookEnum { ShiftStarted, ShiftEnd , PatrolStart, PatrolEnd , TotalWorkTime , CheckPoint }
+enum LogBookEnum {
+  ShiftStarted,
+  ShiftEnd,
+  PatrolStart,
+  PatrolEnd,
+  TotalWorkTime,
+  CheckPoint
+}
 
 extension ConvertMessage on String {
   LogBookEnum toEnum() {

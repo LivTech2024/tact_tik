@@ -449,8 +449,8 @@ class FireStoreService {
         currentStatusList[existingIndex]['Status'] = "completed";
         currentStatusList[existingIndex]['StatusReportedByName'] =
             statusReportedByName;
-        currentStatusList[existingIndex]['StatusReportedTime'] =
-            Timestamp.now();
+        // currentStatusList[existingIndex]['StatusReportedTime'] =
+        //     Timestamp.now();
         currentStatusList[existingIndex]['StatusCompletedCount'] =
             (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
       } else {
@@ -460,7 +460,7 @@ class FireStoreService {
           'StatusReportedById': statusReportedById,
           'StatusReportedByName': statusReportedByName,
           'StatusCompletedCount': 1,
-          'StatusReportedTime': Timestamp.now(),
+          // 'StatusReportedTime': Timestamp.now(),
         });
       }
 

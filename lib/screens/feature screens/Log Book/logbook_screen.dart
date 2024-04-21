@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +60,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
             floating: true, // Makes the app bar float above the content
           ),
           StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection('LogBook').snapshots(),
+            stream: FirebaseFirestore.instance.collection('Dates').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
@@ -71,23 +71,23 @@ class _LogBookScreenState extends State<LogBookScreen> {
               }
 
               if (!snapshot.hasData) {
-                return SliverToBoxAdapter(
+                return const SliverToBoxAdapter(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               }
-
               final logBookDocs = snapshot.data!.docs;
+              // print(logBookDocs);
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final logBookId = logBookDocs[index].id;
-                    final logData =
-                        logBookDocs[index].data() as Map<String, dynamic>;
+                    // final logData =
+                    //     logBookDocs[index].data() as Map<String, dynamic>;
                     return LogBookWidget(
                       logBookId: logBookId,
-                      log: Logs.fromDocument(logData),
+                      // log: Logs.fromDocument(logData),
                     );
                   },
                   childCount: logBookDocs.length,
@@ -103,12 +103,12 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
 class LogBookWidget extends StatefulWidget {
   final String logBookId;
-  final Logs log;
+  // final Logs log;
 
   const LogBookWidget({
     super.key,
     required this.logBookId,
-    required this.log,
+    // required this.log,
   });
 
   @override
@@ -125,59 +125,83 @@ class _LogBookWidgetState extends State<LogBookWidget> {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width / width30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                expand = !expand;
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: height / height10),
-              padding: EdgeInsets.symmetric(horizontal: width / width20),
-              height: height / height70,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(width / width10),
-                color: WidgetColor,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InterBold(
-                    text: widget.log.time,
-                    color: Primarycolor,
-                    fontsize: width / width18,
-                  ),
-                  Icon(
-                    expand
-                        ? Icons.arrow_circle_up_outlined
-                        : Icons.arrow_circle_down_outlined,
-                    size: width / width24,
-                    color: Primarycolor,
-                  )
-                ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible: expand,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Dates')
+              .doc(widget.logBookId.toString())
+              .collection('Logs')
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final logs = snapshot.data!.docs;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                LogTypeWidget(
-                    time: LogBookEnum.CheckPoint,
-                    clientName: widget.log.clientName,
-                    location: widget.log.location,
-                    logtype: widget.log.logtype),
+                GestureDetector(
+                  onTap: () {
+                    print('on ckick');
+                    setState(() {
+                      expand = !expand;
+                    });
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(top: height / height10),
+                    padding: EdgeInsets.symmetric(horizontal: width / width20),
+                    height: height / height70,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(width / width10),
+                      color: WidgetColor,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InterBold(
+                          text: widget.logBookId,
+                          color: Primarycolor,
+                          fontsize: width / width18,
+                        ),
+                        Icon(
+                          expand
+                              ? Icons.arrow_circle_up_outlined
+                              : Icons.arrow_circle_down_outlined,
+                          size: width / width24,
+                          color: Primarycolor,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: expand,
+                  child: Column(
+                    children: List.generate(
+                      logs.length,
+                      (index) => FirebaseAuth.instance.currentUser!.uid ==
+                              logs[index]['LogBookEmployeeId']
+                          ? LogTypeWidget(
+                              clientName: logs[index]['LogbookEmployeeName'],
+                              location: logs[index]['LogBookLocation'],
+                              logtype: logs[index]['LogBookType'],
+                              time: LogBookEnum.CheckPoint,
+                            )
+                          : const SizedBox(),
+                    ),
+                  ),
+                ),
               ],
-            ),
-          ),
-        ],
-      ),
+            );
+          }),
     );
   }
 }
@@ -196,7 +220,7 @@ class Logs {
       required this.timeStamp,
       required this.logtype});
   factory Logs.fromDocument(Map<String, dynamic> data) {
-    Timestamp timestamp = data['LogBookTimeStamp'];
+    Timestamp timestamp = Timestamp.now();
 
     DateTime dateTime = timestamp.toDate();
 
