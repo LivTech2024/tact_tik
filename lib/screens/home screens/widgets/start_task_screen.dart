@@ -538,12 +538,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         var data = await fireStoreService.fetchDataForPdf(
                             widget.EmployeId, widget.ShiftId);
 
-                        generateAndOpenPDF(
-                            'Vaibhav',
-                            "sutarvaibhav37@gmail.com",
-                            "sutarvaibhav37@gmail.com",
-                            data);
-
+                        // generateAndOpenPDF(
+                        //     'Vaibhav',
+                        //     "sutarvaibhav37@gmail.com",
+                        //     "sutarvaibhav37@gmail.com",
+                        //     data);
+                        //for now send email same as patrol
                         //generate the pdf
                         //add to firebase storage and then mail too
                         // String? pdfLink = fireStoreService.uploadPdfToStorage(
