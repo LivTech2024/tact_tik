@@ -227,30 +227,34 @@ class FireStoreService {
       // Fetch the current document data
       var documentSnapshot = await patrolDocument.get();
       var data = documentSnapshot.data();
+      bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+        DateTime dateTime1 = timestamp1.toDate();
+        DateTime dateTime2 = timestamp2.toDate();
+        return dateTime1.year == dateTime2.year &&
+            dateTime1.month == dateTime2.month &&
+            dateTime1.day == dateTime2.day;
+      }
 
       // Check if the status entry already exists
       List<Map<String, dynamic>> currentStatusList =
           List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
-      int existingIndex = currentStatusList.indexWhere(
-          (entry) => entry['StatusReportedById'] == statusReportedById);
+      int existingIndex = currentStatusList.indexWhere((entry) =>
+          entry['StatusReportedById'] == statusReportedById &&
+          _isSameDay(entry['StatusReportedTime'], Timestamp.now()));
 
       if (existingIndex != -1) {
-        // If the status entry exists, update it
+        // If the status entry exists for today, update it
         currentStatusList[existingIndex]['Status'] = status;
         currentStatusList[existingIndex]['StatusReportedByName'] =
             statusReportedByName;
         currentStatusList[existingIndex]['StatusReportedTime'] =
             Timestamp.now();
-        // Optionally, increment the count
-        // currentStatusList[existingIndex]['StatusCompletedCount'] =
-        //     (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
       } else {
-        // If the status entry doesn't exist, add a new entry
+        // If the status entry doesn't exist for today, add a new entry
         currentStatusList.add({
           'Status': status,
           'StatusReportedById': statusReportedById,
           'StatusReportedByName': statusReportedByName,
-          // 'StatusCompletedCount': 1, // Start count from 1 for new entry
           'StatusReportedTime': Timestamp.now(),
         });
       }
@@ -278,6 +282,13 @@ class FireStoreService {
       // Fetch the current document data
       var documentSnapshot = await patrolDocument.get();
       var data = documentSnapshot.data();
+      bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+        DateTime dateTime1 = timestamp1.toDate();
+        DateTime dateTime2 = timestamp2.toDate();
+        return dateTime1.year == dateTime2.year &&
+            dateTime1.month == dateTime2.month &&
+            dateTime1.day == dateTime2.day;
+      }
 
       // Check if the PatrolCheckPoints array exists
       List<Map<String, dynamic>> checkPointsList =
@@ -289,11 +300,17 @@ class FireStoreService {
             List<Map<String, dynamic>>.from(
                 checkpoint['CheckPointStatus'] ?? []);
 
-        // Update CheckPointStatus if it is empty or null
-        if (checkPointStatuses.isEmpty) {
+        // Find the latest status reported by the same ID
+        int existingIndex = checkPointStatuses.indexWhere((status) =>
+            status['StatusReportedById'] == statusReportedById &&
+            _isSameDay(status['StatusReportedTime'], Timestamp.now()));
+
+        // Update CheckPointStatus if it is empty, null, or not updated today
+        if (existingIndex == -1) {
           checkPointStatuses.add({
             'Status': 'unchecked',
             'StatusReportedById': statusReportedById,
+            'StatusReportedTime': Timestamp.now(),
           });
         }
 
@@ -317,54 +334,71 @@ class FireStoreService {
     if (patrolId.isEmpty) {
       return;
     }
+
     DocumentReference<Map<String, dynamic>> patrolDocument =
         FirebaseFirestore.instance.collection('Patrols').doc(patrolId);
 
-    // Fetch the current document data
-    var documentSnapshot = await patrolDocument.get();
-    var data = documentSnapshot.data();
+    try {
+      // Fetch the current document data
+      var documentSnapshot = await patrolDocument.get();
+      var data = documentSnapshot.data();
 
-    // Update the status entry for the given statusReportedById
-
-    // Update checkpoint statuses to "not_checked"
-    List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
-    checkpoints.forEach((checkpoint) {
-      List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
-      status.forEach((entry) {
-        entry['Status'] = 'unchecked';
-        entry['StatusReportedTime'] = Timestamp.now();
+      // Update checkpoint statuses to "unchecked"
+      List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
+      checkpoints.forEach((checkpoint) {
+        List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
+        status.forEach((entry) {
+          entry['Status'] = 'unchecked';
+          entry['StatusReportedTime'] = Timestamp.now();
+        });
       });
-    });
-    List<Map<String, dynamic>> currentStatusList =
-        List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
-    int existingIndex = currentStatusList.indexWhere(
-        (entry) => entry['StatusReportedById'] == statusReportedById);
+      bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+        DateTime dateTime1 = timestamp1.toDate();
+        DateTime dateTime2 = timestamp2.toDate();
+        return dateTime1.year == dateTime2.year &&
+            dateTime1.month == dateTime2.month &&
+            dateTime1.day == dateTime2.day;
+      }
 
-    if (existingIndex != -1) {
-      // If the status entry exists, update it
-      currentStatusList[existingIndex]['Status'] = "completed";
-      currentStatusList[existingIndex]['StatusReportedByName'] =
-          statusReportedByName;
-      currentStatusList[existingIndex]['StatusReportedTime'] = Timestamp.now();
-      currentStatusList[existingIndex]['StatusCompletedCount'] =
-          (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
-    } else {
-      // If the status entry doesn't exist, add a new entry
-      currentStatusList.add({
-        'Status': "completed",
-        'StatusReportedById': statusReportedById,
-        'StatusReportedByName': statusReportedByName,
-        'StatusCompletedCount': 1,
-        'StatusReportedTime': Timestamp.now(),
+      // Update the status entry for the given statusReportedById
+      List<Map<String, dynamic>> currentStatusList =
+          List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
+
+      // Check if the status entry already exists for today
+      int existingIndex = currentStatusList.indexWhere((entry) =>
+          entry['StatusReportedById'] == statusReportedById &&
+          _isSameDay(entry['StatusReportedTime'], Timestamp.now()));
+
+      if (existingIndex != -1) {
+        // If the status entry exists for today, update it
+        currentStatusList[existingIndex]['Status'] = "completed";
+        currentStatusList[existingIndex]['StatusReportedByName'] =
+            statusReportedByName;
+        currentStatusList[existingIndex]['StatusReportedTime'] =
+            Timestamp.now();
+        currentStatusList[existingIndex]['StatusCompletedCount'] =
+            (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
+      } else {
+        // If the status entry doesn't exist for today, add a new entry
+        currentStatusList.add({
+          'Status': "completed",
+          'StatusReportedById': statusReportedById,
+          'StatusReportedByName': statusReportedByName,
+          'StatusCompletedCount': 1,
+          'StatusReportedTime': Timestamp.now(),
+        });
+      }
+
+      // Update the document with the updated CheckPoints and PatrolCurrentStatus arrays
+      await patrolDocument.update({
+        'PatrolCheckPoints': checkpoints,
+        'PatrolCurrentStatus': currentStatusList,
       });
+
+      print("Patrol and checkpoint statuses updated successfully");
+    } catch (e) {
+      print("Error updating document: $e");
     }
-    await patrolDocument.update({
-      'PatrolCheckPoints': checkpoints,
-      'PatrolCurrentStatus': currentStatusList,
-    });
-    // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
-
-    print("Patrol and checkpoint statuses updated successfully");
   }
 
   Future<void> LastEndPatrolupdatePatrolsStatus(String patrolId,
@@ -372,54 +406,71 @@ class FireStoreService {
     if (patrolId.isEmpty) {
       return;
     }
+
     DocumentReference<Map<String, dynamic>> patrolDocument =
         FirebaseFirestore.instance.collection('Patrols').doc(patrolId);
 
-    // Fetch the current document data
-    var documentSnapshot = await patrolDocument.get();
-    var data = documentSnapshot.data();
+    try {
+      // Fetch the current document data
+      var documentSnapshot = await patrolDocument.get();
+      var data = documentSnapshot.data();
+      bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+        DateTime dateTime1 = timestamp1.toDate();
+        DateTime dateTime2 = timestamp2.toDate();
+        return dateTime1.year == dateTime2.year &&
+            dateTime1.month == dateTime2.month &&
+            dateTime1.day == dateTime2.day;
+      }
 
-    // Update the status entry for the given statusReportedById
-
-    // Update checkpoint statuses to "not_checked"
-    List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
-    checkpoints.forEach((checkpoint) {
-      List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
-      status.forEach((entry) {
-        // entry['Status'] = 'not_checked';
-        entry['StatusReportedTime'] = Timestamp.now();
+      // Update checkpoint statuses to "not_checked"
+      List<dynamic> checkpoints = List.from(data?['PatrolCheckPoints'] ?? []);
+      checkpoints.forEach((checkpoint) {
+        List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
+        status.forEach((entry) {
+          // entry['Status'] = 'not_checked';
+          entry['StatusReportedTime'] = Timestamp.now();
+        });
       });
-    });
-    List<Map<String, dynamic>> currentStatusList =
-        List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
-    int existingIndex = currentStatusList.indexWhere(
-        (entry) => entry['StatusReportedById'] == statusReportedById);
 
-    if (existingIndex != -1) {
-      // If the status entry exists, update it
-      currentStatusList[existingIndex]['Status'] = "completed";
-      currentStatusList[existingIndex]['StatusReportedByName'] =
-          statusReportedByName;
-      currentStatusList[existingIndex]['StatusReportedTime'] = Timestamp.now();
-      currentStatusList[existingIndex]['StatusCompletedCount'] =
-          (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
-    } else {
-      // If the status entry doesn't exist, add a new entry
-      currentStatusList.add({
-        'Status': "completed",
-        'StatusReportedById': statusReportedById,
-        'StatusReportedByName': statusReportedByName,
-        'StatusCompletedCount': 1,
-        'StatusReportedTime': Timestamp.now(),
+      // Update the status entry for the given statusReportedById
+      List<Map<String, dynamic>> currentStatusList =
+          List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
+
+      // Check if the status entry already exists for today
+      int existingIndex = currentStatusList.indexWhere((entry) =>
+          entry['StatusReportedById'] == statusReportedById &&
+          _isSameDay(entry['StatusReportedTime'], Timestamp.now()));
+
+      if (existingIndex != -1) {
+        // If the status entry exists for today, update it
+        currentStatusList[existingIndex]['Status'] = "completed";
+        currentStatusList[existingIndex]['StatusReportedByName'] =
+            statusReportedByName;
+        currentStatusList[existingIndex]['StatusReportedTime'] =
+            Timestamp.now();
+        currentStatusList[existingIndex]['StatusCompletedCount'] =
+            (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
+      } else {
+        // If the status entry doesn't exist for today, add a new entry
+        currentStatusList.add({
+          'Status': "completed",
+          'StatusReportedById': statusReportedById,
+          'StatusReportedByName': statusReportedByName,
+          'StatusCompletedCount': 1,
+          'StatusReportedTime': Timestamp.now(),
+        });
+      }
+
+      // Update the document with the updated CheckPoints and PatrolCurrentStatus arrays
+      await patrolDocument.update({
+        'PatrolCheckPoints': checkpoints,
+        'PatrolCurrentStatus': currentStatusList,
       });
+
+      print("Patrol and checkpoint statuses updated successfully");
+    } catch (e) {
+      print("Error updating document: $e");
     }
-    await patrolDocument.update({
-      'PatrolCheckPoints': checkpoints,
-      'PatrolCurrentStatus': currentStatusList,
-    });
-    // Update the PatrolCheckPoints and PatrolCurrentStatus to "completed"
-
-    print("Patrol and checkpoint statuses updated successfully");
   }
 
   //Generate Patrol Logs

@@ -86,8 +86,25 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           List<Map<String, dynamic>> statusList =
               patrolCurrentStatus.cast<Map<String, dynamic>>();
 
-          List<Map<String, dynamic>> filteredStatusList = statusList
-              .where((status) => status['StatusReportedById'] == emplid)
+          DateTime now = DateTime.now();
+          DateTime today = DateTime(now.year, now.month, now.day);
+
+          bool _isSameDay(DateTime date1, DateTime date2) {
+            return date1.year == date2.year &&
+                date1.month == date2.month &&
+                date1.day == date2.day;
+          }
+
+          DateTime _parseTimestamp(Timestamp timestamp) {
+            return timestamp.toDate();
+          }
+
+          List<Map<String, dynamic>> filteredStatusList = patrolCurrentStatus
+              .where((status) =>
+                  status['StatusReportedById'] == emplid &&
+                  status['StatusReportedTime'] != null &&
+                  _isSameDay(
+                      _parseTimestamp(status['StatusReportedTime']), today))
               .toList();
 
           int completedCount = filteredStatusList.fold(
@@ -101,6 +118,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
         setState(() {
           totalCount = completedCount;
         });
+
         print('Completed count for : $completedCount');
       } else {
         print('Patrol status is null or not a List<dynamic>');
