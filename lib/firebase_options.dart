@@ -40,19 +40,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBeY7NcY56pFXFyE3Yw0uaBWG5pA9ZerY4',
-    appId: '1:1014048520427:android:8955e3bc11dc5fce0566ae',
-    messagingSenderId: '1014048520427',
-    projectId: 'security-app-3b156',
-    storageBucket: 'security-app-3b156.appspot.com',
+    apiKey: 'AIzaSyBjCuAhZPuvU8avLd3t8RMaaVuUi_L7Hng',
+    appId: '1:972076944226:android:64a33df2f1c91bb8687a3b',
+    messagingSenderId: '972076944226',
+    projectId: 'livtech-dbcf2',
+    storageBucket: 'livtech-dbcf2.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCyHUl-WhmRsTsMREvW6R9tMHqFLlEJeDw',
-    appId: '1:1014048520427:ios:331fad72fe32dd1b0566ae',
-    messagingSenderId: '1014048520427',
-    projectId: 'security-app-3b156',
-    storageBucket: 'security-app-3b156.appspot.com',
+    apiKey: 'AIzaSyBEQDNAtMwiA49Yo4HmCF3cbhFnJammbyY',
+    appId: '1:972076944226:ios:5e15e5d07a209a0d687a3b',
+    messagingSenderId: '972076944226',
+    projectId: 'livtech-dbcf2',
+    storageBucket: 'livtech-dbcf2.appspot.com',
     iosBundleId: 'com.avocadotech.tacttik.tactTik',
   );
+
 }

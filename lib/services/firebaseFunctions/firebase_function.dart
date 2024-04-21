@@ -1490,6 +1490,14 @@ class FireStoreService {
     }
   }
 
+  bool isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+    DateTime dateTime1 = timestamp1.toDate();
+    DateTime dateTime2 = timestamp2.toDate();
+    return dateTime1.year == dateTime2.year &&
+        dateTime1.month == dateTime2.month &&
+        dateTime1.day == dateTime2.day;
+  }
+
   // Add images and comment
   Future<void> addImagesToPatrol(
     List<Map<String, dynamic>> uploads,
@@ -1522,18 +1530,19 @@ class FireStoreService {
 
           // Find the specific status within CheckPointStatus where StatusReportedById matches empId
           var status = checkPointStatus.firstWhere(
-            (s) => s["StatusReportedById"] == empId,
+            (s) =>
+                s["StatusReportedById"] == empId &&
+                isSameDay(s["StatusReportedTime"], Timestamp.now()),
             orElse: () => null,
           );
 
           if (status == null) {
             // Create a new status entry for the empId
             status = {
-              // "Status": "checked",
               "StatusReportedById": empId,
               "StatusImage": [],
               "StatusComment": "",
-              "StatusReportedTime": Timestamp.now()
+              "StatusReportedTime": Timestamp.now(),
             };
             checkPointStatus.add(status);
           }
@@ -1558,8 +1567,6 @@ class FireStoreService {
           status["StatusImage"] =
               imgUrls.map((url) => url['downloadURL']).toList();
           status["StatusComment"] = comment;
-          status['StatusReportedTime'] = Timestamp.now();
-          // status["Status"] = "checked";
 
           // Update the Firestore document with the new wellness reports
           await patrols.doc(patrolID).update({
