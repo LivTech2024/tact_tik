@@ -4,10 +4,18 @@ import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/roboto_medium.dart';
 import 'package:tact_tik/utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/sizes.dart';
 
 class PanicAlertDialog extends StatelessWidget {
+  final Map<String, String> emergencyContacts = {
+    'Ambulance': '102',
+    'Police': '100',
+    'Doctor': '1234567890',
+    'Fire Department': '911'
+  };
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -145,13 +153,31 @@ class PanicAlertDialog extends StatelessWidget {
                                   children: [
                                     ListView.builder(
                                       shrinkWrap: true,
-                                      itemCount: 6,
+                                      itemCount: emergencyContacts.length,
                                       itemBuilder: (context, index) {
+                                        final contactName = emergencyContacts
+                                            .keys
+                                            .toList()[index];
+                                        final phoneNumber =
+                                            emergencyContacts[contactName];
                                         return ListTile(
-                                          leading: Icon(Icons.call , color: Primarycolor,size: width / width20,),
-                                          title: InterMedium(text:'1234567890' , fontsize: width / width12,),
-                                          onTap: () {
-                                            // options[index].onTap();
+                                          leading: Icon(
+                                            Icons.call,
+                                            color: Primarycolor,
+                                            size: width / width20,
+                                          ),
+                                          title: InterMedium(
+                                            text: contactName,
+                                            fontsize: width / width12,
+                                          ),
+                                          onTap: () async {
+                                            final url = 'tel://$phoneNumber';
+                                            if (await canLaunchUrl(
+                                                Uri.parse(url))) {
+                                              await launchUrl(Uri.parse(url));
+                                            } else {
+                                              print('Cannot launch $url');
+                                            }
                                             Navigator.pop(context);
                                           },
                                         );
@@ -160,8 +186,6 @@ class PanicAlertDialog extends StatelessWidget {
                                   ],
                                 ),
                               );
-
-                              // Navigator.pop(context);
                             },
                             child: RobotoMedium(
                               text: 'Call',

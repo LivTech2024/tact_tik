@@ -69,6 +69,7 @@ dependencies:
   http: ^1.2.1
   image: ^4.1.7
   flutter_native_html_to_pdf: ^1.0.1
+  url_launcher: ^6.2.6
 
 dev_dependencies:
   flutter_test:
