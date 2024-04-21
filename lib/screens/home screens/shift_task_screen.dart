@@ -61,6 +61,10 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
         this.completedTaskCount = completedTaskCount;
         this.totalTaskCount = totalTaskCount;
       });
+      if (completedTaskCount == totalTaskCount) {
+        Navigator.pop(context); // Pop the screen if all tasks are completed
+      }
+
       print(fetchedData);
     } else {
       print('No tasks fetched');

@@ -18,14 +18,12 @@ class LogBookScreen extends StatefulWidget {
 }
 
 class _LogBookScreenState extends State<LogBookScreen> {
-
   List<Logs> logs = [
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
     Logs(type: 'type', clintName: 'clintName', location: 'location'),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +65,9 @@ class _LogBookScreenState extends State<LogBookScreen> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                return LogBookWidget(logs: logs,);
+                return LogBookWidget(
+                  logs: logs,
+                );
               },
               childCount: 10,
             ),
@@ -76,10 +76,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
       ),
     );
   }
-
-
-
-
 }
 
 class LogBookWidget extends StatefulWidget {
@@ -96,25 +92,28 @@ class _LogBookWidgetState extends State<LogBookWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.symmetric(horizontal: width / width30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 expand = !expand;
               });
             },
             child: Container(
-              margin: EdgeInsets.only(top: 10),
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              height: 70,
+              margin: EdgeInsets.only(top: height / height10),
+              padding: EdgeInsets.symmetric(horizontal: width / width20),
+              height: height / height70,
               width: double.maxFinite,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(width / width10),
                 color: WidgetColor,
               ),
               child: Row(
@@ -123,13 +122,13 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                   InterBold(
                     text: '15/04/2023',
                     color: Primarycolor,
-                    fontsize: 18,
+                    fontsize: width / width18,
                   ),
                   Icon(
                     expand
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
-                    size: 24,
+                    size: width / width24,
                     color: Primarycolor,
                   )
                 ],
@@ -141,7 +140,9 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: widget.logs.map((l) {
-                return LogTypeWidget(type: LogBookEnum.patrolCount,);
+                return LogTypeWidget(
+                  type: LogBookEnum.CheckPoint,
+                );
               }).toList(),
             ),
           ),

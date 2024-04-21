@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/shift_task_return_type_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -60,6 +61,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
         this.completedTaskCount = completedTaskCount;
         this.totalTaskCount = totalTaskCount;
       });
+
       print(fetchedData);
     } else {
       print('No tasks fetched');
@@ -159,7 +161,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       }
                     }
 
-                    return ShiftTaskTypeWidget(
+                    return ShiftTaskReturnTypeWidget(
                       type: taskType ?? ShiftTaskEnum.upload,
                       taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
                       taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",

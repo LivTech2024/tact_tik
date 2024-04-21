@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
@@ -35,6 +36,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
+import '../feature screens/pani button/panic_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -540,6 +542,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Bounce(
                                   onTap: () {
                                     switch (index) {
+                                      case 0:
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return PanicAlertDialog();
+                                          },
+                                        );
+                                        break;
                                       case 2:
                                         Navigator.push(
                                             context,
@@ -548,6 +558,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DarDisplayScreen(
                                                       EmpEmail: _employeeId,
                                                     )));
+                                        break;
+                                      case 6:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LogBookScreen()));
                                         break;
                                       default:
                                     }
