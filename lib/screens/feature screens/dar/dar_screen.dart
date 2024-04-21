@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
@@ -11,7 +11,7 @@ import '../../../common/sizes.dart';
 
 class DarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
-  DarDisplayScreen({super.key, required this.EmpEmail});
+  DarDisplayScreen({Key? key, required this.EmpEmail}) : super(key: key);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -67,7 +67,7 @@ class DarDisplayScreen extends StatelessWidget {
                               children: [
                                 SizedBox(height: height / height20),
                                 InterBold(
-                                  text: document['title'],
+                                  text: _formatTimestamp(document['createdAt']),
                                   fontsize: width / width20,
                                   color: Primarycolor,
                                   letterSpacing: -.3,
@@ -92,7 +92,7 @@ class DarDisplayScreen extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       InterBold(
-                                        text: document['userName'],
+                                        text: document['title'],
                                         fontsize: width / width18,
                                         color: Primarycolor,
                                       ),
@@ -179,5 +179,11 @@ class DarDisplayScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+
+    return DateFormat('dd /MM /yyyy').format(dateTime);
   }
 }
