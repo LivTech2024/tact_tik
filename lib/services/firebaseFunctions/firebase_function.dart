@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -480,10 +481,11 @@ class FireStoreService {
       String patrolId,
       String empId,
       String EmpName,
-      String PatrolCount,
+      int PatrolCount,
       String ShiftDate,
-      String StartTime,
-      String EndTime) async {
+      Timestamp StartTime,
+      Timestamp EndTime,
+      String FeedbackComment) async {
     // Assuming Firestore is initialized
     var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
     var patrolDoc = await patrolsCollection.doc(patrolId).get();
@@ -515,11 +517,12 @@ class FireStoreService {
       'PatrolLogGuardId': empId,
       'PatrolLogGuardName': EmpName,
       'PatrolLogPatrolCount': PatrolCount,
+      'PatrolLogFeedbackComment': FeedbackComment,
       'PatrolLogCheckPoints': relevantCheckpoints,
       'PatrolLogStatus': "completed",
       'PatrolLogStartedAt': StartTime,
       'PatrolLogEndedAt': EndTime,
-      'PatrolLogCreatedAt': DateTime.now(),
+      'PatrolLogCreatedAt': Timestamp.now(),
     });
     await docRef.update({'PatrolLogId': docRef.id});
   }
@@ -1893,9 +1896,11 @@ class FireStoreService {
 
       // Process query results
       querySnapshot.docs.forEach((doc) {
-        // Handle each document as needed
-        pdfDataList.add(doc.data());
-        print("Data for Pdf: ${doc.data()}");
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
+        }
       });
     } catch (e) {
       print(e);

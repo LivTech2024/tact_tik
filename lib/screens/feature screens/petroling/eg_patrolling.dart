@@ -1205,7 +1205,32 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           String formattedDate =
                                               DateFormat('yyyy-MM-dd')
                                                   .format(DateTime.now());
+                                          DateFormat timeFormat =
+                                              DateFormat("HH:mm");
 
+                                          String? InTime =
+                                              prefs.getString("StartTime");
+
+                                          DateTime inTime =
+                                              DateFormat("HH:mm:ss")
+                                                  .parse(InTime ?? "");
+
+                                          Timestamp patrolInTimestamp =
+                                              Timestamp.fromDate(inTime);
+
+                                          Timestamp patrolOutTimestamp =
+                                              Timestamp.fromDate(
+                                                  DateTime.now());
+                                          await fireStoreService
+                                              .fetchAndCreatePatrolLogs(
+                                                  widget.p.PatrolId,
+                                                  widget.p.EmpId,
+                                                  widget.p.EmployeeName,
+                                                  widget.p.CompletedCount + 1,
+                                                  formattedStartDate,
+                                                  patrolInTimestamp,
+                                                  patrolOutTimestamp,
+                                                  CommentController.text);
                                           List<Map<String, dynamic>>
                                               formattedImageUrls =
                                               imageUrls.map((url) {
@@ -1218,8 +1243,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             };
                                           }).toList();
 
-                                          String? InTime =
-                                              prefs.getString("StartTime");
                                           await fireStoreService.addToLog(
                                               "PatrolEnded",
                                               "",
@@ -1329,6 +1352,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           emails.add(defaultEmail!);
                                           String? InTime =
                                               prefs.getString("StartTime");
+                                          DateTime inTime =
+                                              DateFormat("HH:mm:ss")
+                                                  .parse(InTime ?? "");
+
+                                          Timestamp patrolInTimestamp =
+                                              Timestamp.fromDate(inTime);
+                                          Timestamp patrolOutTimestamp =
+                                              Timestamp.fromDate(
+                                                  DateTime.now());
+                                          await fireStoreService
+                                              .fetchAndCreatePatrolLogs(
+                                                  widget.p.PatrolId,
+                                                  widget.p.EmpId,
+                                                  widget.p.EmployeeName,
+                                                  widget.p.CompletedCount + 1,
+                                                  formattedStartDate,
+                                                  patrolInTimestamp,
+                                                  patrolOutTimestamp,
+                                                  CommentController.text);
                                           await fireStoreService.addToLog(
                                               "PatrolEnded",
                                               "",

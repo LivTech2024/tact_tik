@@ -96,7 +96,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   int _elapsedTime = 0;
 
   // late SharedPreferences prefs;
-  void send_mail_onOut() async {
+  void send_mail_onOut(data) async {
     //fetch all the patrol ids assigned to him using
     List<String> emails = [];
     var ClientEmail =
@@ -106,8 +106,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var TestinEmail = "sutarvaibhav37@gmail.com";
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
-    // emails.add(ClientEmail!);
-    emails.add("sutarvaibhav37@student.sfit.ac.in");
+    emails.add(ClientEmail!);
+    // emails.add("sutarvaibhav37@student.sfit.ac.in");
     emails.add("sutarvaibhav37@gmail.com");
     // var TestinEmail = "sutarvaibhav37@gmail.com";
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -117,24 +117,26 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
 
     if (ClientEmail != null && AdminEmail != null) {
-      // emails.add(AdminEmail);
-      // sendShiftEmail(
-      // emails.add(TestinEmail);
-      Map<String, dynamic> emailParams = {
-        'to_email': '$ClientEmail, $AdminEmail ,$defaultEmail',
-        // 'to_email': '$TestinEmail',
-        "startDate": '${widget.ShiftId}',
-        "endDate": '${widget.ShiftDate}',
-        'from_name': '${widget.EmployeeName}',
-        'reply_to': '$defaultEmail',
-        'type': 'Shift ',
-        'Location': '${widget.ShiftAddressName}',
-        'Status': 'Completed',
-        'GuardName': '${widget.EmployeeName}',
-        'StartTime': '${widget.ShiftStartTime}',
-        'EndTime': '${stopwatchtime}',
-        'CompanyName': 'Tacttik',
-      };
+      emails.add(AdminEmail);
+
+      emails.add(TestinEmail);
+
+      await sendShiftEmail(
+        ClientName,
+        emails,
+        'Testing Shift Mail',
+        "Tacttik Shift Report",
+        data,
+        "Shift",
+        widget.ShiftDate,
+        widget.EmployeeName,
+        widget.ShiftStartTime,
+        widget.ShiftEndTime,
+        widget.ShiftAddressName,
+        "completed",
+        widget.ShiftStartTime,
+        widget.ShiftEndTime,
+      );
       //     emails,
       //     "Update on Shift",
       //     widget.EmployeeName,
@@ -551,10 +553,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                         var ClientName = fireStoreService
                             .getClientName(widget.ShiftClientID);
+                        print("Client Name ${ClientName}");
                         var ClientEmail = fireStoreService
                             .getClientEmail(widget.ShiftClientID);
+                        print("Client Name ${ClientEmail}");
+
                         var AdminEmal = fireStoreService
                             .getAdminEmail(widget.ShiftCompanyId);
+                        print("Client Name ${AdminEmal}");
                         //fetch the data from Patrol Logs and generate email from it
                         var data = await fireStoreService.fetchDataForPdf(
                             widget.EmployeId, widget.ShiftId);
@@ -569,7 +575,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         //add to firebase storage and then mail too
                         // String? pdfLink = fireStoreService.uploadPdfToStorage(
                         //     file, widget.ShiftId);
-                        // send_mail_onOut();
+                        send_mail_onOut(data);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

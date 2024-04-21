@@ -1,8 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:emailjs/emailjs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_html_to_pdf/flutter_native_html_to_pdf.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:pdf/widgets.dart';
 
 Future<bool> sendEmail(dynamic templateParams) async {
   try {
@@ -228,152 +235,169 @@ Future<void> sendapiEmail(
   }
 }
 
+final _flutterNativeHtmlToPdfPlugin = FlutterNativeHtmlToPdf();
+String? generatedPdfFilePath;
 Future<void> sendShiftEmail(
+  String? ClientName,
   List<String> toEmails,
   String Subject,
   String fromName,
-  String Data,
+  List<Map<String, dynamic>> Data,
   String type,
   String date,
-  List<Map<String, dynamic>> imageData,
   String GuardName,
   String StartTime,
   String EndTime,
   String Location,
   String Status,
-  String patrolTimein,
-  String patrolTimeout,
+  String shiftinTime,
+  String shiftOutTime,
 ) async {
   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
 
-  String imagesHTML = '';
-  for (var data in imageData) {
-    String statusReportedTime = data['StatusReportedTime'];
-    List<String> imageUrls = List<String>.from(data['ImageUrls']);
-    String statusComment = data['StatusComment'] ?? "";
+  final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
-    // Add a paragraph with the StatusReportedTime and StatusComment
-    imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
-    imagesHTML += '<p>StatusComment: $statusComment</p>';
+  for (var toEmail in toEmails) {
+    // Generate HTML content for each recipient
+    String patrolInfoHTML = '';
+    for (var item in Data) {
+      String checkpointImagesHTML = '';
+      for (var checkpoint in item['PatrolLogCheckPoints']) {
+        String checkpointImages = '';
+        if (checkpoint['CheckPointImage'] != null) {
+          for (var image in checkpoint['CheckPointImage']) {
+            checkpointImages +=
+                '<img src="$image" style="height: 100px;">'; // Set the height here
+          }
+        }
+        checkpointImagesHTML += '''
+        <div>
+          <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
+          $checkpointImages
+          <p>Comment: ${checkpoint['CheckPointComment']}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Status: ${checkpoint['CheckPointStatus']}</p>
+        </div>
+      ''';
+      }
 
-    // Add image tags for each ImageUrl with a specific size
-    for (var imageUrl in imageUrls) {
-      imagesHTML +=
-          '<img src="$imageUrl" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
+      patrolInfoHTML += '''
+      <tr>
+        <td>${item['PatrolLogPatrolCount']}</td>
+        <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
+        <td>${dateFormat.format(item['PatrolLogEndedAt'].toDate())}</td>
+        <td>${checkpointImagesHTML}</td>
+      </tr>
+    ''';
+    }
+
+    final htmlcontent2 = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Report</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            header {
+                background-color: #ddd;
+                padding: 20px;
+                text-align: center;
+            }
+
+            h1 {
+                margin-bottom: 0;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            th {
+                text-align: left;
+            }
+
+            .patrol-info tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Security Report</h1>
+        </header>
+
+        <section>
+            <h2>Dear ${ClientName},</h2>
+            <p>This email provides an update on the recent patrol activities carried out by our assigned security guards during their shift. Below is a detailed breakdown of the patrols conducted.</p>
+        </section>
+
+        <h3>Shift Information</h3>
+        <table class="shift-info">
+            <tr>
+                <th>Guard Name</th>
+                <th>Shift Time In</th>
+                <th>Shift Time Out</th>
+            </tr>
+            <tr>
+                <td> ${GuardName}</td>
+                <td>${shiftinTime}</td>
+                <td>${shiftOutTime}</td>
+            </tr>
+        </table>
+
+        <h3>Patrol Information</h3>
+        <table class="patrol-info">
+            <tr>
+                <th>Patrol Count</th>
+                <th>Patrol Time In</th>
+                <th>Patrol Time Out</th>
+                <th>Checkpoint Details</th>
+            </tr>
+            ${patrolInfoHTML}
+        </table>
+
+        <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
+    </body>
+    </html>
+  """;
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'to_email': toEmail,
+        'subject': Subject,
+        'from_name': fromName,
+        'html': htmlcontent2,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print('Email sent successfully');
+      // Handle success
+    } else {
+      print('Failed to send email. Status code: ${response.statusCode} ');
+      // Handle failure
     }
   }
-  final htmlcontent2 = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patrol Report</title>
-    <style>
-        body {
-            background-image: url('path/to/your/background/image.jpg');
-            background-size: cover; /* Ensure the background image covers the entire body */
-            background-repeat: no-repeat; /* Prevent the background image from repeating */
-            font-family: Arial, sans-serif; /* Use a readable font */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-        }
-        #shift-patrol-report {
-            width: 100%;
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-        .patrol-section {
-            border: 1px solid #ddd;
-            padding: 1rem;
-            margin-bottom: 1rem; /* Add some space between sections */
-            background-color: #fff; /* Set a white background color for sections */
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-            text-align: left;
-        }
-        .details {
-            white-space: pre-line; /* Preserve line breaks in the 'Data' field */
-        }
-        img {
-            max-width: 100%; /* Ensure images don't exceed their container width */
-            height: auto; /* Maintain aspect ratio */
-            display: block; /* Prevent inline images from affecting layout */
-            margin-bottom: 0.5rem; /* Add some space between images */
-        }
-    </style>
-</head>
-<body>
-    <div id="shift-patrol-report">
-        <h2>SHIFT/PATROL REPORT</h2>
-        <div class="patrol-section">
-            <h3>Patrol Details</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Guard name</th>
-                        <th>Patrol time in</th>
-                        <th>Patrol time out</th>
-                        <th>Total Patrol Count</th>
-                        <th>Total hits</th>
-                        <th>Status</th>
-                        <th>Incident</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>$GuardName</td>
-                        <td>$patrolTimein</td>
-                        <td>$patrolTimeout</td>
-                        <td>$Status</td>
-                        <td class="details">$Data</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="patrol-section">
-            <h3>Patrol with Photos</h3>
-            <p id="patrol-details"></p>
-            $imagesHTML
-        </div>
-        <div class="report-section">
-            <h3>Important Note</h3>
-            <p id="important-note"></p>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
-
-
-
-
-""";
-  final response = await http.post(
-    Uri.parse(url),
-    headers: {'Content-Type': 'application/json'},
-    body: json.encode({
-      'to_email': "sutarvaibhav37@gmail.com",
-      'subject': "Testing",
-      'from_name': GuardName,
-      'html': htmlcontent2,
-    }),
-  );
-
-  if (response.statusCode == 201) {
-    print('Email sent successfully');
-    // Handle success
-  } else {
-    print('Failed to send email. Status code: ${response.statusCode} ');
-    // Handle failure
-  }
 }
+
+
+
 
 // final htmlContent = '''
 //   <!DOCTYPE html>
