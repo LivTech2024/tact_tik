@@ -396,7 +396,7 @@ Future<void> sendShiftEmail(
 
         <section>
             <h2>Dear ${ClientName},</h2>
-            <p>This email provides an update on the recent patrol activities carried out by our assigned security guards during their shift. Below is a detailed breakdown of the patrols conducted.</p>
+            <p>I hope this email finds you well,I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during thier shif.Below is a detailed breakdown of the patrols conducted.</p>
         </section>
 
         <h3>Shift Information</h3>
@@ -404,7 +404,7 @@ Future<void> sendShiftEmail(
             <tr>
                 <th>Guard Name</th>
                 <th>Shift Time In</th>
-                <th>Shift Time Out</th>
+                <th>Shift Time Out</th> 
             </tr>
             <tr>
                 <td> ${GuardName}</td>
@@ -424,60 +424,39 @@ Future<void> sendShiftEmail(
             ${patrolInfoHTML}
         </table>
 
-        <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
+        <p>Please review the information provided and let us know if you have any questions or require further 
+details. We are committed to ensuring the safety and security of your premises, and your feedback is 
+invaluable to us.</p>
+        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
+Best regards,</p>
+        <p>TEAM TACTTIK<p>
     </body>
     </html>
   """;
 
   // Generate the PDF
-  final pdfResponse = await http.post(
-    Uri.parse('https://yakpdf.p.rapidapi.com/pdf'),
-    headers: {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': '08788b2125msh872c59eba317b7fp15e98ajsnb0a96ec9fb5d',
-      'X-RapidAPI-Host': 'yakpdf.p.rapidapi.com',
-    },
-    body: jsonEncode({
-      'source': {'html': "<p>html Data</p>"},
-      'pdf': {'format': 'A4', 'scale': 1, 'printBackground': true},
-      'wait': {'for': 'navigation', 'waitUntil': 'load', 'timeout': 2500}
-    }),
-  );
 
-  if (pdfResponse.statusCode == 200) {
-    final pdfBytes = pdfResponse.bodyBytes;
+  // Attach the PDF file to the email
+  for (var toEmail in toEmails) {
+    final emailResponse = await http.post(
+      Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'to_email': toEmail,
+        'subject': Subject,
+        'from_name': fromName,
+        'html': htmlcontent2,
+      }),
+    );
 
-    // Attach the PDF file to the email
-    for (var toEmail in toEmails) {
-      final emailResponse = await http.post(
-        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'to_email': toEmail,
-          'subject': Subject,
-          'from_name': fromName,
-          'html': htmlcontent2,
-          'attachments': [
-            {
-              'filename': 'security_report.pdf',
-              'content': base64Encode(pdfBytes)
-            }
-          ],
-        }),
-      );
-
-      if (emailResponse.statusCode == 201) {
-        print('Email sent successfully to $toEmail');
-        // Handle success
-      } else {
-        print(
-            'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
-        // Handle failure
-      }
+    if (emailResponse.statusCode == 201) {
+      print('Email sent successfully to $toEmail');
+      // Handle success
+    } else {
+      print(
+          'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+      // Handle failure
     }
-  } else {
-    print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
-    // Handle PDF generation failure
   }
 }
 
