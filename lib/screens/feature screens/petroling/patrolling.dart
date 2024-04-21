@@ -42,6 +42,7 @@ class Movie {
   final double patrolLocationLongitude;
   final bool keepINRaius;
   final int PatrolRadius;
+  final String ClientId;
 
   // String address, String reportName, String Empid,
   //     String BranchId, String Data, String CompanyId
@@ -74,6 +75,7 @@ class Movie {
     this.patrolLocationLongitude,
     this.keepINRaius,
     this.PatrolRadius,
+    this.ClientId,
     // this.patrolCheckPoints
   );
 }
@@ -113,7 +115,6 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
 
   UserLocationChecker locationChecker = UserLocationChecker();
 
-
   List<Map<String, dynamic>> uploads = [];
 
   void _deleteItem(int index) {
@@ -122,10 +123,9 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
     });
   }
 
-
   Future<void> _addImage() async {
     final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
@@ -220,9 +220,13 @@ class MovieCategory extends StatefulWidget {
   final Map<String, dynamic>? patrolInfo;
   final String EmployeeId;
   final String EmployeeEmail;
+  final String ClientId;
 
   MovieCategory(this.category, this.movies,
-      {this.patrolInfo, required this.EmployeeId, required this.EmployeeEmail});
+      {this.patrolInfo,
+      required this.EmployeeId,
+      required this.EmployeeEmail,
+      required this.ClientId});
 
   @override
   _MovieCategoryState createState() => _MovieCategoryState();
@@ -810,22 +814,23 @@ class _MovieCategoryState extends State<MovieCategory> {
                                             TextButton(
                                               onPressed: () {
                                                 fireStoreService.EndPatrol(
-                                                  //  Category,
-                                                  // movie.patrolId,
-                                                  // movie.patrolLocationName,
-                                                  // movie.PatrolAssignedGuardId,
-                                                  // movie.Empid,
-                                                  // movie.BranchId,
-                                                  // movie.CompanyID,
-                                                  widget.EmployeeId,
-                                                  movie.CompanyID,
-                                                  movie.Name,
-                                                  movie.patrolLocationName,
-                                                  movie.BranchId,
-                                                  movie.patrolId,
-                                                  widget.EmployeeEmail,
-                                                  // movie.s
-                                                );
+                                                    //  Category,
+                                                    // movie.patrolId,
+                                                    // movie.patrolLocationName,
+                                                    // movie.PatrolAssignedGuardId,
+                                                    // movie.Empid,
+                                                    // movie.BranchId,
+                                                    // movie.CompanyID,
+                                                    widget.EmployeeId,
+                                                    movie.CompanyID,
+                                                    movie.Name,
+                                                    movie.patrolLocationName,
+                                                    movie.BranchId,
+                                                    movie.patrolId,
+                                                    widget.EmployeeEmail,
+                                                    widget.ClientId
+                                                    // movie.s
+                                                    );
 
                                                 Navigator.of(context).pop();
                                               },

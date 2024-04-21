@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -351,7 +352,7 @@ class FireStoreService {
         List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
         status.forEach((entry) {
           entry['Status'] = 'unchecked';
-          entry['StatusReportedTime'] = Timestamp.now();
+          // entry['StatusReportedTime'] = Timestamp.now();
         });
       });
       bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
@@ -429,8 +430,8 @@ class FireStoreService {
       checkpoints.forEach((checkpoint) {
         List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
         status.forEach((entry) {
-          // entry['Status'] = 'not_checked';
-          entry['StatusReportedTime'] = Timestamp.now();
+          entry['Status'] = 'checked';
+          // entry['StatusReportedTime'] = Timestamp.now();
         });
       });
 
@@ -480,15 +481,21 @@ class FireStoreService {
       String patrolId,
       String empId,
       String EmpName,
-      String PatrolCount,
+      int PatrolCount,
       String ShiftDate,
-      String StartTime,
-      String EndTime) async {
+      Timestamp StartTime,
+      Timestamp EndTime,
+      String FeedbackComment) async {
     // Assuming Firestore is initialized
     var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
     var patrolDoc = await patrolsCollection.doc(patrolId).get();
     var patrolData = patrolDoc.data() as Map<String, dynamic>;
     print("Patrol Data from Fetch = ${patrolData}");
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    DateTime shiftDateTime = dateFormat.parse(ShiftDate);
+
+    // Convert DateTime to Timestamp
+    Timestamp shiftTimestamp = Timestamp.fromDate(shiftDateTime);
     // Filter and extract relevant checkpoint status information
     List<Map<String, dynamic>> relevantCheckpoints = [];
     for (var checkpoint in patrolData['PatrolCheckPoints']) {
@@ -511,15 +518,16 @@ class FireStoreService {
         FirebaseFirestore.instance.collection('PatrolLogs');
     var docRef = await patrolLogsCollection.add({
       'PatrolId': patrolData['PatrolId'],
-      'PatrolDate': ShiftDate,
+      'PatrolDate': shiftTimestamp,
       'PatrolLogGuardId': empId,
       'PatrolLogGuardName': EmpName,
       'PatrolLogPatrolCount': PatrolCount,
+      'PatrolLogFeedbackComment': FeedbackComment,
       'PatrolLogCheckPoints': relevantCheckpoints,
       'PatrolLogStatus': "completed",
       'PatrolLogStartedAt': StartTime,
       'PatrolLogEndedAt': EndTime,
-      'PatrolLogCreatedAt': DateTime.now(),
+      'PatrolLogCreatedAt': Timestamp.now(),
     });
     await docRef.update({'PatrolLogId': docRef.id});
   }
@@ -665,7 +673,8 @@ class FireStoreService {
       String LocationName,
       String BrachId,
       String CompyId,
-      String EmpNames) async {
+      String EmpNames,
+      String ClientId) async {
     try {
       if (shiftId == null || shiftId.isEmpty) {
         throw ArgumentError('Invalid shiftId: $shiftId');
@@ -699,7 +708,7 @@ class FireStoreService {
       String Title = "Shift Ended";
       String Data = "Shift Ended ";
       await generateReport(LocationName, Title, employeeId, BrachId, Data,
-          CompyId, "other", EmpNames);
+          CompyId, "other", EmpNames, ClientId);
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
@@ -823,14 +832,14 @@ class FireStoreService {
 //completed
 
   Future<void> EndPatrol(
-    String patrolAssignedGuardId,
-    String PatrolCompanyId,
-    String PatrolName,
-    String PatrolArea,
-    String BId,
-    String PatrolId,
-    String EmpName,
-  ) async {
+      String patrolAssignedGuardId,
+      String PatrolCompanyId,
+      String PatrolName,
+      String PatrolArea,
+      String BId,
+      String PatrolId,
+      String EmpName,
+      String ClientID) async {
     try {
       print('Ending patrol...');
       // Get the current system time
@@ -840,16 +849,8 @@ class FireStoreService {
       final patrolRef = FirebaseFirestore.instance
           .collection('Patrols')
           .where("PatrolId", isEqualTo: PatrolId);
-      await generateReport(
-        PatrolArea,
-        PatrolName,
-        patrolAssignedGuardId,
-        BId,
-        data,
-        PatrolCompanyId,
-        "completed",
-        EmpName,
-      );
+      await generateReport(PatrolArea, PatrolName, patrolAssignedGuardId, BId,
+          data, PatrolCompanyId, "completed", EmpName, ClientID);
 
       final querySnapshot = await patrolRef.get();
       if (querySnapshot.docs.isNotEmpty) {
@@ -874,30 +875,36 @@ class FireStoreService {
     }
   }
 
+  Future<String?> getReportCategoryId() async {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("ReportCategories")
+        .where("ReportCategoryName", isEqualTo: "Patrol")
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final doc = snapshot.docs.first;
+      return doc.id;
+    } else {
+      return null; // Handle case when no document is found
+    }
+  }
+
   Future<void> generateReport(
-    String address,
-    String reportName,
-    String Empid,
-    String BranchId,
-    String Data,
-    String CompanyId,
-    String Status,
-    String EmpName,
-  ) async {
+      String address,
+      String reportName,
+      String Empid,
+      String BranchId,
+      String Data,
+      String CompanyId,
+      String Status,
+      String EmpName,
+      String ClientID) async {
     try {
       print('Generating report...');
-      final ReportCategoryRef =
-          FirebaseFirestore.instance.collection("ReportCategories");
-      final newCategoryDocRef = await ReportCategoryRef.add({
-        "ReportCategoryName": "Patrol",
-        "ReportCategoryCreatedAt": DateTime.now(),
-        // Add other fields if needed
-      });
+
       //report Categories fetch the id according to the
-      await newCategoryDocRef
-          .update({'ReportCategoryId': newCategoryDocRef.id});
-      String ReportCategoryId = newCategoryDocRef.id;
-      print('ReportCategoryId: $ReportCategoryId');
+
+      var ReportCategoryId = getReportCategoryId();
       final ReportRef = FirebaseFirestore.instance.collection("Reports");
       String combinationName = (reportName + address).replaceAll(' ', '');
       print('Combination Name: $combinationName');
@@ -917,9 +924,11 @@ class FireStoreService {
         "ReportEmployeeName": EmpName,
         "ReportEmployeeId": Empid,
         "ReportCreatedAt": Timestamp.now(),
+        "ReportCategoryId": ReportCategoryId,
+        "ReportClientId": ClientID,
       });
       print('Report generated successfully');
-      await newDocRef.update({"ReportCategoryId": newDocRef.id});
+      await newDocRef.update({"ReportId": newDocRef.id});
     } catch (e) {
       print('Error generating report: $e');
       // Handle the error as needed
@@ -1106,11 +1115,8 @@ class FireStoreService {
   Future<void> addImagesToShiftGuardWellnessReport(
     List<Map<String, dynamic>> uploads,
     String comment,
-    // String ShiftID,
-    // String EmpID
   ) async {
     try {
-      // final LocalStorage Userstorage = LocalStorage('currentUserEmail');
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
       String empId = storage.getItem('EmpId') ?? "";
@@ -1122,26 +1128,30 @@ class FireStoreService {
 
         List<Map<String, dynamic>> wellnessReports =
             List.from(doc["ShiftGuardWellnessReport"]);
-        List<Map<String, dynamic>> imgUrls = [];
+        List<String> imgUrls = [];
         for (var upload in uploads) {
           if (upload['type'] == 'image') {
             File file = upload['file'];
-
+            print(file);
             // Upload the image file and get the download URL
-            List<Map<String, dynamic>> downloadURL =
-                await addImageToStorage(file);
-            // Add the wellness report entry to the list
-            for (var url in downloadURL) {
-              imgUrls.add(url as Map<String, dynamic>);
+            List<Map<String, dynamic>> downloadURLs =
+                await addImageToStorageShiftTask(file);
+            // Add the image URLs to the list
+            for (var urlMap in downloadURLs) {
+              if (urlMap.containsKey('downloadURL')) {
+                imgUrls.add(urlMap['downloadURL'] as String);
+              }
             }
           }
         }
+
         wellnessReports.add({
           "WellnessEmployeeID": empId,
           "timestamp": DateTime.now(),
           "comment": comment,
           "imageURL": imgUrls,
         });
+
         // Update the Firestore document with the new wellness reports
         await doc.reference.update({
           "ShiftGuardWellnessReport": wellnessReports,
@@ -1569,6 +1579,7 @@ class FireStoreService {
           status["StatusImage"] =
               imgUrls.map((url) => url['downloadURL']).toList();
           status["StatusComment"] = comment;
+          status["StatusReportedTime"] = Timestamp.now();
 
           // Update the Firestore document with the new wellness reports
           await patrols.doc(patrolID).update({
@@ -1591,10 +1602,6 @@ class FireStoreService {
   Future<void> updateShiftTaskStatus(
       String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {
     try {
-      final LocalStorage storage = LocalStorage('ShiftDetails');
-      String shiftId = storage.getItem('shiftId');
-      String empId = storage.getItem('EmpId') ?? "";
-
       final DocumentReference shiftDocRef =
           FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
@@ -1639,8 +1646,6 @@ class FireStoreService {
   Future<void> updateShiftReturnTaskStatus(
       String ShiftTaskId, String EmpID, String ShiftId, String EmpName) async {
     try {
-      final LocalStorage storage = LocalStorage('ShiftDetails');
-
       final DocumentReference shiftDocRef =
           FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
@@ -1893,9 +1898,11 @@ class FireStoreService {
 
       // Process query results
       querySnapshot.docs.forEach((doc) {
-        // Handle each document as needed
-        pdfDataList.add(doc.data());
-        print("Data for Pdf: ${doc.data()}");
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
+        }
       });
     } catch (e) {
       print(e);

@@ -1205,7 +1205,34 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           String formattedDate =
                                               DateFormat('yyyy-MM-dd')
                                                   .format(DateTime.now());
+                                          DateFormat timeFormat =
+                                              DateFormat("HH:mm");
 
+                                          String? InTime =
+                                              prefs.getString("StartTime");
+
+                                          DateTime inTime =
+                                              DateFormat("HH:mm:ss")
+                                                  .parse(InTime ?? "");
+
+                                          Timestamp patrolInTimestamp =
+                                              Timestamp.fromDate(inTime);
+
+                                          Timestamp patrolOutTimestamp =
+                                              Timestamp.fromDate(
+                                                  DateTime.now());
+                                          num count =
+                                              widget.p.CompletedCount + 1;
+                                          await fireStoreService
+                                              .fetchAndCreatePatrolLogs(
+                                                  widget.p.PatrolId,
+                                                  widget.p.EmpId,
+                                                  widget.p.EmployeeName,
+                                                  widget.p.CompletedCount + 1,
+                                                  formattedStartDate,
+                                                  patrolInTimestamp,
+                                                  patrolOutTimestamp,
+                                                  CommentController.text);
                                           List<Map<String, dynamic>>
                                               formattedImageUrls =
                                               imageUrls.map((url) {
@@ -1218,8 +1245,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             };
                                           }).toList();
 
-                                          String? InTime =
-                                              prefs.getString("StartTime");
                                           await fireStoreService.addToLog(
                                               "PatrolEnded",
                                               "",
@@ -1242,8 +1267,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.EmployeeName,
                                               InTime,
                                               formattedEndTime,
-                                              widget.p.CompletedCount
-                                                  .toString(),
+                                              count.toString(),
                                               widget.p.PatrolRequiredCount
                                                   .toString(),
                                               widget.p.description,
@@ -1329,6 +1353,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           emails.add(defaultEmail!);
                                           String? InTime =
                                               prefs.getString("StartTime");
+                                          DateTime inTime =
+                                              DateFormat("HH:mm:ss")
+                                                  .parse(InTime ?? "");
+
+                                          Timestamp patrolInTimestamp =
+                                              Timestamp.fromDate(inTime);
+                                          Timestamp patrolOutTimestamp =
+                                              Timestamp.fromDate(
+                                                  DateTime.now());
+                                          await fireStoreService
+                                              .fetchAndCreatePatrolLogs(
+                                                  widget.p.PatrolId,
+                                                  widget.p.EmpId,
+                                                  widget.p.EmployeeName,
+                                                  widget.p.CompletedCount + 1,
+                                                  formattedStartDate,
+                                                  patrolInTimestamp,
+                                                  patrolOutTimestamp,
+                                                  CommentController.text);
                                           await fireStoreService.addToLog(
                                               "PatrolEnded",
                                               "",
@@ -1340,6 +1383,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.PatrolCompanyID,
                                               "",
                                               widget.p.PatrolClientID);
+                                          num newCount =
+                                              widget.p.CompletedCount;
                                           sendapiEmail(
                                               emails,
                                               "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
@@ -1351,8 +1396,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.EmployeeName,
                                               InTime,
                                               formattedEndTime,
-                                              widget.p.CompletedCount
-                                                  .toString(),
+                                              newCount.toString(),
                                               widget.p.PatrolRequiredCount
                                                   .toString(),
                                               widget.p.description,
