@@ -382,7 +382,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         setState(() {
           buttonEnabled = false; // Disable the button
         });
-
+        await fireStoreService.addToLog(
+            "PatrolStarted",
+            "",
+            "",
+            Timestamp.now(),
+            Timestamp.now(),
+            widget.p.EmpId,
+            widget.p.EmployeeName,
+            widget.p.PatrolCompanyID,
+            "",
+            widget.p.PatrolClientID);
         await fireStoreService.updatePatrolCurrentStatus(
           widget.p.PatrolId,
           "started",
@@ -635,7 +645,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   checkpoint.patrolId,
                                                   checkpoint.id,
                                                   widget.p.EmpId);
-
+                                          await fireStoreService.addToLog(
+                                              "Checkpoint",
+                                              "",
+                                              "",
+                                              Timestamp.now(),
+                                              Timestamp.now(),
+                                              widget.p.EmpId,
+                                              widget.p.EmployeeName,
+                                              widget.p.PatrolCompanyID,
+                                              "",
+                                              widget.p.PatrolClientID);
                                           showSuccessToast(context,
                                               "${checkpoint.description} scanned ");
                                           _refresh();
@@ -1194,12 +1214,23 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   formattedEndDate,
                                               'ImageUrls': url['ImageUrls'],
                                               'StatusComment':
-                                                  url['StatusComment']
+                                                  url['StatusComments']
                                             };
                                           }).toList();
 
                                           String? InTime =
                                               prefs.getString("StartTime");
+                                          await fireStoreService.addToLog(
+                                              "PatrolEnded",
+                                              "",
+                                              "",
+                                              Timestamp.now(),
+                                              Timestamp.now(),
+                                              widget.p.EmpId,
+                                              widget.p.EmployeeName,
+                                              widget.p.PatrolCompanyID,
+                                              "",
+                                              widget.p.PatrolClientID);
                                           sendapiEmail(
                                               emails,
                                               "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
@@ -1298,6 +1329,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           emails.add(defaultEmail!);
                                           String? InTime =
                                               prefs.getString("StartTime");
+                                          await fireStoreService.addToLog(
+                                              "PatrolEnded",
+                                              "",
+                                              "",
+                                              Timestamp.now(),
+                                              Timestamp.now(),
+                                              widget.p.EmpId,
+                                              widget.p.EmployeeName,
+                                              widget.p.PatrolCompanyID,
+                                              "",
+                                              widget.p.PatrolClientID);
                                           sendapiEmail(
                                               emails,
                                               "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",

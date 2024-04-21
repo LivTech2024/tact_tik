@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:bounce/bounce.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -447,6 +448,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       bool? status =
                           await fireStoreService.checkShiftReturnTaskStatus(
                               widget.EmployeId, widget.ShiftId);
+                      await fireStoreService.addToLog(
+                          'ShiftStarted',
+                          widget.ShiftAddressName,
+                          "",
+                          Timestamp.now(),
+                          Timestamp.now(),
+                          widget.EmployeId,
+                          widget.EmployeeName,
+                          widget.ShiftCompanyId,
+                          widget.ShiftBranchId,
+                          widget.ShiftClientID);
                       setState(() {
                         if (!clickedIn) {
                           clickedIn = true;
@@ -455,8 +467,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           inTime = currentTime;
                           prefs.setInt('savedInTime',
                               currentTime.millisecondsSinceEpoch);
-
-                          fireStoreService.INShiftLog(widget.EmployeId);
+                          Timestamp.now();
                           if (status == false) {
                             print("Staus is false");
                           } else {
@@ -518,7 +529,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           widget.resetShiftStarted();
                           prefs.setBool('ShiftStarted', false);
                         });
-
+                        await fireStoreService.addToLog(
+                            'ShiftEnd',
+                            widget.ShiftAddressName,
+                            "",
+                            Timestamp.now(),
+                            Timestamp.now(),
+                            widget.EmployeId,
+                            widget.EmployeeName,
+                            widget.ShiftCompanyId,
+                            widget.ShiftBranchId,
+                            widget.ShiftClientID);
                         await fireStoreService.EndShiftLog(
                             widget.EmployeId,
                             formattedStopwatchTime,
@@ -596,6 +617,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     });
                     // isPaused ? stopStopwatch() : startStopwatch();
                     if (isPaused) {
+                      await fireStoreService.addToLog(
+                          'ShiftBreak',
+                          widget.ShiftAddressName,
+                          "",
+                          Timestamp.now(),
+                          Timestamp.now(),
+                          widget.EmployeId,
+                          widget.EmployeeName,
+                          widget.ShiftCompanyId,
+                          widget.ShiftBranchId,
+                          widget.ShiftClientID);
                       stopStopwatch();
                       setState(() {
                         onBreak = true;
@@ -604,7 +636,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       fireStoreService.BreakShiftLog(widget.EmployeId);
                     } else {
                       onBreak = false;
-
+                      await fireStoreService.addToLog(
+                          'ShiftResume',
+                          widget.ShiftAddressName,
+                          "",
+                          Timestamp.now(),
+                          Timestamp.now(),
+                          widget.EmployeId,
+                          widget.EmployeeName,
+                          widget.ShiftCompanyId,
+                          widget.ShiftBranchId,
+                          widget.ShiftClientID);
                       prefs.setBool('onBreak', onBreak);
                       startStopwatch();
                       fireStoreService.ResumeShiftLog(widget.EmployeId);

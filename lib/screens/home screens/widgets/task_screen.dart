@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
@@ -350,6 +351,18 @@ class _TaskScreenState extends State<TaskScreen> {
                             bool? taskStatus =
                                 await fireStoreService.checkShiftTaskStatus(
                                     widget.empId, widget.shiftId);
+
+                            // await fireStoreService.addToLog(
+                            //     'ShiftStarted',
+                            //     widget.ShiftLocation,
+                            //     "",
+                            //     Timestamp.now(),
+                            //     Timestamp.now(),
+                            //     widget.empId,
+                            //     widget.EmpName,
+                            //     widget.ShiftCompanyId,
+                            //     widget.ShiftBranchId,
+                            //     widget.ShiftClientId);
                             print("Status :$status");
                             if (status == true) {
                               if (taskStatus == false) {
@@ -398,6 +411,17 @@ class _TaskScreenState extends State<TaskScreen> {
                                     widget.shiftId, widget.EmpName);
                               });
                             } else {
+                              await fireStoreService.addToLog(
+                                  'ShiftStarted',
+                                  widget.ShiftLocation,
+                                  "",
+                                  Timestamp.now(),
+                                  Timestamp.now(),
+                                  widget.empId,
+                                  widget.EmpName,
+                                  widget.ShiftCompanyId,
+                                  widget.ShiftBranchId,
+                                  widget.ShiftClientId);
                               bool? taskStatus =
                                   await fireStoreService.checkShiftTaskStatus(
                                       widget.empId, widget.shiftId);
@@ -431,6 +455,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     'Your Shift has been Started ${widget.ShiftLocation}',
                                 'message': 'Your Message',
                               };
+
                               // await sendEmail(emailParams);
                               // print('Email sent: $result');s
                               // setState(() {

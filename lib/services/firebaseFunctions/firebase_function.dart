@@ -25,6 +25,8 @@ class FireStoreService {
       FirebaseFirestore.instance.collection("Patrols");
   final CollectionReference setting =
       FirebaseFirestore.instance.collection("Settings");
+  final CollectionReference log =
+      FirebaseFirestore.instance.collection("LogBook");
   //Get userinfo based on the useremailid
   Future<DocumentSnapshot?> getUserInfoByCurrentUserEmail() async {
     String? currentUser = storage.getItem("CurrentUser");
@@ -1899,6 +1901,48 @@ class FireStoreService {
       print(e);
     }
     return pdfDataList;
+  }
+
+  //Create log
+  Future<void> addToLog(
+      String logType,
+      String LocationName,
+      String ClientName,
+      Timestamp LogBookTimeStamp,
+      Timestamp LogBookModifiedAt,
+      String LogBookEmployeeId,
+      String LogbookEmployeeName,
+      String LogBookCompanyID,
+      String LogBookBranchID,
+      String LogBookClientID) async {
+    try {
+      final userRef = FirebaseFirestore.instance.collection('LogBook');
+
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+
+      // Create a new document in the "Log" subcollection with an auto-generated ID
+      DocumentReference newLogRef = await userRef.add({
+        'LogBookType': logType,
+        'LogBookLocation': LocationName,
+        'LogBookClientName': LocationName, // Note: Should this be ClientName?
+        'LogBookID': "", // Placeholder value
+        'LogBookTimeStamp': LogBookTimeStamp,
+        'LogBookModifiedAt': LogBookModifiedAt,
+        'LogBookEmployeeId': LogBookEmployeeId,
+        'LogbookEmployeeName': LogbookEmployeeName,
+        'LogBookCompanyID': LogBookCompanyID,
+        'LogBookBranchID': LogBookBranchID,
+        'LogBookClientID': LogBookClientID,
+      });
+
+      // Update the document to set LogBookID to the document ID
+      await newLogRef.update({'LogBookID': newLogRef.id});
+
+      print('Shift start logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift start: $e');
+    }
   }
 }
 
