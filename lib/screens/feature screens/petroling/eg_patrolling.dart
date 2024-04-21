@@ -1221,6 +1221,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           Timestamp patrolOutTimestamp =
                                               Timestamp.fromDate(
                                                   DateTime.now());
+                                          num count =
+                                              widget.p.CompletedCount + 1;
                                           await fireStoreService
                                               .fetchAndCreatePatrolLogs(
                                                   widget.p.PatrolId,
@@ -1265,8 +1267,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.EmployeeName,
                                               InTime,
                                               formattedEndTime,
-                                              widget.p.CompletedCount
-                                                  .toString(),
+                                              count.toString(),
                                               widget.p.PatrolRequiredCount
                                                   .toString(),
                                               widget.p.description,
@@ -1382,6 +1383,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.PatrolCompanyID,
                                               "",
                                               widget.p.PatrolClientID);
+                                          num newCount =
+                                              widget.p.CompletedCount;
                                           sendapiEmail(
                                               emails,
                                               "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
@@ -1393,8 +1396,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.EmployeeName,
                                               InTime,
                                               formattedEndTime,
-                                              widget.p.CompletedCount
-                                                  .toString(),
+                                              newCount.toString(),
                                               widget.p.PatrolRequiredCount
                                                   .toString(),
                                               widget.p.description,

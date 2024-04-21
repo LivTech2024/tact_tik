@@ -77,6 +77,37 @@ Future<bool> sendFormattedEmail(dynamic templateParams) async {
 //     // Handle failure
 //   }
 // }
+Future<void> callPdfApi() async {
+  final url = Uri.parse('https://yakpdf.p.rapidapi.com/pdf');
+
+  final headers = {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': '08788b2125msh872c59eba317b7fp15e98ajsnb0a96ec9fb5d',
+    'X-RapidAPI-Host': 'yakpdf.p.rapidapi.com',
+  };
+
+  final body = jsonEncode({
+    'source': {
+      'html':
+          '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><h1>Hello World!</h1></body></html>'
+    },
+    'pdf': {'format': 'A4', 'scale': 1, 'printBackground': true},
+    'wait': {'for': 'navigation', 'waitUntil': 'load', 'timeout': 2500}
+  });
+
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: body,
+  );
+
+  if (response.statusCode == 200) {
+    print('Response body: ${response.body}');
+  } else {
+    print(
+        'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+  }
+}
 
 Future<void> sendapiEmail(
     List<String> toEmails,
@@ -209,11 +240,8 @@ Future<void> sendapiEmail(
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
 """;
+
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -236,7 +264,36 @@ Future<void> sendapiEmail(
 }
 
 final _flutterNativeHtmlToPdfPlugin = FlutterNativeHtmlToPdf();
+Future<void> generateExampleDocument() async {
+  const htmlContent = """
+   <!DOCTYPE html>
+<html>
+<head>
+    <title>Sample HTML Page</title>
+</head>
+<body>
+    <h1>Welcome to My Website!</h1>
+    <p>This is a sample paragraph text.</p>
+    <img src="https://picsum.photos/200/300" alt="Description of the image">
+</body>
+</html>
+    """;
+
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  final targetPath = appDocDir.path;
+  const targetFileName = "mytext";
+  final generatedPdfFile = await _flutterNativeHtmlToPdfPlugin.convertHtmlToPdf(
+    html: htmlContent,
+    targetDirectory: targetPath,
+    targetName: targetFileName,
+  );
+
+  generatedPdfFilePath = generatedPdfFile?.path;
+  print(generatedPdfFile);
+}
+
 String? generatedPdfFilePath;
+
 Future<void> sendShiftEmail(
   String? ClientName,
   List<String> toEmails,
@@ -253,24 +310,21 @@ Future<void> sendShiftEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
-
   final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
-  for (var toEmail in toEmails) {
-    // Generate HTML content for each recipient
-    String patrolInfoHTML = '';
-    for (var item in Data) {
-      String checkpointImagesHTML = '';
-      for (var checkpoint in item['PatrolLogCheckPoints']) {
-        String checkpointImages = '';
-        if (checkpoint['CheckPointImage'] != null) {
-          for (var image in checkpoint['CheckPointImage']) {
-            checkpointImages +=
-                '<img src="$image" style="height: 100px;">'; // Set the height here
-          }
+  // Generate the HTML content for the email
+  String patrolInfoHTML = '';
+  for (var item in Data) {
+    String checkpointImagesHTML = '';
+    for (var checkpoint in item['PatrolLogCheckPoints']) {
+      String checkpointImages = '';
+      if (checkpoint['CheckPointImage'] != null) {
+        for (var image in checkpoint['CheckPointImage']) {
+          checkpointImages +=
+              '<img src="$image" style="height: 100px;">'; // Set the height here
         }
-        checkpointImagesHTML += '''
+      }
+      checkpointImagesHTML += '''
         <div>
           <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
           $checkpointImages
@@ -279,9 +333,9 @@ Future<void> sendShiftEmail(
           <p>Status: ${checkpoint['CheckPointStatus']}</p>
         </div>
       ''';
-      }
+    }
 
-      patrolInfoHTML += '''
+    patrolInfoHTML += '''
       <tr>
         <td>${item['PatrolLogPatrolCount']}</td>
         <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
@@ -289,9 +343,9 @@ Future<void> sendShiftEmail(
         <td>${checkpointImagesHTML}</td>
       </tr>
     ''';
-    }
+  }
 
-    final htmlcontent2 = """
+  final htmlcontent2 = """
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -299,7 +353,7 @@ Future<void> sendShiftEmail(
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Security Report</title>
         <style>
-            body {
+          body {pu
                 font-family: sans-serif;
                 margin: 0;
                 padding: 0;
@@ -375,24 +429,55 @@ Future<void> sendShiftEmail(
     </html>
   """;
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'to_email': toEmail,
-        'subject': Subject,
-        'from_name': fromName,
-        'html': htmlcontent2,
-      }),
-    );
+  // Generate the PDF
+  final pdfResponse = await http.post(
+    Uri.parse('https://yakpdf.p.rapidapi.com/pdf'),
+    headers: {
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': '08788b2125msh872c59eba317b7fp15e98ajsnb0a96ec9fb5d',
+      'X-RapidAPI-Host': 'yakpdf.p.rapidapi.com',
+    },
+    body: jsonEncode({
+      'source': {'html': "<p>html Data</p>"},
+      'pdf': {'format': 'A4', 'scale': 1, 'printBackground': true},
+      'wait': {'for': 'navigation', 'waitUntil': 'load', 'timeout': 2500}
+    }),
+  );
 
-    if (response.statusCode == 201) {
-      print('Email sent successfully');
-      // Handle success
-    } else {
-      print('Failed to send email. Status code: ${response.statusCode} ');
-      // Handle failure
+  if (pdfResponse.statusCode == 200) {
+    final pdfBytes = pdfResponse.bodyBytes;
+
+    // Attach the PDF file to the email
+    for (var toEmail in toEmails) {
+      final emailResponse = await http.post(
+        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'to_email': toEmail,
+          'subject': Subject,
+          'from_name': fromName,
+          'html': htmlcontent2,
+          'attachments': [
+            {
+              'filename': 'security_report.pdf',
+              'content': base64Encode(pdfBytes)
+            }
+          ],
+        }),
+      );
+
+      if (emailResponse.statusCode == 201) {
+        print('Email sent successfully to $toEmail');
+        // Handle success
+      } else {
+        print(
+            'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+        // Handle failure
+      }
     }
+  } else {
+    print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
+    // Handle PDF generation failure
   }
 }
 

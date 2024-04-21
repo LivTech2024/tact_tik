@@ -19,7 +19,8 @@ class HomeScreenPart1 extends StatelessWidget {
     required this.userName,
     // required this.url,
     required this.employeeImg,
-    required this.drawerOnClicked, this.showWish = true,
+    required this.drawerOnClicked,
+    this.showWish = true,
   }) : super(key: key);
 
   bool isUnread = true;
@@ -57,7 +58,10 @@ class HomeScreenPart1 extends StatelessWidget {
                     width: width / width55,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(employeeImg),
+                        image: employeeImg != null
+                            ? NetworkImage(employeeImg)
+                            : NetworkImage(
+                                'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
                         filterQuality: FilterQuality.high,
                         fit: BoxFit.cover,
                       ),
@@ -116,24 +120,26 @@ class HomeScreenPart1 extends StatelessWidget {
               ),
             ),
             SizedBox(height: height / height60),
-            showWish! ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PoppinsSemibold(
-                  text: '${greeting}',
-                  color: Primarycolor,
-                  letterSpacing: -.5,
-                  fontsize: width / width35,
-                ),
-                SizedBox(height: height / height10),
-                PoppinsLight(
-                  text: userName,
-                  color: Primarycolor,
-                  fontsize: width / width30,
-                ),
-                SizedBox(height: height / height46),
-              ],
-            ) : SizedBox(),
+            showWish!
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PoppinsSemibold(
+                        text: '${greeting}',
+                        color: Primarycolor,
+                        letterSpacing: -.5,
+                        fontsize: width / width35,
+                      ),
+                      SizedBox(height: height / height10),
+                      PoppinsLight(
+                        text: userName,
+                        color: Primarycolor,
+                        fontsize: width / width30,
+                      ),
+                      SizedBox(height: height / height46),
+                    ],
+                  )
+                : SizedBox(),
             Container(
               height: height / height64,
               padding: EdgeInsets.symmetric(horizontal: width / width10),

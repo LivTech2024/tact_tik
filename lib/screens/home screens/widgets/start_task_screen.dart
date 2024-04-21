@@ -17,6 +17,7 @@ import 'package:tact_tik/screens/feature%20screens/petroling/eg_patrolling.dart'
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/shift_return_task_screen.dart';
+import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/backgroundService/countDownTimer.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -103,12 +104,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         await fireStoreService.getClientEmail(widget.ShiftClientID);
     var AdminEmail =
         await fireStoreService.getAdminEmail(widget.ShiftCompanyId);
-    var TestinEmail = "sutarvaibhav37@gmail.com";
+    var TestinEmail = "pankaj.kumar1312@yahoo.com";
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
-    emails.add(ClientEmail!);
+    // emails.add(ClientEmail!);
     // emails.add("sutarvaibhav37@student.sfit.ac.in");
-    emails.add("sutarvaibhav37@gmail.com");
+    // emails.add("sutarvaibhav37@gmail.com");
+    var testEmail3 = "sales@tpssolution.com";
+    var testEmail4 = "ys146228@gmail.com";
     // var TestinEmail = "sutarvaibhav37@gmail.com";
     DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     String formattedStartDate = dateFormat.format(DateTime.now());
@@ -117,9 +120,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
 
     if (ClientEmail != null && AdminEmail != null) {
-      emails.add(AdminEmail);
+      // emails.add(AdminEmail);
 
-      emails.add(TestinEmail);
+      // emails.add(TestinEmail);
+      // emails.add(testEmail3);
+      emails.add(testEmail4);
 
       await sendShiftEmail(
         ClientName,
@@ -162,7 +167,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
     initPrefs();
     initStopwatch();
-    startStopwatch();
+    // startStopwatch();
+
+    checkWellnessReport(); // Call the wellness check function
   }
 
   void reload() {
@@ -184,6 +191,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     print("saved Clicked in values: ${savedClickedIn}");
     bool? pauseState = prefs.getBool('paused');
     bool? breakState = prefs.getBool('onBreak');
+
     setState(() {
       clickedIn = savedClickedIn!;
     });
@@ -274,6 +282,51 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     super.dispose();
   }
 
+  Future<void> checkWellnessReport() async {
+    print("Company Id ${widget.ShiftCompanyId}");
+
+    final interval =
+        await fireStoreService.wellnessFetch(widget.ShiftCompanyId);
+    if (interval > 0) {
+      Timer.periodic(Duration(minutes: interval), (timer) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Wellness Report',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Text(
+                'Please upload your wellness report.',
+                style: TextStyle(color: Colors.white),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Open'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WellnessCheckScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      });
+    }
+  }
+
   final LocalStorage storage = LocalStorage('ShiftDetails');
 
   @override
@@ -285,32 +338,72 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     DateFormat format = DateFormat('HH:mm');
 // Parse the shift start time from the widget
     DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
+    double getHoursDiffInTwoTimeString(String startTime, String endTime) {
+      Map<String, int> parseTime(String time) {
+        final parts = time.split(':');
+        int hour = int.parse(parts[0]);
+        int minute = int.parse(parts[1].substring(0, 2));
+        if (time.contains('PM') && hour != 12) {
+          hour += 12;
+        } else if (time.contains('AM') && hour == 12) {
+          hour = 0;
+        }
+        return {'hour': hour, 'minute': minute};
+      }
+
+      final start = parseTime(startTime);
+      final end = parseTime(endTime);
+
+      final startDateTime = DateTime(0, 1, 1, start['hour']!, start['minute']!);
+      final endDateTime = DateTime(0, 1, 1, end['hour']!, end['minute']!);
+
+      double diff = endDateTime.difference(startDateTime).inHours.toDouble();
+
+      if (diff < 0) {
+        diff += 24;
+      }
+
+      return double.parse(diff.toStringAsFixed(2));
+    }
 
 // Convert shift start time to current date for comparison
-    String lateTime = "";
-    if (inTime != null) {
-      DateTime currentTime = DateTime.now();
-      DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
-      shiftStartTime = DateTime(
-        currentTime.year,
-        currentTime.month,
-        currentTime.day,
-        shiftStartTime.hour,
-        shiftStartTime.minute,
-      );
-      Duration difference = shiftStartTime.difference(inTime!);
-      int differenceInMinutes = difference.inMinutes.abs();
+    String lateTime = ""; // Example start time// Get current time
 
-      if (differenceInMinutes > 5) {
-        int hours = differenceInMinutes ~/ 60;
-        int minutes = differenceInMinutes % 60;
-        lateTime = '${hours}Hr ${minutes}m Late';
-      }
-    }
+// Format the current time and start time as strings
+    String currentFormattedTime = DateFormat('hh:mm a').format(currentTime);
+    String startFormattedTime = DateFormat('hh:mm a')
+        .format(DateFormat('HH:mm').parse(widget.ShiftStartTime));
+
+// Calculate the difference in hours
+    double hoursDiff =
+        getHoursDiffInTwoTimeString(startFormattedTime, currentFormattedTime);
+    setState(() {
+      lateTime = hoursDiff.toString() ?? "";
+    });
+    print("Hours difference: $hoursDiff");
+    // DateTime currentTime = DateTime.now();
+    // if (inTime != null) {
+    //   DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
+    //   shiftStartTime = DateTime(
+    //     currentTime.year,
+    //     currentTime.month,
+    //     currentTime.day,
+    //     shiftStartTime.hour,
+    //     shiftStartTime.minute,
+    //   );
+    //   Duration difference = shiftStartTime.difference(inTime!);
+    //   int differenceInMinutes = difference.inMinutes.abs();
+
+    //   if (differenceInMinutes > 5) {
+    //     int hours = differenceInMinutes ~/ 60;
+    //     int minutes = differenceInMinutes % 60;
+    //     lateTime = '${hours}Hr ${minutes}m Late';
+    //   }
+    // }
     print("IN Time : ${inTime}");
     print("Elapsed  : ${_elapsedTime}");
 
-    print(lateTime);
+    print("Late Time: ${lateTime}");
     // DateTime dateTime = format.parse(widget.ShiftStartTime);
     String formattedStopwatchTime =
         '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}';
@@ -549,9 +642,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             widget.ShiftAddressName,
                             widget.ShiftBranchId,
                             widget.ShiftCompanyId,
-                            widget.EmployeeName);
+                            widget.EmployeeName,
+                            widget.ShiftClientID);
 
-                        var ClientName = fireStoreService
+                        String? ClientName = await fireStoreService
                             .getClientName(widget.ShiftClientID);
                         print("Client Name ${ClientName}");
                         var ClientEmail = fireStoreService
@@ -566,10 +660,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             widget.EmployeId, widget.ShiftId);
 
                         // generateAndOpenPDF(
-                        //     'Vaibhav',
-                        //     "sutarvaibhav37@gmail.com",
-                        //     "sutarvaibhav37@gmail.com",
-                        //     data);
+                        //     ClientName, "sutarvaibhav37@gmail.com", data);
                         //for now send email same as patrol
                         //generate the pdf
                         //add to firebase storage and then mail too
@@ -686,8 +777,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     );
   }
 
-  Future<void> generateAndOpenPDF(ClientName, ClientEmail, AdminEmal,
-      List<Map<String, dynamic>> data) async {
+  Future<void> generateAndOpenPDF(String? clientName, String adminEmail,
+      List<Map<String, dynamic>> patrolData) async {
     try {
       final pdf = pw.Document();
 
@@ -699,46 +790,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       final Uint8List logoImageBytes2 = logoImageData2.buffer.asUint8List();
       final logo1 = pw.MemoryImage(logoImageBytes1);
       final logo2 = pw.MemoryImage(logoImageBytes2);
-
-      String patrolDate = data[0]['PatrolDate'];
-      String patrolId = data[0]['PatrolId'];
-      List<dynamic> patrolLogCheckPoints = data[0]['PatrolLogCheckPoints'];
-
-      String patrolLogPatrolCount = data[0]['PatrolLogPatrolCount'];
-      String patrolLogStartedAt = data[0]['PatrolLogStartedAt'];
-      String patrolLogEndedAt = data[0]['PatrolLogEndedAt'];
-
-      final List<Map<String, dynamic>> patrolEntries = [
-        {
-          'timeIn': patrolLogStartedAt,
-          'timeOut': patrolLogEndedAt,
-          'comment': 'Hello',
-        },
-      ];
-
-      List<Map<String, dynamic>> detailedPatrolReport = [];
-      for (int i = 0; i < patrolLogCheckPoints.length; i++) {
-        Map<String, dynamic> checkPoint = patrolLogCheckPoints[i];
-        String checkPointName = checkPoint['CheckPointName'];
-        String checkPointComment = checkPoint['CheckPointComment'];
-        String checkPointImage = checkPoint['CheckPointImage'][0];
-
-        detailedPatrolReport.add({
-          'patrol': patrolLogPatrolCount,
-          'checkpointName': checkPointName,
-          'comment': checkPointComment,
-          'image': checkPointImage,
-        });
-      }
-
-      final List<pw.MemoryImage> images = [];
-      for (var entry in detailedPatrolReport) {
-        final response = await http.get(Uri.parse(entry['image']));
-        if (response.statusCode == 200) {
-          final Uint8List imageBytes = response.bodyBytes;
-          images.add(pw.MemoryImage(imageBytes));
-        }
-      }
 
       pdf.addPage(
         pw.MultiPage(
@@ -775,7 +826,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 ),
                 pw.SizedBox(height: 50),
                 pw.Text(
-                  'Dear $ClientName,\n\nI hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted:',
+                  'Dear $clientName,\n\nI hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted:',
                   style: pw.TextStyle(
                     fontSize: 14,
                   ),
@@ -843,218 +894,29 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           ),
                         ],
                       ),
-                      pw.TableRow(
-                        children: [
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text('$ClientName'),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text('20:00'),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text('06:00'),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text('April 17, 2024 - April 18, 2024'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                pw.SizedBox(height: 20),
-                pw.Text(
-                  '** Patrol Information:**',
-                  style: pw.TextStyle(
-                    fontSize: 16,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 8),
-                pw.Container(
-                  decoration: pw.BoxDecoration(
-                    border: pw.Border.all(
-                      color: PdfColors.black,
-                      width: 2,
-                    ),
-                    borderRadius: pw.BorderRadius.circular(8),
-                  ),
-                  child: pw.Table(
-                    border: null,
-                    children: [
-                      pw.TableRow(
-                        decoration: pw.BoxDecoration(
-                          color: PdfColors.blue100,
-                        ),
-                        children: [
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Patrol Count',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Patrol Time In ',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Patrol Time Out',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Comments',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      for (var i = 0; i < patrolEntries.length; i++)
+                      for (var patrol in patrolData)
                         pw.TableRow(
                           children: [
                             pw.Padding(
                               padding: pw.EdgeInsets.all(8),
-                              child: pw.Text((i + 1).toString()),
-                            ),
-                            pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
-                              child:
-                                  pw.Text(patrolEntries[i]['timeIn'] as String),
+                              child: pw.Text("Vaibhav"),
                             ),
                             pw.Padding(
                               padding: pw.EdgeInsets.all(8),
                               child: pw.Text(
-                                  patrolEntries[i]['timeOut'] as String),
+                                  patrol['PatrolId'] as String? ?? 'N/A'),
                             ),
                             pw.Padding(
                               padding: pw.EdgeInsets.all(8),
                               child: pw.Text(
-                                  patrolEntries[i]['comment'] as String),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
-                pw.SizedBox(height: 20),
-                pw.Text(
-                  '** Detailed Patrol Report:**',
-                  style: pw.TextStyle(
-                    fontSize: 16,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 8),
-                pw.Container(
-                  decoration: pw.BoxDecoration(
-                    border: pw.Border.all(
-                      color: PdfColors.black,
-                      width: 2,
-                    ),
-                    borderRadius: pw.BorderRadius.circular(8),
-                  ),
-                  child: pw.Table(
-                    border: null,
-                    children: [
-                      pw.TableRow(
-                        decoration: pw.BoxDecoration(
-                          color: PdfColors.blue100,
-                        ),
-                        children: [
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Patrol',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Checkpoint Name',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Time',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Comment',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
-                            child: pw.Text(
-                              'Image',
-                              style: pw.TextStyle(
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      for (var i = 0; i < detailedPatrolReport.length; i++)
-                        pw.TableRow(
-                          children: [
-                            pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
-                              child: pw.Text(
-                                  detailedPatrolReport[i]['patrol'] as String),
+                                  patrol['PatrolLogPatrolCount'] as String? ??
+                                      'N/A'),
                             ),
                             pw.Padding(
                               padding: pw.EdgeInsets.all(8),
-                              child: pw.Text(detailedPatrolReport[i]
-                                  ['checkpointName'] as String),
-                            ),
-                            pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
-                              child: pw.Text(
-                                  detailedPatrolReport[i]['time'] as String),
-                            ),
-                            pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
-                              child: pw.Text(
-                                  detailedPatrolReport[i]['comment'] as String),
-                            ),
-                            pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
-                              child:
-                                  pw.Image(images[i], width: 100, height: 100),
+                              child: pw.Text(patrol['PatrolLogFeedbackComment']
+                                      as String? ??
+                                  'N/A'),
                             ),
                           ],
                         ),
