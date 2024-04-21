@@ -353,7 +353,7 @@ Future<void> sendShiftEmail(
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Security Report</title>
         <style>
-          body {pu
+          body {
                 font-family: sans-serif;
                 margin: 0;
                 padding: 0;
