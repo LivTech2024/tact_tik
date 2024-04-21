@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -18,13 +21,6 @@ class LogBookScreen extends StatefulWidget {
 }
 
 class _LogBookScreenState extends State<LogBookScreen> {
-  List<Logs> logs = [
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -62,15 +58,42 @@ class _LogBookScreenState extends State<LogBookScreen> {
             centerTitle: true,
             floating: true, // Makes the app bar float above the content
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return LogBookWidget(
-                  logs: logs,
+          StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection('LogBook').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
                 );
-              },
-              childCount: 10,
-            ),
+              }
+
+              if (!snapshot.hasData) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+
+              final logBookDocs = snapshot.data!.docs;
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final logBookId = logBookDocs[index].id;
+                    final logData =
+                        logBookDocs[index].data() as Map<String, dynamic>;
+                    return LogBookWidget(
+                      logBookId: logBookId,
+                      log: Logs.fromDocument(logData),
+                    );
+                  },
+                  childCount: logBookDocs.length,
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -79,9 +102,14 @@ class _LogBookScreenState extends State<LogBookScreen> {
 }
 
 class LogBookWidget extends StatefulWidget {
-  final List<Logs> logs;
+  final String logBookId;
+  final Logs log;
 
-  const LogBookWidget({super.key, required this.logs});
+  const LogBookWidget({
+    super.key,
+    required this.logBookId,
+    required this.log,
+  });
 
   @override
   State<LogBookWidget> createState() => _LogBookWidgetState();
@@ -120,7 +148,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InterBold(
-                    text: '15/04/2023',
+                    text: widget.log.time,
                     color: Primarycolor,
                     fontsize: width / width18,
                   ),
@@ -139,11 +167,13 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             visible: expand,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.logs.map((l) {
-                return LogTypeWidget(
-                  type: LogBookEnum.CheckPoint,
-                );
-              }).toList(),
+              children: [
+                LogTypeWidget(
+                    time: LogBookEnum.CheckPoint,
+                    clientName: widget.log.clientName,
+                    location: widget.log.location,
+                    logtype: widget.log.logtype),
+              ],
             ),
           ),
         ],
@@ -153,13 +183,30 @@ class _LogBookWidgetState extends State<LogBookWidget> {
 }
 
 class Logs {
-  final String type;
+  final String time;
   final String location;
-  final String clintName;
+  final String clientName;
+  final String timeStamp;
+  final String logtype;
 
-  Logs({
-    required this.type,
-    required this.clintName,
-    required this.location,
-  });
+  Logs(
+      {required this.time,
+      required this.clientName,
+      required this.location,
+      required this.timeStamp,
+      required this.logtype});
+  factory Logs.fromDocument(Map<String, dynamic> data) {
+    Timestamp timestamp = data['LogBookTimeStamp'];
+
+    DateTime dateTime = timestamp.toDate();
+
+    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+
+    return Logs(
+        time: formattedDate,
+        location: data['LogBookLocation'] ?? '',
+        clientName: data['LogbookEmployeeName'] ?? '',
+        timeStamp: formattedDate,
+        logtype: data['LogBookType']);
+  }
 }
