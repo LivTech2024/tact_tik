@@ -1409,11 +1409,22 @@ class Checkpoint {
     required this.id,
     required this.checkPointStatus,
   });
+  bool isSameDay(Timestamp? timestamp1, Timestamp timestamp2) {
+    if (timestamp1 == null) {
+      return false; // or handle the case when timestamp1 is null
+    }
+    DateTime dateTime1 = timestamp1.toDate();
+    DateTime dateTime2 = timestamp2.toDate();
+    return dateTime1.year == dateTime2.year &&
+        dateTime1.month == dateTime2.month &&
+        dateTime1.day == dateTime2.day;
+  }
 
   String? getFirstStatus(String empId) {
     if (checkPointStatus.isNotEmpty) {
       for (var status in checkPointStatus) {
-        if (status.reportedById == empId) {
+        if (status.reportedById == empId &&
+            isSameDay(status.reportedTime, Timestamp.now())) {
           return status.status;
         }
       }

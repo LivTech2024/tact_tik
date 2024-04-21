@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCyHUl-WhmRsTsMREvW6R9tMHqFLlEJeDw</string>
+	<string>AIzaSyBEQDNAtMwiA49Yo4HmCF3cbhFnJammbyY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1014048520427</string>
+	<string>972076944226</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.avocadotech.tacttik.tactTik</string>
 	<key>PROJECT_ID</key>
-	<string>security-app-3b156</string>
+	<string>livtech-dbcf2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>security-app-3b156.appspot.com</string>
+	<string>livtech-dbcf2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1014048520427:ios:331fad72fe32dd1b0566ae</string>
+	<string>1:972076944226:ios:5e15e5d07a209a0d687a3b</string>
 </dict>
 </plist>

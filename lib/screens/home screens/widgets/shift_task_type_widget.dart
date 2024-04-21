@@ -304,8 +304,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       setState(() {
                         Result = res;
                       });
-                      showSuccessToast(context, "Scanned Id ${res}");
-                      showSuccessToast(context, "Task Id ${widget.taskId}");
+                      // showSuccessToast(context, "Scanned Id ${res}");
+                      // showSuccessToast(context, "Task Id ${widget.taskId}");
 
                       if (Result == widget.taskId) {
                         await fireStoreService.updateShiftTaskStatus(
