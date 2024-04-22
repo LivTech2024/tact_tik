@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTextfieldWidget.dart';
@@ -17,30 +18,52 @@ class CreateVisitors extends StatefulWidget {
 }
 
 class _CreateVisitorsState extends State<CreateVisitors> {
-  final TextEditingController nameController = TextEditingController();
-
-  final TextEditingController EmailController = TextEditingController();
-
-  final TextEditingController ContactNoController = TextEditingController();
-
-  final TextEditingController AssetHandoverController = TextEditingController();
-
-  final TextEditingController AssetReturnController = TextEditingController();
-
-  final TextEditingController LicensePlateNumberController =
-      TextEditingController();
-
-  final TextEditingController SetCountdownController = TextEditingController();
-
-  final TextEditingController CommentsController = TextEditingController();
-
-  final TextEditingController NoOfPersonController = TextEditingController();
-
-  final TextEditingController CompanyNameController = TextEditingController();
+  late TextEditingController nameController;
+  late TextEditingController EmailController;
+  late TextEditingController ContactNoController;
+  late TextEditingController AssetHandoverController;
+  late TextEditingController AssetReturnController;
+  late TextEditingController LicensePlateNumberController;
+  late TextEditingController SetCountdownController;
+  late TextEditingController CommentsController;
+  late TextEditingController NoOfPersonController;
+  late TextEditingController CompanyNameController;
 
   TimeOfDay? InTime;
-
   TimeOfDay? OutTime;
+
+  late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController();
+    EmailController = TextEditingController();
+    ContactNoController = TextEditingController();
+    AssetHandoverController = TextEditingController();
+    AssetReturnController = TextEditingController();
+    LicensePlateNumberController = TextEditingController();
+    SetCountdownController = TextEditingController();
+    CommentsController = TextEditingController();
+    NoOfPersonController = TextEditingController();
+    CompanyNameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    EmailController.dispose();
+    ContactNoController.dispose();
+    AssetHandoverController.dispose();
+    AssetReturnController.dispose();
+    LicensePlateNumberController.dispose();
+    SetCountdownController.dispose();
+    CommentsController.dispose();
+    NoOfPersonController.dispose();
+    CompanyNameController.dispose();
+    super.dispose();
+  }
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
     TimeOfDay? selectedTime;
@@ -79,11 +102,81 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     }
   }
 
+  void _saveVisitorData() async {
+    if (_validateInputs()) {
+      try {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        await firestore.collection('Visitors').add({
+          'in_time': InTime != null ? InTime!.format(context) : null,
+          'name': nameController.text,
+          'email': EmailController.text,
+          'contact_number': ContactNoController.text,
+          'asset_handover': AssetHandoverController.text,
+          'license_number': LicensePlateNumberController.text,
+          'set_countdown': SetCountdownController.text,
+          'comments': CommentsController.text,
+          'no_of_person': NoOfPersonController.text,
+          'company_name': CompanyNameController.text,
+        });
+        _showSnackbar('Visitor data saved successfully!');
+
+        // Clear all the controllers
+        nameController.clear();
+        EmailController.clear();
+        ContactNoController.clear();
+        AssetHandoverController.clear();
+        LicensePlateNumberController.clear();
+        SetCountdownController.clear();
+        CommentsController.clear();
+        NoOfPersonController.clear();
+        CompanyNameController.clear();
+        setState(() {
+          InTime = null;
+          OutTime = null;
+        });
+      } catch (error) {
+        _showSnackbar('Error saving visitor data: $error');
+      }
+    }
+  }
+
+  // (InTime == null && OutTime != null) ||
+  //       (InTime != null && OutTime == null)
+
+  // 1 both null
+  // intime != null outTime == null
+
+  bool _validateInputs() {
+    print('Email Controller = ${EmailController.text}');
+    if ((InTime == null && OutTime == null) ||
+        nameController.text.isEmpty ||
+        EmailController.text.isEmpty ||
+        ContactNoController.text.isEmpty ||
+        AssetHandoverController.text.isEmpty ||
+        LicensePlateNumberController.text.isEmpty ||
+        SetCountdownController.text.isEmpty ||
+        CommentsController.text.isEmpty ||
+        NoOfPersonController.text.isEmpty ||
+        CompanyNameController.text.isEmpty) {
+      _showSnackbar('Please fill in all fields correctly');
+      return false;
+    }
+    return true;
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
+    var isFieldEnabled = false;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -120,22 +213,26 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: height / height30),
-                    InterBold(text: 'Add Visitor' , color: Primarycolor, fontsize: width / width20,),
+                    InterBold(
+                      text: 'Add Visitor',
+                      color: Primarycolor,
+                      fontsize: width / width20,
+                    ),
                     SizedBox(height: height / height30),
                     Row(
                       children: [
                         SetTimeWidget(
                           hintText: InTime == null ? 'In Time' : '${InTime}',
-                          // icon: Icons.access_time_rounded,
                           onTap: () => _selectTime(context, true),
                           flex: 2,
+                          isEnabled: true,
                         ),
                         SizedBox(width: width / width6),
                         SetTimeWidget(
                           hintText: OutTime == null ? 'Out Time' : '${OutTime}',
-                          // icon: Icons.access_time_rounded,
                           onTap: () => _selectTime(context, false),
                           flex: 2,
+                          isEnabled: false,
                         ),
                       ],
                     ),
@@ -163,6 +260,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     SetTextfieldWidget(
                       hintText: 'Asset Return',
                       controller: AssetReturnController,
+                      isEnabled: isFieldEnabled,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
@@ -189,10 +287,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                       hintText: 'Company Name',
                       controller: CompanyNameController,
                     ),
-                    SizedBox(height: height / height30,),
+                    SizedBox(
+                      height: height / height30,
+                    ),
                     Button1(
                       text: 'Save',
-                      onPressed: () {},
+                      onPressed: _saveVisitorData,
                       backgroundcolor: Primarycolor,
                       color: color22,
                       borderRadius: width / width10,

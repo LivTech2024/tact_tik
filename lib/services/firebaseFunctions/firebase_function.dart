@@ -1923,10 +1923,13 @@ class FireStoreService {
       String LogBookBranchID,
       String LogBookClientID) async {
     try {
-      final userRef = FirebaseFirestore.instance.collection('LogBook');
+      final now = DateTime.now();
+      final formatedDate = DateFormat('dd-M-yyyy').format(now);
 
-      // Get the current system time
-      DateTime currentTime = DateTime.now();
+      final userRef = FirebaseFirestore.instance
+          .collection('Dates')
+          .doc(formatedDate)
+          .collection('Logs');
 
       // Create a new document in the "Log" subcollection with an auto-generated ID
       DocumentReference newLogRef = await userRef.add({
@@ -1946,7 +1949,7 @@ class FireStoreService {
       // Update the document to set LogBookID to the document ID
       await newLogRef.update({'LogBookID': newLogRef.id});
 
-      print('Shift start logged at $currentTime');
+      // print('Shift start logged at $currentTime');
     } catch (e) {
       print('Error logging shift start: $e');
     }

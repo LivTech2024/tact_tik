@@ -13,12 +13,14 @@ class SetTimeWidget extends StatelessWidget {
     this.controller,
     required this.onTap,
     this.flex = 1,
+    this.isEnabled = true, // Add a new parameter to control enabling/disabling
   });
 
   final String hintText;
   final TextEditingController? controller;
   final VoidCallback onTap;
   final int flex;
+  final bool isEnabled; // New parameter to control enabling/disabling
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +40,15 @@ class SetTimeWidget extends StatelessWidget {
         ),
         // margin: EdgeInsets.only(top: height / height10 ,),
         child: Center(
-          child: GestureDetector(
-            onTap: onTap,
-            child: InterMedium(
-              text: hintText,
-              fontsize: width / width18,
-              color: color25,
+          child: IgnorePointer(
+            ignoring: !isEnabled, // Ignore pointer events based on isEnabled
+            child: GestureDetector(
+              onTap: onTap,
+              child: InterMedium(
+                text: hintText,
+                fontsize: width / width18,
+                color: color25,
+              ),
             ),
           ),
         ),
