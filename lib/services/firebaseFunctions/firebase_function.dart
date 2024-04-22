@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
@@ -315,6 +317,11 @@ class FireStoreService {
             'StatusReportedById': statusReportedById,
             'StatusReportedTime': Timestamp.now(),
           });
+        } else {
+          // Update the existing status with the current timestamp and 'unchecked' status
+          checkPointStatuses[existingIndex]['Status'] = 'unchecked';
+          checkPointStatuses[existingIndex]['StatusReportedTime'] =
+              Timestamp.now();
         }
 
         // Update the CheckPointStatus in the checkpoint
@@ -377,8 +384,8 @@ class FireStoreService {
         currentStatusList[existingIndex]['Status'] = "completed";
         currentStatusList[existingIndex]['StatusReportedByName'] =
             statusReportedByName;
-        currentStatusList[existingIndex]['StatusReportedTime'] =
-            Timestamp.now();
+        // currentStatusList[existingIndex]['StatusReportedTime'] =
+        //     Timestamp.now();
         currentStatusList[existingIndex]['StatusCompletedCount'] =
             (currentStatusList[existingIndex]['StatusCompletedCount'] ?? 0) + 1;
       } else {
@@ -430,7 +437,7 @@ class FireStoreService {
       checkpoints.forEach((checkpoint) {
         List<dynamic> status = List.from(checkpoint['CheckPointStatus']);
         status.forEach((entry) {
-          entry['Status'] = 'checked';
+          // entry['Status'] = 'checked';
           // entry['StatusReportedTime'] = Timestamp.now();
         });
       });
@@ -1469,6 +1476,44 @@ class FireStoreService {
     }
   }
 
+  //add pdf to firebase storage
+  String randomAlphaNumeric(int length) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    Random rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+  }
+
+  Future<String> uploadFileToStorage(Uint8List fileBytes) async {
+    try {
+      // Generate a unique filename
+      String uniqueFilename =
+          'shift_report_${DateTime.now().millisecondsSinceEpoch}_${randomAlphaNumeric(5)}.pdf';
+
+      // Create a temporary file
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = '${tempDir.path}/$uniqueFilename';
+      File tempFile = File(tempPath);
+      await tempFile.writeAsBytes(fileBytes);
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref =
+          storage.ref().child("employees/ShiftReport/$uniqueFilename");
+      UploadTask uploadTask = ref.putFile(tempFile);
+
+      await uploadTask;
+      String downloadURL = await ref.getDownloadURL();
+
+      // Delete the temporary file
+      await tempFile.delete();
+
+      return downloadURL;
+    } catch (e) {
+      print('Failed to upload file: $e');
+      return "";
+    }
+  }
+
   //Add report pdf to storage
   Future<String> uploadPdfToStorage(File file, String ShiftId) async {
     try {
@@ -1894,6 +1939,7 @@ class FireStoreService {
           .collection('PatrolLogs')
           .where('PatrolId', whereIn: shiftLinkedPatrolIds)
           .where('PatrolLogGuardId', isEqualTo: empId)
+          .orderBy('PatrolLogPatrolCount')
           .get();
 
       // Process query results
@@ -1911,6 +1957,46 @@ class FireStoreService {
   }
 
   //Create log
+  // Future<void> addToLog(
+  //     String logType,
+  //     String LocationName,
+  //     String ClientName,
+  //     Timestamp LogBookTimeStamp,
+  //     Timestamp LogBookModifiedAt,
+  //     String LogBookEmployeeId,
+  //     String LogbookEmployeeName,
+  //     String LogBookCompanyID,
+  //     String LogBookBranchID,
+  //     String LogBookClientID) async {
+  //   try {
+  //     final userRef = FirebaseFirestore.instance.collection('LogBook');
+
+  //     // Get the current system time
+  //     DateTime currentTime = DateTime.now();
+
+  //     // Create a new document in the "Log" subcollection with an auto-generated ID
+  //     DocumentReference newLogRef = await userRef.add({
+  //       'LogBookType': logType,
+  //       'LogBookLocation': LocationName,
+  //       'LogBookClientName': LocationName, // Note: Should this be ClientName?
+  //       'LogBookID': "", // Placeholder value
+  //       'LogBookTimeStamp': LogBookTimeStamp,
+  //       'LogBookModifiedAt': LogBookModifiedAt,
+  //       'LogBookEmployeeId': LogBookEmployeeId,
+  //       'LogbookEmployeeName': LogbookEmployeeName,
+  //       'LogBookCompanyID': LogBookCompanyID,
+  //       'LogBookBranchID': LogBookBranchID,
+  //       'LogBookClientID': LogBookClientID,
+  //     });
+
+  //     // Update the document to set LogBookID to the document ID
+  //     await newLogRef.update({'LogBookID': newLogRef.id});
+
+  //     print('Shift start logged at $currentTime');
+  //   } catch (e) {
+  //     print('Error logging shift start: $e');
+  //   }
+  // }
   Future<void> addToLog(
       String logType,
       String LocationName,
@@ -1923,10 +2009,13 @@ class FireStoreService {
       String LogBookBranchID,
       String LogBookClientID) async {
     try {
-      final userRef = FirebaseFirestore.instance.collection('LogBook');
+      final now = DateTime.now();
+      final formatedDate = DateFormat('dd-M-yyyy').format(now);
 
-      // Get the current system time
-      DateTime currentTime = DateTime.now();
+      final userRef = FirebaseFirestore.instance
+          .collection('Dates')
+          .doc(formatedDate)
+          .collection('Logs');
 
       // Create a new document in the "Log" subcollection with an auto-generated ID
       DocumentReference newLogRef = await userRef.add({
@@ -1946,9 +2035,61 @@ class FireStoreService {
       // Update the document to set LogBookID to the document ID
       await newLogRef.update({'LogBookID': newLogRef.id});
 
-      print('Shift start logged at $currentTime');
+      // print('Shift start logged at $currentTime');
     } catch (e) {
       print('Error logging shift start: $e');
+    }
+  }
+
+  //
+  Future<void> changePatrolStatus(String shiftId, String empId) async {
+    // Fetch ShiftLinkedPatrolIds from the Shifts collection
+    DocumentSnapshot shiftSnapshot = await FirebaseFirestore.instance
+        .collection('Shifts')
+        .doc(shiftId)
+        .get();
+    List<String> shiftLinkedPatrolIds =
+        List<String>.from(shiftSnapshot['ShiftLinkedPatrolIds'] ?? []);
+
+    print('ShiftLinkedPatrolIds: $shiftLinkedPatrolIds');
+
+    // Update Patrol documents for each patrolId in ShiftLinkedPatrolIds
+    for (String patrolId in shiftLinkedPatrolIds) {
+      DocumentSnapshot patrolSnapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .doc(patrolId)
+          .get();
+      print("Patrol Fetch for changing status ${patrolSnapshot}");
+      // Check if PatrolCurrentStatus field exists in the document
+      if (patrolSnapshot.exists &&
+          (patrolSnapshot.data() as Map<String, dynamic>)
+              .containsKey('PatrolCurrentStatus')) {
+        List<dynamic> currentStatusList =
+            List<dynamic>.from(patrolSnapshot['PatrolCurrentStatus'] ?? []);
+
+        print('PatrolCurrentStatus for patrolId $patrolId: $currentStatusList');
+
+        // Update PatrolCurrentStatus array
+        List<dynamic> updatedStatusList = [];
+        for (var status in currentStatusList) {
+          if (status['StatusReportedById'] == empId) {
+            if (status['StatusCompletedCount'] != 0) {
+              status['StatusCompletedCount'] = 0;
+              updatedStatusList.add(status);
+            }
+          } else {
+            updatedStatusList.add(status);
+          }
+        }
+
+        // Update Patrol document with the updated PatrolCurrentStatus array
+        await FirebaseFirestore.instance
+            .collection('Patrols')
+            .doc(patrolId)
+            .update({
+          'PatrolCurrentStatus': updatedStatusList,
+        });
+      }
     }
   }
 }

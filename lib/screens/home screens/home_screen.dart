@@ -37,6 +37,7 @@ import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
 import '../feature screens/pani button/panic_button.dart';
+import '../feature screens/visitors/visitors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -556,7 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     DarDisplayScreen(
-                                                      EmpEmail: _employeeId,
+                                                      EmpEmail: _empEmail,
                                                     )));
                                         break;
                                       case 6:
@@ -565,6 +566,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     LogBookScreen()));
+                                        break;
+                                      case 7:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VisiTorsScreen()));
                                         break;
                                       default:
                                     }
