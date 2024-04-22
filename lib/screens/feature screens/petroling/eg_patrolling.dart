@@ -227,11 +227,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           child: CustomScrollView(
             // physics: const PageScrollPhysics(),
             slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: height / height30,
-                ),
-              ),
               SliverAppBar(
                 backgroundColor: AppBarcolor,
                 elevation: 0,
@@ -257,11 +252,19 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 centerTitle: true,
                 floating: true, // Makes the app bar float above the content
               ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: height / height30,
+                ),
+              ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     Patrol p = patrolsData[index];
-                    return PatrollingWidget(p: p, onRefresh: _refreshData);
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width / width30),
+                      child: PatrollingWidget(p: p, onRefresh: _refreshData),
+                    );
                   },
                   childCount: patrolsData.length,
                 ),

@@ -22,6 +22,7 @@ class DarDisplayScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('DAR')
