@@ -303,7 +303,8 @@ Future<File> savePdfLocally(String pdfBase64, String fileName) async {
   return file;
 }
 
-Future<void> generateShiftReportPdf(
+FireStoreService fireStoreService = FireStoreService();
+Future<String> generateShiftReportPdf(
   String? ClientName,
   List<Map<String, dynamic>> Data,
   String GuardName,
@@ -446,14 +447,18 @@ Best regards,</p>
 
   if (pdfResponse.statusCode == 200) {
     print('PDF generated successfully');
-    // Handle success
+    final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);
+    final downloadurl =
+        await fireStoreService.uploadFileToStorage(pdfResponse.bodyBytes);
+    return downloadurl;
   } else {
     print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
-    // Handle failure
+    throw Exception('Failed to generate PDF');
   }
 }
 
-FireStoreService fireStoreService = FireStoreService();
+final dateFormat = DateFormat('HH:mm'); // Define the format for time
+
 Future<void> sendShiftEmail(
   String? ClientName,
   List<String> toEmails,
@@ -470,10 +475,7 @@ Future<void> sendShiftEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final dateFormat = DateFormat('HH:mm'); // Define the format for time
-  final pdf = pw.Document();
-
-  await generateShiftReportPdf(
+  final downloadUrl = await generateShiftReportPdf(
       ClientName, Data, GuardName, shiftinTime, shiftOutTime);
 
   // Generate the HTML content for the email
@@ -594,58 +596,32 @@ invaluable to us.</p>
         <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
 Best regards,</p>
         <p>TEAM TACTTIK<p>
+        <p>Download the detailed report <a href='${downloadUrl}'>here</a>.</p>
     </body>
     </html>
   """;
 
-  // Generate the PDF
-  final pdfResponse = await http.post(
-    Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf'),
-    headers: {'Content-Type': 'application/json'},
-    body: json.encode({
-      'html': htmlcontent2,
-      'file_name': 'security_report.pdf',
-    }),
-  );
+  // Send the email
+  for (var toEmail in toEmails) {
+    final emailResponse = await http.post(
+      Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'to_email': toEmail,
+        'subject': Subject,
+        'from_name': fromName,
+        'html': htmlcontent2,
+      }),
+    );
 
-  if (pdfResponse.statusCode == 200) {
-    print('PDF generated successfully');
-    final pdfBase64 = base64Encode(pdfResponse.bodyBytes);
-
-    final attachments = [
-      {
-        'filename': 'security_report.pdf',
-        'content': pdfBase64,
-        'contentType': 'application/pdf',
-      }
-    ];
-
-    // Attach the PDF file to the email
-    for (var toEmail in toEmails) {
-      final emailResponse = await http.post(
-        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'to_email': toEmail,
-          'subject': Subject,
-          'from_name': fromName,
-          'html': htmlcontent2,
-          'attachments': attachments,
-        }),
-      );
-
-      if (emailResponse.statusCode == 201) {
-        print('Email sent successfully to $toEmail');
-        // Handle success
-      } else {
-        print(
-            'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
-        // Handle failure
-      }
+    if (emailResponse.statusCode == 201) {
+      print('Email sent successfully to $toEmail');
+      // Handle success
+    } else {
+      print(
+          'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+      // Handle failure
     }
-  } else {
-    print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
-    // Handle PDF generation failure
   }
 }
 

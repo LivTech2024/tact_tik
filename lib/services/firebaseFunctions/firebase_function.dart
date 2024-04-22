@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -1476,16 +1477,28 @@ class FireStoreService {
   }
 
   //add pdf to firebase storage
+  String randomAlphaNumeric(int length) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    Random rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+  }
+
   Future<String> uploadFileToStorage(Uint8List fileBytes) async {
     try {
+      // Generate a unique filename
+      String uniqueFilename =
+          'shift_report_${DateTime.now().millisecondsSinceEpoch}_${randomAlphaNumeric(5)}.pdf';
+
       // Create a temporary file
       final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/temp.pdf';
+      final tempPath = '${tempDir.path}/$uniqueFilename';
       File tempFile = File(tempPath);
       await tempFile.writeAsBytes(fileBytes);
 
       FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref = storage.ref().child("employees/ShiftReport/temp.pdf");
+      Reference ref =
+          storage.ref().child("employees/ShiftReport/$uniqueFilename");
       UploadTask uploadTask = ref.putFile(tempFile);
 
       await uploadTask;
@@ -1926,6 +1939,7 @@ class FireStoreService {
           .collection('PatrolLogs')
           .where('PatrolId', whereIn: shiftLinkedPatrolIds)
           .where('PatrolLogGuardId', isEqualTo: empId)
+          .orderBy('PatrolLogPatrolCount')
           .get();
 
       // Process query results
@@ -1943,6 +1957,46 @@ class FireStoreService {
   }
 
   //Create log
+  // Future<void> addToLog(
+  //     String logType,
+  //     String LocationName,
+  //     String ClientName,
+  //     Timestamp LogBookTimeStamp,
+  //     Timestamp LogBookModifiedAt,
+  //     String LogBookEmployeeId,
+  //     String LogbookEmployeeName,
+  //     String LogBookCompanyID,
+  //     String LogBookBranchID,
+  //     String LogBookClientID) async {
+  //   try {
+  //     final userRef = FirebaseFirestore.instance.collection('LogBook');
+
+  //     // Get the current system time
+  //     DateTime currentTime = DateTime.now();
+
+  //     // Create a new document in the "Log" subcollection with an auto-generated ID
+  //     DocumentReference newLogRef = await userRef.add({
+  //       'LogBookType': logType,
+  //       'LogBookLocation': LocationName,
+  //       'LogBookClientName': LocationName, // Note: Should this be ClientName?
+  //       'LogBookID': "", // Placeholder value
+  //       'LogBookTimeStamp': LogBookTimeStamp,
+  //       'LogBookModifiedAt': LogBookModifiedAt,
+  //       'LogBookEmployeeId': LogBookEmployeeId,
+  //       'LogbookEmployeeName': LogbookEmployeeName,
+  //       'LogBookCompanyID': LogBookCompanyID,
+  //       'LogBookBranchID': LogBookBranchID,
+  //       'LogBookClientID': LogBookClientID,
+  //     });
+
+  //     // Update the document to set LogBookID to the document ID
+  //     await newLogRef.update({'LogBookID': newLogRef.id});
+
+  //     print('Shift start logged at $currentTime');
+  //   } catch (e) {
+  //     print('Error logging shift start: $e');
+  //   }
+  // }
   Future<void> addToLog(
       String logType,
       String LocationName,
@@ -1955,10 +2009,13 @@ class FireStoreService {
       String LogBookBranchID,
       String LogBookClientID) async {
     try {
-      final userRef = FirebaseFirestore.instance.collection('LogBook');
+      final now = DateTime.now();
+      final formatedDate = DateFormat('dd-M-yyyy').format(now);
 
-      // Get the current system time
-      DateTime currentTime = DateTime.now();
+      final userRef = FirebaseFirestore.instance
+          .collection('Dates')
+          .doc(formatedDate)
+          .collection('Logs');
 
       // Create a new document in the "Log" subcollection with an auto-generated ID
       DocumentReference newLogRef = await userRef.add({
@@ -1978,7 +2035,7 @@ class FireStoreService {
       // Update the document to set LogBookID to the document ID
       await newLogRef.update({'LogBookID': newLogRef.id});
 
-      print('Shift start logged at $currentTime');
+      // print('Shift start logged at $currentTime');
     } catch (e) {
       print('Error logging shift start: $e');
     }

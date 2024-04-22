@@ -1008,6 +1008,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                 ElevatedButton(
                                                                   onPressed:
                                                                       () async {
+                                                                    setState(
+                                                                        () {
+                                                                      _isLoading =
+                                                                          true;
+                                                                    });
                                                                     // Logic to submit the report
                                                                     if (uploads
                                                                             .isNotEmpty ||

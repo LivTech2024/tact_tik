@@ -556,7 +556,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     DarDisplayScreen(
-                                                      EmpEmail: _employeeId,
+                                                      EmpEmail: _empEmail,
                                                     )));
                                         break;
                                       case 6:

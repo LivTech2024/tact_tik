@@ -117,9 +117,8 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void initState() {
     super.initState();
-    isShiftStartTimeWithinRange(widget.ShiftStartTime);
+    // isShiftStartTimeWithinRange(widget.ShiftStartTime);
     _loadShiftStartedState();
-    widget;
     // issShift = widget.issShiftFetched;
   }
 
@@ -146,23 +145,23 @@ class _TaskScreenState extends State<TaskScreen> {
   //   // Check if the difference is less than or equal to 10 minutes
   //   return differenceInMinutes <= 10 && differenceInMinutes >= 0;
   // }
-  DateTime now = DateTime.now();
-  bool isShiftStartTimeWithinRange(String shiftStartTime) {
-    // Get the current date and time
+  // DateTime now = DateTime.now();
+  // bool isShiftStartTimeWithinRange(String shiftStartTime) {
+  //   // Get the current date and time
 
-    // Parse the shift start time
-    DateFormat format = DateFormat('HH:mm');
-    DateTime parsedShiftStartTime = format.parse(shiftStartTime);
+  //   // Parse the shift start time
+  //   DateFormat format = DateFormat('HH:mm');
+  //   DateTime parsedShiftStartTime = format.parse(shiftStartTime);
 
-    // Calculate the difference in minutes between the current time and shift start time
-    int differenceInMinutes = parsedShiftStartTime.difference(now).inMinutes;
-    print("Shift Start TIme :${shiftStartTime}");
-    print("parsedShiftStartTime :${parsedShiftStartTime}");
-    print("differenceInMinutes :${differenceInMinutes}");
+  //   // Calculate the difference in minutes between the current time and shift start time
+  //   int differenceInMinutes = parsedShiftStartTime.difference(now).inMinutes;
+  //   print("Shift Start TIme :${shiftStartTime}");
+  //   print("parsedShiftStartTime :${parsedShiftStartTime}");
+  //   print("differenceInMinutes :${differenceInMinutes}");
 
-    // Check if the difference is less than or equal to 10 minutes
-    return differenceInMinutes >= -10 && differenceInMinutes <= 0;
-  }
+  //   // Check if the difference is less than or equal to 10 minutes
+  //   return differenceInMinutes >= -10 && differenceInMinutes <= 0;
+  // }
 
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -258,7 +257,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           InterBold(
-                                            text: widget.ShiftDate,
+                                            text: widget.ShiftDate ?? "",
                                             color: Colors.white,
                                             fontsize: width / width18,
                                           ),
