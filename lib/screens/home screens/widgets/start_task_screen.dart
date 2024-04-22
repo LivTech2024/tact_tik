@@ -107,8 +107,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var TestinEmail = "pankaj.kumar1312@yahoo.com";
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
-    emails.add(ClientEmail!);
-    emails.add("sutarvaibhav37@student.sfit.ac.in");
+    // emails.add(ClientEmail!);
+    // emails.add("sutarvaibhav37@student.sfit.ac.in");
     emails.add("sutarvaibhav37@gmail.com");
     var testEmail3 = "sales@tpssolution.com";
     var testEmail5 = "pankaj.kumar1312@yahoo.com";
@@ -122,11 +122,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
 
     if (ClientEmail != null && AdminEmail != null) {
-      emails.add(AdminEmail);
+      // emails.add(AdminEmail);
 
-      emails.add(TestinEmail);
-      emails.add(testEmail3);
-      emails.add(testEmail5);
+      // emails.add(TestinEmail);
+      // emails.add(testEmail3);
+      // emails.add(testEmail5);
 
       await sendShiftEmail(
         ClientName,
@@ -168,7 +168,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     inTime = DateTime.now();
 
     initPrefs();
-    initStopwatch();
+    // initStopwatch();
     // startStopwatch();
 
     checkWellnessReport(); // Call the wellness check function
@@ -329,7 +329,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  final LocalStorage storage = LocalStorage('ShiftDetails');
+  // final LocalStorage storage = LocalStorage('ShiftDetails');
 
   @override
   Widget build(BuildContext context) {
@@ -370,6 +370,38 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
 // Convert shift start time to current date for comparison
     String lateTime = ""; // Example start time// Get current time
+    String? getLateTime(int differenceInMinutes) {
+      if (differenceInMinutes > 10) {
+        int lateHours = differenceInMinutes ~/ 60;
+        int lateMinutes = differenceInMinutes % 60;
+        return '$lateHours hours and $lateMinutes minutes late';
+      } else {
+        return null; // Return null if not late
+      }
+    }
+
+    String? isShiftStartTimeWithinRange(String shiftStartTime) {
+      // Get the current date and time
+      DateTime now = DateTime.now();
+
+      // Combine the current date with the shift start time
+      String combinedDateTime =
+          '${now.year}-${now.month}-${now.day} $shiftStartTime';
+
+      // Parse the combined date and time
+      DateFormat format = DateFormat('yyyy-MM-dd HH:mm');
+      DateTime parsedShiftStartTime = format.parse(combinedDateTime);
+
+      // Calculate the difference in minutes between the current time and shift start time
+      int differenceInMinutes = parsedShiftStartTime.difference(now).inMinutes;
+      print("Difference in minutes ${differenceInMinutes}");
+      // Check if the difference is less than or equal to 10 minutes
+      if (differenceInMinutes <= -10) {
+        return null;
+      } else {
+        return getLateTime(differenceInMinutes);
+      }
+    }
 
 // Format the current time and start time as strings
     String currentFormattedTime = DateFormat('hh:mm a').format(currentTime);
@@ -377,12 +409,41 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         .format(DateFormat('HH:mm').parse(widget.ShiftStartTime));
 
 // Calculate the difference in hours
-    double hoursDiff =
-        getHoursDiffInTwoTimeString(startFormattedTime, currentFormattedTime);
-    setState(() {
-      lateTime = hoursDiff.toString() ?? "";
-    });
-    print("Hours difference: $hoursDiff");
+    String calculateLateTime(String shiftStartTime) {
+      final now = DateTime.now();
+      final shiftTime =
+          DateTime.parse(shiftStartTime); // Parse shift start time
+
+      final duration = now.difference(shiftTime); // Calculate time difference
+
+      // Check if difference is negative (shift hasn't started yet)
+      if (duration.isNegative) {
+        return ''; // No late time yet
+      }
+
+      final lateHours = duration.inHours.abs(); // Get absolute value of hours
+      final lateMinutes =
+          (duration.inMinutes % 60).abs(); // Get remaining minutes (0-59)
+
+      String lateTimeString = '';
+      if (lateHours > 0) {
+        lateTimeString += '$lateHours hr';
+        if (lateMinutes > 0) {
+          lateTimeString += ' $lateMinutes min';
+        }
+      } else if (lateMinutes > 10) {
+        lateTimeString = '$lateMinutes min';
+      }
+      print(lateTimeString);
+      return lateTimeString; // Return formatted late time
+    }
+
+    // double hoursDiff =
+    //     getHoursDiffInTwoTimeString(startFormattedTime, currentFormattedTime);
+    // setState(() {
+    //   lateTime = "";
+    // });
+    // print("Hours difference: $hoursDiff");
     // DateTime currentTime = DateTime.now();
     // if (inTime != null) {
     //   DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
@@ -540,8 +601,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ignoring: clickedIn,
                   child: Bounce(
                     onTap: () async {
+                      String time =
+                          isShiftStartTimeWithinRange(widget.ShiftStartTime) ??
+                              'On time';
+                      setState(() {
+                        lateTime = time ?? "";
+                      });
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
+                      await fireStoreService.changePatrolStatus(
+                          widget.ShiftId, widget.EmployeId);
                       bool? status =
                           await fireStoreService.checkShiftReturnTaskStatus(
                               widget.EmployeId, widget.ShiftId);
