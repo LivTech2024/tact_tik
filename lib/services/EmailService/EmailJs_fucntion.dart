@@ -368,6 +368,23 @@ Future<String> generateShiftReportPdf(
             text-align: center;
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-height: 50px; /* Set the max-height for the logos */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 1; /* Allow the <h1> to grow and fill the space */
+        }
+
         section {
             padding: 20px;
             background-color: #fff;
@@ -375,6 +392,7 @@ Future<String> generateShiftReportPdf(
             border-radius: 5px;
         }
 
+        /* Other styles for tables, images, and footer */
         table {
             border-collapse: collapse;
             width: 100%;
@@ -412,7 +430,7 @@ Future<String> generateShiftReportPdf(
 </head>
 <body>
     <header>
-        <h1>Security Report</h1>
+            <h1>Security Report</h1>
     </header>
 
     <section>

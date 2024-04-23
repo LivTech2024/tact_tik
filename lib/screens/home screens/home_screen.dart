@@ -457,16 +457,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.account_circle_outlined,
                       'Profile',
                       1,
-<<<<<<< HEAD
-                      () {},
-=======
                       () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ProfileScreen()));
                       },
->>>>>>> 287b63546de1b1eb0c6dfc31bbbba77055129d78
                     ),
                     buildListTile(
                       Icons.add_card,
