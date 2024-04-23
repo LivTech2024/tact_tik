@@ -37,7 +37,9 @@ import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
+import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
+import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/visitors/visitors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -443,49 +445,57 @@ class _HomeScreenState extends State<HomeScreen> {
                         Primarycolor, // Background color for the drawer header
                   )),
               Expanded(
-                child: Column(children: [
-                  buildListTile(
-                    Icons.door_back_door_outlined,
-                    'Home',
-                    0,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.account_circle_outlined,
-                    'Profile',
-                    1,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.add_card,
-                    'Payment',
-                    2,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.article,
-                    'Employment Letter',
-                    3,
-                    () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>  EmploymentLetterScreen()));
-                    },
-                  ),
-                  buildListTile(
-                    Icons.restart_alt,
-                    'History',
-                    4,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.settings,
-                    'Settings',
-                    5,
-                    () {},
-                  ),
-                ],),
+                child: Column(
+                  children: [
+                    buildListTile(
+                      Icons.door_back_door_outlined,
+                      'Home',
+                      0,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.account_circle_outlined,
+                      'Profile',
+                      1,
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen()));
+                      },
+                    ),
+                    buildListTile(
+                      Icons.add_card,
+                      'Payment',
+                      2,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.article,
+                      'Employment Letter',
+                      3,
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EmploymentLetterScreen()));
+                      },
+                    ),
+                    buildListTile(
+                      Icons.restart_alt,
+                      'History',
+                      4,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.settings,
+                      'Settings',
+                      5,
+                      () {},
+                    ),
+                  ],
+                ),
               ),
               ListTile(
                 leading: Icon(
@@ -640,6 +650,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DarDisplayScreen(
                                                       EmpEmail: _empEmail,
                                                     )));
+                                        break;
+                                      case 4:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PostOrder()));
                                         break;
                                       case 6:
                                         Navigator.push(
