@@ -13,10 +13,12 @@ class Button1 extends StatelessWidget {
     this.color,
     required this.onPressed,
     this.height = 65,
-    this.backgroundcolor = WidgetColor, this.borderRadius = 0,
+    this.backgroundcolor = WidgetColor, this.borderRadius = 0, this.useBorderRadius = false, this.MyBorderRadius, this.useWidget = false, this.MyWidget,
   });
 
   final bool useBold;
+  final bool useBorderRadius;
+  final bool useWidget;
   final String text;
   final double? fontsize;
   final double borderRadius;
@@ -24,6 +26,8 @@ class Button1 extends StatelessWidget {
   final Color? color;
   final Color backgroundcolor;
   final VoidCallback onPressed;
+  final BorderRadiusGeometry? MyBorderRadius;
+  final Widget? MyWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +36,12 @@ class Button1 extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: backgroundcolor,
-            borderRadius: BorderRadius.circular(borderRadius)
+            borderRadius: useBorderRadius ? MyBorderRadius : BorderRadius
+                .circular(borderRadius)
         ),
         height: height,
         child: Center(
-          child: useBold
+          child: useWidget ? MyWidget : useBold
               ? InterBold(
             text: text,
             fontsize: fontsize,

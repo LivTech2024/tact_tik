@@ -45,12 +45,15 @@ const double height144 = 6.5138888889;
 const double height150 = 6.2533333333;
 const double height180 = 5.2111111111;
 const double height250 = 3.752;
+const double height270 = 3.474074074074074;
 const double height100 = 9.38;
 const double height120 = 7.81666666667;
 const double height140 = 6.7;
 const double height160 = 5.8625;
 const double height198 = 4.7373737374;
 const double height230 = 4.0782608696;
+const double height260 = 3.6076923077;
+const double height500 = 1.876;
 const double height27 = 34.7407407407;
 const double height28 = 33.5;
 
