@@ -143,10 +143,13 @@ class LogTypeWidget extends StatelessWidget {
                         Padding(
                           padding:
                               EdgeInsets.symmetric(vertical: height / height5),
-                          child: InterMedium(
-                            text: '$location',
-                            fontsize: width / width14,
-                            color: color1,
+                          child: SizedBox(
+                            width: width / width140,
+                            child: InterMedium(
+                              text: '$location',
+                              fontsize: width / width14,
+                              color: color1,
+                            ),
                           ),
                         ),
                         InterBold(

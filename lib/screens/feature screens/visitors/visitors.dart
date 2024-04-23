@@ -113,7 +113,8 @@ class VisiTorsScreen extends StatelessWidget {
                                     height: height / height40,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
-                                          width / width10),
+                                        width / width10,
+                                      ),
                                       color: Primarycolorlight,
                                     ),
                                     child: Center(
@@ -141,13 +142,13 @@ class VisiTorsScreen extends StatelessWidget {
                                         children: [
                                           InterBold(
                                             text: 'in time',
-                                            fontsize: width / width12,
+                                            fontsize: width / width10,
                                             color: color4,
                                           ),
                                           SizedBox(width: width / width6),
                                           InterMedium(
                                             text: '11 : 36 pm',
-                                            fontsize: width / width14,
+                                            fontsize: width / width12,
                                             color: color3,
                                           )
                                         ],
@@ -156,13 +157,13 @@ class VisiTorsScreen extends StatelessWidget {
                                         children: [
                                           InterBold(
                                             text: 'out time',
-                                            fontsize: width / width12,
+                                            fontsize: width / width10,
                                             color: color4,
                                           ),
                                           SizedBox(width: width / width6),
                                           InterMedium(
                                             text: '11 : 36 pm',
-                                            fontsize: width / width14,
+                                            fontsize: width / width12,
                                             color: color3,
                                           )
                                         ],
