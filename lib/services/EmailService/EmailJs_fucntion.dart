@@ -322,7 +322,7 @@ Future<String> generateShiftReportPdf(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="height: 100px;">'; // Set the height here
+              '<img src="$image" style="max-width: 100%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
         }
       }
       checkpointImagesHTML += '''
@@ -348,74 +348,97 @@ Future<String> generateShiftReportPdf(
 
   final htmlcontent = """
     <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Security Report</title>
-        <style>
-          body {
-                font-family: sans-serif;
-                margin: 0;
-                padding: 0;
-            }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            header {
-                background-color: #ddd;
-                padding: 20px;
-                text-align: center;
-            }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
 
-            h1 {
-                margin-bottom: 0;
-            }
+        section {
+            padding: 20px;
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
 
-            table {
-                border-collapse: collapse;
-                width: 100%;
-                margin-bottom: 20px;
-            }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-            th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
-            }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-            th {
-                text-align: left;
-            }
+        th {
+            background-color: #f2f2f2;
+        }
 
-            .patrol-info tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <h1>Security Report</h1>
-        </header>
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            max-height: 200px; /* Define a max-height for the images */
+        }
 
-        <section>
-            <h2>Dear ${ClientName},</h2>
-            <p>I hope this email finds you well,I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during thier shif.Below is a detailed breakdown of the patrols conducted.</p>
-        </section>
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Security Report</h1>
+    </header>
 
+    <section>
+        <h2>Dear ${ClientName},</h2>
+        <p>I hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted.</p>
+    </section>
+
+    <section>
         <h3>Shift Information</h3>
-        <table class="shift-info">
+        <table>
             <tr>
                 <th>Guard Name</th>
                 <th>Shift Time In</th>
-                <th>Shift Time Out</th> 
+                <th>Shift Time Out</th>
             </tr>
             <tr>
-                <td> ${GuardName}</td>
+                <td>${GuardName}</td>
                 <td>${shiftinTime}</td>
                 <td>${shiftOutTime}</td>
             </tr>
         </table>
+    </section>
 
+    <section>
         <h3>Patrol Information</h3>
-        <table class="patrol-info">
+        <table>
             <tr>
                 <th>Patrol Count</th>
                 <th>Patrol Time In</th>
@@ -424,15 +447,31 @@ Future<String> generateShiftReportPdf(
             </tr>
             ${patrolInfoHTML}
         </table>
+    </section>
 
-        <p>Please review the information provided and let us know if you have any questions or require further 
-details. We are committed to ensuring the safety and security of your premises, and your feedback is 
-invaluable to us.</p>
-        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
-Best regards,</p>
-        <p>TEAM TACTTIK<p>
-    </body>
-    </html>
+    <section>
+        <h3>Comments</h3>
+        <table>
+            <tr>
+                <th>Incident</th>
+                <th>Important Note</th>
+                <th>Feedback Note</th>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
+        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.</p>
+        <p>Best regards,</p>
+        <p>TEAM TACTTIK</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
+    </footer>
+</body>
+</html>
   """;
 
   // Generate the PDF
@@ -448,16 +487,14 @@ Best regards,</p>
   if (pdfResponse.statusCode == 200) {
     print('PDF generated successfully');
     final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);
-    final downloadurl =
-        await fireStoreService.uploadFileToStorage(pdfResponse.bodyBytes);
-    return downloadurl;
+    return pdfBase64;
   } else {
     print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
     throw Exception('Failed to generate PDF');
   }
 }
 
-final dateFormat = DateFormat('HH:mm'); // Define the format for time
+final dateFormat = DateFormat('HH:mm:ss'); // Define the format for time
 
 Future<void> sendShiftEmail(
   String? ClientName,
@@ -475,7 +512,7 @@ Future<void> sendShiftEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final downloadUrl = await generateShiftReportPdf(
+  final pdfBase64 = await generateShiftReportPdf(
       ClientName, Data, GuardName, shiftinTime, shiftOutTime);
 
   // Generate the HTML content for the email
@@ -596,7 +633,6 @@ invaluable to us.</p>
         <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
 Best regards,</p>
         <p>TEAM TACTTIK<p>
-        <p>Download the detailed report <a href='${downloadUrl}'>here</a>.</p>
     </body>
     </html>
   """;
@@ -611,6 +647,13 @@ Best regards,</p>
         'subject': Subject,
         'from_name': fromName,
         'html': htmlcontent2,
+        'attachments': [
+          {
+            'filename': 'security_report.pdf',
+            'content': pdfBase64,
+            'contentType': 'application/pdf',
+          }
+        ],
       }),
     );
 
@@ -627,6 +670,7 @@ Best regards,</p>
 
 
 
+        // <p>Download the detailed report <a href='${downloadUrlValue}'>here</a>.</p>
 //  final downloadurl =
 //         await fireStoreService.uploadFileToStorage(pdfResponse.bodyBytes);
 

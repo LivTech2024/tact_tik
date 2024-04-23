@@ -109,12 +109,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
     emails.add(ClientEmail!);
-    emails.add(defaultEmail);
     // emails.add("sutarvaibhav37@student.sfit.ac.in");
-    // emails.add("sutarvaibhav37@gmail.com");
+    emails.add("sutarvaibhav37@gmail.com");
     var testEmail3 = "sales@tpssolution.com";
     var testEmail5 = "pankaj.kumar1312@yahoo.com";
-    int? savedInTimeMillis = prefs.getInt('savedInTime');
+    int? savedInTimeMillis = prefs.getInt('InTime');
     DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis!);
     DateTime savedDateTime =
         DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis);
@@ -128,10 +127,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
 
     if (ClientEmail != null && AdminEmail != null) {
-      emails.add(AdminEmail);
-      emails.add(TestinEmail);
+      // emails.add(AdminEmail);
+      // emails.add(TestinEmail);
       // emails.add(testEmail3);
-      // emails.add(testEmail4);
+      // emails.add(testEmail5);
 
       await sendShiftEmail(
         ClientName,
@@ -636,6 +635,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           prefs.setBool('clickedIn', clickedIn);
                           DateTime currentTime = DateTime.now();
                           inTime = currentTime;
+                          prefs.setInt(
+                              'InTime', currentTime.millisecondsSinceEpoch);
                           prefs.setInt('savedInTime',
                               currentTime.millisecondsSinceEpoch);
                           Timestamp.now();
