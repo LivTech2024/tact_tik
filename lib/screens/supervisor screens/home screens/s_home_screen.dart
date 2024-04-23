@@ -1,3 +1,4 @@
+import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,17 @@ import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rou
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
+import '../../../fonts/poppins_bold.dart';
 import '../../../services/auth/auth.dart';
 import '../../../utils/colors.dart';
+import '../../feature screens/pani button/panic_button.dart';
 import '../../feature screens/petroling/patrolling.dart';
 import '../../get started/getstarted_screen.dart';
+import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
+import '../features screens/create_post_order_screen.dart';
+import '../features screens/post_order_screen.dart';
 import 'Scheduling/all_schedules_screen.dart';
 
 class SHomeScreen extends StatefulWidget {
@@ -127,33 +133,90 @@ class _SHomeScreenState extends State<SHomeScreen> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
+    final List<List<String>> data = [
+      ['assets/images/panic_mode.png', 'Panic Mode'],
+      ['assets/images/site_tour.png', 'Site Tours'],
+      ['assets/images/dar.png', 'DAR'],
+      ['assets/images/reports.png', 'Reports'],
+      ['assets/images/post_order.png', 'Post Orders'],
+      ['assets/images/task.png', 'Task'],
+      ['assets/images/log_book.png', 'Log Book'],
+      ['assets/images/visitors.png', 'Visitors'],
+      ['assets/images/key&assets.png', 'Key & Assets'],
+    ];
+
+    int _selectedIndex = 0; // Index of the selected screen
+
+    void _onItemTapped(int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
+    ListTile buildListTile(IconData icon, String title, int index,
+        {bool isLogout = false}) {
+      final bool isSelected = _selectedIndex == index;
+
+      return ListTile(
+        leading: Icon(
+          icon,
+          color: isSelected
+              ? Primarycolor :color3, // Change color based on selection
+          size: width / width24,
+        ),
+        title: PoppinsBold(
+          text: title,
+            color: isSelected
+                ? Primarycolor : color3,
+          fontsize: width / width14,
+        ),
+        onTap: () {
+          if (!isLogout) {
+            _onItemTapped(index);
+          } else {
+            // Handle logout action
+          }
+        },
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
-        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKey,
         backgroundColor: Secondarycolor,
         endDrawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Primarycolor, // Background color for the drawer header
-                ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(color: Colors.white),
+          child: Column(
+            children: [
+              Container(
+                height: height / height180,
+                width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(width / width15),
+                    color: Primarycolor, // Background color for the drawer header
+                  )
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    buildListTile(Icons.home, 'Home', 0),
+                    buildListTile(Icons.account_circle_outlined, 'Profile', 1),
+                    buildListTile(Icons.add_card, 'Payment', 2),
+                    buildListTile(Icons.article, 'Employment Letter', 3),
+                    buildListTile(Icons.restart_alt, 'History', 4),
+                    buildListTile(Icons.settings, 'Settings', 5),
+                  ]
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.logout, color: Colors.red),
-                // Logout icon in red color
-                title: Text('Logout', style: TextStyle(color: Colors.red)),
-                // Logout text in red color
+                leading: Icon(Icons.logout, color: Colors.red , size: width / width24,),
+                title: PoppinsBold(text: 'Logout', color: Colors.red ,fontsize: width / width14, ),
                 onTap: () {
                   auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
+              SizedBox(
+                height: height / height20
+              )
             ],
           ),
         ),
@@ -165,12 +228,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
             physics: PageScrollPhysics(),
             slivers: [
               HomeScreenPart1(
-                  userName: _userName,
-                  // employeeImg: _userImg,
-                  employeeImg: _userImg,
-                  drawerOnClicked: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  }),
+                userName: _userName,
+                // employeeImg: _userImg,
+                employeeImg: _userImg,
+                drawerOnClicked: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
+              ),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -182,21 +246,21 @@ class _SHomeScreenState extends State<SHomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
+                          Bounce(
                             onTap: () => ChangeScreenIndex(0),
                             child: HomeScreenCustomNavigation(
                               icon: Icons.add_task,
                               color: IconColors[0],
                             ),
                           ),
-                          GestureDetector(
-                            // onTap: () => ChangeScreenIndex(1),
+                          Bounce(
+                            onTap: () => ChangeScreenIndex(1),
                             child: HomeScreenCustomNavigation(
                               icon: Icons.grid_view_rounded,
                               color: IconColors[1],
                             ),
                           ),
-                          GestureDetector(
+                          Bounce(
                             onTap: () => ChangeScreenIndex(2),
                             // onTap: () => ChangeScreenIndex(2),
                             child: HomeScreenCustomNavigation(
@@ -204,7 +268,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               color: IconColors[2],
                             ),
                           ),
-                          GestureDetector(
+                          Bounce(
                             // onTap: () => ChangeScreenIndex(3),
                             child: HomeScreenCustomNavigation(
                               icon: Icons.chat_bubble_outline,
@@ -242,7 +306,71 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         childCount: _guardsInfo.length,
                       ),
                     )
-                  : SizedBox(),
+                  : ScreenIndex == 1
+                      ? SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, // Number of columns
+                            // mainAxisSpacing: 10.0, // Spacing between rows
+                            // crossAxisSpacing: 14.0,
+                            // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return Bounce(
+                                onTap: () {
+                                  switch (index) {
+                                    // case 0:
+                                    //   showDialog(
+                                    //     context: context,
+                                    //     builder: (BuildContext context) {
+                                    //       return PanicAlertDialog();
+                                    //     },
+                                    //   );
+                                    //   break;
+                                    // case 2:
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               DarDisplayScreen(
+                                    //                 EmpEmail: _employeeId,
+                                    //               )));
+                                    //   break;
+                                    case 4:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PostOrderScreen()));
+                                      break;
+                                    // case 6:
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               LogBookScreen()));
+                                    //   break;
+                                    // case 7:
+                                    //   Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //           builder: (context) =>
+                                    //               VisiTorsScreen()));
+                                    //   break;
+                                    default:
+                                  }
+                                },
+                                child: gridWidget(
+                                  img: data[index][0],
+                                  tittle: data[index][1],
+                                ),
+                              );
+                            },
+                            childCount: 9,
+                          ),
+                        )
+                      : SliverToBoxAdapter(),
             ],
           ),
         ),
@@ -254,6 +382,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
 class HomeScreenUserCard extends StatefulWidget {
   final DocumentSnapshot<Object?> guardsInfo;
   String CompanyId;
+
   HomeScreenUserCard({
     Key? key,
     required this.guardsInfo,
@@ -389,7 +518,6 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
     );
   }
 }
-
 
 /*SliverToBoxAdapter(
                       child: ListView(

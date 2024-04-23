@@ -36,6 +36,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
+import '../SideBar Screens/employment_letter.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/visitors/visitors.dart';
 
@@ -194,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   FireStoreService fireStoreService = FireStoreService();
   final List<DateTime?> selectedDates = [];
+
   Future<void> _refresh() {
     return Future.delayed(Duration(seconds: 2));
   }
@@ -395,33 +397,112 @@ class _HomeScreenState extends State<HomeScreen> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
+    int _selectedIndex = 0; // Index of the selected screen
+
+    void _onItemTapped(int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
+    ListTile buildListTile(
+        IconData icon, String title, int index, VoidCallback onPressed,
+        {bool isLogout = false}) {
+      final bool isSelected = _selectedIndex == index;
+
+      return ListTile(
+        leading: Icon(
+          icon,
+          color: isSelected
+              ? Primarycolor
+              : color3, // Change color based on selection
+          size: width / width24,
+        ),
+        title: PoppinsBold(
+          text: title,
+          color: isSelected ? Primarycolor : color3,
+          fontsize: width / width14,
+        ),
+        onTap: onPressed,
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
         key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
-                  color: Primarycolor, // Background color for the drawer header
-                ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(color: Colors.white),
-                ),
+          child: Column(
+            children: [
+              Container(
+                  height: height / height180,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(width / width15),
+                    color:
+                        Primarycolor, // Background color for the drawer header
+                  )),
+              Expanded(
+                child: Column(children: [
+                  buildListTile(
+                    Icons.door_back_door_outlined,
+                    'Home',
+                    0,
+                    () {},
+                  ),
+                  buildListTile(
+                    Icons.account_circle_outlined,
+                    'Profile',
+                    1,
+                    () {},
+                  ),
+                  buildListTile(
+                    Icons.add_card,
+                    'Payment',
+                    2,
+                    () {},
+                  ),
+                  buildListTile(
+                    Icons.article,
+                    'Employment Letter',
+                    3,
+                    () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  EmploymentLetterScreen()));
+                    },
+                  ),
+                  buildListTile(
+                    Icons.restart_alt,
+                    'History',
+                    4,
+                    () {},
+                  ),
+                  buildListTile(
+                    Icons.settings,
+                    'Settings',
+                    5,
+                    () {},
+                  ),
+                ],),
               ),
               ListTile(
-                leading: Icon(Icons.logout, color: Colors.red),
-                // Logout icon in red color
-                title: Text('Logout', style: TextStyle(color: Colors.red)),
-                // Logout text in red color
+                leading: Icon(
+                  Icons.logout,
+                  color: Colors.red,
+                  size: width / width24,
+                ),
+                title: PoppinsBold(
+                  text: 'Logout',
+                  color: Colors.red,
+                  fontsize: width / width14,
+                ),
                 onTap: () {
                   auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
+              SizedBox(height: height / height20)
             ],
           ),
         ),

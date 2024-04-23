@@ -14,6 +14,7 @@ class ShiftReturnTaskScreen extends StatefulWidget {
   final String Empid;
   final String ShiftName;
   final String EmpName;
+
   const ShiftReturnTaskScreen(
       {super.key,
       required this.shiftId,
@@ -27,6 +28,7 @@ class ShiftReturnTaskScreen extends StatefulWidget {
 
 class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
   FireStoreService fireStoreService = FireStoreService();
+
   void initState() {
     fetchData();
   }
@@ -34,6 +36,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
   int completedTaskCount = 0;
   int totalTaskCount = 0;
   List<Map<String, dynamic>>? fetchedTasks = [];
+
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
         await fireStoreService.fetchreturnShiftTasks(widget.shiftId);
@@ -114,15 +117,19 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InterBold(
-                        text: "${widget.ShiftName}",
-                        fontsize: width / width18,
-                        color: Primarycolor,
+                      Flexible(
+                        child: InterBold(
+                          text: "${widget.ShiftName}",
+                          fontsize: width / width18,
+                          color: Primarycolor,
+                        ),
                       ),
-                      InterBold(
-                        text: '$completedTaskCount/$totalTaskCount',
-                        fontsize: width / width18,
-                        color: Primarycolor,
+                      Flexible(
+                        child: InterBold(
+                          text: '$completedTaskCount/$totalTaskCount',
+                          fontsize: width / width18,
+                          color: Primarycolor,
+                        ),
                       ),
                     ],
                   ),
