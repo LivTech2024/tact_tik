@@ -35,6 +35,7 @@ class AppView extends ConsumerWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
   final String companyId = "1iFPbYfBB1F6ymMEvEAt";
+
   static void showPopup(String message) {
     navigatorKey.currentState?.overlay?.insert(
       OverlayEntry(
