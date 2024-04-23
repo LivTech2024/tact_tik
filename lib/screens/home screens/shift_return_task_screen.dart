@@ -117,19 +117,18 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Flexible(
+                      SizedBox(
+                        width: width / width280,
                         child: InterBold(
                           text: "${widget.ShiftName}",
                           fontsize: width / width18,
                           color: Primarycolor,
                         ),
                       ),
-                      Flexible(
-                        child: InterBold(
-                          text: '$completedTaskCount/$totalTaskCount',
-                          fontsize: width / width18,
-                          color: Primarycolor,
-                        ),
+                      InterBold(
+                        text: '$completedTaskCount/$totalTaskCount',
+                        fontsize: width / width18,
+                        color: Primarycolor,
                       ),
                     ],
                   ),
