@@ -1011,6 +1011,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                 ElevatedButton(
                                                                   onPressed:
                                                                       () async {
+                                                                    setState(
+                                                                        () {
+                                                                      _isLoading =
+                                                                          true;
+                                                                    });
                                                                     // Logic to submit the report
                                                                     if (uploads
                                                                             .isNotEmpty ||
@@ -1214,12 +1219,21 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           String? InTime =
                                               prefs.getString("StartTime");
 
+                                          DateTime now = DateTime.now();
                                           DateTime inTime =
                                               DateFormat("HH:mm:ss")
                                                   .parse(InTime ?? "");
-
-                                          Timestamp patrolInTimestamp =
-                                              Timestamp.fromDate(inTime);
+                                          DateTime combinedDateTime = DateTime(
+                                              now.year,
+                                              now.month,
+                                              now.day,
+                                              inTime.hour,
+                                              inTime.minute,
+                                              inTime.second);
+                                          Timestamp patrolInTimestamp = Timestamp
+                                              .fromMillisecondsSinceEpoch(
+                                                  combinedDateTime
+                                                      .millisecondsSinceEpoch);
 
                                           Timestamp patrolOutTimestamp =
                                               Timestamp.fromDate(
@@ -1241,10 +1255,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               imageUrls.map((url) {
                                             return {
                                               'StatusReportedTime':
-                                                  formattedEndDate,
+                                                  url['StatusReportedTime'],
                                               'ImageUrls': url['ImageUrls'],
                                               'StatusComment':
-                                                  url['StatusComments']
+                                                  url['StatusComment']
                                             };
                                           }).toList();
 
@@ -1270,7 +1284,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.EmployeeName,
                                               InTime,
                                               formattedEndTime,
-                                              count.toString(),
+                                              widget.p.CompletedCount + 1,
                                               widget.p.PatrolRequiredCount
                                                   .toString(),
                                               widget.p.description,
@@ -1334,7 +1348,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               imageUrls.map((url) {
                                             return {
                                               'StatusReportedTime':
-                                                  formattedEndDate,
+                                                  url['StatusReportedTime'],
                                               'ImageUrls': url['ImageUrls'],
                                               'StatusComment':
                                                   url['StatusComment']
@@ -1356,12 +1370,23 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           emails.add(defaultEmail!);
                                           String? InTime =
                                               prefs.getString("StartTime");
+                                          DateTime now = DateTime.now();
                                           DateTime inTime =
                                               DateFormat("HH:mm:ss")
                                                   .parse(InTime ?? "");
-
-                                          Timestamp patrolInTimestamp =
-                                              Timestamp.fromDate(inTime);
+                                          DateTime combinedDateTime = DateTime(
+                                              now.year,
+                                              now.month,
+                                              now.day,
+                                              inTime.hour,
+                                              inTime.minute,
+                                              inTime.second);
+                                          Timestamp patrolInTimestamp = Timestamp
+                                              .fromMillisecondsSinceEpoch(
+                                                  combinedDateTime
+                                                      .millisecondsSinceEpoch);
+                                          print(
+                                              "patrolIn time: ${patrolInTimestamp}");
                                           Timestamp patrolOutTimestamp =
                                               Timestamp.fromDate(
                                                   DateTime.now());
@@ -1399,7 +1424,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.EmployeeName,
                                               InTime,
                                               formattedEndTime,
-                                              newCount.toString(),
+                                              widget.p.CompletedCount + 1,
                                               widget.p.PatrolRequiredCount
                                                   .toString(),
                                               widget.p.description,

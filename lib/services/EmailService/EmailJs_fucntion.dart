@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emailjs/emailjs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_html_to_pdf/flutter_native_html_to_pdf.dart';
@@ -10,6 +11,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 Future<bool> sendEmail(dynamic templateParams) async {
   try {
@@ -120,7 +122,7 @@ Future<void> sendapiEmail(
     String GuardName,
     String? StartTime,
     String EndTime,
-    String patrolCount,
+    int patrolCount,
     String TotalpatrolCount,
     String Location,
     String Status,
@@ -135,7 +137,7 @@ Future<void> sendapiEmail(
       String statusReportedTime = data['StatusReportedTime'];
       List<String> imageUrls = List<String>.from(data['ImageUrls']);
       String statusComment = data['StatusComment'] ?? "";
-
+      print("Status Reported Time : ${statusReportedTime}");
       // Add a paragraph with the StatusReportedTime and StatusComment
       imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
       imagesHTML += '<p>StatusComment: $statusComment</p>';
@@ -159,7 +161,7 @@ Future<void> sendapiEmail(
             background-size: cover; /* Ensure the background image covers the entire body */
             background-repeat: no-repeat; /* Prevent the background image from repeating */
             font-family: Arial, sans-serif; /* Use a readable font */
-            margin: 0; /* Remove default margin */
+            margin: 20px; /* Remove default margin */
             padding: 0; /* Remove default padding */
         }
         #shift-patrol-report {
@@ -293,6 +295,169 @@ Future<void> generateExampleDocument() async {
 }
 
 String? generatedPdfFilePath;
+Future<File> savePdfLocally(String pdfBase64, String fileName) async {
+  final pdfBytes = base64Decode(pdfBase64);
+  final directory = await getApplicationDocumentsDirectory();
+  final file = File('${directory.path}/$fileName');
+  await file.writeAsBytes(pdfBytes);
+  return file;
+}
+
+FireStoreService fireStoreService = FireStoreService();
+Future<String> generateShiftReportPdf(
+  String? ClientName,
+  List<Map<String, dynamic>> Data,
+  String GuardName,
+  String shiftinTime,
+  String shiftOutTime,
+) async {
+  final dateFormat = DateFormat('HH:mm'); // Define the format for time
+
+  // Generate the HTML content for the report
+  String patrolInfoHTML = '';
+  for (var item in Data) {
+    String checkpointImagesHTML = '';
+    for (var checkpoint in item['PatrolLogCheckPoints']) {
+      String checkpointImages = '';
+      if (checkpoint['CheckPointImage'] != null) {
+        for (var image in checkpoint['CheckPointImage']) {
+          checkpointImages +=
+              '<img src="$image" style="height: 100px;">'; // Set the height here
+        }
+      }
+      checkpointImagesHTML += '''
+        <div>
+          <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
+          $checkpointImages
+          <p>Comment: ${checkpoint['CheckPointComment']}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Status: ${checkpoint['CheckPointStatus']}</p>
+        </div>
+      ''';
+    }
+
+    patrolInfoHTML += '''
+      <tr>
+        <td>${item['PatrolLogPatrolCount']}</td>
+        <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
+        <td>${dateFormat.format(item['PatrolLogEndedAt'].toDate())}</td>
+        <td>${checkpointImagesHTML}</td>
+      </tr>
+    ''';
+  }
+
+  final htmlcontent = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Report</title>
+        <style>
+          body {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            header {
+                background-color: #ddd;
+                padding: 20px;
+                text-align: center;
+            }
+
+            h1 {
+                margin-bottom: 0;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            th {
+                text-align: left;
+            }
+
+            .patrol-info tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Security Report</h1>
+        </header>
+
+        <section>
+            <h2>Dear ${ClientName},</h2>
+            <p>I hope this email finds you well,I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during thier shif.Below is a detailed breakdown of the patrols conducted.</p>
+        </section>
+
+        <h3>Shift Information</h3>
+        <table class="shift-info">
+            <tr>
+                <th>Guard Name</th>
+                <th>Shift Time In</th>
+                <th>Shift Time Out</th> 
+            </tr>
+            <tr>
+                <td> ${GuardName}</td>
+                <td>${shiftinTime}</td>
+                <td>${shiftOutTime}</td>
+            </tr>
+        </table>
+
+        <h3>Patrol Information</h3>
+        <table class="patrol-info">
+            <tr>
+                <th>Patrol Count</th>
+                <th>Patrol Time In</th>
+                <th>Patrol Time Out</th>
+                <th>Checkpoint Details</th>
+            </tr>
+            ${patrolInfoHTML}
+        </table>
+
+        <p>Please review the information provided and let us know if you have any questions or require further 
+details. We are committed to ensuring the safety and security of your premises, and your feedback is 
+invaluable to us.</p>
+        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
+Best regards,</p>
+        <p>TEAM TACTTIK<p>
+    </body>
+    </html>
+  """;
+
+  // Generate the PDF
+  final pdfResponse = await http.post(
+    Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf'),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({
+      'html': htmlcontent,
+      'file_name': 'security_report.pdf',
+    }),
+  );
+
+  if (pdfResponse.statusCode == 200) {
+    print('PDF generated successfully');
+    final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);
+    final downloadurl =
+        await fireStoreService.uploadFileToStorage(pdfResponse.bodyBytes);
+    return downloadurl;
+  } else {
+    print('Failed to generate PDF. Status code: ${pdfResponse.statusCode}');
+    throw Exception('Failed to generate PDF');
+  }
+}
+
+final dateFormat = DateFormat('HH:mm'); // Define the format for time
 
 Future<void> sendShiftEmail(
   String? ClientName,
@@ -310,7 +475,8 @@ Future<void> sendShiftEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final dateFormat = DateFormat('HH:mm'); // Define the format for time
+  final downloadUrl = await generateShiftReportPdf(
+      ClientName, Data, GuardName, shiftinTime, shiftOutTime);
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -430,13 +596,12 @@ invaluable to us.</p>
         <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
 Best regards,</p>
         <p>TEAM TACTTIK<p>
+        <p>Download the detailed report <a href='${downloadUrl}'>here</a>.</p>
     </body>
     </html>
   """;
 
-  // Generate the PDF
-
-  // Attach the PDF file to the email
+  // Send the email
   for (var toEmail in toEmails) {
     final emailResponse = await http.post(
       Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
@@ -461,6 +626,9 @@ Best regards,</p>
 }
 
 
+
+//  final downloadurl =
+//         await fireStoreService.uploadFileToStorage(pdfResponse.bodyBytes);
 
 
 // final htmlContent = '''
