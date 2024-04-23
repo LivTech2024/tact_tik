@@ -443,49 +443,52 @@ class _HomeScreenState extends State<HomeScreen> {
                         Primarycolor, // Background color for the drawer header
                   )),
               Expanded(
-                child: Column(children: [
-                  buildListTile(
-                    Icons.door_back_door_outlined,
-                    'Home',
-                    0,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.account_circle_outlined,
-                    'Profile',
-                    1,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.add_card,
-                    'Payment',
-                    2,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.article,
-                    'Employment Letter',
-                    3,
-                    () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>  EmploymentLetterScreen()));
-                    },
-                  ),
-                  buildListTile(
-                    Icons.restart_alt,
-                    'History',
-                    4,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.settings,
-                    'Settings',
-                    5,
-                    () {},
-                  ),
-                ],),
+                child: Column(
+                  children: [
+                    buildListTile(
+                      Icons.door_back_door_outlined,
+                      'Home',
+                      0,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.account_circle_outlined,
+                      'Profile',
+                      1,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.add_card,
+                      'Payment',
+                      2,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.article,
+                      'Employment Letter',
+                      3,
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EmploymentLetterScreen()));
+                      },
+                    ),
+                    buildListTile(
+                      Icons.restart_alt,
+                      'History',
+                      4,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.settings,
+                      'Settings',
+                      5,
+                      () {},
+                    ),
+                  ],
+                ),
               ),
               ListTile(
                 leading: Icon(

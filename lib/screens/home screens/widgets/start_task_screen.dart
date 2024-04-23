@@ -127,10 +127,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
 
     if (ClientEmail != null && AdminEmail != null) {
-      // emails.add(AdminEmail);
-      // emails.add(TestinEmail);
-      // emails.add(testEmail3);
-      // emails.add(testEmail5);
+      emails.add(AdminEmail);
+      emails.add(TestinEmail);
+      emails.add(testEmail3);
+      emails.add(testEmail5);
 
       await sendShiftEmail(
         ClientName,
