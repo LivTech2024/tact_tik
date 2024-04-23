@@ -37,7 +37,9 @@ import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
+import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
+import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/visitors/visitors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -455,7 +457,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.account_circle_outlined,
                       'Profile',
                       1,
+<<<<<<< HEAD
                       () {},
+=======
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen()));
+                      },
+>>>>>>> 287b63546de1b1eb0c6dfc31bbbba77055129d78
                     ),
                     buildListTile(
                       Icons.add_card,
@@ -643,6 +654,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DarDisplayScreen(
                                                       EmpEmail: _empEmail,
                                                     )));
+                                        break;
+                                      case 4:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PostOrder()));
                                         break;
                                       case 6:
                                         Navigator.push(
