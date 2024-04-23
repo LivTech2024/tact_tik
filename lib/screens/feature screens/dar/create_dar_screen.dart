@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/sizes.dart';
@@ -42,7 +43,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     try {
       var userInfo = await _firestore
           .collection('Employees')
-          .where('EmployeeEmail', isEqualTo: _empEmail)
+          .where(
+            'employeeId',
+            isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+          )
           .limit(1)
           .get();
       if (userInfo.docs.isNotEmpty) {
