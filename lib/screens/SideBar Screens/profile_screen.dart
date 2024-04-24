@@ -19,7 +19,7 @@ import '../feature screens/visitors/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -80,6 +80,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (pickedFile != null) {
       setState(() {
         _selectedImageFile = pickedFile;
+      });
+    }
+  }
+
+  Future<void> _updateEmployeeData(String newName, String newPhoneNo) async {
+    if (_currentUserUid != null) {
+      await FirebaseFirestore.instance
+          .collection('Employees')
+          .doc(_currentUserUid)
+          .update({
+        'EmployeeName': newName,
+        'EmployeePhone': newPhoneNo,
       });
     }
   }
@@ -215,9 +227,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SizedBox(width: width / width6),
                                     Bounce(
                                       onTap: () {
-                                        setState(() {
-                                          isEdit = !isEdit;
-                                        });
+                                        final newName =
+                                            _nameController.text.trim();
+                                        final newPhoneNo =
+                                            _phoneNoController.text.trim();
+
+                                        if (newName.isNotEmpty &&
+                                            newPhoneNo.isNotEmpty) {
+                                          _updateEmployeeData(
+                                              newName, newPhoneNo);
+                                          setState(() {
+                                            isEdit = false;
+                                            _nameController.clear();
+                                            _phoneNoController.clear();
+                                          });
+                                        } else {
+                                          // shw error
+                                        }
                                       },
                                       child: Icon(
                                         Icons.check,
@@ -232,6 +258,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : ProfileEditWidget(
                               tittle: 'Name',
                               content: _employeeName ?? '',
+                              onTap: () {
+                                setState(() {
+                                  isEdit = true;
+                                  _nameController.text = _employeeName ?? '';
+                                });
+                              },
                             ),
                     ),
                     isEdit
@@ -255,9 +287,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SizedBox(width: width / width6),
                                   Bounce(
                                     onTap: () {
-                                      setState(() {
-                                        isEdit = !isEdit;
-                                      });
+                                      final newName =
+                                          _nameController.text.trim();
+                                      final newPhoneNo =
+                                          _phoneNoController.text.trim();
+
+                                      if (newName.isNotEmpty &&
+                                          newPhoneNo.isNotEmpty) {
+                                        _updateEmployeeData(
+                                            newName, newPhoneNo);
+                                        setState(() {
+                                          isEdit = false;
+                                          _nameController.clear();
+                                          _phoneNoController.clear();
+                                        });
+                                      } else {
+                                        //  show snackbar
+                                      }
                                     },
                                     child: Icon(
                                       Icons.check,
@@ -272,6 +318,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : ProfileEditWidget(
                             tittle: 'Contact No',
                             content: _employeePhone ?? '',
+                            onTap: () {
+                              setState(() {
+                                isEdit = true;
+                                _phoneNoController.text = _employeePhone ?? '';
+                              });
+                            },
                           ),
                     Padding(
                       padding:
@@ -279,11 +331,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ProfileEditWidget(
                         tittle: 'Email',
                         content: _employeeEmail ?? '',
+                        onTap: () {},
                       ),
                     ),
                     ProfileEditWidget(
                       tittle: 'Designation',
                       content: _employeeRole ?? '',
+                      onTap: () {},
                     ),
                   ],
                 ),
