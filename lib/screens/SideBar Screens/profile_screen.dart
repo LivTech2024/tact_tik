@@ -227,11 +227,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SizedBox(width: width / width6),
                                     Bounce(
                                       onTap: () {
-<<<<<<< HEAD
-                                        setState(() {
-                                          isEdit = !isEdit;
-                                        });
-=======
                                         final newName =
                                             _nameController.text.trim();
                                         final newPhoneNo =
@@ -249,7 +244,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         } else {
                                           // shw error
                                         }
->>>>>>> 47e78ec6ec59b79d2916e2731b386bcb77b74488
                                       },
                                       child: Icon(
                                         Icons.check,
@@ -264,15 +258,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : ProfileEditWidget(
                               tittle: 'Name',
                               content: _employeeName ?? '',
-<<<<<<< HEAD
-=======
                               onTap: () {
                                 setState(() {
                                   isEdit = true;
                                   _nameController.text = _employeeName ?? '';
                                 });
                               },
->>>>>>> 47e78ec6ec59b79d2916e2731b386bcb77b74488
                             ),
                     ),
                     isEdit
@@ -296,11 +287,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SizedBox(width: width / width6),
                                   Bounce(
                                     onTap: () {
-<<<<<<< HEAD
-                                      setState(() {
-                                        isEdit = !isEdit;
-                                      });
-=======
                                       final newName =
                                           _nameController.text.trim();
                                       final newPhoneNo =
@@ -318,7 +304,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       } else {
                                         //  show snackbar
                                       }
->>>>>>> 47e78ec6ec59b79d2916e2731b386bcb77b74488
                                     },
                                     child: Icon(
                                       Icons.check,
@@ -333,15 +318,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : ProfileEditWidget(
                             tittle: 'Contact No',
                             content: _employeePhone ?? '',
-<<<<<<< HEAD
-=======
                             onTap: () {
                               setState(() {
                                 isEdit = true;
                                 _phoneNoController.text = _employeePhone ?? '';
                               });
                             },
->>>>>>> 47e78ec6ec59b79d2916e2731b386bcb77b74488
                           ),
                     Padding(
                       padding:
