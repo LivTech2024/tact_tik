@@ -64,9 +64,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final employeeData = employeeDoc.data();
         setState(() {
           _employeeName = employeeData?['EmployeeName'];
+          _nameController.text = employeeData?['EmployeeName'];
           _employeeEmail = employeeData?['EmployeeEmail'];
           _employeeRole = employeeData?['EmployeeRole'];
           _employeePhone = employeeData?['EmployeePhone'];
+          _phoneNoController.text = employeeData?['EmployeePhone'];
           _employeeImageUrl = employeeData?['EmployeeImg'];
         });
       }
