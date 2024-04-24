@@ -1,3 +1,4 @@
+import 'package:bounce/bounce.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,8 +12,10 @@ import 'dart:io';
 
 import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
+import '../../fonts/inter_semibold.dart';
 import '../../utils/colors.dart';
 import '../../utils/utils.dart';
+import '../feature screens/visitors/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -30,6 +33,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _employeeImageUrl;
   String? _currentUserUid;
   XFile? _selectedImageFile;
+  bool isEdit = false;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneNoController = TextEditingController();
 
   @override
   void initState() {
@@ -106,6 +113,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.white,
             letterSpacing: -.3,
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  isEdit = !isEdit;
+                });
+              },
+              icon: Icon(
+                isEdit ? Icons.close : Icons.border_color,
+                size: width / width24,
+                color: color1,
+              ),
+            )
+          ],
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -116,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 340,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
                       Colors.black,
                       const Color(0xFF9C6400),
@@ -168,19 +189,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width30),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: height / height40),
-                      child: ProfileEditWidget(
-                        tittle: 'Name',
-                        content: _employeeName ?? '',
-                      ),
+                      child: isEdit
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InterSemibold(
+                                  text: 'Name',
+                                  fontsize: width / width20,
+                                  color: color1,
+                                ),
+                                SizedBox(height: height / height5),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: SetTextfieldWidget(
+                                        hintText: '',
+                                        controller: _nameController,
+                                      ),
+                                    ),
+                                    SizedBox(width: width / width6),
+                                    Bounce(
+                                      onTap: () {
+                                        setState(() {
+                                          isEdit = !isEdit;
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.check,
+                                        color: color2,
+                                        size: width / width30,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )
+                          : ProfileEditWidget(
+                              tittle: 'Name',
+                              content: _employeeName ?? '',
+                            ),
                     ),
-                    ProfileEditWidget(
-                      tittle: 'Contact No',
-                      content: _employeePhone ?? '',
-                    ),
+                    isEdit
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterSemibold(
+                                text: 'Contact No',
+                                fontsize: width / width20,
+                                color: color1,
+                              ),
+                              SizedBox(height: height / height5),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: SetTextfieldWidget(
+                                      hintText: '',
+                                      controller: _phoneNoController,
+                                    ),
+                                  ),
+                                  SizedBox(width: width / width6),
+                                  Bounce(
+                                    onTap: () {
+                                      setState(() {
+                                        isEdit = !isEdit;
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.check,
+                                      color: color2,
+                                      size: width / width30,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          )
+                        : ProfileEditWidget(
+                            tittle: 'Contact No',
+                            content: _employeePhone ?? '',
+                          ),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: height / height40),
