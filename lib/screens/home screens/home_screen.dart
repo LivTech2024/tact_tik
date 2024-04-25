@@ -721,6 +721,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     DarDisplayScreen(
                                                       EmpEmail: _empEmail,
                                                       EmpID: _employeeId,
+                                                      EmpDarCompanyId:
+                                                          _ShiftCompanyId ?? '',
+                                                      EmpDarCompanyBranchId:
+                                                          _ShiftCompanyId ?? "",
+                                                      EmpDarShiftID: _shiftId,
+                                                      EmpDarClientID:
+                                                          _shiftCLientId ?? "",
                                                     )));
                                         break;
                                       case 4:

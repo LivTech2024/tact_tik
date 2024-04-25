@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/riverpod/task_screen_provider.dart';
@@ -733,8 +734,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             .getAdminEmail(widget.ShiftCompanyId);
                         print("Client Name ${AdminEmal}");
                         //fetch the data from Patrol Logs and generate email from it
-                        // var data = await fireStoreService.fetchDataForPdf(
-                        //     widget.EmployeId, widget.ShiftId);
+                        var data = await fireStoreService.fetchDataForPdf(
+                            widget.EmployeId, widget.ShiftId);
+                        if (data != null) {
+                          send_mail_onOut(data);
+                        } else {
+                          showErrorToast(context, "try again");
+                          return;
+                          // Handle the case when data is null
+                        }
                         // send_mail_onOut(data);
 
                         // generateAndOpenPDF(
@@ -846,7 +854,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             EmployeeName: widget.EmployeeName,
                             ShiftId: widget.ShiftId,
                             ShiftDate: widget.ShiftDate,
-                            
                           )));
             },
           ),

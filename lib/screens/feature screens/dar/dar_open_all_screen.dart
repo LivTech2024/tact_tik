@@ -178,6 +178,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                     CreateDarScreen(
                                                   EmpEmail: "",
                                                   EmpId: '',
+                                                  EmpDarCompanyId: "",
+                                                  EmpDarCompanyBranchId: '',
+                                                  EmpShiftId: '',
+                                                  EmpClientID: '',
                                                 ),
                                               ),
                                             );

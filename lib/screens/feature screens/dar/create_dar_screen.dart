@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../../fonts/inter_regular.dart';
 import '../widgets/custome_textfield.dart';
@@ -14,9 +17,19 @@ import '../widgets/custome_textfield.dart';
 class CreateDarScreen extends StatefulWidget {
   final String EmpEmail;
   final String EmpId;
+  final String EmpDarCompanyId;
+  final String EmpDarCompanyBranchId;
+  final String EmpShiftId;
+  final String EmpClientID;
 
   const CreateDarScreen(
-      {super.key, required this.EmpEmail, required this.EmpId});
+      {super.key,
+      required this.EmpEmail,
+      required this.EmpId,
+      required this.EmpDarCompanyId,
+      required this.EmpDarCompanyBranchId,
+      required this.EmpShiftId,
+      required this.EmpClientID});
 
   @override
   State<CreateDarScreen> createState() => _CreateDarScreenState();
@@ -40,6 +53,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     _getUserInfo();
   }
 
+  FireStoreService fireStoreService = FireStoreService();
   List<Map<String, dynamic>> uploads = [];
 
   Future<void> _getUserInfo() async {
@@ -76,23 +90,36 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
 
   Future<void> _addImage() async {
     final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+      });
+    }
+    print("Statis ${uploads}");
+  }
+
+  Future<void> _addGallery() async {
+    final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
+      // await fireStoreService
+      //     .addImageToStorageShiftTask(File(pickedFile.path));
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
     }
   }
 
-  Future<void> _addVideo() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['mp4'],
-    );
-    if (result != null) {
-      setState(() {
-        uploads.add({'type': 'video', 'file': File(result.files.single.path!)});
-      });
+  void _uploadImages() async {
+    print("Uploads Images  $uploads");
+    try {
+      // await fireStoreService.addImageToDarStorage(uploads);
+      uploads.clear();
+      showSuccessToast(context, "Uploaded Successfully");
+    } catch (e) {
+      showErrorToast(context, "$e");
+      print('Error uploading images: $e');
     }
   }
 
@@ -115,16 +142,35 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       });
 
       try {
-        await _firestore.collection('EmployeesDAR').add({
+        List<String> imageUrls = [];
+        for (var upload in uploads) {
+          if (upload['type'] == 'image') {
+            File file = upload['file'];
+            // Upload the image file and get the download URL
+            List<Map<String, dynamic>> downloadURLs =
+                await fireStoreService.addImageToDarStorage(file);
+            // Add the image URLs to the list
+            for (var urlMap in downloadURLs) {
+              if (urlMap.containsKey('downloadURL')) {
+                imageUrls.add(urlMap['downloadURL'] as String);
+              }
+            }
+          }
+        }
+        var docRef = await _firestore.collection('EmployeesDAR').add({
           'EmpDarTitle': title,
-          'EmpDarContent': darContent,
+          'EmpDarData': darContent,
+          'EmpDarShiftId': darContent,
           'EmpDarDate': FieldValue.serverTimestamp(),
+          'EmpDarCreatedAt': FieldValue.serverTimestamp(),
           'EmpDarEmpName': _userName,
           'EmpDarEmpId': _employeeId,
-          'EmpDarEmpEmail': _empEmail,
-          'employeeImg': _employeeImg,
+          'EmpDarCompanyId': widget.EmpDarCompanyId ?? "",
+          'EmpDarCompanyBranchId': widget.EmpDarCompanyBranchId ?? "",
+          'EmpDarClientId': widget.EmpClientID ?? '',
+          'EmpDarImages': imageUrls ?? "",
         });
-
+        await docRef.update({'EmpDarId': docRef.id});
         _titleController.clear();
         _darController.clear();
 
@@ -285,16 +331,16 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               ),
                               ListTile(
                                 leading: Icon(
-                                  Icons.video_collection,
+                                  Icons.image,
                                   size: width / width20,
                                 ),
                                 title: InterRegular(
-                                  text: 'Add Video',
+                                  text: 'Add from Gallery',
                                   fontsize: width / width14,
                                 ),
                                 onTap: () {
                                   Navigator.pop(context);
-                                  _addVideo();
+                                  _addGallery();
                                 },
                               ),
                             ],
@@ -315,7 +361,25 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                           ),
                         ),
                       ),
-                    )
+                    ),
+                    // SizedBox(),
+                    // GestureDetector(
+                    //   onTap: () {},
+                    //   child: Container(
+                    //     height: height / height66,
+                    //     width: width / width66,
+                    //     decoration: BoxDecoration(
+                    //       color: WidgetColor,
+                    //       borderRadius: BorderRadius.circular(width / width8),
+                    //     ),
+                    //     child: Center(
+                    //       child: Icon(
+                    //         Icons.upload,
+                    //         size: width / width20,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
                 /*SizedBox(height: height / height30),

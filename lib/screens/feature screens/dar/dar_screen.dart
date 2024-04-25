@@ -14,8 +14,19 @@ import '../../../common/sizes.dart';
 class DarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
   final String EmpID;
+  final String EmpDarCompanyId;
+  final String EmpDarCompanyBranchId;
+  final String EmpDarShiftID;
+  final String EmpDarClientID;
 
-  DarDisplayScreen({Key? key, required this.EmpEmail, required this.EmpID})
+  DarDisplayScreen(
+      {Key? key,
+      required this.EmpEmail,
+      required this.EmpID,
+      required this.EmpDarCompanyId,
+      required this.EmpDarCompanyBranchId,
+      required this.EmpDarShiftID,
+      required this.EmpDarClientID})
       : super(key: key);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -121,7 +132,7 @@ class DarDisplayScreen extends StatelessWidget {
                                         SizedBox(height: height / height10),
                                         Flexible(
                                           child: InterRegular(
-                                            text: document['EmpDarContent'],
+                                            text: document['EmpDarData'],
                                             fontsize: width / width16,
                                             color: color26,
                                             maxLines: 4,
@@ -185,6 +196,10 @@ class DarDisplayScreen extends StatelessWidget {
                   builder: (context) => CreateDarScreen(
                     EmpEmail: EmpEmail,
                     EmpId: EmpID,
+                    EmpDarCompanyId: EmpDarCompanyId,
+                    EmpDarCompanyBranchId: EmpDarCompanyBranchId,
+                    EmpShiftId: EmpDarShiftID,
+                    EmpClientID: EmpDarClientID,
                   ),
                 ));
           },

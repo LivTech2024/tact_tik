@@ -1314,6 +1314,36 @@ class FireStoreService {
     }
   }
 
+  //Dar images
+  Future<List<Map<String, dynamic>>> addImageToDarStorage(File file) async {
+    try {
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+
+      Reference uploadRef = storageRef.child("employees/Dar/$uniqueName.jpg");
+      // Compress the image
+      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+        file.absolute.path,
+        quality: 50, // Adjust the quality as needed
+      );
+
+      // Upload the compressed image to Firebase Storage
+      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+
+      // Get the download URL of the uploaded image
+      String downloadURL = await uploadRef.getDownloadURL();
+      print("Download URL: $downloadURL");
+
+      // Return the download URL in a list
+      return [
+        {'downloadURL': downloadURL}
+      ];
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   //add wellness to the collection
   Future<void> addImagesToShiftGuardWellnessReport(
     List<Map<String, dynamic>> uploads,
