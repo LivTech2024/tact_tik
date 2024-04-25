@@ -176,7 +176,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     CreateDarScreen(
-                                                  EmpEmail: '',
+                                                  EmpEmail: "",
+                                                  EmpId: '',
                                                 ),
                                               ),
                                             );

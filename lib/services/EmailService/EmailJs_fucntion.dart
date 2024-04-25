@@ -111,6 +111,340 @@ Future<void> callPdfApi() async {
   }
 }
 
+Future<void> sendShiftTemplateEmail(
+  String? ClientName,
+  List<String> toEmails,
+  String Subject,
+  String fromName,
+  List<Map<String, dynamic>> Data,
+  String type,
+  String date,
+  String GuardName,
+  String StartTime,
+  String EndTime,
+  String Location,
+  String Status,
+  String shiftinTime,
+  String shiftOutTime,
+) async {
+  final pdfBase64 = await generateShiftReportPdf(
+      ClientName, Data, GuardName, "20:00", "06:00");
+
+  // Generate the HTML content for the email
+  String patrolInfoHTML = '';
+  for (var item in Data) {
+    String checkpointImagesHTML = '';
+    for (var checkpoint in item['PatrolLogCheckPoints']) {
+      String checkpointImages = '';
+      if (checkpoint['CheckPointImage'] != null) {
+        for (var image in checkpoint['CheckPointImage']) {
+          checkpointImages +=
+              '<img src="$image" style="height: 100px;">'; // Set the height here
+        }
+      }
+      checkpointImagesHTML += '''
+        <div>
+          <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
+          $checkpointImages
+          <p>Comment: ${checkpoint['CheckPointComment']}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Status: ${checkpoint['CheckPointStatus']}</p>
+        </div>
+      ''';
+    }
+
+    patrolInfoHTML += '''
+      <tr>
+        <td>${item['PatrolLogPatrolCount']}</td>
+        <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
+        <td>${dateFormat.format(item['PatrolLogEndedAt'].toDate())}</td>
+        <td>${checkpointImagesHTML}</td>
+      </tr>
+    ''';
+  }
+
+  final htmlcontent2 = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Report</title>
+        <style>
+          body {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            header {
+                background-color: #ddd;
+                padding: 20px;
+                text-align: center;
+            }
+
+            h1 {
+                margin-bottom: 0;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            th {
+                text-align: left;
+            }
+
+            .patrol-info tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Security Report</h1>
+        </header>
+
+        <section>
+            <h2>Dear ${ClientName},</h2>
+            <p>I hope this email finds you well,I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during thier shif.Below is a detailed breakdown of the patrols conducted.</p>
+        </section>
+
+        <h3>Shift Information</h3>
+        <table class="shift-info">
+            <tr>
+                <th>Guard Name</th>
+                <th>Shift Time In</th>
+                <th>Shift Time Out</th> 
+            </tr>
+            <tr>
+                <td> ${GuardName}</td>
+                <td>20:00</td>
+                <td>06:00</td>
+            </tr>
+        </table>
+
+        <h3>Patrol Information</h3>
+        <table class="patrol-info">
+            <tr>
+                <th>Patrol Count</th>
+                <th>Patrol Time In</th>
+                <th>Patrol Time Out</th>
+                <th>Checkpoint Details</th>
+            </tr>
+            ${patrolInfoHTML}
+        </table>
+
+        <p>Please review the information provided and let us know if you have any questions or require further 
+details. We are committed to ensuring the safety and security of your premises, and your feedback is 
+invaluable to us.</p>
+        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
+Best regards,</p>
+        <p>TEAM TACTTIK<p>
+    </body>
+    </html>
+  """;
+
+  // Send the email
+  for (var toEmail in toEmails) {
+    final emailResponse = await http.post(
+      Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'to_email': toEmail,
+        'subject': Subject,
+        'from_name': fromName,
+        'html': htmlcontent2,
+        'attachments': [
+          {
+            'filename': 'security_report.pdf',
+            'content': pdfBase64,
+            'contentType': 'application/pdf',
+          }
+        ],
+      }),
+    );
+
+    if (emailResponse.statusCode == 201) {
+      print('Email sent successfully to $toEmail');
+      // Handle success
+    } else {
+      print(
+          'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+      // Handle failure
+    }
+  }
+}
+
+Future<void> customEmail() async {
+  final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
+
+  final htmlcontent2 = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrol Report</title>
+    <style>
+        body {
+            background-image: url('path/to/your/background/image.jpg');
+            background-size: cover; /* Ensure the background image covers the entire body */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            font-family: Arial, sans-serif; /* Use a readable font */
+            margin: 20px; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        #shift-patrol-report {
+            width: 100%;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .patrol-section {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-bottom: 1rem; /* Add some space between sections */
+            background-color: #fff; /* Set a white background color for sections */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .details {
+            white-space: pre-line; /* Preserve line breaks in the 'Data' field */
+        }
+        img {
+            max-width: 100%; /* Ensure images don't exceed their container width */
+            height: auto; /* Maintain aspect ratio */
+            display: block; /* Prevent inline images from affecting layout */
+            margin-bottom: 0.5rem; /* Add some space between images */
+        }
+    </style>
+</head>
+<body>
+    <div id="shift-patrol-report">
+        <h2>SHIFT/PATROL REPORT</h2>
+        <div class="patrol-section">
+            <h3>Patrol Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Guard name</th>
+                        <th>Patrol time in</th>
+                        <th>Patrol time out</th>
+                        <th>Total Patrol Count</th>
+                        <th>Total hits</th>
+                        <th>Status</th>
+                        <th>Incident</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>sukhman kooner</td>
+                        <td>12:18</td>
+                        <td>12:44</td>
+                        <td>3</td>
+                        <td>1</td>
+                        <td>completed</td>
+                        <td class="details"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="patrol-section">
+            <h3>Patrol with Photos</h3>
+            <p id="patrol-details"></p>
+            <p>StatusReportedTime: 12:22</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A21%3A12.010081.jpg?alt=media&token=e6117e74-337f-49c1-89ec-22e7b83c8f84" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime:12:42 </p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A29%3A44.709502.jpg?alt=media&token=45e82ab5-f9ca-4a47-a2c0-6a1413580193" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:22</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A19%3A33.587063.jpg?alt=media&token=3bffcee9-8458-474d-8788-2a9859cc1486" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:31</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A21%3A59.364269.jpg?alt=media&token=4b08b675-6ee2-492e-909f-69ef141a5592" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A22%3A10.230026.jpg?alt=media&token=3dec8f02-6d9a-4c0b-bf6b-75b6f5bb97e4" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:33</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A23%3A46.714328.jpg?alt=media&token=0f82deae-0362-423d-87f2-70ee693e7de5" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:33</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A23%3A08.513011.jpg?alt=media&token=09b83422-f436-468f-9dbc-e7e18f9dffa9" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+             <p>StatusReportedTime: 12:34</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A24%3A44.269894.jpg?alt=media&token=5e4136d3-ea5e-4f40-a33c-d5f78563e488" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A24%3A54.375074.jpg?alt=media&token=4dc91fec-8c5c-4007-ac50-13d084b4d328" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:36</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A25%3A34.849426.jpg?alt=media&token=4817e34b-41b2-488e-8e59-aa0b00bd631b" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A25%3A48.341502.jpg?alt=media&token=a75b68f8-ed6b-4b0f-baab-6d2e2429ce69" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:38</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A26%3A32.290579.jpg?alt=media&token=1ca5d205-8c91-4ef2-8373-86405f75fecc" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A26%3A40.540463.jpg?alt=media&token=8eb2348a-a7c6-4e3c-872b-a6de33c16883" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:38</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A28%3A36.002146.jpg?alt=media&token=44859881-eda4-4cc9-84f4-04a6ee80994c" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A28%3A45.799979.jpg?alt=media&token=e74c14df-283a-4d96-a6f6-8ada2cf9623b" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:42</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-25%2002%3A27%3A27.734709.jpg?alt=media&token=7608b91b-a11b-4965-96f4-60ac430c7cf3" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-25%2002%3A27%3A35.803377.jpg?alt=media&token=f72f792b-47ab-4b96-9596-dd5e582daa8d" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+             <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-25%2002%3A27%3A45.224427.jpg?alt=media&token=2cc514e0-19ab-4f74-840d-241656d8f494" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:43</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-25%2002%3A28%3A03.965452.jpg?alt=media&token=60308bc1-659a-49ca-b422-485b6102961b" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+        </div>
+        <div class="report-section">
+            <h3>Important Note</h3>
+            <p id="important-note"></p>
+
+            <h3>Feedback Note</h3>
+            <p id="important-note"></p>
+            <p>Guard arrived at high level site. All clear!</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+""";
+  // 'to_email': "pankaj.kumar1312@yahoo.com",
+
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({
+      'to_email': "sapp69750@gmail.com",
+      'subject': "Patrol update for  Date:- 24 April",
+      'from_name': "TactTik Reports",
+      'html': htmlcontent2,
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    print('Email sent successfully');
+    // Handle success
+  } else {
+    print('Failed to send email. Status code: ${response.statusCode} ');
+    // Handle failure
+  }
+}
+
 Future<void> sendapiEmail(
     List<String> toEmails,
     String Subject,
@@ -214,12 +548,12 @@ Future<void> sendapiEmail(
                 </thead>
                 <tbody>
                     <tr>
-                        <td>$GuardName</td>
-                        <td>$patrolTimein</td>
-                        <td>$patrolTimeout</td>
-                        <td>$TotalpatrolCount</td>
-                        <td>$patrolCount</td>
-                        <td>$Status</td>
+                        <td>sukhman kooner</td>
+                        <td>12:18</td>
+                        <td>12:44</td>
+                        <td>3</td>
+                        <td>1</td>
+                        <td>completed</td>
                         <td class="details">$Data</td>
                     </tr>
                 </tbody>
@@ -228,7 +562,52 @@ Future<void> sendapiEmail(
         <div class="patrol-section">
             <h3>Patrol with Photos</h3>
             <p id="patrol-details"></p>
-            $imagesHTML
+            <p>StatusReportedTime: 12:22</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A21%3A12.010081.jpg?alt=media&token=e6117e74-337f-49c1-89ec-22e7b83c8f84" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime:12:42 </p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A29%3A44.709502.jpg?alt=media&token=45e82ab5-f9ca-4a47-a2c0-6a1413580193" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:22</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A19%3A33.587063.jpg?alt=media&token=3bffcee9-8458-474d-8788-2a9859cc1486" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:31</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A21%3A59.364269.jpg?alt=media&token=4b08b675-6ee2-492e-909f-69ef141a5592" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A22%3A10.230026.jpg?alt=media&token=3dec8f02-6d9a-4c0b-bf6b-75b6f5bb97e4" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:33</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A23%3A46.714328.jpg?alt=media&token=0f82deae-0362-423d-87f2-70ee693e7de5" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:33</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A23%3A08.513011.jpg?alt=media&token=09b83422-f436-468f-9dbc-e7e18f9dffa9" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+             <p>StatusReportedTime: 12:34</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A24%3A44.269894.jpg?alt=media&token=5e4136d3-ea5e-4f40-a33c-d5f78563e488" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A24%3A54.375074.jpg?alt=media&token=4dc91fec-8c5c-4007-ac50-13d084b4d328" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:34</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A25%3A34.849426.jpg?alt=media&token=4817e34b-41b2-488e-8e59-aa0b00bd631b" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A25%3A48.341502.jpg?alt=media&token=a75b68f8-ed6b-4b0f-baab-6d2e2429ce69" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:36</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A25%3A34.849426.jpg?alt=media&token=4817e34b-41b2-488e-8e59-aa0b00bd631b" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A25%3A48.341502.jpg?alt=media&token=a75b68f8-ed6b-4b0f-baab-6d2e2429ce69" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:38</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A26%3A32.290579.jpg?alt=media&token=1ca5d205-8c91-4ef2-8373-86405f75fecc" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A26%3A40.540463.jpg?alt=media&token=8eb2348a-a7c6-4e3c-872b-a6de33c16883" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:38</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A28%3A36.002146.jpg?alt=media&token=44859881-eda4-4cc9-84f4-04a6ee80994c" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A28%3A45.799979.jpg?alt=media&token=e74c14df-283a-4d96-a6f6-8ada2cf9623b" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:42</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A33%3A37.362404.jpg?alt=media&token=f480c902-a466-4336-b369-3cc2cb9338bf" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A33%3A46.949634.jpg?alt=media&token=ecfee42a-d7b7-4914-955f-a91330cede32" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
+            <p>StatusReportedTime: 12:43</p>
+            <p>StatusComment: safe and secure</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/livtech-dbcf2.appspot.com/o/employees%2Fpatrol%2F2024-04-24%2020%3A43%3A27.705173.jpg?alt=media&token=b7646b8e-9d5f-4345-be3e-a9bc5e32066e" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">
         </div>
         <div class="report-section">
             <h3>Important Note</h3>
@@ -236,7 +615,7 @@ Future<void> sendapiEmail(
 
             <h3>Feedback Note</h3>
             <p id="important-note"></p>
-            $feedback
+            <p>Guard arrived at high level site. All clear!</p>
         </div>
     </div>
     <script src="script.js"></script>
@@ -248,7 +627,7 @@ Future<void> sendapiEmail(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
-        'to_email': toEmail,
+        'to_email': "sutarvaibhav37@gmail.com",
         'subject': Subject,
         'from_name': "TactTik Reports",
         'html': htmlcontent2,
@@ -684,7 +1063,179 @@ Best regards,</p>
       // Handle failure
     }
   }
+  Future<void> sendShiftEmail(
+    String? ClientName,
+    List<String> toEmails,
+    String Subject,
+    String fromName,
+    List<Map<String, dynamic>> Data,
+    String type,
+    String date,
+    String GuardName,
+    String StartTime,
+    String EndTime,
+    String Location,
+    String Status,
+    String shiftinTime,
+    String shiftOutTime,
+  ) async {
+    final pdfBase64 = await generateShiftReportPdf(
+        ClientName, Data, GuardName, shiftinTime, shiftOutTime);
+
+    // Generate the HTML content for the email
+    String patrolInfoHTML = '';
+    for (var item in Data) {
+      String checkpointImagesHTML = '';
+      for (var checkpoint in item['PatrolLogCheckPoints']) {
+        String checkpointImages = '';
+        if (checkpoint['CheckPointImage'] != null) {
+          for (var image in checkpoint['CheckPointImage']) {
+            checkpointImages +=
+                '<img src="$image" style="height: 100px;">'; // Set the height here
+          }
+        }
+        checkpointImagesHTML += '''
+        <div>
+          <p>Checkpoint Name: ${checkpoint['CheckPointName']}</p>
+          $checkpointImages
+          <p>Comment: ${checkpoint['CheckPointComment']}</p>
+          <p>Reported At: ${dateFormat.format(checkpoint['CheckPointReportedAt'].toDate())}</p>
+          <p>Status: ${checkpoint['CheckPointStatus']}</p>
+        </div>
+      ''';
+      }
+
+      patrolInfoHTML += '''
+      <tr>
+        <td>${item['PatrolLogPatrolCount']}</td>
+        <td>${dateFormat.format(item['PatrolLogStartedAt'].toDate())}</td>
+        <td>${dateFormat.format(item['PatrolLogEndedAt'].toDate())}</td>
+        <td>${checkpointImagesHTML}</td>
+      </tr>
+    ''';
+    }
+
+    final htmlcontent2 = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Report</title>
+        <style>
+          body {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            header {
+                background-color: #ddd;
+                padding: 20px;
+                text-align: center;
+            }
+
+            h1 {
+                margin-bottom: 0;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            th {
+                text-align: left;
+            }
+
+            .patrol-info tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Security Report</h1>
+        </header>
+
+        <section>
+            <h2>Dear ${ClientName},</h2>
+            <p>I hope this email finds you well,I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during thier shif.Below is a detailed breakdown of the patrols conducted.</p>
+        </section>
+
+        <h3>Shift Information</h3>
+        <table class="shift-info">
+            <tr>
+                <th>Guard Name</th>
+                <th>Shift Time In</th>
+                <th>Shift Time Out</th> 
+            </tr>
+            <tr>
+                <td> ${GuardName}</td>
+                <td>${shiftinTime}</td>
+                <td>${shiftOutTime}</td>
+            </tr>
+        </table>
+
+        <h3>Patrol Information</h3>
+        <table class="patrol-info">
+            <tr>
+                <th>Patrol Count</th>
+                <th>Patrol Time In</th>
+                <th>Patrol Time Out</th>
+                <th>Checkpoint Details</th>
+            </tr>
+            ${patrolInfoHTML}
+        </table>
+
+        <p>Please review the information provided and let us know if you have any questions or require further 
+details. We are committed to ensuring the safety and security of your premises, and your feedback is 
+invaluable to us.</p>
+        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
+Best regards,</p>
+        <p>TEAM TACTTIK<p>
+    </body>
+    </html>
+  """;
+
+    // Send the email
+    for (var toEmail in toEmails) {
+      final emailResponse = await http.post(
+        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'to_email': toEmail,
+          'subject': Subject,
+          'from_name': fromName,
+          'html': htmlcontent2,
+          'attachments': [
+            {
+              'filename': 'security_report.pdf',
+              'content': pdfBase64,
+              'contentType': 'application/pdf',
+            }
+          ],
+        }),
+      );
+
+      if (emailResponse.statusCode == 201) {
+        print('Email sent successfully to $toEmail');
+        // Handle success
+      } else {
+        print(
+            'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+        // Handle failure
+      }
+    }
+  }
 }
+
 
 
 

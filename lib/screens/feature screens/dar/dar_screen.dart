@@ -13,8 +13,10 @@ import '../../../common/sizes.dart';
 
 class DarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
+  final String EmpID;
 
-  DarDisplayScreen({Key? key, required this.EmpEmail}) : super(key: key);
+  DarDisplayScreen({Key? key, required this.EmpEmail, required this.EmpID})
+      : super(key: key);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -28,8 +30,9 @@ class DarDisplayScreen extends StatelessWidget {
         backgroundColor: Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
-              .collection('DAR')
-              .orderBy('createdAt', descending: true)
+              .collection('EmployeesDAR')
+              // .where('EmpDarEmpId', isEqualTo: EmpID)
+              .orderBy('EmpDarDate', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -71,7 +74,8 @@ class DarDisplayScreen extends StatelessWidget {
                               children: [
                                 SizedBox(height: height / height20),
                                 InterBold(
-                                  text: _formatTimestamp(document['createdAt']),
+                                  text:
+                                      _formatTimestamp(document['EmpDarDate']),
                                   fontsize: width / width20,
                                   color: Primarycolor,
                                   letterSpacing: -.3,
@@ -87,7 +91,6 @@ class DarDisplayScreen extends StatelessWidget {
                                             DarOpenAllScreen(),
                                       ),
                                     );
-
                                   },
                                   child: Container(
                                     width: double.maxFinite,
@@ -111,14 +114,14 @@ class DarDisplayScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         InterBold(
-                                          text: document['title'],
+                                          text: document['EmpDarTitle'],
                                           fontsize: width / width18,
                                           color: Primarycolor,
                                         ),
                                         SizedBox(height: height / height10),
                                         Flexible(
                                           child: InterRegular(
-                                            text: document['content'],
+                                            text: document['EmpDarContent'],
                                             fontsize: width / width16,
                                             color: color26,
                                             maxLines: 4,
@@ -181,6 +184,7 @@ class DarDisplayScreen extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => CreateDarScreen(
                     EmpEmail: EmpEmail,
+                    EmpId: EmpID,
                   ),
                 ));
           },

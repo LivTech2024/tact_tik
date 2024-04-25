@@ -13,7 +13,10 @@ import '../widgets/custome_textfield.dart';
 
 class CreateDarScreen extends StatefulWidget {
   final String EmpEmail;
-  const CreateDarScreen({super.key, required this.EmpEmail});
+  final String EmpId;
+
+  const CreateDarScreen(
+      {super.key, required this.EmpEmail, required this.EmpId});
 
   @override
   State<CreateDarScreen> createState() => _CreateDarScreenState();
@@ -44,7 +47,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       var userInfo = await _firestore
           .collection('Employees')
           .where(
-            'employeeId',
+            'EmployeeId',
             isEqualTo: FirebaseAuth.instance.currentUser!.uid,
           )
           .limit(1)
@@ -112,13 +115,13 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       });
 
       try {
-        await _firestore.collection('DAR').add({
-          'title': title,
-          'content': darContent,
-          'createdAt': FieldValue.serverTimestamp(),
-          'userName': _userName,
-          'employeeId': _employeeId,
-          'empEmail': _empEmail,
+        await _firestore.collection('EmployeesDAR').add({
+          'EmpDarTitle': title,
+          'EmpDarContent': darContent,
+          'EmpDarDate': FieldValue.serverTimestamp(),
+          'EmpDarEmpName': _userName,
+          'EmpDarEmpId': _employeeId,
+          'EmpDarEmpEmail': _empEmail,
           'employeeImg': _employeeImg,
         });
 

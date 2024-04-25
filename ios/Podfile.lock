@@ -2,6 +2,8 @@ PODS:
   - AppCheckCore (10.18.2):
     - GoogleUtilities/Environment (~> 7.11)
     - PromisesObjC (~> 2.3)
+  - audioplayers_darwin (0.0.1):
+    - Flutter
   - cloud_firestore (4.15.9):
     - Firebase/Firestore (= 10.22.0)
     - firebase_core
@@ -219,6 +221,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_app_check (from `.symlinks/plugins/firebase_app_check/ios`)
@@ -279,6 +282,8 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   file_picker:
@@ -336,6 +341,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppCheckCore: ef7a5f4ae432941d2835c7c9ba14131028aa33bd
+  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   cloud_firestore: 9d69182af1d677062f005584ca5470a19e1f68e7
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
