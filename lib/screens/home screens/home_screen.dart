@@ -14,6 +14,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
@@ -38,9 +39,11 @@ import '../../fonts/roboto_medium.dart';
 import '../../services/EmailService/EmailJs_fucntion.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
+import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
+import '../feature screens/task/task_feature_screen.dart';
 import '../feature screens/visitors/visitors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -438,13 +441,47 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                  height: height / height180,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width / width15),
-                    color:
-                        Primarycolor, // Background color for the drawer header
-                  )),
+                height: height / height180,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(width / width15),
+                  color: Primarycolor, // Background color for the drawer header
+                ),
+                child: Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child: SizedBox.fromSize(
+                                size: Size.fromRadius(width / width50),
+                                child: Image.network(
+                                  'https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630',
+                                  fit: BoxFit.cover,
+                                )),
+                          ),
+                        ),
+                        SizedBox(height: height / height10),
+                        PoppinsSemibold(
+                          text: 'Nick Jones',
+                          color: WidgetColor,
+                          fontsize: width / width16,
+                          letterSpacing: -.3,
+                        ),
+                        SizedBox(height: height / height5),
+                        PoppinsRegular(
+                          text: 'nickjones077@gmail.com',
+                          color: WidgetColor,
+                          fontsize: width / width16,
+                          letterSpacing: -.3,
+                        )
+                      ]),
+                ),
+              ),
               Expanded(
                 child: Column(
                   children: [
@@ -488,7 +525,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'History',
                       4,
                       () {
-                        customEmail();
+                        // customEmail();
                       },
                     ),
                     buildListTile(
@@ -496,36 +533,36 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        List<String> emails = [];
-                        emails.add("sutarvaibhav37@gmail.com");
-                        emails.add("pankaj.kumar1312@yahoo.com");
+                        // List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("pankaj.kumar1312@yahoo.com");
 
-                        List<String> patrolLogIds = [];
-                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        //Sending Shift end report
-                        var data = await fireStoreService.fetchDataForPdf(
-                          "lQ2aTaE9MND2BpVAceXm",
-                          "rIiIVtpd9KZdxdnqal1a",
-                        );
+                        // List<String> patrolLogIds = [];
+                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        // //Sending Shift end report
+                        // var data = await fireStoreService.fetchDataForPdf(
+                        //   "lQ2aTaE9MND2BpVAceXm",
+                        //   "rIiIVtpd9KZdxdnqal1a",
+                        // );
 
-                        await sendShiftTemplateEmail(
-                          "Leston holdings ",
-                          emails,
-                          'Testing Shift Mail',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "24 April",
-                          "sukhman kooner",
-                          "20:00",
-                          "6:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings ",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "24 April",
+                        //   "sukhman kooner",
+                        //   "20:00",
+                        //   "6:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                       },
                     ),
                   ],
@@ -683,6 +720,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 builder: (context) =>
                                                     DarDisplayScreen(
                                                       EmpEmail: _empEmail,
+                                                      EmpID: _employeeId,
                                                     )));
                                         break;
                                       case 4:
@@ -691,6 +729,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     PostOrder()));
+                                        break;
+                                      case 5:
+                                        /*TaskScreen*/
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TaskFeatureScreen()));
                                         break;
                                       case 6:
                                         Navigator.push(
@@ -721,14 +767,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         : ScreenIndex == 2
                             ? SliverToBoxAdapter(
                                 child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: width / width30,
-                                  right: width / width30,
+                                  padding: EdgeInsets.only(
+                                    left: width / width30,
+                                    right: width / width30,
+                                  ),
+                                  child: CustomCalendar(
+                                    selectedDates: selectedDates,
+                                  ),
                                 ),
-                                child: CustomCalendar(
-                                  selectedDates: selectedDates,
-                                ),
-                              ))
+                              )
                             : const SizedBox(),
                 ScreenIndex == 2
                     ? SliverList(
