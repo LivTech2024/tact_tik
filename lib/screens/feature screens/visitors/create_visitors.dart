@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
-import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTextfieldWidget.dart';
+import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 
 import '../../../common/sizes.dart';

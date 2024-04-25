@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/dar/dar_open_all_screen.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
 
 class DarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
+
   DarDisplayScreen({Key? key, required this.EmpEmail}) : super(key: key);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -74,70 +77,77 @@ class DarDisplayScreen extends StatelessWidget {
                                   letterSpacing: -.3,
                                 ),
                                 SizedBox(height: height / height30),
-                                Container(
-                                  width: double.maxFinite,
-                                  height: height / height200,
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width20),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width / width20,
-                                    vertical: height / height10,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InterBold(
-                                        text: document['title'],
-                                        fontsize: width / width18,
-                                        color: Primarycolor,
+                                GestureDetector(
+                                  onTap: () {
+                                    /*DarOpenAllScreen*/
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DarOpenAllScreen(),
                                       ),
-                                      SizedBox(height: height / height10),
-                                      Flexible(
-                                        child: InterRegular(
-                                          text: document['content'],
-                                          fontsize: width / width16,
-                                          color: color26,
-                                          maxLines: 4,
+                                    );
+
+                                  },
+                                  child: Container(
+                                    width: double.maxFinite,
+                                    height: height / height200,
+                                    // constraints: BoxConstraints(
+                                    //     minHeight: height / height200,
+                                    //     ),
+                                    decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                          width / width20),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: width / width20,
+                                      vertical: height / height10,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        InterBold(
+                                          text: document['title'],
+                                          fontsize: width / width18,
+                                          color: Primarycolor,
                                         ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {},
-                                            padding: EdgeInsets.zero,
-                                            icon: SvgPicture.asset(
-                                              'assets/images/pdf.svg',
-                                              height: height / height16,
-                                              color: color2,
-                                            ),
+                                        SizedBox(height: height / height10),
+                                        Flexible(
+                                          child: InterRegular(
+                                            text: document['content'],
+                                            fontsize: width / width16,
+                                            color: color26,
+                                            maxLines: 4,
                                           ),
-                                          IconButton(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: width / width10),
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.image,
-                                              size: width / width18,
-                                              color: color2,
+                                        ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: width / width10),
+                                              onPressed: () {},
+                                              icon: Icon(
+                                                Icons.image,
+                                                size: width / width18,
+                                                color: color2,
+                                              ),
                                             ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(
-                                              Icons.video_collection,
-                                              size: width / width18,
-                                              color: color2,
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(
+                                                Icons.video_collection,
+                                                size: width / width18,
+                                                color: color2,
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: height / height10),

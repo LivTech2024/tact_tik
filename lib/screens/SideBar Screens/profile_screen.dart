@@ -15,7 +15,7 @@ import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_semibold.dart';
 import '../../utils/colors.dart';
 import '../../utils/utils.dart';
-import '../feature screens/visitors/widgets/setTextfieldWidget.dart';
+import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
