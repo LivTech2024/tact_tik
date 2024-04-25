@@ -9,12 +9,20 @@ import '../widgets/custome_textfield.dart';
 
 class TaskFeatureCreateScreen extends StatelessWidget {
   TaskFeatureCreateScreen({super.key});
+
   final TextEditingController _tittleController = TextEditingController();
   final TextEditingController _explainController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
 
 
     return SafeArea(
@@ -47,11 +55,17 @@ class TaskFeatureCreateScreen extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: height / height30),
-                CustomeTextField(hint: 'Tittle',controller: _tittleController,),
+                CustomeTextField(
+                  hint: 'Tittle', controller: _tittleController,),
                 SizedBox(height: height / height20),
-                CustomeTextField(hint: 'Explain',isExpanded: true , controller: _explainController,),
+                CustomeTextField(hint: 'Explain',
+                  isExpanded: true,
+                  controller: _explainController,),
                 SizedBox(height: height / height20),
-                Button1(text: 'Done', onPressed: (){} , backgroundcolor: Primarycolor,borderRadius: width / width10,)
+                Button1(text: 'Done',
+                  onPressed: () {},
+                  backgroundcolor: Primarycolor,
+                  borderRadius: width / width10,)
               ],
             ),
           ),
