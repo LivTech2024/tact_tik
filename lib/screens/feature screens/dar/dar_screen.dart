@@ -25,7 +25,7 @@ class DarDisplayScreen extends StatelessWidget {
         backgroundColor: Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
-              .collection('DAR')
+              .collection('EmployeesDAR')
               .orderBy('createdAt', descending: true)
               .snapshots(),
           builder: (context, snapshot) {

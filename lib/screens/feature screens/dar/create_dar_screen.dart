@@ -112,13 +112,13 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       });
 
       try {
-        await _firestore.collection('DAR').add({
-          'title': title,
-          'content': darContent,
-          'createdAt': FieldValue.serverTimestamp(),
-          'userName': _userName,
-          'employeeId': _employeeId,
-          'empEmail': _empEmail,
+        await _firestore.collection('EmployeesDAR').add({
+          'EmpDarTitle': title,
+          'EmpDarContent': darContent,
+          'EmpDarDate': FieldValue.serverTimestamp(),
+          'EmpDarEmpName': _userName,
+          'EmpDarEmpId': _employeeId,
+          'EmpDarEmpEmail': _empEmail,
           'employeeImg': _employeeImg,
         });
 

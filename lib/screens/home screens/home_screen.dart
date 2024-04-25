@@ -35,6 +35,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
+import '../../services/EmailService/EmailJs_fucntion.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/profile_screen.dart';
@@ -486,13 +487,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.restart_alt,
                       'History',
                       4,
-                      () {},
+                      () {
+                        customEmail();
+                      },
                     ),
                     buildListTile(
                       Icons.settings,
                       'Settings',
                       5,
-                      () {},
+                      () async {
+                        List<String> emails = [];
+                        emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("pankaj.kumar1312@yahoo.com");
+
+                        List<String> patrolLogIds = [];
+                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        //Sending Shift end report
+                        var data = await fireStoreService.fetchDataForPdf(
+                          "lQ2aTaE9MND2BpVAceXm",
+                          "rIiIVtpd9KZdxdnqal1a",
+                        );
+
+                        await sendShiftTemplateEmail(
+                          "Leston holdings ",
+                          emails,
+                          'Testing Shift Mail',
+                          "Tacttik Shift Report",
+                          data,
+                          "Shift",
+                          "24 April",
+                          "sukhman kooner",
+                          "20:00",
+                          "6:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
+                      },
                     ),
                   ],
                 ),

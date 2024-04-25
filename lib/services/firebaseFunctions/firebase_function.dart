@@ -663,15 +663,15 @@ class FireStoreService {
   //   await docRef.update({'PatrolLogId': docRef.id});
   // }
   Future<void> fetchAndCreatePatrolLogs(
-    String patrolId,
-    String empId,
-    String EmpName,
-    int PatrolCount,
-    String ShiftDate,
-    Timestamp StartTime,
-    Timestamp EndTime,
-    String FeedbackComment,
-  ) async {
+      String patrolId,
+      String empId,
+      String EmpName,
+      int PatrolCount,
+      String ShiftDate,
+      Timestamp StartTime,
+      Timestamp EndTime,
+      String FeedbackComment,
+      String ShiftId) async {
     // Assuming Firestore is initialized
     var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
     var patrolDoc = await patrolsCollection.doc(patrolId).get();
@@ -729,6 +729,7 @@ class FireStoreService {
       'PatrolLogStatus': "completed",
       'PatrolLogStartedAt': StartTime,
       'PatrolLogEndedAt': EndTime,
+      'PatrolShiftId': ShiftId,
       'PatrolLogCreatedAt': Timestamp.now(),
     });
     await docRef.update({'PatrolLogId': docRef.id});
@@ -2138,11 +2139,20 @@ class FireStoreService {
           .get();
 
       // Process query results
+      List<String> specificDocIds = [
+        'jz05XKEGNGazZQPl4KiV',
+        'ygLQKPhSsc2Uc8Sfbw7O',
+        'vRVAWBW25mSSG7SxA0JM'
+      ];
+
       querySnapshot.docs.forEach((doc) {
-        // Check if the document ID already exists in pdfDataList
-        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-          pdfDataList.add(doc.data());
-          print("Data for Pdf: ${doc.data()}");
+        // Check if the document ID is in the list of specific IDs
+        if (specificDocIds.contains(doc.id)) {
+          // Check if the document ID already exists in pdfDataList
+          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+            pdfDataList.add(doc.data());
+            print("Data for Pdf: ${doc.data()}");
+          }
         }
       });
     } catch (e) {

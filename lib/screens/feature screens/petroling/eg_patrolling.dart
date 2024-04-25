@@ -203,6 +203,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           Allchecked: allChecked,
           PatrolCompanyID: patrolCompanyId,
           PatrolClientID: patrolClientId, ShiftDate: widget.ShiftDate,
+          ShiftId: widget.ShiftId,
         ),
       );
     }
@@ -1211,7 +1212,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   formattedStartDate,
                                                   patrolInTimestamp,
                                                   patrolOutTimestamp,
-                                                  CommentController.text);
+                                                  CommentController.text,
+                                                  widget.p.ShiftId);
                                           print(
                                               "Patrol count == Required COunt");
                                           setState(() {
@@ -1401,7 +1403,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   formattedStartDate,
                                                   patrolInTimestamp,
                                                   patrolOutTimestamp,
-                                                  CommentController.text);
+                                                  CommentController.text,
+                                                  widget.p.ShiftId);
                                           //if normal update
                                           setState(() {
                                             _expand = false;
@@ -1538,6 +1541,7 @@ class Patrol {
   final bool Allchecked;
   final List<Category> categories;
   final String ShiftDate;
+  final String ShiftId;
 
   Patrol({
     required this.title,
@@ -1554,6 +1558,7 @@ class Patrol {
     required this.CompletedCount,
     required this.Allchecked,
     required this.ShiftDate,
+    required this.ShiftId,
   });
 }
 

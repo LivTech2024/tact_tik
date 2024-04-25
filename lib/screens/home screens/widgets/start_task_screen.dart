@@ -733,8 +733,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             .getAdminEmail(widget.ShiftCompanyId);
                         print("Client Name ${AdminEmal}");
                         //fetch the data from Patrol Logs and generate email from it
-                        var data = await fireStoreService.fetchDataForPdf(
-                            widget.EmployeId, widget.ShiftId);
+                        // var data = await fireStoreService.fetchDataForPdf(
+                        //     widget.EmployeId, widget.ShiftId);
+                        // send_mail_onOut(data);
 
                         // generateAndOpenPDF(
                         //     ClientName, "sutarvaibhav37@gmail.com", data);
@@ -743,7 +744,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         //add to firebase storage and then mail too
                         // String? pdfLink = fireStoreService.uploadPdfToStorage(
                         //     file, widget.ShiftId);
-                        send_mail_onOut(data);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -778,9 +778,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   color: color5,
                   backgroundcolor: WidgetColor,
                   onPressed: () async {
-                    var data = await fireStoreService.fetchDataForPdf(
-                        widget.EmployeId, widget.ShiftId);
-                    print(data);
+                    // var data = await fireStoreService.fetchDataForPdf(
+                    //     widget.EmployeId, widget.ShiftId);
+                    // print(data);
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
 
@@ -846,6 +846,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             EmployeeName: widget.EmployeeName,
                             ShiftId: widget.ShiftId,
                             ShiftDate: widget.ShiftDate,
+                            
                           )));
             },
           ),
