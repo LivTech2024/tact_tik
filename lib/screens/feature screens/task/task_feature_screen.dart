@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/task/task_feature_create_screen.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -19,6 +20,18 @@ class TaskFeatureScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TaskFeatureCreateScreen(),
+                ));
+          },
+          backgroundColor: Primarycolor,
+          shape: CircleBorder(),
+          child: Icon(Icons.add),
+        ),
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [

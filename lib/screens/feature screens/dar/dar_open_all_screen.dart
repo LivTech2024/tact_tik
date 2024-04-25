@@ -17,7 +17,7 @@ class DarOpenAllScreen extends StatefulWidget {
 
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   List colors = [Primarycolor, color25];
-  bool showDARS = false;
+  bool showDARS = true;
 
   @override
   Widget build(BuildContext context) {
