@@ -75,8 +75,6 @@ dependencies:
   flutter_pdfview: ^1.2.5
   open_file: ^3.2.1
 
-  audioplayers: ^6.0.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
