@@ -50,7 +50,7 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 28
         targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger() + 4
+        versionCode flutterVersionCode.toInteger() + 5
         versionName flutterVersionName
         multiDexEnabled true
     }
