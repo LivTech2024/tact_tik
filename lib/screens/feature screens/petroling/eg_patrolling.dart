@@ -1249,11 +1249,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           var testEmail3 =
                                               "Swastikbthiramdas@gmail.com";
                                           emails.add(TestinEmail);
-                                          emails.add(testEmail3);
-                                          emails.add(testEmail3);
-                                          emails.add(ClientEmail!);
-                                          emails.add(AdminEmail!);
-                                          emails.add(defaultEmail!);
+                                          // emails.add(testEmail3);
+                                          // emails.add(testEmail3);
+                                          // emails.add(ClientEmail!);
+                                          // emails.add(AdminEmail!);
+                                          // emails.add(defaultEmail!);
 
                                           // DateFormat dateFormat =
                                           //     DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1454,9 +1454,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           emails.add(TestinEmail);
                                           emails.add(testEmail3);
 
-                                          emails.add(ClientEmail!);
-                                          emails.add(AdminEmail!);
-                                          emails.add(defaultEmail!);
+                                          // emails.add(ClientEmail!);
+                                          // emails.add(AdminEmail!);
+                                          // emails.add(defaultEmail!);
 
                                           await fireStoreService.addToLog(
                                               "PatrolEnded",

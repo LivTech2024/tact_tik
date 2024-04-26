@@ -160,7 +160,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
         var docRef = await _firestore.collection('EmployeesDAR').add({
           'EmpDarTitle': title,
           'EmpDarData': darContent,
-          'EmpDarShiftId': darContent,
+          'EmpDarShiftId': widget.EmpShiftId ?? "",
           'EmpDarDate': FieldValue.serverTimestamp(),
           'EmpDarCreatedAt': FieldValue.serverTimestamp(),
           'EmpDarEmpName': _userName,

@@ -99,52 +99,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final double _zoom = 12.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
-
-  // void _shoeDatePicker(BuildContext context) {
-  //   showDatePicker(
-  //       context: context, firstDate: DateTime(2000), lastDate: DateTime(2025));
-  // }
-
-/*  late DateTime selectedDay;
-  late List <CleanCalendarEvent> selectedEvent;
-
-  final Map<DateTime,List<CleanCalendarEvent>> events = {
-    DateTime (DateTime.now().year,DateTime.now().month,DateTime.now().day):
-    [
-      CleanCalendarEvent('Event A',
-          startTime: DateTime(
-              DateTime.now().year,DateTime.now().month,DateTime.now().day,10,0),
-          endTime:  DateTime(
-              DateTime.now().year,DateTime.now().month,DateTime.now().day,12,0),
-          description: 'A special event',
-          color: Colors.blue,),
-    ],
-
-    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 2):
-    [
-      CleanCalendarEvent('Event B',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 10, 0),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 12, 0),
-          color: Colors.orange),
-      CleanCalendarEvent('Event C',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 14, 30),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 17, 0),
-          color: Colors.pink),
-    ],
-  };
-
-  void _handleData(date){
-    setState(() {
-      selectedDay = date;
-      selectedEvent = events[selectedDay] ?? [];
-    });
-    print(selectedDay);
-  }*/
   @override
+  void refreshHomeScreen() {
+    _getUserInfo();
+    getAndPrintAllSchedules();
+    // Implement the refresh logic here
+    // For example, you can call setState() to update the UI
+  }
+
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
@@ -533,36 +495,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        // List<String> emails = [];
-                        // emails.add("sutarvaibhav37@gmail.com");
-                        // emails.add("pankaj.kumar1312@yahoo.com");
+                        List<String> emails = [];
+                        emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("pankaj.kumar1312@yahoo.com");
+                        emails.add("security@lestonholdings.com");
+                        emails.add("dan@tpssolution.com");
+                        // "security@lestonholdings.com"
+                        List<String> patrolLogIds = [];
+                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        //Sending Shift end report
+                        var data =
+                            await fireStoreService.fetchTemplateDataForPdf(
+                          "Hijql0nkNjA1tOhSf8wW",
+                          "PjiJ0MqsUA9oUwlPsUnr",
+                        );
 
-                        // List<String> patrolLogIds = [];
-                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        // //Sending Shift end report
-                        // var data = await fireStoreService.fetchDataForPdf(
-                        //   "lQ2aTaE9MND2BpVAceXm",
-                        //   "rIiIVtpd9KZdxdnqal1a",
-                        // );
-
-                        // await sendShiftTemplateEmail(
-                        //   "Leston holdings ",
-                        //   emails,
-                        //   'Tacttik Shift Report',
-                        //   "Tacttik Shift Report",
-                        //   data,
-                        //   "Shift",
-                        //   "24 April",
-                        //   "sukhman kooner",
-                        //   "20:00",
-                        //   "6:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        await sendShiftTemplateEmail(
+                          "Leston holdings ",
+                          emails,
+                          'Tacttik Shift Report',
+                          "Tacttik Shift Report",
+                          data,
+                          "Shift",
+                          "25 April",
+                          "Dan Martin",
+                          "20:00",
+                          "6:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                       },
                     ),
                   ],
@@ -687,7 +652,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ShiftClientId: _shiftCLientId,
                                 onRefreshHomeScreen: _refreshScreen,
                                 onEndTask: _refreshScreen,
-                                onRefreshStartTaskScreen: () {},
+                                onRefreshStartTaskScreen: () {
+                                  refreshHomeScreen();
+                                },
                               ),
                             )),
                       )

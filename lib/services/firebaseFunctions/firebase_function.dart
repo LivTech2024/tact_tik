@@ -1083,9 +1083,9 @@ class FireStoreService {
         .collection("ReportCategories")
         .where("ReportCategoryName", isEqualTo: "Patrol")
         .get();
-
     if (snapshot.docs.isNotEmpty) {
       final doc = snapshot.docs.first;
+      print("Report Category Id fetched : ${doc.data()} ");
       return doc.id;
     } else {
       return null; // Handle case when no document is found
@@ -2151,6 +2151,9 @@ class FireStoreService {
     List<Map<String, dynamic>> pdfDataList = [];
     try {
       // Get the array of ShiftLinkedPatrolIds
+      print("Shift Id ${ShiftId}");
+      print("EMP Id ${empId}");
+
       print("Search for pdf Data");
       var shiftDoc = await FirebaseFirestore.instance
           .collection('Shifts')
@@ -2165,6 +2168,7 @@ class FireStoreService {
           .collection('PatrolLogs')
           .where('PatrolId', whereIn: shiftLinkedPatrolIds)
           .where('PatrolLogGuardId', isEqualTo: empId)
+          .where('PatrolShiftId', isEqualTo: ShiftId)
           .orderBy('PatrolLogPatrolCount')
           .get();
 
@@ -2177,6 +2181,54 @@ class FireStoreService {
 
       querySnapshot.docs.forEach((doc) {
         // Check if the document ID is in the list of specific IDs
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+    return pdfDataList;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchTemplateDataForPdf(
+      String empId, String ShiftId) async {
+    List<Map<String, dynamic>> pdfDataList = [];
+    try {
+      // Get the array of ShiftLinkedPatrolIds
+      print("Shift Id ${ShiftId}");
+      print("EMP Id ${empId}");
+
+      print("Search for pdf Data");
+      var shiftDoc = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(ShiftId)
+          .get();
+      print("Shift Doc : ${shiftDoc.data()}");
+      var shiftLinkedPatrolIds =
+          List<String>.from(shiftDoc.data()?['ShiftLinkedPatrolIds'] ?? []);
+      print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
+      // Query PatrolLogs for data
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('PatrolLogs')
+          .where('PatrolId', whereIn: shiftLinkedPatrolIds)
+          .where('PatrolLogGuardId', isEqualTo: empId)
+          // .where('changePatrolStatus', isEqualTo: ShiftId)
+          .orderBy('PatrolLogPatrolCount')
+          .get();
+
+      // Process query results
+      List<String> specificDocIds = [
+        '0qRktNvV0f9kQHLn3Nhn',
+        'ycu5qIbXOu0593jQB6fi',
+        '3VUuYWhhtjik9mx1BOal'
+      ];
+
+      querySnapshot.docs.forEach((doc) {
+        // Check if the document ID is in the list of specific IDs
+        // Check if the document ID already exists in pdfDataList
         if (specificDocIds.contains(doc.id)) {
           // Check if the document ID already exists in pdfDataList
           if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
@@ -2190,7 +2242,6 @@ class FireStoreService {
     }
     return pdfDataList;
   }
-
   //Create log
   // Future<void> addToLog(
   //     String logType,
@@ -2325,6 +2376,26 @@ class FireStoreService {
             .doc(patrolId)
             .update({
           'PatrolCheckPoints': updatedCheckPointsList,
+        });
+
+        // Update PatrolCurrentStatus array
+        List<dynamic> currentStatusList =
+            List<dynamic>.from(patrolSnapshot['PatrolCurrentStatus'] ?? []);
+        for (var status in currentStatusList) {
+          if (status['StatusReportedById'] == empId) {
+            status['Status'] = 'started';
+            status['StatusCompletedCount'] = 0;
+            // status['StatusReportedTime'] = DateTime.now().toUtc().toString();
+            break; // Exit loop once the status is updated
+          }
+        }
+
+        // Update Patrol document with the modified PatrolCurrentStatus array
+        await FirebaseFirestore.instance
+            .collection('Patrols')
+            .doc(patrolId)
+            .update({
+          'PatrolCurrentStatus': currentStatusList,
         });
       }
     }

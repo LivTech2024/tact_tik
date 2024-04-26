@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../common/sizes.dart';
@@ -27,7 +28,7 @@ class PatrollLogsScreen extends StatefulWidget {
 
 class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
   String dropdownValue = 'PatrolLogStatus';
-
+  late List<Patrol> patrolsData = [];
   final TextEditingController PatrollId = TextEditingController();
   final TextEditingController PatrolLogCreateAt = TextEditingController();
   final TextEditingController PatrolLogEndedAt = TextEditingController();
@@ -38,6 +39,160 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
   final TextEditingController PatrolLogId = TextEditingController();
   final TextEditingController PatrolLogPatrolCount = TextEditingController();
   final TextEditingController PatrolLogStartedAt = TextEditingController();
+  void _getUserInfo() async {
+    // print("Shift Id : ${widget.ShiftLocationId}");
+    var patrolInfoList =
+        await fireStoreService.getAllPatrolsByShiftId("TsuGzh56RZWYhFsmvmUU");
+
+    List<Patrol> patrols = [];
+    for (var patrol in patrolInfoList) {
+      Map<String, dynamic> data = patrol.data() as Map<String, dynamic>;
+      String patrolCompanyId = data['PatrolCompanyId'];
+      String patrolLocationName = data['PatrolLocationName'];
+      String patrolName = data['PatrolName'];
+      String patrolId = data['PatrolId'];
+      String patrolClientId = data['PatrolClientId'];
+      // String patrolTime = data['PatrolTime'];
+      int requiredCount = data['PatrolRequiredCount'];
+      List<dynamic>? patrolStatusDynamic =
+          data['PatrolCurrentStatus'] is List<dynamic>
+              ? data['PatrolCurrentStatus'] as List<dynamic>?
+              : null;
+      if (patrolStatusDynamic != null) {
+        List<Map<String, dynamic>> patrolStatus =
+            patrolStatusDynamic.cast<Map<String, dynamic>>();
+
+        int getCompletedCount(
+            List<Map<String, dynamic>> patrolCurrentStatus, String emplid) {
+          List<Map<String, dynamic>> statusList =
+              patrolCurrentStatus.cast<Map<String, dynamic>>();
+
+          DateTime now = DateTime.now();
+          DateTime today = DateTime(now.year, now.month, now.day);
+
+          bool _isSameDay(DateTime date1, DateTime date2) {
+            return date1.year == date2.year &&
+                date1.month == date2.month &&
+                date1.day == date2.day;
+          }
+
+          DateTime _parseTimestamp(Timestamp timestamp) {
+            return timestamp.toDate();
+          }
+
+          List<Map<String, dynamic>> filteredStatusList = patrolCurrentStatus
+              .where((status) =>
+                  status['StatusReportedById'] == emplid &&
+                  status['StatusReportedTime'] != null &&
+                  _isSameDay(
+                      _parseTimestamp(status['StatusReportedTime']), today))
+              .toList();
+
+          int completedCount = filteredStatusList.fold(
+              0,
+              (sum, status) =>
+                  sum + (status['StatusCompletedCount'] as int? ?? 0));
+          return completedCount;
+        }
+
+        int completedCount = getCompletedCount(patrolStatus, "");
+        setState(() {
+          // totalCount = completedCount;
+        });
+
+        print('Completed count for : $completedCount');
+      } else {
+        print('Patrol status is null or not a List<dynamic>');
+      }
+
+      setState(() {
+        // _PatrolId = patrolId;
+      });
+      List<Category> categories = [];
+      bool allChecked = false;
+      for (var checkpoint in data['PatrolCheckPoints']) {
+        String checkpointCategory = checkpoint['CheckPointCategory'] ?? "";
+        String checkpointId = checkpoint['CheckPointId'];
+        String checkpointName = checkpoint['CheckPointName'];
+
+        List<CheckPointStatus> checkPointStatuses =
+            (checkpoint['CheckPointStatus'] as List<dynamic> ?? [])
+                .map((status) {
+          List<dynamic> checkPointStatuses =
+              checkpoint['CheckPointStatus'] ?? [];
+          if (checkPointStatuses == null ||
+              checkPointStatuses.isEmpty ||
+              checkPointStatuses.any((status) =>
+                  status['Status'] == 'unchecked' &&
+                  status['StatusReportedById'] == "") ||
+              checkPointStatuses.any((status) =>
+                  status['Status'] != 'unchecked' &&
+                  checkPointStatuses
+                      .every((s) => s['StatusReportedById'] != ""))) {
+            setState(() {
+              allChecked =
+                  false; // At least one checkpoint is not checked or does not have the specified 'empid'
+            });
+          } else {
+            setState(() {
+              allChecked =
+                  true; // All checkpoints have at least one status and all statuses are checked
+            });
+          }
+          // ... rest of the code
+          //  List<Map<String, dynamic>> filteredStatusList = statusList
+          // .where((status) => status['StatusReportedById'] == emplid)
+          // .toList();
+          return CheckPointStatus(
+            status: status['Status'],
+            StatusCompletedCount: status['StatusCompletedCount'],
+            reportedTime: status['StatusReportedTime'],
+            reportedById: status['StatusReportedById'],
+            reportedByName: status['StatusReportedByName'],
+          );
+        }).toList();
+        // Assuming CheckPointStatus is not used in this context
+        Category category = categories.firstWhere(
+            (element) => element.title == checkpointCategory, orElse: () {
+          Category newCategory =
+              Category(title: checkpointCategory, checkpoints: []);
+          categories.add(newCategory);
+          return newCategory;
+        });
+
+        category.checkpoints.add(Checkpoint(
+          title: checkpointName,
+          description: 'Description of $checkpointName',
+          id: checkpointId,
+          checkPointStatus: checkPointStatuses,
+          patrolId: patrolId,
+        ));
+      }
+
+      patrols.add(
+        Patrol(
+          title: patrolName,
+          description: patrolLocationName,
+          categories: categories,
+          // time: patrolTime,
+          PatrolId: patrolId,
+          EmpId: "",
+          EmployeeName: "",
+          PatrolRequiredCount: requiredCount,
+          CompletedCount: 0,
+          Allchecked: allChecked,
+          PatrolCompanyID: patrolCompanyId,
+          PatrolClientID: patrolClientId,
+          ShiftDate: "",
+          // ShiftId: widget.ShiftId,
+        ),
+      );
+    }
+
+    setState(() {
+      patrolsData = patrols;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +241,7 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                       hint: 'Patroll ID',
                       controller: PatrollId,
                     ),
+                    Button1(text: "Submit", onPressed: _getUserInfo),
                     SizedBox(height: height / height10),
 
                     CustomeTextField(
@@ -177,21 +333,18 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                 ),
               ),
             ),
-            // CheckpointsStructure
-            /* SliverList(
+            SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   Patrol p = patrolsData[index];
                   return Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: width / width30),
-                    child: PatrollingWidget(p: p, onRefresh: _refreshData),
+                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    child: PatrollingWidget(p: p),
                   );
                 },
                 childCount: patrolsData.length,
               ),
-            ),*/
-
+            ),
           ],
         ),
       ),
@@ -200,10 +353,9 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
 }
 
 class PatrollingWidget extends StatefulWidget {
-  const PatrollingWidget({super.key, required this.p, required this.onRefresh});
+  const PatrollingWidget({super.key, required this.p});
 
   final Patrol p;
-  final VoidCallback onRefresh;
 
   @override
   State<PatrollingWidget> createState() => _PatrollingWidgetState();
@@ -240,9 +392,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   String Result = "";
 
-  Future<void> _refresh() async {
-    widget.onRefresh();
-  }
+  // Future<void> _refresh() async {
+  //   widget.onRefresh();
+  // }
 
   List<Map<String, dynamic>> uploads = [];
 
@@ -355,7 +507,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     }
 
     return RefreshIndicator(
-      onRefresh: _refresh,
+      onRefresh: _refreshData,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -576,9 +728,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.PatrolClientID);
                                           showSuccessToast(context,
                                               "${checkpoint.description} scanned ");
-                                          _refresh();
+                                          // _refresh();
                                         } else {
-                                          _refresh();
+                                          // _refresh();
                                           // player.play(AssetSource(
                                           //     "../../../../assets/ErrorSound.mp3"));
                                           showErrorToast(context,
@@ -963,7 +1115,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         autoCloseDuration:
                                                                             const Duration(seconds: 2),
                                                                       );
-                                                                      _refresh();
+                                                                      // _refresh();
                                                                       setState(
                                                                           () {
                                                                         _isLoading =

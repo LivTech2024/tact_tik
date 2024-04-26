@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
+import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -161,13 +162,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
         leading: Icon(
           icon,
           color: isSelected
-              ? Primarycolor :color3, // Change color based on selection
+              ? Primarycolor
+              : color3, // Change color based on selection
           size: width / width24,
         ),
         title: PoppinsBold(
           text: title,
-            color: isSelected
-                ? Primarycolor : color3,
+          color: isSelected ? Primarycolor : color3,
           fontsize: width / width14,
         ),
         onTap: () {
@@ -188,35 +189,39 @@ class _SHomeScreenState extends State<SHomeScreen> {
           child: Column(
             children: [
               Container(
-                height: height / height180,
-                width: double.maxFinite,
+                  height: height / height180,
+                  width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(width / width15),
-                    color: Primarycolor, // Background color for the drawer header
-                  )
-              ),
+                    color:
+                        Primarycolor, // Background color for the drawer header
+                  )),
               Expanded(
-                child: Column(
-                  children: [
-                    buildListTile(Icons.home, 'Home', 0),
-                    buildListTile(Icons.account_circle_outlined, 'Profile', 1),
-                    buildListTile(Icons.add_card, 'Payment', 2),
-                    buildListTile(Icons.article, 'Employment Letter', 3),
-                    buildListTile(Icons.restart_alt, 'History', 4),
-                    buildListTile(Icons.settings, 'Settings', 5),
-                  ]
-                ),
+                child: Column(children: [
+                  buildListTile(Icons.home, 'Home', 0),
+                  buildListTile(Icons.account_circle_outlined, 'Profile', 1),
+                  buildListTile(Icons.add_card, 'Payment', 2),
+                  buildListTile(Icons.article, 'Employment Letter', 3),
+                  buildListTile(Icons.restart_alt, 'History', 4),
+                  buildListTile(Icons.settings, 'Settings', 5),
+                ]),
               ),
               ListTile(
-                leading: Icon(Icons.logout, color: Colors.red , size: width / width24,),
-                title: PoppinsBold(text: 'Logout', color: Colors.red ,fontsize: width / width14, ),
+                leading: Icon(
+                  Icons.logout,
+                  color: Colors.red,
+                  size: width / width24,
+                ),
+                title: PoppinsBold(
+                  text: 'Logout',
+                  color: Colors.red,
+                  fontsize: width / width14,
+                ),
                 onTap: () {
                   auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
-              SizedBox(
-                height: height / height20
-              )
+              SizedBox(height: height / height20)
             ],
           ),
         ),
@@ -228,9 +233,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
             physics: PageScrollPhysics(),
             slivers: [
               HomeScreenPart1(
-                userName: _userName,
+                userName: _userName ?? "",
                 // employeeImg: _userImg,
-                employeeImg: _userImg,
+                employeeImg: _userImg ?? "",
                 drawerOnClicked: () {
                   _scaffoldKey.currentState?.openEndDrawer();
                 },
@@ -344,6 +349,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                               builder: (context) =>
                                                   PostOrderScreen()));
                                       break;
+                                    case 5:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PatrollLogsScreen()));
+                                      break;
                                     // case 6:
                                     //   Navigator.push(
                                     //       context,
@@ -434,8 +446,8 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image:
-                                NetworkImage(widget.guardsInfo['EmployeeImg']),
+                            image: NetworkImage(
+                                widget.guardsInfo['EmployeeImg'] ?? ""),
                             filterQuality: FilterQuality.high,
                             fit: BoxFit.cover,
                           ),
@@ -443,7 +455,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       ),
                       SizedBox(width: width / width20),
                       InterBold(
-                        text: widget.guardsInfo['EmployeeName'],
+                        text: widget.guardsInfo['EmployeeName'] ?? "",
                         letterSpacing: -.3,
                         color: color1,
                       ),
@@ -483,12 +495,15 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                               MaterialPageRoute(
                                   builder: (context) => CreateSheduleScreen(
                                         GuardId:
-                                            widget.guardsInfo["EmployeeId"],
+                                            widget.guardsInfo["EmployeeId"] ??
+                                                "",
                                         GuardName:
-                                            widget.guardsInfo["EmployeeName"],
+                                            widget.guardsInfo["EmployeeName"] ??
+                                                "",
                                         GuardImg:
-                                            widget.guardsInfo["EmployeeImg"],
-                                        CompanyId: widget.CompanyId,
+                                            widget.guardsInfo["EmployeeImg"] ??
+                                                "",
+                                        CompanyId: widget.CompanyId ?? "",
                                       )),
                             );
                           },

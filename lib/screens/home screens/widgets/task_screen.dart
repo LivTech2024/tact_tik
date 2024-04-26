@@ -126,7 +126,9 @@ class _TaskScreenState extends State<TaskScreen> {
     _loadShiftStartedState();
   }
 
-  void refreshStartTaskScreen() {}
+  void refreshStartTaskScreen() {
+    widget.onRefreshStartTaskScreen;
+  }
   // bool isShiftStartTimeWithinRange(String shiftStartTime) {
   //   // Get the current time
   //   DateTime currentTime = DateTime.now();
@@ -225,7 +227,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftClientID: widget.ShiftClientId,
                   resetShiftStarted: resetShiftStarted,
                   ShiftIN: ShiftIn,
-                  onRefresh: resetShiftStarted,
+                  onRefresh: refreshStartTaskScreen,
                   // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                 )
               : Column(
