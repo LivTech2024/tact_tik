@@ -495,39 +495,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        List<String> emails = [];
-                        emails.add("sutarvaibhav37@gmail.com");
-                        emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
-                        // "security@lestonholdings.com"
-                        List<String> patrolLogIds = [];
-                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        //Sending Shift end report
-                        var data =
-                            await fireStoreService.fetchTemplateDataForPdf(
-                          "Hijql0nkNjA1tOhSf8wW",
-                          "PjiJ0MqsUA9oUwlPsUnr",
-                        );
+                        // List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("pankaj.kumar1312@yahoo.com");
+                        // emails.add("security@lestonholdings.com");
+                        // emails.add("dan@tpssolution.com");
+                        // // "security@lestonholdings.com"
+                        // List<String> patrolLogIds = [];
+                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        // //Sending Shift end report
+                        // var data =
+                        //     await fireStoreService.fetchTemplateDataForPdf(
+                        //   "Hijql0nkNjA1tOhSf8wW",
+                        //   "PjiJ0MqsUA9oUwlPsUnr",
+                        // );
 
-                        await sendShiftTemplateEmail(
-                          "Leston holdings ",
-                          emails,
-                          'Tacttik Shift Report',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "25 April",
-                          "Dan Martin",
-                          "20:00",
-                          "6:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings ",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "25 April",
+                        //   "Dan Martin",
+                        //   "20:00",
+                        //   "6:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                       },
                     ),
                   ],
