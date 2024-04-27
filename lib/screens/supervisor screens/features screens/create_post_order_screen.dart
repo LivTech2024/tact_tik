@@ -127,7 +127,9 @@ class _CreatePostOrderScreenState extends State<CreatePostOrderScreen> {
             padding: EdgeInsets.symmetric(horizontal: width / width30),
             child: Column(
               children: [
-                SizedBox(height: height / height30,),
+                SizedBox(
+                  height: height / height30,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -395,7 +397,9 @@ class _CreatePostOrderScreenState extends State<CreatePostOrderScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: height / height60,),
+                SizedBox(
+                  height: height / height60,
+                ),
                 Button1(
                   text: 'Done',
                   onPressed: () {},

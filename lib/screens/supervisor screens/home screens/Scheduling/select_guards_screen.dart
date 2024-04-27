@@ -39,9 +39,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (mounted) {
       if (userInfo != null) {
-        String userName = userInfo['EmployeeName'];
-        String EmployeeId = userInfo['EmployeeId'];
-        String CompanyId = userInfo['EmployeeCompanyId'];
+        String userName = userInfo['EmployeeName'] ?? "";
+        String EmployeeId = userInfo['EmployeeId'] ?? "";
+        String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(widget.companyId);
         var patrolInfo = await fireStoreService
@@ -120,102 +120,115 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                         dropdownValue = newValue!;
                       });
                     },
-                    items: <String>['All', 'available', 'unavailable'] // Add your options here
+                    items: <String>[
+                      'All',
+                      'available',
+                      'unavailable'
+                    ] // Add your options here
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
-                    })
-                        .toList(),
+                    }).toList(),
                   ),
                 ),
                 SizedBox(height: height / height20),
-                _guardsInfo.length != 0 ? ListView.builder(
-                  shrinkWrap: true,
-                  physics: PageScrollPhysics(),
-                  itemCount: _guardsInfo.length,
-                  itemBuilder: (context, index) {
-                    var guardInfo = _guardsInfo[index];
-                    String name = guardInfo['EmployeeName'];
-                    String id = guardInfo['EmployeeId'];
-                    String url = guardInfo['EmployeeImg'];
+                _guardsInfo.length != 0
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        physics: PageScrollPhysics(),
+                        itemCount: _guardsInfo.length,
+                        itemBuilder: (context, index) {
+                          var guardInfo = _guardsInfo[index];
+                          String name = guardInfo['EmployeeName'] ?? "";
+                          String id = guardInfo['EmployeeId'] ?? "";
+                          String url = guardInfo['EmployeeImg'] ?? "";
 
-                    print(guardInfo);
-                    return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(
-                            context,
-                            {
-                              'name': name,
-                              'id': id,
-                              'url': url,
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: color19,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          margin: EdgeInsets.only(bottom: 10),
-                          width: double.maxFinite,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 48,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          print(guardInfo);
+                          return GestureDetector(
+                              onTap: () {
+                                Navigator.pop(
+                                  context,
+                                  {
+                                    'name': name,
+                                    'id': id,
+                                    'url': url,
+                                  },
+                                );
+                              },
+                              child: Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: color19,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                margin: EdgeInsets.only(bottom: 10),
+                                width: double.maxFinite,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          height: 50,
-                                          width: 50,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              image: NetworkImage(url),
-                                              filterQuality: FilterQuality.high,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 20),
-                                        InterBold(
-                                          text: name,
-                                          letterSpacing: -.3,
-                                          color: color1,
-                                        ),
-                                      ],
-                                    ),
                                     Container(
-                                      height: 16,
-                                      width: 16,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: guardInfo['EmployeeIsAvailable'] ==
-                                            "available"
-                                            ? Colors.green
-                                            : guardInfo['EmployeeIsAvailable'] ==
-                                            "on_shift"
-                                            ? Colors.orange
-                                            : Colors.red,
+                                      height: 48,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                height: 50,
+                                                width: 50,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(url),
+                                                    filterQuality:
+                                                        FilterQuality.high,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 20),
+                                              InterBold(
+                                                text: name,
+                                                letterSpacing: -.3,
+                                                color: color1,
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            height: 16,
+                                            width: 16,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: guardInfo[
+                                                          'EmployeeIsAvailable'] ==
+                                                      "available"
+                                                  ? Colors.green
+                                                  : guardInfo['EmployeeIsAvailable'] ==
+                                                          "on_shift"
+                                                      ? Colors.orange
+                                                      : Colors.red,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ));
-                  },
-                ) : Center(
-                  child: PoppinsBold(text: 'No Guards Found',color: color2,fontsize: width / width16,),
-                )
+                              ));
+                        },
+                      )
+                    : Center(
+                        child: PoppinsBold(
+                          text: 'No Guards Found',
+                          color: color2,
+                          fontsize: width / width16,
+                        ),
+                      )
               ],
             ),
           ),

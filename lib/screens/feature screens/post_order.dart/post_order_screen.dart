@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -48,73 +49,73 @@ class PostOrder extends StatelessWidget {
                   // Patrol p = patrolsData[index];
                   return Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: width / width30,
-                        vertical: height / height30),
+                        horizontal: width / width30),
                     child: Container(
-                      height: width / width120,
+                      // constraints: Constraints(),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width / width20,
+                          vertical: height / height10),
+                      height: height / height250,
                       width: double.maxFinite,
                       margin: EdgeInsets.only(bottom: height / height10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(width / width10),
                         color: WidgetColor,
                       ),
-                      child: Container(
-                        height: height / height270,
-                        width: double.maxFinite,
-                        child: Column(
-                          children: [
-                            InterSemibold(
-                              text: 'Supervisor Name here',
-                              fontsize: width / width20,
-                              color: Primarycolor,
-                            ),
-                            SizedBox(
-                              height: height / height20,
-                            ),
-                            InterBold(
-                              text: 'Title Here',
-                              color: color2,
-                              fontsize: width / width14,
-                            ),
-                            SizedBox(
-                              height: height / height16,
-                            ),
-                            InterRegular(
-                              text:
-                                  'Post Orders Here\nPost Orders Here\nPost Orders Here\nPost Orders Here..',
-                              color: color2,
-                              fontsize: width / width14,
-                            ),
-                            SizedBox(
-                              height: height / height20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: height / height80,
-                                      width: width / width80,
-                                      child: Image.network('https://cdn-images-1.medium.com/v2/resize:fit:1200/1*5-aoK8IBmXve5whBQM90GA.png'),
-                                    ),
-                                    SizedBox(
-                                      height: height / height80,
-                                      width: width / width80,
-                                      child: Image.network('https://cdn-images-1.medium.com/v2/resize:fit:1200/1*5-aoK8IBmXve5whBQM90GA.png'),
-                                    ),
-                                  ],
-                                ),
-                                InterRegular(
-                                  text: '12.36pm',
-                                  color: color2,
-                                  fontsize: width / width14,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InterSemibold(
+                            text: 'Supervisor Name here',
+                            fontsize: width / width20,
+                            color: Primarycolor,
+                          ),
+                          SizedBox(
+                            height: height / height20,
+                          ),
+                          InterBold(
+                            text: 'Title Here',
+                            color: color2,
+                            fontsize: width / width14,
+                          ),
+                          SizedBox(
+                            height: height / height16,
+                          ),
+                          InterRegular(
+                            text:
+                                'Post Orders Here\nPost Orders Here\nPost Orders Here\nPost Orders Here..',
+                            color: color2,
+                            fontsize: width / width14,
+                          ),
+                          SizedBox(
+                            height: height / height20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: height / height40,
+                                    width: width / width40,
+                                    child: Image.network('https://cdn-images-1.medium.com/v2/resize:fit:1200/1*5-aoK8IBmXve5whBQM90GA.png'),
+                                  ),
+                                  SizedBox(
+                                    height: height / height40,
+                                    width: width / width40,
+                                    child: Image.network('https://cdn-images-1.medium.com/v2/resize:fit:1200/1*5-aoK8IBmXve5whBQM90GA.png'),
+                                  ),
+                                ],
+                              ),
+                              InterRegular(
+                                text: '12.36pm',
+                                color: color2,
+                                fontsize: width / width14,
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     ),
                   );

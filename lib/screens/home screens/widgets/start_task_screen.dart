@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/riverpod/task_screen_provider.dart';
@@ -69,7 +70,7 @@ class StartTaskScreen extends StatefulWidget {
     required this.ShiftLocationId,
     required this.resetShiftStarted,
     required this.ShiftIN,
-    required this.onRefresh,
+    required this.onRefresh, //refresh the homescreen
 
     // required this.ShiftLocation,
     // required this.ShiftName,
@@ -108,12 +109,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var TestinEmail = "pankaj.kumar1312@yahoo.com";
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
-    emails.add(ClientEmail!);
+    // emails.add(ClientEmail!);
     // emails.add("sutarvaibhav37@student.sfit.ac.in");
     emails.add("sutarvaibhav37@gmail.com");
     var testEmail3 = "sales@tpssolution.com";
     var testEmail5 = "pankaj.kumar1312@yahoo.com";
-    int? savedInTimeMillis = prefs.getInt('savedInTime');
+    int? savedInTimeMillis = prefs.getInt('InTime');
     DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis!);
     DateTime savedDateTime =
         DateTime.fromMillisecondsSinceEpoch(savedInTimeMillis);
@@ -127,15 +128,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
 
     if (ClientEmail != null && AdminEmail != null) {
-      emails.add(AdminEmail);
-      emails.add(TestinEmail);
-      emails.add(testEmail3);
-      emails.add(testEmail5);
+      // emails.add(AdminEmail);
+      // emails.add(TestinEmail);
+      // emails.add(testEmail3);
+      // emails.add(testEmail5);
 
       await sendShiftEmail(
         ClientName,
         emails,
-        'Testing Shift Mail',
+        'Tacttik Shift Report',
         "Tacttik Shift Report",
         data,
         "Shift",
@@ -148,21 +149,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         formattedDateTime,
         formattedEndTime,
       );
-      //     emails,
-      //     "Update on Shift",
-      //     widget.EmployeeName,
-      //     "",
-      //     "Shift",
-      //     widget.ShiftDate,
-      //     imageData,
-      //     widget.EmployeeName,
-      //     widget.ShiftStartTime,
-      //     widget.ShiftEndTime,
-      //     widget.ShiftAddressName,
-      //     "Completed",
-      //     "ShiftInTime",
-      //     "ShiftOutTime");
-      // sendFormattedEmail(emailParams);
     }
   }
 
@@ -344,129 +330,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     DateFormat format = DateFormat('HH:mm');
 // Parse the shift start time from the widget
     DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
-    // double getHoursDiffInTwoTimeString(String startTime, String endTime) {
-    //   Map<String, int> parseTime(String time) {
-    //     final parts = time.split(':');
-    //     int hour = int.parse(parts[0]);
-    //     int minute = int.parse(parts[1].substring(0, 2));
-    //     if (time.contains('PM') && hour != 12) {
-    //       hour += 12;
-    //     } else if (time.contains('AM') && hour == 12) {
-    //       hour = 0;
-    //     }
-    //     return {'hour': hour, 'minute': minute};
-    //   }
-
-    //   final start = parseTime(startTime);
-    //   final end = parseTime(endTime);
-
-    //   final startDateTime = DateTime(0, 1, 1, start['hour']!, start['minute']!);
-    //   final endDateTime = DateTime(0, 1, 1, end['hour']!, end['minute']!);
-
-    //   double diff = endDateTime.difference(startDateTime).inHours.toDouble();
-
-    //   if (diff < 0) {
-    //     diff += 24;
-    //   }
-
-    //   return double.parse(diff.toStringAsFixed(2));
-    // }
 
 // Convert shift start time to current date for comparison
     String lateTime = ""; // Example start time// Get current time
-    // String? getLateTime(int differenceInMinutes) {
-    //   if (differenceInMinutes > 10) {
-    //     int lateHours = differenceInMinutes ~/ 60;
-    //     int lateMinutes = differenceInMinutes % 60;
-    //     return '$lateHours hours and $lateMinutes minutes late';
-    //   } else {
-    //     return null; // Return null if not late
-    //   }
-    // }
-
-    // String? isShiftStartTimeWithinRange(String shiftStartTime) {
-    //   // Get the current date and time
-    //   DateTime now = DateTime.now();
-
-    //   // Combine the current date with the shift start time
-    //   String combinedDateTime =
-    //       '${now.year}-${now.month}-${now.day} $shiftStartTime';
-
-    //   // Parse the combined date and time
-    //   DateFormat format = DateFormat('yyyy-MM-dd HH:mm');
-    //   DateTime parsedShiftStartTime = format.parse(combinedDateTime);
-
-    //   // Calculate the difference in minutes between the current time and shift start time
-    //   int differenceInMinutes = parsedShiftStartTime.difference(now).inMinutes;
-    //   print("Difference in minutes ${differenceInMinutes}");
-    //   // Check if the difference is less than or equal to 10 minutes
-    //   if (differenceInMinutes <= -10) {
-    //     return null;
-    //   } else {
-    //     return getLateTime(differenceInMinutes);
-    //   }
-    // }
-
 // Format the current time and start time as strings
     String currentFormattedTime = DateFormat('hh:mm a').format(currentTime);
     String startFormattedTime = DateFormat('hh:mm a')
         .format(DateFormat('HH:mm').parse(widget.ShiftStartTime));
-
-// Calculate the difference in hours
-    // String calculateLateTime(String shiftStartTime) {
-    //   final now = DateTime.now();
-    //   final shiftTime =
-    //       DateTime.parse(shiftStartTime); // Parse shift start time
-
-    //   final duration = now.difference(shiftTime); // Calculate time difference
-
-    //   // Check if difference is negative (shift hasn't started yet)
-    //   if (duration.isNegative) {
-    //     return ''; // No late time yet
-    //   }
-
-    //   final lateHours = duration.inHours.abs(); // Get absolute value of hours
-    //   final lateMinutes =
-    //       (duration.inMinutes % 60).abs(); // Get remaining minutes (0-59)
-
-    //   String lateTimeString = '';
-    //   if (lateHours > 0) {
-    //     lateTimeString += '$lateHours hr';
-    //     if (lateMinutes > 0) {
-    //       lateTimeString += ' $lateMinutes min';
-    //     }
-    //   } else if (lateMinutes > 10) {
-    //     lateTimeString = '$lateMinutes min';
-    //   }
-    //   print(lateTimeString);
-    //   return lateTimeString; // Return formatted late time
-    // }
-
-    // double hoursDiff =
-    //     getHoursDiffInTwoTimeString(startFormattedTime, currentFormattedTime);
-    // setState(() {
-    //   lateTime = "";
-    // });
-    // print("Hours difference: $hoursDiff");
-    // DateTime currentTime = DateTime.now();
-    // if (inTime != null) {
-    //   DateTime shiftStartTime = format.parse(widget.ShiftStartTime);
-    //   shiftStartTime = DateTime(
-    //     currentTime.year,
-    //     currentTime.month,
-    //     currentTime.day,
-    //     shiftStartTime.hour,
-    //     shiftStartTime.minute,
-    //   );
-    //   Duration difference = shiftStartTime.difference(inTime!);
-    //   int differenceInMinutes = difference.inMinutes.abs();
-
-    //   if (differenceInMinutes > 5) {
-    //     int hours = differenceInMinutes ~/ 60;
-    //     int minutes = differenceInMinutes % 60;
-    //     lateTime = '${hours}Hr ${minutes}m Late';
-    //   }
-    // }
     print("IN Time : ${inTime}");
     print("Elapsed  : ${_elapsedTime}");
 
@@ -633,6 +503,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           prefs.setBool('clickedIn', clickedIn);
                           DateTime currentTime = DateTime.now();
                           inTime = currentTime;
+                          prefs.setInt(
+                              'InTime', currentTime.millisecondsSinceEpoch);
                           prefs.setInt('savedInTime',
                               currentTime.millisecondsSinceEpoch);
                           Timestamp.now();
@@ -688,6 +560,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   )),
                         );
                       } else {
+                        widget.onRefresh();
                         setState(() {
                           // isPaused = !isPaused;
                           // prefs.setBool("pauseState", isPaused);
@@ -697,6 +570,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           widget.resetShiftStarted();
                           prefs.setBool('ShiftStarted', false);
                         });
+                        var data = await fireStoreService.fetchDataForPdf(
+                            widget.EmployeId, widget.ShiftId);
+                        if (data.isNotEmpty) {
+                          send_mail_onOut(data);
+                        } else {
+                          showErrorToast(context, "try again");
+                          widget.onRefresh();
+                          return;
+                          // Handle the case when data is null
+                        }
                         await fireStoreService.addToLog(
                             'shift_end',
                             widget.ShiftAddressName,
@@ -726,23 +609,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         var AdminEmal = fireStoreService
                             .getAdminEmail(widget.ShiftCompanyId);
                         print("Client Name ${AdminEmal}");
-                        //fetch the data from Patrol Logs and generate email from it
-                        var data = await fireStoreService.fetchDataForPdf(
-                            widget.EmployeId, widget.ShiftId);
-
-                        // generateAndOpenPDF(
-                        //     ClientName, "sutarvaibhav37@gmail.com", data);
-                        //for now send email same as patrol
-                        //generate the pdf
-                        //add to firebase storage and then mail too
-                        // String? pdfLink = fireStoreService.uploadPdfToStorage(
-                        //     file, widget.ShiftId);
-                        send_mail_onOut(data);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
+                        widget.onRefresh();
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: Container(
@@ -774,10 +649,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   onPressed: () async {
                     var data = await fireStoreService.fetchDataForPdf(
                         widget.EmployeId, widget.ShiftId);
-                    print(data);
+                    print("Fetched Data for generating pdf: ${data}");
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
-
                     setState(() {
                       isPaused = !isPaused;
                       onBreak = false;
@@ -785,6 +659,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     });
                     // isPaused ? stopStopwatch() : startStopwatch();
                     if (isPaused) {
+                      var data = await fireStoreService.fetchDataForPdf(
+                          widget.EmployeId, widget.ShiftId);
+                      print("Fetched Data for generating pdf: ${data}");
                       await fireStoreService.addToLog(
                           'shift_break',
                           widget.ShiftAddressName,

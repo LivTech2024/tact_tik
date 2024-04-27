@@ -1,68 +1,48 @@
 import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
-import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
-import 'package:tact_tik/screens/home%20screens/home_screen.dart';
-import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
-import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:toastification/toastification.dart';
-import '../../../common/sizes.dart';
-import '../../../common/widgets/button1.dart';
-import '../../../fonts/inter_bold.dart';
-import '../../../fonts/inter_medium.dart';
-import '../../../fonts/inter_regular.dart';
-import '../../../utils/colors.dart';
-import '../../home screens/widgets/icon_text_widget.dart';
-import '../widgets/custome_textfield.dart';
 
-FireStoreService fireStoreService = FireStoreService();
+import '../../common/sizes.dart';
+import '../../fonts/inter_bold.dart';
+import '../../fonts/inter_regular.dart';
+import '../../services/EmailService/EmailJs_fucntion.dart';
+import '../../utils/colors.dart';
+import '../feature screens/widgets/custome_textfield.dart';
+import '../home screens/widgets/icon_text_widget.dart';
 
-class MyPatrolsList extends StatefulWidget {
-  final String EmployeeID;
-  final String ShiftLocationId;
-  final String ShiftId;
-  final String EmployeeName;
-  final String ShiftDate;
-
-  const MyPatrolsList(
-      {required this.ShiftLocationId,
-      required this.EmployeeID,
-      required this.EmployeeName,
-      required this.ShiftId,
-      required this.ShiftDate});
+class PatrollLogsScreen extends StatefulWidget {
+  const PatrollLogsScreen({super.key});
 
   @override
-  State<MyPatrolsList> createState() => _MyPatrolsListState();
+  State<PatrollLogsScreen> createState() => _PatrollLogsScreenState();
 }
 
-class _MyPatrolsListState extends State<MyPatrolsList> {
-  // late Map<String, dynamic> patrolsData = "";
+class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
+  String dropdownValue = 'PatrolLogStatus';
   late List<Patrol> patrolsData = [];
-  String _PatrolId = '';
-  int totalCount = 0;
-  bool buttonClicked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _getUserInfo();
-  }
-
-  Future<void> _refreshData() async {
-    _getUserInfo();
-  }
-
+  final TextEditingController PatrollId = TextEditingController();
+  final TextEditingController PatrolLogCreateAt = TextEditingController();
+  final TextEditingController PatrolLogEndedAt = TextEditingController();
+  final TextEditingController PatrolLogFeedbackComment =
+      TextEditingController();
+  final TextEditingController PatrolLogGuardId = TextEditingController();
+  final TextEditingController PatrolLogGuardName = TextEditingController();
+  final TextEditingController PatrolLogId = TextEditingController();
+  final TextEditingController PatrolLogPatrolCount = TextEditingController();
+  final TextEditingController PatrolLogStartedAt = TextEditingController();
   void _getUserInfo() async {
-    print("Shift Id : ${widget.ShiftLocationId}");
+    // print("Shift Id : ${widget.ShiftLocationId}");
     var patrolInfoList =
-        await fireStoreService.getAllPatrolsByShiftId(widget.ShiftId);
+        await fireStoreService.getAllPatrolsByShiftId("TsuGzh56RZWYhFsmvmUU");
 
     List<Patrol> patrols = [];
     for (var patrol in patrolInfoList) {
@@ -115,9 +95,9 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           return completedCount;
         }
 
-        int completedCount = getCompletedCount(patrolStatus, widget.EmployeeID);
+        int completedCount = getCompletedCount(patrolStatus, "");
         setState(() {
-          totalCount = completedCount;
+          // totalCount = completedCount;
         });
 
         print('Completed count for : $completedCount');
@@ -126,7 +106,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       }
 
       setState(() {
-        _PatrolId = patrolId;
+        // _PatrolId = patrolId;
       });
       List<Category> categories = [];
       bool allChecked = false;
@@ -144,11 +124,11 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
               checkPointStatuses.isEmpty ||
               checkPointStatuses.any((status) =>
                   status['Status'] == 'unchecked' &&
-                  status['StatusReportedById'] == widget.EmployeeID) ||
+                  status['StatusReportedById'] == "") ||
               checkPointStatuses.any((status) =>
                   status['Status'] != 'unchecked' &&
-                  checkPointStatuses.every(
-                      (s) => s['StatusReportedById'] != widget.EmployeeID))) {
+                  checkPointStatuses
+                      .every((s) => s['StatusReportedById'] != ""))) {
             setState(() {
               allChecked =
                   false; // At least one checkpoint is not checked or does not have the specified 'empid'
@@ -195,15 +175,16 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           description: patrolLocationName,
           categories: categories,
           // time: patrolTime,
-          PatrolId: _PatrolId,
-          EmpId: widget.EmployeeID,
-          EmployeeName: widget.EmployeeName,
+          PatrolId: patrolId,
+          EmpId: "",
+          EmployeeName: "",
           PatrolRequiredCount: requiredCount,
-          CompletedCount: totalCount,
+          CompletedCount: 0,
           Allchecked: allChecked,
           PatrolCompanyID: patrolCompanyId,
-          PatrolClientID: patrolClientId, ShiftDate: widget.ShiftDate,
-          ShiftId: widget.ShiftId,
+          PatrolClientID: patrolClientId,
+          ShiftDate: "",
+          // ShiftId: widget.ShiftId,
         ),
       );
     }
@@ -213,9 +194,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
     });
   }
 
-  // bool _expand = false;
-  // bool _expand2 = false;
-
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -223,57 +201,151 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
-        body: RefreshIndicator(
-          onRefresh: _refreshData,
-          child: CustomScrollView(
-            // physics: const PageScrollPhysics(),
-            slivers: [
-              SliverAppBar(
-                backgroundColor: AppBarcolor,
-                elevation: 0,
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: width / width24,
-                  ),
-                  padding: EdgeInsets.only(left: width / width20),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    print(
-                        "Navigtor debug: ${Navigator.of(context).toString()}");
-                  },
-                ),
-                title: InterRegular(
-                  text: 'Patrolling',
-                  fontsize: width / width18,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: AppBarcolor,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
                   color: Colors.white,
-                  letterSpacing: -.3,
+                  size: width / width24,
                 ),
-                centerTitle: true,
-                floating: true, // Makes the app bar float above the content
+                padding: EdgeInsets.only(left: width / width20),
+                onPressed: () {
+                  Navigator.pop(context);
+                  print("Navigtor debug: ${Navigator.of(context).toString()}");
+                },
               ),
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: height / height30,
-                ),
+              title: InterRegular(
+                text: 'Patrolling',
+                fontsize: width / width18,
+                color: Colors.white,
+                letterSpacing: -.3,
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    Patrol p = patrolsData[index];
-                    return Padding(
+              centerTitle: true,
+              floating: true, // Makes the app bar float above the content
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: height / height30,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  children: [
+                    CustomeTextField(
+                      hint: 'Patroll ID',
+                      controller: PatrollId,
+                    ),
+                    Button1(text: "Submit", onPressed: _getUserInfo),
+                    SizedBox(height: height / height10),
+
+                    CustomeTextField(
+                      hint: 'PatrolLogCreateAt',
+                      controller: PatrolLogCreateAt,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogEndedAt',
+                      controller: PatrolLogEndedAt,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogFeedbackComment',
+                      controller: PatrolLogFeedbackComment,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogGuardId',
+                      controller: PatrolLogGuardId,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogGuardName',
+                      controller: PatrolLogGuardName,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogId',
+                      controller: PatrolLogId,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogPatrolCount',
+                      controller: PatrolLogPatrolCount,
+                    ),
+                    SizedBox(height: height / height10),
+                    CustomeTextField(
+                      hint: 'PatrolLogStartedAt',
+                      controller: PatrolLogStartedAt,
+                    ),
+                    SizedBox(height: height / height10),
+                    Container(
+                      height: height / height60,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
-                      child: PatrollingWidget(p: p, onRefresh: _refreshData),
-                    );
-                  },
-                  childCount: patrolsData.length,
+                          EdgeInsets.symmetric(horizontal: width / width20),
+                      decoration: BoxDecoration(
+                        color: WidgetColor,
+                        borderRadius: BorderRadius.circular(width / width10),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          iconSize: width / width24,
+                          dropdownColor: WidgetColor,
+                          style: TextStyle(color: color2),
+                          borderRadius: BorderRadius.circular(10),
+                          value: dropdownValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                              // if (dropdownValue == 'Other') {
+                              //   dropdownShoe = true;
+                              // }  else{
+                              //   dropdownShoe = false;
+                              // }
+                              // if (newValue == 'Other') {
+                              // Perform any action needed when 'Other' is selected
+                              // For example, show a dialog, navigate to another screen, etc.
+                              // Here, we'll just print a debug message
+                              print('Other selected');
+                            });
+                          },
+                          items: <String?>[
+                            'PatrolLogStatus',
+                            'Completed',
+                            'Started',
+                          ].map<DropdownMenuItem<String>>((String? value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value ?? ''),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    // CustomeTextField(hint: 'PatrolLogStatus',),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  Patrol p = patrolsData[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    child: PatrollingWidget(p: p),
+                  );
+                },
+                childCount: patrolsData.length,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -281,23 +353,21 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 }
 
 class PatrollingWidget extends StatefulWidget {
-  const PatrollingWidget({super.key, required this.p, required this.onRefresh});
+  const PatrollingWidget({super.key, required this.p});
 
   final Patrol p;
-  final VoidCallback onRefresh;
 
   @override
   State<PatrollingWidget> createState() => _PatrollingWidgetState();
 }
 
 class _PatrollingWidgetState extends State<PatrollingWidget> {
-  bool _expand = false;
-
   // bool _expand2 = false;
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
   TextEditingController CommentController = TextEditingController();
   bool buttonClicked = true;
+
   @override
   void initState() {
     super.initState();
@@ -310,7 +380,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _expand = prefs.getBool('expand') ?? false;
+      // _expand = prefs.getBool('expand') ?? false;
     });
   }
 
@@ -322,9 +392,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   String Result = "";
 
-  Future<void> _refresh() async {
-    widget.onRefresh();
-  }
+  // Future<void> _refresh() async {
+  //   widget.onRefresh();
+  // }
 
   List<Map<String, dynamic>> uploads = [];
 
@@ -375,7 +445,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       );
     }
 
-    void handleStartButton() async {
+/*    void handleStartButton() async {
       print("ButtonEnabled : ${buttonEnabled}");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       // setState(() {
@@ -390,9 +460,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
           buttonEnabled = false; // Disable the button
         });
         await fireStoreService.addToLog(
-            "patrol_start",
+            "PatrolStarted",
             "",
             "",
+            Timestamp.now(),
+            Timestamp.now(),
             widget.p.EmpId,
             widget.p.EmployeeName,
             widget.p.PatrolCompanyID,
@@ -408,7 +480,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         String formattedTime = DateFormat('HH:mm:ss').format(now);
         setState(() {
           StartTime = formattedTime;
-          _expand = true;
+          // _expand = true;
           prefs.setBool("expand", _expand);
           prefs.setString("StartTime", StartTime.toString());
         });
@@ -423,7 +495,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       } else {
         return null;
       }
-    }
+    }*/
 
     void showErrorToast(BuildContext context, String message) {
       toastification.show(
@@ -435,7 +507,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     }
 
     return RefreshIndicator(
-      onRefresh: _refresh,
+      onRefresh: _refreshData,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -452,9 +524,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
               color: WidgetColor,
               borderRadius: BorderRadius.circular(width / width10),
             ),
-            constraints: _expand
-                ? BoxConstraints(minHeight: height / height200)
-                : const BoxConstraints(),
+            constraints: BoxConstraints(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -523,15 +593,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     ],
                   ),
                 ),
-                Button1(
-                  text: 'START',
-                  backgroundcolor: colorGreen,
-                  color: Colors.green,
-                  borderRadius: width / width10,
-                  onPressed: buttonClicked ? handleStartButton : () {},
-                ),
                 Visibility(
-                    visible: _expand,
+                    visible: true,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: widget.p.categories.map((category) {
@@ -621,7 +684,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               ),
                             ),
                             Visibility(
-                              visible: expand,
+                              visible: true,
                               child: Column(
                                 children:
                                     category.checkpoints.map((checkpoint) {
@@ -643,8 +706,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           Result = res;
                                         });
                                         // if (Result) {
-                                        // player.play(AssetSource(
-                                        //     "../../../../assets/SuccessSound.mpeg"));
+                                        player.play(AssetSource(
+                                            "../../../../assets/SuccessSound.mpeg"));
                                         print(res);
                                         if (res == checkpoint.id) {
                                           await fireStoreService
@@ -653,9 +716,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   checkpoint.id,
                                                   widget.p.EmpId);
                                           await fireStoreService.addToLog(
-                                              "check_point",
+                                              "Checkpoint",
                                               "",
                                               "",
+                                              Timestamp.now(),
+                                              Timestamp.now(),
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
@@ -663,9 +728,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               widget.p.PatrolClientID);
                                           showSuccessToast(context,
                                               "${checkpoint.description} scanned ");
-                                          _refresh();
+                                          // _refresh();
                                         } else {
-                                          _refresh();
+                                          // _refresh();
                                           // player.play(AssetSource(
                                           //     "../../../../assets/ErrorSound.mp3"));
                                           showErrorToast(context,
@@ -1050,7 +1115,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         autoCloseDuration:
                                                                             const Duration(seconds: 2),
                                                                       );
-                                                                      _refresh();
+                                                                      // _refresh();
                                                                       setState(
                                                                           () {
                                                                         _isLoading =
@@ -1112,402 +1177,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 SizedBox(
                   height: height / height10,
                 ),
-                _expand
-                    ? Button1(
-                        text: 'END',
-                        backgroundcolor: colorRed2,
-                        color: Colors.redAccent,
-                        borderRadius: 10,
-                        onPressed: () async {
-                          _refresh();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: InterRegular(
-                                  text: 'Add Comment',
-                                  color: color2,
-                                  fontsize: width / width12,
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CustomeTextField(
-                                      hint: 'Add Comment',
-                                      showIcon: false,
-                                      controller: CommentController,
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () async {
-                                      Navigator.pop(context);
-                                    },
-                                    child: InterRegular(
-                                      text: 'Cancel',
-                                      color: Primarycolor,
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      if (CommentController.text.isNotEmpty) {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-
-                                        if (widget.p.CompletedCount ==
-                                            widget.p.PatrolRequiredCount - 1) {
-                                          String? InTime =
-                                              prefs.getString("StartTime");
-                                          DateTime now = DateTime.now();
-                                          DateTime inTime =
-                                              DateFormat("HH:mm:ss")
-                                                  .parse(InTime ?? "");
-                                          DateTime combinedDateTime = DateTime(
-                                              now.year,
-                                              now.month,
-                                              now.day,
-                                              inTime.hour,
-                                              inTime.minute,
-                                              inTime.second);
-                                          Timestamp patrolInTimestamp = Timestamp
-                                              .fromMillisecondsSinceEpoch(
-                                                  combinedDateTime
-                                                      .millisecondsSinceEpoch);
-
-                                          print(
-                                              "patrolIn time: ${patrolInTimestamp}");
-
-                                          DateFormat dateFormat =
-                                              DateFormat("yyyy-MM-dd HH:mm:ss");
-                                          String formattedEndDate =
-                                              dateFormat.format(DateTime.now());
-                                          Timestamp patrolOutTimestamp =
-                                              Timestamp.fromDate(
-                                                  DateTime.now());
-                                          String formattedStartDate =
-                                              dateFormat.format(DateTime.now());
-                                          String formattedEndTime =
-                                              dateFormat.format(DateTime.now());
-                                          DateFormat timeformat = DateFormat(
-                                              "HH:mm"); // Define the format for time
-                                          // String formattedPatrolInTime =
-                                          //     timeformat.format(StartTime);
-                                          String formattedPatrolOutTime =
-                                              timeformat.format(DateTime.now());
-                                          String formattedDate =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(DateTime.now());
-                                          await fireStoreService
-                                              .fetchAndCreatePatrolLogs(
-                                                  widget.p.PatrolId,
-                                                  widget.p.EmpId,
-                                                  widget.p.EmployeeName,
-                                                  widget.p.CompletedCount + 1,
-                                                  formattedStartDate,
-                                                  patrolInTimestamp,
-                                                  patrolOutTimestamp,
-                                                  CommentController.text,
-                                                  widget.p.ShiftId);
-                                          print(
-                                              "Patrol count == Required COunt");
-                                          setState(() {
-                                            _expand = false;
-
-                                            prefs.setBool("expand", _expand);
-                                          });
-                                          //If the count is equal
-                                          await fireStoreService
-                                              .LastEndPatrolupdatePatrolsStatus(
-                                                  widget.p.PatrolId,
-                                                  widget.p.EmpId,
-                                                  widget.p.EmployeeName);
-                                          List<String> emails = [];
-                                          var ClientEmail =
-                                              await fireStoreService
-                                                  .getClientEmail(
-                                                      widget.p.PatrolClientID);
-                                          var AdminEmail =
-                                              await fireStoreService
-                                                  .getAdminEmail(
-                                                      widget.p.PatrolCompanyID);
-                                          var imageUrls = await fireStoreService
-                                              .getImageUrlsForPatrol(
-                                                  widget.p.PatrolId,
-                                                  widget.p.EmpId);
-
-                                          print(imageUrls);
-                                          var TestinEmail =
-                                              "sutarvaibhav37@gmail.com";
-                                          var defaultEmail =
-                                              "tacttikofficial@gmail.com";
-                                          var testEmail3 =
-                                              "Swastikbthiramdas@gmail.com";
-                                          emails.add(TestinEmail);
-                                          // emails.add(testEmail3);
-                                          // emails.add(testEmail3);
-                                          // emails.add(ClientEmail!);
-                                          // emails.add(AdminEmail!);
-                                          // emails.add(defaultEmail!);
-
-                                          // DateFormat dateFormat =
-                                          //     DateFormat("yyyy-MM-dd HH:mm:ss");
-                                          // String formattedStartDate =
-                                          //     dateFormat.format(DateTime.now());
-                                          // String formattedEndDate =
-                                          //     dateFormat.format(DateTime.now());
-                                          // String formattedEndTime =
-                                          //     dateFormat.format(DateTime.now());
-                                          // DateFormat timeformat = DateFormat(
-                                          //     "HH:mm");
-                                          // Define the format for time
-                                          // if (InTime != null) {
-                                          //   String formattedPatrolInTime =
-                                          //       timeformat.format(InTime);
-                                          // }
-                                          // String formattedPatrolOutTime =
-                                          //     timeformat.format(DateTime.now());
-                                          // String formattedDate =
-                                          //     DateFormat('yyyy-MM-dd')
-                                          //         .format(DateTime.now());
-                                          DateFormat timeFormat =
-                                              DateFormat("HH:mm");
-
-                                          // String? InTime =
-                                          //     prefs.getString("StartTime");
-
-                                          // DateTime now = DateTime.now();
-                                          // DateTime inTime =
-                                          //     DateFormat("HH:mm:ss")
-                                          //         .parse(InTime ?? "");
-                                          // DateTime combinedDateTime = DateTime(
-                                          //     now.year,
-                                          //     now.month,
-                                          //     now.day,
-                                          //     inTime.hour,
-                                          //     inTime.minute,
-                                          //     inTime.second);
-                                          // Timestamp patrolInTimestamp = Timestamp
-                                          //     .fromMillisecondsSinceEpoch(
-                                          //         combinedDateTime
-                                          //             .millisecondsSinceEpoch);
-
-                                          // Timestamp patrolOutTimestamp =
-                                          //     Timestamp.fromDate(
-                                          //         DateTime.now());
-                                          num count =
-                                              widget.p.CompletedCount + 1;
-
-                                          List<Map<String, dynamic>>
-                                              formattedImageUrls =
-                                              imageUrls.map((url) {
-                                            return {
-                                              'StatusReportedTime':
-                                                  url['StatusReportedTime'],
-                                              'ImageUrls': url['ImageUrls'],
-                                              'StatusComment':
-                                                  url['StatusComment'],
-                                              'CheckPointName':
-                                                  url['CheckPointName']
-                                            };
-                                          }).toList();
-
-                                          await fireStoreService.addToLog(
-                                              "patrol_end",
-                                              "",
-                                              "",
-                                              widget.p.EmpId,
-                                              widget.p.EmployeeName,
-                                              widget.p.PatrolCompanyID,
-                                              "",
-                                              widget.p.PatrolClientID);
-                                          sendapiEmail(
-                                              emails,
-                                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                              widget.p.EmployeeName,
-                                              "",
-                                              'Shift ',
-                                              formattedStartDate,
-                                              formattedImageUrls,
-                                              widget.p.EmployeeName,
-                                              InTime,
-                                              formattedEndTime,
-                                              widget.p.CompletedCount + 1,
-                                              widget.p.PatrolRequiredCount
-                                                  .toString(),
-                                              widget.p.description,
-                                              "Completed",
-                                              InTime,
-                                              formattedPatrolOutTime,
-                                              CommentController.text);
-                                          _refresh();
-                                          // sendFormattedEmail(emailParams);
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HomeScreen()));
-                                        } else {
-                                          String? InTime =
-                                              prefs.getString("StartTime");
-                                          DateTime now = DateTime.now();
-                                          DateTime inTime =
-                                              DateFormat("HH:mm:ss")
-                                                  .parse(InTime ?? "");
-                                          DateTime combinedDateTime = DateTime(
-                                              now.year,
-                                              now.month,
-                                              now.day,
-                                              inTime.hour,
-                                              inTime.minute,
-                                              inTime.second);
-                                          Timestamp patrolInTimestamp = Timestamp
-                                              .fromMillisecondsSinceEpoch(
-                                                  combinedDateTime
-                                                      .millisecondsSinceEpoch);
-
-                                          print(
-                                              "patrolIn time: ${patrolInTimestamp}");
-
-                                          DateFormat dateFormat =
-                                              DateFormat("yyyy-MM-dd HH:mm:ss");
-                                          String formattedEndDate =
-                                              dateFormat.format(DateTime.now());
-                                          Timestamp patrolOutTimestamp =
-                                              Timestamp.fromDate(
-                                                  DateTime.now());
-                                          String formattedStartDate =
-                                              dateFormat.format(DateTime.now());
-                                          String formattedEndTime =
-                                              dateFormat.format(DateTime.now());
-                                          DateFormat timeformat = DateFormat(
-                                              "HH:mm"); // Define the format for time
-                                          // String formattedPatrolInTime =
-                                          //     timeformat.format(StartTime);
-                                          String formattedPatrolOutTime =
-                                              timeformat.format(DateTime.now());
-                                          String formattedDate =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(DateTime.now());
-                                          await fireStoreService
-                                              .fetchAndCreatePatrolLogs(
-                                                  widget.p.PatrolId,
-                                                  widget.p.EmpId,
-                                                  widget.p.EmployeeName,
-                                                  widget.p.CompletedCount + 1,
-                                                  formattedStartDate,
-                                                  patrolInTimestamp,
-                                                  patrolOutTimestamp,
-                                                  CommentController.text,
-                                                  widget.p.ShiftId);
-                                          //if normal update
-                                          setState(() {
-                                            _expand = false;
-                                            buttonEnabled = false;
-
-                                            prefs.setBool("expand", _expand);
-                                          });
-                                          await fireStoreService
-                                              .EndPatrolupdatePatrolsStatus(
-                                                  widget.p.PatrolId,
-                                                  widget.p.EmpId,
-                                                  widget.p.EmployeeName);
-
-                                          List<String> emails = [];
-                                          var ClientEmail =
-                                              await fireStoreService
-                                                  .getClientEmail(
-                                                      widget.p.PatrolClientID);
-                                          var AdminEmail =
-                                              await fireStoreService
-                                                  .getAdminEmail(
-                                                      widget.p.PatrolCompanyID);
-                                          var imageUrls = await fireStoreService
-                                              .getImageUrlsForPatrol(
-                                                  widget.p.PatrolId,
-                                                  widget.p.EmpId);
-
-                                          List<Map<String, dynamic>>
-                                              formattedImageUrls =
-                                              imageUrls.map((url) {
-                                            return {
-                                              'StatusReportedTime':
-                                                  url['StatusReportedTime'],
-                                              'ImageUrls': url['ImageUrls'],
-                                              'StatusComment':
-                                                  url['StatusComment']
-                                            };
-                                          }).toList();
-                                          print(imageUrls);
-                                          var TestinEmail =
-                                              "sutarvaibhav37@gmail.com";
-                                          var defaultEmail =
-                                              "tacttikofficial@gmail.com";
-                                          // var defaultEmail = "tacttikofficial@gmail.com";
-                                          var testEmail3 =
-                                              "Swastikbthiramdas@gmail.com";
-                                          emails.add(TestinEmail);
-                                          emails.add(testEmail3);
-
-                                          // emails.add(ClientEmail!);
-                                          // emails.add(AdminEmail!);
-                                          // emails.add(defaultEmail!);
-
-                                          await fireStoreService.addToLog(
-                                              "patrol_end",
-                                              "",
-                                              "",
-                                              widget.p.EmpId,
-                                              widget.p.EmployeeName,
-                                              widget.p.PatrolCompanyID,
-                                              "",
-                                              widget.p.PatrolClientID);
-                                          num newCount =
-                                              widget.p.CompletedCount;
-                                          sendapiEmail(
-                                              emails,
-                                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                              widget.p.EmployeeName,
-                                              "",
-                                              'Shift ',
-                                              formattedStartDate,
-                                              formattedImageUrls,
-                                              widget.p.EmployeeName,
-                                              InTime,
-                                              formattedEndTime,
-                                              widget.p.CompletedCount + 1,
-                                              widget.p.PatrolRequiredCount
-                                                  .toString(),
-                                              widget.p.description,
-                                              "Completed",
-                                              InTime,
-                                              formattedPatrolOutTime,
-                                              CommentController.text);
-                                        }
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomeScreen()));
-                                      } else {
-                                        showErrorToast(
-                                            context, "Field cannot be empty");
-                                      }
-                                    },
-                                    child: InterRegular(
-                                      text: 'Submit',
-                                      fontsize: width / width18,
-                                      color: Primarycolor,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      )
-                    : const SizedBox(),
               ],
             ),
           ),
@@ -1535,7 +1204,6 @@ class Patrol {
   final bool Allchecked;
   final List<Category> categories;
   final String ShiftDate;
-  final String ShiftId;
 
   Patrol({
     required this.title,
@@ -1552,7 +1220,6 @@ class Patrol {
     required this.CompletedCount,
     required this.Allchecked,
     required this.ShiftDate,
-    required this.ShiftId,
   });
 }
 
@@ -1577,6 +1244,7 @@ class Checkpoint {
     required this.id,
     required this.checkPointStatus,
   });
+
   bool isSameDay(Timestamp? timestamp1, Timestamp timestamp2) {
     if (timestamp1 == null) {
       return false; // or handle the case when timestamp1 is null

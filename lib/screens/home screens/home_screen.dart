@@ -14,6 +14,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
@@ -35,9 +36,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
+import '../../services/EmailService/EmailJs_fucntion.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
+import '../SideBar Screens/history_screen.dart';
+import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
+import '../feature screens/post_order.dart/post_order_screen.dart';
+import '../feature screens/task/task_feature_screen.dart';
 import '../feature screens/visitors/visitors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -93,52 +99,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final double _zoom = 12.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
-
-  // void _shoeDatePicker(BuildContext context) {
-  //   showDatePicker(
-  //       context: context, firstDate: DateTime(2000), lastDate: DateTime(2025));
-  // }
-
-/*  late DateTime selectedDay;
-  late List <CleanCalendarEvent> selectedEvent;
-
-  final Map<DateTime,List<CleanCalendarEvent>> events = {
-    DateTime (DateTime.now().year,DateTime.now().month,DateTime.now().day):
-    [
-      CleanCalendarEvent('Event A',
-          startTime: DateTime(
-              DateTime.now().year,DateTime.now().month,DateTime.now().day,10,0),
-          endTime:  DateTime(
-              DateTime.now().year,DateTime.now().month,DateTime.now().day,12,0),
-          description: 'A special event',
-          color: Colors.blue,),
-    ],
-
-    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 2):
-    [
-      CleanCalendarEvent('Event B',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 10, 0),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 12, 0),
-          color: Colors.orange),
-      CleanCalendarEvent('Event C',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 14, 30),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 17, 0),
-          color: Colors.pink),
-    ],
-  };
-
-  void _handleData(date){
-    setState(() {
-      selectedDay = date;
-      selectedEvent = events[selectedDay] ?? [];
-    });
-    print(selectedDay);
-  }*/
   @override
+  void refreshHomeScreen() {
+    _getUserInfo();
+    getAndPrintAllSchedules();
+    // Implement the refresh logic here
+    // For example, you can call setState() to update the UI
+  }
+
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
@@ -211,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
         String empEmail = userInfo['EmployeeEmail'];
-        String empImage = userInfo['EmployeeImg'];
+        String empImage = userInfo['EmployeeImg'] ?? "";
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -435,57 +403,135 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                  height: height / height180,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width / width15),
-                    color:
-                        Primarycolor, // Background color for the drawer header
-                  )),
+                height: height / height180,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(width / width15),
+                  color: Primarycolor, // Background color for the drawer header
+                ),
+                child: Center(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: ClipOval(
+                            child: SizedBox.fromSize(
+                                size: Size.fromRadius(width / width50),
+                                child: Image.network(
+                                  'https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630',
+                                  fit: BoxFit.cover,
+                                )),
+                          ),
+                        ),
+                        SizedBox(height: height / height10),
+                        PoppinsSemibold(
+                          text: 'Nick Jones',
+                          color: WidgetColor,
+                          fontsize: width / width16,
+                          letterSpacing: -.3,
+                        ),
+                        SizedBox(height: height / height5),
+                        PoppinsRegular(
+                          text: 'nickjones077@gmail.com',
+                          color: WidgetColor,
+                          fontsize: width / width16,
+                          letterSpacing: -.3,
+                        )
+                      ]),
+                ),
+              ),
               Expanded(
-                child: Column(children: [
-                  buildListTile(
-                    Icons.door_back_door_outlined,
-                    'Home',
-                    0,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.account_circle_outlined,
-                    'Profile',
-                    1,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.add_card,
-                    'Payment',
-                    2,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.article,
-                    'Employment Letter',
-                    3,
-                    () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>  EmploymentLetterScreen()));
-                    },
-                  ),
-                  buildListTile(
-                    Icons.restart_alt,
-                    'History',
-                    4,
-                    () {},
-                  ),
-                  buildListTile(
-                    Icons.settings,
-                    'Settings',
-                    5,
-                    () {},
-                  ),
-                ],),
+                child: Column(
+                  children: [
+                    buildListTile(
+                      Icons.door_back_door_outlined,
+                      'Home',
+                      0,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.account_circle_outlined,
+                      'Profile',
+                      1,
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen()));
+                      },
+                    ),
+                    buildListTile(
+                      Icons.add_card,
+                      'Payment',
+                      2,
+                      () {},
+                    ),
+                    buildListTile(
+                      Icons.article,
+                      'Employment Letter',
+                      3,
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EmploymentLetterScreen()));
+                      },
+                    ),
+                    buildListTile(
+                      Icons.restart_alt,
+                      'History',
+                      4,
+                      () {
+                        // customEmail();
+                      },
+                    ),
+                    buildListTile(
+                      Icons.settings,
+                      'Settings',
+                      5,
+                      () async {
+                        List<String> emails = [];
+                        emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("pankaj.kumar1312@yahoo.com");
+                        emails.add("security@lestonholdings.com");
+                        emails.add("dan@tpssolution.com");
+                        // "security@lestonholdings.com"
+                        List<String> patrolLogIds = [];
+                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        //Sending Shift end report
+                        var data =
+                            await fireStoreService.fetchTemplateDataForPdf(
+                          "Hijql0nkNjA1tOhSf8wW",
+                          "PjiJ0MqsUA9oUwlPsUnr",
+                        );
+
+                        await sendShiftTemplateEmail(
+                          "Leston holdings ",
+                          emails,
+                          'Tacttik Shift Report',
+                          "Tacttik Shift Report",
+                          data,
+                          "Shift",
+                          "25 April",
+                          "Dan Martin",
+                          "20:00",
+                          "6:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
               ListTile(
                 leading: Icon(
@@ -606,7 +652,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ShiftClientId: _shiftCLientId,
                                 onRefreshHomeScreen: _refreshScreen,
                                 onEndTask: _refreshScreen,
-                                onRefreshStartTaskScreen: () {},
+                                onRefreshStartTaskScreen: () {
+                                  refreshHomeScreen();
+                                },
                               ),
                             )),
                       )
@@ -639,7 +687,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 builder: (context) =>
                                                     DarDisplayScreen(
                                                       EmpEmail: _empEmail,
+                                                      EmpID: _employeeId,
+                                                      EmpDarCompanyId:
+                                                          _ShiftCompanyId ?? '',
+                                                      EmpDarCompanyBranchId:
+                                                          _ShiftCompanyId ?? "",
+                                                      EmpDarShiftID: _shiftId,
+                                                      EmpDarClientID:
+                                                          _shiftCLientId ?? "",
                                                     )));
+                                        break;
+                                      case 4:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PostOrder()));
+                                        break;
+                                      case 5:
+                                        /*TaskScreen*/
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TaskFeatureScreen()));
                                         break;
                                       case 6:
                                         Navigator.push(
@@ -670,14 +741,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         : ScreenIndex == 2
                             ? SliverToBoxAdapter(
                                 child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: width / width30,
-                                  right: width / width30,
+                                  padding: EdgeInsets.only(
+                                    left: width / width30,
+                                    right: width / width30,
+                                  ),
+                                  child: CustomCalendar(
+                                    selectedDates: selectedDates,
+                                  ),
                                 ),
-                                child: CustomCalendar(
-                                  selectedDates: selectedDates,
-                                ),
-                              ))
+                              )
                             : const SizedBox(),
                 ScreenIndex == 2
                     ? SliverList(

@@ -15,7 +15,7 @@ import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_semibold.dart';
 import '../../utils/colors.dart';
 import '../../utils/utils.dart';
-import '../feature screens/visitors/widgets/setTextfieldWidget.dart';
+import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -64,9 +64,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final employeeData = employeeDoc.data();
         setState(() {
           _employeeName = employeeData?['EmployeeName'];
+          _nameController.text = employeeData?['EmployeeName'];
           _employeeEmail = employeeData?['EmployeeEmail'];
           _employeeRole = employeeData?['EmployeeRole'];
           _employeePhone = employeeData?['EmployeePhone'];
+          _phoneNoController.text = employeeData?['EmployeePhone'];
           _employeeImageUrl = employeeData?['EmployeeImg'];
         });
       }

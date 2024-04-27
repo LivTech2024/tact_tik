@@ -76,6 +76,7 @@ dependencies:
   open_file: ^3.2.1
   date_picker_timeline: ^1.2.3
 
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -105,6 +106,9 @@ flutter:
     - assets/email.png
     - assets/TPS RGB.png
     - assets/Tactik.jpeg
+    - assets/ErrorSound.mp3
+    - assets/SuccessSound.mp3
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
