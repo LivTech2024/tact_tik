@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -357,7 +356,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    AudioPlayer player = new AudioPlayer();
     bool buttonEnabled = true;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
@@ -645,8 +643,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           Result = res;
                                         });
                                         // if (Result) {
-                                        player.play(AssetSource(
-                                            "../../../../assets/SuccessSound.mpeg"));
                                         print(res);
                                         if (res == checkpoint.id) {
                                           await fireStoreService
