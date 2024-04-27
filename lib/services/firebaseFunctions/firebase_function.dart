@@ -910,8 +910,8 @@ class FireStoreService {
       // Generate report
       String Title = "Shift Ended";
       String Data = "Shift Ended ";
-      await generateReport(LocationName, Title, employeeId, BrachId, Data,
-          CompyId, "other", EmpNames, ClientId);
+      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
+      //     CompyId, "other", EmpNames, ClientId);
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
@@ -1979,9 +1979,11 @@ class FireStoreService {
             String formattedTime = statusReportedTime.toDate().toString();
 
             String statusComment = status["StatusComment"] ?? "";
+            String checkPointName = checkPoint["CheckPointName"] ?? "";
 
             if (statusImageUrls.isNotEmpty) {
               imageData.add({
+                "CheckPointName": checkPointName,
                 "StatusReportedTime": formattedTime,
                 "ImageUrls": statusImageUrls,
                 "StatusComment": statusComment,
@@ -1991,6 +1993,7 @@ class FireStoreService {
         }
 
         if (imageData.isNotEmpty) {
+          print("Images Data for Patrol : $imageData");
           return imageData;
         } else {
           print("No image URLs found for EmpId: $EmpId in PatrolID: $PatrolID");
@@ -2171,13 +2174,6 @@ class FireStoreService {
           .where('PatrolShiftId', isEqualTo: ShiftId)
           .orderBy('PatrolLogPatrolCount')
           .get();
-
-      // Process query results
-      List<String> specificDocIds = [
-        'jz05XKEGNGazZQPl4KiV',
-        'ygLQKPhSsc2Uc8Sfbw7O',
-        'vRVAWBW25mSSG7SxA0JM'
-      ];
 
       querySnapshot.docs.forEach((doc) {
         // Check if the document ID is in the list of specific IDs
