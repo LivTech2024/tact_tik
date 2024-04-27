@@ -262,7 +262,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                   (context, index) {
                     Patrol p = patrolsData[index];
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width / width30),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width30),
                       child: PatrollingWidget(p: p, onRefresh: _refreshData),
                     );
                   },
@@ -386,11 +387,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
           buttonEnabled = false; // Disable the button
         });
         await fireStoreService.addToLog(
-            "PatrolStarted",
+            "patrol_start",
             "",
             "",
-            Timestamp.now(),
-            Timestamp.now(),
             widget.p.EmpId,
             widget.p.EmployeeName,
             widget.p.PatrolCompanyID,
@@ -649,11 +648,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   checkpoint.id,
                                                   widget.p.EmpId);
                                           await fireStoreService.addToLog(
-                                              "Checkpoint",
+                                              "check_point",
                                               "",
                                               "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
@@ -1263,11 +1260,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           }).toList();
 
                                           await fireStoreService.addToLog(
-                                              "PatrolEnded",
+                                              "patrol_end",
                                               "",
                                               "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
@@ -1401,11 +1396,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   patrolOutTimestamp,
                                                   CommentController.text);
                                           await fireStoreService.addToLog(
-                                              "PatrolEnded",
+                                              "patrol_end",
                                               "",
                                               "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,

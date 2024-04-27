@@ -619,11 +619,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           await fireStoreService.checkShiftReturnTaskStatus(
                               widget.EmployeId, widget.ShiftId);
                       await fireStoreService.addToLog(
-                          'ShiftStarted',
+                          'shift_start',
                           widget.ShiftAddressName,
                           "",
-                          Timestamp.now(),
-                          Timestamp.now(),
                           widget.EmployeId,
                           widget.EmployeeName,
                           widget.ShiftCompanyId,
@@ -700,11 +698,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           prefs.setBool('ShiftStarted', false);
                         });
                         await fireStoreService.addToLog(
-                            'ShiftEnd',
+                            'shift_end',
                             widget.ShiftAddressName,
                             "",
-                            Timestamp.now(),
-                            Timestamp.now(),
                             widget.EmployeId,
                             widget.EmployeeName,
                             widget.ShiftCompanyId,
@@ -790,11 +786,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     // isPaused ? stopStopwatch() : startStopwatch();
                     if (isPaused) {
                       await fireStoreService.addToLog(
-                          'ShiftBreak',
+                          'shift_break',
                           widget.ShiftAddressName,
                           "",
-                          Timestamp.now(),
-                          Timestamp.now(),
                           widget.EmployeId,
                           widget.EmployeeName,
                           widget.ShiftCompanyId,
@@ -809,11 +803,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     } else {
                       onBreak = false;
                       await fireStoreService.addToLog(
-                          'ShiftResume',
+                          'shift_resume',
                           widget.ShiftAddressName,
                           "",
-                          Timestamp.now(),
-                          Timestamp.now(),
                           widget.EmployeId,
                           widget.EmployeeName,
                           widget.ShiftCompanyId,

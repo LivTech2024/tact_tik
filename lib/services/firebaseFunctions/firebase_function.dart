@@ -1997,47 +1997,123 @@ class FireStoreService {
   //     print('Error logging shift start: $e');
   //   }
   // }
+  // Future<void> addToLog(
+  //     String logType,
+  //     String LocationName,
+  //     String ClientName,
+  //     Timestamp LogBookTimeStamp,
+  //     Timestamp LogBookModifiedAt,
+  //     String LogBookEmployeeId,
+  //     String LogbookEmployeeName,
+  //     String LogBookCompanyID,
+  //     String LogBookBranchID,
+  //     String LogBookClientID) async {
+  //   try {
+  //     final now = DateTime.now();
+  //     final formatedDate = DateFormat('dd-M-yyyy').format(now);
+
+  //     final userRef = FirebaseFirestore.instance.collection('LogBook');
+
+  //     // Create a new document in the "Log" subcollection with an auto-generated ID
+  //     DocumentReference newLogRef = await userRef.add({
+  //       'LogBookType': logType,
+  //       'LogBookLocation': LocationName,
+  //       'LogBookClientName': LocationName, // Note: Should this be ClientName?
+  //       'LogBookID': "", // Placeholder value
+  //       'LogBookTimeStamp': LogBookTimeStamp,
+  //       'LogBookModifiedAt': LogBookModifiedAt,
+  //       'LogBookEmployeeId': LogBookEmployeeId,
+  //       'LogbookEmployeeName': LogbookEmployeeName,
+  //       'LogBookCompanyID': LogBookCompanyID,
+  //       'LogBookBranchID': LogBookBranchID,
+  //       'LogBookClientID': LogBookClientID,
+  //     });
+
+  //     // Update the document to set LogBookID to the document ID
+  //     await newLogRef.update({'LogBookID': newLogRef.id});
+
+  //     // print('Shift start logged at $currentTime');
+  //   } catch (e) {
+  //     print('Error logging shift start: $e');
+  //   }
+  // }
+
+  List convertDate(Timestamp timestamp) {
+    DateTime date = timestamp.toDate();
+    return [date.day, date.month, date.year];
+  }
+
   Future<void> addToLog(
-      String logType,
-      String LocationName,
-      String ClientName,
-      Timestamp LogBookTimeStamp,
-      Timestamp LogBookModifiedAt,
-      String LogBookEmployeeId,
-      String LogbookEmployeeName,
-      String LogBookCompanyID,
-      String LogBookBranchID,
-      String LogBookClientID) async {
+    String logType,
+    String locationName,
+    String clientName,
+    String logBookEmployeeId,
+    String logbookEmployeeName,
+    String logBookCompanyID,
+    String logBookBranchID,
+    String logBookClientID,
+  ) async {
     try {
-      final now = DateTime.now();
-      final formatedDate = DateFormat('dd-M-yyyy').format(now);
+      final today = DateTime.now();
+      bool isDocumentpresent = false;
+      final userRef = FirebaseFirestore.instance.collection('LogBook');
+      final query = userRef.where('LogBookEmpId', isEqualTo: logBookEmployeeId);
+      String documentID = '';
 
-      final userRef = FirebaseFirestore.instance
-          .collection('Dates')
-          .doc(formatedDate)
-          .collection('Logs');
+      final querySnapshot = await query.get();
 
-      // Create a new document in the "Log" subcollection with an auto-generated ID
-      DocumentReference newLogRef = await userRef.add({
-        'LogBookType': logType,
-        'LogBookLocation': LocationName,
-        'LogBookClientName': LocationName, // Note: Should this be ClientName?
-        'LogBookID': "", // Placeholder value
-        'LogBookTimeStamp': LogBookTimeStamp,
-        'LogBookModifiedAt': LogBookModifiedAt,
-        'LogBookEmployeeId': LogBookEmployeeId,
-        'LogbookEmployeeName': LogbookEmployeeName,
-        'LogBookCompanyID': LogBookCompanyID,
-        'LogBookBranchID': LogBookBranchID,
-        'LogBookClientID': LogBookClientID,
-      });
+      for (var log in querySnapshot.docs) {
+        var data = log.data();
+        var time = convertDate(data['LogBookDate']);
+        if (today.day == time[0] &&
+            today.month == time[1] &&
+            today.year == time[2]) {
+          isDocumentpresent = true;
+          documentID = log.id;
+          break;
+        }
+      }
 
-      // Update the document to set LogBookID to the document ID
-      await newLogRef.update({'LogBookID': newLogRef.id});
+      if (isDocumentpresent) {
+        // A document exists, update the LogBookData array
+        final docRef = userRef.doc(documentID);
+        await docRef.update({
+          'LogBookData': FieldValue.arrayUnion([
+            {
+              'LogContent': '$logType at $locationName for $clientName',
+              'LogType': logType,
+              'LogReportedAt': Timestamp.fromDate(today),
+            }
+          ]),
+        });
+      } else {
+        // Set the timestamp separately
+        final timestamp = Timestamp.fromDate(today);
 
-      // print('Shift start logged at $currentTime');
+        DocumentReference newLogRef = await userRef.add({
+          'LogBookCompanyId': logBookCompanyID,
+          'LogBookCompanyBranchId': logBookBranchID,
+          'LogBookDate': timestamp,
+          'LogBookEmpId': logBookEmployeeId,
+          'LogBookEmpName': logbookEmployeeName,
+          'LogBookClientId': logBookClientID,
+          'LogBookCleintName': clientName,
+          'LogBookLocationId': locationName,
+          'LogBookData': [
+            {
+              'LogContent': '$logType at $locationName for $clientName',
+              'LogType': logType,
+              'LogReportedAt': timestamp,
+            }
+          ],
+          'LogBookCreatedAt': timestamp,
+        });
+
+        // Update the document to set LogBookId to the document ID
+        await newLogRef.update({'LogBookId': newLogRef.id});
+      }
     } catch (e) {
-      print('Error logging shift start: $e');
+      print('Error logging: $e');
     }
   }
 
