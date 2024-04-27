@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
         String empEmail = userInfo['EmployeeEmail'];
-        String empImage = userInfo['EmployeeImg'];
+        String empImage = userInfo['EmployeeImg'] ?? "";
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService

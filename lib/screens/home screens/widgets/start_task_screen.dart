@@ -137,7 +137,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         ClientName,
         emails,
         'Tacttik Shift Report',
-        "Tacttik Shift Rxeport",
+        "Tacttik Shift Report",
         data,
         "Shift",
         widget.ShiftDate,
@@ -563,27 +563,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         );
                       } else {
                         widget.onRefresh();
-                        // showDialog(
-                        //   context: context,
-                        //   barrierDismissible:
-                        //       false, // Prevent dismissing the dialog by tapping outside
-                        //   builder: (BuildContext context) {
-                        //     return Dialog(
-                        //       child: Container(
-                        //         padding: EdgeInsets.all(20),
-                        //         child: Column(
-                        //           mainAxisSize: MainAxisSize.min,
-                        //           children: [
-                        //             CircularProgressIndicator(),
-                        //             SizedBox(height: 20),
-                        //             Text('Loading...'),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        // );
-                        // await Future.delayed(Duration(seconds: 30));
                         setState(() {
                           // isPaused = !isPaused;
                           // prefs.setBool("pauseState", isPaused);
@@ -593,6 +572,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           widget.resetShiftStarted();
                           prefs.setBool('ShiftStarted', false);
                         });
+                        var data = await fireStoreService.fetchDataForPdf(
+                            widget.EmployeId, widget.ShiftId);
+                        if (data.isNotEmpty) {
+                          send_mail_onOut(data);
+                        } else {
+                          showErrorToast(context, "try again");
+                          widget.onRefresh();
+                          return;
+                          // Handle the case when data is null
+                        }
                         await fireStoreService.addToLog(
                             'ShiftEnd',
                             widget.ShiftAddressName,
@@ -624,32 +613,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         var AdminEmal = fireStoreService
                             .getAdminEmail(widget.ShiftCompanyId);
                         print("Client Name ${AdminEmal}");
-                        //fetch the data from Patrol Logs and generate email from it
-                        var data = await fireStoreService.fetchDataForPdf(
-                            widget.EmployeId, widget.ShiftId);
-                        if (data.isNotEmpty) {
-                          send_mail_onOut(data);
-                        } else {
-                          showErrorToast(context, "try again");
-                          widget.onRefresh();
-                          return;
-                          // Handle the case when data is null
-                        }
-                        // send_mail_onOut(data);
-
-                        // generateAndOpenPDF(
-                        //     ClientName, "sutarvaibhav37@gmail.com", data);
-                        //for now send email same as patrol
-                        //generate the pdf
-                        //add to firebase storage and then mail too
-                        // String? pdfLink = fireStoreService.uploadPdfToStorage(
-                        //     file, widget.ShiftId);
                         widget.onRefresh();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
+                        if (mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: Container(
@@ -679,9 +651,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   color: color5,
                   backgroundcolor: WidgetColor,
                   onPressed: () async {
-                    // var data = await fireStoreService.fetchDataForPdf(
-                    //     widget.EmployeId, widget.ShiftId);
-                    // print(data);
+                    var data = await fireStoreService.fetchDataForPdf(
+                        widget.EmployeId, widget.ShiftId);
+                    print("Fetched Data for generating pdf: ${data}");
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     setState(() {

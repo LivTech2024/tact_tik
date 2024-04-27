@@ -645,8 +645,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           Result = res;
                                         });
                                         // if (Result) {
-                                        player.play(AssetSource(
-                                            "../../../../assets/SuccessSound.mpeg"));
+                                        // player.play(AssetSource(
+                                        //     "../../../../assets/SuccessSound.mpeg"));
                                         print(res);
                                         if (res == checkpoint.id) {
                                           await fireStoreService
@@ -1311,7 +1311,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   url['StatusReportedTime'],
                                               'ImageUrls': url['ImageUrls'],
                                               'StatusComment':
-                                                  url['StatusComment']
+                                                  url['StatusComment'],
+                                              'CheckPointName':
+                                                  url['CheckPointName']
                                             };
                                           }).toList();
 
