@@ -716,11 +716,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   checkpoint.id,
                                                   widget.p.EmpId);
                                           await fireStoreService.addToLog(
-                                              "Checkpoint",
+                                              "check_point",
                                               "",
                                               "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
