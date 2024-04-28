@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -21,6 +22,8 @@ class CreateReportScreen extends StatefulWidget {
   final String locationName;
   final String companyID;
   final String empId;
+  final String ClientId;
+
   final String empName;
 
   CreateReportScreen(
@@ -29,7 +32,8 @@ class CreateReportScreen extends StatefulWidget {
       required this.locationName,
       required this.companyID,
       required this.empId,
-      required this.empName});
+      required this.empName,
+      required this.ClientId});
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
@@ -38,6 +42,10 @@ class CreateReportScreen extends StatefulWidget {
 class _CreateReportScreenState extends State<CreateReportScreen> {
   FireStoreService fireStoreService = FireStoreService();
   List<String> tittles = [];
+  final TextEditingController explainController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController newCategoryController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -63,12 +71,36 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   bool isChecked = false;
 
   Future<void> _addImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 50);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        // Compress the image
+        XFile compressedFile = await _compressImage(File(pickedFile.path));
+
+        // Add the compressed image to the uploads list
+        setState(() {
+          uploads.add({'type': 'image', 'file': compressedFile});
+        });
+      }
+    }
+  }
+
+  Future<XFile> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 50,
+    );
+
+    return result!;
+  }
+
+  Future<void> onSubmit() async {
+    try {
+      //add to storage get its download links
+    } catch (e) {
+      print("Error $e");
     }
   }
 
@@ -137,6 +169,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 SizedBox(height: height / height30),
                 CustomeTextField(
                   hint: 'Tittle',
+                  controller: titleController,
                 ),
                 SizedBox(height: height / height30),
                 InterBold(
@@ -192,11 +225,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     hint: 'Create category',
                     isExpanded: true,
                     showIcon: false,
+                    controller: newCategoryController,
                   ),
                 SizedBox(height: height / height20),
-                const CustomeTextField(
+                CustomeTextField(
                   hint: 'Explain',
                   isExpanded: true,
+                  controller: explainController,
                 ),
                 SizedBox(height: height / height20),
                 Container(
@@ -345,20 +380,44 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 Button1(
                   text: 'Submit',
                   onPressed: () async {
-                    await fireStoreService.createReport(
-                        locationId: "locationId",
-                        locationName: "locationName",
-                        isFollowUpRequired: true,
-                        companyId: "companyId",
-                        employeeId: "employeeId",
-                        employeeName: "employeeName",
-                        reportName: "reportName",
-                        categoryName: "categoryName",
-                        categoryId: "categoryId",
-                        data: "data",
-                        status: "status",
-                        clientId: "clientId",
-                        createdAt: Timestamp.now());
+                    if (dropdownValue == "Other") {
+                      var newId = await fireStoreService.createReportCategoryId(
+                          newCategoryController.text, widget.companyID);
+                      await fireStoreService.createReport(
+                          locationId: widget.locationId,
+                          locationName: widget.locationName,
+                          isFollowUpRequired: isChecked,
+                          companyId: widget.companyID,
+                          employeeId: widget.empId,
+                          employeeName: widget.empName,
+                          reportName: titleController.text,
+                          categoryName: dropdownValue,
+                          categoryId: newId ?? "",
+                          data: explainController.text,
+                          status: "started",
+                          clientId: widget.ClientId,
+                          createdAt: Timestamp.now());
+                      Navigator.pop(context);
+                      //create a new catergory and add its return its id
+                    } else {
+                      var id = await fireStoreService.getReportCategoryId(
+                          dropdownValue, widget.companyID);
+                      await fireStoreService.createReport(
+                          locationId: widget.locationId,
+                          locationName: widget.locationName,
+                          isFollowUpRequired: isChecked,
+                          companyId: widget.companyID,
+                          employeeId: widget.empId,
+                          employeeName: widget.empName,
+                          reportName: titleController.text,
+                          categoryName: dropdownValue,
+                          categoryId: id ?? "",
+                          data: explainController.text,
+                          status: "started",
+                          clientId: widget.ClientId,
+                          createdAt: Timestamp.now());
+                      Navigator.pop(context);
+                    }
                   },
                   backgroundcolor: Primarycolor,
                   borderRadius: width / width10,

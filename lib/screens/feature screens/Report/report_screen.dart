@@ -84,8 +84,17 @@ class _ReportScreenState extends State<ReportScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CreateReportScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateReportScreen(
+                          locationId: widget.locationId,
+                          companyID: widget.companyId,
+                          locationName: widget.locationName,
+                          empId: widget.empId,
+                          empName: widget.empName,
+                          ClientId: widget.clientId,
+                        )));
           },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),

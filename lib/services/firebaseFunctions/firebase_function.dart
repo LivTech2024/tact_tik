@@ -1080,10 +1080,11 @@ class FireStoreService {
     }
   }
 
-  Future<String?> getReportCategoryId(String type) async {
+  Future<String?> getReportCategoryId(String type, String CompanyID) async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("ReportCategories")
         .where("ReportCategoryName", isEqualTo: type)
+        .where('ReportCompanyId', isEqualTo: CompanyID)
         .get();
     if (snapshot.docs.isNotEmpty) {
       final doc = snapshot.docs.first;
@@ -1092,6 +1093,17 @@ class FireStoreService {
     } else {
       return null; // Handle case when no document is found
     }
+  }
+
+  Future<String?> createReportCategoryId(String type, String CompanyId) async {
+    final ReportRef = FirebaseFirestore.instance.collection("ReportCategories");
+    final newDoc = await ReportRef.add({
+      "ReportCategoryCreatedAt": Timestamp.now(),
+      "ReportCategoryName": type,
+      "ReportCompanyId": CompanyId
+    });
+    await newDoc.update({"ReportCategoryId": newDoc.id});
+    return newDoc.id;
   }
 
   Future<void> generateReport(
@@ -1110,7 +1122,7 @@ class FireStoreService {
 
       //report Categories fetch the id according to the
 
-      var ReportCategoryId = await getReportCategoryId(type);
+      var ReportCategoryId = await getReportCategoryId(type, CompanyId);
       final ReportRef = FirebaseFirestore.instance.collection("Reports");
       String combinationName = "${reportName} ${address}";
       print('Combination Name: $combinationName');
@@ -1316,6 +1328,70 @@ class FireStoreService {
       throw e;
     }
   }
+
+  //Upload files to storage for report
+  // Future<List<Map<String, dynamic>>> addToReportStorage(File file) async {
+  //   try {
+  //     String uniqueName = DateTime.now().toString();
+  //     Reference storageRef = FirebaseStorage.instance.ref();
+
+  //     Reference uploadRef =
+  //         storageRef.child("employees/report/$uniqueName.jpg");
+  //     // Compress the image
+  //     Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+  //       file.absolute.path,
+  //       quality: 50, // Adjust the quality as needed
+  //     );
+
+  //     // Upload the compressed image to Firebase Storage
+  //     await uploadRef.putData(Uint8List.fromList(compressedImage!));
+
+  //     // Get the download URL of the uploaded image
+  //     String downloadURL = await uploadRef.getDownloadURL();
+  //     print("Download URL: $downloadURL");
+
+  //     // Return the download URL in a list
+  //     return [
+  //       {'downloadURL': downloadURL}
+  //     ];
+  //   } catch (e) {
+  //     print(e);
+  //     throw e;
+  //   }
+  // }
+
+  Future<String> uploadFileToReportStorage(File file, String path) async {
+    try {
+      TaskSnapshot snapshot =
+          await FirebaseStorage.instance.ref(path).putFile(file);
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Error uploading file: $e");
+      return "";
+    }
+  }
+//   Future<void> uploadFiles() async {
+//   for (var upload in uploads) {
+//     String type = upload['type'];
+//     String filePath = upload['file'];
+
+//     File file = File(filePath);
+//     String fileName = file.path.split('/').last;
+
+//     firebase_storage.Reference ref =
+//         firebase_storage.FirebaseStorage.instance.ref('employee/report/$fileName');
+
+//     try {
+//       await ref.putFile(file);
+//       String downloadURL = await ref.getDownloadURL();
+
+//       // Store the downloadURL in Firestore or use it as needed
+//     } catch (e) {
+//       print('Error uploading $type: $e');
+//     }
+//   }
+// }
 
   //Dar images
   Future<List<Map<String, dynamic>>> addImageToDarStorage(File file) async {
