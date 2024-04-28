@@ -17,6 +17,7 @@ import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
@@ -62,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String employeeImg = "";
   String _ShiftDate = "";
   String _ShiftLocation = "";
+  String _ShiftLocationName = "";
+
   String _ShiftName = "";
   String _ShiftEndTime = "";
   String _ShiftStartTime = "";
@@ -230,6 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
           String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
           String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
+          String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
 
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
@@ -252,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _ShiftEndTime = shiftEndTimeStr;
             _ShiftStartTime = shiftStartTimeStr;
             _ShiftLocation = shiftLocation;
+            _ShiftLocationName = shiftLocationName;
             _ShiftName = shiftName;
             _shiftLatitude = shiftLocationLatitude;
             _shiftLongitude = shiftLocationLongitude;
@@ -495,39 +500,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        List<String> emails = [];
-                        emails.add("sutarvaibhav37@gmail.com");
-                        emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
-                        // "security@lestonholdings.com"
-                        List<String> patrolLogIds = [];
-                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        //Sending Shift end report
-                        var data =
-                            await fireStoreService.fetchTemplateDataForPdf(
-                          "Hijql0nkNjA1tOhSf8wW",
-                          "PjiJ0MqsUA9oUwlPsUnr",
-                        );
+                        // List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("pankaj.kumar1312@yahoo.com");
+                        // emails.add("security@lestonholdings.com");
+                        // emails.add("dan@tpssolution.com");
+                        // // "security@lestonholdings.com"
+                        // List<String> patrolLogIds = [];
+                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        // //Sending Shift end report
+                        // var data =
+                        //     await fireStoreService.fetchTemplateDataForPdf(
+                        //   "Hijql0nkNjA1tOhSf8wW",
+                        //   "PjiJ0MqsUA9oUwlPsUnr",
+                        // );
 
-                        await sendShiftTemplateEmail(
-                          "Leston holdings ",
-                          emails,
-                          'Tacttik Shift Report',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "25 April",
-                          "Dan Martin",
-                          "20:00",
-                          "6:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings ",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "25 April",
+                        //   "Dan Martin",
+                        //   "20:00",
+                        //   "6:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                       },
                     ),
                   ],
@@ -655,6 +660,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onRefreshStartTaskScreen: () {
                                   refreshHomeScreen();
                                 },
+                                ShiftLocationName: _ShiftLocationName,
                               ),
                             )),
                       )
@@ -695,6 +701,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       EmpDarShiftID: _shiftId,
                                                       EmpDarClientID:
                                                           _shiftCLientId ?? "",
+                                                    )));
+                                        break;
+                                      case 3:
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReportScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                      locationName:
+                                                          _ShiftLocationName,
+                                                      companyId:
+                                                          _ShiftCompanyId ?? "",
+                                                      empId: _employeeId,
+                                                      empName: _userName,
+                                                      clientId: _shiftCLientId,
                                                     )));
                                         break;
                                       case 4:

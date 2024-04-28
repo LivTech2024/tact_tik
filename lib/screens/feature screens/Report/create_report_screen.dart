@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -15,14 +17,46 @@ import '../../../utils/colors.dart';
 import '../widgets/custome_textfield.dart';
 
 class CreateReportScreen extends StatefulWidget {
-  CreateReportScreen({super.key});
+  final String locationId;
+  final String locationName;
+  final String companyID;
+  final String empId;
+  final String empName;
+
+  CreateReportScreen(
+      {super.key,
+      required this.locationId,
+      required this.locationName,
+      required this.companyID,
+      required this.empId,
+      required this.empName});
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
 }
 
 class _CreateReportScreenState extends State<CreateReportScreen> {
-  String dropdownValue = 'Select';
+  FireStoreService fireStoreService = FireStoreService();
+  List<String> tittles = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    getAllTitles();
+    super.initState();
+  }
+
+  void getAllTitles() async {
+    List<String> data = await fireStoreService.getReportTitles();
+    if (data.isNotEmpty) {
+      setState(() {
+        tittles = ["All", ...data];
+      });
+    }
+    print("Report Titles : $data");
+    print("Getting all titles");
+  }
+
+  String dropdownValue = 'Other';
   bool dropdownShoe = false;
 
   List<Map<String, dynamic>> uploads = [];
@@ -139,16 +173,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           // Perform any action needed when 'Other' is selected
                           // For example, show a dialog, navigate to another screen, etc.
                           // Here, we'll just print a debug message
-                          print('Other selected');
+                          print('$dropdownValue selected');
                         });
                       },
-                      items: <String?>[
-                        'Select',
-                        'All',
-                        'available',
-                        'unavailable',
-                        'Other'
-                      ].map<DropdownMenuItem<String>>((String? value) {
+                      items: <String?>[...tittles]
+                          .map<DropdownMenuItem<String>>((String? value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value ?? ''),
@@ -182,9 +211,18 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.follow_the_signs , color: color2,size: width / width24,),
+                          Icon(
+                            Icons.follow_the_signs,
+                            color: color2,
+                            size: width / width24,
+                          ),
                           SizedBox(width: width / width6),
-                          InterMedium(text: 'Follow-Up Required ?' , color: color8,fontsize: width / width16,letterSpacing: -.3,)
+                          InterMedium(
+                            text: 'Follow-Up Required ?',
+                            color: color8,
+                            fontsize: width / width16,
+                            letterSpacing: -.3,
+                          )
                         ],
                       ),
                       Checkbox(
@@ -306,7 +344,22 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 SizedBox(height: height / height60),
                 Button1(
                   text: 'Submit',
-                  onPressed: () {},
+                  onPressed: () async {
+                    await fireStoreService.createReport(
+                        locationId: "locationId",
+                        locationName: "locationName",
+                        isFollowUpRequired: true,
+                        companyId: "companyId",
+                        employeeId: "employeeId",
+                        employeeName: "employeeName",
+                        reportName: "reportName",
+                        categoryName: "categoryName",
+                        categoryId: "categoryId",
+                        data: "data",
+                        status: "status",
+                        clientId: "clientId",
+                        createdAt: Timestamp.now());
+                  },
                   backgroundcolor: Primarycolor,
                   borderRadius: width / width10,
                 )
