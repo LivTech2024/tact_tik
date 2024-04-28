@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -25,6 +26,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   bool dropdownShoe = false;
 
   List<Map<String, dynamic>> uploads = [];
+  bool isChecked = false;
 
   Future<void> _addImage() async {
     final pickedFile =
@@ -130,16 +132,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           dropdownValue = newValue!;
                           if (dropdownValue == 'Other') {
                             dropdownShoe = true;
-                          }  else{
+                          } else {
                             dropdownShoe = false;
                           }
                           // if (newValue == 'Other') {
-                            // Perform any action needed when 'Other' is selected
-                            // For example, show a dialog, navigate to another screen, etc.
-                            // Here, we'll just print a debug message
-                            print('Other selected');
-
-
+                          // Perform any action needed when 'Other' is selected
+                          // For example, show a dialog, navigate to another screen, etc.
+                          // Here, we'll just print a debug message
+                          print('Other selected');
                         });
                       },
                       items: <String?>[
@@ -157,18 +157,48 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     ),
                   ),
                 ),
-                if (dropdownShoe)
-                SizedBox(height: height / height20),
+                if (dropdownShoe) SizedBox(height: height / height20),
                 if (dropdownShoe)
                   CustomeTextField(
                     hint: 'Create category',
                     isExpanded: true,
                     showIcon: false,
                   ),
-                SizedBox(height: height / height30),
+                SizedBox(height: height / height20),
                 const CustomeTextField(
                   hint: 'Explain',
                   isExpanded: true,
+                ),
+                SizedBox(height: height / height20),
+                Container(
+                  height: height / height60,
+                  padding: EdgeInsets.symmetric(horizontal: width / width20),
+                  decoration: BoxDecoration(
+                    color: WidgetColor,
+                    borderRadius: BorderRadius.circular(width / width10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.follow_the_signs , color: color2,size: width / width24,),
+                          SizedBox(width: width / width6),
+                          InterMedium(text: 'Follow-Up Required ?' , color: color8,fontsize: width / width16,letterSpacing: -.3,)
+                        ],
+                      ),
+                      Checkbox(
+                        activeColor: Primarycolor,
+                        checkColor: color1,
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isChecked = !isChecked;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: height / height20),
                 Row(

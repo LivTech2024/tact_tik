@@ -866,6 +866,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   Row(
                                     children: [
                                       Checkbox(
+                                        activeColor: Primarycolor,
+                                        checkColor: color1,
                                         value: isChecked,
                                         onChanged: (bool? value) {
                                           setState(() {
@@ -876,6 +878,27 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ),
                                       InterMedium(
                                         text: 'QR Code Required',
+                                        fontsize: width / width16,
+                                        color: color2,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: height / height10),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        activeColor: Primarycolor,
+                                        checkColor: color1,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tasks[index]['isChecked'] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                      InterMedium(
+                                        text: 'Return QR Code Required',
                                         fontsize: width / width16,
                                         color: color2,
                                       ),
