@@ -130,33 +130,44 @@ class _LogBookScreenState extends State<LogBookScreen> {
               }
               Map<String, dynamic>? logBookDoc =
                   fetchLogsByDateAndId(snapshot.data!.docs);
-              List<dynamic> logs = logBookDoc!['LogBookData'];
+
               // print(logBookDocs);
-              return logBookDoc == null
-                  ? SizedBox()
-                  : SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        //
-                        (context, index) {
-                          Map<String, dynamic> logBookId = logs[index];
-                          // final logData =
-                          //     logBookDocs[index].data() as Map<String, dynamic>;
-                          // return LogBookWidget(
-                          //   logBookId: logBookId,
-                          //   // log: Logs.fromDocument(logData),
-                          // );
-                          // Logs log = Logs.fromDocument(logBookId);
-                          return LogTypeWidget(
-                            clientName: logBookDoc['LogBookCleintName'] ?? "",
-                            location: logBookDoc['LogBookLocationName'] ?? "",
-                            logtype: logBookId['LogType'],
-                            logEnum: LogBookEnum.CheckPoint,
-                            time: logBookId['LogReportedAt'],
-                          );
-                        },
-                        childCount: logs.length,
-                      ),
-                    );
+              if (logBookDoc == null) {
+                print('No data found');
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      'No data found!',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                );
+              } else {
+                List<dynamic> logs = logBookDoc['LogBookData'];
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    //
+                    (context, index) {
+                      Map<String, dynamic> logBookId = logs[index];
+                      // final logData =
+                      //     logBookDocs[index].data() as Map<String, dynamic>;
+                      // return LogBookWidget(
+                      //   logBookId: logBookId,
+                      //   // log: Logs.fromDocument(logData),
+                      // );
+                      // Logs log = Logs.fromDocument(logBookId);
+                      return LogTypeWidget(
+                        clientName: logBookDoc['LogBookCleintName'] ?? "",
+                        location: logBookDoc['LogBookLocationName'] ?? "",
+                        logtype: logBookId['LogType'],
+                        logEnum: LogBookEnum.CheckPoint,
+                        time: logBookId['LogReportedAt'],
+                      );
+                    },
+                    childCount: logs.length,
+                  ),
+                );
+              }
             },
           ),
         ],

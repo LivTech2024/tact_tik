@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
+import 'package:tact_tik/services/Userservice.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -18,6 +20,70 @@ class DarOpenAllScreen extends StatefulWidget {
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   List colors = [Primarycolor, color25];
   bool showDARS = true;
+  List<Map<String, dynamic>> hourlyShiftDetails = [];
+  final _userService = UserService(firestoreService: FireStoreService());
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchShiftDetails();
+  }
+
+  Future<void> _fetchShiftDetails() async {
+    try {
+      await _userService.getShiftInfo();
+      String? shiftStartTime = _userService.shiftStartTime;
+      print("shiftStartTime :$shiftStartTime");
+      String? shiftEndTime = _userService.shiftEndTime;
+      print("shiftEndTime :$shiftEndTime");
+      if (shiftStartTime != null && shiftEndTime != null) {
+        final List<Map<String, dynamic>> shiftDetails = [
+          {
+            'startTime': '2023-05-01 09:00:00',
+            'endTime': '2023-05-01 14:00:00',
+          },
+        ];
+
+        _processShiftDetails(shiftDetails);
+        setState(() {});
+      } else {
+        print('Shift data is null.');
+      }
+    } catch (e) {
+      print('Error fetching shift details: $e');
+    }
+  }
+
+  void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
+    hourlyShiftDetails.clear(); // Clear previous details
+    for (var shift in shiftDetails) {
+      final startTime = DateTime.parse(shift['startTime']);
+      final endTime = DateTime.parse(shift['endTime']);
+      final duration = endTime.difference(startTime);
+      final hourlyDuration = Duration(hours: 1);
+      final totalHours = duration.inHours;
+
+      for (int i = 0; i < totalHours; i++) {
+        final hourStart = startTime.add(Duration(hours: i));
+        final hourEnd = hourStart.add(hourlyDuration);
+        hourlyShiftDetails.add({
+          'startTime': hourStart.toString(),
+          'endTime': hourEnd.toString(),
+        });
+      }
+
+      final remainingMinutes = duration.inMinutes.remainder(60);
+      if (remainingMinutes > 0) {
+        final lastHourStart =
+            endTime.subtract(Duration(minutes: remainingMinutes));
+        final lastHourEnd = endTime;
+        hourlyShiftDetails.add({
+          'startTime': lastHourStart.toString(),
+          'endTime': lastHourEnd.toString(),
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +170,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               ),
                               Flexible(
                                 child: InterRegular(
-                                  text: 'Clark Place - Unknown person',
+                                  text: _userService.userName ?? 'Loading...',
                                   color: Primarycolor,
                                   fontsize: width / width20,
                                 ),
@@ -125,8 +191,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               ),
                               Flexible(
                                 child: InterRegular(
-                                  text:
-                                      'Clark Place - Lost & Found Item Report',
+                                  text: _userService.shiftLocation ??
+                                      'Loading...',
                                   color: Primarycolor,
                                   fontsize: width / width20,
                                   maxLines: 3,
@@ -137,7 +203,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           SizedBox(height: height / height20),
                           Column(
                             children: List.generate(
-                              10,
+                              hourlyShiftDetails.length,
                               (index) => Container(
                                 margin:
                                     EdgeInsets.only(bottom: height / height10),
@@ -154,13 +220,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterMedium(
-                                      text: '10.30 pm - 11.30pm ',
+                                      text:
+                                          '${hourlyShiftDetails[index]['startTime']!.substring(11, 16)} - ${hourlyShiftDetails[index]['endTime']!.substring(11, 16)}',
                                       color: color21,
                                     ),
                                     SizedBox(height: height / height10),
                                     InterRegular(
-                                      text:
-                                          'Lorem Ipsum is simply dummy text of the printing and typesetting industry....',
+                                      text: 'Test',
                                       fontsize: width / width16,
                                       color: color26,
                                       maxLines: 5,
