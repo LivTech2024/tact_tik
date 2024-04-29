@@ -162,8 +162,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
             },
           ),
           title: InterRegular(
-            text: reportData.isNotEmpty
-                ? 'Report FollowUp for ${reportData['ReportName']} '
+            text: reportData.isNotEmpty &&
+                    reportData['ReportIsFollowUpRequired'] == true
+                ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
             fontsize: width / width18,
             color: Colors.white,
@@ -424,22 +425,49 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       Navigator.pop(context);
                       //create a new catergory and add its return its id
                     } else {
-                      var id = await fireStoreService.getReportCategoryId(
-                          dropdownValue, widget.companyID);
-                      await fireStoreService.createReport(
-                          locationId: widget.locationId,
-                          locationName: widget.locationName,
-                          isFollowUpRequired: isChecked,
-                          companyId: widget.companyID,
-                          employeeId: widget.empId,
-                          employeeName: widget.empName,
-                          reportName: titleController.text,
-                          categoryName: dropdownValue,
-                          categoryId: id ?? "",
-                          data: explainController.text,
-                          status: "started",
-                          clientId: widget.ClientId,
-                          createdAt: Timestamp.now());
+                      if (reportData['ReportIsFollowUpRequired'] == true) {
+                        print("Dropdown value $dropdownValue");
+                        // reportData['ReportCategoryName'] = dropdownValue;
+                        // reportData['ReportName'] = titleController.text;
+                        // reportData['ReportName'] = explainController.text;
+                        // var id = await fireStoreService.getReportCategoryId(
+                        //     dropdownValue, widget.companyID);
+                        // await fireStoreService.createReport(
+                        //     locationId: widget.locationId,
+                        //     locationName: widget.locationName,
+                        //     isFollowUpRequired: isChecked,
+                        //     companyId: widget.companyID,
+                        //     employeeId: widget.empId,
+                        //     employeeName: widget.empName,
+                        //     reportName: titleController
+                        //         .text, // Use existing report name
+                        //     categoryName: reportData[
+                        //         'ReportCategoryName'], // Use existing category name
+                        //     categoryId: id ?? "",
+                        //     data: explainController.text,
+                        //     status: "started",
+                        //     clientId: widget.ClientId,
+                        //     followedUpId: widget.reportId,
+                        //     createdAt: Timestamp.now());
+                        print('Report created on follow up');
+                      } else {
+                        var id = await fireStoreService.getReportCategoryId(
+                            dropdownValue, widget.companyID);
+                        await fireStoreService.createReport(
+                            locationId: widget.locationId,
+                            locationName: widget.locationName,
+                            isFollowUpRequired: isChecked,
+                            companyId: widget.companyID,
+                            employeeId: widget.empId,
+                            employeeName: widget.empName,
+                            reportName: titleController.text,
+                            categoryName: dropdownValue,
+                            categoryId: id ?? "",
+                            data: explainController.text,
+                            status: "started",
+                            clientId: widget.ClientId,
+                            createdAt: Timestamp.now());
+                      }
                       Navigator.pop(context);
                     }
                   },
