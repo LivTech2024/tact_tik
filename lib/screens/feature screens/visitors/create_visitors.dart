@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
+import 'package:tact_tik/services/Userservice.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -18,6 +20,7 @@ class CreateVisitors extends StatefulWidget {
 }
 
 class _CreateVisitorsState extends State<CreateVisitors> {
+  // FireStoreService fireStoreService = FireStoreService();
   late TextEditingController nameController;
   late TextEditingController EmailController;
   late TextEditingController ContactNoController;
@@ -35,9 +38,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  late UserService _userService;
+
   @override
   void initState() {
     super.initState();
+    _userService = UserService(firestoreService: FireStoreService());
     nameController = TextEditingController();
     EmailController = TextEditingController();
     ContactNoController = TextEditingController();
@@ -105,18 +111,27 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   void _saveVisitorData() async {
     if (_validateInputs()) {
       try {
+        await _userService.getShiftInfo();
+        String? shiftLocationId = _userService.shiftLocationId;
+
+        print("Shiftlocation : $shiftLocationId");
+
         FirebaseFirestore firestore = FirebaseFirestore.instance;
         await firestore.collection('Visitors').add({
-          'in_time': InTime != null ? InTime!.format(context) : null,
-          'name': nameController.text,
-          'email': EmailController.text,
-          'contact_number': ContactNoController.text,
-          'asset_handover': AssetHandoverController.text,
-          'license_number': LicensePlateNumberController.text,
-          'set_countdown': SetCountdownController.text,
-          'comments': CommentsController.text,
-          'no_of_person': NoOfPersonController.text,
-          'company_name': CompanyNameController.text,
+          'VisitorInTime': InTime != null ? InTime!.format(context) : null,
+          'VisitorName': nameController.text,
+          'VisitorEmail': EmailController.text,
+          'VisitorContactNumber': ContactNoController.text,
+          'VisitorAssetHandover': AssetHandoverController.text,
+          'VisitorLicenseNumber': LicensePlateNumberController.text,
+          'VisitorAssetDurationInMinute': SetCountdownController.text,
+          'VisitorComment': CommentsController.text,
+          'VisitorNoOfPerson': NoOfPersonController.text,
+          'VisitorCompanyId': CompanyNameController.text,
+          'VisitorCreatedAt': Timestamp.now(),
+          'VisitorLocationId': shiftLocationId,
+          'VisitorOutTime': null,
+          'VisitorReturnAsset': null,
         });
         _showSnackbar('Visitor data saved successfully!');
 
