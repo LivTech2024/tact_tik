@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -9,7 +11,20 @@ import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
 class ReportScreen extends StatefulWidget {
-  const ReportScreen({super.key});
+  final String locationId;
+  final String locationName;
+  final String companyId;
+  final String empId;
+  final String empName;
+  final String clientId;
+  const ReportScreen(
+      {super.key,
+      required this.locationId,
+      required this.locationName,
+      required this.companyId,
+      required this.empId,
+      required this.empName,
+      required this.clientId});
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
@@ -17,15 +32,24 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   int currentIndex = 0;
+  FireStoreService fireStoreService = FireStoreService();
+  List<String> tittles = [];
+  @override
+  void initState() {
+    super.initState();
+    getAllTitles();
+  }
 
-  List<String> tittles = [
-    'All',
-    'General concern',
-    'Incident',
-    'Incident',
-    'Incident',
-    'Incident',
-  ];
+  void getAllTitles() async {
+    List<String> data = await fireStoreService.getReportTitles();
+    if (data.isNotEmpty) {
+      setState(() {
+        tittles = ["All", ...data];
+      });
+    }
+    print("Report Titles : $data");
+    print("Getting all titles");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +83,19 @@ class _ReportScreenState extends State<ReportScreen> {
         backgroundColor: Secondarycolor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateReportScreen(
+                          locationId: widget.locationId,
+                          companyID: widget.companyId,
+                          locationName: widget.locationName,
+                          empId: widget.empId,
+                          empName: widget.empName,
+                          ClientId: widget.clientId,
+                        )));
+          },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),

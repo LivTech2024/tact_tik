@@ -908,10 +908,11 @@ class FireStoreService {
       await documentReference.update({'ShiftCurrentStatus': currentArray});
 
       // Generate report
-      String Title = "Shift Ended";
+      String Title = "ShiftEnded";
       String Data = "Shift Ended ";
-      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
-      //     CompyId, "other", EmpNames, ClientId);
+      String type = "Shift";
+      await generateReport(LocationName, Title, employeeId, BrachId, Data,
+          CompyId, "completed", EmpNames, ClientId, type);
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
@@ -1052,8 +1053,9 @@ class FireStoreService {
       final patrolRef = FirebaseFirestore.instance
           .collection('Patrols')
           .where("PatrolId", isEqualTo: PatrolId);
+      String type = "Patrol";
       await generateReport(PatrolArea, PatrolName, patrolAssignedGuardId, BId,
-          data, PatrolCompanyId, "completed", EmpName, ClientID);
+          data, PatrolCompanyId, "completed", EmpName, ClientID, type);
 
       final querySnapshot = await patrolRef.get();
       if (querySnapshot.docs.isNotEmpty) {
@@ -1078,10 +1080,11 @@ class FireStoreService {
     }
   }
 
-  Future<String?> getReportCategoryId() async {
+  Future<String?> getReportCategoryId(String type, String CompanyID) async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("ReportCategories")
-        .where("ReportCategoryName", isEqualTo: "Patrol")
+        .where("ReportCategoryName", isEqualTo: type)
+        .where('ReportCompanyId', isEqualTo: CompanyID)
         .get();
     if (snapshot.docs.isNotEmpty) {
       final doc = snapshot.docs.first;
@@ -1090,6 +1093,17 @@ class FireStoreService {
     } else {
       return null; // Handle case when no document is found
     }
+  }
+
+  Future<String?> createReportCategoryId(String type, String CompanyId) async {
+    final ReportRef = FirebaseFirestore.instance.collection("ReportCategories");
+    final newDoc = await ReportRef.add({
+      "ReportCategoryCreatedAt": Timestamp.now(),
+      "ReportCategoryName": type,
+      "ReportCompanyId": CompanyId
+    });
+    await newDoc.update({"ReportCategoryId": newDoc.id});
+    return newDoc.id;
   }
 
   Future<void> generateReport(
@@ -1101,15 +1115,16 @@ class FireStoreService {
       String CompanyId,
       String Status,
       String EmpName,
-      String ClientID) async {
+      String ClientID,
+      String type) async {
     try {
       print('Generating report...');
 
       //report Categories fetch the id according to the
 
-      var ReportCategoryId = getReportCategoryId();
+      var ReportCategoryId = await getReportCategoryId(type, CompanyId);
       final ReportRef = FirebaseFirestore.instance.collection("Reports");
-      String combinationName = (reportName + address).replaceAll(' ', '');
+      String combinationName = "${reportName} ${address}";
       print('Combination Name: $combinationName');
       // Limit the length
       int maxLength = 10;
@@ -1313,6 +1328,70 @@ class FireStoreService {
       throw e;
     }
   }
+
+  //Upload files to storage for report
+  // Future<List<Map<String, dynamic>>> addToReportStorage(File file) async {
+  //   try {
+  //     String uniqueName = DateTime.now().toString();
+  //     Reference storageRef = FirebaseStorage.instance.ref();
+
+  //     Reference uploadRef =
+  //         storageRef.child("employees/report/$uniqueName.jpg");
+  //     // Compress the image
+  //     Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+  //       file.absolute.path,
+  //       quality: 50, // Adjust the quality as needed
+  //     );
+
+  //     // Upload the compressed image to Firebase Storage
+  //     await uploadRef.putData(Uint8List.fromList(compressedImage!));
+
+  //     // Get the download URL of the uploaded image
+  //     String downloadURL = await uploadRef.getDownloadURL();
+  //     print("Download URL: $downloadURL");
+
+  //     // Return the download URL in a list
+  //     return [
+  //       {'downloadURL': downloadURL}
+  //     ];
+  //   } catch (e) {
+  //     print(e);
+  //     throw e;
+  //   }
+  // }
+
+  Future<String> uploadFileToReportStorage(File file, String path) async {
+    try {
+      TaskSnapshot snapshot =
+          await FirebaseStorage.instance.ref(path).putFile(file);
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("Error uploading file: $e");
+      return "";
+    }
+  }
+//   Future<void> uploadFiles() async {
+//   for (var upload in uploads) {
+//     String type = upload['type'];
+//     String filePath = upload['file'];
+
+//     File file = File(filePath);
+//     String fileName = file.path.split('/').last;
+
+//     firebase_storage.Reference ref =
+//         firebase_storage.FirebaseStorage.instance.ref('employee/report/$fileName');
+
+//     try {
+//       await ref.putFile(file);
+//       String downloadURL = await ref.getDownloadURL();
+
+//       // Store the downloadURL in Firestore or use it as needed
+//     } catch (e) {
+//       print('Error uploading $type: $e');
+//     }
+//   }
+// }
 
   //Dar images
   Future<List<Map<String, dynamic>>> addImageToDarStorage(File file) async {
@@ -2146,6 +2225,28 @@ class FireStoreService {
     }
   }
 
+  Future<String?> getShiftClientID(String shiftID) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(shiftID)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        String? clientId = clientData['ShiftClientId'];
+        print('Client Id: $clientId');
+        return clientId;
+      } else {
+        print('Client not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null;
+    }
+  }
+
   //PatrolClientId
 
   // Fetch the the PatrolLogs using PatrolShiftIds
@@ -2334,6 +2435,7 @@ class FireStoreService {
     String logBookCompanyID,
     String logBookBranchID,
     String logBookClientID,
+    String logBookLocationID,
   ) async {
     try {
       final today = DateTime.now();
@@ -2380,7 +2482,8 @@ class FireStoreService {
           'LogBookEmpName': logbookEmployeeName,
           'LogBookClientId': logBookClientID,
           'LogBookCleintName': clientName,
-          'LogBookLocationId': locationName,
+          'LogBookLocationId': logBookLocationID,
+          'LogBookLocationName': locationName,
           'LogBookData': [
             {
               'LogContent': '$logType at $locationName for $clientName',
@@ -2472,6 +2575,102 @@ class FireStoreService {
       }
     }
   }
+
+  //get all the report titles
+  Future<List<String>> getReportTitles() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('ReportCategories').get();
+
+      final List<String> titles = snapshot.docs
+          .map((doc) => doc.data()['ReportCategoryName'] as String)
+          .toSet()
+          .toList();
+
+      return titles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  //Create Report
+//   export interface IReportsCollection {
+//   ReportId: string;
+//   ReportLocationId: string;
+//   ReportLocationName: string;
+//   ReportIsFollowUpRequired: boolean;
+//   ReportFollowedUpId?: string | null;  //*Id of report which followed up this report
+//   ReportCompanyId: string;
+//   ReportCompanyBranchId?: string;
+//   ReportEmployeeId: string;
+//   ReportEmployeeName: string;
+//   ReportName: string;
+//   ReportCategoryName: string;
+//   ReportCategoryId: string;
+//   ReportData: string;
+//   ReportShiftId?: string;
+//   ReportPatrolId?: string;
+//   ReportImage?: string[];
+//   ReportVideo?: string[];
+//   ReportStatus: 'pending' | 'started' | 'completed';
+//   ReportClientId: string;
+//   ReportCreatedAt: Timestamp | FieldValue;
+// }
+
+  Future<void> createReport({
+    required String locationId,
+    required String locationName,
+    required bool isFollowUpRequired,
+    String? followedUpId,
+    required String companyId,
+    String? companyBranchId,
+    required String employeeId,
+    required String employeeName,
+    required String reportName,
+    required String categoryName,
+    required String categoryId,
+    required String data,
+    String? shiftId,
+    String? patrolId,
+    List<String>? image,
+    List<String>? video,
+    required String status,
+    required String clientId,
+    required Timestamp createdAt,
+  }) async {
+    try {
+      final CollectionReference reportsRef =
+          FirebaseFirestore.instance.collection('Reports');
+
+      final reportDoc = await reportsRef.add({
+        'ReportLocationId': locationId,
+        'ReportLocationName': locationName,
+        'ReportIsFollowUpRequired': isFollowUpRequired,
+        if (followedUpId != null) 'ReportFollowedUpId': followedUpId,
+        'ReportCompanyId': companyId,
+        if (companyBranchId != null) 'ReportCompanyBranchId': companyBranchId,
+        'ReportEmployeeId': employeeId,
+        'ReportEmployeeName': employeeName,
+        'ReportName': reportName,
+        'ReportCategoryName': categoryName,
+        'ReportCategoryId': categoryId,
+        'ReportData': data,
+        if (shiftId != null) 'ReportShiftId': shiftId,
+        if (patrolId != null) 'ReportPatrolId': patrolId,
+        if (image != null) 'ReportImage': image,
+        if (video != null) 'ReportVideo': video,
+        'ReportStatus': status,
+        'ReportClientId': clientId,
+        'ReportCreatedAt': createdAt,
+      });
+      await reportDoc.update({"ReportId": reportDoc.id});
+      print('Report created successfully');
+    } catch (e) {
+      print('Error creating report: $e');
+    }
+  }
 }
+
 
 // Schedule and assign

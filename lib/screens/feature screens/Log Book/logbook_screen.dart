@@ -157,8 +157,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
                       // );
                       // Logs log = Logs.fromDocument(logBookId);
                       return LogTypeWidget(
-                        clientName: logBookDoc['LogBookEmpName'],
-                        location: logBookDoc['LogBookLocationId'],
+                        clientName: logBookDoc['LogBookCleintName'] ?? "",
+                        location: logBookDoc['LogBookLocationName'] ?? "",
                         logtype: logBookId['LogType'],
                         logEnum: LogBookEnum.CheckPoint,
                         time: logBookId['LogReportedAt'],

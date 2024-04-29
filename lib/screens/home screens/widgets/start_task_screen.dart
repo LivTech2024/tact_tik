@@ -488,15 +488,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       bool? status =
                           await fireStoreService.checkShiftReturnTaskStatus(
                               widget.EmployeId, widget.ShiftId);
+                      var clientName = await fireStoreService
+                          .getClientName(widget.ShiftClientID);
                       await fireStoreService.addToLog(
                           'shift_start',
                           widget.ShiftAddressName,
-                          "",
+                          clientName ?? "",
                           widget.EmployeId,
                           widget.EmployeeName,
                           widget.ShiftCompanyId,
                           widget.ShiftBranchId,
-                          widget.ShiftClientID);
+                          widget.ShiftClientID,
+                          widget.ShiftLocationId);
                       setState(() {
                         if (!clickedIn) {
                           clickedIn = true;
@@ -572,23 +575,26 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         });
                         var data = await fireStoreService.fetchDataForPdf(
                             widget.EmployeId, widget.ShiftId);
-                        if (data.isNotEmpty) {
-                          send_mail_onOut(data);
-                        } else {
-                          showErrorToast(context, "try again");
-                          widget.onRefresh();
-                          return;
-                          // Handle the case when data is null
-                        }
+
+                        send_mail_onOut(data);
+
+                        // showErrorToast(context, "try again");
+                        // widget.onRefresh();
+
+                        // Handle the case when data is null
+
+                        var clientName = await fireStoreService
+                            .getClientName(widget.ShiftClientID);
                         await fireStoreService.addToLog(
                             'shift_end',
                             widget.ShiftAddressName,
-                            "",
+                            clientName ?? "",
                             widget.EmployeId,
                             widget.EmployeeName,
                             widget.ShiftCompanyId,
                             widget.ShiftBranchId,
-                            widget.ShiftClientID);
+                            widget.ShiftClientID,
+                            widget.ShiftLocationId);
                         await fireStoreService.EndShiftLog(
                             widget.EmployeId,
                             formattedStopwatchTime,
@@ -661,16 +667,19 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     if (isPaused) {
                       var data = await fireStoreService.fetchDataForPdf(
                           widget.EmployeId, widget.ShiftId);
+                      var clientName = await fireStoreService
+                          .getClientName(widget.ShiftClientID);
                       print("Fetched Data for generating pdf: ${data}");
                       await fireStoreService.addToLog(
                           'shift_break',
                           widget.ShiftAddressName,
-                          "",
+                          clientName ?? "",
                           widget.EmployeId,
                           widget.EmployeeName,
                           widget.ShiftCompanyId,
                           widget.ShiftBranchId,
-                          widget.ShiftClientID);
+                          widget.ShiftClientID,
+                          widget.ShiftLocationId);
                       stopStopwatch();
                       setState(() {
                         onBreak = true;
@@ -679,15 +688,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       fireStoreService.BreakShiftLog(widget.EmployeId);
                     } else {
                       onBreak = false;
+                      var clientName = await fireStoreService
+                          .getClientName(widget.ShiftClientID);
                       await fireStoreService.addToLog(
                           'shift_resume',
                           widget.ShiftAddressName,
-                          "",
+                          clientName ?? "",
                           widget.EmployeId,
                           widget.EmployeeName,
                           widget.ShiftCompanyId,
                           widget.ShiftBranchId,
-                          widget.ShiftClientID);
+                          widget.ShiftClientID,
+                          widget.ShiftLocationId);
                       prefs.setBool('onBreak', onBreak);
                       startStopwatch();
                       fireStoreService.ResumeShiftLog(widget.EmployeId);

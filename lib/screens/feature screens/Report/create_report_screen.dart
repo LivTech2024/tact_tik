@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -14,25 +18,89 @@ import '../../../utils/colors.dart';
 import '../widgets/custome_textfield.dart';
 
 class CreateReportScreen extends StatefulWidget {
-  CreateReportScreen({super.key});
+  final String locationId;
+  final String locationName;
+  final String companyID;
+  final String empId;
+  final String ClientId;
+
+  final String empName;
+
+  CreateReportScreen(
+      {super.key,
+      required this.locationId,
+      required this.locationName,
+      required this.companyID,
+      required this.empId,
+      required this.empName,
+      required this.ClientId});
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
 }
 
 class _CreateReportScreenState extends State<CreateReportScreen> {
-  String dropdownValue = 'Select';
+  FireStoreService fireStoreService = FireStoreService();
+  List<String> tittles = [];
+  final TextEditingController explainController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController newCategoryController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getAllTitles();
+    super.initState();
+  }
+
+  void getAllTitles() async {
+    List<String> data = await fireStoreService.getReportTitles();
+    if (data.isNotEmpty) {
+      setState(() {
+        tittles = ["All", ...data];
+      });
+    }
+    print("Report Titles : $data");
+    print("Getting all titles");
+  }
+
+  String dropdownValue = 'Other';
   bool dropdownShoe = false;
 
   List<Map<String, dynamic>> uploads = [];
+  bool isChecked = false;
 
   Future<void> _addImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 50);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        // Compress the image
+        XFile compressedFile = await _compressImage(File(pickedFile.path));
+
+        // Add the compressed image to the uploads list
+        setState(() {
+          uploads.add({'type': 'image', 'file': compressedFile});
+        });
+      }
+    }
+  }
+
+  Future<XFile> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 50,
+    );
+
+    return result!;
+  }
+
+  Future<void> onSubmit() async {
+    try {
+      //add to storage get its download links
+    } catch (e) {
+      print("Error $e");
     }
   }
 
@@ -101,6 +169,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 SizedBox(height: height / height30),
                 CustomeTextField(
                   hint: 'Tittle',
+                  controller: titleController,
                 ),
                 SizedBox(height: height / height30),
                 InterBold(
@@ -130,25 +199,18 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           dropdownValue = newValue!;
                           if (dropdownValue == 'Other') {
                             dropdownShoe = true;
-                          }  else{
+                          } else {
                             dropdownShoe = false;
                           }
                           // if (newValue == 'Other') {
-                            // Perform any action needed when 'Other' is selected
-                            // For example, show a dialog, navigate to another screen, etc.
-                            // Here, we'll just print a debug message
-                            print('Other selected');
-
-
+                          // Perform any action needed when 'Other' is selected
+                          // For example, show a dialog, navigate to another screen, etc.
+                          // Here, we'll just print a debug message
+                          print('$dropdownValue selected');
                         });
                       },
-                      items: <String?>[
-                        'Select',
-                        'All',
-                        'available',
-                        'unavailable',
-                        'Other'
-                      ].map<DropdownMenuItem<String>>((String? value) {
+                      items: <String?>[...tittles]
+                          .map<DropdownMenuItem<String>>((String? value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value ?? ''),
@@ -157,18 +219,59 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     ),
                   ),
                 ),
-                if (dropdownShoe)
-                SizedBox(height: height / height20),
+                if (dropdownShoe) SizedBox(height: height / height20),
                 if (dropdownShoe)
                   CustomeTextField(
                     hint: 'Create category',
                     isExpanded: true,
                     showIcon: false,
+                    controller: newCategoryController,
                   ),
-                SizedBox(height: height / height30),
-                const CustomeTextField(
+                SizedBox(height: height / height20),
+                CustomeTextField(
                   hint: 'Explain',
                   isExpanded: true,
+                  controller: explainController,
+                ),
+                SizedBox(height: height / height20),
+                Container(
+                  height: height / height60,
+                  padding: EdgeInsets.symmetric(horizontal: width / width20),
+                  decoration: BoxDecoration(
+                    color: WidgetColor,
+                    borderRadius: BorderRadius.circular(width / width10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.follow_the_signs,
+                            color: color2,
+                            size: width / width24,
+                          ),
+                          SizedBox(width: width / width6),
+                          InterMedium(
+                            text: 'Follow-Up Required ?',
+                            color: color8,
+                            fontsize: width / width16,
+                            letterSpacing: -.3,
+                          )
+                        ],
+                      ),
+                      Checkbox(
+                        activeColor: Primarycolor,
+                        checkColor: color1,
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            isChecked = !isChecked;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: height / height20),
                 Row(
@@ -276,7 +379,46 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 SizedBox(height: height / height60),
                 Button1(
                   text: 'Submit',
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (dropdownValue == "Other") {
+                      var newId = await fireStoreService.createReportCategoryId(
+                          newCategoryController.text, widget.companyID);
+                      await fireStoreService.createReport(
+                          locationId: widget.locationId,
+                          locationName: widget.locationName,
+                          isFollowUpRequired: isChecked,
+                          companyId: widget.companyID,
+                          employeeId: widget.empId,
+                          employeeName: widget.empName,
+                          reportName: titleController.text,
+                          categoryName: dropdownValue,
+                          categoryId: newId ?? "",
+                          data: explainController.text,
+                          status: "started",
+                          clientId: widget.ClientId,
+                          createdAt: Timestamp.now());
+                      Navigator.pop(context);
+                      //create a new catergory and add its return its id
+                    } else {
+                      var id = await fireStoreService.getReportCategoryId(
+                          dropdownValue, widget.companyID);
+                      await fireStoreService.createReport(
+                          locationId: widget.locationId,
+                          locationName: widget.locationName,
+                          isFollowUpRequired: isChecked,
+                          companyId: widget.companyID,
+                          employeeId: widget.empId,
+                          employeeName: widget.empName,
+                          reportName: titleController.text,
+                          categoryName: dropdownValue,
+                          categoryId: id ?? "",
+                          data: explainController.text,
+                          status: "started",
+                          clientId: widget.ClientId,
+                          createdAt: Timestamp.now());
+                      Navigator.pop(context);
+                    }
+                  },
                   backgroundcolor: Primarycolor,
                   borderRadius: width / width10,
                 )
