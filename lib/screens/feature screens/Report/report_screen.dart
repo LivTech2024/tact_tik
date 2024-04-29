@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -34,10 +35,13 @@ class _ReportScreenState extends State<ReportScreen> {
   int currentIndex = 0;
   FireStoreService fireStoreService = FireStoreService();
   List<String> tittles = [];
+
+  List<Map<String, dynamic>> reportData = [];
   @override
   void initState() {
     super.initState();
     getAllTitles();
+    getAllReports();
   }
 
   void getAllTitles() async {
@@ -49,6 +53,21 @@ class _ReportScreenState extends State<ReportScreen> {
     }
     print("Report Titles : $data");
     print("Getting all titles");
+  }
+
+  void getAllReports() async {
+    reportData = await fireStoreService.getReportWithCompanyID(
+        widget.companyId, widget.locationId);
+    setState(() {
+      if (currentIndex > 0 && currentIndex < tittles.length) {
+        String selectedTitle = tittles[currentIndex];
+        reportData = reportData
+            .where((report) => report['ReportCategoryName'] == selectedTitle)
+            .toList();
+      }
+    });
+
+    print("Report Data $reportData");
   }
 
   @override
@@ -94,6 +113,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           empId: widget.empId,
                           empName: widget.empName,
                           ClientId: widget.clientId,
+                          reportId: "",
                         )));
           },
           backgroundColor: Primarycolor,
@@ -116,6 +136,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       onTap: () {
                         setState(() {
                           currentIndex = index;
+                          getAllReports();
                         });
                       },
                       child: AnimatedContainer(
@@ -147,109 +168,125 @@ class _ReportScreenState extends State<ReportScreen> {
               SizedBox(height: height / height20),
               Expanded(
                 child: ListView.builder(
-                  // physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: tittles.length,
+                  itemCount: reportData.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // SizedBox(height: height / height20,),
-                        InterBold(
-                          text: 'Today',
-                          color: Primarycolor,
-                          fontsize: width / width20,
-                        ),
-                        SizedBox(
-                          height: height / height10,
-                        ),
-                        Column(
-                          children: tittles
-                              .map(
-                                (title) => Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: height / height10,
+                    final report = reportData[index];
+                    final reportDate = report['ReportCreatedAt'].toDate();
+                    final reportId = report['ReportId'];
+                    final formattedDate =
+                        DateFormat.yMMMMd().format(reportDate);
+                    final formattedTime = DateFormat.jm().format(reportDate);
+                    final bool isFirstReport = index == 0;
+                    final bool isDateChanged = !isFirstReport &&
+                        formattedDate !=
+                            DateFormat.yMMMMd().format(reportData[index - 1]
+                                    ['ReportCreatedAt']
+                                .toDate());
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateReportScreen(
+                                      locationId: widget.locationId,
+                                      locationName: widget.locationName,
+                                      companyID: widget.companyId,
+                                      empId: widget.empId,
+                                      empName: widget.empName,
+                                      ClientId: widget.clientId,
+                                      reportId: reportId,
+                                    )));
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (isFirstReport || isDateChanged)
+                            InterBold(
+                              text: formattedDate,
+                              color: Primarycolor,
+                              fontsize: width / width20,
+                            ),
+                          SizedBox(
+                            height: height / height10,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              bottom: height / height10,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: width / width20,
+                            ),
+                            height: height / height100,
+                            decoration: BoxDecoration(
+                              color: WidgetColor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: width / width20,
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width / width20,
+                                  child: SvgPicture.asset(
+                                    'assets/images/report_icon.svg',
+                                    height: height / height24,
+                                    fit: BoxFit.fitHeight,
                                   ),
-                                  height: height / height100,
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  child: Row(
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          // left: width / width24,
-                                          right: width / width20,
-                                        ),
-                                        child: SvgPicture.asset(
-                                          'assets/images/report_icon.svg',
-                                          height: height / height24,
-                                          fit: BoxFit.fitHeight,
+                                      Text(
+                                        reportData[index]['ReportCategoryName'],
+                                        style: TextStyle(
+                                          fontSize: width / width20,
+                                          color: color2,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: width / width280,
-                                              child: Text(
-                                                'Clark Place - Lost & Found Item Report',
-                                                style: TextStyle(
-                                                  fontSize: width / width20,
-                                                  color: color2,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
+                                      SizedBox(height: height / height10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              InterMedium(
+                                                text: 'CATEGORY: ',
+                                                fontsize: width / width14,
+                                                color: color32,
                                               ),
-                                            ),
-                                            SizedBox(height: height / height10),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    InterMedium(
-                                                      text: 'CATEGORY: ',
-                                                      fontsize: width / width14,
-                                                      color: color32,
-                                                    ),
-                                                    InterRegular(
-                                                      text: title,
-                                                      fontsize: width / width14,
-                                                      color: color26,
-                                                    ),
-                                                  ],
-                                                ),
-                                                InterRegular(
-                                                  text: '11.36pm',
-                                                  color: color26,
-                                                  fontsize: width / width14,
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                              InterRegular(
+                                                text: reportData[index]
+                                                    ['ReportCategoryName'],
+                                                fontsize: width / width14,
+                                                color: color26,
+                                              ),
+                                            ],
+                                          ),
+                                          InterRegular(
+                                            text: formattedTime,
+                                            color: color26,
+                                            fontsize: width / width14,
+                                          )
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                              )
-                              .toList(),
-                        ),
-                        SizedBox(
-                          height: height / height20,
-                        )
-                      ],
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: height / height20,
+                          )
+                        ],
+                      ),
                     );
                   },
                 ),

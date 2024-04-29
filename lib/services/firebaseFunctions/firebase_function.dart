@@ -2594,6 +2594,51 @@ class FireStoreService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getReportWithCompanyID(
+      String companyId, String locationId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Reports')
+              .where('ReportLocationId', isEqualTo: locationId)
+              .where('ReportCompanyId', isEqualTo: companyId)
+              .get();
+
+      final Set<Map<String, dynamic>> dataSet = Set<Map<String, dynamic>>();
+
+      snapshot.docs.forEach((doc) {
+        dataSet.add(doc.data());
+      });
+
+      final List<Map<String, dynamic>> data = dataSet.toList();
+
+      return data;
+    } catch (e) {
+      print("Error fetching report data: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  Future<Map<String, dynamic>?> getReportWithId(String reportId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Reports')
+              .doc(reportId)
+              .get();
+
+      if (snapshot.exists) {
+        return snapshot.data();
+      } else {
+        print("Document with ID $reportId does not exist");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching report data: $e");
+      return null; // Return null in case of error
+    }
+  }
+
   //Create Report
 //   export interface IReportsCollection {
 //   ReportId: string;

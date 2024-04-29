@@ -25,6 +25,7 @@ class CreateReportScreen extends StatefulWidget {
   final String ClientId;
 
   final String empName;
+  final String reportId;
 
   CreateReportScreen(
       {super.key,
@@ -33,7 +34,8 @@ class CreateReportScreen extends StatefulWidget {
       required this.companyID,
       required this.empId,
       required this.empName,
-      required this.ClientId});
+      required this.ClientId,
+      required this.reportId});
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
@@ -42,14 +44,19 @@ class CreateReportScreen extends StatefulWidget {
 class _CreateReportScreenState extends State<CreateReportScreen> {
   FireStoreService fireStoreService = FireStoreService();
   List<String> tittles = [];
+  Map<String, dynamic> reportData = {};
   final TextEditingController explainController = TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController newCategoryController = TextEditingController();
+  bool isChecked = false;
+  String dropdownValue = 'Other';
+  bool dropdownShoe = false;
 
   @override
   void initState() {
     // TODO: implement initState
     getAllTitles();
+    getAllReports();
     super.initState();
   }
 
@@ -64,11 +71,20 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     print("Getting all titles");
   }
 
-  String dropdownValue = 'Other';
-  bool dropdownShoe = false;
+  void getAllReports() async {
+    Map<String, dynamic>? data =
+        (await fireStoreService.getReportWithId(widget.reportId))!;
+    if (data != null) {
+      setState(() {
+        reportData = data;
+        isChecked = reportData['ReportIsFollowUpRequired'];
+      });
+      print(reportData['ReportIsFollowUpRequired']);
+    }
+    print("Report Data for ${widget.reportId} $reportData");
+  }
 
   List<Map<String, dynamic>> uploads = [];
-  bool isChecked = false;
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
@@ -146,7 +162,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
             },
           ),
           title: InterRegular(
-            text: 'Report',
+            text: reportData.isNotEmpty
+                ? 'Report FollowUp for ${reportData['ReportName']} '
+                : 'Report',
             fontsize: width / width18,
             color: Colors.white,
             letterSpacing: -.3,
@@ -169,7 +187,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 SizedBox(height: height / height30),
                 CustomeTextField(
                   hint: 'Tittle',
-                  controller: titleController,
+                  controller: reportData.isNotEmpty
+                      ? TextEditingController(text: reportData['ReportName'])
+                      : titleController,
                 ),
                 SizedBox(height: height / height30),
                 InterBold(
@@ -193,7 +213,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       dropdownColor: WidgetColor,
                       style: TextStyle(color: color2),
                       borderRadius: BorderRadius.circular(10),
-                      value: dropdownValue,
+                      value: reportData.isNotEmpty
+                          ? reportData['ReportCategoryName']
+                          : dropdownValue,
                       onChanged: (String? newValue) {
                         setState(() {
                           dropdownValue = newValue!;
@@ -231,7 +253,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 CustomeTextField(
                   hint: 'Explain',
                   isExpanded: true,
-                  controller: explainController,
+                  controller: reportData.isNotEmpty
+                      ? TextEditingController(text: reportData['ReportData'])
+                      : explainController,
                 ),
                 SizedBox(height: height / height20),
                 Container(
@@ -391,7 +415,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           employeeId: widget.empId,
                           employeeName: widget.empName,
                           reportName: titleController.text,
-                          categoryName: dropdownValue,
+                          categoryName: newCategoryController.text,
                           categoryId: newId ?? "",
                           data: explainController.text,
                           status: "started",
