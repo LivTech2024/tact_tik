@@ -77,6 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String _branchId = "";
   String _cmpId = "";
   String _patrolArea = "";
+  String? _currentUserUid;
+  String? _employeeName = "";
+  String? _employeeEmail = "";
+  String? _employeeImageUrl = "";
   String _patrolCompanyId = "";
   bool _patrolKeepGuardInRadiusOfLocation = true;
   bool _shiftKeepGuardInRadiusOfLocation = true;
@@ -103,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void refreshHomeScreen() {
     _getUserInfo();
     getAndPrintAllSchedules();
+
     // Implement the refresh logic here
     // For example, you can call setState() to update the UI
   }
@@ -111,12 +116,41 @@ class _HomeScreenState extends State<HomeScreen> {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
     getAndPrintAllSchedules();
+    // _getCurrentUserUid();
+
     // checkLocation();
     // Timer.periodic(Duration(seconds: 1), (Timer timer) {
     //   // checkLocation();
     // });
     super.initState();
   }
+
+  // Future<void> _getCurrentUserUid() async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     setState(() {
+  //       _currentUserUid = user.uid;
+  //     });
+  //     _fetchEmployeeData();
+  //   }
+  // }
+
+  // Future<void> _fetchEmployeeData() async {
+  //   if (_currentUserUid != null) {
+  //     final employeeDoc = await FirebaseFirestore.instance
+  //         .collection('Employees')
+  //         .doc(_currentUserUid)
+  //         .get();
+  //     if (employeeDoc.exists) {
+  //       final employeeData = employeeDoc.data();
+  //       setState(() {
+  //         _employeeName = employeeData?['EmployeeName'];
+  //         _employeeEmail = employeeData?['EmployeeEmail'];
+  //         _employeeImageUrl = employeeData?['EmployeeImg'];
+  //       });
+  //     }
+  //   }
+  // }
 
   void ChangeScreenIndex(int index) {
     setState(() {
@@ -170,8 +204,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _refreshScreen() async {
     _getUserInfo();
+    // _getCurrentUserUid();
   }
 
+  // 12 datani mall shift start id A local stoarage
+  // 2 capital mall
   void _getUserInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (mounted) {
@@ -422,21 +459,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: SizedBox.fromSize(
                                 size: Size.fromRadius(width / width50),
                                 child: Image.network(
-                                  'https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630',
+                                  employeeImg!,
                                   fit: BoxFit.cover,
                                 )),
                           ),
                         ),
                         SizedBox(height: height / height10),
                         PoppinsSemibold(
-                          text: 'Nick Jones',
+                          text: _userName,
                           color: WidgetColor,
                           fontsize: width / width16,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: height / height5),
                         PoppinsRegular(
-                          text: 'nickjones077@gmail.com',
+                          text: _empEmail,
                           color: WidgetColor,
                           fontsize: width / width16,
                           letterSpacing: -.3,
@@ -496,38 +533,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       5,
                       () async {
                         List<String> emails = [];
-                        emails.add("sutarvaibhav37@gmail.com");
-                        emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
-                        // "security@lestonholdings.com"
-                        List<String> patrolLogIds = [];
-                        patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        //Sending Shift end report
-                        var data =
-                            await fireStoreService.fetchTemplateDataForPdf(
-                          "Hijql0nkNjA1tOhSf8wW",
-                          "PjiJ0MqsUA9oUwlPsUnr",
-                        );
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("pankaj.kumar1312@yahoo.com");
+                        // emails.add("security@lestonholdings.com");
+                        // emails.add("dan@tpssolution.com");
+                        // // "security@lestonholdings.com"
+                        // List<String> patrolLogIds = [];
+                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
+                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
+                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
+                        // //Sending Shift end report
+                        // var data =
+                        //     await fireStoreService.fetchTemplateDataForPdf(
+                        //   "Hijql0nkNjA1tOhSf8wW",
+                        //   "PjiJ0MqsUA9oUwlPsUnr",
+                        // );
 
-                        await sendShiftTemplateEmail(
-                          "Leston holdings ",
-                          emails,
-                          'Tacttik Shift Report',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "25 April",
-                          "Dan Martin",
-                          "20:00",
-                          "6:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings ",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "25 April",
+                        //   "Dan Martin",
+                        //   "20:00",
+                        //   "6:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                       },
                     ),
                   ],
