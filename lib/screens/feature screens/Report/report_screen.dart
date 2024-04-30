@@ -58,6 +58,7 @@ class _ReportScreenState extends State<ReportScreen> {
   void getAllReports() async {
     reportData = await fireStoreService.getReportWithCompanyID(
         widget.companyId, widget.locationId);
+    groupedReportData.clear(); // Clear existing data before adding new data
     reportData.forEach((report) {
       String reportDate =
           DateFormat.yMMMMd().format(report['ReportCreatedAt'].toDate());
@@ -81,6 +82,12 @@ class _ReportScreenState extends State<ReportScreen> {
         });
       }
     });
+
+    // Sort groupedReportData by date in descending order
+    groupedReportData.sort((a, b) => DateFormat.yMMMMd()
+        .parse(b['date'])
+        .compareTo(DateFormat.yMMMMd().parse(a['date'])));
+
     setState(() {
       if (currentIndex > 0 && currentIndex < tittles.length) {
         String selectedTitle = tittles[currentIndex];

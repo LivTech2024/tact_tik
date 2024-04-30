@@ -78,6 +78,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
       setState(() {
         reportData = data;
         isChecked = reportData['ReportIsFollowUpRequired'];
+        titleController.text = reportData['ReportName'];
+        explainController.text = reportData['ReportData'];
+        dropdownValue = reportData['ReportCategoryName'];
       });
       print(reportData['ReportIsFollowUpRequired']);
     }
@@ -214,9 +217,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       dropdownColor: WidgetColor,
                       style: TextStyle(color: color2),
                       borderRadius: BorderRadius.circular(10),
-                      value: reportData.isNotEmpty
-                          ? reportData['ReportCategoryName']
-                          : dropdownValue,
+                      value: dropdownValue,
                       onChanged: (String? newValue) {
                         setState(() {
                           dropdownValue = newValue!;
@@ -254,9 +255,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 CustomeTextField(
                   hint: 'Explain',
                   isExpanded: true,
-                  controller: reportData.isNotEmpty
-                      ? TextEditingController(text: reportData['ReportData'])
-                      : explainController,
+                  controller: explainController,
                 ),
                 SizedBox(height: height / height20),
                 Container(
@@ -405,7 +404,32 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 Button1(
                   text: 'Submit',
                   onPressed: () async {
-                    if (dropdownValue == "Other") {
+                    if (reportData['ReportIsFollowUpRequired'] == true) {
+                      final newTItle = titleController.text.trim();
+                      print("New Title ${titleController.text}");
+                      print("New Data ${explainController.text}");
+                      print("New Category ${dropdownValue}");
+                      print("Checked $isChecked");
+                      var id = await fireStoreService.getReportCategoryId(
+                          dropdownValue, widget.companyID);
+                      await fireStoreService.createReport(
+                          locationId: widget.locationId,
+                          locationName: widget.locationName,
+                          isFollowUpRequired: isChecked,
+                          companyId: widget.companyID,
+                          employeeId: widget.empId,
+                          employeeName: widget.empName,
+                          reportName:
+                              titleController.text, // Use existing report name
+                          categoryName: dropdownValue,
+                          // Use existing category name
+                          categoryId: id ?? "",
+                          data: explainController.text,
+                          status: "completed",
+                          clientId: widget.ClientId,
+                          followedUpId: widget.reportId,
+                          createdAt: Timestamp.now());
+                    } else if (dropdownValue == "Other") {
                       var newId = await fireStoreService.createReportCategoryId(
                           newCategoryController.text, widget.companyID);
                       await fireStoreService.createReport(
@@ -425,50 +449,51 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       Navigator.pop(context);
                       //create a new catergory and add its return its id
                     } else {
-                      if (reportData['ReportIsFollowUpRequired'] == true) {
-                        print("Dropdown value $dropdownValue");
-                        // reportData['ReportCategoryName'] = dropdownValue;
-                        // reportData['ReportName'] = titleController.text;
-                        // reportData['ReportName'] = explainController.text;
-                        // var id = await fireStoreService.getReportCategoryId(
-                        //     dropdownValue, widget.companyID);
-                        // await fireStoreService.createReport(
-                        //     locationId: widget.locationId,
-                        //     locationName: widget.locationName,
-                        //     isFollowUpRequired: isChecked,
-                        //     companyId: widget.companyID,
-                        //     employeeId: widget.empId,
-                        //     employeeName: widget.empName,
-                        //     reportName: titleController
-                        //         .text, // Use existing report name
-                        //     categoryName: reportData[
-                        //         'ReportCategoryName'], // Use existing category name
-                        //     categoryId: id ?? "",
-                        //     data: explainController.text,
-                        //     status: "started",
-                        //     clientId: widget.ClientId,
-                        //     followedUpId: widget.reportId,
-                        //     createdAt: Timestamp.now());
-                        print('Report created on follow up');
-                      } else {
-                        var id = await fireStoreService.getReportCategoryId(
-                            dropdownValue, widget.companyID);
-                        await fireStoreService.createReport(
-                            locationId: widget.locationId,
-                            locationName: widget.locationName,
-                            isFollowUpRequired: isChecked,
-                            companyId: widget.companyID,
-                            employeeId: widget.empId,
-                            employeeName: widget.empName,
-                            reportName: titleController.text,
-                            categoryName: dropdownValue,
-                            categoryId: id ?? "",
-                            data: explainController.text,
-                            status: "started",
-                            clientId: widget.ClientId,
-                            createdAt: Timestamp.now());
-                      }
-                      Navigator.pop(context);
+                      // if (reportData['ReportIsFollowUpRequired'] == true) {
+                      //   final newTItle = titleController.text.trim();
+                      //   print("Dropdown value $dropdownValue");
+                      //   // reportData['ReportCategoryName'] = dropdownValue;
+                      //   // reportData['ReportName'] = titleController.text;
+                      //   // reportData['ReportName'] = explainController.text;
+                      //   // var id = await fireStoreService.getReportCategoryId(
+                      //   //     dropdownValue, widget.companyID);
+                      //   // await fireStoreService.createReport(
+                      //   //     locationId: widget.locationId,
+                      //   //     locationName: widget.locationName,
+                      //   //     isFollowUpRequired: isChecked,
+                      //   //     companyId: widget.companyID,
+                      //   //     employeeId: widget.empId,
+                      //   //     employeeName: widget.empName,
+                      //   //     reportName: titleController
+                      //   //         .text, // Use existing report name
+                      //   //     categoryName: reportData[
+                      //   //         'ReportCategoryName'], // Use existing category name
+                      //   //     categoryId: id ?? "",
+                      //   //     data: explainController.text,
+                      //   //     status: "started",
+                      //   //     clientId: widget.ClientId,
+                      //   //     followedUpId: widget.reportId,
+                      //   //     createdAt: Timestamp.now());
+                      //   print('Report created on follow up');
+                      // } else {
+                      var id = await fireStoreService.getReportCategoryId(
+                          dropdownValue, widget.companyID);
+                      await fireStoreService.createReport(
+                          locationId: widget.locationId,
+                          locationName: widget.locationName,
+                          isFollowUpRequired: isChecked,
+                          companyId: widget.companyID,
+                          employeeId: widget.empId,
+                          employeeName: widget.empName,
+                          reportName: titleController.text,
+                          categoryName: dropdownValue,
+                          categoryId: id ?? "",
+                          data: explainController.text,
+                          status: "started",
+                          clientId: widget.ClientId,
+                          createdAt: Timestamp.now());
+                      // }
+                      // Navigator.pop(context);
                     }
                   },
                   backgroundcolor: Primarycolor,
