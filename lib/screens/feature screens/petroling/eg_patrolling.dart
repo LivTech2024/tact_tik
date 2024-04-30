@@ -1314,7 +1314,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   url['CheckPointName']
                                             };
                                           }).toList();
-
                                           await fireStoreService.addToLog(
                                               "PatrolEnded",
                                               "",

@@ -723,9 +723,9 @@ Future<String> generateShiftReportPdf(
         }
 
         section {
-            padding: 20px;
+            padding: 15px;
             background-color: #fff;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-radius: 5px;
         }
 
@@ -761,7 +761,7 @@ Future<String> generateShiftReportPdf(
             background-color: #333;
             color: white;
             text-align: center;
-            padding: 10px 0;
+            padding: 10px;
         }
     </style>
 </head>
@@ -803,7 +803,6 @@ Future<String> generateShiftReportPdf(
             ${patrolInfoHTML}
         </table>
     </section>
-
     <section>
         <h3>Comments</h3>
         <table>
@@ -814,14 +813,12 @@ Future<String> generateShiftReportPdf(
             </tr>
         </table>
     </section>
-
     <section>
         <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
         <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.</p>
         <p>Best regards,</p>
-        <p>TEAM TACTTIK</p>
+    <p>TEAM TACTTIK</p>
     </section>
-
     <footer>
         <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
     </footer>
