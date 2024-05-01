@@ -760,12 +760,7 @@ Future<String> generateShiftReportPdf(
             background-color: #333;
             color: white;
             text-align: center;
-<<<<<<< HEAD
             padding: 10px;
-=======
-            padding: 10px 0;
-            margin-top: auto; /* Push the footer to the bottom of the page */
->>>>>>> dev
         }
     </style>
 </head>
@@ -817,16 +812,12 @@ Future<String> generateShiftReportPdf(
             </tr>
         </table>
     </section>
-<<<<<<< HEAD
     <section>
         <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
         <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.</p>
         <p>Best regards,</p>
     <p>TEAM TACTTIK</p>
     </section>
-=======
-
->>>>>>> dev
     <footer>
         <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
     </footer>
