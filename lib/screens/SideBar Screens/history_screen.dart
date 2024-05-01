@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,12 +6,58 @@ import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../fonts/inter_regular.dart';
 
-class HistoryScreen extends StatelessWidget {
-  const HistoryScreen({super.key});
+class HistoryScreen extends StatefulWidget {
+  final String empID;
+  const HistoryScreen({super.key, required this.empID});
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchShiftHistoryDetails();
+    super.initState();
+  }
+
+  List<Map<String, dynamic>> shiftHistory = [];
+  FireStoreService fireStoreService = FireStoreService();
+  void fetchShiftHistoryDetails() async {
+    print("Emp ID ${widget.empID}");
+    var shifthistory = await fireStoreService.getShiftHistory(widget.empID);
+    setState(() {
+      shiftHistory = shifthistory;
+    });
+    print('Shift History :  ${shifthistory}');
+  }
+
+  String _getDayOfWeek(int day) {
+    switch (day) {
+      case 1:
+        return 'Monday';
+      case 2:
+        return 'Tuesday';
+      case 3:
+        return 'Wednesday';
+      case 4:
+        return 'Thursday';
+      case 5:
+        return 'Friday';
+      case 6:
+        return 'Saturday';
+      case 7:
+        return 'Sunday';
+      default:
+        return '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +101,22 @@ class HistoryScreen extends StatelessWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
+                  var shift = shiftHistory[index];
+                  DateTime shiftDate =
+                      (shift['ShiftDate'] as Timestamp).toDate();
+                  String date =
+                      '${shiftDate.day}/${shiftDate.month}/${shiftDate.year}';
+                  String dayOfWeek = _getDayOfWeek(shiftDate.weekday);
                   return Padding(
-                    padding: EdgeInsets.only(left: width / width30 , right: width / width30 , bottom: height / height40),
+                    padding: EdgeInsets.only(
+                        left: width / width30,
+                        right: width / width30,
+                        bottom: height / height40),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterBold(
-                          text: 'Yesterday',
+                          text: "${date}  ${dayOfWeek}",
                           fontsize: width / width18,
                           color: color1,
                         ),
@@ -68,7 +124,8 @@ class HistoryScreen extends StatelessWidget {
                         Container(
                           height: height / height340,
                           padding: EdgeInsets.only(
-                              top: height / height20,),
+                            top: height / height20,
+                          ),
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                             borderRadius:
@@ -92,7 +149,7 @@ class HistoryScreen extends StatelessWidget {
                                     SizedBox(width: width / width40),
                                     Flexible(
                                       child: InterSemibold(
-                                        text: 'Holi Shift',
+                                        text: shift['ShiftName'],
                                         fontsize: width / width16,
                                         color: color1,
                                       ),
@@ -100,7 +157,9 @@ class HistoryScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: height / height10,),
+                              SizedBox(
+                                height: height / height10,
+                              ),
                               Container(
                                 height: height / height100,
                                 color: colorRed,
@@ -117,8 +176,7 @@ class HistoryScreen extends StatelessWidget {
                                     SizedBox(width: width / width40),
                                     Flexible(
                                       child: InterSemibold(
-                                        text:
-                                            '521 Despard Street Atlanta, GA 30329',
+                                        text: shift['ShiftLocationAddress'],
                                         fontsize: width / width16,
                                         color: color1,
                                       ),
@@ -148,7 +206,8 @@ class HistoryScreen extends StatelessWidget {
                                           height: height / height20,
                                         ),
                                         InterSemibold(
-                                          text: '12:00pm to 4:30pm',
+                                          text:
+                                              '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
                                           fontsize: width / width16,
                                           color: color1,
                                         ),
@@ -179,7 +238,9 @@ class HistoryScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              SizedBox(height: height / height20,),
+                              SizedBox(
+                                height: height / height20,
+                              ),
                               Button1(
                                 text: 'text',
                                 useWidget: true,

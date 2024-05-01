@@ -530,6 +530,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       4,
                       () {
                         // customEmail();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HistoryScreen(
+                                      empID: _employeeId,
+                                    )));
                       },
                     ),
                     buildListTile(

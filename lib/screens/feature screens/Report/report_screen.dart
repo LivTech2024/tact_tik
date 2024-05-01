@@ -146,7 +146,12 @@ class _ReportScreenState extends State<ReportScreen> {
                           empName: widget.empName,
                           ClientId: widget.clientId,
                           reportId: "",
-                        )));
+                        ))).then((value) {
+              if (value == true) {
+                getAllReports();
+                getAllTitles();
+              }
+            });
           },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
