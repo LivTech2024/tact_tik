@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,7 +8,10 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_open_all_screen.dart';
+import 'package:tact_tik/services/Userservice.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
+import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../common/sizes.dart';
 
@@ -35,6 +39,65 @@ class DarDisplayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
+    // keep this code in firebase_function file  and handle its errors here
+    Future<void> _submitDAR() async {
+      final _userService = UserService(firestoreService: FireStoreService());
+      await _userService.getShiftInfo();
+      // if (_isSubmitting) return;
+
+      // final title = _titleController.text.trim();
+      // final darContent = _darController.text.trim();
+      // setState(() {
+      //   _isSubmitting = true;
+      // });
+
+      try {
+        final date = DateTime.now();
+        List darList = [];
+        final CollectionReference employeesDARCollection =
+            FirebaseFirestore.instance.collection('EmployeesDAR');
+
+        final QuerySnapshot querySnapshot = await employeesDARCollection
+            .where('EmpDarEmpId',
+                isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          for (var dar in querySnapshot.docs) {
+            final data = dar.data() as Map<String, dynamic>;
+            final date2 = UtilsFuctions.convertDate(data['EmpDarDate']);
+            print('date3 = ${date2[0]}');
+            if (date2[0] == date.day &&
+                date2[1] == date.month &&
+                date2[2] == date.year) {
+              if (dar.exists) {
+                return null;
+              }
+            }
+          }
+        }
+
+        var docRef = await _firestore.collection('EmployeesDAR').add({
+          'EmpDarTitle': _userService.userName,
+          'EmpDarData': _userService.shiftLocation,
+          'EmpDarLocationId:': _userService.shiftLocationId,
+          'EmpDarLocationName': _userService.shiftLocation,
+          'EmpDarShiftId': _userService.shiftId,
+          'EmpDarDate': FieldValue.serverTimestamp(),
+          'EmpDarCreatedAt': FieldValue.serverTimestamp(),
+          'EmpDarEmpName': _userService.userName,
+          'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,
+          'EmpDarCompanyId': "widget.EmpDarCompanyId ?? " "",
+          'EmpDarCompanyBranchId': "widget.EmpDarCompanyBranchId ?? " "",
+          'EmpDarClientId': "widget.EmpClientID ?? ''",
+        });
+        await docRef.update({'EmpDarId': docRef.id});
+      } catch (e) {
+        print('error = $e');
+      }
+      print('function run successfully');
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -99,7 +162,7 @@ class DarDisplayScreen extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            DarOpenAllScreen(),
+                                            const DarOpenAllScreen(),
                                       ),
                                     );
                                   },
@@ -168,7 +231,7 @@ class DarDisplayScreen extends StatelessWidget {
                               ],
                             );
                           }
-                          return SizedBox.shrink();
+                          return const SizedBox.shrink();
                         },
                         childCount: documents?.length ?? 0,
                       ),
@@ -181,7 +244,7 @@ class DarDisplayScreen extends StatelessWidget {
                 child: Text('Error: ${snapshot.error}'),
               );
             } else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }
@@ -190,22 +253,17 @@ class DarDisplayScreen extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateDarScreen(
-                    EmpEmail: EmpEmail,
-                    EmpId: EmpID,
-                    EmpDarCompanyId: EmpDarCompanyId,
-                    EmpDarCompanyBranchId: EmpDarCompanyBranchId,
-                    EmpShiftId: EmpDarShiftID,
-                    EmpClientID: EmpDarClientID,
-                  ),
-                ));
+            _submitDAR().whenComplete(() {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DarOpenAllScreen(),
+                  ));
+            });
           },
           backgroundColor: Primarycolor,
-          shape: CircleBorder(),
-          child: Icon(Icons.add),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
         ),
       ),
     );

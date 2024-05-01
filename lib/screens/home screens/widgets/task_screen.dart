@@ -42,6 +42,8 @@ class TaskScreen extends StatefulWidget {
   final bool CheckUserRadius;
   final String EmpEmail;
   final String EmpName;
+  final String ShiftLocationName;
+
   final Function() onRefreshHomeScreen;
   final Function() onEndTask;
   final VoidCallback onRefreshStartTaskScreen;
@@ -71,6 +73,7 @@ class TaskScreen extends StatefulWidget {
     required this.ShiftBranchId,
     required this.ShiftLocationId,
     required this.ShiftClientId,
+    required this.ShiftLocationName,
     required this.onRefreshHomeScreen,
     required this.onEndTask,
     required this.onRefreshStartTaskScreen,
@@ -219,7 +222,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   ShiftEndTime: widget.ShiftEndTime,
                   EmployeId: widget.empId,
                   ShiftId: widget.shiftId,
-                  ShiftAddressName: widget.ShiftName,
+                  ShiftAddressName: widget.ShiftLocationName,
                   ShiftCompanyId: widget.ShiftCompanyId,
                   ShiftBranchId: widget.ShiftBranchId,
                   EmployeeName: widget.EmpName,
@@ -451,17 +454,15 @@ class _TaskScreenState extends State<TaskScreen> {
                                     widget.shiftId, widget.EmpName);
                               });
                             } else {
-                              await fireStoreService.addToLog(
-                                  'ShiftStarted',
-                                  widget.ShiftLocation,
-                                  "",
-                                  Timestamp.now(),
-                                  Timestamp.now(),
-                                  widget.empId,
-                                  widget.EmpName,
-                                  widget.ShiftCompanyId,
-                                  widget.ShiftBranchId,
-                                  widget.ShiftClientId);
+                              // await fireStoreService.addToLog(
+                              //     'ShiftStarted',
+                              //     widget.ShiftLocation,
+                              //     "",
+                              //     widget.empId,
+                              //     widget.EmpName,
+                              //     widget.ShiftCompanyId,
+                              //     widget.ShiftBranchId,
+                              //     widget.ShiftClientId);
                               bool? taskStatus =
                                   await fireStoreService.checkShiftTaskStatus(
                                       widget.empId, widget.shiftId);

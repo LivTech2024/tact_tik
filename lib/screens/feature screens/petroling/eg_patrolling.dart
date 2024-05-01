@@ -202,7 +202,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           Allchecked: allChecked,
           PatrolCompanyID: patrolCompanyId,
           PatrolClientID: patrolClientId, ShiftDate: widget.ShiftDate,
-          ShiftId: widget.ShiftId,
+          ShiftId: widget.ShiftId, LocationId: widget.ShiftLocationId,
         ),
       );
     }
@@ -387,17 +387,20 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         setState(() {
           buttonEnabled = false; // Disable the button
         });
+        var clientID =
+            await fireStoreService.getShiftClientID(widget.p.ShiftId);
+        var clientName = await fireStoreService.getClientName(clientID!);
+
         await fireStoreService.addToLog(
-            "PatrolStarted",
+            "patrol_start",
             "",
-            "",
-            Timestamp.now(),
-            Timestamp.now(),
+            clientName ?? "",
             widget.p.EmpId,
             widget.p.EmployeeName,
             widget.p.PatrolCompanyID,
             "",
-            widget.p.PatrolClientID);
+            widget.p.PatrolClientID,
+            widget.p.LocationId);
         await fireStoreService.updatePatrolCurrentStatusToUnchecked(
           widget.p.PatrolId,
           "started",
@@ -653,16 +656,15 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   checkpoint.id,
                                                   widget.p.EmpId);
                                           await fireStoreService.addToLog(
-                                              "Checkpoint",
+                                              "check_point",
                                               "",
                                               "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
                                               "",
-                                              widget.p.PatrolClientID);
+                                              widget.p.PatrolClientID,
+                                              widget.p.LocationId);
                                           showSuccessToast(context,
                                               "${checkpoint.description} scanned ");
                                           _refresh();
@@ -1314,17 +1316,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   url['CheckPointName']
                                             };
                                           }).toList();
+                                          var clientId = await fireStoreService
+                                              .getShiftClientID(
+                                                  widget.p.ShiftId);
+                                          var clientName =
+                                              await fireStoreService
+                                                  .getClientName(clientId!);
                                           await fireStoreService.addToLog(
-                                              "PatrolEnded",
+                                              "patrol_end",
                                               "",
-                                              "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
+                                              clientName ?? "",
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
                                               "",
-                                              widget.p.PatrolClientID);
+                                              widget.p.PatrolClientID,
+                                              widget.p.LocationId);
                                           sendapiEmail(
                                               emails,
                                               "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
@@ -1457,17 +1464,24 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           emails.add(AdminEmail!);
                                           emails.add(defaultEmail!);
 
+                                          // emails.add(AdminEmail!);
+                                          // emails.add(defaultEmail!);
+                                          var clientId = await fireStoreService
+                                              .getShiftClientID(
+                                                  widget.p.ShiftId);
+                                          var clientName =
+                                              await fireStoreService
+                                                  .getClientName(clientId!);
                                           await fireStoreService.addToLog(
-                                              "PatrolEnded",
+                                              "patrol_end",
                                               "",
-                                              "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
+                                              clientName ?? "",
                                               widget.p.EmpId,
                                               widget.p.EmployeeName,
                                               widget.p.PatrolCompanyID,
                                               "",
-                                              widget.p.PatrolClientID);
+                                              widget.p.PatrolClientID,
+                                              widget.p.LocationId);
                                           num newCount =
                                               widget.p.CompletedCount;
                                           sendapiEmail(
@@ -1541,6 +1555,7 @@ class Patrol {
   final List<Category> categories;
   final String ShiftDate;
   final String ShiftId;
+  final String LocationId;
 
   Patrol({
     required this.title,
@@ -1558,6 +1573,7 @@ class Patrol {
     required this.Allchecked,
     required this.ShiftDate,
     required this.ShiftId,
+    required this.LocationId,
   });
 }
 

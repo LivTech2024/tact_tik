@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +24,36 @@ class LogBookScreen extends StatefulWidget {
 }
 
 class _LogBookScreenState extends State<LogBookScreen> {
+  DateTime _selectedDate = DateTime.now();
+  DatePickerController datePickerController = DatePickerController();
+
+  List convertDate(Timestamp timestamp) {
+    DateTime date = timestamp.toDate();
+    return [date.day, date.month, date.year];
+  }
+
+  Map<String, dynamic>? fetchLogsByDateAndId(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> logs) {
+    for (var log in logs) {
+      List date = convertDate(log['LogBookDate'] as Timestamp);
+      if (date[0] == _selectedDate.day &&
+          date[1] == _selectedDate.month &&
+          date[2] == _selectedDate.year &&
+          log['LogBookEmpId'] == FirebaseAuth.instance.currentUser!.uid) {
+        return log.data();
+      }
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      datePickerController.jumpToSelection();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -59,8 +91,27 @@ class _LogBookScreenState extends State<LogBookScreen> {
             centerTitle: true,
             floating: true, // Makes the app bar float above the content
           ),
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('Dates').snapshots(),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 100,
+              width: double.infinity,
+              child: DatePicker(
+                DateTime(2024),
+                controller: datePickerController,
+                initialSelectedDate: DateTime.now(),
+                selectionColor: Primarycolor,
+                selectedTextColor: Colors.white,
+                onDateChange: (date) {
+                  setState(() {
+                    _selectedDate = date;
+                  });
+                },
+              ),
+            ),
+          ),
+          StreamBuilder(
+            stream:
+                FirebaseFirestore.instance.collection('LogBook').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
@@ -77,22 +128,46 @@ class _LogBookScreenState extends State<LogBookScreen> {
                   ),
                 );
               }
-              final logBookDocs = snapshot.data!.docs;
+              Map<String, dynamic>? logBookDoc =
+                  fetchLogsByDateAndId(snapshot.data!.docs);
+
               // print(logBookDocs);
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final logBookId = logBookDocs[index].id;
-                    // final logData =
-                    //     logBookDocs[index].data() as Map<String, dynamic>;
-                    return LogBookWidget(
-                      logBookId: logBookId,
-                      // log: Logs.fromDocument(logData),
-                    );
-                  },
-                  childCount: logBookDocs.length,
-                ),
-              );
+              if (logBookDoc == null) {
+                print('No data found');
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      'No data found!',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                );
+              } else {
+                List<dynamic> logs = logBookDoc['LogBookData'];
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    //
+                    (context, index) {
+                      Map<String, dynamic> logBookId = logs[index];
+                      // final logData =
+                      //     logBookDocs[index].data() as Map<String, dynamic>;
+                      // return LogBookWidget(
+                      //   logBookId: logBookId,
+                      //   // log: Logs.fromDocument(logData),
+                      // );
+                      // Logs log = Logs.fromDocument(logBookId);
+                      return LogTypeWidget(
+                        clientName: logBookDoc['LogBookCleintName'] ?? "",
+                        location: logBookDoc['LogBookLocationName'] ?? "",
+                        logtype: logBookId['LogType'],
+                        logEnum: LogBookEnum.CheckPoint,
+                        time: logBookId['LogReportedAt'],
+                      );
+                    },
+                    childCount: logs.length,
+                  ),
+                );
+              }
             },
           ),
         ],
@@ -101,110 +176,91 @@ class _LogBookScreenState extends State<LogBookScreen> {
   }
 }
 
-class LogBookWidget extends StatefulWidget {
-  final String logBookId;
-  // final Logs log;
+// class LogBookWidget extends StatefulWidget {
+//   // final String logBookId;
+//   final Logs log;
 
-  const LogBookWidget({
-    super.key,
-    required this.logBookId,
-    // required this.log,
-  });
+//   const LogBookWidget({
+//     super.key,
+//     // required this.logBookId,
+//     required this.log,
+//   });
 
-  @override
-  State<LogBookWidget> createState() => _LogBookWidgetState();
-}
+//   @override
+//   State<LogBookWidget> createState() => _LogBookWidgetState();
+// }
 
-class _LogBookWidgetState extends State<LogBookWidget> {
-  bool expand = false;
+// class _LogBookWidgetState extends State<LogBookWidget> {
+//   bool expand = false;
 
-  @override
-  Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+//   @override
+//   Widget build(BuildContext context) {
+//     final double height = MediaQuery.of(context).size.height;
+//     final double width = MediaQuery.of(context).size.width;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width / width30),
-      child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('Dates')
-              .doc(widget.logBookId.toString())
-              .collection('Logs')
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            }
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final logs = snapshot.data!.docs;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    print('on ckick');
-                    setState(() {
-                      expand = !expand;
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(top: height / height10),
-                    padding: EdgeInsets.symmetric(horizontal: width / width20),
-                    height: height / height70,
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
-                      color: WidgetColor,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InterBold(
-                          text: widget.logBookId,
-                          color: Primarycolor,
-                          fontsize: width / width18,
-                        ),
-                        Icon(
-                          expand
-                              ? Icons.arrow_circle_up_outlined
-                              : Icons.arrow_circle_down_outlined,
-                          size: width / width24,
-                          color: Primarycolor,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: expand,
-                  child: Column(
-                    children: List.generate(
-                      logs.length,
-                      (index) => FirebaseAuth.instance.currentUser!.uid ==
-                              logs[index]['LogBookEmployeeId']
-                          ? LogTypeWidget(
-                              clientName: logs[index]['LogbookEmployeeName'],
-                              location: logs[index]['LogBookLocation'],
-                              logtype: logs[index]['LogBookType'],
-                              time: LogBookEnum.CheckPoint,
-                            )
-                          : const SizedBox(),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }),
-    );
-  }
-}
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: width / width30),
+//       child:  Column(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 GestureDetector(
+//                   onTap: () {
+//                     print('on ckick');
+//                     setState(() {
+//                       expand = !expand;
+//                     });
+//                   },
+//                   child: Container(
+//                     margin: EdgeInsets.only(top: height / height10),
+//                     padding: EdgeInsets.symmetric(horizontal: width / width20),
+//                     height: height / height70,
+//                     width: double.maxFinite,
+//                     decoration: BoxDecoration(
+//                       borderRadius: BorderRadius.circular(width / width10),
+//                       color: WidgetColor,
+//                     ),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         InterBold(
+//                           text: widget.logBookId,
+//                           color: Primarycolor,
+//                           fontsize: width / width18,
+//                         ),
+//                         Icon(
+//                           expand
+//                               ? Icons.arrow_circle_up_outlined
+//                               : Icons.arrow_circle_down_outlined,
+//                           size: width / width24,
+//                           color: Primarycolor,
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 // Visibility(
+//                 //   visible: expand,
+//                 //   child: Column(
+//                 //     children: List.generate(
+//                 //       logs.length,
+//                 //       (index) => FirebaseAuth.instance.currentUser!.uid ==
+//                 //               logs[index]['LogBookEmployeeId']
+//                 //           ? LogTypeWidget(
+//                 //               clientName: logs[index]['LogbookEmployeeName'],
+//                 //               location: logs[index]['LogBookLocation'],
+//                 //               logtype: logs[index]['LogBookType'],
+//                 //               time: LogBookEnum.CheckPoint,
+//                 //             )
+//                 //           : const SizedBox(),
+//                 //     ),
+//                 //   ),
+//                 // ),
+//               ],
+//             )
+//     );
+//   }
+// }
 
 class Logs {
   final String time;
@@ -213,24 +269,39 @@ class Logs {
   final String timeStamp;
   final String logtype;
 
-  Logs(
-      {required this.time,
-      required this.clientName,
-      required this.location,
-      required this.timeStamp,
-      required this.logtype});
-  factory Logs.fromDocument(Map<String, dynamic> data) {
+  Logs({
+    required this.time,
+    required this.clientName,
+    required this.location,
+    required this.timeStamp,
+    required this.logtype,
+  });
+
+  factory Logs.fromDocument(Map<String, dynamic>? data) {
+    if (data == null) {
+      throw Exception('Data is null');
+    }
+
+    final String? logBookLocation = data['LogBookLocation'];
+    final String? logbookEmployeeName = data['LogbookEmployeeName'];
+    final String? logBookType = data['LogBookType'];
+
+    if (logBookLocation == null ||
+        logbookEmployeeName == null ||
+        logBookType == null) {
+      throw Exception('Required data is missing');
+    }
+
     Timestamp timestamp = Timestamp.now();
-
     DateTime dateTime = timestamp.toDate();
-
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
     return Logs(
-        time: formattedDate,
-        location: data['LogBookLocation'] ?? '',
-        clientName: data['LogbookEmployeeName'] ?? '',
-        timeStamp: formattedDate,
-        logtype: data['LogBookType']);
+      time: formattedDate,
+      location: logBookLocation,
+      clientName: logbookEmployeeName,
+      timeStamp: formattedDate,
+      logtype: logBookType,
+    );
   }
 }

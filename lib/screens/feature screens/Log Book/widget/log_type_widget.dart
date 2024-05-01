@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -11,13 +12,15 @@ import '../../../../utils/colors.dart';
 class LogTypeWidget extends StatelessWidget {
   const LogTypeWidget({
     Key? key,
-    required this.time,
+    required this.logEnum,
     required this.clientName,
     required this.location,
     required this.logtype,
+    required this.time,
   }) : super(key: key);
 
-  final LogBookEnum time;
+  final LogBookEnum logEnum;
+  final Timestamp time;
   final String clientName;
   final String location;
   final String logtype;
@@ -29,8 +32,9 @@ class LogTypeWidget extends StatelessWidget {
 
     // Convert logtype string to LogBookEnum
     LogBookEnum logTypeEnum = logtype.toEnum();
+    print('time = $time');
 
-    return time == LogBookEnum.TotalWorkTime
+    return logEnum == LogBookEnum.TotalWorkTime
         ? Container(
             margin: EdgeInsets.only(top: height / height10),
             padding: EdgeInsets.symmetric(horizontal: width / width20),
@@ -85,7 +89,7 @@ class LogTypeWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InterMedium(
-                      text: DateFormat('hh:mm a').format(DateTime.now()),
+                      text: DateFormat('hh:mm a').format(time.toDate()),
                       color: color1,
                       fontsize: width / width14,
                     ),
@@ -161,8 +165,11 @@ class LogTypeWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                //
+
                 InterMedium(
-                  text: DateFormat('hh:mm a').format(DateTime.now()),
+                  text: DateFormat('hh:mm a').format(time.toDate()),
                   color: color1,
                   fontsize: width / width14,
                 ),

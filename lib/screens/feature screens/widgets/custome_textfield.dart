@@ -10,12 +10,15 @@ class CustomeTextField extends StatelessWidget {
     required this.hint,
     this.isExpanded = false,
     this.showIcon = true,
+    this.isEnabled = true,
     this.controller,
   });
 
   final String hint;
   final bool isExpanded;
   final bool showIcon;
+  final bool isEnabled;
+
   final TextEditingController? controller;
 
   @override
@@ -67,6 +70,7 @@ class CustomeTextField extends StatelessWidget {
                 contentPadding: EdgeInsets.zero, // Remove padding
               ),
               cursorColor: Primarycolor,
+              enabled: isEnabled,
             ),
           ),
           if (showIcon)

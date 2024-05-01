@@ -710,17 +710,15 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   checkpoint.patrolId,
                                                   checkpoint.id,
                                                   widget.p.EmpId);
-                                          await fireStoreService.addToLog(
-                                              "Checkpoint",
-                                              "",
-                                              "",
-                                              Timestamp.now(),
-                                              Timestamp.now(),
-                                              widget.p.EmpId,
-                                              widget.p.EmployeeName,
-                                              widget.p.PatrolCompanyID,
-                                              "",
-                                              widget.p.PatrolClientID);
+                                          // await fireStoreService.addToLog(
+                                          //     "check_point",
+                                          //     "",
+                                          //     "",
+                                          //     widget.p.EmpId,
+                                          //     widget.p.EmployeeName,
+                                          //     widget.p.PatrolCompanyID,
+                                          //     "",
+                                          //     widget.p.PatrolClientID);
                                           showSuccessToast(context,
                                               "${checkpoint.description} scanned ");
                                           // _refresh();
