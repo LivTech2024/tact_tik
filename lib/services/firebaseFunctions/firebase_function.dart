@@ -1418,7 +1418,7 @@ class FireStoreService {
 // }
 
   //Dar images
-  Future<List<Map<String, dynamic>>> addImageToDarStorage(File file) async {
+  Future<String> addImageToDarStorage(File file) async {
     try {
       String uniqueName = DateTime.now().toString();
       Reference storageRef = FirebaseStorage.instance.ref();
@@ -1438,9 +1438,7 @@ class FireStoreService {
       print("Download URL: $downloadURL");
 
       // Return the download URL in a list
-      return [
-        {'downloadURL': downloadURL}
-      ];
+      return downloadURL;
     } catch (e) {
       print(e);
       throw e;

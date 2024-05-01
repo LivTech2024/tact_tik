@@ -113,12 +113,16 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       try {
         await _userService.getShiftInfo();
         String? shiftLocationId = _userService.shiftLocationId;
+        String? shiftLocation = _userService.shiftLocation;
 
         print("Shiftlocation : $shiftLocationId");
 
         FirebaseFirestore firestore = FirebaseFirestore.instance;
+        DocumentReference docRef = firestore.collection('Visitors').doc();
+        String visitorId = docRef.id;
         await firestore.collection('Visitors').add({
-          'VisitorInTime': InTime != null ? InTime!.format(context) : null,
+          // 'VisitorInTime': InTime != null ? InTime!.format(context) : null,
+          'VisitorInTime': Timestamp.now(),
           'VisitorName': nameController.text,
           'VisitorEmail': EmailController.text,
           'VisitorContactNumber': ContactNoController.text,
@@ -128,8 +132,10 @@ class _CreateVisitorsState extends State<CreateVisitors> {
           'VisitorComment': CommentsController.text,
           'VisitorNoOfPerson': NoOfPersonController.text,
           'VisitorCompanyId': CompanyNameController.text,
+          'VisitorId': visitorId,
           'VisitorCreatedAt': Timestamp.now(),
           'VisitorLocationId': shiftLocationId,
+          'VisitorLocationName': shiftLocation,
           'VisitorOutTime': null,
           'VisitorReturnAsset': null,
         });

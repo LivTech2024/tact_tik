@@ -7,6 +7,7 @@ class UserService {
   String? shiftEndTime;
   String? shiftLocation;
   String? userName;
+  String? shiftId;
   UserService({required FireStoreService firestoreService});
 
   Future<void> getShiftInfo() async {
@@ -28,7 +29,7 @@ class UserService {
         shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
 
         // String shiftName = shiftInfo['ShiftName'] ?? " ";
-        // String shiftId = shiftInfo['ShiftId'] ?? " ";
+        String shiftId = shiftInfo['ShiftId'] ?? " ";
       } else {
         print('Shift info not found');
       }
