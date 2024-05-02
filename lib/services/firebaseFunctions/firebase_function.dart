@@ -782,7 +782,8 @@ class FireStoreService {
         'Status': 'started',
         'StatusReportedById': employeeId,
         'StatusReportedByName': EmpName,
-        'StatusReportedTime': DateTime.now().toString(),
+        'StatusStartedTime': Timestamp.now(),
+        'StatusReportedTime': Timestamp.now(),
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
@@ -895,7 +896,7 @@ class FireStoreService {
         'Status': 'completed',
         'StatusReportedById': employeeId,
         'StatusReportedByName': EmpNames,
-        'StatusReportedTime': DateTime.now().toString(),
+        'StatusReportedTime': DateTime.now(),
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
