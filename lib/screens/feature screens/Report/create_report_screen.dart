@@ -66,7 +66,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     List<String> data = await fireStoreService.getReportTitles();
     if (data.isNotEmpty) {
       setState(() {
-        tittles = ["All", ...data];
+        tittles = [...data];
       });
     }
     print("Report Titles : $data");

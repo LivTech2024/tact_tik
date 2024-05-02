@@ -105,7 +105,7 @@ class DarDisplayScreen extends StatelessWidget {
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
-              // .where('EmpDarEmpId', isEqualTo: EmpID)
+              .where('EmpDarEmpId', isEqualTo: EmpID)
               .orderBy('EmpDarDate', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
