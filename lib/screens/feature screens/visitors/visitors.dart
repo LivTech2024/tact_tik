@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
@@ -128,10 +129,19 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
 
                       if (documentData != null) {
                         final visitorName = documentData['VisitorName'] ?? '';
-                        final inTime = documentData['VisitorInTime'] ?? '';
-                        final outTime = documentData['VisitorOutTime'] ?? '';
+                        final inTimeTimestamp =
+                            documentData['VisitorInTime'] as Timestamp?;
+                        final outTimeTimestamp =
+                            documentData['VisitorOutTime'] as Timestamp?;
                         final location =
                             documentData['VisitorLocationName'] ?? '';
+
+                        final inTime = inTimeTimestamp != null
+                            ? DateFormat.jm().format(inTimeTimestamp.toDate())
+                            : '';
+                        final outTime = outTimeTimestamp != null
+                            ? DateFormat.jm().format(outTimeTimestamp.toDate())
+                            : '';
 
                         return Padding(
                           padding:
