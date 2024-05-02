@@ -83,14 +83,14 @@ class DarDisplayScreen extends StatelessWidget {
           'EmpDarData': _userService.shiftLocation,
           'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
-          'EmpDarShiftId': _userService.shiftId,
+          'EmpDarShiftId': _userService.ShiftId,
           'EmpDarDate': FieldValue.serverTimestamp(),
           'EmpDarCreatedAt': FieldValue.serverTimestamp(),
           'EmpDarEmpName': _userService.userName,
           'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,
-          'EmpDarCompanyId': "widget.EmpDarCompanyId ?? " "",
-          'EmpDarCompanyBranchId': "widget.EmpDarCompanyBranchId ?? " "",
-          'EmpDarClientId': "widget.EmpClientID ?? ''",
+          'EmpDarCompanyId': _userService.shiftCompanyId,
+          'EmpDarCompanyBranchId': _userService.shiftCompanyBranchId,
+          'EmpDarClientId': _userService.shiftClientId,
         });
         await docRef.update({'EmpDarId': docRef.id});
       } catch (e) {
@@ -105,7 +105,7 @@ class DarDisplayScreen extends StatelessWidget {
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
-              // .where('EmpDarEmpId', isEqualTo: EmpID)
+              .where('EmpDarEmpId', isEqualTo: EmpID)
               .orderBy('EmpDarDate', descending: true)
               .snapshots(),
           builder: (context, snapshot) {

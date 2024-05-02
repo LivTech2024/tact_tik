@@ -13,7 +13,8 @@ import '../../../utils/colors.dart';
 import '../../supervisor screens/home screens/widgets/set_details_widget.dart';
 
 class CreateVisitors extends StatefulWidget {
-  CreateVisitors({super.key});
+  final Map<String, dynamic>? visitorData;
+  CreateVisitors({super.key, this.visitorData});
 
   @override
   State<CreateVisitors> createState() => _CreateVisitorsState();
@@ -54,6 +55,39 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     CommentsController = TextEditingController();
     NoOfPersonController = TextEditingController();
     CompanyNameController = TextEditingController();
+
+    // Initialize the controllers with visitor data if available
+    if (widget.visitorData != null) {
+      nameController.text = widget.visitorData!['VisitorName'] ?? '';
+      EmailController.text = widget.visitorData!['VisitorEmail'] ?? '';
+      ContactNoController.text =
+          widget.visitorData!['VisitorContactNumber'] ?? '';
+      AssetHandoverController.text =
+          widget.visitorData!['VisitorAssetHandover'] ?? '';
+      LicensePlateNumberController.text =
+          widget.visitorData!['VisitorLicenseNumber'] ?? '';
+      SetCountdownController.text =
+          (widget.visitorData!['VisitorAssetDurationInMinute'] ?? '')
+              .toString();
+
+      CommentsController.text = widget.visitorData!['VisitorComment'] ?? '';
+      NoOfPersonController.text =
+          (widget.visitorData!['VisitorNoOfPerson'] ?? '').toString();
+      CompanyNameController.text =
+          widget.visitorData!['VisitorCompanyId'] ?? '';
+
+      final inTimeTimestamp =
+          widget.visitorData!['VisitorInTime'] as Timestamp?;
+      final outTimeTimestamp =
+          widget.visitorData!['VisitorOutTime'] as Timestamp?;
+
+      InTime = inTimeTimestamp != null
+          ? TimeOfDay.fromDateTime(inTimeTimestamp.toDate())
+          : null;
+      OutTime = outTimeTimestamp != null
+          ? TimeOfDay.fromDateTime(outTimeTimestamp.toDate())
+          : null;
+    }
   }
 
   @override
@@ -81,7 +115,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor, // Change primary color to red
+              primary: Primarycolor,
               secondary: Primarycolor,
             ),
           ),
@@ -118,28 +152,59 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         print("Shiftlocation : $shiftLocationId");
 
         FirebaseFirestore firestore = FirebaseFirestore.instance;
-        DocumentReference docRef = firestore.collection('Visitors').doc();
-        String visitorId = docRef.id;
-        await firestore.collection('Visitors').add({
-          // 'VisitorInTime': InTime != null ? InTime!.format(context) : null,
-          'VisitorInTime': Timestamp.now(),
-          'VisitorName': nameController.text,
-          'VisitorEmail': EmailController.text,
-          'VisitorContactNumber': ContactNoController.text,
-          'VisitorAssetHandover': AssetHandoverController.text,
-          'VisitorLicenseNumber': LicensePlateNumberController.text,
-          'VisitorAssetDurationInMinute': SetCountdownController.text,
-          'VisitorComment': CommentsController.text,
-          'VisitorNoOfPerson': NoOfPersonController.text,
-          'VisitorCompanyId': CompanyNameController.text,
-          'VisitorId': visitorId,
-          'VisitorCreatedAt': Timestamp.now(),
-          'VisitorLocationId': shiftLocationId,
-          'VisitorLocationName': shiftLocation,
-          'VisitorOutTime': null,
-          'VisitorReturnAsset': null,
-        });
-        _showSnackbar('Visitor data saved successfully!');
+
+        if (widget.visitorData == null) {
+          // Create a new visitor document
+          DocumentReference docRef = firestore.collection('Visitors').doc();
+          String visitorId = docRef.id;
+          await firestore.collection('Visitors').add({
+            // 'VisitorInTime': InTime != null ? InTime!.format(context) : null,
+            'VisitorInTime': Timestamp.now(),
+            'VisitorName': nameController.text,
+            'VisitorEmail': EmailController.text,
+            'VisitorContactNumber': ContactNoController.text,
+            'VisitorAssetHandover': AssetHandoverController.text,
+            'VisitorLicenseNumber': LicensePlateNumberController.text,
+            'VisitorAssetDurationInMinute': SetCountdownController.text,
+            'VisitorComment': CommentsController.text,
+            'VisitorNoOfPerson': NoOfPersonController.text,
+            'VisitorCompanyId': null,
+            'VisitorCompanyName': CompanyNameController.text,
+            'VisitorId': visitorId,
+            'VisitorCreatedAt': Timestamp.now(),
+            'VisitorLocationId': shiftLocationId,
+            'VisitorLocationName': shiftLocation,
+            'VisitorOutTime': null,
+            'VisitorReturnAsset': null,
+          });
+        } else {
+          String visitorId = widget.visitorData!['VisitorId'];
+          print("visitors:$visitorId");
+
+          QuerySnapshot querySnapshot = await firestore
+              .collection('Visitors')
+              .where('VisitorId', isEqualTo: visitorId)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+            await documentSnapshot.reference.update({
+              'VisitorOutTime': OutTime != null
+                  ? Timestamp.fromDate(DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      OutTime!.hour,
+                      OutTime!.minute,
+                    ))
+                  : null,
+              'VisitorReturnAsset': AssetReturnController.text,
+            });
+            _showSnackbar('Visitor data updated successfully!');
+          } else {
+            _showSnackbar('Visitor document does not exist!');
+          }
+        }
 
         // Clear all the controllers
         nameController.clear();
@@ -160,12 +225,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       }
     }
   }
-
-  // (InTime == null && OutTime != null) ||
-  //       (InTime != null && OutTime == null)
-
-  // 1 both null
-  // intime != null outTime == null
 
   bool _validateInputs() {
     print('Email Controller = ${EmailController.text}');
@@ -197,7 +256,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
-    var isFieldEnabled = false;
+    var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -253,7 +312,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           hintText: OutTime == null ? 'Out Time' : '${OutTime}',
                           onTap: () => _selectTime(context, false),
                           flex: 2,
-                          isEnabled: false,
+                          isEnabled: isFieldEnabled,
                         ),
                       ],
                     ),

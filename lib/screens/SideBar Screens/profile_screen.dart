@@ -14,7 +14,7 @@ import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_semibold.dart';
 import '../../utils/colors.dart';
-import '../../utils/utils.dart';
+
 import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 

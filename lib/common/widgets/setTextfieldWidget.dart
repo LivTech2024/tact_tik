@@ -5,12 +5,13 @@ import '../sizes.dart';
 import '../../utils/colors.dart';
 
 class SetTextfieldWidget extends StatefulWidget {
-  const SetTextfieldWidget(
-      {super.key,
-      required this.hintText,
-      this.controller,
-      this.keyboardType,
-      this.isEnabled = true});
+  const SetTextfieldWidget({
+    Key? key, // Added Key? key parameter
+    required this.hintText,
+    this.controller,
+    this.keyboardType,
+    this.isEnabled = true,
+  }) : super(key: key); // Added super(key: key) to the constructor
   final String hintText;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -36,41 +37,39 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
         color: WidgetColor,
       ),
       margin: EdgeInsets.only(top: height / height10),
-      child: Expanded(
-        child: Center(
-          child: TextField(
-            keyboardType: widget.keyboardType,
-            enabled: widget
-                .isEnabled, // Enable or disable TextField based on isEnabled
-            style: GoogleFonts.poppins(
+      child: Center(
+        child: TextField(
+          keyboardType: widget.keyboardType,
+          enabled: widget
+              .isEnabled, // Enable or disable TextField based on isEnabled
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w300,
+            fontSize: width / width18,
+            color: Colors.white, // Change text color to white
+          ),
+          onSubmitted: (value) {
+            setState(() {
+              widget.controller!.text = value;
+            });
+          },
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.all(
+                Radius.circular(width / width10),
+              ),
+            ),
+            focusedBorder: InputBorder.none,
+            hintStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w300,
               fontSize: width / width18,
-              color: Colors.white, // Change text color to white
+              color: color2, // Change text color to white
             ),
-            onSubmitted: (value) {
-              setState(() {
-                widget.controller!.text = value;
-              });
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(width / width10),
-                ),
-              ),
-              focusedBorder: InputBorder.none,
-              hintStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.w300,
-                fontSize: width / width18,
-                color: color2, // Change text color to white
-              ),
-              hintText: widget.hintText,
-              contentPadding: EdgeInsets.zero, // Remove padding
-            ),
-            cursorColor: Primarycolor,
-            controller: widget.controller,
+            hintText: widget.hintText,
+            contentPadding: EdgeInsets.zero, // Remove padding
           ),
+          cursorColor: Primarycolor,
+          controller: widget.controller,
         ),
       ),
     );

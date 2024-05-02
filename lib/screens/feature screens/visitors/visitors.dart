@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
@@ -44,7 +45,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CreateVisitors(),
+                builder: (context) => CreateVisitors(visitorData: null),
               ),
             );
           },
@@ -128,142 +129,167 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
 
                       if (documentData != null) {
                         final visitorName = documentData['VisitorName'] ?? '';
-                        final inTime = documentData['VisitorInTime'] ?? '';
-                        final outTime = documentData['VisitorOutTime'] ?? '';
+                        final inTimeTimestamp =
+                            documentData['VisitorInTime'] as Timestamp?;
+                        final outTimeTimestamp =
+                            documentData['VisitorOutTime'] as Timestamp?;
                         final location =
                             documentData['VisitorLocationName'] ?? '';
 
-                        return Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width / width30),
-                          child: Container(
-                            height: width / width120,
-                            width: double.maxFinite,
-                            margin: EdgeInsets.only(bottom: height / height10),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(width / width10),
-                              color: WidgetColor,
-                            ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: width / width10,
-                                      vertical: height / height10,
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          width: width / width40,
-                                          height: height / height40,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                width / width10),
-                                            color: Primarycolorlight,
-                                          ),
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                              'assets/images/man.svg',
-                                              height: height / height20,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: width / width120,
-                                          child: InterMedium(
-                                            text: visitorName,
-                                            color: color1,
-                                            fontsize: width / width16,
-                                            maxLines: 1,
-                                          ),
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                InterBold(
-                                                  text: 'in time',
-                                                  fontsize: width / width10,
-                                                  color: color4,
-                                                ),
-                                                SizedBox(width: width / width6),
-                                                InterMedium(
-                                                  text: inTime,
-                                                  fontsize: width / width12,
-                                                  color: color3,
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                InterBold(
-                                                  text: 'out time',
-                                                  fontsize: width / width10,
-                                                  color: color4,
-                                                ),
-                                                SizedBox(width: width / width6),
-                                                InterMedium(
-                                                  text: outTime,
-                                                  fontsize: width / width12,
-                                                  color: color3,
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                        final inTime = inTimeTimestamp != null
+                            ? DateFormat.jm().format(inTimeTimestamp.toDate())
+                            : '';
+                        final outTime = outTimeTimestamp != null
+                            ? DateFormat.jm().format(outTimeTimestamp.toDate())
+                            : '';
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateVisitors(
+                                  visitorData: documentData,
                                 ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / width10),
-                                    decoration: BoxDecoration(
-                                      color: colorRed,
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft:
-                                            Radius.circular(width / width10),
-                                        bottomRight:
-                                            Radius.circular(width / width10),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width30),
+                            child: Container(
+                              height: width / width120,
+                              width: double.maxFinite,
+                              margin:
+                                  EdgeInsets.only(bottom: height / height10),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(width / width10),
+                                color: WidgetColor,
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width / width10,
+                                        vertical: height / height10,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: width / width40,
+                                            height: height / height40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      width / width10),
+                                              color: Primarycolorlight,
+                                            ),
+                                            child: Center(
+                                              child: SvgPicture.asset(
+                                                'assets/images/man.svg',
+                                                height: height / height20,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / width120,
+                                            child: InterMedium(
+                                              text: visitorName,
+                                              color: color1,
+                                              fontsize: width / width16,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  InterBold(
+                                                    text: 'in time',
+                                                    fontsize: width / width10,
+                                                    color: color4,
+                                                  ),
+                                                  SizedBox(
+                                                      width: width / width6),
+                                                  InterMedium(
+                                                    text: inTime,
+                                                    fontsize: width / width12,
+                                                    color: color3,
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  InterBold(
+                                                    text: 'out time',
+                                                    fontsize: width / width10,
+                                                    color: color4,
+                                                  ),
+                                                  SizedBox(
+                                                      width: width / width6),
+                                                  InterMedium(
+                                                    text: outTime,
+                                                    fontsize: width / width12,
+                                                    color: color3,
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        InterSemibold(
-                                          text: 'Location',
-                                          color: color1,
-                                          fontsize: width / width14,
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: width / width10),
+                                      decoration: BoxDecoration(
+                                        color: colorRed,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft:
+                                              Radius.circular(width / width10),
+                                          bottomRight:
+                                              Radius.circular(width / width10),
                                         ),
-                                        SizedBox(
-                                          width: width / width200,
-                                          child: InterRegular(
-                                            text: location,
-                                            fontsize: width / width12,
-                                            color: color2,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InterSemibold(
+                                            text: 'Location',
+                                            color: color1,
+                                            fontsize: width / width14,
                                           ),
-                                        )
-                                      ],
+                                          SizedBox(
+                                            width: width / width200,
+                                            child: InterRegular(
+                                              text: location,
+                                              fontsize: width / width12,
+                                              color: color2,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );

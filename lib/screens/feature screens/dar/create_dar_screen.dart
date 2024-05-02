@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
@@ -196,14 +197,14 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   void submitDarTileData() async {
-    print(
-        'darTiles = ${widget.darTiles} , DarIndex = ${widget.index} , darDate = ${widget.darTiles[widget.index]['date']}');
-    final date = widget.darTiles[widget.index]['time'];
+    // print(
+    //     'darTiles = ${widget.darTiles} , DarIndex = ${widget.index} , darDate = ${widget.darTiles[widget.index]['date']}');
+    final date = widget.darTiles[widget.index]['TileTime'];
     await _uploadImages();
     final data = {
-      'time': date,
-      'title': _titleController.text,
-      'images': imageUrls,
+      'TileTime': date,
+      'TileContent': _titleController.text,
+      'TileImages': imageUrls,
     };
     widget.darTiles.removeAt(widget.index);
     widget.darTiles.insert(widget.index, data);
@@ -229,11 +230,11 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           for (var dar in querySnapshot.docs) {
             final data = dar.data() as Map<String, dynamic>;
             final date2 = UtilsFuctions.convertDate(data['EmpDarDate']);
-            print('date = ${date2[0]}');
+            // print('date = ${date2[0]}');
             if (date2[0] == date.day &&
                 date2[1] == date.month &&
                 date2[2] == date.year) {
-              if (data['darTiles'] != null) {
+              if (data['EmpDarTile'] != null) {
                 isDarlistPresent = true;
               }
               docRef = dar.reference;
@@ -242,7 +243,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
 
           if (docRef != null) {
             await docRef
-                .set({'darTiles': widget.darTiles}, SetOptions(merge: true));
+                .set({'EmpDarTile': widget.darTiles}, SetOptions(merge: true));
           }
         } else {
           print('No document found with the matching _employeeId.');
@@ -301,7 +302,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
               children: [
                 SizedBox(height: height / height30),
                 InterBold(
-                  text: 'Today',
+                  text: DateFormat('dd/MM/yyyy').format(DateTime.now()),
                   fontsize: width / width20,
                   color: Primarycolor,
                 ),

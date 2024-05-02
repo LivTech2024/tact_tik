@@ -119,7 +119,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             if (date2[0] == date.day &&
                 date2[1] == date.month &&
                 date2[2] == date.year) {
-              if (data['darTiles'] != null) {
+              if (data['EmpDarTile'] != null) {
                 isDarlistPresent = true;
               }
               docRef = dar.reference;
@@ -131,16 +131,17 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             final String startTime = shift['startTime']!;
             final String endTime = shift['endTime']!;
             final Map<String, dynamic> darTile = {
-              'title': '',
-              'time': '$startTime - $endTime',
-              'images': [],
+              'TileContent': '',
+              'TileTime': '$startTime - $endTime',
+              'TileImages': [],
             };
             darTiles.add(darTile);
           }
 
           if (docRef != null) {
             if (!isDarlistPresent) {
-              await docRef.set({'darTiles': darTiles}, SetOptions(merge: true));
+              await docRef
+                  .set({'EmpDarTile': darTiles}, SetOptions(merge: true));
             }
           } else {
             print('No document found with the matching date.');
@@ -209,7 +210,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       }
       print('docRef = ${docRef}');
       if (docRef != null) {
-        darList = docRef['darTiles'];
+        darList = docRef['EmpDarTile'];
       }
     }
     // print('darList = ${darList[0]}');
@@ -292,7 +293,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           Row(
                             children: [
                               InterRegular(
-                                text: 'Client :',
+                                text: 'Shift Name :',
                                 fontsize: width / width20,
                                 color: color17,
                               ),
@@ -301,7 +302,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               ),
                               Flexible(
                                 child: InterRegular(
-                                  text: _userService.userName ?? 'Loading...',
+                                  text: _userService.shiftName ?? 'Loading...',
                                   color: Primarycolor,
                                   fontsize: width / width20,
                                 ),
@@ -347,8 +348,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                   );
                                 }
                                 final data = snapshot.data;
-                                print(
-                                    'image length = ${(data![0]['images'] as List).length}');
+                                // print(
+                                //     'image length = ${(data![0]['images'] as List).length}');
                                 return data == null
                                     ? const Center(
                                         child: Text(
@@ -393,7 +394,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                 children: [
                                                   InterMedium(
                                                     text:
-                                                        '${hourlyShiftDetails[index]['startTime']!.substring(11, 16)} - ${hourlyShiftDetails[index]['endTime']!.substring(11, 16)}',
+                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(11, 16) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(11, 16) : ''}',
                                                     color: color21,
                                                   ),
                                                   SizedBox(
@@ -401,7 +402,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                           height / height10),
                                                   InterRegular(
                                                     text:
-                                                        '${data[index]['title']}',
+                                                        '${data[index]['TileContent']}',
                                                     fontsize: width / width16,
                                                     color: color12,
                                                     maxLines: 5,
@@ -411,7 +412,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                           height / height20),
                                                   Row(
                                                     children: List.generate(
-                                                      (data[index]['images']
+                                                      (data[index]['TileImages']
                                                               as List)
                                                           .length,
                                                       (i) => Container(
@@ -430,8 +431,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                           image:
                                                               DecorationImage(
                                                             image: NetworkImage(
-                                                              data[index]
-                                                                  ['images'][i],
+                                                              data[index][
+                                                                  'TileImages'][i],
                                                             ),
                                                             fit: BoxFit.cover,
                                                           ),
@@ -463,7 +464,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           SizedBox(height: height / height10),
                           Column(
                             children: List.generate(
-                              20,
+                              0,
                               (index) => Container(
                                 margin: EdgeInsets.only(
                                   bottom: height / height10,
