@@ -1329,6 +1329,30 @@ class FireStoreService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> addImageToReportStorage(File file) async {
+    try {
+      String uniqueName = DateTime.now().toString();
+      Reference storageRef = FirebaseStorage.instance.ref();
+
+      Reference uploadRef =
+          storageRef.child("employees/report/$uniqueName.jpg");
+
+      // Upload the already compressed image to Firebase Storage
+      await uploadRef.putFile(file);
+
+      // Get the download URL of the uploaded image
+      String downloadURL = await uploadRef.getDownloadURL();
+      print("Download URL: $downloadURL");
+
+      // Return the download URL in a list
+      return [
+        {'downloadURL': downloadURL}
+      ];
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
   //Upload files to storage for report
   // Future<List<Map<String, dynamic>>> addToReportStorage(File file) async {
   //   try {
@@ -2592,6 +2616,51 @@ class FireStoreService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getReportWithCompanyID(
+      String companyId, String locationId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Reports')
+              .where('ReportLocationId', isEqualTo: locationId)
+              .where('ReportCompanyId', isEqualTo: companyId)
+              .get();
+
+      final Set<Map<String, dynamic>> dataSet = Set<Map<String, dynamic>>();
+
+      snapshot.docs.forEach((doc) {
+        dataSet.add(doc.data());
+      });
+
+      final List<Map<String, dynamic>> data = dataSet.toList();
+
+      return data;
+    } catch (e) {
+      print("Error fetching report data: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  Future<Map<String, dynamic>?> getReportWithId(String reportId) async {
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Reports')
+              .doc(reportId)
+              .get();
+
+      if (snapshot.exists) {
+        return snapshot.data();
+      } else {
+        print("Document with ID $reportId does not exist");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching report data: $e");
+      return null; // Return null in case of error
+    }
+  }
+
   //Create Report
 //   export interface IReportsCollection {
 //   ReportId: string;
@@ -2667,6 +2736,51 @@ class FireStoreService {
     } catch (e) {
       print('Error creating report: $e');
     }
+  }
+
+  Future<void> updateFollowUp(String reportId) async {
+    try {
+      final CollectionReference reportsRef =
+          FirebaseFirestore.instance.collection('Reports');
+
+      await reportsRef.doc(reportId).update({
+        'ReportIsFollowUpRequired': false,
+      });
+
+      print('Follow-up updated successfully.');
+    } catch (e) {
+      print("Error in updating the follow-up: $e");
+    }
+  }
+
+  //Gell all Shift
+  Future<List<Map<String, dynamic>>> getShiftHistory(String empId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Shifts')
+        .where('ShiftAssignedUserId', arrayContains: empId)
+        .get();
+
+    List<Map<String, dynamic>> shiftHistoryList = [];
+    Set<String> addedDocIds = Set(); // To keep track of added document IDs
+
+    querySnapshot.docs.forEach((doc) {
+      List<dynamic> shiftCurrentStatus = doc['ShiftCurrentStatus'];
+      if (shiftCurrentStatus != null) {
+        for (var status in shiftCurrentStatus) {
+          if (status is Map &&
+              status['Status'] == 'completed' &&
+              status['StatusReportedById'] == empId &&
+              !addedDocIds.contains(doc.id)) {
+            // Explicitly cast the result of doc.data() to Map<String, dynamic>
+            shiftHistoryList.add(doc.data() as Map<String, dynamic>);
+            addedDocIds.add(doc.id);
+            break; // Exit the loop once a match is found
+          }
+        }
+      }
+    });
+
+    return shiftHistoryList;
   }
 }
 
