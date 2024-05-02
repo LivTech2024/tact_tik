@@ -293,7 +293,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           Row(
                             children: [
                               InterRegular(
-                                text: 'Client :',
+                                text: 'Shift Name :',
                                 fontsize: width / width20,
                                 color: color17,
                               ),
@@ -302,7 +302,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               ),
                               Flexible(
                                 child: InterRegular(
-                                  text: _userService.userName ?? 'Loading...',
+                                  text: _userService.shiftName ?? 'Loading...',
                                   color: Primarycolor,
                                   fontsize: width / width20,
                                 ),
