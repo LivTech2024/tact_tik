@@ -13,7 +13,7 @@ class UserService {
   String? shiftClientId;
   String? shiftCompanyId;
   String? shiftCompanyBranchId;
-   String? shiftName;
+  String? shiftName;
   // Timestamp? shiftDate;
   UserService({required FireStoreService firestoreService});
 
