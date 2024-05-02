@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
@@ -11,25 +12,18 @@ import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
+import 'package:tact_tik/utils/utils_functions.dart';
 import '../../../fonts/inter_regular.dart';
 import '../widgets/custome_textfield.dart';
 
 class CreateDarScreen extends StatefulWidget {
-  final String EmpEmail;
-  final String EmpId;
-  final String EmpDarCompanyId;
-  final String EmpDarCompanyBranchId;
-  final String EmpShiftId;
-  final String EmpClientID;
-
-  const CreateDarScreen(
-      {super.key,
-      required this.EmpEmail,
-      required this.EmpId,
-      required this.EmpDarCompanyId,
-      required this.EmpDarCompanyBranchId,
-      required this.EmpShiftId,
-      required this.EmpClientID});
+  final List<dynamic> darTiles;
+  final int index;
+  const CreateDarScreen({
+    super.key,
+    required this.darTiles,
+    required this.index,
+  });
 
   @override
   State<CreateDarScreen> createState() => _CreateDarScreenState();
@@ -39,6 +33,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final TextEditingController _titleController;
   late final TextEditingController _darController;
+  List<String> imageUrls = [];
   bool _isSubmitting = false;
   String _userName = '';
   String _employeeId = '';
@@ -111,10 +106,14 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     }
   }
 
-  void _uploadImages() async {
+  Future<void> _uploadImages() async {
     print("Uploads Images  $uploads");
     try {
-      // await fireStoreService.addImageToDarStorage(uploads);
+      for (var image in uploads) {
+        final im = await fireStoreService.addImageToDarStorage(image['file']);
+        print('Image url = ${im}');
+        imageUrls.add(im);
+      }
       uploads.clear();
       showSuccessToast(context, "Uploaded Successfully");
     } catch (e) {
@@ -130,63 +129,63 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   //keep this code in firebase_function file  and handle its errors here
-  Future<void> _submitDAR() async {
-    if (_isSubmitting) return;
+  // Future<void> _submitDAR() async {
+  //   if (_isSubmitting) return;
 
-    final title = _titleController.text.trim();
-    final darContent = _darController.text.trim();
+  //   final title = _titleController.text.trim();
+  //   final darContent = _darController.text.trim();
 
-    if (title.isNotEmpty && darContent.isNotEmpty) {
-      setState(() {
-        _isSubmitting = true;
-      });
+  //   if (title.isNotEmpty && darContent.isNotEmpty) {
+  //     setState(() {
+  //       _isSubmitting = true;
+  //     });
 
-      try {
-        List<String> imageUrls = [];
-        for (var upload in uploads) {
-          if (upload['type'] == 'image') {
-            File file = upload['file'];
-            // Upload the image file and get the download URL
-            List<Map<String, dynamic>> downloadURLs =
-                await fireStoreService.addImageToDarStorage(file);
-            // Add the image URLs to the list
-            for (var urlMap in downloadURLs) {
-              if (urlMap.containsKey('downloadURL')) {
-                imageUrls.add(urlMap['downloadURL'] as String);
-              }
-            }
-          }
-        }
-        var docRef = await _firestore.collection('EmployeesDAR').add({
-          'EmpDarTitle': title,
-          'EmpDarData': darContent,
-          'EmpDarShiftId': widget.EmpShiftId ?? "",
-          'EmpDarDate': FieldValue.serverTimestamp(),
-          'EmpDarCreatedAt': FieldValue.serverTimestamp(),
-          'EmpDarEmpName': _userName,
-          'EmpDarEmpId': _employeeId,
-          'EmpDarCompanyId': widget.EmpDarCompanyId ?? "",
-          'EmpDarCompanyBranchId': widget.EmpDarCompanyBranchId ?? "",
-          'EmpDarClientId': widget.EmpClientID ?? '',
-          'EmpDarImages': imageUrls ?? "",
-        });
-        await docRef.update({'EmpDarId': docRef.id});
-        _titleController.clear();
-        _darController.clear();
+  //     try {
+  //       List<String> imageUrls = [];
+  //       for (var upload in uploads) {
+  //         if (upload['type'] == 'image') {
+  //           File file = upload['file'];
+  //           // Upload the image file and get the download URL
+  //           List<Map<String, dynamic>> downloadURLs =
+  //               await fireStoreService.addImageToDarStorage(file);
+  //           // Add the image URLs to the list
+  //           for (var urlMap in downloadURLs) {
+  //             if (urlMap.containsKey('downloadURL')) {
+  //               imageUrls.add(urlMap['downloadURL'] as String);
+  //             }
+  //           }
+  //         }
+  //       }
+  //       var docRef = await _firestore.collection('EmployeesDAR').add({
+  //         'EmpDarTitle': title,
+  //         'EmpDarData': darContent,
+  //         'EmpDarShiftId': widget.EmpShiftId ?? "",
+  //         'EmpDarDate': FieldValue.serverTimestamp(),
+  //         'EmpDarCreatedAt': FieldValue.serverTimestamp(),
+  //         'EmpDarEmpName': _userName,
+  //         'EmpDarEmpId': _employeeId,
+  //         'EmpDarCompanyId': widget.EmpDarCompanyId ?? "",
+  //         'EmpDarCompanyBranchId': widget.EmpDarCompanyBranchId ?? "",
+  //         'EmpDarClientId': widget.EmpClientID ?? '',
+  //         'EmpDarImages': imageUrls ?? "",
+  //       });
+  //       await docRef.update({'EmpDarId': docRef.id});
+  //       _titleController.clear();
+  //       _darController.clear();
 
-        showCustomSnackbar(context, 'DAR saved successfully');
-        Navigator.pop(context);
-      } catch (e) {
-        showCustomSnackbar(context, 'Error saving DAR: $e');
-      } finally {
-        setState(() {
-          _isSubmitting = false;
-        });
-      }
-    } else {
-      showCustomSnackbar(context, 'Please fill in the title and DAR content');
-    }
-  }
+  //       showCustomSnackbar(context, 'DAR saved successfully');
+  //       Navigator.pop(context);
+  //     } catch (e) {
+  //       showCustomSnackbar(context, 'Error saving DAR: $e');
+  //     } finally {
+  //       setState(() {
+  //         _isSubmitting = false;
+  //       });
+  //     }
+  //   } else {
+  //     showCustomSnackbar(context, 'Please fill in the title and DAR content');
+  //   }
+  // }
 
   void showCustomSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -195,6 +194,66 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  void submitDarTileData() async {
+    // print(
+    //     'darTiles = ${widget.darTiles} , DarIndex = ${widget.index} , darDate = ${widget.darTiles[widget.index]['date']}');
+    final date = widget.darTiles[widget.index]['TileTime'];
+    await _uploadImages();
+    final data = {
+      'TileTime': date,
+      'TileContent': _titleController.text,
+      'TileImages': imageUrls,
+    };
+    widget.darTiles.removeAt(widget.index);
+    widget.darTiles.insert(widget.index, data);
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _getUserInfo();
+        final String employeeId = _employeeId;
+        print("employeeId: $employeeId");
+
+        final CollectionReference employeesDARCollection =
+            FirebaseFirestore.instance.collection('EmployeesDAR');
+
+        final QuerySnapshot querySnapshot = await employeesDARCollection
+            .where('EmpDarEmpId', isEqualTo: user.uid)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentReference? docRef;
+          final date = DateTime.now();
+          bool isDarlistPresent = false;
+
+          for (var dar in querySnapshot.docs) {
+            final data = dar.data() as Map<String, dynamic>;
+            final date2 = UtilsFuctions.convertDate(data['EmpDarDate']);
+            // print('date = ${date2[0]}');
+            if (date2[0] == date.day &&
+                date2[1] == date.month &&
+                date2[2] == date.year) {
+              if (data['EmpDarTile'] != null) {
+                isDarlistPresent = true;
+              }
+              docRef = dar.reference;
+            }
+          }
+
+          if (docRef != null) {
+            await docRef
+                .set({'EmpDarTile': widget.darTiles}, SetOptions(merge: true));
+          }
+        } else {
+          print('No document found with the matching _employeeId.');
+        }
+      } else {
+        print('User is not logged in.');
+      }
+    } catch (e) {
+      print('Error creating blank DAR cards: $e');
+    }
   }
 
   //use the toast notification here instead of this
@@ -243,7 +302,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
               children: [
                 SizedBox(height: height / height30),
                 InterBold(
-                  text: 'Today',
+                  text: DateFormat('dd/MM/yyyy').format(DateTime.now()),
                   fontsize: width / width20,
                   color: Primarycolor,
                 ),
@@ -427,7 +486,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                 SizedBox(height: height / height30),
                 Button1(
                   text: _isSubmitting ? 'Submitting...' : 'Submit',
-                  onPressed: _submitDAR,
+                  onPressed: submitDarTileData,
                   backgroundcolor: Primarycolor,
                   borderRadius: 20,
                 ),

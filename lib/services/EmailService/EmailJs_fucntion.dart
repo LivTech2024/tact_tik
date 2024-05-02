@@ -696,6 +696,9 @@ Future<String> generateShiftReportPdf(
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         header {
@@ -754,20 +757,17 @@ Future<String> generateShiftReportPdf(
         }
 
         footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
             background-color: #333;
             color: white;
             text-align: center;
             padding: 10px 0;
+            margin-top: auto; /* Push the footer to the bottom of the page */
         }
     </style>
 </head>
 <body>
     <header>
-            <h1>Security Report</h1>
+        <h1>Security Report</h1>
     </header>
 
     <section>
@@ -813,13 +813,6 @@ Future<String> generateShiftReportPdf(
                 <th>Feedback Note</th>
             </tr>
         </table>
-    </section>
-
-    <section>
-        <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
-        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.</p>
-        <p>Best regards,</p>
-        <p>TEAM TACTTIK</p>
     </section>
 
     <footer>

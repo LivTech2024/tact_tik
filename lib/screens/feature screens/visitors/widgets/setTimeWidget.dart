@@ -8,19 +8,19 @@ import '../../../../utils/colors.dart';
 
 class SetTimeWidget extends StatelessWidget {
   SetTimeWidget({
-    super.key,
+    Key? key, // Add 'key' parameter here
     required this.hintText,
     this.controller,
     required this.onTap,
     this.flex = 1,
-    this.isEnabled = true, // Add a new parameter to control enabling/disabling
-  });
+    this.isEnabled = true,
+  }) : super(key: key); // Call super constructor with key parameter
 
   final String hintText;
   final TextEditingController? controller;
   final VoidCallback onTap;
   final int flex;
-  final bool isEnabled; // New parameter to control enabling/disabling
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +34,12 @@ class SetTimeWidget extends StatelessWidget {
         height: height / height60,
         width: double.maxFinite,
         decoration: BoxDecoration(
-          // color: Colors.redAccent,
           borderRadius: BorderRadius.circular(width / width10),
           color: WidgetColor,
         ),
-        // margin: EdgeInsets.only(top: height / height10 ,),
         child: Center(
           child: IgnorePointer(
-            ignoring: !isEnabled, // Ignore pointer events based on isEnabled
+            ignoring: !isEnabled,
             child: GestureDetector(
               onTap: onTap,
               child: InterMedium(
