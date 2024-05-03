@@ -1,7 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -254,7 +261,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   placesAutoCompleteTextField(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    String qrData = "https://github.com/ChinmayMunje";
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: GooglePlaceAutoCompleteTextField(
@@ -314,12 +321,30 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
-  bool nextScreen = true;
+  bool nextScreen = false;
 
   void _addNewTask() {
     setState(() {
       tasks.add({'name': '', 'isChecked': false});
     });
+  }
+
+  void _saveQrCode() async {
+    final qrImageData = await _generateQrImage('12123WRWRW');
+    final directory = await getExternalStorageDirectory();
+    final path = '${directory!.path}/qr_code.png';
+    await File(path).writeAsBytes(qrImageData!);
+    print("Path : $path");
+    OpenFile.open(path);
+  }
+
+  Future<Uint8List?> _generateQrImage(String data) async {
+    final qr = QrCode(4, QrErrorCorrectLevel.L);
+    qr.addData(data);
+    final painter =
+        QrPainter(data: data, version: QrVersions.auto, color: Colors.white);
+    final img = await painter.toImageData(2048, format: ImageByteFormat.png);
+    return img?.buffer.asUint8List();
   }
 
   @override
@@ -904,6 +929,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ),
                                     ],
                                   ),
+                                  Button1(
+                                      text: "Generate Qr",
+                                      onPressed: () async {
+                                        _saveQrCode();
+                                        print("Generate qr buttoin");
+                                      })
                                 ],
                               );
                             },
