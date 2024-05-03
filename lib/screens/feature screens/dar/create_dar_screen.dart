@@ -203,8 +203,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     await _uploadImages();
     final data = {
       'TileTime': date,
-      'TileContent': _titleController.text,
+      'TileContent': _darController.text,
       'TileImages': imageUrls,
+      'TileLocation': _titleController.text,
     };
     widget.darTiles.removeAt(widget.index);
     widget.darTiles.insert(widget.index, data);
@@ -302,14 +303,14 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
               children: [
                 SizedBox(height: height / height30),
                 InterBold(
-                  text: DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                  text: widget.darTiles[widget.index]['TileTime'],
                   fontsize: width / width20,
                   color: Primarycolor,
                 ),
                 SizedBox(height: height / height30),
                 CustomeTextField(
                   controller: _titleController,
-                  hint: 'Tittle',
+                  hint: 'Spot',
                   isExpanded: true,
                 ),
                 SizedBox(height: height / height20),

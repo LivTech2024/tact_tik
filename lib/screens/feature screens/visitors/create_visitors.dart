@@ -256,6 +256,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
+    bool isEditMode = widget.visitorData != null;
+
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
@@ -302,17 +304,25 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     Row(
                       children: [
                         SetTimeWidget(
-                          hintText: InTime == null ? 'In Time' : '${InTime}',
+                          hintText: InTime == null
+                              ? 'In Time'
+                              : '${_formatTime(InTime!, true)}',
                           onTap: () => _selectTime(context, true),
                           flex: 2,
                           isEnabled: true,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
                         ),
                         SizedBox(width: width / width6),
                         SetTimeWidget(
-                          hintText: OutTime == null ? 'Out Time' : '${OutTime}',
+                          hintText: OutTime == null
+                              ? 'Out Time'
+                              : '${_formatTime(OutTime!, false)}',
                           onTap: () => _selectTime(context, false),
                           flex: 2,
-                          isEnabled: isFieldEnabled,
+                          isEnabled: isEditMode,
+                          enabled: isEditMode,
+                          isEditMode: isEditMode,
                         ),
                       ],
                     ),
@@ -320,52 +330,71 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     SetTextfieldWidget(
                       hintText: 'Name',
                       controller: nameController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Email',
                       controller: EmailController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Contact Number',
                       controller: ContactNoController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Asset Handover',
                       controller: AssetHandoverController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Asset Return',
                       controller: AssetReturnController,
-                      isEnabled: isFieldEnabled,
+                      enabled: isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'License Plate Number ',
                       controller: LicensePlateNumberController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Set Countdown',
                       controller: SetCountdownController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Comments ',
                       controller: CommentsController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'No. Of Person',
                       controller: NoOfPersonController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
                       hintText: 'Company Name',
                       controller: CompanyNameController,
+                      enabled: !isEditMode,
+                      isEditMode: isEditMode,
                     ),
                     SizedBox(
                       height: height / height30,
@@ -386,5 +415,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         ),
       ),
     );
+  }
+
+  String _formatTime(TimeOfDay time, bool isStartTime) {
+    final hour = time.hourOfPeriod;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '${hour}:${minute} ${period}';
   }
 }

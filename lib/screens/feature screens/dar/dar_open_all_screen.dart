@@ -45,8 +45,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       if (shiftStartTime != null && shiftEndTime != null) {
         final List<Map<String, dynamic>> shiftDetails = [
           {
-            'startTime': '2023-05-01 09:00:00',
-            'endTime': '2023-05-01 14:00:00',
+            'startTime': shiftStartTime,
+            'endTime': shiftEndTime,
           },
         ];
 
@@ -64,33 +64,73 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
     hourlyShiftDetails.clear(); // Clear previous details
     for (var shift in shiftDetails) {
-      final startTime = DateTime.parse(shift['startTime']);
-      final endTime = DateTime.parse(shift['endTime']);
-      final duration = endTime.difference(startTime);
-      final hourlyDuration = const Duration(hours: 1);
-      final totalHours = duration.inHours;
+      final startTime = shift['startTime']; // Extract startTime
+      final endTime = shift['endTime']; // Extract endTime
 
-      for (int i = 0; i < totalHours; i++) {
-        final hourStart = startTime.add(Duration(hours: i));
-        final hourEnd = hourStart.add(hourlyDuration);
+      // Split startTime and endTime strings to get hours and minutes
+      final startTimeParts = startTime.split(':');
+      final endTimeParts = endTime.split(':');
+
+      final startHour = int.parse(startTimeParts[0]);
+      final startMinute = int.parse(startTimeParts[1]);
+      final endHour = int.parse(endTimeParts[0]);
+      final endMinute = int.parse(endTimeParts[1]);
+
+      for (int hour = startHour; hour < endHour; hour++) {
+        final hourStart =
+            '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+        final hourEnd =
+            '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
         hourlyShiftDetails.add({
-          'startTime': hourStart.toString(),
-          'endTime': hourEnd.toString(),
+          'startTime': hourStart,
+          'endTime': hourEnd,
         });
       }
 
-      final remainingMinutes = duration.inMinutes.remainder(60);
-      if (remainingMinutes > 0) {
+      if (endMinute > startMinute) {
         final lastHourStart =
-            endTime.subtract(Duration(minutes: remainingMinutes));
-        final lastHourEnd = endTime;
+            '${endHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}'; // Format last hour start time
+        final lastHourEnd =
+            '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}'; // Format last hour end time
         hourlyShiftDetails.add({
-          'startTime': lastHourStart.toString(),
-          'endTime': lastHourEnd.toString(),
+          'startTime': lastHourStart,
+          'endTime': lastHourEnd,
         });
       }
     }
   }
+
+  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
+  //   hourlyShiftDetails.clear(); // Clear previous details
+  //   for (var shift in shiftDetails) {
+  //     final startTime = DateTime.parse(shift['startTime']);
+  //     final endTime = DateTime.parse(shift['endTime']);
+  //     final duration = endTime.difference(startTime);
+  //     final hourlyDuration = const Duration(hours: 1);
+  //     final totalHours = duration.inHours;
+
+  //     for (int i = 0; i < totalHours; i++) {
+  //       final hourStart = startTime.add(Duration(hours: i));
+  //       final hourEnd = hourStart.add(hourlyDuration);
+  //       hourlyShiftDetails.add({
+  //         'startTime': hourStart.toString(),
+  //         'endTime': hourEnd.toString(),
+  //       });
+  //     }
+
+  //     final remainingMinutes = duration.inMinutes.remainder(60);
+  //     if (remainingMinutes > 0) {
+  //       final lastHourStart =
+  //           endTime.subtract(Duration(minutes: remainingMinutes));
+  //       final lastHourEnd = endTime;
+  //       hourlyShiftDetails.add({
+  //         'startTime': lastHourStart.toString(),
+  //         'endTime': lastHourEnd.toString(),
+  //       });
+  //     }
+  //   }
+  // }
 
   Future<void> _createBlankDARCards() async {
     try {
@@ -134,6 +174,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               'TileContent': '',
               'TileTime': '$startTime - $endTime',
               'TileImages': [],
+              'TileLocation:': '',
             };
             darTiles.add(darTile);
           }
@@ -394,7 +435,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                 children: [
                                                   InterMedium(
                                                     text:
-                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(11, 16) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(11, 16) : ''}',
+                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
                                                     color: color21,
                                                   ),
                                                   SizedBox(
