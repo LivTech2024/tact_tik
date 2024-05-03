@@ -79,8 +79,6 @@ class DarDisplayScreen extends StatelessWidget {
         }
 
         var docRef = await _firestore.collection('EmployeesDAR').add({
-          'EmpDarTitle': _userService.userName,
-          'EmpDarData': _userService.shiftLocation,
           'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
@@ -188,14 +186,15 @@ class DarDisplayScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         InterBold(
-                                          text: document['EmpDarTitle'],
+                                          text: document['EmpDarEmpName'],
                                           fontsize: width / width18,
                                           color: Primarycolor,
                                         ),
                                         SizedBox(height: height / height10),
                                         Flexible(
                                           child: InterRegular(
-                                            text: document['EmpDarData'],
+                                            text:
+                                                document['EmpDarLocationName'],
                                             fontsize: width / width16,
                                             color: color26,
                                             maxLines: 4,
