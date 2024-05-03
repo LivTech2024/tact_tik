@@ -505,7 +505,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           SizedBox(height: height / height10),
                           Column(
                             children: List.generate(
-                              20,
+                              0,
                               (index) => Container(
                                 margin: EdgeInsets.only(
                                   bottom: height / height10,

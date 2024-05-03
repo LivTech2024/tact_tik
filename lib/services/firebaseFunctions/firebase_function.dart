@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
@@ -5,6 +6,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -780,7 +782,8 @@ class FireStoreService {
         'Status': 'started',
         'StatusReportedById': employeeId,
         'StatusReportedByName': EmpName,
-        'StatusReportedTime': DateTime.now().toString(),
+        'StatusStartedTime': Timestamp.now(),
+        'StatusReportedTime': Timestamp.now(),
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
@@ -893,7 +896,7 @@ class FireStoreService {
         'Status': 'completed',
         'StatusReportedById': employeeId,
         'StatusReportedByName': EmpNames,
-        'StatusReportedTime': DateTime.now().toString(),
+        'StatusReportedTime': DateTime.now(),
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
@@ -1104,6 +1107,57 @@ class FireStoreService {
     });
     await newDoc.update({"ReportCategoryId": newDoc.id});
     return newDoc.id;
+  }
+
+  Future<String> generateUniqueID(
+      String reportDate, String reportCategory, String reportName) async {
+    // Format the date
+    String formattedDate = reportDate.replaceAll(' ', '').replaceAll(',', '');
+
+    // Extract the first two initials of the report category
+    List<String> categoryWords = reportCategory.split(' ');
+    String categoryInitials = categoryWords
+        .map((word) => word.length >= 2 ? word.substring(0, 2) : word)
+        .join()
+        .toUpperCase();
+
+    // Extract the first two initials of the report name
+    List<String> nameWords = reportName.split(' ');
+    String nameInitials = nameWords
+        .map((word) => word.length >= 2 ? word.substring(0, 2) : word)
+        .join()
+        .toUpperCase();
+
+    // Combine the elements to form the base unique ID
+    String baseUniqueID = '${formattedDate}${categoryInitials}${nameInitials}';
+
+    // Query Firestore to check if the base unique ID already exists
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Reports')
+        .where('ReportSearchId', isEqualTo: baseUniqueID)
+        .get();
+
+    // If the base unique ID doesn't exist, return it
+    if (querySnapshot.docs.isEmpty) {
+      return baseUniqueID;
+    }
+
+    // If the base unique ID already exists, find a unique ID by incrementing a number
+    int counter = 1;
+    String uniqueID = '';
+    while (true) {
+      uniqueID = '$baseUniqueID$counter';
+      querySnapshot = await FirebaseFirestore.instance
+          .collection('Reports')
+          .where('ReportSearchId', isEqualTo: uniqueID)
+          .get();
+      if (querySnapshot.docs.isEmpty) {
+        break;
+      }
+      counter++;
+    }
+
+    return uniqueID;
   }
 
   Future<void> generateReport(
@@ -2709,7 +2763,6 @@ class FireStoreService {
     try {
       final CollectionReference reportsRef =
           FirebaseFirestore.instance.collection('Reports');
-
       final reportDoc = await reportsRef.add({
         'ReportLocationId': locationId,
         'ReportLocationName': locationName,
@@ -2732,6 +2785,19 @@ class FireStoreService {
         'ReportCreatedAt': createdAt,
       });
       await reportDoc.update({"ReportId": reportDoc.id});
+      Timestamp timestamp = Timestamp.now();
+
+      // Convert Timestamp to DateTime
+      DateTime dateTime = timestamp.toDate();
+
+      // Format DateTime as a date string
+      String date = '${dateTime.day}${dateTime.month}';
+
+      // Format DateTime as a date strin
+      // String date = '${dateTime.day}/${dateTime.month}/${dateTime.year}'
+      var uniqueid = await generateUniqueID(date, reportName, categoryName);
+      // ReportSearchId
+      await reportDoc.update({"ReportSearchId": uniqueid});
       print('Report created successfully');
     } catch (e) {
       print('Error creating report: $e');
