@@ -224,6 +224,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: SetTextfieldWidget(
                                         hintText: '',
                                         controller: _nameController,
+                                        enabled: true,
+                                        isEditMode: false,
                                       ),
                                     ),
                                     SizedBox(width: width / width6),
@@ -284,6 +286,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: SetTextfieldWidget(
                                       hintText: '',
                                       controller: _phoneNoController,
+                                      enabled: true,
+                                      isEditMode: false,
                                     ),
                                   ),
                                   SizedBox(width: width / width6),
