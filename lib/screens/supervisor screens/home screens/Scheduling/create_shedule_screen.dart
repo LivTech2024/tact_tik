@@ -137,6 +137,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List colors = [Primarycolor, color25];
   List selectedGuards = [];
   String compId = "";
+  List<TextEditingController> taskControllers = [];
 
   @override
   void initState() {
@@ -152,6 +153,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         compId = widget.CompanyId;
       });
     }
+    for (int i = 0; i < tasks.length; i++) {
+      taskControllers.add(TextEditingController());
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in taskControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   TextEditingController _clientcontrller = TextEditingController();
@@ -184,42 +196,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       print('Selected Dates: $selectedDates');
     }
   }
-
-/*
-  void _selectDate(BuildContext context) async {
-    List<DateTime> selectedDates = [];
-
-    final List<DateTime>? pickedDates = await showCalendarDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime(3000),
-      selectableDayPredicate: (DateTime date) {
-        // Customize the predicate to allow or disallow specific dates to be selectable
-        return true; // Allow all dates to be selectable
-      },
-      initialSelectionMode: SelectionMode.multi,
-      headerTextStyle: TextStyle(color: Colors.white),
-      selectedDecoration: BoxDecoration(
-        color: Color(0xFF704600),
-        shape: BoxShape.circle,
-      ),
-      todayDecoration: BoxDecoration(
-        color: Color(0xFFCBA76B),
-        shape: BoxShape.circle,
-      ),
-    );
-
-    if (pickedDates != null) {
-      // User selected one or more dates
-      setState(() {
-        selectedDates.addAll(pickedDates);
-      });
-    }
-
-    print('Selected Dates: $selectedDates');
-  }
-*/
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
     TimeOfDay? selectedTime;
@@ -321,7 +297,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
-  bool nextScreen = false;
+  bool nextScreen = true;
 
   void _addNewTask() {
     setState(() {
@@ -329,8 +305,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     });
   }
 
-  void _saveQrCode() async {
-    final qrImageData = await _generateQrImage('12123WRWRW');
+  void _saveQrCode(String id) async {
+    final qrImageData = await _generateQrImage(id);
     final directory = await getExternalStorageDirectory();
     final path = '${directory!.path}/qr_code.png';
     await File(path).writeAsBytes(qrImageData!);
@@ -351,6 +327,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+    TextEditingController taskText = TextEditingController();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -872,6 +849,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         cursorColor: Primarycolor,
+                                        controller: taskText,
                                       ),
                                     ),
                                     trailing: IconButton(
@@ -932,7 +910,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   Button1(
                                       text: "Generate Qr",
                                       onPressed: () async {
-                                        _saveQrCode();
+                                        if (taskText != null) {
+                                          final name = taskText.text;
+                                          _saveQrCode(name.toString());
+                                        }
                                         print("Generate qr buttoin");
                                       })
                                 ],
@@ -955,7 +936,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               height: height / height50,
                               backgroundcolor: Primarycolor,
                               text: nextScreen == false
-                                  ? 'Fist screen'
+                                  ? 'Create Shift Task'
                                   : 'Second Screen',
                               color: Colors.black,
                             ),
