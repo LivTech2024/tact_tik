@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../sizes.dart';
 import '../../utils/colors.dart';
@@ -12,6 +13,7 @@ class SetTextfieldWidget extends StatefulWidget {
     this.isEnabled = true,
     required this.enabled, // Add 'enabled' parameter
     required this.isEditMode, // Add 'isEditMode' parameter
+    this.inputFormatters,
   }) : super(key: key);
 
   final String hintText;
@@ -20,6 +22,8 @@ class SetTextfieldWidget extends StatefulWidget {
   final bool isEnabled;
   final bool enabled;
   final bool isEditMode;
+
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<SetTextfieldWidget> createState() => _SetTextfieldWidgetState();
@@ -78,6 +82,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           ),
           cursorColor: Primarycolor,
           controller: widget.controller,
+          inputFormatters: widget.inputFormatters,
         ),
       ),
     );

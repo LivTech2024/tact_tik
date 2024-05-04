@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
+import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -74,7 +76,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
       NoOfPersonController.text =
           (widget.visitorData!['VisitorNoOfPerson'] ?? '').toString();
       CompanyNameController.text =
-          widget.visitorData!['VisitorCompanyId'] ?? '';
+          widget.visitorData!['VisitorCompanyName'] ?? '';
+      //VisitorCompanyName
 
       final inTimeTimestamp =
           widget.visitorData!['VisitorInTime'] as Timestamp?;
@@ -142,14 +145,16 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     }
   }
 
-  void _saveVisitorData() async {
+  Future<bool> _saveVisitorData() async {
     if (_validateInputs()) {
       try {
         await _userService.getShiftInfo();
         String? shiftLocationId = _userService.shiftLocationId;
         String? shiftLocation = _userService.shiftLocation;
 
-        print("Shiftlocation : $shiftLocationId");
+        String? employeeId = _userService.employeeId;
+
+        print("employeekiId : $employeeId");
 
         FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -168,7 +173,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
             'VisitorAssetDurationInMinute': SetCountdownController.text,
             'VisitorComment': CommentsController.text,
             'VisitorNoOfPerson': NoOfPersonController.text,
-            'VisitorCompanyId': null,
+            'VisitorCompanyId': _userService.shiftCompanyId,
+            'VisitorCompanyBranchId': _userService.shiftCompanyBranchId,
             'VisitorCompanyName': CompanyNameController.text,
             'VisitorId': visitorId,
             'VisitorCreatedAt': Timestamp.now(),
@@ -220,10 +226,22 @@ class _CreateVisitorsState extends State<CreateVisitors> {
           InTime = null;
           OutTime = null;
         });
+
+        // Navigate to the visitor screen after saving or updating visitor data
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                VisiTorsScreen(), // Replace with your visitor screen widget
+          ),
+        );
+        return true;
       } catch (error) {
         _showSnackbar('Error saving visitor data: $error');
+        return false;
       }
     }
+    return false;
   }
 
   bool _validateInputs() {
@@ -346,6 +364,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                       controller: ContactNoController,
                       enabled: !isEditMode,
                       isEditMode: isEditMode,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(10),
+                        FilteringTextInputFormatter
+                            .digitsOnly, // Allows only digits
+                      ],
                     ),
                     SizedBox(height: height / height20),
                     SetTextfieldWidget(
@@ -401,7 +424,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     ),
                     Button1(
                       text: 'Save',
-                      onPressed: _saveVisitorData,
+                      onPressed: () async {
+                        bool isSuccessful = await _saveVisitorData();
+                        if (!isSuccessful) {
+                          // Handle the case when saving or updating visitor data fails
+                        }
+                      },
                       backgroundcolor: Primarycolor,
                       color: color22,
                       borderRadius: width / width10,

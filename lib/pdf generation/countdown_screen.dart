@@ -19,7 +19,7 @@ class _CountdownScreenState extends State<CountdownScreen> {
   void initState() {
     super.initState();
     const MethodChannel channel =
-        MethodChannel('com.avocadotech.tacttik.tact_tik/countdown_service');
+        MethodChannel('com.example/countdown_service');
     channel.setMethodCallHandler(_handleMethod);
   }
 
