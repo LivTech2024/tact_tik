@@ -2394,9 +2394,9 @@ class FireStoreService {
 
       // Process query results
       List<String> specificDocIds = [
-        'fUcQeD7NlEQCmuHhCObD',
-        'bOs36GQTFixYohCcsIF7',
-        'OCLRBjx6TFhNih71SGdO'
+        'L6u6bkf2TDt3bLLZKmWr',
+        'TUgOuZUqZE7MU75XcuTR',
+        'gpfeYqTnzmiHJdAwA1TX'
       ];
 
       querySnapshot.docs.forEach((doc) {
