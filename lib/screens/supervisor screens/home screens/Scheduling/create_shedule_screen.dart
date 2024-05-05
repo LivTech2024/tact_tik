@@ -14,6 +14,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
@@ -135,14 +136,34 @@ class CreateSheduleScreen extends StatefulWidget {
 }
 
 class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
+  FireStoreService fireStoreService = FireStoreService();
+
   List colors = [Primarycolor, color25];
   List selectedGuards = [];
   String compId = "";
   List<TextEditingController> taskControllers = [];
+  List<String> PositionValues = [];
+  List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
+  String dropdownValue = 'Other';
+  List<String> tittles = [];
+  String? selectedClint;
+  String? selectedLocatin = 'Location 1';
+  String? selectedGuard = 'Guard 1';
+  String? selectedPosition;
+  // selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
+  List<String> ClintValues = [];
+  List<String> LocationValues = ['Location 1', 'Location 2', 'Location 3'];
+  List<String> PatrolValues = ['Patrol 1', 'Patrol 2', 'Patrol 3'];
+  List<String> selectedPatrols = [];
+  String selectedPatrol = 'Patrol 1';
 
   @override
   void initState() {
     super.initState();
+    getEmployeeRoles();
+    getAllClientNames();
+    selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
+    selectedClint = ClintValues.isNotEmpty ? ClintValues[0] : null;
     // Add the initial guard data to selectedGuards if not already present
     if (!selectedGuards.any((guard) => guard['GuardId'] == widget.GuardId)) {
       setState(() {
@@ -156,6 +177,26 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     }
     for (int i = 0; i < tasks.length; i++) {
       taskControllers.add(TextEditingController());
+    }
+  }
+
+  void getEmployeeRoles() async {
+    List<String> roles =
+        await fireStoreService.getEmployeeRoles(widget.CompanyId);
+    if (roles.isNotEmpty) {
+      setState(() {
+        PositionValues.addAll(roles);
+      });
+    }
+  }
+
+  void getAllClientNames() async {
+    List<String> clientNames =
+        await fireStoreService.getAllClientsName(widget.CompanyId);
+    if (clientNames.isNotEmpty) {
+      setState(() {
+        ClintValues.addAll(clientNames);
+      });
     }
   }
 
@@ -185,10 +226,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List<DateTime> selectedDates = []; // Define and initialize selectedDates list
 
   List<Map<String, dynamic>> tasks = [];
-
-  List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
-  String dropdownValue = 'Other';
-  List<String> tittles = [];
 
   void _selectDate(BuildContext context) async {
     final List<DateTime>? selectedDates = await showDialog<List<DateTime>>(
@@ -308,17 +345,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       tasks.add({'name': '', 'isChecked': false});
     });
   }
-
-  String? selectedClint = 'Clint 1';
-  String? selectedLocatin = 'Location 1';
-  String? selectedGuard = 'Guard 1';
-  String? selectedPosition = 'Guard';
-  List<String> ClintValues = ['Clint 1', 'Clint 2', 'Clint 3'];
-  List<String> PositionValues = ['Guard', 'Supervisor 2', 'Patrol'];
-  List<String> LocationValues = ['Location 1', 'Location 2', 'Location 3'];
-  List<String> PatrolValues = ['Patrol 1', 'Patrol 2', 'Patrol 3'];
-  List<String> selectedPatrols = [];
-  String selectedPatrol = 'Patrol 1';
 
   void _saveQrCode(String id) async {
     final qrImageData = await _generateQrImage(id);
@@ -632,9 +658,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 dropdownColor: WidgetColor,
                                 style: TextStyle(color: color1),
                                 value: selectedPosition,
+                                hint: Text("Select Roles"),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedPosition = newValue!;
+                                    selectedPosition = newValue;
                                     // print('$selectedValue selected');
                                   });
                                 },

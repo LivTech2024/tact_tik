@@ -2848,7 +2848,45 @@ class FireStoreService {
 
     return shiftHistoryList;
   }
-}
 
+  //fetch all the roles
+  Future<List<String>> getEmployeeRoles(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('EmployeeRoles').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['EmployeeRoleCompanyId'] == companyid)
+          .map((doc) => doc.data()['EmployeeRoleName'] as String)
+          .toSet()
+          .toList();
+      print("Roles ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  //fetch all the patrols according to the supervisor
+  Future<List<String>> getAllClientsName(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Clients').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['ClientCompanyId'] == companyid)
+          .map((doc) => doc.data()['ClientName'] as String)
+          .toSet()
+          .toList();
+      print("Clientname ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+  //Fetch location
+}
 
 // Schedule and assign
