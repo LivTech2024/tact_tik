@@ -19,6 +19,7 @@ import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
 import '../features screens/create_post_order_screen.dart';
+import '../features screens/post order/s_post_order_screen.dart';
 import '../features screens/post_order_screen.dart';
 import 'Scheduling/all_schedules_screen.dart';
 
@@ -189,22 +190,24 @@ class _SHomeScreenState extends State<SHomeScreen> {
           child: Column(
             children: [
               Container(
-                  height: height / height180,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width / width15),
-                    color:
-                        Primarycolor, // Background color for the drawer header
-                  )),
+                height: height / height180,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(width / width15),
+                  color: Primarycolor, // Background color for the drawer header
+                ),
+              ),
               Expanded(
-                child: Column(children: [
-                  buildListTile(Icons.home, 'Home', 0),
-                  buildListTile(Icons.account_circle_outlined, 'Profile', 1),
-                  buildListTile(Icons.add_card, 'Payment', 2),
-                  buildListTile(Icons.article, 'Employment Letter', 3),
-                  buildListTile(Icons.restart_alt, 'History', 4),
-                  buildListTile(Icons.settings, 'Settings', 5),
-                ]),
+                child: Column(
+                  children: [
+                    buildListTile(Icons.home, 'Home', 0),
+                    buildListTile(Icons.account_circle_outlined, 'Profile', 1),
+                    buildListTile(Icons.add_card, 'Payment', 2),
+                    buildListTile(Icons.article, 'Employment Letter', 3),
+                    buildListTile(Icons.restart_alt, 'History', 4),
+                    buildListTile(Icons.settings, 'Settings', 5),
+                  ],
+                ),
               ),
               ListTile(
                 leading: Icon(
@@ -347,7 +350,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PostOrderScreen()));
+                                                  SPostOrder()));
                                       break;
                                     case 5:
                                       Navigator.push(

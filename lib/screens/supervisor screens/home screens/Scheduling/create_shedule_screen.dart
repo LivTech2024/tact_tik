@@ -122,12 +122,13 @@ class CreateSheduleScreen extends StatefulWidget {
   final String GuardImg;
   final String CompanyId;
 
-  CreateSheduleScreen(
-      {super.key,
-      required this.GuardId,
-      required this.GuardName,
-      required this.GuardImg,
-      required this.CompanyId});
+  CreateSheduleScreen({
+    super.key,
+    required this.GuardId,
+    required this.GuardName,
+    required this.GuardImg,
+    required this.CompanyId,
+  });
 
   @override
   State<CreateSheduleScreen> createState() => _CreateSheduleScreenState();
@@ -184,7 +185,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List<DateTime> selectedDates = []; // Define and initialize selectedDates list
 
   List<Map<String, dynamic>> tasks = [];
+
   List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
+  String dropdownValue = 'Other';
+  List<String> tittles = [];
 
   void _selectDate(BuildContext context) async {
     final List<DateTime>? selectedDates = await showDialog<List<DateTime>>(
@@ -305,6 +309,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     });
   }
 
+  String? selectedClint = 'Clint 1';
+  String? selectedLocatin = 'Location 1';
+  String? selectedGuard = 'Guard 1';
+  String? selectedPosition = 'Guard';
+  List<String> ClintValues = ['Clint 1', 'Clint 2', 'Clint 3'];
+  List<String> PositionValues = ['Guard', 'Supervisor 2', 'Patrol'];
+  List<String> LocationValues = ['Location 1', 'Location 2', 'Location 3'];
+  List<String> PatrolValues = ['Patrol 1', 'Patrol 2', 'Patrol 3'];
+  List<String> selectedPatrols = [];
+  String selectedPatrol = 'Patrol 1';
+
   void _saveQrCode(String id) async {
     final qrImageData = await _generateQrImage(id);
     final directory = await getExternalStorageDirectory();
@@ -327,7 +342,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    TextEditingController taskText = TextEditingController();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -585,12 +600,69 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             color: color1,
                           ),
                           SizedBox(height: height / height10),
-                          SetDetailsWidget(
-                            useTextField: true,
-                            hintText: 'Shift Position',
-                            icon: Icons.control_camera,
-                            controller: _ShiftPosition,
-                            onTap: () {},
+                          // Select Guard
+                          // SetDetailsWidget(
+                          //   useTextField: true,
+                          //   hintText: 'Shift Position',
+                          //   icon: Icons.control_camera,
+                          //   controller: _ShiftPosition,
+                          //   onTap: () {},
+                          // ),
+                          Container(
+                            height: height / height60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width10),
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                iconSize: width / width24,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: color1,
+                                // Set icon color for enabled state
+                                dropdownColor: WidgetColor,
+                                style: TextStyle(color: color1),
+                                value: selectedPosition,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedPosition = newValue!;
+                                    // print('$selectedValue selected');
+                                  });
+                                },
+                                items: PositionValues.map<
+                                    DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedPosition == value
+                                            ? Icon(Icons.control_camera,
+                                                color: color1)
+                                            : Icon(Icons.control_camera,
+                                                color: color3),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: width / width10),
+                                        InterRegular(
+                                            text: value,
+                                            color: selectedPosition == value
+                                                ? color1
+                                                : color3),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                           ),
                           SetDetailsWidget(
                             useTextField: true,
@@ -624,9 +696,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             onTap: () => _selectTime(context, false),
                           ),
 
+                          // Location DropDown
                           Container(
                             height: height / height60,
-                            width: double.maxFinite,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width10),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
                               borderRadius:
@@ -637,102 +711,181 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 ),
                               ),
                             ),
-                            margin: EdgeInsets.only(top: height / height10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(width: width / width10),
-                                Icon(
-                                  Icons.location_on,
-                                  size: width / width24,
-                                  color: color1,
-                                ),
-                                SizedBox(width: width / width10),
-                                Expanded(
-                                  child: GooglePlaceAutoCompleteTextField(
-                                    textEditingController: _locationController,
-                                    googleAPIKey:
-                                        "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc",
-                                    boxDecoration:
-                                        BoxDecoration(border: Border()),
-                                    inputDecoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: width / width18,
-                                        color:
-                                            color2, // Change text color to white
-                                      ),
-                                      hintText: 'Search your location',
-                                      contentPadding: EdgeInsets.zero,
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                iconSize: width / width24,
+                                icon: Icon(Icons.arrow_drop_down,
+                                    size: width / width24),
+                                iconEnabledColor: color1,
+                                // Set icon color for enabled state
+                                dropdownColor: WidgetColor,
+                                style: TextStyle(color: color1),
+                                value: selectedLocatin,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedLocatin = newValue!;
+                                    // print('$selectedValue selected');
+                                  });
+                                },
+                                items: LocationValues.map<
+                                    DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedLocatin == value
+                                            ? Icon(Icons.location_on,
+                                                color: color1)
+                                            : Icon(Icons.location_on,
+                                                color: color3),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: width / width10),
+                                        InterRegular(
+                                            text: value,
+                                            color: selectedLocatin == value
+                                                ? color1
+                                                : color3),
+                                        // Conditional text color based on selection
+                                      ],
                                     ),
-                                    debounceTime: 400,
-                                    countries: ["in", "fr"],
-                                    isLatLngRequired: true,
-                                    getPlaceDetailWithLatLng:
-                                        (Prediction prediction) {
-                                      print("placeDetails" +
-                                          prediction.lat.toString());
-                                    },
-
-                                    itemClick: (Prediction prediction) {
-                                      _locationController.text =
-                                          prediction.description ?? "";
-                                      _locationController.selection =
-                                          TextSelection.fromPosition(
-                                              TextPosition(
-                                                  offset: prediction.description
-                                                          ?.length ??
-                                                      0));
-                                    },
-                                    seperatedBuilder: Divider(),
-                                    // containerHorizontalPadding: 10,
-
-                                    // OPTIONAL// If you want to customize list view item builder
-                                    itemBuilder: (context, index,
-                                        Prediction prediction) {
-                                      return Container(
-                                        padding: EdgeInsets.all(10),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.location_on),
-                                            SizedBox(
-                                              width: 6,
-                                            ),
-                                            Expanded(
-                                              child: InterMedium(
-                                                text:
-                                                    '${prediction.description ?? ""}',
-                                                color: color2,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-
-                                    isCrossBtnShown: true,
-                                    textStyle: TextStyle(color: Colors.white),
-
-                                    // default 600 ms ,
-                                  ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: height / height10),
+                          // Clint DropDown
+                          Container(
+                            height: height / height60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width10),
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
                                 ),
-                              ],
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                iconSize: width / width24,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: color1,
+                                // Set icon color for enabled state
+                                dropdownColor: WidgetColor,
+                                style: TextStyle(color: color1),
+                                value: selectedClint,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedClint = newValue!;
+                                    // print('$selectedValue selected');
+                                  });
+                                },
+                                items:
+                                    ClintValues.map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedClint == value
+                                            ? Icon(
+                                                Icons.account_circle_outlined,
+                                                color: color1)
+                                            : Icon(
+                                                Icons.account_circle_outlined,
+                                                color: color3),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: width / width10),
+                                        InterRegular(
+                                            text: value,
+                                            color: selectedClint == value
+                                                ? color1
+                                                : color3),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: height / height10),
+                          // Select Guards
+                          Container(
+                            height: height / height60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width10),
+                            decoration: BoxDecoration(
+                              // color: Colors.redAccent,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButtonFormField<String>(
+                                decoration: InputDecoration(
+                                  // Set decoration to null to remove the underline
+                                  border: InputBorder.none,
+                                  // Optionally, you can add other decoration properties here
+                                ),
+                                isExpanded: true,
+                                iconSize: width / width24,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: color1,
+                                // Set icon color for enabled state
+                                dropdownColor: WidgetColor,
+                                style: TextStyle(color: color1),
+                                value: selectedPatrol,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    if (selectedPatrols.contains(newValue)) {
+                                      selectedPatrols.remove(newValue);
+                                    } else {
+                                      selectedPatrols.add(newValue!);
+                                    }
+                                  });
+                                },
+                                items:
+                                    PatrolValues.map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedPatrols.contains(value)
+                                            ? Icon(Icons.check_circle,
+                                                color: color1)
+                                            : Icon(Icons.radio_button_unchecked,
+                                                color: color3),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: width / width10),
+                                        InterRegular(
+                                          text: value,
+                                          color: selectedPatrols.contains(value)
+                                              ? color1
+                                              : color3,
+                                        ),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ),
 
                           SetDetailsWidget(
-                            useTextField: true,
-                            hintText: 'client Name',
-                            icon: Icons.account_circle_outlined,
-                            controller: _clientcontrller,
-                            onTap: () {},
-                          ),
-                          SetDetailsWidget(
+                            keyboardType: TextInputType.number,
                             useTextField: true,
                             hintText: 'Required no. of Employees ',
                             icon: Icons.onetwothree,
@@ -749,6 +902,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Row(
                             children: [
                               Checkbox(
+                                activeColor: Primarycolor,
+                                checkColor: color1,
                                 value: _isRestrictedChecked,
                                 onChanged: (bool? value) {
                                   setState(() {
@@ -773,6 +928,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           ),
                           SetDetailsWidget(
                             useTextField: true,
+                            keyboardType: TextInputType.number,
                             hintText: 'Photo Upload interval in minutes ',
                             icon: Icons.backup_outlined,
                             controller: _PhotoUploadIntervalInMinutes,
@@ -849,7 +1005,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         cursorColor: Primarycolor,
-                                        controller: taskText,
                                       ),
                                     ),
                                     trailing: IconButton(
@@ -910,10 +1065,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   Button1(
                                       text: "Generate Qr",
                                       onPressed: () async {
-                                        if (taskText != null) {
-                                          final name = taskText.text;
-                                          _saveQrCode(name.toString());
-                                        }
+                                        // if (taskText != null) {
+                                        //   final name = taskText.text;
+                                        //   _saveQrCode(name.toString());
+                                        // }
                                         print("Generate qr buttoin");
                                       })
                                 ],
@@ -940,6 +1095,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   : 'Second Screen',
                               color: Colors.black,
                             ),
+                          ),
+                          SizedBox(height: height / height90),
+                          Button1(
+                            text: 'Done',
+                            onPressed: () {
+                              print(selectedGuards);
+                            },
+                            backgroundcolor: Primarycolor,
+                            color: color22,
+                            borderRadius: width / width10,
+                            fontsize: width / width18,
                           ),
                         ],
                       ),
