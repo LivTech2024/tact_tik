@@ -78,6 +78,7 @@ dependencies:
 
 
   audioplayers: ^6.0.0
+  syncfusion_flutter_datepicker: ^21.2.3
 
 dev_dependencies:
   flutter_test:
