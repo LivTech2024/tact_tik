@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
@@ -33,6 +34,35 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     super.initState();
     _fetchShiftDetails();
     fetchDarTileData();
+  }
+
+  Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
+    final employeeId = FirebaseAuth.instance.currentUser?.uid;
+    print("testtfwdf:$employeeId");
+
+    final reportsCollection = FirebaseFirestore.instance.collection('Reports');
+    final querySnapshot = await reportsCollection
+        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .get();
+
+    final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    // Group reports by hour
+    Map<String, List<Map<String, dynamic>>> reportsByHour = {};
+    for (var report in reports) {
+      final timestampStr = report['ReportCreatedAt'] as Timestamp;
+      final creationTime = timestampStr.toDate();
+      final hour = creationTime.hour;
+      final hourKey = '${hour.toString().padLeft(2, '0')}:00';
+
+      if (reportsByHour.containsKey(hourKey)) {
+        reportsByHour[hourKey]!.add(report);
+      } else {
+        reportsByHour[hourKey] = [report];
+      }
+    }
+
+    return reportsByHour;
   }
 
   Future<void> _fetchShiftDetails() async {
@@ -100,37 +130,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       }
     }
   }
-
-  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
-  //   hourlyShiftDetails.clear(); // Clear previous details
-  //   for (var shift in shiftDetails) {
-  //     final startTime = DateTime.parse(shift['startTime']);
-  //     final endTime = DateTime.parse(shift['endTime']);
-  //     final duration = endTime.difference(startTime);
-  //     final hourlyDuration = const Duration(hours: 1);
-  //     final totalHours = duration.inHours;
-
-  //     for (int i = 0; i < totalHours; i++) {
-  //       final hourStart = startTime.add(Duration(hours: i));
-  //       final hourEnd = hourStart.add(hourlyDuration);
-  //       hourlyShiftDetails.add({
-  //         'startTime': hourStart.toString(),
-  //         'endTime': hourEnd.toString(),
-  //       });
-  //     }
-
-  //     final remainingMinutes = duration.inMinutes.remainder(60);
-  //     if (remainingMinutes > 0) {
-  //       final lastHourStart =
-  //           endTime.subtract(Duration(minutes: remainingMinutes));
-  //       final lastHourEnd = endTime;
-  //       hourlyShiftDetails.add({
-  //         'startTime': lastHourStart.toString(),
-  //         'endTime': lastHourEnd.toString(),
-  //       });
-  //     }
-  //   }
-  // }
 
   Future<void> _createBlankDARCards() async {
     try {
@@ -210,7 +209,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           .get();
       if (userInfo.docs.isNotEmpty) {
         String employeeId = userInfo.docs.first['EmployeeId'];
-
         setState(() {
           _employeeId = employeeId;
         });
@@ -229,7 +227,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     List darList = [];
     final CollectionReference employeesDARCollection =
         FirebaseFirestore.instance.collection('EmployeesDAR');
-
     print('empid = ${_employeeId}');
 
     final QuerySnapshot querySnapshot = await employeesDARCollection
@@ -254,7 +251,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         darList = docRef['EmpDarTile'];
       }
     }
-    // print('darList = ${darList[0]}');
+// print('darList = ${darList[0]}');
     return darList;
   }
 
@@ -262,7 +259,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -375,166 +371,262 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           ),
                           SizedBox(height: height / height20),
                           FutureBuilder(
-                              future: fetchDarTileData(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                if (snapshot.hasError) {
-                                  return const Center(
-                                    child: Text('error'),
-                                  );
-                                }
-                                final data = snapshot.data;
-                                // print(
-                                //     'image length = ${(data![0]['images'] as List).length}');
-                                return data == null
-                                    ? const Center(
-                                        child: Text(
-                                          'Null',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
+                            future: fetchDarTileData(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return const Center(
+                                  child: Text('error'),
+                                );
+                              }
+                              final data = snapshot.data;
+                              // print(
+                              //     'image length = ${(data![0]['images'] as List).length}');
+                              return data == null
+                                  ? const Center(
+                                      child: Text(
+                                        'Null',
+                                        style: TextStyle(
+                                          color: Colors.red,
                                         ),
-                                      )
-                                    : Column(
-                                        children: List.generate(
-                                          data.length,
-                                          (index) => GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CreateDarScreen(
-                                                    index: index,
-                                                    darTiles: data,
-                                                  ),
+                                      ),
+                                    )
+                                  : Column(
+                                      children: List.generate(
+                                        data.length,
+                                        (index) => GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateDarScreen(
+                                                  index: index,
+                                                  darTiles: data,
                                                 ),
-                                              );
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  bottom: height / height10),
-                                              width: double.maxFinite,
-                                              decoration: BoxDecoration(
-                                                color: WidgetColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        width / width10),
                                               ),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: height / height20,
-                                                  horizontal: width / width20),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterMedium(
-                                                    text:
-                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: color21,
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          height / height10),
-                                                  InterRegular(
-                                                    text:
-                                                        '${data[index]['TileContent']}',
-                                                    fontsize: width / width16,
-                                                    color: color12,
-                                                    maxLines: 5,
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          height / height20),
-                                                  Row(
-                                                    children: List.generate(
-                                                      (data[index]['TileImages']
-                                                              as List)
-                                                          .length,
-                                                      (i) => Container(
-                                                        margin: EdgeInsets.only(
-                                                            right: height /
-                                                                height10),
-                                                        height:
-                                                            height / height50,
-                                                        width: width / width50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(width /
-                                                                      width10),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                              data[index][
-                                                                  'TileImages'][i],
-                                                            ),
-                                                            fit: BoxFit.cover,
+                                            );
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                bottom: height / height10),
+                                            width: double.maxFinite,
+                                            decoration: BoxDecoration(
+                                              color: WidgetColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      width / width10),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: height / height20,
+                                                horizontal: width / width20),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterMedium(
+                                                  text:
+                                                      '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
+                                                  color: color21,
+                                                ),
+                                                SizedBox(
+                                                    height: height / height10),
+                                                InterRegular(
+                                                  text:
+                                                      '${data[index]['TileContent']}',
+                                                  fontsize: width / width16,
+                                                  color: color12,
+                                                  maxLines: 5,
+                                                ),
+                                                SizedBox(
+                                                    height: height / height20),
+                                                Row(
+                                                  children: List.generate(
+                                                    (data[index]['TileImages']
+                                                            as List)
+                                                        .length,
+                                                    (i) => Container(
+                                                      margin: EdgeInsets.only(
+                                                          right: height /
+                                                              height10),
+                                                      height: height / height50,
+                                                      width: width / width50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(width /
+                                                                    width10),
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                            data[index][
+                                                                'TileImages'][i],
                                                           ),
+                                                          fit: BoxFit.cover,
                                                         ),
                                                       ),
                                                     ),
-                                                  )
-                                                ],
-                                              ),
+                                                  ),
+                                                ),
+                                                FutureBuilder<
+                                                    Map<
+                                                        String,
+                                                        List<
+                                                            Map<String,
+                                                                dynamic>>>>(
+                                                  future: fetchReports(),
+                                                  builder: (context,
+                                                      reportsSnapshot) {
+                                                    if (reportsSnapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return const CircularProgressIndicator();
+                                                    }
+                                                    final reportsByHour =
+                                                        reportsSnapshot.data ??
+                                                            {};
+                                                    final hourKey =
+                                                        '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
+                                                    final reportsForHour =
+                                                        reportsByHour[
+                                                                hourKey] ??
+                                                            [];
+
+                                                    return Column(
+                                                      children: reportsForHour
+                                                          .map((report) {
+                                                        return Text(
+                                                          report['ReportSearchId'] ??
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    195,
+                                                                    21,
+                                                                    21),
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      );
-                              }),
+                                      ),
+                                    );
+                            },
+                          ),
                         ],
                       ),
                     )
                   : Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                      padding: EdgeInsets.symmetric(horizontal: width / 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterBold(
                             text: 'Reports',
-                            fontsize: width / width20,
+                            fontsize: width / 20,
                             color: Primarycolor,
                           ),
-                          SizedBox(height: height / height10),
-                          Column(
-                            children: List.generate(
-                              0,
-                              (index) => Container(
-                                margin: EdgeInsets.only(
-                                  bottom: height / height10,
-                                ),
-                                height: height / height35,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      height: height / height35,
-                                      width: double.maxFinite,
-                                      decoration: BoxDecoration(
-                                        color: WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
+                          SizedBox(height: height / 25),
+                          FutureBuilder<
+                              Map<String, List<Map<String, dynamic>>>>(
+                            future: fetchReports(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
+                              }
+
+                              final reportsByHour = snapshot.data ?? {};
+
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: reportsByHour.length,
+                                itemBuilder: (context, index) {
+                                  final hourKey =
+                                      reportsByHour.keys.toList()[index];
+                                  final reportsForHour =
+                                      reportsByHour[hourKey] ?? [];
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Reports for $hourKey',
+                                        style: const TextStyle(
+                                          color: Primarycolor,
+                                        ),
                                       ),
-                                    ),
-                                    Container(
-                                      height: height / height35,
-                                      width: width / width16,
-                                      decoration: BoxDecoration(
-                                        color: colorRed3,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                      ...reportsForHour.map((report) {
+                                        final timestampStr =
+                                            report['ReportCreatedAt']
+                                                as Timestamp;
+                                        final formattedTime = timestampStr !=
+                                                null
+                                            ? DateFormat.jm()
+                                                .format(timestampStr.toDate())
+                                            : '';
+                                        return Container(
+                                          margin: EdgeInsets.only(
+                                              bottom: height / 30),
+                                          height: height / 25,
+                                          color: const Color(0xFF7C7C7C),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: double.infinity,
+                                                color: Colors.red,
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Expanded(
+                                                child: Text(
+                                                  '# ${report['ReportSearchId'] ?? ''}',
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 48, 48, 48),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Text(
+                                                formattedTime,
+                                                style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 48, 48, 48),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           )
                         ],
                       ),
