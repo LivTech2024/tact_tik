@@ -152,9 +152,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         String? shiftLocationId = _userService.shiftLocationId;
         String? shiftLocation = _userService.shiftLocation;
 
-        String? employeeId = _userService.employeeId;
+        // String? employeeId = _userService.employeeId;
 
-        print("employeekiId : $employeeId");
+        // print("employeekiId : $employeeId");
 
         FirebaseFirestore firestore = FirebaseFirestore.instance;
 

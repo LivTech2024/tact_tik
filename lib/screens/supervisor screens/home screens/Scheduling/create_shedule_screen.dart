@@ -611,11 +611,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Container(
                             height: height / height60,
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width20),
+                                horizontal: width / width10),
                             decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                              BorderRadius.circular(width / width10),
+                              // color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
@@ -697,12 +701,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // Location DropDown
                           Container(
                             height: height / height60,
+
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width20),
+                                horizontal: width / width10),
                             decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width10),
+                              // color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
@@ -753,11 +762,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Container(
                             height: height / height60,
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width20),
+                                horizontal: width / width10),
                             decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width10),
+                              // color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
@@ -810,10 +823,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // Select Guards
                           Container(
                             height: height / height60,
-                            padding: EdgeInsets.symmetric(horizontal: width / width20),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width10),
                             decoration: BoxDecoration(
-                              color: WidgetColor,
+                              // color: Colors.redAccent,
                               borderRadius: BorderRadius.circular(width / width10),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: color19,
+                                ),
+                              ),
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButtonFormField<String>(
