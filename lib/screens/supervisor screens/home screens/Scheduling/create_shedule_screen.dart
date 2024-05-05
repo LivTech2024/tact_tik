@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -228,8 +227,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   List<Map<String, dynamic>> tasks = [];
 
-  void _showDatePicker(BuildContext context) {
-    showDialog(
+  void _selectDate(BuildContext context) async {
+    final List<DateTime>? selectedDates = await showDialog<List<DateTime>>(
       context: context,
       builder: (context) => MultiDateSelectionDialog(),
     );
@@ -237,48 +236,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     if (selectedDates != null) {
       print('Selected Dates: $selectedDates');
     }
-  }
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            width: MediaQuery.of(context).size.width - 120,
-            height: 400,
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('Select Dates', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                SizedBox(height: 20),
-                Expanded(
-                  child: SfDateRangePicker(
-                    selectionTextStyle: TextStyle(color: Primarycolor), // Use primary color here
-                    selectionShape: DateRangePickerSelectionShape.circle,
-                    selectionColor: Primarycolor, // Use primary color here
-                    selectionRadius: 4,
-                    view: DateRangePickerView.month,
-                    selectionMode: DateRangePickerSelectionMode.multiple,
-                    initialSelectedDates: _selectedDates,
-                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                      setState(() {
-                        _selectedDates = args.value.cast<DateTime>();
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Done'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
