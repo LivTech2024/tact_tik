@@ -4,16 +4,16 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../../../common/sizes.dart';
-import '../../../fonts/inter_regular.dart';
-import '../../../utils/colors.dart';
-import '../../supervisor screens/features screens/create_post_order_screen.dart';
-import 'view_post_order.dart';
+import '../../../../common/sizes.dart';
+import '../../../../fonts/inter_regular.dart';
+import '../../../../utils/colors.dart';
+import '../../../feature screens/post_order.dart/view_post_order.dart';
 
-class PostOrder extends StatelessWidget {
-  const PostOrder({super.key});
+class SPostOrder extends StatelessWidget {
+  const SPostOrder({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class PostOrder extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CreatePostOrder(
+                builder: (context) => CreateSPostOrder(
                   isDisplay: false,
                 ),
               ),
@@ -74,7 +74,7 @@ class PostOrder extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreatePostOrder(
-                            isDisplay: true,
+                            isDisplay: false,
                           ),
                         ),
                       );
