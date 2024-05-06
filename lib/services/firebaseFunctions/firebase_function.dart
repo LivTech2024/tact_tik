@@ -1209,18 +1209,20 @@ class FireStoreService {
 
   //Patrol is Completed
   Future<void> ScheduleShift(
-    List guards,
-    String? role,
-    String Address,
-    String CompanyBranchId,
-    String CompanyId,
-    List<DateTime> Date,
-    TimeOfDay? startTime,
-    TimeOfDay? EndTime,
-    double Latitude,
-    double Longitude,
-    String LocationName,
-  ) async {
+      List guards,
+      String? role,
+      String Address,
+      String CompanyBranchId,
+      String CompanyId,
+      List<DateTime> Date,
+      TimeOfDay? startTime,
+      TimeOfDay? EndTime,
+      double Latitude,
+      double Longitude,
+      String LocationName,
+      List patrol,
+      String clientID,
+      int requiredEmp) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1241,7 +1243,7 @@ class FireStoreService {
         final newDocRef = await shifts.add({
           'ShiftName': Address.split(' ')[0],
           'ShiftPosition': role,
-          'ShiftDate': dateFormatter.format(date),
+          'ShiftDate': Timestamp.fromDate(date),
           'ShiftStartTime': timeFormatter.format(DateTime(
             date.year,
             date.month,
@@ -1261,13 +1263,14 @@ class FireStoreService {
           'ShiftAddress': Address,
           'ShiftDescription': '',
           'ShiftAssignedUserId': selectedGuardIds, // array
-          'ShiftClientId': '',
+          'ShiftClientId': clientID,
           'ShiftCompanyId': CompanyId,
-          'ShiftRequiredEmp': selectedGuardIds.length,
+          'ShiftRequiredEmp': requiredEmp,
           'ShiftCompanyBranchId': CompanyBranchId,
           'ShiftCurrentStatus': 'pending',
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
+          'ShiftLinkedPatrolIds': patrol,
         });
         await newDocRef.update({"ShiftId": newDocRef.id});
       }
@@ -2935,9 +2938,46 @@ class FireStoreService {
       return []; // Return empty list in case of error
     }
   }
-  //fetch the location coordinates ,
 
-  //patrol id from patrolname
+  //fetch the location coordinates ,
+  Future<String> getClientIdfromName(String clientName) async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('ClientName', isEqualTo: clientName)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        // Assuming ClientId is a field in your document
+        return snapshot.docs.first['ClientId'];
+      } else {
+        return ''; // Or handle the case where no document matches the clientName
+      }
+    } catch (e) {
+      print(e);
+      return ''; // Or throw an error if you want to handle it differently
+    }
+  }
+
+  // patrol id from patrolname for a list of names
+  Future<List<String>> getPatrolIdsFromNames(List<String> patrolNames) async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('PatrolName', whereIn: patrolNames)
+          .get();
+
+      List<String> patrolIds = [];
+      snapshot.docs.forEach((doc) {
+        patrolIds.add(doc['PatrolId']);
+      });
+
+      return patrolIds;
+    } catch (e) {
+      print(e);
+      return []; // Or throw an error if you want to handle it differently
+    }
+  }
 }
 
 // Schedule and assign

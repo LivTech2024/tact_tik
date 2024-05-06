@@ -946,18 +946,29 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Button1(
                             text: 'Done',
                             onPressed: () async {
+                              //fetching the patrols ids using patrol name
+                              List<String> patrolids = await fireStoreService
+                                  .getPatrolIdsFromNames(selectedPatrols);
+                              //fetching clientid
+                              String clientId = await fireStoreService
+                                  .getClientIdfromName(selectedClint!);
+                              //fetching location details from locationame
+                              print("fetched patrol ids ${patrolids}");
                               await fireStoreService.ScheduleShift(
-                                  selectedGuards,
-                                  selectedPosition,
-                                  "Address",
-                                  "CompanyBranchId",
-                                  widget.CompanyId,
-                                  _selectedDates,
-                                  startTime,
-                                  endTime,
-                                  100,
-                                  20,
-                                  "LocationName");
+                                selectedGuards,
+                                selectedPosition,
+                                "Address",
+                                "CompanyBranchId",
+                                widget.CompanyId,
+                                _selectedDates,
+                                startTime,
+                                endTime,
+                                100,
+                                20,
+                                "LocationName",
+                                patrolids,
+                                clientId,
+                              );
                               print("Shift Created");
                             },
                             backgroundcolor: Primarycolor,
