@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -946,6 +947,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Button1(
                             text: 'Done',
                             onPressed: () async {
+                              String address = "";
+                              GeoPoint coordinates = GeoPoint(0, 0);
+                              String name = "";
+                              String locationId = "";
                               //fetching the patrols ids using patrol name
                               List<String> patrolids = await fireStoreService
                                   .getPatrolIdsFromNames(selectedPatrols);
@@ -953,22 +958,52 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               String clientId = await fireStoreService
                                   .getClientIdfromName(selectedClint!);
                               //fetching location details from locationame
-                              print("fetched patrol ids ${patrolids}");
+                              var locationData =
+                                  await fireStoreService.getLocationByName(
+                                      selectedLocatin!, widget.CompanyId);
+                              if (locationData.exists) {
+                                var data = locationData.data()
+                                    as Map<String, dynamic>?;
+                                ;
+                                if (data != null) {
+                                  address = data['LocationAddress'];
+                                  coordinates =
+                                      data['LocationCoordinates'] as GeoPoint;
+                                  name = data['LocationName'];
+                                  locationId = data['LocationId'];
+
+                                  print("Address ${address}");
+                                  print("coordinates ${coordinates}");
+                                  print("Latitude: ${coordinates.latitude}");
+                                  print("Longitude: ${coordinates.longitude}");
+                                }
+                              }
+                              print("locationData  ids ${locationData}");
+
                               await fireStoreService.ScheduleShift(
-                                selectedGuards,
-                                selectedPosition,
-                                "Address",
-                                "CompanyBranchId",
-                                widget.CompanyId,
-                                _selectedDates,
-                                startTime,
-                                endTime,
-                                100,
-                                20,
-                                "LocationName",
-                                patrolids,
-                                clientId,
-                              );
+                                  selectedGuards,
+                                  selectedPosition,
+                                  "Address",
+                                  "CompanyBranchId",
+                                  widget.CompanyId,
+                                  _selectedDates,
+                                  startTime,
+                                  endTime,
+                                  100,
+                                  20,
+                                  "LocationName",
+                                  patrolids,
+                                  clientId,
+                                  _RequirednoofEmployees.text,
+                                  _PhotoUploadIntervalInMinutes.text,
+                                  _RestrictedRadius.text,
+                                  _isRestrictedChecked,
+                                  coordinates,
+                                  name,
+                                  locationId,
+                                  address,
+                                  _Branch.text,
+                                  _Description.text);
                               print("Shift Created");
                             },
                             backgroundcolor: Primarycolor,

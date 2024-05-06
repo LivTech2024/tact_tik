@@ -1222,7 +1222,16 @@ class FireStoreService {
       String LocationName,
       List patrol,
       String clientID,
-      int requiredEmp) async {
+      String requiredEmp,
+      String photoInterval,
+      String restrictedRadius,
+      bool shiftenablerestriction,
+      GeoPoint coordinates,
+      String locationName,
+      String locationId,
+      String locationAddress,
+      String branchId,
+      String shiftDesc) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1259,18 +1268,29 @@ class FireStoreService {
             EndTime.minute,
           )),
           // 'ShiftLocation': GeoPoint(Latitude, Longitude),
+          'ShiftCompanyBranchId': branchId,
+          'ShiftDescription': shiftDesc,
           'ShiftLocationName': LocationName,
-          'ShiftAddress': Address,
+          'ShiftLocationAddress': locationAddress,
+          'ShiftLocationId': locationId,
+          'ShiftLocation': coordinates,
+          'ShiftAcknowledgedByEmpId': [],
+          'ShiftGuardWellnessReport': [],
+          'ShiftIsSpecialShift': "false", //check the condition
+          // 'ShiftAddress': Address,
           'ShiftDescription': '',
           'ShiftAssignedUserId': selectedGuardIds, // array
           'ShiftClientId': clientID,
           'ShiftCompanyId': CompanyId,
           'ShiftRequiredEmp': requiredEmp,
-          'ShiftCompanyBranchId': CompanyBranchId,
+          'ShiftCompanyBranchId': branchId,
           'ShiftCurrentStatus': 'pending',
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
           'ShiftLinkedPatrolIds': patrol,
+          'ShiftPhotoUploadIntervalInMinutes': photoInterval,
+          'ShiftRestrictedRadius': restrictedRadius,
+          'ShiftEnableRestrictedRadius': shiftenablerestriction,
         });
         await newDocRef.update({"ShiftId": newDocRef.id});
       }
@@ -2976,6 +2996,26 @@ class FireStoreService {
     } catch (e) {
       print(e);
       return []; // Or throw an error if you want to handle it differently
+    }
+  }
+
+  Future<DocumentSnapshot> getLocationByName(
+      String locationName, String companyid) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .where('LocationName', isEqualTo: locationName)
+          .where('LocationCompanyId', isEqualTo: companyid)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first;
+      } else {
+        throw Exception('No document found with the specified location name.');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+      rethrow; // Rethrow the exception to handle it outside this function
     }
   }
 }
