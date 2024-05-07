@@ -14,7 +14,9 @@ class UserService {
   String? shiftCompanyId;
   String? shiftCompanyBranchId;
   String? shiftName;
-  // Timestamp? shiftDate;
+  String? employeeId;
+  Timestamp? shiftDate;
+  // Timestamp? shiftDate; //shiftDate
   UserService({required FireStoreService firestoreService});
 
   Future<void> getShiftInfo() async {
@@ -39,8 +41,9 @@ class UserService {
         shiftCompanyId = shiftInfo['ShiftCompanyId'] ?? " ";
         shiftCompanyBranchId = shiftInfo['ShiftCompanyBranchId'] ?? " ";
         shiftName = shiftInfo['ShiftName'] ?? " ";
+        shiftDate = shiftInfo['ShiftDate'] ?? " ";
 
-        //ShiftClientId  ShiftCompanyBranchId  // ShiftCompanyId //ShiftDate
+        //ShiftClientId  ShiftCompanyBranchId  // ShiftCompanyId //ShiftDate  //ShiftCompanyBranchId  //ShiftDate
 
         // String shiftName = shiftInfo['ShiftName'] ?? " ";
         String shiftId = shiftInfo['ShiftId'] ?? " ";
