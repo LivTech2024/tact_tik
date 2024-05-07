@@ -14,6 +14,8 @@ class UserService {
   String? shiftCompanyId;
   String? shiftCompanyBranchId;
   String? shiftName;
+  String? ShiftDate;
+
   // Timestamp? shiftDate;
   UserService({required FireStoreService firestoreService});
 
@@ -41,6 +43,7 @@ class UserService {
         shiftCompanyId = shiftInfo['ShiftCompanyId'] ?? " ";
         shiftCompanyBranchId = shiftInfo['ShiftCompanyBranchId'] ?? " ";
         shiftName = shiftInfo['ShiftName'] ?? " ";
+        ShiftDate = shiftInfo['ShiftDate'] ?? " ";
 
         //ShiftClientId  ShiftCompanyBranchId  // ShiftCompanyId //ShiftDate
 

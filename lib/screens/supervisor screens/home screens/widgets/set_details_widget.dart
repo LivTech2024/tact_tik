@@ -26,10 +26,11 @@ class SetDetailsWidget extends StatelessWidget {
   SetDetailsWidget({
     super.key,
     required this.hintText,
-     this.icon,
+    this.icon,
     this.controller,
     this.useTextField = false,
-    required this.onTap, this.keyboardType,
+    required this.onTap,
+    this.keyboardType,
   });
 
   final String hintText;
