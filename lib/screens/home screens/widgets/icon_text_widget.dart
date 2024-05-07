@@ -7,7 +7,18 @@ import 'package:tact_tik/utils/colors.dart';
 import '../../../common/sizes.dart';
 
 class IconTextWidget extends StatelessWidget {
-  const IconTextWidget({super.key, required this.icon, required this.text,this.useBold = true,  this.color = color6, this.fontsize = 14, this.iconSize, this.Iconcolor = Primarycolor, this.space});
+  const IconTextWidget({
+    super.key,
+    required this.icon,
+    required this.text,
+    this.useBold = true,
+    this.color = color6,
+    this.fontsize = 14,
+    this.iconSize,
+    this.Iconcolor = Primarycolor,
+    this.space,
+  });
+
   final IconData icon;
   final String text;
   final bool useBold;
@@ -23,9 +34,25 @@ class IconTextWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(icon, color: Iconcolor,size: iconSize,),
+        Icon(
+          icon,
+          color: Iconcolor,
+          size: iconSize,
+        ),
         SizedBox(width: space ?? (width / width20)),
-        Flexible(child: useBold ? InterBold(text: text , fontsize: fontsize,color: color,maxLine: 2,) : InterMedium(text: text,fontsize: fontsize,color: color,))
+        Flexible(
+            child: useBold
+                ? InterBold(
+                    text: text,
+                    fontsize: fontsize,
+                    color: color,
+                    maxLine: 2,
+                  )
+                : InterMedium(
+                    text: text,
+                    fontsize: fontsize,
+                    color: color,
+                  ))
       ],
     );
   }
