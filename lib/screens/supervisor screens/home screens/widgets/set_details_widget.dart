@@ -96,6 +96,7 @@ class SetDetailsWidget extends StatelessWidget {
                       contentPadding: EdgeInsets.zero, // Remove padding
                     ),
                     cursorColor: Primarycolor,
+                    controller: controller,
                   ),
                 )
               : GestureDetector(

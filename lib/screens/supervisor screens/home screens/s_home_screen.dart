@@ -328,14 +328,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               return Bounce(
                                 onTap: () {
                                   switch (index) {
-                                    // case 0:
-                                    //   showDialog(
-                                    //     context: context,
-                                    //     builder: (BuildContext context) {
-                                    //       return PanicAlertDialog();
-                                    //     },
-                                    //   );
-                                    //   break;
+                                    case 4:
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return SPostOrder();
+                                        },
+                                      );
+                                      break;
                                     // case 2:
                                     //   Navigator.push(
                                     //       context,
