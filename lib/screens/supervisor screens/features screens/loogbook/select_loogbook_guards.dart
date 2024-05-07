@@ -112,8 +112,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                   child: DropdownButton<String>(
                     iconSize: width / width24,
                     dropdownColor: WidgetColor,
-                    style: TextStyle(color: color2),
-                    borderRadius: BorderRadius.circular(10),
+                    style: TextStyle(color: color2, fontSize: width / width14),
+                    borderRadius: BorderRadius.circular(width / width10),
                     value: dropdownValue,
                     onChanged: (String? newValue) {
                       setState(() {
@@ -158,20 +158,20 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                           );
                         },
                         child: Container(
-                          height: 60,
+                          height: height / height60,
                           decoration: BoxDecoration(
                             color: color19,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(width / width12),
                           ),
-                          margin: EdgeInsets.only(bottom: 10),
+                          margin: EdgeInsets.only(bottom: height / height10),
                           width: double.maxFinite,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                height: 48,
+                                height: height / height48,
                                 padding:
-                                EdgeInsets.symmetric(horizontal: 20),
+                                EdgeInsets.symmetric(horizontal: width / width20),
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
@@ -179,8 +179,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                     Row(
                                       children: [
                                         Container(
-                                          height: 50,
-                                          width: 50,
+                                          height: height / height50,
+                                          width: width / width50,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
@@ -191,7 +191,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 20),
+                                        SizedBox(width: width / width20),
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
@@ -200,8 +200,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                       ],
                                     ),
                                     Container(
-                                      height: 16,
-                                      width: 16,
+                                      height: height / height16,
+                                      width: width / width16,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: guardInfo[
