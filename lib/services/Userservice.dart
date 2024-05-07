@@ -14,12 +14,12 @@ class UserService {
   String? shiftCompanyId;
   String? shiftCompanyBranchId;
   String? shiftName;
-  String? ShiftDate;
-
-  // Timestamp? shiftDate;
+  String? employeeId;
+  Timestamp? shiftDate;
+  // Timestamp? shiftDate; //shiftDate
   UserService({required FireStoreService firestoreService});
 
-  String? get employeeId => null;
+  // String? get employeeId => null;
 
   Future<void> getShiftInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
@@ -43,9 +43,9 @@ class UserService {
         shiftCompanyId = shiftInfo['ShiftCompanyId'] ?? " ";
         shiftCompanyBranchId = shiftInfo['ShiftCompanyBranchId'] ?? " ";
         shiftName = shiftInfo['ShiftName'] ?? " ";
-        ShiftDate = shiftInfo['ShiftDate'] ?? " ";
+        shiftDate = shiftInfo['ShiftDate'] ?? " ";
 
-        //ShiftClientId  ShiftCompanyBranchId  // ShiftCompanyId //ShiftDate
+        //ShiftClientId  ShiftCompanyBranchId  // ShiftCompanyId //ShiftDate  //ShiftCompanyBranchId  //ShiftDate
 
         // String shiftName = shiftInfo['ShiftName'] ?? " ";
         String shiftId = shiftInfo['ShiftId'] ?? " ";
