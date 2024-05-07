@@ -42,6 +42,7 @@ import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
+import '../feature screens/assets/assets_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/task/task_feature_screen.dart';
@@ -548,7 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");
+                        // emails.add("dan@tpssolution.com");s
                         // // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
                         // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
@@ -792,6 +793,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     VisiTorsScreen()));
+                                        break;
+                                      case 8:
+                                        // AssetsScreen
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AssetsScreen()));
                                         break;
                                       default:
                                     }

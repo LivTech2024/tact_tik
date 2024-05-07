@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     } catch (e) {
       // Handle other errors
-      print('Error signing in: $e');
+      print('Error signing in login screen: $e');
       setState(() {
         _errorMessage = 'An unexpected error occurred';
       });

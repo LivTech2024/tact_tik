@@ -24,6 +24,13 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
   late UserService _userService;
   FireStoreService fireStoreService = FireStoreService();
 
+  bool isVisitorCompleted(Map<String, dynamic> documentData) {
+    final inTimeTimestamp = documentData['VisitorInTime'] as Timestamp?;
+    final outTimeTimestamp = documentData['VisitorOutTime'] as Timestamp?;
+
+    return inTimeTimestamp != null && outTimeTimestamp != null;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -128,6 +135,8 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                       print("document_data:$documentData");
 
                       if (documentData != null) {
+                        final visitorCompleted =
+                            isVisitorCompleted(documentData);
                         final visitorName = documentData['VisitorName'] ?? '';
                         final inTimeTimestamp =
                             documentData['VisitorInTime'] as Timestamp?;
@@ -144,16 +153,18 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                             : '';
 
                         return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateVisitors(
-                                  visitorData: documentData,
-                                ),
-                              ),
-                            );
-                          },
+                          onTap: visitorCompleted
+                              ? null // Do nothing if visitor is completed
+                              : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateVisitors(
+                                        visitorData: documentData,
+                                      ),
+                                    ),
+                                  );
+                                },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: width / width30),

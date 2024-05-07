@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 
 class CountdownService {
   static const MethodChannel _channel =
-      MethodChannel('com.avocadotech.tacttik.tact_tik/countdown_service');
+      MethodChannel('com.example/countdown_service');
 
   static Future<void> startCountdown() async {
     try {

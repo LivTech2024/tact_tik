@@ -89,20 +89,21 @@ class Auth {
       if (query.docs.isNotEmpty) {
         // User found
         DocumentSnapshot<Map<String, dynamic>> userDoc = query.docs.first;
-        String storedPassword = userDoc['EmployeePassword'];
-        String employeeID = userDoc['EmployeeId'];
-        String role = userDoc['EmployeeRole'];
+        String storedPassword = userDoc['EmployeePassword'] ?? "";
+        String employeeID = userDoc['EmployeeId'] ?? "";
+        String role = userDoc['EmployeeRole'] ?? "";
         // Verify password
         if (storedPassword == password) {
           // Passwords match, set the current user
           await storage.setItem("CurrentUser", email);
           await storage.setItem("CurrentEmployeeId", employeeID);
           await storage.setItem("Role", role);
-          await _firestore.collection('Employees').doc(employeeID).set({
-            'EmployeeIsAvailable': 'available',
-          }, SetOptions(merge: true));
+          // await _firestore.collection('Employees').doc(employeeID).set({
+          //   'EmployeeIsAvailable': 'available',
+          // }, SetOptions(merge: true));
 
           // Check role here and navigate accordingly
+          print('Role $role');
           if (role == "SUPERVISOR") {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => SHomeScreen()));
@@ -126,7 +127,7 @@ class Auth {
       } else if (e.code ==
           "The supplied auth credential is incorrect, malformed or has expired.") {}
     } catch (e) {
-      print('Error signing in: $e');
+      print('Error signing in firestore: $e');
     }
   }
 

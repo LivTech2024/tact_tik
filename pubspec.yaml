@@ -75,9 +75,10 @@ dependencies:
   flutter_pdfview: ^1.2.5
   open_file: ^3.2.1
   date_picker_timeline: ^1.2.3
-
   audioplayers: ^6.0.0
+  syncfusion_flutter_datepicker: ^21.2.3
   crypto: ^3.0.3
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
