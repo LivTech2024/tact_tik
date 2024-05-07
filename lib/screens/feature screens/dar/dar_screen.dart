@@ -66,7 +66,7 @@ class DarDisplayScreen extends StatelessWidget {
         if (querySnapshot.docs.isNotEmpty) {
           for (var dar in querySnapshot.docs) {
             final data = dar.data() as Map<String, dynamic>;
-            final date2 = UtilsFuctions.convertDate(data['EmpDarDate']);
+            final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
             print('date3 = ${date2[0]}');
             if (date2[0] == date.day &&
                 date2[1] == date.month &&
@@ -82,7 +82,7 @@ class DarDisplayScreen extends StatelessWidget {
           'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
-          'EmpDarDate': FieldValue.serverTimestamp(),
+          'EmpDarDate': _userService.shiftDate,
           'EmpDarCreatedAt': FieldValue.serverTimestamp(),
           'EmpDarEmpName': _userService.userName,
           'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,
@@ -146,8 +146,8 @@ class DarDisplayScreen extends StatelessWidget {
                               children: [
                                 SizedBox(height: height / height20),
                                 InterBold(
-                                  text:
-                                      _formatTimestamp(document['EmpDarDate']),
+                                  text: _formatTimestamp(
+                                      document['EmpDarCreatedAt']),
                                   fontsize: width / width20,
                                   color: Primarycolor,
                                   letterSpacing: -.3,

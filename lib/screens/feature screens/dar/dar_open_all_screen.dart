@@ -91,13 +91,88 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
   }
 
+  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
+  //   hourlyShiftDetails.clear(); // Clear previous details
+  //   for (var shift in shiftDetails) {
+  //     //
+
+  //     final startTime = '09:00'; // Extract startTime
+  //     final endTime = '13:00'; // Extract endTime
+
+  //     // Split startTime and endTime strings to get hours and minutes
+  //     final startTimeParts = startTime.split(':');
+  //     final endTimeParts = endTime.split(':');
+
+  //     final startHour = int.parse(startTimeParts[0]);
+  //     final startMinute = int.parse(startTimeParts[1]);
+  //     final endHour = int.parse(endTimeParts[0]);
+  //     final endMinute = int.parse(endTimeParts[1]);
+
+  //     if (endHour > startHour ||
+  //         (endHour == startHour && endMinute > startMinute)) {
+  //       // Shift doesn't cross midnight
+  //       for (int hour = startHour; hour < endHour; hour++) {
+  //         final hourStart =
+  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //         final hourEnd =
+  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+  //         hourlyShiftDetails.add({
+  //           'startTime': hourStart,
+  //           'endTime': hourEnd,
+  //         });
+  //       }
+  //       // Add last hour
+  //       final lastHourStart =
+  //           '${endHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //       final lastHourEnd =
+  //           '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+  //       hourlyShiftDetails.add({
+  //         'startTime': lastHourStart,
+  //         'endTime': lastHourEnd,
+  //       });
+  //     } else {
+  //       // Shift crosses midnight
+  //       for (int hour = startHour; hour < 24; hour++) {
+  //         final hourStart =
+  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //         final hourEnd =
+  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+  //         hourlyShiftDetails.add({
+  //           'startTime': hourStart,
+  //           'endTime': hourEnd,
+  //         });
+  //       }
+  //       for (int hour = 0; hour < endHour; hour++) {
+  //         final hourStart =
+  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //         final hourEnd =
+  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+  //         hourlyShiftDetails.add({
+  //           'startTime': hourStart,
+  //           'endTime': hourEnd,
+  //         });
+  //       }
+  //       // Add last hour
+  //       // final lastHourStart = '00:${startMinute.toString().padLeft(2, '0')}';
+  //       // final lastHourEnd =
+  //       //     '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+  //       // hourlyShiftDetails.add({
+  //       //   'startTime': lastHourStart,
+  //       //   'endTime': lastHourEnd,
+  //       // });
+  //     }
+  //   }
+  // }
+
   void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
     hourlyShiftDetails.clear(); // Clear previous details
     for (var shift in shiftDetails) {
       final startTime = shift['startTime']; // Extract startTime
       final endTime = shift['endTime']; // Extract endTime
 
-      // Split startTime and endTime strings to get hours and minutes
       final startTimeParts = startTime.split(':');
       final endTimeParts = endTime.split(':');
 
@@ -106,27 +181,44 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       final endHour = int.parse(endTimeParts[0]);
       final endMinute = int.parse(endTimeParts[1]);
 
-      for (int hour = startHour; hour < endHour; hour++) {
-        final hourStart =
-            '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-        final hourEnd =
-            '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+      if (endHour > startHour ||
+          (endHour == startHour && endMinute > startMinute)) {
+        // Shift doesn't cross midnight
+        for (int hour = startHour; hour < endHour; hour++) {
+          final hourStart =
+              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          final hourEnd =
+              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
 
-        hourlyShiftDetails.add({
-          'startTime': hourStart,
-          'endTime': hourEnd,
-        });
-      }
+          hourlyShiftDetails.add({
+            'startTime': hourStart,
+            'endTime': hourEnd,
+          });
+        }
+      } else {
+        // Shift crosses midnight
+        for (int hour = startHour; hour < 24; hour++) {
+          final hourStart =
+              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          final hourEnd =
+              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
 
-      if (endMinute > startMinute) {
-        final lastHourStart =
-            '${endHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}'; // Format last hour start time
-        final lastHourEnd =
-            '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}'; // Format last hour end time
-        hourlyShiftDetails.add({
-          'startTime': lastHourStart,
-          'endTime': lastHourEnd,
-        });
+          hourlyShiftDetails.add({
+            'startTime': hourStart,
+            'endTime': hourEnd,
+          });
+        }
+        for (int hour = 0; hour < endHour; hour++) {
+          final hourStart =
+              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          final hourEnd =
+              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+          hourlyShiftDetails.add({
+            'startTime': hourStart,
+            'endTime': hourEnd,
+          });
+        }
       }
     }
   }
@@ -153,7 +245,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
           for (var dar in querySnapshot.docs) {
             final data = dar.data() as Map<String, dynamic>;
-            final date2 = UtilsFuctions.convertDate(data['EmpDarDate']);
+            final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
             print('date = ${date2[0]}');
             if (date2[0] == date.day &&
                 date2[1] == date.month &&
@@ -238,7 +330,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
       for (var dar in querySnapshot.docs) {
         final data = dar.data() as Map<String, dynamic>;
-        final date2 = UtilsFuctions.convertDate(data['EmpDarDate']);
+        final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
         print('date3 = ${date2[0]}');
         if (date2[0] == date.day &&
             date2[1] == date.month &&
