@@ -101,6 +101,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
+                  if (shiftHistory.isEmpty) {
+                    return Center(
+                      child: Text('No shift history available.'),
+                    );
+                  }
                   var shift = shiftHistory[index];
                   DateTime shiftDate =
                       (shift['ShiftDate'] as Timestamp).toDate();
@@ -228,7 +233,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                             height: height / height20,
                                           ),
                                           InterSemibold(
-                                            text: '02hr 36min',
+                                            text: '',
                                             fontsize: width / width16,
                                             color: color1,
                                           ),
@@ -277,7 +282,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   );
                 },
-                childCount: 4,
+                childCount: shiftHistory.isNotEmpty ? shiftHistory.length : 1,
               ),
             ),
           ],
