@@ -1209,19 +1209,30 @@ class FireStoreService {
 
   //Patrol is Completed
   Future<void> ScheduleShift(
-    List guards,
-    String Address,
-    String CompanyBranchId,
-    String CompanyId,
-    String Date,
-    List<TimeOfDay> Time,
-    double Latitude,
-    double Longitude,
-    String LocationName,
-  ) async {
+      List guards,
+      String? role,
+      String Address,
+      String CompanyBranchId,
+      String CompanyId,
+      List<DateTime> Date,
+      TimeOfDay? startTime,
+      TimeOfDay? EndTime,
+      double Latitude,
+      double Longitude,
+      String LocationName,
+      List patrol,
+      String clientID,
+      String requiredEmp,
+      String photoInterval,
+      String restrictedRadius,
+      bool shiftenablerestriction,
+      GeoPoint coordinates,
+      String locationName,
+      String locationId,
+      String locationAddress,
+      String branchId,
+      String shiftDesc) async {
     try {
-      // Get the current system time
-      DateTime currentTime = DateTime.now();
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
         for (var element in list) {
@@ -1234,36 +1245,59 @@ class FireStoreService {
       List<String> selectedGuardIds =
           guards.map((guard) => guard['GuardId'] as String).toList();
 
-      final DateTime date = DateTime.parse(Date);
+      final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
-      final List<String> formattedTimeRanges = Time.map((timeOfDay) =>
-          timeFormatter.format(
-              DateTime(0, 0, 0, timeOfDay.hour, timeOfDay.minute))).toList();
 
-      final newDocRef = await shifts.add({
-        'ShiftName': Address.split(' ')[0],
-        'ShiftPosition': 'GUARD',
-        'ShiftDate': date,
-        'ShiftStartTime': formattedTimeRanges[0],
-        'ShiftEndTime': formattedTimeRanges[1],
-        'ShiftLocation': GeoPoint(Latitude, Longitude),
-        'ShiftLocationName': Address.split(' ')[0],
-        'ShiftAddress': Address,
-        'ShiftDescription': '',
-        'ShiftAssignedUserId': selectedGuardIds,
-        'ShiftClientId': '',
-        'ShiftCompanyId': CompanyId,
-        'ShiftRequiredEmp': selectedGuardIds.length,
-        'ShiftCompanyBranchId': CompanyBranchId,
-        'ShiftCurrentStatus': 'pending',
-        'ShiftCreatedAt': Timestamp.now(),
-        'ShiftModifiedAt': Timestamp.now(),
-      });
-      await newDocRef.update({"ShiftId": newDocRef.id});
-      // Log the shift start time
-      print('Shift start logged at $currentTime');
+      for (DateTime date in Date) {
+        final newDocRef = await shifts.add({
+          'ShiftName': Address.split(' ')[0],
+          'ShiftPosition': role,
+          'ShiftDate': Timestamp.fromDate(date),
+          'ShiftStartTime': timeFormatter.format(DateTime(
+            date.year,
+            date.month,
+            date.day,
+            startTime!.hour,
+            startTime.minute,
+          )),
+          'ShiftEndTime': timeFormatter.format(DateTime(
+            date.year,
+            date.month,
+            date.day,
+            EndTime!.hour,
+            EndTime.minute,
+          )),
+          // 'ShiftLocation': GeoPoint(Latitude, Longitude),
+          'ShiftCompanyBranchId': branchId,
+          'ShiftDescription': shiftDesc,
+          'ShiftLocationName': LocationName,
+          'ShiftLocationAddress': locationAddress,
+          'ShiftLocationId': locationId,
+          'ShiftLocation': coordinates,
+          'ShiftAcknowledgedByEmpId': [],
+          'ShiftGuardWellnessReport': [],
+          'ShiftIsSpecialShift': "false", //check the condition
+          // 'ShiftAddress': Address,
+          'ShiftDescription': '',
+          'ShiftAssignedUserId': selectedGuardIds, // array
+          'ShiftClientId': clientID,
+          'ShiftCompanyId': CompanyId,
+          'ShiftRequiredEmp': requiredEmp,
+          'ShiftCompanyBranchId': branchId,
+          'ShiftCurrentStatus': 'pending',
+          'ShiftCreatedAt': Timestamp.now(),
+          'ShiftModifiedAt': Timestamp.now(),
+          'ShiftLinkedPatrolIds': patrol,
+          'ShiftPhotoUploadIntervalInMinutes': photoInterval,
+          'ShiftRestrictedRadius': restrictedRadius,
+          'ShiftEnableRestrictedRadius': shiftenablerestriction,
+        });
+        await newDocRef.update({"ShiftId": newDocRef.id});
+      }
+
+      print('Shifts created successfully');
     } catch (e) {
-      print('Error logging shift start: $e');
+      print('Error creating shifts: $e');
       // Handle the error as needed
     }
   }
@@ -2848,7 +2882,142 @@ class FireStoreService {
 
     return shiftHistoryList;
   }
-}
 
+  //fetch all the roles
+  Future<List<String>> getEmployeeRoles(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('EmployeeRoles').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['EmployeeRoleCompanyId'] == companyid)
+          .map((doc) => doc.data()['EmployeeRoleName'] as String)
+          .toSet()
+          .toList();
+      print("Roles ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  //fetch all the patrols according to the supervisor
+  Future<List<String>> getAllClientsName(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Clients').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['ClientCompanyId'] == companyid)
+          .map((doc) => doc.data()['ClientName'] as String)
+          .toSet()
+          .toList();
+      print("Clientname ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  //Fetch location
+  Future<List<String>> getAllLocation(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Locations').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['LocationCompanyId'] == companyid)
+          .map((doc) => doc.data()['LocationName'] as String)
+          .toSet()
+          .toList();
+      print("Clientname ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  //fetch all the patrols
+  Future<List<String>> getAllPatrolName(String companyid) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('Patrols').get();
+
+      final List<String> roles = snapshot.docs
+          .where((doc) => doc.data()['PatrolCompanyId'] == companyid)
+          .map((doc) => doc.data()['PatrolName'] as String)
+          .toSet()
+          .toList();
+      print("Clientname ${roles}");
+      return roles;
+    } catch (e) {
+      print("Error fetching report titles: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
+  //fetch the location coordinates ,
+  Future<String> getClientIdfromName(String clientName) async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('ClientName', isEqualTo: clientName)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        // Assuming ClientId is a field in your document
+        return snapshot.docs.first['ClientId'];
+      } else {
+        return ''; // Or handle the case where no document matches the clientName
+      }
+    } catch (e) {
+      print(e);
+      return ''; // Or throw an error if you want to handle it differently
+    }
+  }
+
+  // patrol id from patrolname for a list of names
+  Future<List<String>> getPatrolIdsFromNames(List<String> patrolNames) async {
+    try {
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('PatrolName', whereIn: patrolNames)
+          .get();
+
+      List<String> patrolIds = [];
+      snapshot.docs.forEach((doc) {
+        patrolIds.add(doc['PatrolId']);
+      });
+
+      return patrolIds;
+    } catch (e) {
+      print(e);
+      return []; // Or throw an error if you want to handle it differently
+    }
+  }
+
+  Future<DocumentSnapshot> getLocationByName(
+      String locationName, String companyid) async {
+    try {
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .where('LocationName', isEqualTo: locationName)
+          .where('LocationCompanyId', isEqualTo: companyid)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first;
+      } else {
+        throw Exception('No document found with the specified location name.');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+      rethrow; // Rethrow the exception to handle it outside this function
+    }
+  }
+}
 
 // Schedule and assign

@@ -1,13 +1,22 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
@@ -33,13 +42,40 @@ class CreateSheduleScreen extends StatefulWidget {
 }
 
 class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
+  FireStoreService fireStoreService = FireStoreService();
+
   List colors = [Primarycolor, color25];
   List selectedGuards = [];
   String compId = "";
+  List<TextEditingController> taskControllers = [];
+  List<String> PositionValues = [];
+  List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
+  String dropdownValue = 'Other';
+  List<String> tittles = [];
+  String? selectedClint;
+  String? selectedLocatin;
+  String? selectedGuard = 'Guard 1';
+  List<DateTime> _selectedDates = [];
+  String? selectedPosition;
+  // selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
+  List<String> ClintValues = [];
+  List<String> LocationValues = [];
+  List<String> PatrolValues = [];
+  List<String> selectedPatrols = [];
+  String? selectedPatrol;
 
   @override
   void initState() {
     super.initState();
+    getEmployeeRoles();
+    getAllClientNames();
+    getAllPatrolNames();
+    getAllLocationNames();
+    selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
+    selectedClint = ClintValues.isNotEmpty ? ClintValues[0] : null;
+    selectedLocatin = LocationValues.isNotEmpty ? LocationValues[0] : null;
+    selectedPatrol = selectedPatrols.isNotEmpty ? selectedPatrols[0] : null;
+
     // Add the initial guard data to selectedGuards if not already present
     if (!selectedGuards.any((guard) => guard['GuardId'] == widget.GuardId)) {
       setState(() {
@@ -51,6 +87,57 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         compId = widget.CompanyId;
       });
     }
+    for (int i = 0; i < tasks.length; i++) {
+      taskControllers.add(TextEditingController());
+    }
+  }
+
+  void getEmployeeRoles() async {
+    List<String> roles =
+        await fireStoreService.getEmployeeRoles(widget.CompanyId);
+    if (roles.isNotEmpty) {
+      setState(() {
+        PositionValues.addAll(roles);
+      });
+    }
+  }
+
+  void getAllClientNames() async {
+    List<String> clientNames =
+        await fireStoreService.getAllClientsName(widget.CompanyId);
+    if (clientNames.isNotEmpty) {
+      setState(() {
+        ClintValues.addAll(clientNames);
+      });
+    }
+  }
+
+  void getAllLocationNames() async {
+    List<String> LocatioName =
+        await fireStoreService.getAllLocation(widget.CompanyId);
+    if (LocatioName.isNotEmpty) {
+      setState(() {
+        LocationValues.addAll(LocatioName);
+      });
+    }
+  }
+
+  void getAllPatrolNames() async {
+    List<String> PatrolNames =
+        await fireStoreService.getAllPatrolName(widget.CompanyId);
+    if (PatrolNames.isNotEmpty) {
+      setState(() {
+        PatrolValues.addAll(PatrolNames);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in taskControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   TextEditingController _clientcontrller = TextEditingController();
@@ -68,12 +155,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   TextEditingController _PhotoUploadIntervalInMinutes = TextEditingController();
   TextEditingController _Branch = TextEditingController();
   bool _isRestrictedChecked = false;
-  List<DateTime> _selectedDates = [];
-  List<Map<String, dynamic>> tasks = [];
+  List<DateTime> selectedDates = []; // Define and initialize selectedDates list
 
-  List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
-  String dropdownValue = 'Other';
-  List<String> tittles = [];
+  List<Map<String, dynamic>> tasks = [];
 
   void _showDatePicker(BuildContext context) {
     showDialog(
@@ -88,20 +172,26 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Select Dates', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                Text('Select Dates',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                 SizedBox(height: 20),
                 Expanded(
                   child: SfDateRangePicker(
-                    selectionTextStyle: TextStyle(color: Primarycolor), // Use primary color here
+                    selectionTextStyle: TextStyle(
+                        color: Primarycolor), // Use primary color here
                     selectionShape: DateRangePickerSelectionShape.circle,
                     selectionColor: Primarycolor, // Use primary color here
                     selectionRadius: 4,
                     view: DateRangePickerView.month,
                     selectionMode: DateRangePickerSelectionMode.multiple,
                     initialSelectedDates: _selectedDates,
-                    onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                    onSelectionChanged:
+                        (DateRangePickerSelectionChangedArgs args) {
                       setState(() {
                         _selectedDates = args.value.cast<DateTime>();
+
+                        print("selected Date:- $_selectedDates ");
                       });
                     },
                   ),
@@ -161,7 +251,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   placesAutoCompleteTextField(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    String qrData = "https://github.com/ChinmayMunje";
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: GooglePlaceAutoCompleteTextField(
@@ -229,17 +319,23 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     });
   }
 
-  String? selectedClint = 'Clint 1';
-  String? selectedLocatin = 'Location 1';
-  String? selectedGuard = 'Guard 1';
-  String? selectedPosition = 'Guard';
-  List<String> ClintValues = ['Clint 1', 'Clint 2', 'Clint 3'];
-  List<String> PositionValues = ['Guard', 'Supervisor 2', 'Patrol'];
-  List<String> LocationValues = ['Location 1', 'Location 2', 'Location 3'];
-  List<String> PatrolValues = ['Patrol 1', 'Patrol 2', 'Patrol 3'];
-  List<String> selectedPatrols = [];
-  String selectedPatrol = 'Patrol 1';
+  void _saveQrCode(String id) async {
+    final qrImageData = await _generateQrImage(id);
+    final directory = await getExternalStorageDirectory();
+    final path = '${directory!.path}/qr_code.png';
+    await File(path).writeAsBytes(qrImageData!);
+    print("Path : $path");
+    OpenFile.open(path);
+  }
 
+  Future<Uint8List?> _generateQrImage(String data) async {
+    final qr = QrCode(4, QrErrorCorrectLevel.L);
+    qr.addData(data);
+    final painter =
+        QrPainter(data: data, version: QrVersions.auto, color: Colors.white);
+    final img = await painter.toImageData(2048, format: ImageByteFormat.png);
+    return img?.buffer.asUint8List();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -503,13 +599,22 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             color: color1,
                           ),
                           SizedBox(height: height / height10),
+                          // Select Guard
+                          // SetDetailsWidget(
+                          //   useTextField: true,
+                          //   hintText: 'Shift Position',
+                          //   icon: Icons.control_camera,
+                          //   controller: _ShiftPosition,
+                          //   onTap: () {},
+                          // ),
                           Container(
                             height: height / height60,
                             padding: EdgeInsets.symmetric(
                                 horizontal: width / width10),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(width / width10),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                               border: Border(
                                 bottom: BorderSide(
                                   color: color19,
@@ -526,38 +631,36 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 dropdownColor: WidgetColor,
                                 style: TextStyle(color: color1),
                                 value: selectedPosition,
+                                hint: Text("Select Roles"),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedPosition = newValue!;
+                                    selectedPosition = newValue;
                                     // print('$selectedValue selected');
                                   });
                                 },
-                                items:
-                                PositionValues.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Row(
-                                          children: [
-                                            selectedPosition == value
-                                                ? Icon(
-                                                Icons.control_camera,
+                                items: PositionValues.map<
+                                    DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedPosition == value
+                                            ? Icon(Icons.control_camera,
                                                 color: color1)
-                                                : Icon(
-                                                Icons.control_camera,
+                                            : Icon(Icons.control_camera,
                                                 color: color3),
-                                            // Conditional icon color based on selection
-                                            SizedBox(width: width / width10),
-                                            InterRegular(
-                                                text: value,
-                                                color: selectedPosition == value
-                                                    ? color1
-                                                    : color3),
-                                            // Conditional text color based on selection
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: width / width10),
+                                        InterRegular(
+                                            text: value,
+                                            color: selectedPosition == value
+                                                ? color1
+                                                : color3),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             ),
                           ),
@@ -577,9 +680,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             icon: Icons.date_range,
                             onTap: () => _showDatePicker(context),
                           ),
-
-
-
                           // Seperate Time
                           SetDetailsWidget(
                             hintText: selectedTime == null
@@ -599,12 +699,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // Location DropDown
                           Container(
                             height: height / height60,
-
                             padding: EdgeInsets.symmetric(
                                 horizontal: width / width10),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(width / width10),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                               border: Border(
                                 bottom: BorderSide(
                                   color: color19,
@@ -615,7 +715,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               child: DropdownButton<String>(
                                 isExpanded: true,
                                 iconSize: width / width24,
-                                icon: Icon(Icons.arrow_drop_down , size: width / width24),
+                                icon: Icon(Icons.arrow_drop_down,
+                                    size: width / width24),
                                 iconEnabledColor: color1,
                                 // Set icon color for enabled state
                                 dropdownColor: WidgetColor,
@@ -634,11 +735,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     child: Row(
                                       children: [
                                         selectedLocatin == value
-                                            ? Icon(
-                                                Icons.location_on,
+                                            ? Icon(Icons.location_on,
                                                 color: color1)
-                                            : Icon(
-                                                Icons.location_on,
+                                            : Icon(Icons.location_on,
                                                 color: color3),
                                         // Conditional icon color based on selection
                                         SizedBox(width: width / width10),
@@ -663,7 +762,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 horizontal: width / width10),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(width / width10),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                               border: Border(
                                 bottom: BorderSide(
                                   color: color19,
@@ -715,9 +815,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: height / height10
-                          ),
+                          SizedBox(height: height / height10),
                           // Select Guards
                           Container(
                             height: height / height60,
@@ -725,7 +823,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 horizontal: width / width10),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(width / width10),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                               border: Border(
                                 bottom: BorderSide(
                                   color: color19,
@@ -756,19 +855,25 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     }
                                   });
                                 },
-                                items: PatrolValues.map<DropdownMenuItem<String>>((String value) {
+                                items:
+                                    PatrolValues.map<DropdownMenuItem<String>>(
+                                        (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Row(
                                       children: [
                                         selectedPatrols.contains(value)
-                                            ? Icon(Icons.check_circle, color: color1)
-                                            : Icon(Icons.radio_button_unchecked, color: color3),
+                                            ? Icon(Icons.check_circle,
+                                                color: color1)
+                                            : Icon(Icons.radio_button_unchecked,
+                                                color: color3),
                                         // Conditional icon color based on selection
                                         SizedBox(width: width / width10),
                                         InterRegular(
                                           text: value,
-                                          color: selectedPatrols.contains(value) ? color1 : color3,
+                                          color: selectedPatrols.contains(value)
+                                              ? color1
+                                              : color3,
                                         ),
                                         // Conditional text color based on selection
                                       ],
@@ -778,7 +883,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               ),
                             ),
                           ),
-
 
                           SetDetailsWidget(
                             keyboardType: TextInputType.number,
@@ -842,8 +946,65 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           SizedBox(height: height / height90),
                           Button1(
                             text: 'Done',
-                            onPressed: () {
-                              print(selectedGuards);
+                            onPressed: () async {
+                              String address = "";
+                              GeoPoint coordinates = GeoPoint(0, 0);
+                              String name = "";
+                              String locationId = "";
+                              //fetching the patrols ids using patrol name
+                              List<String> patrolids = await fireStoreService
+                                  .getPatrolIdsFromNames(selectedPatrols);
+                              //fetching clientid
+                              String clientId = await fireStoreService
+                                  .getClientIdfromName(selectedClint!);
+                              //fetching location details from locationame
+                              var locationData =
+                                  await fireStoreService.getLocationByName(
+                                      selectedLocatin!, widget.CompanyId);
+                              if (locationData.exists) {
+                                var data = locationData.data()
+                                    as Map<String, dynamic>?;
+                                ;
+                                if (data != null) {
+                                  address = data['LocationAddress'];
+                                  coordinates =
+                                      data['LocationCoordinates'] as GeoPoint;
+                                  name = data['LocationName'];
+                                  locationId = data['LocationId'];
+
+                                  print("Address ${address}");
+                                  print("coordinates ${coordinates}");
+                                  print("Latitude: ${coordinates.latitude}");
+                                  print("Longitude: ${coordinates.longitude}");
+                                }
+                              }
+                              print("locationData  ids ${locationData}");
+
+                              await fireStoreService.ScheduleShift(
+                                  selectedGuards,
+                                  selectedPosition,
+                                  "Address",
+                                  "CompanyBranchId",
+                                  widget.CompanyId,
+                                  _selectedDates,
+                                  startTime,
+                                  endTime,
+                                  100,
+                                  20,
+                                  "LocationName",
+                                  patrolids,
+                                  clientId,
+                                  _RequirednoofEmployees.text,
+                                  _PhotoUploadIntervalInMinutes.text,
+                                  _RestrictedRadius.text,
+                                  _isRestrictedChecked,
+                                  coordinates,
+                                  name,
+                                  locationId,
+                                  address,
+                                  _Branch.text,
+                                  _Description.text);
+                              print("Shift Created");
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
@@ -958,6 +1119,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ),
                                     ],
                                   ),
+                                  Button1(
+                                      text: "Generate Qr",
+                                      onPressed: () async {
+                                        // if (taskText != null) {
+                                        //   final name = taskText.text;
+                                        //   _saveQrCode(name.toString());
+                                        // }
+                                        print("Generate qr buttoin");
+                                      })
                                 ],
                               );
                             },
@@ -977,8 +1147,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               },
                               height: height / height50,
                               backgroundcolor: Primarycolor,
-                              text:
-                                  nextScreen ? 'Fist screen' : 'Second Screen',
+                              text: nextScreen == false
+                                  ? 'Create Shift Task'
+                                  : 'Second Screen',
                               color: Colors.black,
                             ),
                           ),
