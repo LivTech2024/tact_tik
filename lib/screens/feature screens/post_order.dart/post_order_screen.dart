@@ -9,7 +9,6 @@ import 'package:workmanager/workmanager.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
-import '../../supervisor screens/features screens/create_post_order_screen.dart';
 import 'view_post_order.dart';
 
 class PostOrder extends StatelessWidget {

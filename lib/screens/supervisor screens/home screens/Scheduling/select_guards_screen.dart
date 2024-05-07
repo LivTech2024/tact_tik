@@ -136,8 +136,8 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                 SizedBox(height: height / height20),
                 _guardsInfo.length != 0
                     ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        physics: PageScrollPhysics(),
                         itemCount: _guardsInfo.length,
                         itemBuilder: (context, index) {
                           var guardInfo = _guardsInfo[index];
