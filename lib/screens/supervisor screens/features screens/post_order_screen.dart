@@ -11,9 +11,7 @@ class PostOrderScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         body: CustomScrollView(
-          slivers: [
-
-          ],
+          slivers: [],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

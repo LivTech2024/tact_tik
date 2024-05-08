@@ -4,7 +4,8 @@ import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
 class HomeScreenCustomNavigation extends StatelessWidget {
-  const HomeScreenCustomNavigation({super.key, required this.icon, required this.color});
+  const HomeScreenCustomNavigation(
+      {super.key, required this.icon, required this.color});
   final IconData icon;
   final Color color;
 
