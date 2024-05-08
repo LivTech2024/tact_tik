@@ -1,6 +1,5 @@
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
@@ -9,7 +8,9 @@ import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
+import '../../../fonts/inter_regular.dart';
 import '../../../fonts/poppins_bold.dart';
+import '../../../fonts/poppins_regular.dart';
 import '../../../services/auth/auth.dart';
 import '../../../utils/colors.dart';
 import '../../feature screens/pani button/panic_button.dart';
@@ -18,10 +19,9 @@ import '../../get started/getstarted_screen.dart';
 import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
-import '../features screens/create_post_order_screen.dart';
 import '../features screens/post order/s_post_order_screen.dart';
-import '../features screens/post_order_screen.dart';
 import 'Scheduling/all_schedules_screen.dart';
+import 'message screens/super_inbox.dart';
 
 class SHomeScreen extends StatefulWidget {
   const SHomeScreen({super.key});
@@ -48,6 +48,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _CompanyId = "";
+
+  bool NewMessage = false;
 
   void ChangeScreenIndex(int index) {
     setState(() {
@@ -84,6 +86,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[1] = color4;
           IconColors[2] = color4;
           IconColors[3] = Primarycolor;
+          NavigateScreen(SuperInboxScreen(
+            companyId: 'aSvLtwII6Cjs7uCISBRR',
+          ));
           break;
       }
     });
@@ -96,6 +101,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
+    IconColors[0] = Primarycolor;
+    IconColors[1] = color4;
+    IconColors[2] = color4;
+    IconColors[3] = color4;
+    ScreenIndex = 0;
     _getUserInfo();
     // checkLocation();
     super.initState();
@@ -257,30 +267,48 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           Bounce(
                             onTap: () => ChangeScreenIndex(0),
                             child: HomeScreenCustomNavigation(
+                              text: 'Guards',
                               icon: Icons.add_task,
                               color: IconColors[0],
+                              textcolor: ScreenIndex == 0 ? color1 : color4,
                             ),
                           ),
                           Bounce(
                             onTap: () => ChangeScreenIndex(1),
                             child: HomeScreenCustomNavigation(
+                              text: 'Explore',
                               icon: Icons.grid_view_rounded,
                               color: IconColors[1],
+                              textcolor: ScreenIndex == 1 ? color1 : color4,
                             ),
                           ),
                           Bounce(
                             onTap: () => ChangeScreenIndex(2),
                             // onTap: () => ChangeScreenIndex(2),
                             child: HomeScreenCustomNavigation(
+                              useSVG: true,
+                              SVG: 'assets/images/calendar_clock.svg',
+                              text: 'Calendar',
                               icon: Icons.calendar_today,
                               color: IconColors[2],
+                              textcolor: ScreenIndex == 2 ? color1 : color4,
                             ),
                           ),
                           Bounce(
-                            // onTap: () => ChangeScreenIndex(3),
+                            onTap: () => ChangeScreenIndex(3),
                             child: HomeScreenCustomNavigation(
+                              useSVG: true,
+                              SVG: NewMessage
+                                  ? ScreenIndex == 3
+                                      ? 'assets/images/message_dot.svg'
+                                      : 'assets/images/no_message_dot.svg'
+                                  : ScreenIndex == 3
+                                      ? 'assets/images/message.svg'
+                                      : 'assets/images/no_message.svg',
+                              text: 'Message',
                               icon: Icons.chat_bubble_outline,
                               color: IconColors[3],
+                              textcolor: ScreenIndex == 3 ? color1 : color4,
                             ),
                           ),
                         ],
@@ -328,14 +356,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               return Bounce(
                                 onTap: () {
                                   switch (index) {
-                                    // case 0:
-                                    //   showDialog(
-                                    //     context: context,
-                                    //     builder: (BuildContext context) {
-                                    //       return PanicAlertDialog();
-                                    //     },
-                                    //   );
-                                    //   break;
+                                    case 4:
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return SPostOrder();
+                                        },
+                                      );
+                                      break;
                                     // case 2:
                                     //   Navigator.push(
                                     //       context,
@@ -527,7 +555,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
           ],
@@ -536,139 +564,3 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
     );
   }
 }
-
-/*SliverToBoxAdapter(
-                      child: ListView(
-                        physics: NeverScrollableScrollPhysics(),
-                        
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InterBold(
-                                text: 'All Guards',
-                                fontsize: 18,
-                                color: color1,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    size: 24,
-                                    color: Primarycolor,
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  InterBold(
-                                    text: 'Add',
-                                    fontsize: 14,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return AnimatedContainer(
-                                  duration: Duration(microseconds: 500),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            InterBold(
-                                              text: 'Harold M. Madrigal',
-                                              letterSpacing: -.3,
-                                              color: color1,
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              height: 16,
-                                              width: 16,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.green,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    )*/
-
-/*AnimatedContainer(
-                                  duration: Duration(microseconds: 500),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 20),
-                                            InterBold(
-                                              text: 'Harold M. Madrigal',
-                                              letterSpacing: -.3,
-                                              color: color1,
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              height: 16,
-                                              width: 16,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.green,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-
-                                      )
-                                    ],
-                                  ),
-                                )*/

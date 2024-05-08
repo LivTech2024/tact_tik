@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tact_tik/screens/home%20screens/message%20screen/widgets/chat_list.dart';
+import 'package:tact_tik/screens/message%20screen/widgets/chat_list.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';

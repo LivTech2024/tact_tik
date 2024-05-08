@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tact_tik/screens/home%20screens/message%20screen/widgets/my_message_card.dart';
-import 'package:tact_tik/screens/home%20screens/message%20screen/widgets/sender_message_card.dart';
-
+import 'package:tact_tik/screens/message%20screen/widgets/sender_message_card.dart';
 import 'info.dart';
+import 'my_message_card.dart';
 
 class ChatList extends StatelessWidget {
   const ChatList({Key? key}) : super(key: key);
