@@ -19,8 +19,6 @@ class UserService {
   // Timestamp? shiftDate; //shiftDate
   UserService({required FireStoreService firestoreService});
 
-  String? get employeeId => null;
-
   Future<void> getShiftInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (userInfo != null) {

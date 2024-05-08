@@ -16,7 +16,8 @@ import '../../../fonts/inter_bold.dart';
 import '../../../utils/colors.dart';
 
 class DarOpenAllScreen extends StatefulWidget {
-  const DarOpenAllScreen({super.key});
+  final DateTime? passdate;
+  const DarOpenAllScreen({super.key, this.passdate});
 
   @override
   State<DarOpenAllScreen> createState() => _DarOpenAllScreenState();
@@ -33,7 +34,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   void initState() {
     super.initState();
     _fetchShiftDetails();
-    fetchDarTileData();
+    // fetchDarTileData();
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
@@ -47,7 +48,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
     final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
 
-    // Group reports by hour
     Map<String, List<Map<String, dynamic>>> reportsByHour = {};
     for (var report in reports) {
       final timestampStr = report['ReportCreatedAt'] as Timestamp;
@@ -314,8 +314,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
   }
 
-  Future<List> fetchDarTileData() async {
-    final date = DateTime.now();
+  Future<List> fetchDarTileData(DateTime? time) async {
+    final date = time ?? DateTime.now();
+    print("aajkadin:$date");
     List darList = [];
     final CollectionReference employeesDARCollection =
         FirebaseFirestore.instance.collection('EmployeesDAR');
@@ -463,7 +464,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           ),
                           SizedBox(height: height / height20),
                           FutureBuilder(
-                            future: fetchDarTileData(),
+                            future: fetchDarTileData(widget.passdate),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

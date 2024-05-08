@@ -7,7 +7,13 @@ import '../../../utils/colors.dart';
 
 class HomeScreenCustomNavigation extends StatelessWidget {
   const HomeScreenCustomNavigation(
-      {super.key, required this.icon, required this.color});
+      {super.key,
+      required this.icon,
+      required this.color,
+      this.useSVG = false,
+      required this.text,
+      required this.textcolor,
+      this.SVG});
   final IconData icon;
   final Color color;
   final Color textcolor;
