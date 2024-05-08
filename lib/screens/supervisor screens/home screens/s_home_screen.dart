@@ -86,7 +86,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[1] = color4;
           IconColors[2] = color4;
           IconColors[3] = Primarycolor;
-          NavigateScreen(SuperInboxScreen(companyId: 'aSvLtwII6Cjs7uCISBRR',));
+          NavigateScreen(SuperInboxScreen(
+            companyId: 'aSvLtwII6Cjs7uCISBRR',
+          ));
           break;
       }
     });
@@ -411,7 +413,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             childCount: 9,
                           ),
                         )
-                          : SliverToBoxAdapter(),
+                      : SliverToBoxAdapter(),
             ],
           ),
         ),

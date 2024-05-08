@@ -75,11 +75,28 @@ class Auth {
     try {
       var data = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
+      var idtoken;
+      var claims;
+      var loginType;
       print(data);
 
       final LocalStorage storage = LocalStorage('currentUserEmail');
+      var user = data.user;
+      if (user != null) {
+        idtoken = await user.getIdTokenResult();
+        print("IdToken: $idtoken");
+        claims = idtoken.claims;
+        loginType = claims['role'];
+        print("claims: ${claims['role']}");
+      }
       await storage.ready;
-
+      if (loginType == 'client') {
+        await storage.setItem("CurrentUser", email);
+        // await storage.setItem("CurrentEmployeeId", );
+        await storage.setItem("Role", 'CLIENT');
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+      }
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('Employees')
           .where('EmployeeEmail', isEqualTo: email)

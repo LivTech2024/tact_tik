@@ -318,7 +318,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   bool nextScreen = false;
-
+  String CreatedshiftId = "";
   void _addNewTask() {
     setState(() {
       tasks.add(
@@ -1017,7 +1017,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               }
                               print("locationData  ids ${locationData}");
                               var requiredEmp = _RequirednoofEmployees.text;
-                              int? requiredEmpNUmber = int.parse(requiredEmp);
+                              // int? requiredEmpNUmber = int.parse(requiredEmp);
                               print(
                                   "Number Editing Controller ${requiredEmpcontroller.number}");
                               print("ShiftName ${_ShiftName.text}");
@@ -1050,7 +1050,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 _addNewTask();
                               });
                               print("Shift Created");
-                              print(id);
+                              print("Shift ID : ${id}");
+                              setState(() {
+                                CreatedshiftId = id;
+                              });
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
