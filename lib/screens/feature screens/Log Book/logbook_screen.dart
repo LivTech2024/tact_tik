@@ -62,11 +62,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: height / height30,
-            ),
-          ),
           SliverAppBar(
             backgroundColor: AppBarcolor,
             elevation: 0,
@@ -90,6 +85,11 @@ class _LogBookScreenState extends State<LogBookScreen> {
             ),
             centerTitle: true,
             floating: true, // Makes the app bar float above the content
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: height / height30,
+            ),
           ),
           SliverToBoxAdapter(
             child: Container(
