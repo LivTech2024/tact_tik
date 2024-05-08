@@ -2428,9 +2428,13 @@ class FireStoreService {
 
       // Process query results
       List<String> specificDocIds = [
-        'irZi69LyQksCfF6rjUCV',
-        'pyowIuayAXyUuELbxfFC',
-        'KZFjrqJ4pX7UFhY03tjP'
+        'hYCnrNiyVBww04EEquXe',
+        // 'WVaPcfsZc2KGNGdx9mRm',
+        // 'mtH1pIv87naxpoVar1gS',
+        // 'tH8hRqiAk7d0EbFN0sg5',
+        // 'XalQPx7nkclM5BkN7EZi',
+        // 'dKogAJRsF0pxCXKsdpD4',
+        // '0EJnwANH2NuZK0zPqifQ'
       ];
 
       querySnapshot.docs.forEach((doc) {
@@ -2449,6 +2453,7 @@ class FireStoreService {
     }
     return pdfDataList;
   }
+
   //Create log
   // Future<void> addToLog(
   //     String logType,
@@ -3017,6 +3022,57 @@ class FireStoreService {
       print('Error getting location: $e');
       rethrow; // Rethrow the exception to handle it outside this function
     }
+  }
+
+  Future<void> copyAndCreateDocument(
+      String collection, String sourceDocumentId) async {
+    final DocumentReference sourceDocRef =
+        FirebaseFirestore.instance.collection(collection).doc(sourceDocumentId);
+
+    DocumentSnapshot sourceDocSnapshot = await sourceDocRef.get();
+
+    if (!sourceDocSnapshot.exists) {
+      print('Document does not exist');
+      return;
+    }
+
+    final Map<String, dynamic> data =
+        sourceDocSnapshot.data() as Map<String, dynamic>;
+
+    // Copy the document to a new document with a different ID
+    final DocumentReference newDocRef =
+        FirebaseFirestore.instance.collection(collection).doc();
+
+    await newDocRef.set(data);
+
+    // Create another new document with a different ID in the same location
+    // final DocumentReference anotherNewDocRef =
+    //     FirebaseFirestore.instance.collection(collection).doc();
+
+    // await anotherNewDocRef.set({
+    //   'exampleField': 'exampleValue',
+    // });
+  }
+
+  Future<List<String>> fetchImagesWithDate(String path, String fileName) async {
+    List<String> imageUrls = [];
+
+    Reference storageRef = FirebaseStorage.instance.ref(path);
+
+    // List all items under the storage reference
+    ListResult result = await storageRef.listAll();
+
+    // Iterate over the items to find images with filenames greater than or equal to the given filename
+    for (Reference ref in result.items) {
+      String name = ref.name;
+      if (name.compareTo(fileName) >= 0) {
+        // Get the download URL for the image
+        String url = await ref.getDownloadURL();
+        imageUrls.add(url);
+      }
+    }
+
+    return imageUrls;
   }
 }
 

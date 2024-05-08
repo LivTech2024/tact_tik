@@ -226,8 +226,8 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             <tr>
                 <td> ${GuardName}</td>
-                <td>20:00</td>
-                <td>06:00</td>
+                <td>19:00</td>
+                <td>07:00</td>
             </tr>
         </table>
 

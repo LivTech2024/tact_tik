@@ -545,11 +545,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       5,
                       () async {
                         List<String> emails = [];
-                        // emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");s
+                        // emails.add("dan@tpssolution.com");
                         // // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
                         // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
@@ -558,8 +558,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "Hijql0nkNjA1tOhSf8wW",
-                        //   "FNEsI5LTVUOClRDeoyFB",
+                        //   "paHVXXC99uNtXamURMBc",
+                        //   "mgypv1SYC1RrXjJ90Eyl",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -569,8 +569,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "6 May",
-                        //   "Dan Martin",
+                        //   "8 May",
+                        //   "Pankaj Kumar",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -578,6 +578,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedDateTime",
                         //   "formattedEndTime",
                         // );
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     'EmployeesDAR', 'YHRrTfgn07btcFtSLuAj');
+                        // String path = 'employees/patrol';
+                        // String fileName = '2024-05-08 05:00:13.307902.jpg';
+                        // await fireStoreService
+                        //     .fetchImagesWithDate(path, fileName)
+                        //     .then((imageUrls) {
+                        //   // Print the list of image URLs
+                        //   for (String url in imageUrls) {
+                        //     print(url);
+                        //   }
+                        // });
                       },
                     ),
                   ],
