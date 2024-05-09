@@ -45,6 +45,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     super.initState();
     _titleController = TextEditingController();
     _darController = TextEditingController();
+
+    if (widget.darTiles != null &&
+        widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TileLocation'] != null) {
+      _titleController.text = widget.darTiles[widget.index]['TileLocation'];
+      _darController.text = widget.darTiles[widget.index]['TileContent'];
+    }
+
+    if (widget.darTiles != null &&
+        widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TileImages'] != null) {
+      imageUrls =
+          List<String>.from(widget.darTiles[widget.index]['TileImages']);
+    }
     _getUserInfo();
   }
 
@@ -98,8 +112,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
@@ -128,77 +140,13 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     });
   }
 
-  //keep this code in firebase_function file  and handle its errors here
-  // Future<void> _submitDAR() async {
-  //   if (_isSubmitting) return;
-
-  //   final title = _titleController.text.trim();
-  //   final darContent = _darController.text.trim();
-
-  //   if (title.isNotEmpty && darContent.isNotEmpty) {
-  //     setState(() {
-  //       _isSubmitting = true;
-  //     });
-
-  //     try {
-  //       List<String> imageUrls = [];
-  //       for (var upload in uploads) {
-  //         if (upload['type'] == 'image') {
-  //           File file = upload['file'];
-  //           // Upload the image file and get the download URL
-  //           List<Map<String, dynamic>> downloadURLs =
-  //               await fireStoreService.addImageToDarStorage(file);
-  //           // Add the image URLs to the list
-  //           for (var urlMap in downloadURLs) {
-  //             if (urlMap.containsKey('downloadURL')) {
-  //               imageUrls.add(urlMap['downloadURL'] as String);
-  //             }
-  //           }
-  //         }
-  //       }
-  //       var docRef = await _firestore.collection('EmployeesDAR').add({
-  //         'EmpDarTitle': title,
-  //         'EmpDarData': darContent,
-  //         'EmpDarShiftId': widget.EmpShiftId ?? "",
-  //         'EmpDarDate': FieldValue.serverTimestamp(),
-  //         'EmpDarCreatedAt': FieldValue.serverTimestamp(),
-  //         'EmpDarEmpName': _userName,
-  //         'EmpDarEmpId': _employeeId,
-  //         'EmpDarCompanyId': widget.EmpDarCompanyId ?? "",
-  //         'EmpDarCompanyBranchId': widget.EmpDarCompanyBranchId ?? "",
-  //         'EmpDarClientId': widget.EmpClientID ?? '',
-  //         'EmpDarImages': imageUrls ?? "",
-  //       });
-  //       await docRef.update({'EmpDarId': docRef.id});
-  //       _titleController.clear();
-  //       _darController.clear();
-
-  //       showCustomSnackbar(context, 'DAR saved successfully');
-  //       Navigator.pop(context);
-  //     } catch (e) {
-  //       showCustomSnackbar(context, 'Error saving DAR: $e');
-  //     } finally {
-  //       setState(() {
-  //         _isSubmitting = false;
-  //       });
-  //     }
-  //   } else {
-  //     showCustomSnackbar(context, 'Please fill in the title and DAR content');
-  //   }
-  // }
-
-  void showCustomSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+  void _removeImage(int index) {
+    setState(() {
+      imageUrls.removeAt(index);
+    });
   }
 
   void submitDarTileData() async {
-    // print(
-    //     'darTiles = ${widget.darTiles} , DarIndex = ${widget.index} , darDate = ${widget.darTiles[widget.index]['date']}');
     final date = widget.darTiles[widget.index]['TileTime'];
     await _uploadImages();
     final data = {
@@ -231,7 +179,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           for (var dar in querySnapshot.docs) {
             final data = dar.data() as Map<String, dynamic>;
             final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
-            // print('date = ${date2[0]}');
             if (date2[0] == date.day &&
                 date2[1] == date.month &&
                 date2[2] == date.year) {
@@ -257,7 +204,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     }
   }
 
-  //use the toast notification here instead of this
   @override
   void dispose() {
     _titleController.dispose();
@@ -422,68 +368,47 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         ),
                       ),
                     ),
-                    // SizedBox(),
-                    // GestureDetector(
-                    //   onTap: () {},
-                    //   child: Container(
-                    //     height: height / height66,
-                    //     width: width / width66,
-                    //     decoration: BoxDecoration(
-                    //       color: WidgetColor,
-                    //       borderRadius: BorderRadius.circular(width / width8),
-                    //     ),
-                    //     child: Center(
-                    //       child: Icon(
-                    //         Icons.upload,
-                    //         size: width / width20,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
-                /*SizedBox(height: height / height30),
-                InterBold(
-                  text: 'Reports',
-                  fontsize: width / width20,
-                  color: Primarycolor,
-                ),
-                SizedBox(height: height / height20),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: 10, // Provide the number of items
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(
-                        bottom: height / height10,
-                      ),
-                      height: height / height35,
-                      child: Stack(
+                if (imageUrls.isNotEmpty)
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 8.0,
+                      crossAxisSpacing: 8.0,
+                    ),
+                    itemCount: imageUrls.length,
+                    itemBuilder: (context, index) {
+                      return Stack(
                         children: [
-                          Container(
-                            height: height / height35,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width10),
-                            ),
+                          Image.network(
+                            imageUrls[index],
+                            fit: BoxFit.cover,
                           ),
-                          Container(
-                            height: height / height35,
-                            width: width / width16,
-                            decoration: BoxDecoration(
-                              color: colorRed3,
-                              borderRadius:
-                                  BorderRadius.circular(width / width10),
+                          Positioned(
+                            top: 5,
+                            right: 5,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    _removeImage(index);
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      ),
-                    );
-                  },
-                ),*/
+                      );
+                    },
+                  ),
                 SizedBox(height: height / height30),
                 Button1(
                   text: _isSubmitting ? 'Submitting...' : 'Submit',
