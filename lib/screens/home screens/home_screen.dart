@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
@@ -107,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final double _zoom = 12.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
+  bool NewMessage = false;
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -532,11 +534,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       () {
                         // customEmail();
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HistoryScreen(
-                                      empID: _employeeId,
-                                    )));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HistoryScreen(
+                              empID: _employeeId,
+                            ),
+                          ),
+                        );
                       },
                     ),
                     buildListTile(
@@ -578,34 +582,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedDateTime",
                         //   "formattedEndTime",
                         // );
-
-                        await sendDARTemplateEmail(
-                          "Leston holdings ",
-                          emails,
-                          'Tacttik Dar',
-                          "Tacttik Dar",
-                          "Shift",
-                          "9 May",
-                          "sukhman kooner",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
-                        // await fireStoreService.copyAndCreateDocument(
-                        //     'EmployeesDAR', 'YHRrTfgn07btcFtSLuAj');
-                        // String path = 'employees/patrol';
-                        // String fileName = '2024-05-08 05:00:13.307902.jpg';
-                        // await fireStoreService
-                        //     .fetchImagesWithDate(path, fileName)
-                        //     .then((imageUrls) {
-                        //   // Print the list of image URLs
-                        //   for (String url in imageUrls) {
-                        //     print(url);
-                        //   }
-                        // });
                       },
                     ),
                   ],
@@ -662,28 +638,44 @@ class _HomeScreenState extends State<HomeScreen> {
                             Bounce(
                               onTap: () => ChangeScreenIndex(0),
                               child: HomeScreenCustomNavigation(
+                                text: 'Shifts',
                                 icon: Icons.add_task,
                                 color: IconColors[0],
+                                textcolor: ScreenIndex == 0 ? color1 : color4,
                               ),
                             ),
                             Bounce(
                               onTap: () => ChangeScreenIndex(1),
                               child: HomeScreenCustomNavigation(
+                                text: 'Explore',
                                 icon: Icons.grid_view_rounded,
                                 color: IconColors[1],
+                                textcolor: ScreenIndex == 1 ? color1 : color4,
                               ),
                             ),
                             Bounce(
                               onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
+                                text: 'Calendar',
                                 icon: Icons.calendar_today,
                                 color: IconColors[2],
+                                textcolor: ScreenIndex == 2 ? color1 : color4,
                               ),
                             ),
                             Bounce(
                               child: HomeScreenCustomNavigation(
+                                useSVG: true,
+                                SVG: NewMessage
+                                    ? ScreenIndex == 3
+                                        ? 'assets/images/message_dot.svg'
+                                        : 'assets/images/no_message_dot.svg'
+                                    : ScreenIndex == 3
+                                        ? 'assets/images/message.svg'
+                                        : 'assets/images/no_message.svg',
+                                text: 'Message',
                                 icon: Icons.chat_bubble_outline,
                                 color: IconColors[3],
+                                textcolor: ScreenIndex == 3 ? color1 : color4,
                               ),
                             ),
                           ],
@@ -854,7 +846,44 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               )
-                            : const SizedBox(),
+                            : ScreenIndex == 3
+                                ? SliverToBoxAdapter(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width / width30,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InterBold(
+                                            text: 'Received Message ',
+                                            color: Primarycolor,
+                                            fontsize: width / width14,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Icon(
+                                                Icons.add,
+                                                color: Primarycolor,
+                                                size: width / width20,
+                                              ),
+                                              SizedBox(width: width / width4),
+                                              InterBold(
+                                                text: 'Create Message',
+                                                fontsize: width / width14,
+                                                color: Primarycolor,
+                                                maxLine: 2,
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
                 ScreenIndex == 2
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
@@ -978,7 +1007,126 @@ class _HomeScreenState extends State<HomeScreen> {
                           childCount: schedules_list.length,
                         ),
                       )
-                    : SliverToBoxAdapter()
+                    : ScreenIndex == 3
+                        ? SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    left: width / width30,
+                                    right: width / width30,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      height: height / height80,
+                                      margin: EdgeInsets.only(
+                                        top: height / height10,
+                                      ),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            width: 1,
+                                            color: Primarycolor,
+                                          ),
+                                        ),
+                                        // color: WidgetColor,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: height / height20,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        // mainAxisAlignment:
+                                        //     MainAxisAlignment
+                                        //         .spaceBetween,
+                                        children: [
+                                          NewMessage
+                                              ? Container(
+                                                  height: height / height10,
+                                                  width: width / width10,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                )
+                                              : SizedBox(),
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                left: width / width6),
+                                            height: height / height40,
+                                            width: width / width40,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: width / width10,
+                                          ),
+                                          SizedBox(
+                                            width: width / width300,
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    InterRegular(
+                                                      text: 'Supervisor',
+                                                      fontsize: width / width16,
+                                                      color: color1,
+                                                    ),
+                                                    Row(
+                                                      // mainAxisAlignment: MainAxisAlignment.end,
+                                                      children: [
+                                                        PoppinsRegular(
+                                                          text: '9:36 AM',
+                                                          color: color3,
+                                                          fontsize:
+                                                              width / width14,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .arrow_forward_ios,
+                                                          color: color1,
+                                                          size: width / width18,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height: height / height5),
+                                                Flexible(
+                                                  child: InterRegular(
+                                                    text:
+                                                        'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                    fontsize: width / width14,
+                                                    color: color3,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              childCount: 8,
+                            ),
+                          )
+                        : SliverToBoxAdapter()
               ],
             ),
           ),

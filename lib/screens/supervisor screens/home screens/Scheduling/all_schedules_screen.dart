@@ -185,7 +185,7 @@ class AllSchedulesScreen extends StatelessWidget {
                   childCount: 10,
                   (context, index) {
                     return Container(
-                      height: 160,
+                      height: height / height160,
                       margin: EdgeInsets.only(top: height / height10),
                       width: double.maxFinite,
                       decoration: BoxDecoration(

@@ -9,7 +9,6 @@ import 'package:workmanager/workmanager.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
-import '../../supervisor screens/features screens/create_post_order_screen.dart';
 import 'view_post_order.dart';
 
 class PostOrder extends StatelessWidget {
@@ -22,22 +21,22 @@ class PostOrder extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreatePostOrder(
-                  isDisplay: false,
-                ),
-              ),
-            );
-          },
-          backgroundColor: Primarycolor,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add),
-        ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => CreatePostOrder(
+        //           isDisplay: false,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        //   backgroundColor: Primarycolor,
+        //   shape: const CircleBorder(),
+        //   child: const Icon(Icons.add),
+        // ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -165,6 +164,8 @@ class PostOrder extends StatelessWidget {
                                 crossAxisSpacing: 10.0,
                                 mainAxisSpacing: 10.0,
                               ),
+
+                              // Don't Update the count there will be only 3 photos display hear or less then that.
                               itemCount: 3,
                               itemBuilder: (context, index) {
                                 return SizedBox(

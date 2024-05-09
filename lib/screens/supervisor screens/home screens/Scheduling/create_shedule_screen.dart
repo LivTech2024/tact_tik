@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:number_editing_controller/parsed_number_format/text_controller.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -16,6 +17,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/inputwidget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
@@ -148,12 +150,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   TimeOfDay? endTime;
   TextEditingController _locationController = TextEditingController();
   TextEditingController _ShiftPosition = TextEditingController();
-  TextEditingController _ShiftName = TextEditingController();
+  final TextEditingController _ShiftName = TextEditingController();
   TextEditingController _RequirednoofEmployees = TextEditingController();
   TextEditingController _RestrictedRadius = TextEditingController();
   TextEditingController _Description = TextEditingController();
   TextEditingController _PhotoUploadIntervalInMinutes = TextEditingController();
   TextEditingController _Branch = TextEditingController();
+  final requiredEmpcontroller = NumberEditingTextController.integer();
+  final requiredPhotocontroller = NumberEditingTextController.integer();
+  final requiredRadius = NumberEditingTextController.integer();
+
   bool _isRestrictedChecked = false;
   List<DateTime> selectedDates = []; // Define and initialize selectedDates list
 
@@ -311,11 +317,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
-  bool nextScreen = true;
-
+  bool nextScreen = false;
+  String CreatedshiftId = "";
   void _addNewTask() {
     setState(() {
-      tasks.add({'name': '', 'isChecked': false});
+      tasks.add(
+          {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false});
     });
   }
 
@@ -341,7 +348,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    int requiredEmp = 0;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -412,7 +419,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                 ),
               ),
               SizedBox(height: height / height30),
-              nextScreen
+              !nextScreen
                   ? Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width30),
@@ -671,7 +678,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             controller: _ShiftName,
                             onTap: () {},
                           ),
-
                           // Multiple Date To Do
                           SetDetailsWidget(
                             hintText: selectedDate == null
@@ -889,16 +895,34 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             useTextField: true,
                             hintText: 'Required no. of Employees ',
                             icon: Icons.onetwothree,
-                            controller: _RequirednoofEmployees,
+                            controller: requiredEmpcontroller,
                             onTap: () {},
                           ),
+                          // IntInputWidget(
+                          //     hintText: "Required no. of Employees",
+                          //     controller: requiredEmpcontroller,
+                          //     onChanged: (text) {
+                          //       print("Photo Interval minutes ${text}");
+                          //       // setState(() {
+                          //       //   requiredEmp = text!;
+                          //       // });
+                          //     }),
                           SetDetailsWidget(
                             useTextField: true,
                             hintText: 'Restricted Radius(in meter)',
                             icon: Icons.attribution,
-                            controller: _RestrictedRadius,
+                            controller: requiredRadius,
                             onTap: () {},
                           ),
+                          // IntInputWidget(
+                          //     hintText: "Restricted Radius(in meter)",
+                          //     controller: requiredRadius,
+                          //     onChanged: (text) {
+                          //       print("Photo Interval minutes ${text}");
+                          //       // setState(() {
+                          //       //   requiredEmp = text!;
+                          //       // });
+                          //     }),
                           Row(
                             children: [
                               Checkbox(
@@ -931,9 +955,18 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             keyboardType: TextInputType.number,
                             hintText: 'Photo Upload interval in minutes ',
                             icon: Icons.backup_outlined,
-                            controller: _PhotoUploadIntervalInMinutes,
+                            controller: requiredPhotocontroller,
                             onTap: () {},
                           ),
+                          // IntInputWidget(
+                          //     hintText: "Photo Upload interval in minutes",
+                          //     controller: requiredPhotocontroller,
+                          //     onChanged: (text) {
+                          //       print("Photo Interval minutes ${text}");
+                          //       // setState(() {
+                          //       //   requiredEmp = text!;
+                          //       // });
+                          //     }),
                           SetDetailsWidget(
                             useTextField: true,
                             hintText: 'Description(Optional)',
@@ -954,10 +987,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               //fetching the patrols ids using patrol name
                               List<String> patrolids = await fireStoreService
                                   .getPatrolIdsFromNames(selectedPatrols);
-                              //fetching clientid
+                              // fetching clientid
+
                               String clientId = await fireStoreService
                                   .getClientIdfromName(selectedClint!);
-                              //fetching location details from locationame
+                              print('CLientName: $selectedClint');
+                              print('clientId: $clientId');
+
+                              // //fetching location details from locationame
                               var locationData =
                                   await fireStoreService.getLocationByName(
                                       selectedLocatin!, widget.CompanyId);
@@ -979,8 +1016,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 }
                               }
                               print("locationData  ids ${locationData}");
+                              var requiredEmp = _RequirednoofEmployees.text;
+                              // int? requiredEmpNUmber = int.parse(requiredEmp);
+                              print(
+                                  "Number Editing Controller ${requiredEmpcontroller.number}");
+                              print("ShiftName ${_ShiftName.text}");
+                              print("ShiftDesc ${_Description.text}");
 
-                              await fireStoreService.ScheduleShift(
+                              String id = await fireStoreService.ScheduleShift(
                                   selectedGuards,
                                   selectedPosition,
                                   "Address",
@@ -989,22 +1032,28 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   _selectedDates,
                                   startTime,
                                   endTime,
-                                  100,
-                                  20,
-                                  "LocationName",
                                   patrolids,
                                   clientId,
-                                  _RequirednoofEmployees.text,
-                                  _PhotoUploadIntervalInMinutes.text,
-                                  _RestrictedRadius.text,
+                                  requiredEmpcontroller.text,
+                                  requiredPhotocontroller.text,
+                                  requiredRadius.text,
                                   _isRestrictedChecked,
                                   coordinates,
                                   name,
                                   locationId,
                                   address,
                                   _Branch.text,
-                                  _Description.text);
+                                  _Description.text,
+                                  _ShiftName.text);
+                              setState(() {
+                                nextScreen = !nextScreen;
+                                _addNewTask();
+                              });
                               print("Shift Created");
+                              print("Shift ID : ${id}");
+                              setState(() {
+                                CreatedshiftId = id;
+                              });
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
@@ -1025,7 +1074,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             itemCount: tasks.length,
                             itemBuilder: (context, index) {
                               String taskName = tasks[index]['name'];
-                              bool isChecked = tasks[index]['isChecked'] ??
+                              bool isChecked =
+                                  tasks[index]['isQrRequired'] ?? false;
+                              bool isReturnChecked = tasks[index]
+                                      ['isReturnQrRequired'] ??
                                   false; // Default value is false
 
                               return Column(
@@ -1062,6 +1114,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         cursorColor: Primarycolor,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            tasks[index]['name'] = value;
+                                          });
+                                          print("textfield value $value");
+                                        },
                                       ),
                                     ),
                                     trailing: IconButton(
@@ -1086,7 +1144,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         value: isChecked,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            tasks[index]['isChecked'] =
+                                            tasks[index]['isQrRequired'] =
                                                 value ?? false;
                                           });
                                         },
@@ -1097,6 +1155,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         color: color2,
                                       ),
                                     ],
+                                    // {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false});
                                   ),
                                   SizedBox(height: height / height10),
                                   Row(
@@ -1104,10 +1163,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       Checkbox(
                                         activeColor: Primarycolor,
                                         checkColor: color1,
-                                        value: isChecked,
+                                        value: isReturnChecked,
                                         onChanged: (bool? value) {
                                           setState(() {
-                                            tasks[index]['isChecked'] =
+                                            tasks[index]['isReturnQrRequired'] =
                                                 value ?? false;
                                           });
                                         },
@@ -1119,15 +1178,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ),
                                     ],
                                   ),
-                                  Button1(
-                                      text: "Generate Qr",
-                                      onPressed: () async {
-                                        // if (taskText != null) {
-                                        //   final name = taskText.text;
-                                        //   _saveQrCode(name.toString());
-                                        // }
-                                        print("Generate qr buttoin");
-                                      })
+                                  // Button1(
+                                  //     text: "Generate Qr",
+                                  //     onPressed: () async {
+                                  //       // if (taskText != null) {
+                                  //       //   final name = taskText.text;
+                                  //       //   _saveQrCode(name.toString());
+                                  //       // }
+                                  //       print("Generate qr buttoin");
+                                  //     })
                                 ],
                               );
                             },
@@ -1143,13 +1202,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 //     nextScreen = true;
                                 //   });
                                 // }  else
+                                print(tasks);
                                 _addNewTask();
                               },
                               height: height / height50,
                               backgroundcolor: Primarycolor,
                               text: nextScreen == false
                                   ? 'Create Shift Task'
-                                  : 'Second Screen',
+                                  : 'Create Task',
                               color: Colors.black,
                             ),
                           ),
@@ -1157,7 +1217,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Button1(
                             text: 'Done',
                             onPressed: () {
-                              print(selectedGuards);
+                              print(tasks);
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,

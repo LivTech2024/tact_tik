@@ -295,12 +295,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               actions: <Widget>[
-                TextButton(
-                  child: Text('Close'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+                // TextButton(
+                //   child: Text('Close'),
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
                 TextButton(
                   child: Text('Open'),
                   onPressed: () {
@@ -577,7 +577,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         var data = await fireStoreService.fetchDataForPdf(
                             widget.EmployeId, widget.ShiftId);
 
-                        send_mail_onOut(data);
+                        // send_mail_onOut(data);
 
                         // showErrorToast(context, "try again");
                         // widget.onRefresh();

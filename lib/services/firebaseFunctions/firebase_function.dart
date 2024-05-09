@@ -59,13 +59,22 @@ class FireStoreService {
   }
 
   Future<DocumentSnapshot?> getShiftByEmployeeIdFromUserInfo(
-      String empId) async {
+    String empId,
+  ) async {
     if (empId.isEmpty) {
       return null;
     }
 
+    final currentDate = DateTime.now();
+    final oneDayBefore =
+        DateTime(currentDate.year, currentDate.month, currentDate.day - 1);
+    final oneDayAfter =
+        DateTime(currentDate.year, currentDate.month, currentDate.day + 1);
+
     final querySnapshot = await shifts
         .where("ShiftAssignedUserId", arrayContains: empId)
+        .where("ShiftDate", isGreaterThanOrEqualTo: oneDayBefore)
+        .where("ShiftDate", isLessThanOrEqualTo: oneDayAfter)
         .orderBy("ShiftDate", descending: false)
         .get();
 
@@ -1208,7 +1217,7 @@ class FireStoreService {
   }
 
   //Patrol is Completed
-  Future<void> ScheduleShift(
+  Future<String> ScheduleShift(
       List guards,
       String? role,
       String Address,
@@ -1217,9 +1226,6 @@ class FireStoreService {
       List<DateTime> Date,
       TimeOfDay? startTime,
       TimeOfDay? EndTime,
-      double Latitude,
-      double Longitude,
-      String LocationName,
       List patrol,
       String clientID,
       String requiredEmp,
@@ -1231,7 +1237,8 @@ class FireStoreService {
       String locationId,
       String locationAddress,
       String branchId,
-      String shiftDesc) async {
+      String shiftDesc,
+      String ShiftName) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1247,10 +1254,10 @@ class FireStoreService {
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
-
+      String docId;
       for (DateTime date in Date) {
         final newDocRef = await shifts.add({
-          'ShiftName': Address.split(' ')[0],
+          'ShiftName': ShiftName,
           'ShiftPosition': role,
           'ShiftDate': Timestamp.fromDate(date),
           'ShiftStartTime': timeFormatter.format(DateTime(
@@ -1270,7 +1277,7 @@ class FireStoreService {
           // 'ShiftLocation': GeoPoint(Latitude, Longitude),
           'ShiftCompanyBranchId': branchId,
           'ShiftDescription': shiftDesc,
-          'ShiftLocationName': LocationName,
+          'ShiftLocationName': locationName,
           'ShiftLocationAddress': locationAddress,
           'ShiftLocationId': locationId,
           'ShiftLocation': coordinates,
@@ -1278,26 +1285,29 @@ class FireStoreService {
           'ShiftGuardWellnessReport': [],
           'ShiftIsSpecialShift': "false", //check the condition
           // 'ShiftAddress': Address,
-          'ShiftDescription': '',
+          'ShiftDescription': shiftDesc,
           'ShiftAssignedUserId': selectedGuardIds, // array
           'ShiftClientId': clientID,
           'ShiftCompanyId': CompanyId,
-          'ShiftRequiredEmp': requiredEmp,
+          'ShiftRequiredEmp': int.parse(requiredEmp),
           'ShiftCompanyBranchId': branchId,
           'ShiftCurrentStatus': 'pending',
           'ShiftCreatedAt': Timestamp.now(),
           'ShiftModifiedAt': Timestamp.now(),
           'ShiftLinkedPatrolIds': patrol,
-          'ShiftPhotoUploadIntervalInMinutes': photoInterval,
-          'ShiftRestrictedRadius': restrictedRadius,
+          'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
+          'ShiftRestrictedRadius': int.parse(restrictedRadius),
           'ShiftEnableRestrictedRadius': shiftenablerestriction,
         });
         await newDocRef.update({"ShiftId": newDocRef.id});
+        return newDocRef.id;
       }
+      return '';
 
       print('Shifts created successfully');
     } catch (e) {
       print('Error creating shifts: $e');
+      return '';
       // Handle the error as needed
     }
   }
@@ -2975,7 +2985,7 @@ class FireStoreService {
   Future<String> getClientIdfromName(String clientName) async {
     try {
       final QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('Patrols')
+          .collection('Clients')
           .where('ClientName', isEqualTo: clientName)
           .get();
 
