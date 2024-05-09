@@ -59,13 +59,22 @@ class FireStoreService {
   }
 
   Future<DocumentSnapshot?> getShiftByEmployeeIdFromUserInfo(
-      String empId) async {
+    String empId,
+  ) async {
     if (empId.isEmpty) {
       return null;
     }
 
+    final currentDate = DateTime.now();
+    final oneDayBefore =
+        DateTime(currentDate.year, currentDate.month, currentDate.day - 1);
+    final oneDayAfter =
+        DateTime(currentDate.year, currentDate.month, currentDate.day + 1);
+
     final querySnapshot = await shifts
         .where("ShiftAssignedUserId", arrayContains: empId)
+        .where("ShiftDate", isGreaterThanOrEqualTo: oneDayBefore)
+        .where("ShiftDate", isLessThanOrEqualTo: oneDayAfter)
         .orderBy("ShiftDate", descending: false)
         .get();
 

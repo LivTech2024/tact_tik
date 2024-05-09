@@ -294,12 +294,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               actions: <Widget>[
-                TextButton(
-                  child: Text('Close'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
+                // TextButton(
+                //   child: Text('Close'),
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
                 TextButton(
                   child: Text('Open'),
                   onPressed: () {
