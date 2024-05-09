@@ -6,7 +6,14 @@ import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
 class HomeScreenCustomNavigation extends StatelessWidget {
-  const HomeScreenCustomNavigation({super.key, required this.icon, required this.color, this.useSVG = false, required this.text, required this.textcolor, this.SVG});
+  const HomeScreenCustomNavigation(
+      {super.key,
+      required this.icon,
+      required this.color,
+      this.useSVG = false,
+      required this.text,
+      required this.textcolor,
+      this.SVG});
   final IconData icon;
   final Color color;
   final Color textcolor;
@@ -29,13 +36,22 @@ class HomeScreenCustomNavigation extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          useSVG? SvgPicture.asset(SVG! , color: color,) :Icon(
-            icon,
-            size: width / width24,
-            color: color,
-          ),
+          useSVG
+              ? SvgPicture.asset(
+                  SVG!,
+                  color: color,
+                )
+              : Icon(
+                  icon,
+                  size: width / width24,
+                  color: color,
+                ),
           SizedBox(height: height / height8),
-          InterMedium(text: text , fontsize: width / width12,color: textcolor,)
+          InterMedium(
+            text: text,
+            fontsize: width / width12,
+            color: textcolor,
+          )
         ],
       ),
     );

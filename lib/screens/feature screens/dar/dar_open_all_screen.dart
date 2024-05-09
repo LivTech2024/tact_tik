@@ -16,7 +16,8 @@ import '../../../fonts/inter_bold.dart';
 import '../../../utils/colors.dart';
 
 class DarOpenAllScreen extends StatefulWidget {
-  const DarOpenAllScreen({super.key});
+  final DateTime? passdate;
+  const DarOpenAllScreen({super.key, this.passdate});
 
   @override
   State<DarOpenAllScreen> createState() => _DarOpenAllScreenState();
@@ -33,24 +34,24 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   void initState() {
     super.initState();
     _fetchShiftDetails();
-    fetchDarTileData();
+    // fetchDarTileData();
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
     final employeeId = FirebaseAuth.instance.currentUser?.uid;
     print("testtfwdf:$employeeId");
 
-    final reportsCollection = FirebaseFirestore.instance.collection('Reports');
+    final reportsCollection =
+        FirebaseFirestore.instance.collection('PatrolLogs');
     final querySnapshot = await reportsCollection
-        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .where('PatrolShiftId', isEqualTo: _userService.ShiftId)
         .get();
 
     final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
 
-    // Group reports by hour
     Map<String, List<Map<String, dynamic>>> reportsByHour = {};
     for (var report in reports) {
-      final timestampStr = report['ReportCreatedAt'] as Timestamp;
+      final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
       final creationTime = timestampStr.toDate();
       final hour = creationTime.hour;
       final hourKey = '${hour.toString().padLeft(2, '0')}:00';
@@ -63,6 +64,36 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
 
     return reportsByHour;
+  }
+
+  // patrol logs
+
+  Future<Map<String, List<Map<String, dynamic>>>> fetchReportLogs() async {
+    final employeeId = FirebaseAuth.instance.currentUser?.uid;
+
+    final patrolLogsCollection =
+        FirebaseFirestore.instance.collection('Reports');
+    final querySnapshot = await patrolLogsCollection
+        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .get();
+
+    final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    Map<String, List<Map<String, dynamic>>> patrolLogsByHour = {};
+    for (var patrolLog in patrolLogs) {
+      final timestampStr = patrolLog['ReportCreatedAt'] as Timestamp;
+      final creationTime = timestampStr.toDate();
+      final hour = creationTime.hour;
+      final hourKey = '${hour.toString().padLeft(2, '0')}:00';
+
+      if (patrolLogsByHour.containsKey(hourKey)) {
+        patrolLogsByHour[hourKey]!.add(patrolLog);
+      } else {
+        patrolLogsByHour[hourKey] = [patrolLog];
+      }
+    }
+
+    return patrolLogsByHour;
   }
 
   Future<void> _fetchShiftDetails() async {
@@ -314,8 +345,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
   }
 
-  Future<List> fetchDarTileData() async {
-    final date = DateTime.now();
+  Future<List> fetchDarTileData(DateTime? time) async {
+    final date = time ?? DateTime.now();
+    print("aajkadin:$date");
     List darList = [];
     final CollectionReference employeesDARCollection =
         FirebaseFirestore.instance.collection('EmployeesDAR');
@@ -354,6 +386,28 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
+        appBar: AppBar(
+          backgroundColor: AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: width / width24,
+            ),
+            padding: EdgeInsets.only(left: width / width20),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: InterRegular(
+            text: '',
+            fontsize: width / width18,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,7 +517,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           ),
                           SizedBox(height: height / height20),
                           FutureBuilder(
-                            future: fetchDarTileData(),
+                            future: fetchDarTileData(widget.passdate),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -518,101 +572,153 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                 vertical: height / height20,
                                                 horizontal: width / width20),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                InterMedium(
-                                                  text:
-                                                      '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                  color: color21,
-                                                ),
-                                                SizedBox(
-                                                    height: height / height10),
-                                                InterRegular(
-                                                  text:
-                                                      '${data[index]['TileContent']}',
-                                                  fontsize: width / width16,
-                                                  color: color12,
-                                                  maxLines: 5,
-                                                ),
-                                                SizedBox(
-                                                    height: height / height20),
-                                                Row(
-                                                  children: List.generate(
-                                                    (data[index]['TileImages']
-                                                            as List)
-                                                        .length,
-                                                    (i) => Container(
-                                                      margin: EdgeInsets.only(
-                                                          right: height /
-                                                              height10),
-                                                      height: height / height50,
-                                                      width: width / width50,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(width /
-                                                                    width10),
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                            data[index][
-                                                                'TileImages'][i],
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  InterMedium(
+                                                    text:
+                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
+                                                    color: color21,
+                                                  ),
+                                                  SizedBox(
+                                                      height:
+                                                          height / height10),
+                                                  InterRegular(
+                                                    text:
+                                                        '${data[index]['TileContent']}',
+                                                    fontsize: width / width16,
+                                                    color: color12,
+                                                    maxLines: 5,
+                                                  ),
+                                                  SizedBox(
+                                                      height:
+                                                          height / height20),
+                                                  Row(
+                                                    children: List.generate(
+                                                      (data[index]['TileImages']
+                                                              as List)
+                                                          .length,
+                                                      (i) => Container(
+                                                        margin: EdgeInsets.only(
+                                                            right: height /
+                                                                height10),
+                                                        height:
+                                                            height / height50,
+                                                        width: width / width50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(width /
+                                                                      width10),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              data[index][
+                                                                  'TileImages'][i],
+                                                            ),
+                                                            fit: BoxFit.cover,
                                                           ),
-                                                          fit: BoxFit.cover,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                FutureBuilder<
-                                                    Map<
-                                                        String,
-                                                        List<
-                                                            Map<String,
-                                                                dynamic>>>>(
-                                                  future: fetchReports(),
-                                                  builder: (context,
-                                                      reportsSnapshot) {
-                                                    if (reportsSnapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return const CircularProgressIndicator();
-                                                    }
-                                                    final reportsByHour =
-                                                        reportsSnapshot.data ??
-                                                            {};
-                                                    final hourKey =
-                                                        '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
-                                                    final reportsForHour =
-                                                        reportsByHour[
-                                                                hourKey] ??
-                                                            [];
+                                                  FutureBuilder<
+                                                      Map<
+                                                          String,
+                                                          List<
+                                                              Map<String,
+                                                                  dynamic>>>>(
+                                                    future: fetchReports(),
+                                                    builder: (context,
+                                                        reportsSnapshot) {
+                                                      if (reportsSnapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return const CircularProgressIndicator();
+                                                      }
 
-                                                    return Column(
-                                                      children: reportsForHour
-                                                          .map((report) {
-                                                        return Text(
-                                                          report['ReportSearchId'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    195,
-                                                                    21,
-                                                                    21),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
+                                                      final reportsByHour =
+                                                          reportsSnapshot
+                                                                  .data ??
+                                                              {};
+                                                      final hourKey =
+                                                          '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
+                                                      final reportsForHour =
+                                                          reportsByHour[
+                                                                  hourKey] ??
+                                                              [];
+
+                                                      return Column(
+                                                        children: reportsForHour
+                                                            .map((report) {
+                                                          final patrolLogCheckPoints =
+                                                              report['PatrolLogCheckPoints']
+                                                                      as List<
+                                                                          dynamic>? ??
+                                                                  [];
+                                                          final timestamp =
+                                                              report['PatrolLogStartedAt']
+                                                                  as Timestamp;
+                                                          final formattedTime =
+                                                              timestamp != null
+                                                                  ? DateFormat
+                                                                          .jm()
+                                                                      .format(timestamp
+                                                                          .toDate())
+                                                                  : '';
+                                                          return Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                formattedTime,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          195,
+                                                                          21,
+                                                                          21),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                              ...patrolLogCheckPoints
+                                                                  .expand(
+                                                                      (checkPoint) {
+                                                                final checkPointImages =
+                                                                    checkPoint['CheckPointImage']
+                                                                            as List<dynamic>? ??
+                                                                        [];
+
+                                                                return checkPointImages
+                                                                    .map(
+                                                                        (imageUrl) {
+                                                                  return Image
+                                                                      .network(
+                                                                    imageUrl
+                                                                        .toString(),
+                                                                    width:
+                                                                        100, // Adjust the width as per your requirement
+                                                                    height:
+                                                                        100, // Adjust the height as per your requirement
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  );
+                                                                }).toList();
+                                                              }).toList(),
+                                                            ],
+                                                          );
+                                                        }).toList(),
+                                                      );
+                                                    },
+                                                  ),
+                                                ]),
                                           ),
                                         ),
                                       ),
@@ -635,7 +741,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           SizedBox(height: height / 25),
                           FutureBuilder<
                               Map<String, List<Map<String, dynamic>>>>(
-                            future: fetchReports(),
+                            future: fetchReportLogs(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

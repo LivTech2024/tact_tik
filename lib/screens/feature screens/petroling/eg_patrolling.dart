@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -344,15 +345,26 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   }
 
   Future<void> _addGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 50);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        File file = File(pickedFile.path);
+        File compressedFile = await _compressImage(file);
+        setState(() {
+          uploads.add({'type': 'image', 'file': file});
+        });
+      }
     }
+  }
+
+  Future<File> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 50,
+    );
+    return File(result!.path);
   }
 
   @override

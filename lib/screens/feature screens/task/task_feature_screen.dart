@@ -77,7 +77,9 @@ class TaskFeatureScreen extends StatelessWidget {
                       constraints: BoxConstraints(
                         minHeight: height / height140,
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: width / width14 , vertical: height / height10),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: width / width14,
+                          vertical: height / height10),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
@@ -89,23 +91,22 @@ class TaskFeatureScreen extends StatelessWidget {
                             text: 'Guard Name',
                             fontsize: width / width20,
                             color: Primarycolor,
-                          ),SizedBox(height: height / height10),
-
+                          ),
+                          SizedBox(height: height / height10),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
                             fontsize: width / width20,
                             color: color1,
                             maxLines: 5,
                           ),
-                           SizedBox(height: height / height5),
-                           InterMedium(
-                              text:
-                                  'Take care of all the computers Make sure they are properly turned off',
-                              fontsize: width / width14,
-                              color: color3,
-                             maxLines: 4,
-                            ),
-
+                          SizedBox(height: height / height5),
+                          InterMedium(
+                            text:
+                                'Take care of all the computers Make sure they are properly turned off',
+                            fontsize: width / width14,
+                            color: color3,
+                            maxLines: 4,
+                          ),
                         ],
                       ),
                     ),

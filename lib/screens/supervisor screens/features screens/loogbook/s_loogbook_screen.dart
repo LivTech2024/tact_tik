@@ -11,19 +11,18 @@ import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/widget/log_type_widget.dart';
+import '../../../../common/enums/log_type_enums.dart';
+import '../../../../fonts/inter_regular.dart';
+import '../../../../utils/colors.dart';
 
-import '../../../common/enums/log_type_enums.dart';
-import '../../../fonts/inter_regular.dart';
-import '../../../utils/colors.dart';
-
-class LogBookScreen extends StatefulWidget {
-  const LogBookScreen({super.key});
+class SLogBookScreen extends StatefulWidget {
+  const SLogBookScreen({super.key});
 
   @override
-  State<LogBookScreen> createState() => _LogBookScreenState();
+  State<SLogBookScreen> createState() => _LogBookScreenState();
 }
 
-class _LogBookScreenState extends State<LogBookScreen> {
+class _LogBookScreenState extends State<SLogBookScreen> {
   DateTime _selectedDate = DateTime.now();
   DatePickerController datePickerController = DatePickerController();
 
@@ -111,7 +110,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
           ),
           StreamBuilder(
             stream:
-                FirebaseFirestore.instance.collection('LogBook').snapshots(),
+            FirebaseFirestore.instance.collection('LogBook').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
@@ -129,7 +128,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
                 );
               }
               Map<String, dynamic>? logBookDoc =
-                  fetchLogsByDateAndId(snapshot.data!.docs);
+              fetchLogsByDateAndId(snapshot.data!.docs);
 
               // print(logBookDocs);
               if (logBookDoc == null) {
@@ -147,7 +146,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                     //
-                    (context, index) {
+                        (context, index) {
                       Map<String, dynamic> logBookId = logs[index];
                       // final logData =
                       //     logBookDocs[index].data() as Map<String, dynamic>;

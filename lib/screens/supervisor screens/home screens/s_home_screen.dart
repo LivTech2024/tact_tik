@@ -555,7 +555,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
           ],

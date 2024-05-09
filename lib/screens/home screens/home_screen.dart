@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
@@ -32,7 +33,6 @@ import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../common/sizes.dart';
-import '../../fonts/inter_regular.dart';
 import '../../fonts/poppins_light.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -109,7 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
-
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -552,18 +551,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         // List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
+                        // emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");s
+                        // emails.add("dan@tpssolution.com");
                         // // "security@lestonholdings.com"
-                        // List<String> patrolLogIds = [];
-                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        // //Sending Shift end report
+                        // // List<String> patrolLogIds = [];
+                        // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
+                        // // patrolLogIds.add("sDFfQDSLM9oVxkJxuQ1D");
+                        // // patrolLogIds.add("BrRI6OO1GRiwkuiXhLQZ");
+                        // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "Hijql0nkNjA1tOhSf8wW",
-                        //   "PjiJ0MqsUA9oUwlPsUnr",
+                        //   "paHVXXC99uNtXamURMBc",
+                        //   "mgypv1SYC1RrXjJ90Eyl",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -573,15 +573,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "25 April",
-                        //   "Dan Martin",
-                        //   "20:00",
-                        //   "6:00",
+                        //   "9 May",
+                        //   "Pankaj Kumar",
+                        //   "01:20:27",
+                        //   "06:00:00",
                         //   "High level place",
                         //   "completed",
                         //   "formattedDateTime",
                         //   "formattedEndTime",
                         // );
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     'EmployeesDAR', 'YHRrTfgn07btcFtSLuAj');
+                        // String path = 'employees/patrol';
+                        // String fileName = '2024-05-08 05:00:13.307902.jpg';
+                        // await fireStoreService
+                        //     .fetchImagesWithDate(path, fileName)
+                        //     .then((imageUrls) {
+                        //   // Print the list of image URLs
+                        //   for (String url in imageUrls) {
+                        //     print(url);
+                        //   }
+                        // });
                       },
                     ),
                   ],
@@ -751,14 +763,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                         );
                                         break;
-                                      // case 1:
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder: (context) =>
-
-                                      //               ));
-                                      //   break;
                                       case 2:
                                         Navigator.push(
                                             context,
