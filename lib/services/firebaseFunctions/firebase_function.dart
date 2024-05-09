@@ -2427,17 +2427,21 @@ class FireStoreService {
           .get();
 
       // Process query results
+      // tnWGKzhtPdl2pwrzgD9T
+      // XQYpLrnAFYqLhoMvCfU5
+      // 14s56gL5OvSbASAz1Ms4
       List<String> specificDocIds = [
-        'hYCnrNiyVBww04EEquXe',
-        // 'WVaPcfsZc2KGNGdx9mRm',
-        // 'mtH1pIv87naxpoVar1gS',
-        // 'tH8hRqiAk7d0EbFN0sg5',
-        // 'XalQPx7nkclM5BkN7EZi',
-        // 'dKogAJRsF0pxCXKsdpD4',
-        // '0EJnwANH2NuZK0zPqifQ'
+        // 'breC0vfyE9vhTFLIBruk',
+        // 'UknsoKwDEdoCceRIR17r',
+        // 'htqtVzVzdb4ejCl7VvBf',
+        // 'WvBYWd0yOaS8ECZPLK8r'
+        // 'F1L6IMM2YxxnEjZc18Fr',
+        // 'RqprQaoAzXu7BLsEzHme',
+        // '4nFnTTezyLfGHCucJmHd',
       ];
 
       querySnapshot.docs.forEach((doc) {
+        print("Doc id $doc");
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
         if (specificDocIds.contains(doc.id)) {
