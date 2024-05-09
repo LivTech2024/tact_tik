@@ -2427,14 +2427,17 @@ class FireStoreService {
           .get();
 
       // Process query results
-      // tnWGKzhtPdl2pwrzgD9T
-      // XQYpLrnAFYqLhoMvCfU5
-      // 14s56gL5OvSbASAz1Ms4
       List<String> specificDocIds = [
         // 'breC0vfyE9vhTFLIBruk',
         // 'UknsoKwDEdoCceRIR17r',
         // 'htqtVzVzdb4ejCl7VvBf',
+
+        'tnWGKzhtPdl2pwrzgD9T',
+        'XQYpLrnAFYqLhoMvCfU5',
+        '14s56gL5OvSbASAz1Ms4',
+
         // 'WvBYWd0yOaS8ECZPLK8r'
+
         // 'F1L6IMM2YxxnEjZc18Fr',
         // 'RqprQaoAzXu7BLsEzHme',
         // '4nFnTTezyLfGHCucJmHd',

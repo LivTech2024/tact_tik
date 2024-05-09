@@ -546,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       () async {
                         List<String> emails = [];
                         emails.add("sutarvaibhav37@gmail.com");
-                        emails.add("pankaj.kumar1312@yahoo.com");
+                        // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
                         // emails.add("dan@tpssolution.com");
@@ -558,8 +558,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "mgypv1SYC1RrXjJ90Eyl",
+                        //   "lQ2aTaE9MND2BpVAceXm",
+                        //   "sD2atO3eTsBANTldvPbr",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -570,7 +570,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   data,
                         //   "Shift",
                         //   "9 May",
-                        //   "Pankaj Kumar",
+                        //   "sukhman kooner",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -578,6 +578,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedDateTime",
                         //   "formattedEndTime",
                         // );
+
+                        await sendDARTemplateEmail(
+                          "Leston holdings ",
+                          emails,
+                          'Tacttik Dar',
+                          "Tacttik Dar",
+                          "Shift",
+                          "9 May",
+                          "sukhman kooner",
+                          "01:20:27",
+                          "06:00:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                         // await fireStoreService.copyAndCreateDocument(
                         //     'EmployeesDAR', 'YHRrTfgn07btcFtSLuAj');
                         // String path = 'employees/patrol';
