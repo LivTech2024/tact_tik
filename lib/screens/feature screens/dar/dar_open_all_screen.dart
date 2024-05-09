@@ -41,16 +41,17 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     final employeeId = FirebaseAuth.instance.currentUser?.uid;
     print("testtfwdf:$employeeId");
 
-    final reportsCollection = FirebaseFirestore.instance.collection('Reports');
+    final reportsCollection =
+        FirebaseFirestore.instance.collection('PatrolLogs');
     final querySnapshot = await reportsCollection
-        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .where('PatrolShiftId', isEqualTo: _userService.ShiftId)
         .get();
 
     final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
 
     Map<String, List<Map<String, dynamic>>> reportsByHour = {};
     for (var report in reports) {
-      final timestampStr = report['ReportCreatedAt'] as Timestamp;
+      final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
       final creationTime = timestampStr.toDate();
       final hour = creationTime.hour;
       final hourKey = '${hour.toString().padLeft(2, '0')}:00';
@@ -63,6 +64,36 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
 
     return reportsByHour;
+  }
+
+  // patrol logs
+
+  Future<Map<String, List<Map<String, dynamic>>>> fetchReportLogs() async {
+    final employeeId = FirebaseAuth.instance.currentUser?.uid;
+
+    final patrolLogsCollection =
+        FirebaseFirestore.instance.collection('Reports');
+    final querySnapshot = await patrolLogsCollection
+        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .get();
+
+    final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+    Map<String, List<Map<String, dynamic>>> patrolLogsByHour = {};
+    for (var patrolLog in patrolLogs) {
+      final timestampStr = patrolLog['ReportCreatedAt'] as Timestamp;
+      final creationTime = timestampStr.toDate();
+      final hour = creationTime.hour;
+      final hourKey = '${hour.toString().padLeft(2, '0')}:00';
+
+      if (patrolLogsByHour.containsKey(hourKey)) {
+        patrolLogsByHour[hourKey]!.add(patrolLog);
+      } else {
+        patrolLogsByHour[hourKey] = [patrolLog];
+      }
+    }
+
+    return patrolLogsByHour;
   }
 
   Future<void> _fetchShiftDetails() async {
@@ -90,6 +121,82 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       print('Error fetching shift details: $e');
     }
   }
+
+  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
+  //   hourlyShiftDetails.clear(); // Clear previous details
+  //   for (var shift in shiftDetails) {
+  //     //
+
+  //     final startTime = '09:00'; // Extract startTime
+  //     final endTime = '13:00'; // Extract endTime
+
+  //     // Split startTime and endTime strings to get hours and minutes
+  //     final startTimeParts = startTime.split(':');
+  //     final endTimeParts = endTime.split(':');
+
+  //     final startHour = int.parse(startTimeParts[0]);
+  //     final startMinute = int.parse(startTimeParts[1]);
+  //     final endHour = int.parse(endTimeParts[0]);
+  //     final endMinute = int.parse(endTimeParts[1]);
+
+  //     if (endHour > startHour ||
+  //         (endHour == startHour && endMinute > startMinute)) {
+  //       // Shift doesn't cross midnight
+  //       for (int hour = startHour; hour < endHour; hour++) {
+  //         final hourStart =
+  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //         final hourEnd =
+  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+  //         hourlyShiftDetails.add({
+  //           'startTime': hourStart,
+  //           'endTime': hourEnd,
+  //         });
+  //       }
+  //       // Add last hour
+  //       final lastHourStart =
+  //           '${endHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //       final lastHourEnd =
+  //           '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+  //       hourlyShiftDetails.add({
+  //         'startTime': lastHourStart,
+  //         'endTime': lastHourEnd,
+  //       });
+  //     } else {
+  //       // Shift crosses midnight
+  //       for (int hour = startHour; hour < 24; hour++) {
+  //         final hourStart =
+  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //         final hourEnd =
+  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+  //         hourlyShiftDetails.add({
+  //           'startTime': hourStart,
+  //           'endTime': hourEnd,
+  //         });
+  //       }
+  //       for (int hour = 0; hour < endHour; hour++) {
+  //         final hourStart =
+  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+  //         final hourEnd =
+  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+
+  //         hourlyShiftDetails.add({
+  //           'startTime': hourStart,
+  //           'endTime': hourEnd,
+  //         });
+  //       }
+  //       // Add last hour
+  //       // final lastHourStart = '00:${startMinute.toString().padLeft(2, '0')}';
+  //       // final lastHourEnd =
+  //       //     '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+  //       // hourlyShiftDetails.add({
+  //       //   'startTime': lastHourStart,
+  //       //   'endTime': lastHourEnd,
+  //       // });
+  //     }
+  //   }
+  // }
 
   void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
     hourlyShiftDetails.clear(); // Clear previous details
@@ -443,101 +550,153 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                 vertical: height / height20,
                                                 horizontal: width / width20),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                InterMedium(
-                                                  text:
-                                                      '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                  color: color21,
-                                                ),
-                                                SizedBox(
-                                                    height: height / height10),
-                                                InterRegular(
-                                                  text:
-                                                      '${data[index]['TileContent']}',
-                                                  fontsize: width / width16,
-                                                  color: color12,
-                                                  maxLines: 5,
-                                                ),
-                                                SizedBox(
-                                                    height: height / height20),
-                                                Row(
-                                                  children: List.generate(
-                                                    (data[index]['TileImages']
-                                                            as List)
-                                                        .length,
-                                                    (i) => Container(
-                                                      margin: EdgeInsets.only(
-                                                          right: height /
-                                                              height10),
-                                                      height: height / height50,
-                                                      width: width / width50,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(width /
-                                                                    width10),
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                            data[index][
-                                                                'TileImages'][i],
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  InterMedium(
+                                                    text:
+                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
+                                                    color: color21,
+                                                  ),
+                                                  SizedBox(
+                                                      height:
+                                                          height / height10),
+                                                  InterRegular(
+                                                    text:
+                                                        '${data[index]['TileContent']}',
+                                                    fontsize: width / width16,
+                                                    color: color12,
+                                                    maxLines: 5,
+                                                  ),
+                                                  SizedBox(
+                                                      height:
+                                                          height / height20),
+                                                  Row(
+                                                    children: List.generate(
+                                                      (data[index]['TileImages']
+                                                              as List)
+                                                          .length,
+                                                      (i) => Container(
+                                                        margin: EdgeInsets.only(
+                                                            right: height /
+                                                                height10),
+                                                        height:
+                                                            height / height50,
+                                                        width: width / width50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(width /
+                                                                      width10),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              data[index][
+                                                                  'TileImages'][i],
+                                                            ),
+                                                            fit: BoxFit.cover,
                                                           ),
-                                                          fit: BoxFit.cover,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                FutureBuilder<
-                                                    Map<
-                                                        String,
-                                                        List<
-                                                            Map<String,
-                                                                dynamic>>>>(
-                                                  future: fetchReports(),
-                                                  builder: (context,
-                                                      reportsSnapshot) {
-                                                    if (reportsSnapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return const CircularProgressIndicator();
-                                                    }
-                                                    final reportsByHour =
-                                                        reportsSnapshot.data ??
-                                                            {};
-                                                    final hourKey =
-                                                        '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
-                                                    final reportsForHour =
-                                                        reportsByHour[
-                                                                hourKey] ??
-                                                            [];
+                                                  FutureBuilder<
+                                                      Map<
+                                                          String,
+                                                          List<
+                                                              Map<String,
+                                                                  dynamic>>>>(
+                                                    future: fetchReports(),
+                                                    builder: (context,
+                                                        reportsSnapshot) {
+                                                      if (reportsSnapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return const CircularProgressIndicator();
+                                                      }
 
-                                                    return Column(
-                                                      children: reportsForHour
-                                                          .map((report) {
-                                                        return Text(
-                                                          report['ReportSearchId'] ??
-                                                              '',
-                                                          style:
-                                                              const TextStyle(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    195,
-                                                                    21,
-                                                                    21),
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
+                                                      final reportsByHour =
+                                                          reportsSnapshot
+                                                                  .data ??
+                                                              {};
+                                                      final hourKey =
+                                                          '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
+                                                      final reportsForHour =
+                                                          reportsByHour[
+                                                                  hourKey] ??
+                                                              [];
+
+                                                      return Column(
+                                                        children: reportsForHour
+                                                            .map((report) {
+                                                          final patrolLogCheckPoints =
+                                                              report['PatrolLogCheckPoints']
+                                                                      as List<
+                                                                          dynamic>? ??
+                                                                  [];
+                                                          final timestamp =
+                                                              report['PatrolLogStartedAt']
+                                                                  as Timestamp;
+                                                          final formattedTime =
+                                                              timestamp != null
+                                                                  ? DateFormat
+                                                                          .jm()
+                                                                      .format(timestamp
+                                                                          .toDate())
+                                                                  : '';
+                                                          return Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                formattedTime,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          195,
+                                                                          21,
+                                                                          21),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                              ...patrolLogCheckPoints
+                                                                  .expand(
+                                                                      (checkPoint) {
+                                                                final checkPointImages =
+                                                                    checkPoint['CheckPointImage']
+                                                                            as List<dynamic>? ??
+                                                                        [];
+
+                                                                return checkPointImages
+                                                                    .map(
+                                                                        (imageUrl) {
+                                                                  return Image
+                                                                      .network(
+                                                                    imageUrl
+                                                                        .toString(),
+                                                                    width:
+                                                                        100, // Adjust the width as per your requirement
+                                                                    height:
+                                                                        100, // Adjust the height as per your requirement
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  );
+                                                                }).toList();
+                                                              }).toList(),
+                                                            ],
+                                                          );
+                                                        }).toList(),
+                                                      );
+                                                    },
+                                                  ),
+                                                ]),
                                           ),
                                         ),
                                       ),
@@ -560,7 +719,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           SizedBox(height: height / 25),
                           FutureBuilder<
                               Map<String, List<Map<String, dynamic>>>>(
-                            future: fetchReports(),
+                            future: fetchReportLogs(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
