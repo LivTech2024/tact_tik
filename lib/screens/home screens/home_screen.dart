@@ -560,30 +560,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // patrolLogIds.add("sDFfQDSLM9oVxkJxuQ1D");
                         // // patrolLogIds.add("BrRI6OO1GRiwkuiXhLQZ");
                         // // //Sending Shift end report
-                        // var data =
-                        //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "lQ2aTaE9MND2BpVAceXm",
-                        //   "sD2atO3eTsBANTldvPbr",
-                        // );
+                        var data =
+                            await fireStoreService.fetchTemplateDataForPdf(
+                          "paHVXXC99uNtXamURMBc",
+                          "zk5vrLJ2JQ4pW02w0zry",
+                        );
 
-                        // await sendShiftTemplateEmail(
-                        //   "Leston holdings ",
-                        //   emails,
-                        //   'Tacttik Shift Report',
-                        //   "Tacttik Shift Report",
-                        //   data,
-                        //   "Shift",
-                        //   "9 May",
-                        //   "sukhman kooner",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        await sendShiftTemplateEmail(
+                          "Leston holdings ",
+                          emails,
+                          'Tacttik Shift Report',
+                          "Tacttik Shift Report",
+                          data,
+                          "Shift",
+                          "10 May",
+                          "Pankaj kumar",
+                          "01:20:27",
+                          "06:00:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "EmployeesDAR", "YHRrTfgn07btcFtSLuAj");
+                        //     "PatrolLogs", "htqtVzVzdb4ejCl7VvBf");
                       },
                     ),
                   ],

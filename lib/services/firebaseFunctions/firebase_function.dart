@@ -2436,21 +2436,12 @@ class FireStoreService {
           .orderBy('PatrolLogPatrolCount')
           .get();
 
+      // 'R6UwWI2qodv58N4cSsKr'
       // Process query results
       List<String> specificDocIds = [
-        // 'breC0vfyE9vhTFLIBruk',
-        // 'UknsoKwDEdoCceRIR17r',
-        // 'htqtVzVzdb4ejCl7VvBf',
-
-        'tnWGKzhtPdl2pwrzgD9T',
-        'XQYpLrnAFYqLhoMvCfU5',
-        '14s56gL5OvSbASAz1Ms4',
-
-        // 'WvBYWd0yOaS8ECZPLK8r'
-
-        // 'F1L6IMM2YxxnEjZc18Fr',
-        // 'RqprQaoAzXu7BLsEzHme',
-        // '4nFnTTezyLfGHCucJmHd',
+        'JKxzgp6rtqOQHLlzKaOm',
+        'XCLOEbPi8FXSpKHyHNpx',
+        'axGaN9B6aBurfFAnhge8'
       ];
 
       querySnapshot.docs.forEach((doc) {

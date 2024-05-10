@@ -129,7 +129,7 @@ Future<void> sendShiftTemplateEmail(
   String shiftOutTime,
 ) async {
   final pdfBase64 = await generateShiftReportPdf(
-      ClientName, Data, GuardName, "20:00", "06:00");
+      ClientName, Data, GuardName, "19:00", "07:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -227,8 +227,8 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             <tr>
                 <td> ${GuardName}</td>
-                <td>20:00</td>
-                <td>06:00</td>
+                <td>19:00</td>
+                <td>07:00</td>
             </tr>
         </table>
 
@@ -309,8 +309,8 @@ Best regards,</p>
 //     </head>
 //     <body>
 //         <p>Employee Dar for Date 9th May attached at the bottom of the mail</p>
-//         <p>Please review the information provided and let us know if you have any questions or require further 
-// details. We are committed to ensuring the safety and security of your premises, and your feedback is 
+//         <p>Please review the information provided and let us know if you have any questions or require further
+// details. We are committed to ensuring the safety and security of your premises, and your feedback is
 // invaluable to us.</p>
 //         <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
 // Best regards,</p>
@@ -1270,13 +1270,9 @@ Best regards,</p>
   }
 }
 
-
-
-
-        // <p>Download the detailed report <a href='${downloadUrlValue}'>here</a>.</p>
+// <p>Download the detailed report <a href='${downloadUrlValue}'>here</a>.</p>
 //  final downloadurl =
 //         await fireStoreService.uploadFileToStorage(pdfResponse.bodyBytes);
-
 
 // final htmlContent = '''
 //   <!DOCTYPE html>
