@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../../fonts/inter_regular.dart';
 import '../widgets/custome_textfield.dart';
@@ -28,6 +31,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final TextEditingController _titleController;
   late final TextEditingController _darController;
+  List<String> imageUrls = [];
   bool _isSubmitting = false;
   String _userName = '';
   String _employeeId = '';
@@ -112,6 +116,22 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     });
   }
 
+  Future<void> _uploadImages() async {
+    print("Uploads Images  $uploads");
+    try {
+      for (var image in uploads) {
+        final im = await fireStoreService.addImageToDarStorage(image['file']);
+        print('Image url = ${im}');
+        imageUrls.add(im);
+      }
+      uploads.clear();
+      showSuccessToast(context, "Uploaded Successfully");
+    } catch (e) {
+      showErrorToast(context, "$e");
+      print('Error uploading images: $e');
+    }
+  }
+
   Future<void> _submitDAR() async {
     if (_isSubmitting) return;
 
@@ -124,17 +144,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       });
 
       try {
+        // await fireStoreService.addImageToDarStorage(uploads as File);
+        await _uploadImages();
         await _firestore.collection('EmployeesDAR').add({
           'DarTitle': title,
           'DarContent': darContent,
           'DarCreatedAt': FieldValue.serverTimestamp(),
           'DarUserName': widget.Username,
           'DarEmpId': widget.EmpId,
+          'DarImages': imageUrls
         });
         _titleController.clear();
         _darController.clear();
         showCustomSnackbar(context, 'DAR saved successfully');
-      Navigator.pop(context);
+        Navigator.pop(context);
       } catch (e) {
         showCustomSnackbar(context, 'Error saving DAR: $e');
       } finally {
