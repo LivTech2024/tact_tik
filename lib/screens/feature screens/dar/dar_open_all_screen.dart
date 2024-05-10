@@ -122,82 +122,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
   }
 
-  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
-  //   hourlyShiftDetails.clear(); // Clear previous details
-  //   for (var shift in shiftDetails) {
-  //     //
-
-  //     final startTime = '09:00'; // Extract startTime
-  //     final endTime = '13:00'; // Extract endTime
-
-  //     // Split startTime and endTime strings to get hours and minutes
-  //     final startTimeParts = startTime.split(':');
-  //     final endTimeParts = endTime.split(':');
-
-  //     final startHour = int.parse(startTimeParts[0]);
-  //     final startMinute = int.parse(startTimeParts[1]);
-  //     final endHour = int.parse(endTimeParts[0]);
-  //     final endMinute = int.parse(endTimeParts[1]);
-
-  //     if (endHour > startHour ||
-  //         (endHour == startHour && endMinute > startMinute)) {
-  //       // Shift doesn't cross midnight
-  //       for (int hour = startHour; hour < endHour; hour++) {
-  //         final hourStart =
-  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //         final hourEnd =
-  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-
-  //         hourlyShiftDetails.add({
-  //           'startTime': hourStart,
-  //           'endTime': hourEnd,
-  //         });
-  //       }
-  //       // Add last hour
-  //       final lastHourStart =
-  //           '${endHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //       final lastHourEnd =
-  //           '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
-  //       hourlyShiftDetails.add({
-  //         'startTime': lastHourStart,
-  //         'endTime': lastHourEnd,
-  //       });
-  //     } else {
-  //       // Shift crosses midnight
-  //       for (int hour = startHour; hour < 24; hour++) {
-  //         final hourStart =
-  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //         final hourEnd =
-  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-
-  //         hourlyShiftDetails.add({
-  //           'startTime': hourStart,
-  //           'endTime': hourEnd,
-  //         });
-  //       }
-  //       for (int hour = 0; hour < endHour; hour++) {
-  //         final hourStart =
-  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //         final hourEnd =
-  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-
-  //         hourlyShiftDetails.add({
-  //           'startTime': hourStart,
-  //           'endTime': hourEnd,
-  //         });
-  //       }
-  //       // Add last hour
-  //       // final lastHourStart = '00:${startMinute.toString().padLeft(2, '0')}';
-  //       // final lastHourEnd =
-  //       //     '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
-  //       // hourlyShiftDetails.add({
-  //       //   'startTime': lastHourStart,
-  //       //   'endTime': lastHourEnd,
-  //       // });
-  //     }
-  //   }
-  // }
-
   void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
     hourlyShiftDetails.clear(); // Clear previous details
     for (var shift in shiftDetails) {
@@ -212,43 +136,55 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       final endHour = int.parse(endTimeParts[0]);
       final endMinute = int.parse(endTimeParts[1]);
 
+      // Handle shifts starting before and ending after midnight
       if (endHour > startHour ||
           (endHour == startHour && endMinute > startMinute)) {
         // Shift doesn't cross midnight
-        for (int hour = startHour; hour < endHour; hour++) {
-          final hourStart =
-              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-          final hourEnd =
-              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+        for (int hour = startHour; hour < 24; hour++) {
+          if (hour < 24) {
+            // Ensure hours are within a day
+            final hourStart =
+                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+            final hourEnd =
+                '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
 
-          hourlyShiftDetails.add({
-            'startTime': hourStart,
-            'endTime': hourEnd,
-          });
+            hourlyShiftDetails.add({
+              'startTime': hourStart,
+              'endTime': hourEnd,
+            });
+          }
         }
       } else {
         // Shift crosses midnight
         for (int hour = startHour; hour < 24; hour++) {
-          final hourStart =
-              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-          final hourEnd =
-              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          if (hour < 24) {
+            // Ensure hours are within a day
+            final hourStart =
+                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+            final hourEnd =
+                '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
 
-          hourlyShiftDetails.add({
-            'startTime': hourStart,
-            'endTime': hourEnd,
-          });
+            hourlyShiftDetails.add({
+              'startTime': hourStart,
+              'endTime': hourEnd,
+            });
+          }
         }
-        for (int hour = 0; hour < endHour; hour++) {
-          final hourStart =
-              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-          final hourEnd =
-              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+        // Add tiles for remaining hours after midnight (if any)
+        final remainingEndHour = endHour % 24;
+        for (int hour = 0; hour <= remainingEndHour; hour++) {
+          if (hour < 24) {
+            // Ensure hours are within a day
+            final hourStart =
+                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+            final hourEnd =
+                '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
 
-          hourlyShiftDetails.add({
-            'startTime': hourStart,
-            'endTime': hourEnd,
-          });
+            hourlyShiftDetails.add({
+              'startTime': hourStart,
+              'endTime': hourEnd,
+            });
+          }
         }
       }
     }
@@ -292,13 +228,36 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           for (var shift in hourlyShiftDetails) {
             final String startTime = shift['startTime']!;
             final String endTime = shift['endTime']!;
-            final Map<String, dynamic> darTile = {
-              'TileContent': '',
-              'TileTime': '$startTime - $endTime',
-              'TileImages': [],
-              'TileLocation:': '',
-            };
-            darTiles.add(darTile);
+            print("shiftStartTime $startTime");
+            print("shiftEndTime $endTime");
+
+            final int startHour = int.parse(startTime.split(':')[0]);
+            final int endHour = int.parse(endTime.split(':')[0]);
+            print("startHour $startHour");
+            print("endHour $endHour");
+
+            if (endHour < startHour) {
+              // Handle shifts that span across midnight
+              for (int hour = startHour; hour < 24; hour++) {
+                darTiles.add({
+                  'TileContent': '',
+                  'TileImages': [],
+                  'TileLocation': '',
+                  'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
+                  'TileDate': '${date.year}-${date.month}-${date.day}',
+                });
+              }
+            } else {
+              for (int hour = startHour; hour < endHour; hour++) {
+                darTiles.add({
+                  'TileContent': '',
+                  'TileImages': [],
+                  'TileLocation': '',
+                  'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
+                  'TileDate': '${date.year}-${date.month}-${date.day}',
+                });
+              }
+            }
           }
 
           if (docRef != null) {
@@ -552,8 +511,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     CreateDarScreen(
-                                                  index: index,
-                                                  darTiles: data,
+                                                  EmpEmail: "", Username: '',
+                                                  EmpId: '',
+                                                  // index: index,
+                                                  // darTiles: data,
                                                 ),
                                               ),
                                             );
@@ -696,21 +657,25 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                                             as List<dynamic>? ??
                                                                         [];
 
-                                                                return checkPointImages
-                                                                    .map(
-                                                                        (imageUrl) {
-                                                                  return Image
-                                                                      .network(
-                                                                    imageUrl
-                                                                        .toString(),
-                                                                    width:
-                                                                        100, // Adjust the width as per your requirement
-                                                                    height:
-                                                                        100, // Adjust the height as per your requirement
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  );
-                                                                }).toList();
+                                                                if (checkPointImages
+                                                                    .isNotEmpty) {
+                                                                  return [
+                                                                    Image
+                                                                        .network(
+                                                                      checkPointImages
+                                                                          .first
+                                                                          .toString(),
+                                                                      width:
+                                                                          100,
+                                                                      height:
+                                                                          100,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )
+                                                                  ];
+                                                                } else {
+                                                                  return [];
+                                                                }
                                                               }).toList(),
                                                             ],
                                                           );

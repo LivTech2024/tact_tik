@@ -36,7 +36,7 @@ class UserService {
         shiftStartTime = shiftInfo['ShiftStartTime'] ?? " ";
         shiftEndTime = shiftInfo['ShiftEndTime'] ?? " ";
         shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
-        ShiftId = shiftInfo['ShiftId'];
+        ShiftId = shiftInfo['ShiftId'] ?? "";
         shiftClientId = shiftInfo['ShiftClientId'] ?? " ";
         shiftCompanyId = shiftInfo['ShiftCompanyId'] ?? " ";
         shiftCompanyBranchId = shiftInfo['ShiftCompanyBranchId'] ?? " ";

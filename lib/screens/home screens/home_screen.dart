@@ -548,7 +548,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        // List<String> emails = [];
+                        List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
@@ -562,8 +562,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "mgypv1SYC1RrXjJ90Eyl",
+                        //   "Hijql0nkNjA1tOhSf8wW",
+                        //   "qRtZHPi8a4JOUUwmG1Wj",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -573,8 +573,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "9 May",
-                        //   "Pankaj Kumar",
+                        //   "10 May",
+                        //   "Dan Martin",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -583,17 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // await fireStoreService.copyAndCreateDocument(
-                        //     'EmployeesDAR', 'YHRrTfgn07btcFtSLuAj');
-                        // String path = 'employees/patrol';
-                        // String fileName = '2024-05-08 05:00:13.307902.jpg';
-                        // await fireStoreService
-                        //     .fetchImagesWithDate(path, fileName)
-                        //     .then((imageUrls) {
-                        //   // Print the list of image URLs
-                        //   for (String url in imageUrls) {
-                        //     print(url);
-                        //   }
-                        // });
+                        //     "PatrolLogs", "htqtVzVzdb4ejCl7VvBf");
                       },
                     ),
                   ],
@@ -768,16 +758,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DarDisplayScreen(
+                                                    CreateDarScreen(
                                                       EmpEmail: _empEmail,
-                                                      EmpID: _employeeId,
-                                                      EmpDarCompanyId:
-                                                          _ShiftCompanyId ?? '',
-                                                      EmpDarCompanyBranchId:
-                                                          _ShiftCompanyId ?? "",
-                                                      EmpDarShiftID: _shiftId,
-                                                      EmpDarClientID:
-                                                          _shiftCLientId ?? "",
+                                                      Username: _userName,
+                                                      EmpId: _employeeId,
                                                     )));
                                         break;
                                       case 3:

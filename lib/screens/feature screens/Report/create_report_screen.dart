@@ -203,7 +203,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                 ),
                 SizedBox(height: height / height30),
                 CustomeTextField(
-                  hint: 'Tittle',
+                  hint: 'Title',
                   controller: titleController,
                   isEnabled: reportData.isNotEmpty &&
                           reportData['ReportIsFollowUpRequired'] == false
