@@ -4,7 +4,7 @@ enum LogBookEnum {
   PatrolStart,
   PatrolEnd,
   TotalWorkTime,
-  CheckPoint
+  CheckPoint, shift, end, patrolCount
 }
 
 extension ConvertMessage on String {
