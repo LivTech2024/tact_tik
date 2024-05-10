@@ -551,9 +551,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         List<String> emails = [];
                         emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("alerts.tactik@gmail.com");
-                        // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");
+                        emails.add("alerts.tactik@gmail.com");
+                        emails.add("security@lestonholdings.com");
+                        emails.add("dan@tpssolution.com");
                         // // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
                         // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
@@ -562,8 +562,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         var data =
                             await fireStoreService.fetchTemplateDataForPdf(
-                          "paHVXXC99uNtXamURMBc",
-                          "zk5vrLJ2JQ4pW02w0zry",
+                          "Hijql0nkNjA1tOhSf8wW",
+                          "qRtZHPi8a4JOUUwmG1Wj",
                         );
 
                         await sendShiftTemplateEmail(
@@ -574,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           data,
                           "Shift",
                           "10 May",
-                          "Pankaj kumar",
+                          "Dan Martin",
                           "01:20:27",
                           "06:00:00",
                           "High level place",
