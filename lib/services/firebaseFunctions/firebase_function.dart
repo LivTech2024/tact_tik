@@ -289,11 +289,11 @@ class FireStoreService {
 
   // using this at the start patrol button , so that patrol status will be unchecked for new patrol iteration
   Future<void> updatePatrolCurrentStatusToUnchecked(
-    String docId,
-    String status,
-    String? statusReportedById,
-    String? statusReportedByName,
-  ) async {
+      String docId,
+      String status,
+      String? statusReportedById,
+      String? statusReportedByName,
+      String ShiftId) async {
     try {
       // Get a reference to the Firestore document
       DocumentReference<Map<String, dynamic>> patrolDocument =
@@ -302,20 +302,20 @@ class FireStoreService {
       // Fetch the current document data
       var documentSnapshot = await patrolDocument.get();
       var data = documentSnapshot.data();
-      bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
-        DateTime dateTime1 = timestamp1.toDate();
-        DateTime dateTime2 = timestamp2.toDate();
-        return dateTime1.year == dateTime2.year &&
-            dateTime1.month == dateTime2.month &&
-            dateTime1.day == dateTime2.day;
-      }
+      // bool _isSameDay(Timestamp timestamp1, Timestamp timestamp2) {
+      //   DateTime dateTime1 = timestamp1.toDate();
+      //   DateTime dateTime2 = timestamp2.toDate();
+      //   return dateTime1.year == dateTime2.year &&r
+      //       dateTime1.month == dateTime2.month &&
+      //       dateTime1.day == dateTime2.day;
+      // }
 
       // Check if the status entry already exists
       List<Map<String, dynamic>> currentStatusList =
           List<Map<String, dynamic>>.from(data?['PatrolCurrentStatus'] ?? []);
       int existingIndex = currentStatusList.indexWhere((entry) =>
           entry['StatusReportedById'] == statusReportedById &&
-          _isSameDay(entry['StatusReportedTime'], Timestamp.now()));
+          entry['StatusShiftId'] == ShiftId);
 
       if (existingIndex != -1) {
         // If the status entry exists for today, update it
@@ -330,6 +330,7 @@ class FireStoreService {
           'Status': status,
           'StatusReportedById': statusReportedById,
           'StatusReportedByName': statusReportedByName,
+          'StatusShiftId': ShiftId,
           'StatusReportedTime': Timestamp.now(),
         });
       }
