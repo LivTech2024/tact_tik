@@ -103,8 +103,9 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
               .where((status) =>
                   status['StatusReportedById'] == emplid &&
                   status['StatusReportedTime'] != null &&
-                  _isSameDay(
-                      _parseTimestamp(status['StatusReportedTime']), today))
+                  // _isSameDay(
+                  //     _parseTimestamp(status['StatusReportedTime']), today)
+                  status['StatusShiftId'] == widget.ShiftId)
               .toList();
 
           int completedCount = filteredStatusList.fold(
@@ -402,11 +403,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             widget.p.PatrolClientID,
             widget.p.LocationId);
         await fireStoreService.updatePatrolCurrentStatusToUnchecked(
-          widget.p.PatrolId,
-          "started",
-          widget.p.EmpId,
-          widget.p.EmployeeName,
-        );
+            widget.p.PatrolId,
+            "started",
+            widget.p.EmpId,
+            widget.p.EmployeeName,
+            widget.p.ShiftId);
         DateTime now = DateTime.now();
         String formattedTime = DateFormat('HH:mm:ss').format(now);
         setState(() {
@@ -1226,7 +1227,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               .LastEndPatrolupdatePatrolsStatus(
                                                   widget.p.PatrolId,
                                                   widget.p.EmpId,
-                                                  widget.p.EmployeeName);
+                                                  widget.p.EmployeeName,
+                                                  widget.p.ShiftId);
                                           List<String> emails = [];
                                           var ClientEmail =
                                               await fireStoreService
@@ -1332,25 +1334,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               "",
                                               widget.p.PatrolClientID,
                                               widget.p.LocationId);
-                                          // sendapiEmail(
-                                          //     emails,
-                                          //     "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                          //     widget.p.EmployeeName,
-                                          //     "",
-                                          //     'Shift ',
-                                          //     formattedStartDate,
-                                          //     formattedImageUrls,
-                                          //     widget.p.EmployeeName,
-                                          //     InTime,
-                                          //     formattedEndTime,
-                                          //     widget.p.CompletedCount + 1,
-                                          //     widget.p.PatrolRequiredCount
-                                          //         .toString(),
-                                          //     widget.p.description,
-                                          //     "Completed",
-                                          //     InTime,
-                                          //     formattedPatrolOutTime,
-                                          //     CommentController.text);
+                                          sendapiEmail(
+                                              emails,
+                                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                              widget.p.EmployeeName,
+                                              "",
+                                              'Shift ',
+                                              formattedStartDate,
+                                              formattedImageUrls,
+                                              widget.p.EmployeeName,
+                                              InTime,
+                                              formattedEndTime,
+                                              widget.p.CompletedCount + 1,
+                                              widget.p.PatrolRequiredCount
+                                                  .toString(),
+                                              widget.p.description,
+                                              "Completed",
+                                              InTime,
+                                              formattedPatrolOutTime,
+                                              CommentController.text);
                                           _refresh();
                                           // sendFormattedEmail(emailParams);
                                           Navigator.pushReplacement(
@@ -1422,7 +1424,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               .EndPatrolupdatePatrolsStatus(
                                                   widget.p.PatrolId,
                                                   widget.p.EmpId,
-                                                  widget.p.EmployeeName);
+                                                  widget.p.EmployeeName,
+                                                  widget.p.ShiftId);
 
                                           List<String> emails = [];
                                           var ClientEmail =
@@ -1484,25 +1487,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           //     widget.p.LocationId);
                                           num newCount =
                                               widget.p.CompletedCount;
-                                          // sendapiEmail(
-                                          //     emails,
-                                          //     "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                          //     widget.p.EmployeeName,
-                                          //     "",
-                                          //     'Shift ',
-                                          //     formattedStartDate,
-                                          //     formattedImageUrls,
-                                          //     widget.p.EmployeeName,
-                                          //     InTime,
-                                          //     formattedEndTime,
-                                          //     widget.p.CompletedCount + 1,
-                                          //     widget.p.PatrolRequiredCount
-                                          //         .toString(),
-                                          //     widget.p.description,
-                                          //     "Completed",
-                                          //     InTime,
-                                          //     formattedPatrolOutTime,
-                                          //     CommentController.text);
+                                          sendapiEmail(
+                                              emails,
+                                              "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                              widget.p.EmployeeName,
+                                              "",
+                                              'Shift ',
+                                              formattedStartDate,
+                                              formattedImageUrls,
+                                              widget.p.EmployeeName,
+                                              InTime,
+                                              formattedEndTime,
+                                              widget.p.CompletedCount + 1,
+                                              widget.p.PatrolRequiredCount
+                                                  .toString(),
+                                              widget.p.description,
+                                              "Completed",
+                                              InTime,
+                                              formattedPatrolOutTime,
+                                              CommentController.text);
                                         }
                                         Navigator.pushReplacement(
                                             context,

@@ -549,40 +549,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       5,
                       () async {
                         List<String> emails = [];
-                        emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("alerts.tactik@gmail.com");
-                        emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
+                        // emails.add("alerts.tactik@gmail.com");
+                        // emails.add("security@lestonholdings.com");
+                        // emails.add("dan@tpssolution.com");
                         // // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
                         // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
                         // // patrolLogIds.add("sDFfQDSLM9oVxkJxuQ1D");
                         // // patrolLogIds.add("BrRI6OO1GRiwkuiXhLQZ");
                         // // //Sending Shift end report
-                        var data =
-                            await fireStoreService.fetchTemplateDataForPdf(
-                          "Hijql0nkNjA1tOhSf8wW",
-                          "qRtZHPi8a4JOUUwmG1Wj",
-                        );
+                        // var data =
+                        //     await fireStoreService.fetchTemplateDataForPdf(
+                        //   "Hijql0nkNjA1tOhSf8wW",
+                        //   "qRtZHPi8a4JOUUwmG1Wj",
+                        // );
 
-                        await sendShiftTemplateEmail(
-                          "Leston holdings ",
-                          emails,
-                          'Tacttik Shift Report',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "10 May",
-                          "Dan Martin",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings ",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "10 May",
+                        //   "Dan Martin",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // await fireStoreService.copyAndCreateDocument(
+                        //     "PatrolLogs", "htqtVzVzdb4ejCl7VvBf");
                         //     "PatrolLogs", "htqtVzVzdb4ejCl7VvBf");
                       },
                     ),
@@ -758,16 +759,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DarDisplayScreen(
+                                                    CreateDarScreen(
                                                       EmpEmail: _empEmail,
-                                                      EmpID: _employeeId,
-                                                      EmpDarCompanyId:
-                                                          _ShiftCompanyId ?? '',
-                                                      EmpDarCompanyBranchId:
-                                                          _ShiftCompanyId ?? "",
-                                                      EmpDarShiftID: _shiftId,
-                                                      EmpDarClientID:
-                                                          _shiftCLientId ?? "",
+                                                      Username: _userName,
+                                                      EmpId: _employeeId,
                                                     )));
                                         break;
                                       case 3:
