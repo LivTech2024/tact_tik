@@ -44,6 +44,7 @@ import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/assets/assets_screen.dart';
+import '../feature screens/keys/keys_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/task/task_feature_screen.dart';
@@ -543,6 +544,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
+
                     buildListTile(
                       Icons.settings,
                       'Settings',
@@ -829,7 +831,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AssetsScreen()));
+                                                    KeysScreen()));
                                         break;
                                       default:
                                     }

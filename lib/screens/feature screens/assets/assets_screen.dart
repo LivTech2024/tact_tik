@@ -17,6 +17,7 @@ class AssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -95,6 +96,7 @@ class AssetsScreen extends StatelessWidget {
                                 Container(
                                   height: height / height44,
                                   width: width / width44,
+                                  padding: EdgeInsets.symmetric(horizontal: width / width10),
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.circular(width / width10),
