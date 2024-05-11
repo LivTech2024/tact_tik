@@ -17,7 +17,15 @@ import '../../../utils/colors.dart';
 
 class DarOpenAllScreen extends StatefulWidget {
   final DateTime? passdate;
-  const DarOpenAllScreen({super.key, this.passdate});
+  final String? DarId;
+  final String Username;
+  final String Empid;
+  const DarOpenAllScreen(
+      {super.key,
+      this.passdate,
+      this.DarId,
+      required this.Username,
+      required this.Empid});
 
   @override
   State<DarOpenAllScreen> createState() => _DarOpenAllScreenState();
@@ -27,6 +35,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   List colors = [Primarycolor, color25];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
+  List<Map<String, dynamic>> hourlyShiftDetails2 = [];
+
   final _userService = UserService(firestoreService: FireStoreService());
   String _employeeId = '';
 
@@ -110,7 +120,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             'endTime': shiftEndTime,
           },
         ];
-
+        print("_fetchShiftDetails startTime&endTime ${shiftDetails}");
         _processShiftDetails(shiftDetails);
         _createBlankDARCards();
         setState(() {});
@@ -146,12 +156,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             final hourStart =
                 '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
             final hourEnd =
-                '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
             hourlyShiftDetails.add({
               'startTime': hourStart,
               'endTime': hourEnd,
             });
+            print("process 1 ${hourlyShiftDetails}");
           }
         }
       } else {
@@ -162,28 +173,31 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             final hourStart =
                 '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
             final hourEnd =
-                '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
             hourlyShiftDetails.add({
               'startTime': hourStart,
               'endTime': hourEnd,
             });
+            print("process 2 ${hourlyShiftDetails}");
           }
         }
         // Add tiles for remaining hours after midnight (if any)
-        final remainingEndHour = endHour % 24;
+        final remainingEndHour = endHour < startHour ? endHour + 24 : endHour;
+
         for (int hour = 0; hour <= remainingEndHour; hour++) {
-          if (hour < 24) {
+          if (hour < endHour) {
             // Ensure hours are within a day
             final hourStart =
                 '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
             final hourEnd =
-                '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
-            hourlyShiftDetails.add({
+            hourlyShiftDetails2.add({
               'startTime': hourStart,
               'endTime': hourEnd,
             });
+            print("process 3 ${hourlyShiftDetails2}");
           }
         }
       }
@@ -211,20 +225,23 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           bool isDarlistPresent = false;
 
           for (var dar in querySnapshot.docs) {
+            print('DarID ${widget.DarId}');
             final data = dar.data() as Map<String, dynamic>;
-            final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
-            print('date = ${date2[0]}');
-            if (date2[0] == date.day &&
-                date2[1] == date.month &&
-                date2[2] == date.year) {
-              if (data['EmpDarTile'] != null) {
-                isDarlistPresent = true;
-              }
+            if (data['EmpDarId'] == widget.DarId) {
+              // Assuming YOUR_EMPDARID_HERE is the EmpDarId you're checking for
               docRef = dar.reference;
+              if (data['EmpDarTile'] == null || data['EmpDarTile'] == "") {
+                isDarlistPresent = false; // Tile does not exist
+              } else {
+                isDarlistPresent = true; // Tile exists
+              }
+              break; // Exit the loop once the DAR is found
             }
           }
 
           final List<Map<String, dynamic>> darTiles = [];
+          final List<Map<String, dynamic>> darTiles2 = [];
+
           for (var shift in hourlyShiftDetails) {
             final String startTime = shift['startTime']!;
             final String endTime = shift['endTime']!;
@@ -259,14 +276,45 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               }
             }
           }
+          // final DateTime date = DateTime.now();
+          final DateTime nextDate = date.add(Duration(days: 1)); // Next day
+          for (var shift in hourlyShiftDetails2) {
+            final String startTime = shift['startTime']!;
+            final String endTime = shift['endTime']!;
+            print("shiftStartTime $startTime");
+            print("shiftEndTime $endTime");
+
+            final int startHour = int.parse(startTime.split(':')[0]);
+            final int endHour = int.parse(endTime.split(':')[0]);
+            print("startHour $startHour");
+            print("endHour $endHour");
+
+            for (int hour = startHour; hour < endHour; hour++) {
+              darTiles2.add({
+                'TileContent': '',
+                'TileImages': [],
+                'TileLocation': '',
+                'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
+                'TileDate':
+                    '${nextDate.year}-${nextDate.month}-${nextDate.day}',
+              });
+            }
+          }
+          // var id = await _submitDAR();
+          // await id?.set({'EmpDarTile': darTiles2}, SetOptions(merge: true));
 
           if (docRef != null) {
             if (!isDarlistPresent) {
               await docRef
                   .set({'EmpDarTile': darTiles}, SetOptions(merge: true));
+              if (darTiles2.isNotEmpty) {
+                var id = await _submitDAR();
+                await id
+                    ?.set({'EmpDarTile': darTiles2}, SetOptions(merge: true));
+              }
             }
           } else {
-            print('No document found with the matching date.');
+            // await
           }
         } else {
           print('No document found with the matching _employeeId.');
@@ -276,6 +324,34 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       }
     } catch (e) {
       print('Error creating blank DAR cards: $e');
+    }
+  }
+
+  Future<DocumentReference?> _submitDAR() async {
+    final _userService = UserService(firestoreService: FireStoreService());
+    await _userService.getShiftInfo();
+
+    try {
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      var docRef = await _firestore.collection('EmployeesDAR').add({
+        'EmpDarLocationId:': _userService.shiftLocationId,
+        'EmpDarLocationName': _userService.shiftLocation,
+        'EmpDarShiftId': _userService.ShiftId,
+        'EmpDarDate': _userService.shiftDate,
+        'EmpDarCreatedAt':
+            Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
+        'EmpDarEmpName': _userService.userName,
+        'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,
+        'EmpDarCompanyId': _userService.shiftCompanyId,
+        'EmpDarCompanyBranchId': _userService.shiftCompanyBranchId,
+        'EmpDarClientId': _userService.shiftClientId,
+        'EmpDarShiftName': _userService.shiftName
+      });
+      await docRef.update({'EmpDarId': docRef.id});
+      return docRef;
+    } catch (e) {
+      print('error = $e');
+      return null;
     }
   }
 
@@ -304,19 +380,32 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
   }
 
-  Future<List> fetchDarTileData(DateTime? time) async {
+  Future<List> fetchDarTileData(DateTime? time, String? DarID) async {
     final date = time ?? DateTime.now();
     print("aajkadin:$date");
     List darList = [];
+    List<Map<String, dynamic>> empDarTile = [];
     final CollectionReference employeesDARCollection =
         FirebaseFirestore.instance.collection('EmployeesDAR');
     print('empid = ${_employeeId}');
 
+    DateTime today = DateTime.now();
+    DateTime startDate = DateTime(today.year, today.month, today.day);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(startDate);
+    print('Formatted Date: $formattedDate');
+    print("startDate $startDate");
+    DateTime endDate = DateTime(today.year, today.month, today.day, 23, 59, 59);
+
     final QuerySnapshot querySnapshot = await employeesDARCollection
         .where('EmpDarEmpId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('EmpDarId', isEqualTo: DarID)
+        // .where('EmpDarShiftId', isEqualTo: _userService.ShiftId)
+        // .where('TileDate', isEqualTo: formattedDate)
+        // .where('TileDate', isLessThan: Timestamp.fromDate(endDate))
         .get();
-
+    String formattedDate2 = DateFormat('yyyy-M-dd').format(startDate);
     if (querySnapshot.docs.isNotEmpty) {
+      // Assuming there is only one document for today's date
       Map<String, dynamic>? docRef;
 
       for (var dar in querySnapshot.docs) {
@@ -325,18 +414,47 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         print('date3 = ${date2[0]}');
         if (date2[0] == date.day &&
             date2[1] == date.month &&
-            date2[2] == date.year) {
-          docRef = dar.data() as Map<String, dynamic>;
-        }
+            date2[2] == date.year) {}
+        docRef = dar.data() as Map<String, dynamic>;
       }
       print('docRef = ${docRef}');
       if (docRef != null) {
         darList = docRef['EmpDarTile'];
       }
+      if (docRef != null) {
+        darList = docRef['EmpDarTile'];
+      }
+      // print("darList2 ${darList2}");
+    } else {
+      print("doc is empty");
     }
-// print('darList = ${darList[0]}');
+    print("darlist ${darList}");
     return darList;
   }
+
+  // Future<List<Map<String, dynamic>>> fetchDarTileData(DateTime? time) async {
+  //   final date = time ?? DateTime.now();
+  //   print("aajkadin:$date");
+  //   List<Map<String, dynamic>> darList = [];
+  //   final CollectionReference employeesDARCollection =
+  //       FirebaseFirestore.instance.collection('EmployeesDAR');
+  //   print('empid = ${_employeeId}');
+
+  //   final QuerySnapshot querySnapshot = await employeesDARCollection
+  //       .where('EmpDarEmpId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //       .get();
+
+  //   if (querySnapshot.docs.isNotEmpty) {
+  //     for (var dar in querySnapshot.docs) {
+  //       final data = dar.data() as Map<String, dynamic>;
+  //       darList.addAll(data['EmpDarTile']);
+  //     }
+  //   } else {
+  //     print("No DAR documents found for the current user.");
+  //   }
+  //   print("darList: $darList");
+  //   return darList;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -476,7 +594,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           ),
                           SizedBox(height: height / height20),
                           FutureBuilder(
-                            future: fetchDarTileData(widget.passdate),
+                            future:
+                                fetchDarTileData(widget.passdate, widget.DarId),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -490,6 +609,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                 );
                               }
                               final data = snapshot.data;
+                              print("Data length ${data?.length}");
                               // print(
                               //     'image length = ${(data![0]['images'] as List).length}');
                               return data == null
@@ -503,18 +623,22 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                     )
                                   : Column(
                                       children: List.generate(
-                                        data.length,
+                                        data?.length ?? 0,
                                         (index) => GestureDetector(
                                           onTap: () {
+                                            print(data[index]);
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     CreateDarScreen(
-                                                  EmpEmail: "", Username: '',
-                                                  EmpId: '',
-                                                  // index: index,
                                                   // darTiles: data,
+                                                  // index: index,
+                                                  index: index,
+                                                  DarId: widget.DarId,
+                                                  darTiles: data,
+                                                  EmployeeId: widget.Empid,
+                                                  EmployeeName: widget.Username,
                                                 ),
                                               ),
                                             );
@@ -538,7 +662,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                 children: [
                                                   InterMedium(
                                                     text:
-                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
+                                                        "${data[index]['TileTime']}",
+                                                    // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
                                                     color: color21,
                                                   ),
                                                   SizedBox(
@@ -604,8 +729,12 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                           reportsSnapshot
                                                                   .data ??
                                                               {};
-                                                      final hourKey =
-                                                          '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
+                                                      final hourKey = data[
+                                                                      index][
+                                                                  'startTime'] !=
+                                                              null
+                                                          ? '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00'
+                                                          : '';
                                                       final reportsForHour =
                                                           reportsByHour[
                                                                   hourKey] ??

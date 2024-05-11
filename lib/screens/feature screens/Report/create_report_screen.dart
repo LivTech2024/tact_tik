@@ -44,6 +44,8 @@ class CreateReportScreen extends StatefulWidget {
 class _CreateReportScreenState extends State<CreateReportScreen> {
   bool shouldShowButton = true;
   List<String> imageUrls = [];
+  List<Map<String, dynamic>> DisplayIMage = [];
+
   FireStoreService fireStoreService = FireStoreService();
   List<String> tittles = [];
   Map<String, dynamic> reportData = {};
@@ -90,14 +92,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           shouldShowButton = false;
         });
       }
-      // if (reportData['ReportImage'] is List<dynamic>) {
-      //   // Add existing report images URLs to uploads list
-      //   for (var imageUrl in reportData['ReportImage']) {
-      //     setState(() {
-      //       uploads.add({'type': 'image', 'url': imageUrl});
-      //     });
-      //   }
-      // }
+      if (reportData['ReportImage'] != null) {
+        // Add existing report images URLs to uploads list
+        for (var imageUrl in reportData['ReportImage']) {
+          setState(() {
+            DisplayIMage.add({'type': 'image', 'url': imageUrl});
+          });
+        }
+      }
       print(reportData['ReportIsFollowUpRequired']);
     }
     print("Report Data for ${widget.reportId} $reportData");
@@ -105,17 +107,41 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   List<Map<String, dynamic>> uploads = [];
 
+  // Future<void> _addImage() async {
+  //   List<XFile>? pickedFiles =
+  //       await ImagePicker().pickMultiImage(imageQuality: 50);
+  //   if (pickedFiles != null) {
+  //     for (var pickedFile in pickedFiles) {
+  //       File file = File(pickedFile.path);
+  //       File compressedFile = await _compressImage(file);
+  //       setState(() {
+  //         uploads.add({'type': 'image', 'file': file});
+  //       });
+  //     }
+  //   }
+  // }
+
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
         await ImagePicker().pickMultiImage(imageQuality: 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
-        File file = File(pickedFile.path);
-        File compressedFile = await _compressImage(file);
-        setState(() {
-          uploads.add({'type': 'image', 'file': file});
-        });
+        try {
+          File file = File(pickedFile.path);
+          if (file.existsSync()) {
+            File compressedFile = await _compressImage(file);
+            setState(() {
+              uploads.add({'type': 'image', 'file': file});
+            });
+          } else {
+            print('File does not exist: ${file.path}');
+          }
+        } catch (e) {
+          print('Error adding image: $e');
+        }
       }
+    } else {
+      print('No images selected');
     }
   }
 
@@ -123,7 +149,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       file.absolute.path + '_compressed.jpg',
-      quality: 50,
+      quality: 30,
     );
     return File(result!.path);
   }
@@ -136,16 +162,22 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     }
   }
 
-  Future<void> _addVideo() async {
+  void _addVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp4'],
     );
-    if (result != null) {
+    if (result != null && result.files.isNotEmpty) {
       setState(() {
         uploads.add({'type': 'video', 'file': File(result.files.single.path!)});
       });
     }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      DisplayIMage.removeAt(index);
+    });
   }
 
   void _deleteItem(int index) {
@@ -189,409 +221,461 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width / width30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: height / height30),
-                InterBold(
-                  text: 'New Report',
-                  fontsize: width / width20,
-                  color: Primarycolor,
-                  letterSpacing: -.3,
+          child: Stack(
+            children: [
+              // if (_isLoading)
+              Align(
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: _isLoading,
+                  child: CircularProgressIndicator(),
                 ),
-                SizedBox(height: height / height30),
-                CustomeTextField(
-                  hint: 'Title',
-                  controller: titleController,
-                  isEnabled: reportData.isNotEmpty &&
-                          reportData['ReportIsFollowUpRequired'] == false
-                      ? false
-                      : true,
-                ),
-                SizedBox(height: height / height30),
-                InterBold(
-                  text: 'Category',
-                  fontsize: width / width20,
-                  color: Primarycolor,
-                  letterSpacing: -.3,
-                ),
-                SizedBox(height: height / height20),
-                Container(
-                  height: height / height60,
-                  padding: EdgeInsets.symmetric(horizontal: width / width20),
-                  decoration: BoxDecoration(
-                    color: WidgetColor,
-                    borderRadius: BorderRadius.circular(width / width10),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      iconSize: width / width24,
-                      dropdownColor: WidgetColor,
-                      style: TextStyle(color: color2),
-                      borderRadius: BorderRadius.circular(10),
-                      value: dropdownValue,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                          if (dropdownValue == 'Other') {
-                            dropdownShoe = true;
-                          } else {
-                            dropdownShoe = false;
-                          }
-                          print('$dropdownValue selected');
-                        });
-                      },
-                      items: <String?>[...tittles]
-                          .map<DropdownMenuItem<String>>((String? value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value ?? ''),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                if (dropdownShoe) SizedBox(height: height / height20),
-                if (dropdownShoe)
-                  CustomeTextField(
-                    hint: 'Create category',
-                    isExpanded: true,
-                    showIcon: false,
-                    controller: newCategoryController,
-                  ),
-                SizedBox(height: height / height20),
-                CustomeTextField(
-                  hint: 'Explain',
-                  isExpanded: true,
-                  controller: explainController,
-                  isEnabled: reportData.isNotEmpty &&
-                          reportData['ReportIsFollowUpRequired'] == false
-                      ? false
-                      : true,
-                ),
-                SizedBox(height: height / height20),
-                Container(
-                  height: height / height60,
-                  padding: EdgeInsets.symmetric(horizontal: width / width20),
-                  decoration: BoxDecoration(
-                    color: WidgetColor,
-                    borderRadius: BorderRadius.circular(width / width10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.follow_the_signs,
-                            color: color2,
-                            size: width / width24,
-                          ),
-                          SizedBox(width: width / width6),
-                          InterMedium(
-                            text: 'Follow-Up Required ?',
-                            color: color8,
-                            fontsize: width / width16,
-                            letterSpacing: -.3,
-                          )
-                        ],
-                      ),
-                      Checkbox(
-                        activeColor: Primarycolor,
-                        checkColor: color1,
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isChecked = !isChecked;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: height / height20),
-                Row(
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: uploads.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final upload = entry.value;
-                        return Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Container(
-                              height: height / height66,
-                              width: width / width66,
-                              decoration: BoxDecoration(
-                                color: WidgetColor,
-                                borderRadius: BorderRadius.circular(
-                                  width / width10,
-                                ),
-                              ),
-                              margin: EdgeInsets.all(width / width8),
-                              child: upload['type'] == 'image'
-                                  ? Image.file(
-                                      upload['file'],
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Icon(
-                                      Icons.videocam,
-                                      size: width / width20,
-                                    ),
-                            ),
-                            Positioned(
-                              top: -5,
-                              right: -5,
-                              child: IconButton(
-                                onPressed: () => _deleteItem(index),
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                  size: width / width20,
-                                ),
-                                padding: EdgeInsets.zero,
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                    SizedBox(height: height / height30),
+                    InterBold(
+                      text: 'New Report',
+                      fontsize: width / width20,
+                      color: Primarycolor,
+                      letterSpacing: -.3,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => Column(
-                            mainAxisSize: MainAxisSize.min,
+                    SizedBox(height: height / height30),
+                    CustomeTextField(
+                      hint: 'Title',
+                      controller: titleController,
+                      isEnabled: reportData.isNotEmpty &&
+                              reportData['ReportIsFollowUpRequired'] == false
+                          ? false
+                          : true,
+                    ),
+                    SizedBox(height: height / height30),
+                    InterBold(
+                      text: 'Category',
+                      fontsize: width / width20,
+                      color: Primarycolor,
+                      letterSpacing: -.3,
+                    ),
+                    SizedBox(height: height / height20),
+                    Container(
+                      height: height / height60,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width20),
+                      decoration: BoxDecoration(
+                        color: WidgetColor,
+                        borderRadius: BorderRadius.circular(width / width10),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          iconSize: width / width24,
+                          dropdownColor: WidgetColor,
+                          style: TextStyle(color: color2),
+                          borderRadius: BorderRadius.circular(10),
+                          value: dropdownValue,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                              if (dropdownValue == 'Other') {
+                                dropdownShoe = true;
+                              } else {
+                                dropdownShoe = false;
+                              }
+                              print('$dropdownValue selected');
+                            });
+                          },
+                          items: <String?>[...tittles]
+                              .map<DropdownMenuItem<String>>((String? value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value ?? ''),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    if (dropdownShoe) SizedBox(height: height / height20),
+                    if (dropdownShoe)
+                      CustomeTextField(
+                        hint: 'Create category',
+                        isExpanded: true,
+                        showIcon: false,
+                        controller: newCategoryController,
+                      ),
+                    SizedBox(height: height / height20),
+                    CustomeTextField(
+                      hint: 'Explain',
+                      isExpanded: true,
+                      controller: explainController,
+                      isEnabled: reportData.isNotEmpty &&
+                              reportData['ReportIsFollowUpRequired'] == false
+                          ? false
+                          : true,
+                    ),
+                    SizedBox(height: height / height20),
+                    Container(
+                      height: height / height60,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width20),
+                      decoration: BoxDecoration(
+                        color: WidgetColor,
+                        borderRadius: BorderRadius.circular(width / width10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
                             children: [
-                              ListTile(
-                                leading: Icon(
-                                  Icons.photo,
-                                  size: width / width20,
-                                ),
-                                title: InterRegular(
-                                  text: 'Add Image',
-                                  fontsize: width / width14,
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  _addImage();
-                                },
+                              Icon(
+                                Icons.follow_the_signs,
+                                color: color2,
+                                size: width / width24,
                               ),
-                              // ListTile(
-                              //   leading: Icon(
-                              //     Icons.video_collection,
-                              //     size: width / width20,
-                              //   ),
-                              //   title: InterRegular(
-                              //     text: 'Add Video',
-                              //     fontsize: width / width14,
-                              //   ),
-                              //   onTap: () {
-                              //     Navigator.pop(context);
-                              //     _addVideo();
-                              //   },
-                              // ),
+                              SizedBox(width: width / width6),
+                              InterMedium(
+                                text: 'Follow-Up Required ?',
+                                color: color8,
+                                fontsize: width / width16,
+                                letterSpacing: -.3,
+                              )
                             ],
                           ),
-                        );
-                      },
-                      child: Container(
-                        height: height / height66,
-                        width: width / width66,
-                        decoration: BoxDecoration(
-                          color: WidgetColor,
-                          borderRadius: BorderRadius.circular(width / width8),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.add,
-                            size: width / width20,
+                          Checkbox(
+                            activeColor: Primarycolor,
+                            checkColor: color1,
+                            value: isChecked,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                isChecked = !isChecked;
+                              });
+                            },
                           ),
-                        ),
+                        ],
                       ),
-                    )
+                    ),
+                    SizedBox(height: height / height20),
+                    Row(
+                      children: [
+                        Row(
+                          children: uploads.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final upload = entry.value;
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: height / height66,
+                                  width: width / width66,
+                                  decoration: BoxDecoration(
+                                    color: WidgetColor,
+                                    borderRadius: BorderRadius.circular(
+                                      width / width10,
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.all(width / width8),
+                                  child: upload['type'] == 'image'
+                                      ? Image.file(
+                                          upload['file'],
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Icon(
+                                          Icons.videocam,
+                                          size: width / width20,
+                                        ),
+                                ),
+                                Positioned(
+                                  top: -5,
+                                  right: -5,
+                                  child: IconButton(
+                                    onPressed: () => _deleteItem(index),
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                      size: width / width20,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    leading: Icon(
+                                      Icons.photo,
+                                      size: width / width20,
+                                    ),
+                                    title: InterRegular(
+                                      text: 'Add Image',
+                                      fontsize: width / width14,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _addImage();
+                                    },
+                                  ),
+                                  // ListTile(
+                                  //   leading: Icon(
+                                  //     Icons.video_collection,
+                                  //     size: width / width20,
+                                  //   ),
+                                  //   title: InterRegular(
+                                  //     text: 'Add Video',
+                                  //     fontsize: width / width14,
+                                  //   ),
+                                  //   onTap: () {
+                                  //     Navigator.pop(context);
+                                  //     _addVideo();
+                                  //   },
+                                  // ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: WidgetColor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width8),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.add,
+                                size: width / width20,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    if (DisplayIMage.isNotEmpty)
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 8.0,
+                        ),
+                        itemCount: DisplayIMage.length,
+                        itemBuilder: (context, index) {
+                          return Stack(
+                            children: [
+                              Image.network(
+                                DisplayIMage[index]['url'],
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        _removeImage(index);
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    SizedBox(height: height / height60),
+                    Visibility(
+                      visible: shouldShowButton,
+                      child: Button1(
+                        text: 'Submit',
+                        onPressed: () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          if (reportData['ReportIsFollowUpRequired'] == true) {
+                            final newTItle = titleController.text.trim();
+                            print("New Title ${titleController.text}");
+                            print("New Data ${explainController.text}");
+                            print("New Category ${dropdownValue}");
+                            print("Checked $isChecked");
+                            var id = await fireStoreService.getReportCategoryId(
+                                dropdownValue, widget.companyID);
+                            List<Map<String, dynamic>> imageList =
+                                await Future.wait(uploads.map((upload) async {
+                              if (upload['type'] == 'image') {
+                                // Upload the image and get its download URL
+                                List<Map<String, dynamic>> urls =
+                                    await fireStoreService
+                                        .addImageToReportStorage(
+                                            upload['file']);
+                                // Add the download URL to the list of image URLs
+                                imageUrls.add(urls[0]['downloadURL']);
+                              }
+                              return {'type': upload['type']};
+                            }));
+                            await fireStoreService.createReport(
+                                locationId: widget.locationId,
+                                locationName: widget.locationName,
+                                isFollowUpRequired: isChecked,
+                                companyId: widget.companyID,
+                                employeeId: widget.empId,
+                                employeeName: widget.empName,
+                                reportName: titleController
+                                    .text, // Use existing report name
+                                categoryName: dropdownValue,
+                                // Use existing category name
+                                categoryId: id ?? "",
+                                data: explainController.text,
+                                status: "completed",
+                                clientId: widget.ClientId,
+                                followedUpId: widget.reportId,
+                                image: imageUrls,
+                                createdAt: Timestamp.now());
+                            if (isChecked == false) {
+                              await fireStoreService
+                                  .updateFollowUp(reportData['ReportId']);
+                            }
+                            setState(() {
+                              _isLoading = false; // Set loading state
+                            });
+                            Navigator.pop(context, true);
+                          } else if (dropdownValue == "Other") {
+                            setState(() {
+                              _isLoading = true; // Set loading state
+                            });
+                            var newId =
+                                await fireStoreService.createReportCategoryId(
+                                    newCategoryController.text,
+                                    widget.companyID);
+                            List<Map<String, dynamic>> imageList =
+                                await Future.wait(uploads.map((upload) async {
+                              if (upload['type'] == 'image') {
+                                // Upload the image and get its download URL
+                                List<Map<String, dynamic>> urls =
+                                    await fireStoreService
+                                        .addImageToReportStorage(
+                                            upload['file']);
+                                // Add the download URL to the list of image URLs
+                                imageUrls.add(urls[0]['downloadURL']);
+                              }
+                              return {'type': upload['type']};
+                            }));
+                            await fireStoreService.createReport(
+                                locationId: widget.locationId,
+                                locationName: widget.locationName,
+                                isFollowUpRequired: isChecked,
+                                companyId: widget.companyID,
+                                employeeId: widget.empId,
+                                employeeName: widget.empName,
+                                reportName: titleController.text,
+                                categoryName: newCategoryController.text,
+                                categoryId: newId ?? "",
+                                data: explainController.text,
+                                status: "started",
+                                clientId: widget.ClientId,
+                                image: imageUrls,
+                                createdAt: Timestamp.now());
+                            Navigator.pop(context, true);
+                            setState(() {
+                              _isLoading = false; // Set loading state
+                            });
+                            //create a new catergory and add its return its id
+                          } else {
+                            setState(() {
+                              _isLoading = true; // Set loading state
+                            });
+                            // if (reportData['ReportIsFollowUpRequired'] == true) {
+                            //   final newTItle = titleController.text.trim();
+                            //   print("Dropdown value $dropdownValue");
+                            //   // reportData['ReportCategoryName'] = dropdownValue;
+                            //   // reportData['ReportName'] = titleController.text;
+                            //   // reportData['ReportName'] = explainController.text;
+                            //   // var id = await fireStoreService.getReportCategoryId(
+                            //   //     dropdownValue, widget.companyID);
+                            //   // await fireStoreService.createReport(
+                            //   //     locationId: widget.locationId,
+                            //   //     locationName: widget.locationName,
+                            //   //     isFollowUpRequired: isChecked,
+                            //   //     companyId: widget.companyID,
+                            //   //     employeeId: widget.empId,
+                            //   //     employeeName: widget.empName,
+                            //   //     reportName: titleController
+                            //   //         .text, // Use existing report name
+                            //   //     categoryName: reportData[
+                            //   //         'ReportCategoryName'], // Use existing category name
+                            //   //     categoryId: id ?? "",
+                            //   //     data: explainController.text,
+                            //   //     status: "started",
+                            //   //     clientId: widget.ClientId,
+                            //   //     followedUpId: widget.reportId,
+                            //   //     createdAt: Timestamp.now());
+                            //   print('Report created on follow up');
+                            // } else {
+                            var id = await fireStoreService.getReportCategoryId(
+                                dropdownValue, widget.companyID);
+                            List<Map<String, dynamic>> imageList =
+                                await Future.wait(uploads.map((upload) async {
+                              if (upload['type'] == 'image') {
+                                // Upload the image and get its download URL
+                                List<Map<String, dynamic>> urls =
+                                    await fireStoreService
+                                        .addImageToReportStorage(
+                                            upload['file']);
+                                // Add the download URL to the list of image URLs
+                                imageUrls.add(urls[0]['downloadURL']);
+                              }
+                              return {'type': upload['type']};
+                            }));
+                            await fireStoreService.createReport(
+                                locationId: widget.locationId,
+                                locationName: widget.locationName,
+                                isFollowUpRequired: isChecked,
+                                companyId: widget.companyID,
+                                employeeId: widget.empId,
+                                employeeName: widget.empName,
+                                reportName: titleController.text,
+                                categoryName: dropdownValue,
+                                categoryId: id ?? "",
+                                data: explainController.text,
+                                status: "started",
+                                clientId: widget.ClientId,
+                                image: imageUrls,
+                                createdAt: Timestamp.now());
+                            // }
+                            Navigator.pop(context, true);
+                            setState(() {
+                              _isLoading = false; // Set loading state
+                            });
+                            // Navigator.pop(context);
+                          }
+                          setState(() {
+                            _isLoading = false; // Set loading state
+                          });
+                        },
+                        backgroundcolor: Primarycolor,
+                        borderRadius: width / width10,
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: height / height60),
-                Visibility(
-                  visible: shouldShowButton,
-                  child: Button1(
-                    text: 'Submit',
-                    onPressed: () async {
-                      if (reportData['ReportIsFollowUpRequired'] == true) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        final newTItle = titleController.text.trim();
-                        print("New Title ${titleController.text}");
-                        print("New Data ${explainController.text}");
-                        print("New Category ${dropdownValue}");
-                        print("Checked $isChecked");
-                        var id = await fireStoreService.getReportCategoryId(
-                            dropdownValue, widget.companyID);
-                        List<Map<String, dynamic>> imageList =
-                            await Future.wait(uploads.map((upload) async {
-                          if (upload['type'] == 'image') {
-                            // Upload the image and get its download URL
-                            List<Map<String, dynamic>> urls =
-                                await fireStoreService
-                                    .addImageToReportStorage(upload['file']);
-                            // Add the download URL to the list of image URLs
-                            imageUrls.add(urls[0]['downloadURL']);
-                          }
-                          return {'type': upload['type']};
-                        }));
-                        await fireStoreService.createReport(
-                            locationId: widget.locationId,
-                            locationName: widget.locationName,
-                            isFollowUpRequired: isChecked,
-                            companyId: widget.companyID,
-                            employeeId: widget.empId,
-                            employeeName: widget.empName,
-                            reportName: titleController
-                                .text, // Use existing report name
-                            categoryName: dropdownValue,
-                            // Use existing category name
-                            categoryId: id ?? "",
-                            data: explainController.text,
-                            status: "completed",
-                            clientId: widget.ClientId,
-                            followedUpId: widget.reportId,
-                            image: imageUrls,
-                            createdAt: Timestamp.now());
-                        if (isChecked == false) {
-                          await fireStoreService
-                              .updateFollowUp(reportData['ReportId']);
-                        }
-                        setState(() {
-                          _isLoading = false; // Set loading state
-                        });
-                        Navigator.pop(context, true);
-                      } else if (dropdownValue == "Other") {
-                        setState(() {
-                          _isLoading = true; // Set loading state
-                        });
-                        var newId =
-                            await fireStoreService.createReportCategoryId(
-                                newCategoryController.text, widget.companyID);
-                        List<Map<String, dynamic>> imageList =
-                            await Future.wait(uploads.map((upload) async {
-                          if (upload['type'] == 'image') {
-                            // Upload the image and get its download URL
-                            List<Map<String, dynamic>> urls =
-                                await fireStoreService
-                                    .addImageToReportStorage(upload['file']);
-                            // Add the download URL to the list of image URLs
-                            imageUrls.add(urls[0]['downloadURL']);
-                          }
-                          return {'type': upload['type']};
-                        }));
-                        await fireStoreService.createReport(
-                            locationId: widget.locationId,
-                            locationName: widget.locationName,
-                            isFollowUpRequired: isChecked,
-                            companyId: widget.companyID,
-                            employeeId: widget.empId,
-                            employeeName: widget.empName,
-                            reportName: titleController.text,
-                            categoryName: newCategoryController.text,
-                            categoryId: newId ?? "",
-                            data: explainController.text,
-                            status: "started",
-                            clientId: widget.ClientId,
-                            image: imageUrls,
-                            createdAt: Timestamp.now());
-                        Navigator.pop(context, true);
-                        setState(() {
-                          _isLoading = false; // Set loading state
-                        });
-                        //create a new catergory and add its return its id
-                      } else {
-                        setState(() {
-                          _isLoading = true; // Set loading state
-                        });
-                        // if (reportData['ReportIsFollowUpRequired'] == true) {
-                        //   final newTItle = titleController.text.trim();
-                        //   print("Dropdown value $dropdownValue");
-                        //   // reportData['ReportCategoryName'] = dropdownValue;
-                        //   // reportData['ReportName'] = titleController.text;
-                        //   // reportData['ReportName'] = explainController.text;
-                        //   // var id = await fireStoreService.getReportCategoryId(
-                        //   //     dropdownValue, widget.companyID);
-                        //   // await fireStoreService.createReport(
-                        //   //     locationId: widget.locationId,
-                        //   //     locationName: widget.locationName,
-                        //   //     isFollowUpRequired: isChecked,
-                        //   //     companyId: widget.companyID,
-                        //   //     employeeId: widget.empId,
-                        //   //     employeeName: widget.empName,
-                        //   //     reportName: titleController
-                        //   //         .text, // Use existing report name
-                        //   //     categoryName: reportData[
-                        //   //         'ReportCategoryName'], // Use existing category name
-                        //   //     categoryId: id ?? "",
-                        //   //     data: explainController.text,
-                        //   //     status: "started",
-                        //   //     clientId: widget.ClientId,
-                        //   //     followedUpId: widget.reportId,
-                        //   //     createdAt: Timestamp.now());
-                        //   print('Report created on follow up');
-                        // } else {
-                        var id = await fireStoreService.getReportCategoryId(
-                            dropdownValue, widget.companyID);
-                        List<Map<String, dynamic>> imageList =
-                            await Future.wait(uploads.map((upload) async {
-                          if (upload['type'] == 'image') {
-                            // Upload the image and get its download URL
-                            List<Map<String, dynamic>> urls =
-                                await fireStoreService
-                                    .addImageToReportStorage(upload['file']);
-                            // Add the download URL to the list of image URLs
-                            imageUrls.add(urls[0]['downloadURL']);
-                          }
-                          return {'type': upload['type']};
-                        }));
-                        await fireStoreService.createReport(
-                            locationId: widget.locationId,
-                            locationName: widget.locationName,
-                            isFollowUpRequired: isChecked,
-                            companyId: widget.companyID,
-                            employeeId: widget.empId,
-                            employeeName: widget.empName,
-                            reportName: titleController.text,
-                            categoryName: dropdownValue,
-                            categoryId: id ?? "",
-                            data: explainController.text,
-                            status: "started",
-                            clientId: widget.ClientId,
-                            image: imageUrls,
-                            createdAt: Timestamp.now());
-                        // }
-                        Navigator.pop(context, true);
-                        setState(() {
-                          _isLoading = false; // Set loading state
-                        });
-                        // Navigator.pop(context);
-                      }
-                      setState(() {
-                        _isLoading = false; // Set loading state
-                      });
-                    },
-                    backgroundcolor: Primarycolor,
-                    borderRadius: width / width10,
-                  ),
-                ),
-                if (_isLoading)
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: height / height10),
-                    child: CircularProgressIndicator(),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
