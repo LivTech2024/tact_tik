@@ -97,6 +97,23 @@ class DarDisplayScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final documents = snapshot.data?.docs;
+              if (documents == null || documents.isEmpty) {
+                return Center(
+                  child: Text('No DAR entries found.'),
+                );
+              }
+
+              Map<String, List<DocumentSnapshot>> groupedByDate = {};
+              documents.forEach((document) {
+                Timestamp timestamp = document['EmpDarCreatedAt'];
+                DateTime date = timestamp.toDate();
+                String formattedDate = DateFormat('dd /MM /yyyy').format(date);
+                if (!groupedByDate.containsKey(formattedDate)) {
+                  groupedByDate[formattedDate] = [];
+                }
+                groupedByDate[formattedDate]!.add(document);
+              });
+
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -127,23 +144,21 @@ class DarDisplayScreen extends StatelessWidget {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          if (documents != null && index < documents.length) {
-                            final document = documents[index];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: height / height20),
-                                InterBold(
-                                  text: _formatTimestamp(
-                                      document['EmpDarCreatedAt']),
-                                  fontsize: width / width20,
-                                  color: Primarycolor,
-                                  letterSpacing: -.3,
-                                ),
-                                SizedBox(height: height / height30),
-                                GestureDetector(
+                          final date = groupedByDate.keys.elementAt(index);
+                          final darEntries = groupedByDate[date]!;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterBold(
+                                text: date,
+                                fontsize: width / width20,
+                                color: Primarycolor,
+                                letterSpacing: -.3,
+                              ),
+                              SizedBox(height: height / height20),
+                              ...darEntries.map((document) {
+                                return GestureDetector(
                                   onTap: () {
-                                    /*DarOpenAllScreen*/
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -161,9 +176,6 @@ class DarDisplayScreen extends StatelessWidget {
                                   child: Container(
                                     width: double.maxFinite,
                                     height: height / height200,
-                                    // constraints: BoxConstraints(
-                                    //     minHeight: height / height200,
-                                    //     ),
                                     decoration: BoxDecoration(
                                       color: WidgetColor,
                                       borderRadius: BorderRadius.circular(
@@ -220,14 +232,13 @@ class DarDisplayScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: height / height10),
-                              ],
-                            );
-                          }
-                          return const SizedBox.shrink();
+                                );
+                              }).toList(),
+                              SizedBox(height: height / height10),
+                            ],
+                          );
                         },
-                        childCount: documents?.length ?? 0,
+                        childCount: groupedByDate.length,
                       ),
                     ),
                   ),
@@ -266,10 +277,10 @@ class DarDisplayScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  String _formatTimestamp(Timestamp timestamp) {
-    DateTime dateTime = timestamp.toDate();
+String _formatTimestamp(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
 
-    return DateFormat('dd /MM /yyyy').format(dateTime);
-  }
+  return DateFormat('dd /MM /yyyy').format(dateTime);
 }

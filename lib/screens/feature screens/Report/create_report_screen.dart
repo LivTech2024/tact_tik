@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -55,6 +56,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   bool isChecked = false;
   String dropdownValue = 'Other';
   bool dropdownShoe = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -213,7 +215,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    bool _isLoading = false;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -242,18 +244,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              // if (_isLoading)
-              Align(
-                alignment: Alignment.center,
-                child: Visibility(
-                  visible: _isLoading,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              Padding(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,122 +373,111 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       ),
                     ),
                     SizedBox(height: height / height20),
-                    Row(
-                      children: [
-                        Row(
-                          children: uploads.asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final upload = entry.value;
-                            return Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  height: height / height66,
-                                  width: width / width66,
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius: BorderRadius.circular(
-                                      width / width10,
-                                    ),
-                                  ),
-                                  margin: EdgeInsets.all(width / width8),
-                                  child: upload['type'] == 'image'
-                                      ? Image.file(
-                                          upload['file'],
-                                          fit: BoxFit.cover,
-                                        )
-                                      : Icon(
-                                          Icons.videocam,
-                                          size: width / width20,
-                                        ),
-                                ),
-                                Positioned(
-                                  top: -5,
-                                  right: -5,
-                                  child: IconButton(
-                                    onPressed: () => _deleteItem(index),
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.black,
-                                      size: width / width20,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => Column(
-                                mainAxisSize: MainAxisSize.min,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Row(
+                            children: uploads.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final upload = entry.value;
+                              return Stack(
+                                clipBehavior: Clip.none,
                                 children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.camera,
-                                      size: width / width20,
+                                  Container(
+                                    height: height / height66,
+                                    width: width / width66,
+                                    decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      ),
                                     ),
-                                    title: InterRegular(
-                                      text: 'Add Image from camera',
-                                      fontsize: width / width14,
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      _addImageFromCamera();
-                                    },
+                                    margin: EdgeInsets.all(width / width8),
+                                    child: upload['type'] == 'image'
+                                        ? Image.file(
+                                            upload['file'],
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Icon(
+                                            Icons.videocam,
+                                            size: width / width20,
+                                          ),
                                   ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.photo,
-                                      size: width / width20,
+                                  Positioned(
+                                    top: -5,
+                                    right: -5,
+                                    child: IconButton(
+                                      onPressed: () => _deleteItem(index),
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
+                                        size: width / width20,
+                                      ),
+                                      padding: EdgeInsets.zero,
                                     ),
-                                    title: InterRegular(
-                                      text: 'Add Image',
-                                      fontsize: width / width14,
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      _addImage();
-                                    },
                                   ),
-                                  // ListTile(
-                                  //   leading: Icon(
-                                  //     Icons.video_collection,
-                                  //     size: width / width20,
-                                  //   ),
-                                  //   title: InterRegular(
-                                  //     text: 'Add Video',
-                                  //     fontsize: width / width14,
-                                  //   ),
-                                  //   onTap: () {
-                                  //     Navigator.pop(context);
-                                  //     _addVideo();
-                                  //   },
-                                  // ),
                                 ],
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: height / height66,
-                            width: width / width66,
-                            decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width8),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.add,
-                                size: width / width20,
-                              ),
-                            ),
+                              );
+                            }).toList(),
                           ),
-                        )
-                      ],
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.video_collection,
+                                        size: width / width20,
+                                      ),
+                                      title: InterRegular(
+                                        text: 'Add Image from Camera',
+                                        fontsize: width / width14,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addImageFromCamera();
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.photo,
+                                        size: width / width20,
+                                      ),
+                                      title: InterRegular(
+                                        text: 'Add Image',
+                                        fontsize: width / width14,
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        _addImage();
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: height / height66,
+                              width: width / width66,
+                              decoration: BoxDecoration(
+                                color: WidgetColor,
+                                borderRadius:
+                                    BorderRadius.circular(width / width8),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: width / width20,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     if (DisplayIMage.isNotEmpty)
                       GridView.builder(
@@ -519,15 +502,15 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        _removeImage(index);
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    // IconButton(
+                                    //   onPressed: () {
+                                    //     _removeImage(index);
+                                    //   },
+                                    //   icon: const Icon(
+                                    //     Icons.delete,
+                                    //     color: Colors.white,
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -572,8 +555,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
                                 employeeName: widget.empName,
-                                reportName: titleController
-                                    .text, // Use existing report name
+                                reportName: titleController.text,
+                                // Use existing report name
                                 categoryName: dropdownValue,
                                 // Use existing category name
                                 categoryId: id ?? "",
@@ -711,8 +694,15 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Visibility(
+                visible: _isLoading,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -40,6 +40,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final TextEditingController _titleController;
   late final TextEditingController _darController;
+  bool _isLoading = false;
   List<String> imageUrls = [];
   bool _isSubmitting = false;
   String _userName = '';
@@ -134,7 +135,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
         imageUrls.add(im);
       }
       uploads.clear();
-      showSuccessToast(context, "Uploaded Successfully");
+      showSuccessToast(context, "Image Successfully");
     } catch (e) {
       showErrorToast(context, "$e");
       print('Error uploading images: $e');
@@ -230,6 +231,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     localdarTiles.add(data);
     print("Updated ${widget.darTiles}");
     try {
+      setState(() {
+        _isSubmitting = true;
+        _isLoading = true;
+      });
       final user = FirebaseAuth.instance.currentUser;
       // if (user != null) {
       // await _getUserInfo();
@@ -267,12 +272,17 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           await docRef
               .set({'EmpDarTile': widget.darTiles}, SetOptions(merge: true));
         }
+        Navigator.pop(context);
       } else {
         print('No document found with the matching _employeeId.');
       }
       // } else {
       //   print('User is not logged in.');
       // }
+      setState(() {
+        _isLoading = false;
+        _isSubmitting = true;
+      });
     } catch (e) {
       print('Error creating blank DAR cards: $e');
     }
@@ -315,184 +325,196 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width / width30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: height / height30),
-                InterBold(
-                  text: widget.darTiles[widget.index]['TileTime'],
-                  fontsize: width / width20,
-                  color: Primarycolor,
-                ),
-                SizedBox(height: height / height30),
-                CustomeTextField(
-                  controller: _titleController,
-                  hint: 'Spot',
-                  isExpanded: true,
-                ),
-                SizedBox(height: height / height20),
-                CustomeTextField(
-                  controller: _darController,
-                  hint: 'Write your DAR here...',
-                  isExpanded: true,
-                ),
-                SizedBox(height: height / height20),
-                Row(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: height / height30),
+                    InterBold(
+                      text: widget.darTiles[widget.index]['TileTime'],
+                      fontsize: width / width20,
+                      color: Primarycolor,
+                    ),
+                    SizedBox(height: height / height30),
+                    CustomeTextField(
+                      controller: _titleController,
+                      hint: 'Spot',
+                      isExpanded: true,
+                    ),
+                    SizedBox(height: height / height20),
+                    CustomeTextField(
+                      controller: _darController,
+                      hint: 'Write your DAR here...',
+                      isExpanded: true,
+                    ),
+                    SizedBox(height: height / height20),
                     Row(
-                      children: uploads.asMap().entries.map(
-                        (entry) {
-                          final index = entry.key;
-                          final upload = entry.value;
-                          return Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                height: height / height66,
-                                width: width / width66,
-                                decoration: BoxDecoration(
-                                  color: WidgetColor,
-                                  borderRadius: BorderRadius.circular(
-                                    width / width10,
+                      children: [
+                        Row(
+                          children: uploads.asMap().entries.map(
+                            (entry) {
+                              final index = entry.key;
+                              final upload = entry.value;
+                              return Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    height: height / height66,
+                                    width: width / width66,
+                                    decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.all(width / width8),
+                                    child: upload['type'] == 'image'
+                                        ? Image.file(
+                                            upload['file'],
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Icon(
+                                            Icons.videocam,
+                                            size: width / width20,
+                                          ),
                                   ),
-                                ),
-                                margin: EdgeInsets.all(width / width8),
-                                child: upload['type'] == 'image'
-                                    ? Image.file(
-                                        upload['file'],
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Icon(
-                                        Icons.videocam,
+                                  Positioned(
+                                    top: -5,
+                                    right: -5,
+                                    child: IconButton(
+                                      onPressed: () => _deleteItem(index),
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
                                         size: width / width20,
                                       ),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList(),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    leading: Icon(
+                                      Icons.photo,
+                                      size: width / width20,
+                                    ),
+                                    title: InterRegular(
+                                      text: 'Add Image',
+                                      fontsize: width / width14,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _addImage();
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: Icon(
+                                      Icons.image,
+                                      size: width / width20,
+                                    ),
+                                    title: InterRegular(
+                                      text: 'Add from Gallery',
+                                      fontsize: width / width14,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _addGallery();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: WidgetColor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width8),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.add,
+                                size: width / width20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (imageUrls.isNotEmpty)
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 8.0,
+                        ),
+                        itemCount: imageUrls.length,
+                        itemBuilder: (context, index) {
+                          return Stack(
+                            children: [
+                              Image.network(
+                                imageUrls[index],
+                                fit: BoxFit.cover,
                               ),
                               Positioned(
-                                top: -5,
-                                right: -5,
-                                child: IconButton(
-                                  onPressed: () => _deleteItem(index),
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.black,
-                                    size: width / width20,
-                                  ),
-                                  padding: EdgeInsets.zero,
+                                top: 5,
+                                right: 5,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        _removeImage(index);
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           );
                         },
-                      ).toList(),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Icon(
-                                  Icons.photo,
-                                  size: width / width20,
-                                ),
-                                title: InterRegular(
-                                  text: 'Add Image',
-                                  fontsize: width / width14,
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  _addImage();
-                                },
-                              ),
-                              ListTile(
-                                leading: Icon(
-                                  Icons.image,
-                                  size: width / width20,
-                                ),
-                                title: InterRegular(
-                                  text: 'Add from Gallery',
-                                  fontsize: width / width14,
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  _addGallery();
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: height / height66,
-                        width: width / width66,
-                        decoration: BoxDecoration(
-                          color: WidgetColor,
-                          borderRadius: BorderRadius.circular(width / width8),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.add,
-                            size: width / width20,
-                          ),
-                        ),
                       ),
+                    SizedBox(height: height / height30),
+                    Button1(
+                      text: _isSubmitting ? 'Submitting...' : 'Submit',
+                      onPressed: submitDarTileData,
+                      backgroundcolor: Primarycolor,
+                      borderRadius: 20,
                     ),
                   ],
                 ),
-                if (imageUrls.isNotEmpty)
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 8.0,
-                      crossAxisSpacing: 8.0,
-                    ),
-                    itemCount: imageUrls.length,
-                    itemBuilder: (context, index) {
-                      return Stack(
-                        children: [
-                          Image.network(
-                            imageUrls[index],
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            top: 5,
-                            right: 5,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    _removeImage(index);
-                                  },
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                SizedBox(height: height / height30),
-                Button1(
-                  text: _isSubmitting ? 'Submitting...' : 'Submit',
-                  onPressed: submitDarTileData,
-                  backgroundcolor: Primarycolor,
-                  borderRadius: 20,
-                ),
-              ],
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.center,
+              child: Visibility(
+                visible: _isLoading,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ],
         ),
       ),
     );

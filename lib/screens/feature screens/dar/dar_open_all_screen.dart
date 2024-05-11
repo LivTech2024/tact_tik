@@ -801,49 +801,102 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                       ),
                     )
                   : Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                      padding: EdgeInsets.symmetric(horizontal: width / 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterBold(
                             text: 'Reports',
-                            fontsize: width / width20,
+                            fontsize: width / 20,
                             color: Primarycolor,
                           ),
-                          SizedBox(height: height / height10),
-                          Column(
-                            children: List.generate(
-                              20,
-                              (index) => Container(
-                                margin: EdgeInsets.only(
-                                  bottom: height / height10,
-                                ),
-                                height: height / height35,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      height: height / height35,
-                                      width: double.maxFinite,
-                                      decoration: BoxDecoration(
-                                        color: WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
+                          SizedBox(height: height / 25),
+                          FutureBuilder<
+                              Map<String, List<Map<String, dynamic>>>>(
+                            future: fetchReportLogs(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+
+                              if (snapshot.hasError) {
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
+                              }
+
+                              final reportsByHour = snapshot.data ?? {};
+
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: reportsByHour.length,
+                                itemBuilder: (context, index) {
+                                  final hourKey =
+                                      reportsByHour.keys.toList()[index];
+                                  final reportsForHour =
+                                      reportsByHour[hourKey] ?? [];
+
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Reports for $hourKey',
+                                        style: const TextStyle(
+                                          color: Primarycolor,
+                                        ),
                                       ),
-                                    ),
-                                    Container(
-                                      height: height / height35,
-                                      width: width / width16,
-                                      decoration: BoxDecoration(
-                                        color: colorRed3,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                      ...reportsForHour.map((report) {
+                                        final timestampStr =
+                                            report['ReportCreatedAt']
+                                                as Timestamp;
+                                        final formattedTime = timestampStr !=
+                                                null
+                                            ? DateFormat.jm()
+                                                .format(timestampStr.toDate())
+                                            : '';
+                                        return Container(
+                                          margin: EdgeInsets.only(
+                                              bottom: height / 30),
+                                          height: height / 25,
+                                          color: const Color(0xFF7C7C7C),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: double.infinity,
+                                                color: Colors.red,
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Expanded(
+                                                child: Text(
+                                                  '# ${report['ReportSearchId'] ?? ''}',
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 48, 48, 48),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Text(
+                                                formattedTime,
+                                                style: const TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 48, 48, 48),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           )
                         ],
                       ),
