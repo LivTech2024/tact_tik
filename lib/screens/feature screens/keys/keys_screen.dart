@@ -8,8 +8,8 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
-class AssetsScreen extends StatelessWidget {
-  const AssetsScreen({super.key});
+class KeysScreen extends StatelessWidget {
+  const KeysScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +18,7 @@ class AssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -36,7 +37,7 @@ class AssetsScreen extends StatelessWidget {
                 },
               ),
               title: InterRegular(
-                text: 'Visitors',
+                text: 'Keys',
                 fontsize: width / width18,
                 color: Colors.white,
                 letterSpacing: -0.3,
@@ -67,19 +68,20 @@ class AssetsScreen extends StatelessWidget {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: width / width30),
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewKeysScreen()));
+                                builder: (context) => ViewKeysScreen()));
                       },
                       child: Container(
                         height: width / width60,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: width / width10),
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
@@ -98,7 +100,7 @@ class AssetsScreen extends StatelessWidget {
                                   width: width / width44,
                                   decoration: BoxDecoration(
                                     borderRadius:
-                                    BorderRadius.circular(width / width10),
+                                        BorderRadius.circular(width / width10),
                                     color: Primarycolorlight,
                                   ),
                                   child: Center(
@@ -122,7 +124,7 @@ class AssetsScreen extends StatelessWidget {
                               color: color17,
                               fontsize: width / width16,
                             ),
-                            SizedBox(width: width / width20),
+                            // SizedBox(width: width / width10),
                           ],
                         ),
                       ),
