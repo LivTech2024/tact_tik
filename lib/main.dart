@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
               // return OfflineScreen();
             }
           },
-          child: AuthChecker(),
+          child: MobileChatScreen(),
         ),
       ),
     );
