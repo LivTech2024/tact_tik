@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,15 +28,14 @@ class CreateReportScreen extends StatefulWidget {
   final String empName;
   final String reportId;
 
-  CreateReportScreen(
-      {super.key,
-      required this.locationId,
-      required this.locationName,
-      required this.companyID,
-      required this.empId,
-      required this.empName,
-      required this.ClientId,
-      required this.reportId});
+  CreateReportScreen({super.key,
+    required this.locationId,
+    required this.locationName,
+    required this.companyID,
+    required this.empId,
+    required this.empName,
+    required this.ClientId,
+    required this.reportId});
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
@@ -55,6 +55,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   bool isChecked = false;
   String dropdownValue = 'Other';
   bool dropdownShoe = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -77,7 +78,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   void getAllReports() async {
     Map<String, dynamic>? data =
-        (await fireStoreService.getReportWithId(widget.reportId))!;
+    (await fireStoreService.getReportWithId(widget.reportId))!;
     if (data != null) {
       setState(() {
         reportData = data;
@@ -123,7 +124,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 50);
+    await ImagePicker().pickMultiImage(imageQuality: 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -189,9 +190,15 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   // Initialize default value
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-    bool _isLoading = false;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -211,7 +218,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           ),
           title: InterRegular(
             text: reportData.isNotEmpty &&
-                    reportData['ReportIsFollowUpRequired'] == true
+                reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
             fontsize: width / width18,
@@ -220,18 +227,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              // if (_isLoading)
-              Align(
-                alignment: Alignment.center,
-                child: Visibility(
-                  visible: _isLoading,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              Padding(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +247,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       hint: 'Title',
                       controller: titleController,
                       isEnabled: reportData.isNotEmpty &&
-                              reportData['ReportIsFollowUpRequired'] == false
+                          reportData['ReportIsFollowUpRequired'] == false
                           ? false
                           : true,
                     ),
@@ -263,7 +262,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     Container(
                       height: height / height60,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width20),
+                      EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
@@ -311,7 +310,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       isExpanded: true,
                       controller: explainController,
                       isEnabled: reportData.isNotEmpty &&
-                              reportData['ReportIsFollowUpRequired'] == false
+                          reportData['ReportIsFollowUpRequired'] == false
                           ? false
                           : true,
                     ),
@@ -319,7 +318,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     Container(
                       height: height / height60,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width20),
+                      EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
@@ -357,108 +356,115 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       ),
                     ),
                     SizedBox(height: height / height20),
-                    Row(
-                      children: [
-                        Row(
-                          children: uploads.asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final upload = entry.value;
-                            return Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  height: height / height66,
-                                  width: width / width66,
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius: BorderRadius.circular(
-                                      width / width10,
-                                    ),
-                                  ),
-                                  margin: EdgeInsets.all(width / width8),
-                                  child: upload['type'] == 'image'
-                                      ? Image.file(
-                                          upload['file'],
-                                          fit: BoxFit.cover,
-                                        )
-                                      : Icon(
-                                          Icons.videocam,
-                                          size: width / width20,
-                                        ),
-                                ),
-                                Positioned(
-                                  top: -5,
-                                  right: -5,
-                                  child: IconButton(
-                                    onPressed: () => _deleteItem(index),
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.black,
-                                      size: width / width20,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => Column(
-                                mainAxisSize: MainAxisSize.min,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Row(
+                            children: uploads
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              final index = entry.key;
+                              final upload = entry.value;
+                              return Stack(
+                                clipBehavior: Clip.none,
                                 children: [
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.photo,
+                                  Container(
+                                    height: height / height66,
+                                    width: width / width66,
+                                    decoration: BoxDecoration(
+                                      color: WidgetColor,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.all(width / width8),
+                                    child: upload['type'] == 'image'
+                                        ? Image.file(
+                                      upload['file'],
+                                      fit: BoxFit.cover,
+                                    )
+                                        : Icon(
+                                      Icons.videocam,
                                       size: width / width20,
                                     ),
-                                    title: InterRegular(
-                                      text: 'Add Image',
-                                      fontsize: width / width14,
-                                    ),
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      _addImage();
-                                    },
                                   ),
-                                  // ListTile(
-                                  //   leading: Icon(
-                                  //     Icons.video_collection,
-                                  //     size: width / width20,
-                                  //   ),
-                                  //   title: InterRegular(
-                                  //     text: 'Add Video',
-                                  //     fontsize: width / width14,
-                                  //   ),
-                                  //   onTap: () {
-                                  //     Navigator.pop(context);
-                                  //     _addVideo();
-                                  //   },
-                                  // ),
+                                  Positioned(
+                                    top: -5,
+                                    right: -5,
+                                    child: IconButton(
+                                      onPressed: () => _deleteItem(index),
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.black,
+                                        size: width / width20,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                  ),
                                 ],
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: height / height66,
-                            width: width / width66,
-                            decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width8),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.add,
-                                size: width / width20,
-                              ),
-                            ),
+                              );
+                            }).toList(),
                           ),
-                        )
-                      ],
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) =>
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.photo,
+                                            size: width / width20,
+                                          ),
+                                          title: InterRegular(
+                                            text: 'Add Image',
+                                            fontsize: width / width14,
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _addImage();
+                                          },
+                                        ),
+                                        // ListTile(
+                                        //   leading: Icon(
+                                        //     Icons.video_collection,
+                                        //     size: width / width20,
+                                        //   ),
+                                        //   title: InterRegular(
+                                        //     text: 'Add Video',
+                                        //     fontsize: width / width14,
+                                        //   ),
+                                        //   onTap: () {
+                                        //     Navigator.pop(context);
+                                        //     _addVideo();
+                                        //   },
+                                        // ),
+                                      ],
+                                    ),
+                              );
+                            },
+                            child: Container(
+                              height: height / height66,
+                              width: width / width66,
+                              decoration: BoxDecoration(
+                                color: WidgetColor,
+                                borderRadius:
+                                BorderRadius.circular(width / width8),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: width / width20,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     if (DisplayIMage.isNotEmpty)
                       GridView.builder(
@@ -517,13 +523,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             var id = await fireStoreService.getReportCategoryId(
                                 dropdownValue, widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
+                            await Future.wait(uploads.map((upload) async {
                               if (upload['type'] == 'image') {
                                 // Upload the image and get its download URL
                                 List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
+                                await fireStoreService
+                                    .addImageToReportStorage(
+                                    upload['file']);
                                 // Add the download URL to the list of image URLs
                                 imageUrls.add(urls[0]['downloadURL']);
                               }
@@ -536,8 +542,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 companyId: widget.companyID,
                                 employeeId: widget.empId,
                                 employeeName: widget.empName,
-                                reportName: titleController
-                                    .text, // Use existing report name
+                                reportName: titleController.text,
+                                // Use existing report name
                                 categoryName: dropdownValue,
                                 // Use existing category name
                                 categoryId: id ?? "",
@@ -560,17 +566,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               _isLoading = true; // Set loading state
                             });
                             var newId =
-                                await fireStoreService.createReportCategoryId(
-                                    newCategoryController.text,
-                                    widget.companyID);
+                            await fireStoreService.createReportCategoryId(
+                                newCategoryController.text,
+                                widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
+                            await Future.wait(uploads.map((upload) async {
                               if (upload['type'] == 'image') {
                                 // Upload the image and get its download URL
                                 List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
+                                await fireStoreService
+                                    .addImageToReportStorage(
+                                    upload['file']);
                                 // Add the download URL to the list of image URLs
                                 imageUrls.add(urls[0]['downloadURL']);
                               }
@@ -630,13 +636,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             var id = await fireStoreService.getReportCategoryId(
                                 dropdownValue, widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
+                            await Future.wait(uploads.map((upload) async {
                               if (upload['type'] == 'image') {
                                 // Upload the image and get its download URL
                                 List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
+                                await fireStoreService
+                                    .addImageToReportStorage(
+                                    upload['file']);
                                 // Add the download URL to the list of image URLs
                                 imageUrls.add(urls[0]['downloadURL']);
                               }
@@ -675,8 +681,15 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Visibility(
+                visible: _isLoading,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ],
         ),
       ),
     );
