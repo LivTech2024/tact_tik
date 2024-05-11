@@ -1435,7 +1435,7 @@ class FireStoreService {
 
       Reference uploadRef =
           storageRef.child("employees/report/$uniqueName.jpg");
-
+      
       // Upload the already compressed image to Firebase Storage
       await uploadRef.putFile(file);
 

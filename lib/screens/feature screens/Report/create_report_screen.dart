@@ -123,7 +123,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 50);
+        await ImagePicker().pickMultiImage(imageQuality: 30);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -139,6 +139,28 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
         } catch (e) {
           print('Error adding image: $e');
         }
+      }
+    } else {
+      print('No images selected');
+    }
+  }
+
+  Future<void> _addImageFromCamera() async {
+    XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      try {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          File compressedFile = await _compressImage(file);
+          setState(() {
+            uploads.add({'type': 'image', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      } catch (e) {
+        print('Error adding image: $e');
       }
     } else {
       print('No images selected');
@@ -410,6 +432,20 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               builder: (context) => Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
+                                  ListTile(
+                                    leading: Icon(
+                                      Icons.camera,
+                                      size: width / width20,
+                                    ),
+                                    title: InterRegular(
+                                      text: 'Add Image from camera',
+                                      fontsize: width / width14,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      _addImageFromCamera();
+                                    },
+                                  ),
                                   ListTile(
                                     leading: Icon(
                                       Icons.photo,

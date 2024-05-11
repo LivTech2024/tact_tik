@@ -205,6 +205,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           PatrolCompanyID: patrolCompanyId,
           PatrolClientID: patrolClientId, ShiftDate: widget.ShiftDate,
           ShiftId: widget.ShiftId, LocationId: widget.ShiftLocationId,
+          patrolClientId: patrolClientId,
         ),
       );
     }
@@ -1319,12 +1320,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   url['CheckPointName']
                                             };
                                           }).toList();
-                                          var clientId = await fireStoreService
-                                              .getShiftClientID(
-                                                  widget.p.ShiftId);
+                                          // var clientId = await fireStoreService
+                                          //     .getShiftClientID(
+                                          //         widget.p.ShiftId);
                                           var clientName =
                                               await fireStoreService
-                                                  .getClientName(clientId!);
+                                                  .getClientName(
+                                                      widget.p.PatrolClientID);
                                           await fireStoreService.addToLog(
                                               "patrol_end",
                                               "",
@@ -1466,12 +1468,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           // emails.add(ClientEmail!);
                                           // emails.add(AdminEmail!);
                                           // emails.add(defaultEmail!);
-                                          var clientId = await fireStoreService
-                                              .getShiftClientID(
-                                                  widget.p.ShiftId);
+                                          // var clientId = await fireStoreService
+                                          //     .getShiftClientID(
+                                          //         widget.p.ShiftId);
                                           var clientName =
                                               await fireStoreService
-                                                  .getClientName(clientId!);
+                                                  .getClientName(
+                                                      widget.p.PatrolClientID);
                                           await fireStoreService.addToLog(
                                               "patrol_end",
                                               "",
@@ -1557,13 +1560,15 @@ class Patrol {
   final String ShiftId;
   final String LocationId;
 
+  final String patrolClientId;
+
   Patrol({
     required this.title,
     required this.PatrolCompanyID,
     required this.PatrolClientID,
     required this.description,
     required this.categories,
-
+    required this.patrolClientId,
     // required this.time,
     required this.PatrolId,
     required this.EmpId,

@@ -151,9 +151,9 @@ class DarDisplayScreen extends StatelessWidget {
                                           passdate: (document['EmpDarCreatedAt']
                                                   as Timestamp)
                                               .toDate(),
-                                          DarId: document['EmpDarId'],
                                           Username: Username,
                                           Empid: EmpID,
+                                          DarId: document['EmpDarId'],
                                         ),
                                       ),
                                     );
