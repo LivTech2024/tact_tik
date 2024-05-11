@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -460,31 +459,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
-            ),
-            padding: EdgeInsets.only(left: width / width20),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: InterRegular(
-            text: '',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
-          ),
-          centerTitle: true,
-        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -517,7 +495,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         ),
                       ),
                     ),
-                    const VerticalDivider(
+                    VerticalDivider(
                       color: Primarycolor,
                     ),
                     Expanded(
@@ -823,102 +801,49 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                       ),
                     )
                   : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width / 30),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterBold(
                             text: 'Reports',
-                            fontsize: width / 20,
+                            fontsize: width / width20,
                             color: Primarycolor,
                           ),
-                          SizedBox(height: height / 25),
-                          FutureBuilder<
-                              Map<String, List<Map<String, dynamic>>>>(
-                            future: fetchReportLogs(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-
-                              if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Error: ${snapshot.error}'));
-                              }
-
-                              final reportsByHour = snapshot.data ?? {};
-
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: reportsByHour.length,
-                                itemBuilder: (context, index) {
-                                  final hourKey =
-                                      reportsByHour.keys.toList()[index];
-                                  final reportsForHour =
-                                      reportsByHour[hourKey] ?? [];
-
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Reports for $hourKey',
-                                        style: const TextStyle(
-                                          color: Primarycolor,
-                                        ),
+                          SizedBox(height: height / height10),
+                          Column(
+                            children: List.generate(
+                              20,
+                              (index) => Container(
+                                margin: EdgeInsets.only(
+                                  bottom: height / height10,
+                                ),
+                                height: height / height35,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: height / height35,
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: WidgetColor,
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
                                       ),
-                                      ...reportsForHour.map((report) {
-                                        final timestampStr =
-                                            report['ReportCreatedAt']
-                                                as Timestamp;
-                                        final formattedTime = timestampStr !=
-                                                null
-                                            ? DateFormat.jm()
-                                                .format(timestampStr.toDate())
-                                            : '';
-                                        return Container(
-                                          margin: EdgeInsets.only(
-                                              bottom: height / 30),
-                                          height: height / 25,
-                                          color: const Color(0xFF7C7C7C),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 20,
-                                                height: double.infinity,
-                                                color: Colors.red,
-                                              ),
-                                              const SizedBox(width: 2),
-                                              Expanded(
-                                                child: Text(
-                                                  '# ${report['ReportSearchId'] ?? ''}',
-                                                  style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 48, 48, 48),
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 2),
-                                              Text(
-                                                formattedTime,
-                                                style: const TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 48, 48, 48),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
+                                    ),
+                                    Container(
+                                      height: height / height35,
+                                      width: width / width16,
+                                      decoration: BoxDecoration(
+                                        color: colorRed3,
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           )
                         ],
                       ),
