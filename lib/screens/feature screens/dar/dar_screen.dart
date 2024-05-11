@@ -18,6 +18,7 @@ import '../../../common/sizes.dart';
 class DarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
   final String EmpID;
+  final String Username;
   final String EmpDarCompanyId;
   final String EmpDarCompanyBranchId;
   final String EmpDarShiftID;
@@ -30,7 +31,8 @@ class DarDisplayScreen extends StatelessWidget {
       required this.EmpDarCompanyId,
       required this.EmpDarCompanyBranchId,
       required this.EmpDarShiftID,
-      required this.EmpDarClientID})
+      required this.EmpDarClientID,
+      required this.Username})
       : super(key: key);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -41,44 +43,27 @@ class DarDisplayScreen extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     // keep this code in firebase_function file  and handle its errors here
-    Future<void> _submitDAR() async {
+    Future<String?> _submitDAR() async {
       final _userService = UserService(firestoreService: FireStoreService());
       await _userService.getShiftInfo();
-      // if (_isSubmitting) return;
-
-      // final title = _titleController.text.trim();
-      // final darContent = _darController.text.trim();
-      // setState(() {
-      //   _isSubmitting = true;
-      // });
-
       try {
         final date = DateTime.now();
-        List darList = [];
         final CollectionReference employeesDARCollection =
             FirebaseFirestore.instance.collection('EmployeesDAR');
 
         final QuerySnapshot querySnapshot = await employeesDARCollection
             .where('EmpDarEmpId',
                 isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('EmpDarShiftId', isEqualTo: _userService.ShiftId)
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
-          for (var dar in querySnapshot.docs) {
-            final data = dar.data() as Map<String, dynamic>;
-            final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
-            print('date3 = ${date2[0]}');
-            if (date2[0] == date.day &&
-                date2[1] == date.month &&
-                date2[2] == date.year) {
-              if (dar.exists) {
-                return null;
-              }
-            }
-          }
+          print(
+              'Document with EmpDarShiftId ${_userService.ShiftId} already exists.');
+          // return null;
         }
 
-        var docRef = await _firestore.collection('EmployeesDAR').add({
+        var docRef = await employeesDARCollection.add({
           'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
@@ -89,12 +74,15 @@ class DarDisplayScreen extends StatelessWidget {
           'EmpDarCompanyId': _userService.shiftCompanyId,
           'EmpDarCompanyBranchId': _userService.shiftCompanyBranchId,
           'EmpDarClientId': _userService.shiftClientId,
+          'EmpDarShiftName': _userService.shiftName
         });
         await docRef.update({'EmpDarId': docRef.id});
+        print(
+            'Document with EmpDarShiftId ${_userService.ShiftId} created successfully.');
+        return docRef.id;
       } catch (e) {
-        print('error = $e');
+        print('Error creating document: $e');
       }
-      print('function run successfully');
     }
 
     return SafeArea(
@@ -109,6 +97,23 @@ class DarDisplayScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final documents = snapshot.data?.docs;
+              if (documents == null || documents.isEmpty) {
+                return Center(
+                  child: Text('No DAR entries found.'),
+                );
+              }
+
+              Map<String, List<DocumentSnapshot>> groupedByDate = {};
+              documents.forEach((document) {
+                Timestamp timestamp = document['EmpDarCreatedAt'];
+                DateTime date = timestamp.toDate();
+                String formattedDate = DateFormat('dd /MM /yyyy').format(date);
+                if (!groupedByDate.containsKey(formattedDate)) {
+                  groupedByDate[formattedDate] = [];
+                }
+                groupedByDate[formattedDate]!.add(document);
+              });
+
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -139,23 +144,21 @@ class DarDisplayScreen extends StatelessWidget {
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          if (documents != null && index < documents.length) {
-                            final document = documents[index];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: height / height20),
-                                InterBold(
-                                  text: _formatTimestamp(
-                                      document['EmpDarCreatedAt']),
-                                  fontsize: width / width20,
-                                  color: Primarycolor,
-                                  letterSpacing: -.3,
-                                ),
-                                SizedBox(height: height / height30),
-                                GestureDetector(
+                          final date = groupedByDate.keys.elementAt(index);
+                          final darEntries = groupedByDate[date]!;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterBold(
+                                text: date,
+                                fontsize: width / width20,
+                                color: Primarycolor,
+                                letterSpacing: -.3,
+                              ),
+                              SizedBox(height: height / height20),
+                              ...darEntries.map((document) {
+                                return GestureDetector(
                                   onTap: () {
-                                    /*DarOpenAllScreen*/
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -163,6 +166,9 @@ class DarDisplayScreen extends StatelessWidget {
                                           passdate: (document['EmpDarCreatedAt']
                                                   as Timestamp)
                                               .toDate(),
+                                          Username: Username,
+                                          Empid: EmpID,
+                                          DarId: document['EmpDarId'],
                                         ),
                                       ),
                                     );
@@ -170,9 +176,6 @@ class DarDisplayScreen extends StatelessWidget {
                                   child: Container(
                                     width: double.maxFinite,
                                     height: height / height200,
-                                    // constraints: BoxConstraints(
-                                    //     minHeight: height / height200,
-                                    //     ),
                                     decoration: BoxDecoration(
                                       color: WidgetColor,
                                       borderRadius: BorderRadius.circular(
@@ -189,15 +192,21 @@ class DarDisplayScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         InterBold(
-                                          text: document['EmpDarEmpName'],
+                                          text: document != null &&
+                                                  document.data
+                                                      is DocumentSnapshot
+                                              ? document['EmpDarShiftName'] ??
+                                                  '' // Use nullish coalescing for default value
+                                              : document['EmpDarEmpName'],
                                           fontsize: width / width18,
                                           color: Primarycolor,
                                         ),
                                         SizedBox(height: height / height10),
                                         Flexible(
                                           child: InterRegular(
-                                            text:
-                                                document['EmpDarLocationName'],
+                                            text: document[
+                                                    'EmpDarLocationName'] ??
+                                                "",
                                             fontsize: width / width16,
                                             color: color26,
                                             maxLines: 4,
@@ -228,14 +237,13 @@ class DarDisplayScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: height / height10),
-                              ],
-                            );
-                          }
-                          return const SizedBox.shrink();
+                                );
+                              }).toList(),
+                              SizedBox(height: height / height10),
+                            ],
+                          );
                         },
-                        childCount: documents?.length ?? 0,
+                        childCount: groupedByDate.length,
                       ),
                     ),
                   ),
@@ -254,14 +262,18 @@ class DarDisplayScreen extends StatelessWidget {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _submitDAR().whenComplete(() {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DarOpenAllScreen(),
-                  ));
-            });
+          onPressed: () async {
+            var id = await _submitDAR();
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DarOpenAllScreen(
+                    Username: Username,
+                    Empid: EmpID,
+                    DarId: id,
+                  ),
+                ));
           },
           backgroundColor: Primarycolor,
           shape: const CircleBorder(),
@@ -270,10 +282,10 @@ class DarDisplayScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  String _formatTimestamp(Timestamp timestamp) {
-    DateTime dateTime = timestamp.toDate();
+String _formatTimestamp(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
 
-    return DateFormat('dd /MM /yyyy').format(dateTime);
-  }
+  return DateFormat('dd /MM /yyyy').format(dateTime);
 }
