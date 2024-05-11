@@ -12,6 +12,7 @@ class gridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return Column(
@@ -23,7 +24,7 @@ class gridWidget extends StatelessWidget {
           height: height / height100,
           width: width / width100,
           decoration: BoxDecoration(
-            color: WidgetColor,
+            color: isLight ? color1 : WidgetColor,
             borderRadius: BorderRadius.circular(width / width18),
           ),
           child: Center(
@@ -37,7 +38,7 @@ class gridWidget extends StatelessWidget {
         SizedBox(height: height / height10),
         InterBold(
           text: tittle,
-          color: color25,
+          color: isLight ? WidgetColor : color25,
           fontsize: width / width16,
           letterSpacing: -0.3,
         ),

@@ -5,6 +5,10 @@ const Color AppBarcolor = Color(0x26CBA769);
 const Color Primarycolorlight = Color(0x80CBA769);
 const Color Secondarycolor = Color(0xFF010101);
 const Color WidgetColor = Color(0xFF151515);
+//Added by Lisha
+const Color IconSelected = Color(0xFF8336fe);
+
+
 const Color color1 = Colors.white;
 const Color color2 = Color(0xFFD0D0D0);
 const Color color3 = Color(0x80D9D9D9);

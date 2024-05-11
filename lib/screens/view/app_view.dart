@@ -98,6 +98,8 @@ class AppView extends ConsumerWidget {
       title: 'Tact Tik',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        // primaryColor: color18,
+
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Primarycolor,
         ),

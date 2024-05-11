@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        // backgroundColor: Secondarycolor,
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: width / width30, vertical: height / height20),
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  color: Colors.white, // Change text color to white
+                  // color: Colors.white, // Change text color to white
                 ),
                 controller: _emailcontrller,
                 decoration: const InputDecoration(
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  color: Colors.white, // Change text color to white
+                  // color: Colors.white, // Change text color to white
                 ),
                 controller: _passwordcontrller,
                 obscureText: _obscureText,

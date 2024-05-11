@@ -30,7 +30,7 @@ class HomeScreenCustomNavigation extends StatelessWidget {
       height: height / height74,
       width: width / width74,
       decoration: BoxDecoration(
-        color: WidgetColor,
+        color: Theme.of(context).brightness == Brightness.light ? Colors.white : WidgetColor,
         borderRadius: BorderRadius.circular(width / width13),
       ),
       child: Column(

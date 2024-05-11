@@ -22,6 +22,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -30,12 +31,17 @@ class _CustomCalenderState extends State<CustomCalendar> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
+            color: isLight ? color1 : const Color(0xFF1A1A1A),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Theme(
             data: ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.dark(
+              colorScheme: isLight ?
+                  ColorScheme.light(
+                    primary: IconSelected,
+                    onPrimary: IconSelected.withOpacity(0.65)
+                  ) :
+              ColorScheme.dark(
                 primary: const Color(0xFFCBA76B), // Background color
                 onPrimary:
                     const Color(0xFF704600), // Text color for selected dates
@@ -51,7 +57,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     disableModePicker: true,
                     calendarType: CalendarDatePicker2Type.multi,
                     selectedDayTextStyle: TextStyle(
-                      color: Colors.white,
+                      color: isLight ? Colors.black : Colors.white,
                     ),
                     selectedYearTextStyle: TextStyle(
                       color: Colors.white,
@@ -79,7 +85,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
         InterBold(
           text: 'Weekly Shifts',
           fontsize: width / width18,
-          color: Color(0xFFE9E9E9),
+          color: isLight ? WidgetColor :  Color(0xFFE9E9E9),
         )
       ],
     );

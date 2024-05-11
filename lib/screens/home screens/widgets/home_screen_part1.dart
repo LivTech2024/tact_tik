@@ -30,6 +30,7 @@ class HomeScreenPart1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     if (hour < 12) {
@@ -82,7 +83,7 @@ class HomeScreenPart1 extends StatelessWidget {
                           Icon(
                             Icons.notifications,
                             // Use the notifications_active icon
-                            color: Primarycolor, // Change color if unread
+                            color: isLight ? WidgetColor : Primarycolor, // Change color if unread
                             size: width / width28,
                           ),
                           if (isUnread)
@@ -91,10 +92,10 @@ class HomeScreenPart1 extends StatelessWidget {
                               right: 0,
                               child: Container(
                                 padding: EdgeInsets.all(width / width4 / 2),
-                                decoration: const BoxDecoration(
+                                decoration:  BoxDecoration(
                                   shape: BoxShape.circle,
                                   color:
-                                      Primarycolor, // Background color for unread indicator
+                                  isLight ? WidgetColor : Primarycolor, // Background color for unread indicator
                                 ),
                               ),
                             ),
@@ -109,7 +110,7 @@ class HomeScreenPart1 extends StatelessWidget {
                           scaleX: -1,
                           child: Icon(
                             Icons.short_text_rounded,
-                            color: Primarycolor,
+                            color: isLight ? WidgetColor : Primarycolor,
                             size: width / width40,
                           ),
                         ),
@@ -126,14 +127,14 @@ class HomeScreenPart1 extends StatelessWidget {
                     children: [
                       PoppinsSemibold(
                         text: '${greeting}',
-                        color: Primarycolor,
+                        color: isLight ? WidgetColor : Primarycolor,
                         letterSpacing: -.5,
                         fontsize: width / width35,
                       ),
                       SizedBox(height: height / height10),
                       PoppinsLight(
                         text: userName,
-                        color: Primarycolor,
+                        color: isLight ? WidgetColor :  Primarycolor,
                         fontsize: width / width30,
                       ),
                       SizedBox(height: height / height46),
@@ -144,7 +145,7 @@ class HomeScreenPart1 extends StatelessWidget {
               height: height / height64,
               padding: EdgeInsets.symmetric(horizontal: width / width10),
               decoration: BoxDecoration(
-                color: WidgetColor,
+                color: isLight ? color1 : WidgetColor,
                 borderRadius: BorderRadius.circular(width / width13),
               ),
               child: Row(
@@ -168,7 +169,7 @@ class HomeScreenPart1 extends StatelessWidget {
                         hintStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: width / width18,
-                          color: color2, // Change text color to white
+                          color: isLight ? WidgetColor : color2, // Change text color to white
                         ),
                         hintText: 'Search',
                         contentPadding: EdgeInsets.zero, // Remove padding
@@ -180,14 +181,14 @@ class HomeScreenPart1 extends StatelessWidget {
                     height: height / height44,
                     width: width / width44,
                     decoration: BoxDecoration(
-                      color: Primarycolor,
+                      color: isLight ? IconSelected : Primarycolor,
                       borderRadius: BorderRadius.circular(width / width10),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.search,
                         size: width / width20,
-                        color: Colors.black,
+                        color: isLight ? color1 : Colors.black,
                       ),
                     ),
                   )

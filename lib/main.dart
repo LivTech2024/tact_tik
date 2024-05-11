@@ -25,6 +25,7 @@ import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/screens/view/app_view.dart';
+import 'package:tact_tik/utils/colors.dart';
 import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 
@@ -49,13 +50,36 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Tact Tik',
         debugShowCheckedModeBanner: false,
+
         theme: ThemeData(
+          // primaryColorLight: Secondarycolor,
+          primaryColor: color18,
+          useMaterial3: true,
+          brightness: Brightness.light,
+          textTheme: GoogleFonts.poppinsTextTheme(
+            TextTheme(
+              bodyText1: TextStyle(color: Colors.black),
+              bodyText2: TextStyle(color: Colors.black),
+              headline1: TextStyle(color: Colors.black),
+            )
+          ),
+          buttonTheme: ButtonThemeData(
+            buttonColor: color18,
+            textTheme: ButtonTextTheme.primary,
+          ),
+
+
+
+        ),
+        darkTheme: ThemeData(
+          primaryColor: Secondarycolor,
           useMaterial3: true,
           brightness: Brightness.dark,
           textTheme: GoogleFonts.poppinsTextTheme(
             Theme.of(context).textTheme,
           ),
         ),
+        themeMode: ThemeMode.system,
         home: OfflineBuilder(
           connectivityBuilder: (
             BuildContext context,
