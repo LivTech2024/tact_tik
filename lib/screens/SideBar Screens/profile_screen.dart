@@ -102,10 +102,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isLight ? color18 : Secondarycolor,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -151,10 +151,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 340,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
+                  gradient:  LinearGradient(
                     colors: [
                       Colors.black,
-                      const Color(0xFF9C6400),
+                      isLight ? IconSelected : const Color(0xFF9C6400),
                     ],
                     begin: Alignment(0, -1.5),
                     end: Alignment.bottomCenter,
@@ -215,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 InterSemibold(
                                   text: 'Name',
                                   fontsize: width / width20,
-                                  color: color1,
+                                  color: isLight ? WidgetColor :color1,
                                 ),
                                 SizedBox(height: height / height5),
                                 Row(
@@ -251,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                       child: Icon(
                                         Icons.check,
-                                        color: color2,
+                                        color: isLight ? WidgetColor :color2,
                                         size: width / width30,
                                       ),
                                     )
@@ -277,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InterSemibold(
                                 text: 'Contact No',
                                 fontsize: width / width20,
-                                color: color1,
+                                color: isLight ? WidgetColor :color1,
                               ),
                               SizedBox(height: height / height5),
                               Row(
@@ -313,7 +313,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     child: Icon(
                                       Icons.check,
-                                      color: color2,
+                                      color: isLight ? WidgetColor :color2,
                                       size: width / width30,
                                     ),
                                   )
@@ -353,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: PoppinsRegular(
                   text: 'complete your profile !',
                   fontsize: width / width20,
-                  color: color3,
+                  color: isLight ? WidgetColor :color3,
                 ),
               )
             ],

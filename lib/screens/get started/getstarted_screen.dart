@@ -33,6 +33,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -41,7 +42,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
             ? const SizedBox()
             : Container(
                 height: height / height66,
-                color: Secondarycolor,
+                color: isLight ? color18 : Secondarycolor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: width / width40),
                   child: Row(
@@ -55,7 +56,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         child: PoppinsBold(
                           text: 'Skip',
                           fontsize: width / width16,
-                          color: Primarycolor,
+                          color: isLight ? IconSelected :Primarycolor,
                         ),
                       ),
                       SmoothPageIndicator(
@@ -63,7 +64,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         count: 3,
                         effect: WormEffect(
                           dotColor: color3,
-                          activeDotColor: Primarycolor,
+                          activeDotColor: isLight ? IconSelected :Primarycolor,
                           dotHeight: height / height13,
                           dotWidth: width / width13,
                           type: WormType.thinUnderground,
@@ -82,7 +83,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         icon: Icon(
                           Icons.arrow_forward_ios,
                           size: width / width24,
-                          color: Primarycolor,
+                          color: isLight ? IconSelected :Primarycolor,
                         ),
                       )
                     ],

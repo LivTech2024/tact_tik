@@ -32,6 +32,7 @@ class SetTextfieldWidget extends StatefulWidget {
 class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -46,7 +47,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
       padding: EdgeInsets.symmetric(horizontal: width / width20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(width / width10),
-        color: WidgetColor,
+        color: isLight ? color1 : WidgetColor,
       ),
       margin: EdgeInsets.only(top: height / height10),
       child: Center(
@@ -57,7 +58,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
             fontSize: width / width18,
-            color: Colors.white,
+            color: isLight ? WidgetColor :Colors.white,
           ),
           onSubmitted: (value) {
             setState(() {

@@ -65,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -81,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  // color: Colors.white, // Change text color to white
+                  color: isLight ? WidgetColor : Colors.white, // Change text color to white
                 ),
                 controller: _emailcontrller,
                 decoration: const InputDecoration(
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  // color: Colors.white, // Change text color to white
+                  color: isLight ? WidgetColor : Colors.white, // Change text color to white
                 ),
                 controller: _passwordcontrller,
                 obscureText: _obscureText,
@@ -126,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               Button1(
-                backgroundcolor: Primarycolor,
+                backgroundcolor: isLight ? IconSelected :Primarycolor,
                 text: 'Login',
                 color: color1,
                 borderRadius: 10,

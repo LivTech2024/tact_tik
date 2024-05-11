@@ -16,6 +16,7 @@ class EmploymentLetterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -53,14 +54,14 @@ class EmploymentLetterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isLight ? color18: Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isLight ? color1 : AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isLight ? WidgetColor : Colors.white,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -71,7 +72,7 @@ class EmploymentLetterScreen extends StatelessWidget {
           title: InterRegular(
             text: 'Employment Letter',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isLight ? WidgetColor :Colors.white,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -82,7 +83,7 @@ class EmploymentLetterScreen extends StatelessWidget {
             width: double.maxFinite,
             margin: EdgeInsets.symmetric(horizontal: width / width30),
             decoration: BoxDecoration(
-              color: WidgetColor,
+              color: isLight ? color1 : WidgetColor,
               borderRadius: BorderRadius.circular(width / width12),
             ),
             child: Column(
@@ -104,6 +105,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                   child: SvgPicture.asset(
                     'assets/images/folder.svg',
                     width: width / width190,
+                    color: isLight ? Color(0xff7c7c7c) :Primarycolor,
                   ),
                 ),
                 Button1(
@@ -128,7 +130,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                     ],
                   ),
                   onPressed: () => _downloadAndOpenPdf(context),
-                  backgroundcolor: Primarycolorlight,
+                  backgroundcolor: isLight ? IconSelected : Primarycolorlight,
                   useBorderRadius: true,
                   MyBorderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(width / width12),

@@ -11,20 +11,21 @@ class MobileChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
 
 
     return Scaffold(
-      backgroundColor: Secondarycolor,
+      backgroundColor: isLight ? color18 : Secondarycolor,
       appBar: AppBar(
-        backgroundColor: AppBarcolor,
+        backgroundColor: isLight ? color1 : AppBarcolor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: isLight ? WidgetColor : Colors.white,
             size: width / width24,
           ),
           padding: EdgeInsets.only(left: width / width20),
@@ -35,7 +36,7 @@ class MobileChatScreen extends StatelessWidget {
         title: InterMedium(
           text: 'Message',
           fontsize: width / width18,
-          color: Colors.white,
+          color: isLight ? WidgetColor : Colors.white,
           letterSpacing: -.3,
         ),
         centerTitle: true,
@@ -53,7 +54,7 @@ class MobileChatScreen extends StatelessWidget {
                   child: TextField(
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: WidgetColor,
+                      fillColor: isLight ? color1 : WidgetColor,
                       hintText: 'Type a message!',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
@@ -73,7 +74,8 @@ class MobileChatScreen extends StatelessWidget {
                   onPressed: () {
                     // Send message logic here
                   },
-                  icon: Icon(Icons.send , size: width / width24,),
+                  icon: Icon(Icons.send , size: width / width24,
+                  color: isLight ? WidgetColor : null,),
                 ),
               ],
             ),

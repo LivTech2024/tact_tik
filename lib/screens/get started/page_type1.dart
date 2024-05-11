@@ -35,10 +35,11 @@ class PageType1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return Container(
-      color: Secondarycolor,
+      color: isLight ? color18 :Secondarycolor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +48,7 @@ class PageType1 extends StatelessWidget {
             height: height / height470,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: Primarycolor,
+              color: isLight ? IconSelected : Primarycolor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(width / width40),
                 bottomLeft: Radius.circular(width / width40),
@@ -74,20 +75,21 @@ class PageType1 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
             fontsize: width / width32,
-            color: color1,
+            color: isLight ? WidgetColor :color1,
           ),
           SizedBox(height: height / height27),
           SizedBox(
             width: width / width54,
             child: Divider(
               height: 3,
+              color: isLight ? IconSelected : Primarycolor,
             ),
           ),
           SizedBox(height: height / height30),
           PoppinsRegular(
             text: description[index],
             fontsize: width / width14,
-            color: color2,
+            color: isLight ? WidgetColor :color2,
             textAlign: TextAlign.center,
           ),
         ],

@@ -24,6 +24,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -42,14 +43,14 @@ class _PayStubScreenState extends State<PayStubScreen> {
 
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Secondarycolor,
+            backgroundColor: isLight ? color18 : Secondarycolor,
             appBar: AppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: isLight ? color1 : AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isLight ? WidgetColor : Colors.white,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -60,7 +61,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
               title: InterRegular(
                 text: 'Paystub',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isLight ? WidgetColor : Colors.white,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -78,7 +79,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                   width: double.maxFinite,
                   margin: EdgeInsets.symmetric(horizontal: width / width30),
                   decoration: BoxDecoration(
-                    color: WidgetColor,
+                    color: isLight ? color1 : WidgetColor,
                     borderRadius: BorderRadius.circular(width / width12),
                   ),
                   child: Column(
@@ -93,12 +94,12 @@ class _PayStubScreenState extends State<PayStubScreen> {
                         child: InterBold(
                           text: 'Pay Discrepancy',
                           fontsize: width / width18,
-                          color: Primarycolor,
+                          color: isLight ? WidgetColor : Primarycolor,
                         ),
                       ),
                       Button1(
                         text: 'Open',
-                        color: color1,
+                        color: isLight ? WidgetColor : color1,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -110,7 +111,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                             ),
                           );
                         },
-                        backgroundcolor: Primarycolorlight,
+                        backgroundcolor: isLight ? color1 : Primarycolorlight,
                         useBorderRadius: true,
                         MyBorderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(width / width12),

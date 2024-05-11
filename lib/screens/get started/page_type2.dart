@@ -39,10 +39,11 @@ class PageType2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return Container(
-      color: Secondarycolor,
+      color: isLight ? color18 : Secondarycolor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +52,7 @@ class PageType2 extends StatelessWidget {
             height: height / height470,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: Primarycolor,
+              color: isLight ? IconSelected : Primarycolor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(width / width40),
                 bottomLeft: Radius.circular(width / width40),
@@ -78,20 +79,21 @@ class PageType2 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
             fontsize: width / width32,
-            color: color1,
+            color: isLight ? WidgetColor :color1,
           ),
           SizedBox(height: height / height27),
           SizedBox(
             width: width / width54,
             child: Divider(
               height: 3,
+              color: isLight ? IconSelected : Primarycolor,
             ),
           ),
           SizedBox(height: height / height10),
           PoppinsRegular(
             text: description[index],
             fontsize: width / width14,
-            color: color2,
+            color: isLight ? WidgetColor :color2,
             textAlign: TextAlign.center,
           ),
           Visibility(
@@ -106,12 +108,13 @@ class PageType2 extends StatelessWidget {
                 margin: EdgeInsets.only(left: width / width24, right: width / width24, top: height / height74),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: Primarycolor,
+                  color: isLight ? IconSelected : Primarycolor,
                 ),
                 child: Center(
                   child: PoppinsMedium(
                     text: 'Get Started',
                     fontsize: width / width16,
+                    color: isLight ? color1 : WidgetColor,
                   ),
                 ),
               ),

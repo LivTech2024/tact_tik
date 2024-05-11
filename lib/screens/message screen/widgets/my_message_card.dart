@@ -13,6 +13,7 @@ class MyMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -26,7 +27,7 @@ class MyMessageCard extends StatelessWidget {
         child: Card(
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width / width8),),
-          color: WidgetColor,
+          color: isLight ? color1 : WidgetColor,
           margin: EdgeInsets.symmetric(horizontal: width / width15, vertical: height / height5),
           child: Stack(
             children: [
@@ -40,7 +41,7 @@ class MyMessageCard extends StatelessWidget {
                 child: InterMedium(
                   text: message,
                   fontsize: width / width16,
-                  color: color1,
+                  color: isLight ? WidgetColor : color1,
                 ),
               ),
               Positioned(
@@ -51,7 +52,7 @@ class MyMessageCard extends StatelessWidget {
                     InterMedium(
                       text: date,
                       fontsize: width / width13,
-                      color: Colors.white60,
+                      color: isLight ? WidgetColor :Colors.white60,
                     ),
                     SizedBox(
                       width: width / width4
@@ -59,7 +60,7 @@ class MyMessageCard extends StatelessWidget {
                     Icon(
                       Icons.done_all,
                       size: width / width20,
-                      color: Colors.white60,
+                      color: isLight ? WidgetColor : Colors.white60,
                     ),
                   ],
                 ),

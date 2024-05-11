@@ -12,6 +12,7 @@ class AssetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -20,12 +21,12 @@ class AssetsScreen extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: isLight ? color1 : AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isLight ? WidgetColor : Colors.white,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -37,7 +38,7 @@ class AssetsScreen extends StatelessWidget {
               title: InterRegular(
                 text: 'Visitors',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isLight ? WidgetColor : Colors.white,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -55,7 +56,7 @@ class AssetsScreen extends StatelessWidget {
                     InterBold(
                       text: 'Today',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: isLight ? IconSelected : Primarycolor,
                     ),
                     SizedBox(
                       height: height / height30,

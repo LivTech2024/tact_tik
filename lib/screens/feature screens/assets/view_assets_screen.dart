@@ -61,6 +61,7 @@ class ViewAssetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery
         .of(context)
         .size
@@ -72,13 +73,14 @@ class ViewAssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isLight ? color18 : Secondarycolor,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: height / height30),
             InterBold(
               text: 'Allocation Date',
-              color: Primarycolor,
+              color: isLight ? WidgetColor : Primarycolor,
               fontsize: width / width20,
             ),
             SizedBox(height: height / height30),
@@ -89,14 +91,14 @@ class ViewAssetsScreen extends StatelessWidget {
                     height: height / height60,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(width / width10),
-                      color: WidgetColor,
+                      color: isLight ? color1 : WidgetColor,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         InterMedium(text: '21 / 04 / 2024',
                           fontsize: width / width16,
-                          color: color2,),
+                          color: isLight ? WidgetColor : color2,),
                         SvgPicture.asset('assets/images/calendar_clock.svg',
                           width: width / width20,)
                       ],
@@ -109,14 +111,14 @@ class ViewAssetsScreen extends StatelessWidget {
                     height: height / height60,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(width / width10),
-                      color: WidgetColor,
+                      color: isLight ? color1 : WidgetColor,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         InterMedium(text: '22 / 04 / 2024',
                           fontsize: width / width16,
-                          color: color2,),
+                          color: isLight ? WidgetColor : color2,),
                         SvgPicture.asset('assets/images/calendar_clock.svg',
                           width: width / width20,)
                       ],

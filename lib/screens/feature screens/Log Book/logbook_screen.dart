@@ -56,6 +56,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -63,12 +64,12 @@ class _LogBookScreenState extends State<LogBookScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: AppBarcolor,
+            backgroundColor: isLight ? color1 : AppBarcolor,
             elevation: 0,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: isLight ? WidgetColor: Colors.white,
                 size: width / width24,
               ),
               padding: EdgeInsets.only(left: width / width20),
@@ -80,7 +81,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
             title: InterRegular(
               text: 'LogBook',
               fontsize: width / width18,
-              color: Colors.white,
+              color: isLight ? WidgetColor: Colors.white,
               letterSpacing: -.3,
             ),
             centerTitle: true,
@@ -99,8 +100,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
                 DateTime(2024),
                 controller: datePickerController,
                 initialSelectedDate: DateTime.now(),
-                selectionColor: Primarycolor,
-                selectedTextColor: Colors.white,
+                selectionColor: isLight ? IconSelected: Primarycolor,
+                selectedTextColor: isLight ? WidgetColor: Colors.white,
                 onDateChange: (date) {
                   setState(() {
                     _selectedDate = date;
@@ -225,7 +226,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 //                       children: [
 //                         InterBold(
 //                           text: widget.logBookId,
-//                           color: Primarycolor,
+//                           color: isLight ? IconSelected: Primarycolor,
 //                           fontsize: width / width18,
 //                         ),
 //                         Icon(
@@ -233,7 +234,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 //                               ? Icons.arrow_circle_up_outlined
 //                               : Icons.arrow_circle_down_outlined,
 //                           size: width / width24,
-//                           color: Primarycolor,
+//                           color: isLight ? IconSelected: Primarycolor,
 //                         )
 //                       ],
 //                     ),

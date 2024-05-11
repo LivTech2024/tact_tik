@@ -15,6 +15,7 @@ class SenderMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
@@ -27,7 +28,7 @@ class SenderMessageCard extends StatelessWidget {
         child: Card(
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width / width8),),
-          color: Primarycolorlight,
+          color: isLight ? IconSelected.withOpacity(0.45) : Primarycolorlight,
           margin: EdgeInsets.symmetric(horizontal: width / width15, vertical: height / height5),
           child: Stack(
             children: [

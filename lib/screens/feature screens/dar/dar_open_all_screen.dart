@@ -381,18 +381,19 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isLight ? color18 : Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isLight ?  color1:AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isLight ? WidgetColor: Colors.white,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -403,7 +404,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           title: InterRegular(
             text: '',
             fontsize: width / width18,
-            color: Colors.white,
+            color:isLight ? WidgetColor:  Colors.white,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -415,7 +416,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               Container(
                 height: height / height65,
                 width: double.maxFinite,
-                color: color24,
+                color: isLight ? color1: color24,
                 padding: EdgeInsets.symmetric(vertical: height / height16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -425,7 +426,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = Primarycolor;
+                            colors[0] = isLight ? IconSelected: Primarycolor;
                             colors[1] = color25;
                           });
                         },
@@ -433,15 +434,15 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           child: Center(
                             child: InterBold(
                               text: 'Edit',
-                              color: colors[0],
+                              color: isLight ? WidgetColor: colors[0],
                               fontsize: width / width18,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    const VerticalDivider(
-                      color: Primarycolor,
+                     VerticalDivider(
+                      color: isLight ? WidgetColor: Primarycolor,
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -449,14 +450,14 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           setState(() {
                             showDARS = false;
                             colors[0] = color25;
-                            colors[1] = Primarycolor;
+                            colors[1] = isLight ? IconSelected: Primarycolor;
                           });
                         },
                         child: SizedBox(
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
-                              color: colors[1],
+                              color: isLight ? WidgetColor: colors[1],
                               fontsize: width / width18,
                             ),
                           ),
@@ -478,7 +479,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               InterRegular(
                                 text: 'Shift Name :',
                                 fontsize: width / width20,
-                                color: color17,
+                                color: isLight ? WidgetColor: color17,
                               ),
                               SizedBox(
                                 width: width / width6,
@@ -486,7 +487,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftName ?? 'Loading...',
-                                  color: Primarycolor,
+                                  color: isLight ? IconSelected: Primarycolor,
                                   fontsize: width / width20,
                                 ),
                               ),
@@ -499,7 +500,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               InterRegular(
                                 text: 'Location :',
                                 fontsize: width / width20,
-                                color: color17,
+                                color: isLight ? WidgetColor: color17,
                               ),
                               SizedBox(
                                 width: width / width6,
@@ -508,7 +509,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                 child: InterRegular(
                                   text: _userService.shiftLocation ??
                                       'Loading...',
-                                  color: Primarycolor,
+                                  color: isLight ? IconSelected: Primarycolor,
                                   fontsize: width / width20,
                                   maxLines: 3,
                                 ),
@@ -736,7 +737,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           InterBold(
                             text: 'Reports',
                             fontsize: width / 20,
-                            color: Primarycolor,
+                            color: isLight ? IconSelected: Primarycolor,
                           ),
                           SizedBox(height: height / 25),
                           FutureBuilder<
@@ -772,8 +773,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                     children: [
                                       Text(
                                         'Reports for $hourKey',
-                                        style: const TextStyle(
-                                          color: Primarycolor,
+                                        style:  TextStyle(
+                                          color: isLight ? IconSelected: Primarycolor,
                                         ),
                                       ),
                                       ...reportsForHour.map((report) {
@@ -789,20 +790,20 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                           margin: EdgeInsets.only(
                                               bottom: height / 30),
                                           height: height / 25,
-                                          color: const Color(0xFF7C7C7C),
+                                          color: isLight ? color1: Color(0xFF7C7C7C),
                                           child: Row(
                                             children: [
                                               Container(
                                                 width: 20,
                                                 height: double.infinity,
-                                                color: Colors.red,
+                                                color: isLight ? IconSelected: Colors.red,
                                               ),
                                               const SizedBox(width: 2),
                                               Expanded(
                                                 child: Text(
                                                   '# ${report['ReportSearchId'] ?? ''}',
-                                                  style: const TextStyle(
-                                                    color: Color.fromARGB(
+                                                  style:  TextStyle(
+                                                    color: isLight ? WidgetColor: Color.fromARGB(
                                                         255, 48, 48, 48),
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -811,8 +812,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                               const SizedBox(width: 2),
                                               Text(
                                                 formattedTime,
-                                                style: const TextStyle(
-                                                  color: Color.fromARGB(
+                                                style:  TextStyle(
+                                                  color: isLight ? WidgetColor: Color.fromARGB(
                                                       255, 48, 48, 48),
                                                 ),
                                               ),

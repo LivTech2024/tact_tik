@@ -441,13 +441,15 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: Icon(
           icon,
           color: isSelected
-              ? Primarycolor
-              : color3, // Change color based on selection
+              ? (isLight ? IconSelected :Primarycolor)
+              : (isLight ? WidgetColor : color3), // Change color based on selection
           size: width / width24,
         ),
         title: PoppinsBold(
           text: title,
-          color: isSelected ? Primarycolor : color3,
+          color: isSelected
+              ? (isLight ? IconSelected :Primarycolor)
+              : (isLight ? WidgetColor : color3),
           fontsize: width / width14,
         ),
         onTap: onPressed,
@@ -466,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(width / width15),
-                      color: Primarycolor, // Background color for the drawer header
+                      color: isLight ? IconSelected :Primarycolor, // Background color for the drawer header
                     ),
                     child: Center(
                       child: Column(
@@ -489,14 +491,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(height: height / height10),
                             PoppinsSemibold(
                               text: _userName,
-                              color: WidgetColor,
+                              color: isLight ? color1 :WidgetColor,
                               fontsize: width / width16,
                               letterSpacing: -.3,
                             ),
                             SizedBox(height: height / height5),
                             PoppinsRegular(
                               text: _empEmail,
-                              color: WidgetColor,
+                              color: isLight ? color1 :WidgetColor,
                               fontsize: width / width16,
                               letterSpacing: -.3,
                             )
