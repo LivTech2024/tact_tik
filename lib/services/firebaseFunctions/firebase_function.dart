@@ -90,9 +90,10 @@ class FireStoreService {
         return doc;
       }
 
-      final statusDoc = shiftTasks.any((status) =>
-          status['StatusReportedById'] == empId &&
-          (status['Status'] == 'pending' || status['Status'] == 'started'));
+      final statusDoc = shiftTasks.isEmpty ||
+          shiftTasks.any((status) =>
+              status['StatusReportedById'] == empId &&
+              (status['Status'] == 'pending' || status['Status'] == 'started'));
       if (statusDoc) {
         print(
             "Found shift with status pending for EmployeeId: $empId in Document ID: ${doc.id}");
