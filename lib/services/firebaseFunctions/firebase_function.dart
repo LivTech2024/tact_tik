@@ -14,6 +14,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
@@ -897,6 +898,8 @@ class FireStoreService {
       }
 
       // Update the shift status in Firestore
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int? savedInTime = prefs.getInt('savedInTime');
       DocumentReference documentReference =
           FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
       DocumentSnapshot documentSnapshot = await documentReference.get();
@@ -906,7 +909,10 @@ class FireStoreService {
         'Status': 'completed',
         'StatusReportedById': employeeId,
         'StatusReportedByName': EmpNames,
-        'StatusReportedTime': DateTime.now(),
+        'StatusReportedTime': Timestamp.now(),
+        'StatusStartedTime': savedInTime != null
+            ? DateTime.fromMillisecondsSinceEpoch(savedInTime)
+            : null
       };
       int index = currentArray.indexWhere((element) =>
           element['StatusReportedById'] == employeeId &&
@@ -924,8 +930,8 @@ class FireStoreService {
       String Title = "ShiftEnded";
       String Data = "Shift Ended ";
       String type = "Shift";
-      await generateReport(LocationName, Title, employeeId, BrachId, Data,
-          CompyId, "completed", EmpNames, ClientId, type);
+      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
+      //     CompyId, "completed", EmpNames, ClientId, type);
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
@@ -1067,8 +1073,8 @@ class FireStoreService {
           .collection('Patrols')
           .where("PatrolId", isEqualTo: PatrolId);
       String type = "Patrol";
-      await generateReport(PatrolArea, PatrolName, patrolAssignedGuardId, BId,
-          data, PatrolCompanyId, "completed", EmpName, ClientID, type);
+      // await generateReport(PatrolArea, PatrolName, patrolAssignedGuardId, BId,
+      //     data, PatrolCompanyId, "completed", EmpName, ClientID, type);
 
       final querySnapshot = await patrolRef.get();
       if (querySnapshot.docs.isNotEmpty) {
@@ -1435,7 +1441,7 @@ class FireStoreService {
 
       Reference uploadRef =
           storageRef.child("employees/report/$uniqueName.jpg");
-      
+
       // Upload the already compressed image to Firebase Storage
       await uploadRef.putFile(file);
 

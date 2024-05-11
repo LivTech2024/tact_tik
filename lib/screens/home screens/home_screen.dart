@@ -544,7 +544,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-
                     buildListTile(
                       Icons.settings,
                       'Settings',
