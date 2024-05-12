@@ -2448,7 +2448,7 @@ class FireStoreService {
           .collection('PatrolLogs')
           .where('PatrolId', whereIn: shiftLinkedPatrolIds)
           .where('PatrolLogGuardId', isEqualTo: empId)
-          // .where('PatrolShiftId', isEqualTo: ShiftId)
+          .where('PatrolShiftId', isEqualTo: ShiftId)
           .orderBy('PatrolLogPatrolCount')
           .get();
 
@@ -2473,13 +2473,13 @@ class FireStoreService {
         print("Doc id $doc");
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
-        if (specificDocIds.contains(doc.id)) {
-          // Check if the document ID already exists in pdfDataList
-          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-            pdfDataList.add(doc.data());
-            print("Data for Pdf: ${doc.data()}");
-          }
+        // if (specificDocIds.contains(doc.id)) {
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
         }
+        // }
       });
     } catch (e) {
       print(e);
