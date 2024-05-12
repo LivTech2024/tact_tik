@@ -4,6 +4,7 @@ import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/roboto_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,7 +35,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    bool _isLoading = false;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -112,10 +113,16 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
 
                       String Data =
                           "Panic Button pressed by ${widget.Username}";
+                      setState(() {
+                        _isLoading = true;
+                      });
                       await fireStoreService.SendMessage(widget.CompanyId,
                           widget.Username, Data, receiversId, widget.EmpId);
+                      setState(() {
+                        _isLoading = false;
+                      });
                       _showSupervisorDialog(context);
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                     },
                     child: RobotoMedium(
                       text: 'Yes',
@@ -126,6 +133,13 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                 ],
               ),
             ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Visibility(
+            visible: _isLoading,
+            child: CircularProgressIndicator(),
           ),
         ),
       ],
@@ -234,7 +248,12 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                           SizedBox(width: width / width10),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(),
+                                ),
+                              );
                             },
                             child: RobotoMedium(
                               text: 'OK',

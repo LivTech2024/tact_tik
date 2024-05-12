@@ -286,7 +286,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     } catch (e) {
       print('Error creating blank DAR cards: $e');
     }
-     setState(() {
+    setState(() {
       _isSubmitting = false;
       _isLoading = false;
     });
