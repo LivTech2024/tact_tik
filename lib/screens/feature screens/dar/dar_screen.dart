@@ -64,7 +64,7 @@ class DarDisplayScreen extends StatelessWidget {
         }
 
         var docRef = await employeesDARCollection.add({
-          'EmpDarLocationId:': _userService.shiftLocationId,
+          'EmpDarLocationId': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
           'EmpDarDate': _userService.shiftDate,

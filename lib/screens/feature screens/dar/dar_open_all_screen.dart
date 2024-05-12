@@ -333,7 +333,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     try {
       final FirebaseFirestore _firestore = FirebaseFirestore.instance;
       var docRef = await _firestore.collection('EmployeesDAR').add({
-        'EmpDarLocationId:': _userService.shiftLocationId,
+        'EmpDarLocationId': _userService.shiftLocationId,
         'EmpDarLocationName': _userService.shiftLocation,
         'EmpDarShiftId': _userService.ShiftId,
         'EmpDarDate': _userService.shiftDate,
