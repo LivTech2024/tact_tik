@@ -109,20 +109,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   List<Map<String, dynamic>> uploads = [];
 
-  // Future<void> _addImage() async {
-  //   List<XFile>? pickedFiles =
-  //       await ImagePicker().pickMultiImage(imageQuality: 50);
-  //   if (pickedFiles != null) {
-  //     for (var pickedFile in pickedFiles) {
-  //       File file = File(pickedFile.path);
-  //       File compressedFile = await _compressImage(file);
-  //       setState(() {
-  //         uploads.add({'type': 'image', 'file': file});
-  //       });
-  //     }
-  //   }
-  // }
-
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
         await ImagePicker().pickMultiImage(imageQuality: 30);

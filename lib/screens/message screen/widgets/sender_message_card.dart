@@ -26,9 +26,12 @@ class SenderMessageCard extends StatelessWidget {
         ),
         child: Card(
           elevation: 1,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width / width8),),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(width / width8),
+          ),
           color: Primarycolorlight,
-          margin: EdgeInsets.symmetric(horizontal: width / width15, vertical: height / height5),
+          margin: EdgeInsets.symmetric(
+              horizontal: width / width15, vertical: height / height5),
           child: Stack(
             children: [
               Padding(
@@ -40,7 +43,7 @@ class SenderMessageCard extends StatelessWidget {
                 ),
                 child: InterMedium(
                   text: message,
-                    fontsize: width / width16,
+                  fontsize: width / width16,
                   color: color1,
                 ),
               ),
@@ -49,8 +52,8 @@ class SenderMessageCard extends StatelessWidget {
                 right: height / height10,
                 child: InterMedium(
                   text: date,
-                    fontsize: width / width13,
-                    color: color2,
+                  fontsize: width / width13,
+                  color: color2,
                 ),
               ),
             ],

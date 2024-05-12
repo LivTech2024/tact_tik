@@ -950,6 +950,66 @@ class FireStoreService {
     }
   }
 
+  Future<void> EndShiftLogComment(
+      String employeeId,
+      String Stopwatch,
+      String? shiftId,
+      String LocationName,
+      String BrachId,
+      String CompyId,
+      String EmpNames,
+      String ClientId,
+      String Reason) async {
+    try {
+      if (shiftId == null || shiftId.isEmpty) {
+        throw ArgumentError('Invalid shiftId: $shiftId');
+      }
+
+      // Update the shift status in Firestore
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int? savedInTime = prefs.getInt('savedInTime');
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+      final statusData = {
+        'Status': 'completed',
+        'StatusReportedById': employeeId,
+        'StatusReportedByName': EmpNames,
+        'StatusReportedTime': Timestamp.now(),
+        'StatusStartedTime': savedInTime != null
+            ? DateTime.fromMillisecondsSinceEpoch(savedInTime)
+            : null,
+        'StatusEndReason': Reason ?? ""
+      };
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'started');
+      if (index != -1) {
+        // If the map already exists in the array, update it
+        currentArray[index] = statusData;
+      } else {
+        // If the map doesn't exist, add it to the array
+        currentArray.add(statusData);
+      }
+      await documentReference.update({'ShiftCurrentStatus': currentArray});
+
+      // Generate report
+      String Title = "ShiftEnded";
+      String Data = "Shift Ended ";
+      String type = "Shift";
+      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
+      //     CompyId, "completed", EmpNames, ClientId, type);
+
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+      print('Shift end logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift end: $e');
+    }
+  }
+
 //Start Shift
 //Break
 //Stop push the timer also change the shiftStatus as done
@@ -2342,6 +2402,51 @@ class FireStoreService {
     }
   }
 
+  Future<String?> getAdminID(String companyId) async {
+    try {
+      QuerySnapshot adminSnapshot = await FirebaseFirestore.instance
+          .collection('Admins')
+          .where('AdminCompanyId', isEqualTo: companyId)
+          .get();
+
+      if (adminSnapshot.docs.isNotEmpty) {
+        String AdminId = adminSnapshot.docs.first['AdminId'];
+        print('Admin Email: $AdminId');
+        return AdminId;
+      } else {
+        print('Admin not found');
+        return null; // Return null if admin is not found
+      }
+    } catch (e) {
+      print('Error fetching admin: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<List<String>?> getSupervisorIDs(String EmpId) async {
+    try {
+      QuerySnapshot employeeSnapshot = await FirebaseFirestore.instance
+          .collection('Employees')
+          .where('EmployeeId', isEqualTo: EmpId)
+          .get();
+
+      if (employeeSnapshot.docs.isNotEmpty) {
+        List<dynamic> supervisorIds =
+            employeeSnapshot.docs.first['EmployeeSupervisorId'];
+        List<String> supervisorIdList =
+            supervisorIds.map((id) => id.toString()).toList();
+        print('Supervisor IDs: $supervisorIdList');
+        return supervisorIdList;
+      } else {
+        print('Employee not found');
+        return null; // Return null if employee is not found
+      }
+    } catch (e) {
+      print('Error fetching employee: $e');
+      return null; // Return null in case of error
+    }
+  }
+
   void getClientID(String clientId) async {
     try {
       DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
@@ -3054,6 +3159,40 @@ class FireStoreService {
     } catch (e) {
       print('Error getting location: $e');
       rethrow; // Rethrow the exception to handle it outside this function
+    }
+  }
+
+  //send message
+  Future<void> SendMessage(String Companyid, String UserName,
+      String MessageData, List<String> receiversId, String Empid) async {
+    try {
+      // Assuming you have a 'messages' collection in Firestore
+      CollectionReference messagesCollection =
+          FirebaseFirestore.instance.collection('Messages');
+      // List<String> receiversId = [
+      //   'g3mGPRtk8wfGG2QSnzIMGELjK4u2',
+      //   'aSvLtwII6Cjs7uCISBRR'
+      // ];
+      // Create a map for the message data
+      Map<String, dynamic> messageData = {
+        'MessageCompanyId': Companyid,
+        'MessageCreatedAt': FieldValue.serverTimestamp(),
+        'MessageCreatedById': Empid,
+        'MessageCreatedByName': UserName,
+        'MessageData': MessageData,
+        'MessageReceiversId': receiversId,
+      };
+      DocumentReference newDocRef = await messagesCollection.add(messageData);
+
+      String messageId = newDocRef.id;
+
+      // Update the document with the MessageId
+      await newDocRef.update({'MessageId': messageId});
+
+      print('Message sent successfully');
+    } catch (e) {
+      print('Error sending message: $e');
+      throw e;
     }
   }
 

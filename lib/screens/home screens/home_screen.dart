@@ -77,6 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
   String _employeeId = "";
+  String _employeeCompanyID = "";
+
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -224,6 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String empEmail = userInfo['EmployeeEmail'];
         String empImage = userInfo['EmployeeImg'] ?? "";
+        String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
+        String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -233,39 +237,40 @@ class _HomeScreenState extends State<HomeScreen> {
           _employeeId = EmployeeId;
           _empEmail = empEmail;
           employeeImg = empImage;
+          _employeeCompanyID = empCompanyId;
         });
         print('User Info: ${userInfo.data()}');
-        if (patrolInfo != null) {
-          String PatrolArea = patrolInfo['PatrolArea'];
-          String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
-          bool PatrolKeepGuardInRadiusOfLocation =
-              patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
-          String PatrolLocationName = patrolInfo['PatrolLocationName'];
-          String PatrolName = patrolInfo['PatrolName'];
-          int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
-          Timestamp PatrolTime = patrolInfo['PatrolTime'];
-          DateTime patrolDateTime = PatrolTime.toDate();
+        // if (patrolInfo != null) {
+        //   String PatrolArea = patrolInfo['PatrolArea'];
+        //   String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
+        //   bool PatrolKeepGuardInRadiusOfLocation =
+        //       patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+        //   String PatrolLocationName = patrolInfo['PatrolLocationName'];
+        //   String PatrolName = patrolInfo['PatrolName'];
+        //   int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
+        //   Timestamp PatrolTime = patrolInfo['PatrolTime'];
+        //   DateTime patrolDateTime = PatrolTime.toDate();
 
-          // Format DateTime as String
-          String patrolTimeString =
-              DateFormat('hh:mm a').format(patrolDateTime);
-          String patrolDateString =
-              DateFormat('yyyy-MM-dd').format(patrolDateTime);
-          print('Patrol Info: ${patrolInfo.data()}');
+        //   // Format DateTime as String
+        //   String patrolTimeString =
+        //       DateFormat('hh:mm a').format(patrolDateTime);
+        //   String patrolDateString =
+        //       DateFormat('yyyy-MM-dd').format(patrolDateTime);
+        //   print('Patrol Info: ${patrolInfo.data()}');
 
-          setState(() {
-            _patrolArea = PatrolArea;
-            _patrolCompanyId = PatrolCompanyId;
-            _patrolKeepGuardInRadiusOfLocation =
-                PatrolKeepGuardInRadiusOfLocation;
-            _patrolLocationName = PatrolLocationName;
-            _patrolRestrictedRadius = PatrolRestrictedRadius;
-            // _patrolTime = patrolTimeString;
-            _patrolDate = patrolDateString;
+        //   setState(() {
+        //     _patrolArea = PatrolArea;
+        //     _patrolCompanyId = PatrolCompanyId;
+        //     _patrolKeepGuardInRadiusOfLocation =
+        //         PatrolKeepGuardInRadiusOfLocation;
+        //     _patrolLocationName = PatrolLocationName;
+        //     _patrolRestrictedRadius = PatrolRestrictedRadius;
+        //     // _patrolTime = patrolTimeString;
+        //     _patrolDate = patrolDateString;
 
-            // issShift = false;
-          });
-        }
+        //     // issShift = false;
+        //   });
+        // }
 
         if (shiftInfo != null) {
           String shiftDateStr =
@@ -768,7 +773,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return PanicAlertDialog();
+                                            return PanicAlertDialog(
+                                              EmpId: _employeeId,
+                                              CompanyId: _employeeCompanyID,
+                                              Username: _userName,
+                                            );
                                           },
                                         );
                                         break;
