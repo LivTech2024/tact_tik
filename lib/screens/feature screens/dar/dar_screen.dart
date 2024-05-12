@@ -67,7 +67,7 @@ class DarDisplayScreen extends StatelessWidget {
           'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
-          'EmpDarDate': _userService.shiftDate,
+          'EmpDarDate': FieldValue.serverTimestamp(),
           'EmpDarCreatedAt': FieldValue.serverTimestamp(),
           'EmpDarEmpName': _userService.userName,
           'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,

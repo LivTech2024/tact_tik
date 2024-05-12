@@ -40,12 +40,14 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
   void _uploadImages() async {
     print("Uploads ${uploads}");
     try {
-      await fireStoreService.addImagesToShiftGuardWellnessReport(
-          uploads, _controller.text);
+      await fireStoreService
+          .addImagesToShiftGuardWellnessReport(uploads, _controller.text)
+          .whenComplete(() {
+        Navigator.pop(context);
+      });
       uploads.clear();
       _controller.clear();
       showSuccessToast(context, "Uploaded");
-      Navigator.pop(context);
     } catch (e) {}
   }
 
@@ -268,7 +270,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           onPressed: _uploadImages,
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.cloud_upload),
+          child: Icon(Icons.check),
         ),
       ),
     );
