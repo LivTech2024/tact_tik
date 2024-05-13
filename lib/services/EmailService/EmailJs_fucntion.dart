@@ -129,7 +129,7 @@ Future<void> sendShiftTemplateEmail(
   String shiftOutTime,
 ) async {
   final pdfBase64 = await generateShiftReportPdf(
-      ClientName, Data, GuardName, "19:00", "06:00");
+      ClientName, Data, GuardName, "19:00", "07:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -228,7 +228,7 @@ Future<void> sendShiftTemplateEmail(
             <tr>
                 <td> ${GuardName}</td>
                 <td>19:00</td>
-                <td>06:00</td>
+                <td>07:00</td>
             </tr>
         </table>
 
@@ -329,7 +329,7 @@ Thank you for your attention
   // final pdfContent2 = await file2.readAsBytes();
   // final pdfContentBase64_2 = base64Encode(pdfContent2);
 
-  final pdfContent = await rootBundle.load('assets/Dar.pdf');
+  final pdfContent = await rootBundle.load('assets/DAR.pdf');
   final pdfContentBase64 = base64Encode(pdfContent.buffer.asUint8List());
   // final pdfContent1 = await rootBundle.load('assets/a');
   // final pdfContentBase641 = base64Encode(pdfContent.buffer.asUint8List());

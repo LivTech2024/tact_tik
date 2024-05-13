@@ -113,7 +113,9 @@ flutter:
     - assets/Tactik.jpeg
     - assets/ErrorSound.mp3
     - assets/SuccessSound.mp3
-  #   - images/a_dot_ham.jpeg
+    - assets/DAR.pdf
+
+    # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
