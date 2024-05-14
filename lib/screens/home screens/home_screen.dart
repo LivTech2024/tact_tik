@@ -283,7 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
+          GeoPoint shiftGeolocation =
+              shiftInfo['ShiftLocation'] as GeoPoint? ?? GeoPoint(0.0, 0.0);
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";

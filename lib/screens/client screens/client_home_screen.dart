@@ -249,8 +249,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 selectedDates.add(shiftDateTime);
               });
             }
-            storage.setItem("shiftId", shiftId);
-            storage.setItem("EmpId", EmployeeId);
+            // storage.setItem("shiftId", shiftId);
+            // storage.setItem("EmpId", EmployeeId);
 
             // _employeeImg = employeeImg;
           });

@@ -50,8 +50,8 @@ class FireStoreService {
       return null;
     }
 
-    final querySnapshot = await clientInfo
-        .where("ClientEmail", isEqualTo: currentUserEmail)
+    final querySnapshot = await userInfo
+        .where("EmployeeEmail", isEqualTo: currentUserEmail)
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {

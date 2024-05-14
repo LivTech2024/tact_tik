@@ -332,6 +332,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   void _deleteItem(int index) {
     uploads.removeAt(index);
+    _refresh();
   }
 
   Future<void> _addImage() async {
@@ -343,18 +344,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       });
     }
     print("Statis ${uploads}");
+    _refresh();
   }
 
   Future<void> _addGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 5);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          setState(() {
+            uploads.add({'type': 'image', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      }
     }
+    _refresh();
   }
 
   @override
@@ -389,6 +397,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
           !_expand &&
           widget.p.CompletedCount < widget.p.PatrolRequiredCount) {
         setState(() {
+          _isLoading = true;
           buttonEnabled = false; // Disable the button
         });
         var clientID =
@@ -430,6 +439,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       } else {
         return null;
       }
+      setState(() {
+        _isLoading = true;
+// Disable the button
+      });
     }
 
     void showErrorToast(BuildContext context, String message) {
@@ -936,6 +949,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                     onPressed: () {
                                                                                       setState(() {
                                                                                         _deleteItem(index);
+                                                                                        _refresh();
                                                                                       });
                                                                                     },
                                                                                     icon: Icon(
@@ -955,6 +969,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                               () {
                                                                             print("Patrol Checkpoint Status ${widget.p.Allchecked}");
                                                                             Navigator.pop(context);
+
                                                                             showModalBottomSheet(
                                                                               context: context,
                                                                               builder: (context) => Column(
@@ -965,6 +980,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                     title: Text('Add Image'),
                                                                                     onTap: () {
                                                                                       _addImage();
+                                                                                      _refresh();
                                                                                       Navigator.pop(context);
                                                                                     },
                                                                                   ),
@@ -973,6 +989,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                     title: Text('Add from Gallery'),
                                                                                     onTap: () {
                                                                                       Navigator.pop(context);
+                                                                                      _refresh();
                                                                                       _addGallery();
                                                                                     },
                                                                                   ),
@@ -1127,13 +1144,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         color: Colors.redAccent,
                         borderRadius: 10,
                         onPressed: () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
                           _refresh();
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: InterRegular(
-                                  text: 'Add Comment',
+                                  text: 'Add Feedback',
                                   color: color2,
                                   fontsize: width / width12,
                                 ),
@@ -1141,7 +1161,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     CustomeTextField(
-                                      hint: 'Add Comment',
+                                      hint: 'Add Feedback',
                                       showIcon: false,
                                       controller: CommentController,
                                     ),
@@ -1527,12 +1547,21 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               );
                             },
                           );
+                          setState(() {
+                            _isLoading = false;
+                          });
                         },
                       )
                     : const SizedBox(),
               ],
             ),
           ),
+          if (_isLoading)
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(top: 10),
+              child: CircularProgressIndicator(),
+            ),
         ],
       ),
     );
