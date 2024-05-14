@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -35,6 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if (role == "SUPERVISOR") {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+      } else if (role == "CLIENT") {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => ClientHomeScreen()));
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));

@@ -25,6 +25,8 @@ class FireStoreService {
   //Read LoggedIN User Information
   final CollectionReference userInfo =
       FirebaseFirestore.instance.collection("Employees");
+  final CollectionReference clientInfo =
+      FirebaseFirestore.instance.collection("Clients");
   final CollectionReference shifts =
       FirebaseFirestore.instance.collection("Shifts");
   final CollectionReference patrols =
@@ -38,6 +40,33 @@ class FireStoreService {
     String? currentUser = storage.getItem("CurrentUser");
 
     if (currentUser == null || currentUser.isEmpty) {
+      print("CurrentUSer is empty");
+      return null;
+    }
+
+    final currentUserEmail = currentUser;
+    if (currentUserEmail.isEmpty) {
+      print("CurrentUSerEmail is empty");
+      return null;
+    }
+
+    final querySnapshot = await clientInfo
+        .where("ClientEmail", isEqualTo: currentUserEmail)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Return the first document found
+      print(querySnapshot.docs.first);
+      return querySnapshot.docs.first;
+    } else {
+      return null;
+    }
+  }
+
+  Future<DocumentSnapshot?> getClientInfoByCurrentUserEmail() async {
+    String? currentUser = storage.getItem("CurrentUser");
+
+    if (currentUser == null || currentUser.isEmpty) {
       return null;
     }
 
@@ -46,8 +75,8 @@ class FireStoreService {
       return null;
     }
 
-    final querySnapshot = await userInfo
-        .where("EmployeeEmail", isEqualTo: currentUserEmail)
+    final querySnapshot = await clientInfo
+        .where("ClientEmail", isEqualTo: currentUserEmail)
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {

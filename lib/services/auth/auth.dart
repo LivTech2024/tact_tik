@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/riverpod/auth_provider.dart';
+import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 
@@ -94,8 +95,10 @@ class Auth {
         await storage.setItem("CurrentUser", email);
         // await storage.setItem("CurrentEmployeeId", );
         await storage.setItem("Role", 'CLIENT');
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => ClientHomeScreen()));
+        await storage.setItem("CurrentUser", email);
+        await storage.setItem("Role", "CLIENT");
       }
       QuerySnapshot<Map<String, dynamic>> query = await _firestore
           .collection('Employees')

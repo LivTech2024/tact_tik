@@ -141,12 +141,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   // 12 datani mall shift start id A local stoarage
   // 2 capital mall
   void _getUserInfo() async {
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    var userInfo = await fireStoreService.getClientInfoByCurrentUserEmail();
     if (mounted) {
       if (userInfo != null) {
-        String userName = userInfo['EmployeeName'];
-        String EmployeeId = userInfo['EmployeeId'];
-        String empEmail = userInfo['EmployeeEmail'];
+        String userName = userInfo['ClientName'];
+        String EmployeeId = userInfo['ClientId'];
+        String empEmail = userInfo['ClientEmail'];
         String empImage = userInfo['EmployeeImg'] ?? "";
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
