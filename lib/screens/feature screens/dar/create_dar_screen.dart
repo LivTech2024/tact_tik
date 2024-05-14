@@ -120,12 +120,19 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   Future<void> _addGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 5);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          setState(() {
+            uploads.add({'type': 'image', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      }
     }
   }
 
@@ -542,7 +549,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                       backgroundcolor: Primarycolor,
                       borderRadius: 20,
                     ),
-                  ], 
+                  ],
                 ),
               ),
             ),
