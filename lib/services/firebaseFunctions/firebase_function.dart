@@ -2557,34 +2557,24 @@ class FireStoreService {
           .orderBy('PatrolLogPatrolCount')
           .get();
 
-      // 'R6UwWI2qodv58N4cSsKr'
-      // Process query results
-      // 'JKxzgp6rtqOQHLlzKaOm',
-      // 'XCLOEbPi8FXSpKHyHNpx',
-      // 'axGaN9B6aBurfFAnhge8'
-      // '0EJnwANH2NuZK0zPqifQ',
-      // 'R9s4DUlhNDSJferI2ZSX',
-      // 'xyJVnOpxQ78i0HUUiOIc',
-      // 'cumRosS2UKPNU9heq7Kp',
       List<String> specificDocIds = [
-        // 'ytq58U0w01gTW4VQFHc7',
-        // 'Z2HWfMhB1x4dad7DEhx2',
-        // '4tTsDpeAWEEL4LDZHJJh'
-        'xgUAILtMcy5Au3eQZjus',
-        'rIry6QEdvF4IPXzswOdi'
+        // '9cWqMvjiRXiyFhWDgN7q',
+        'jUTw8hz6rSJso3b5xrE9',
+        'VNPPr5OLCVNyYCzGVpAA',
+        'IuS66mHsqkIPgI57Ge5a'
       ];
 
       querySnapshot.docs.forEach((doc) {
         print("Doc id $doc");
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
-        // if (specificDocIds.contains(doc.id)) {
-        // Check if the document ID already exists in pdfDataList
-        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-          pdfDataList.add(doc.data());
-          print("Data for Pdf: ${doc.data()}");
+        if (specificDocIds.contains(doc.id)) {
+          // Check if the document ID already exists in pdfDataList
+          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+            pdfDataList.add(doc.data());
+            print("Data for Pdf: ${doc.data()}");
+          }
         }
-        // }
       });
     } catch (e) {
       print(e);
