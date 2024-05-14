@@ -97,7 +97,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   bool onBreak = false;
   DateTime inTime = DateTime.now();
   int _elapsedTime = 0;
-
+  bool _isLoading = false;
   // late SharedPreferences prefs;
   void send_mail_onOut(data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -310,7 +310,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       MaterialPageRoute(
                         builder: (context) => WellnessCheckScreen(),
                       ),
-                    );
+                    ).then((value) {
+                      if (value == true) {
+                        Navigator.pop(context);
+                      }
+                    });
                   },
                 ),
               ],
@@ -478,12 +482,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ignoring: clickedIn,
                   child: Bounce(
                     onTap: () async {
-                      // String time =
-                      //     isShiftStartTimeWithinRange(widget.ShiftStartTime) ??
-                      //         'On time';
-                      // setState(() {
-                      //   lateTime = time ?? "";
-                      // });
+                      setState(() {
+                        _isLoading = true;
+                      });
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       await fireStoreService.changePatrolStatus(
@@ -526,6 +527,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           print('already clicked');
                         }
                       });
+                      setState(() {
+                        _isLoading = false;
+                      });
                     },
                     child: Container(
                       color: WidgetColor,
@@ -548,6 +552,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ignoring: !clickedIn,
                   child: Bounce(
                     onTap: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
                       List<String> endTimeParts =
                           widget.ShiftEndTime.split(':');
                       DateTime shiftEndDateTime = DateTime(
@@ -741,6 +748,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           }
                         }
                       }
+                      setState(() {
+                        _isLoading = false;
+                      });
                     },
                     child: Container(
                       color: WidgetColor,
@@ -845,6 +855,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             },
           ),
         ),
+        if (_isLoading)
+          Align(
+            alignment: Alignment.center,
+            child: Visibility(
+              visible: _isLoading,
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
   }
