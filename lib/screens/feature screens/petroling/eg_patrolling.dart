@@ -170,6 +170,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             reportedTime: status['StatusReportedTime'],
             reportedById: status['StatusReportedById'],
             reportedByName: status['StatusReportedByName'],
+            statusShiftId: status['StatusShiftId'],
           );
         }).toList();
         // Assuming CheckPointStatus is not used in this context
@@ -648,10 +649,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   return GestureDetector(
                                     onTap: () async {
                                       if (checkpoint.getFirstStatus(
-                                                  widget.p.EmpId) ==
+                                                  widget.p.EmpId,
+                                                  widget.p.ShiftId) ==
                                               'unchecked' ||
                                           checkpoint.getFirstStatus(
-                                                  widget.p.EmpId) ==
+                                                  widget.p.EmpId,
+                                                  widget.p.ShiftId) ==
                                               null) {
                                         var res = await Navigator.push(
                                             context,
@@ -738,15 +741,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   ),
                                                   child: Icon(
                                                     checkpoint.getFirstStatus(
-                                                                widget
-                                                                    .p.EmpId) ==
+                                                                widget.p.EmpId,
+                                                                widget.p
+                                                                    .ShiftId) ==
                                                             'checked'
                                                         ? Icons.done
                                                         : Icons.qr_code,
                                                     color: checkpoint
                                                                 .getFirstStatus(
                                                                     widget.p
-                                                                        .EmpId) ==
+                                                                        .EmpId,
+                                                                    widget.p
+                                                                        .ShiftId) ==
                                                             'checked'
                                                         ? Colors.green
                                                         : Primarycolor,
@@ -1250,7 +1256,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               .LastEndPatrolupdatePatrolsStatus(
                                                   widget.p.PatrolId,
                                                   widget.p.EmpId,
-                                                  widget.p.EmployeeName);
+                                                  widget.p.EmployeeName,
+                                                  widget.p.ShiftId);
                                           List<String> emails = [];
                                           var ClientEmail =
                                               await fireStoreService
@@ -1447,7 +1454,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               .EndPatrolupdatePatrolsStatus(
                                                   widget.p.PatrolId,
                                                   widget.p.EmpId,
-                                                  widget.p.EmployeeName);
+                                                  widget.p.EmployeeName,
+                                                  widget.p.ShiftId);
 
                                           List<String> emails = [];
                                           var ClientEmail =
@@ -1643,11 +1651,12 @@ class Checkpoint {
         dateTime1.day == dateTime2.day;
   }
 
-  String? getFirstStatus(String empId) {
+  String? getFirstStatus(String empId, String ShiftId) {
     if (checkPointStatus.isNotEmpty) {
       for (var status in checkPointStatus) {
         if (status.reportedById == empId &&
-            isSameDay(status.reportedTime, Timestamp.now())) {
+            // isSameDay(status.reportedTime, Timestamp.now())
+            status.statusShiftId == ShiftId) {
           return status.status;
         }
       }
@@ -1659,6 +1668,8 @@ class Checkpoint {
 class CheckPointStatus {
   final String status;
   final String? reportedById;
+  final String? statusShiftId;
+
   final String? reportedByName;
   final Timestamp? reportedTime;
   final String? failureReason;
@@ -1671,6 +1682,7 @@ class CheckPointStatus {
     this.reportedTime,
     this.failureReason,
     this.StatusCompletedCount,
+    this.statusShiftId,
   });
 }
 
