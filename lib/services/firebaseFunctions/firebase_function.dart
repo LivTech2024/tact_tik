@@ -365,8 +365,8 @@ class FireStoreService {
           'StatusReportedTime': Timestamp.now(),
         });
       }
-      await updatePatrolCheckpointStatusToUnchecked(docId,
-          statusReportedById); //updates the checkpoint status to unchecked
+      await updatePatrolCheckpointStatusToUnchecked(docId, statusReportedById,
+          ShiftId); //updates the checkpoint status to unchecked
       // Update the document with the updated status array
       await patrolDocument.update({
         'PatrolCurrentStatus': currentStatusList,
@@ -443,9 +443,7 @@ class FireStoreService {
   }
 
   Future<void> updatePatrolCheckpointStatusToUnchecked(
-    String docId,
-    String? statusReportedById,
-  ) async {
+      String docId, String? statusReportedById, String shiftId) async {
     try {
       // Get a reference to the Firestore document
       DocumentReference<Map<String, dynamic>> patrolDocument =
@@ -475,7 +473,8 @@ class FireStoreService {
         // Find the latest status reported by the same ID
         int existingIndex = checkPointStatuses.indexWhere((status) =>
             status['StatusReportedById'] == statusReportedById &&
-            _isSameDay(status['StatusReportedTime'], Timestamp.now()));
+            // _isSameDay(status['StatusReportedTime'], Timestamp.now()
+            status['StatusShiftId'] == shiftId);
 
         // Update CheckPointStatus if it is empty, null, or not updated today
         if (existingIndex == -1) {
@@ -510,7 +509,7 @@ class FireStoreService {
       String patrolId,
       String statusReportedById,
       String statusReportedByName,
-      String ShiftId) async {
+      String ShiftID) async {
     if (patrolId.isEmpty) {
       return;
     }
@@ -547,7 +546,8 @@ class FireStoreService {
       // Check if the status entry already exists for today
       int existingIndex = currentStatusList.indexWhere((entry) =>
           entry['StatusReportedById'] == statusReportedById &&
-          _isSameDay(entry['StatusReportedTime'], Timestamp.now()));
+          // _isSameDay(entry['StatusReportedTime'], Timestamp.now())
+          entry['StatusShiftId'] == ShiftID);
 
       if (existingIndex != -1) {
         // If the status entry exists for today, update it
@@ -566,7 +566,7 @@ class FireStoreService {
           'StatusReportedByName': statusReportedByName,
           'StatusCompletedCount': 1,
           'StatusReportedTime': Timestamp.now(),
-          'StatusShiftId': ShiftId
+          'StatusShiftId': ShiftID
         });
       }
 
@@ -623,7 +623,6 @@ class FireStoreService {
       // Check if the status entry already exists for today
       int existingIndex = currentStatusList.indexWhere((entry) =>
           entry['StatusReportedById'] == statusReportedById &&
-          // _isSameDay(entry['StatusReportedTime'], Timestamp.now())
           entry['StatusShiftId'] == ShiftId);
 
       if (existingIndex != -1) {
@@ -643,6 +642,7 @@ class FireStoreService {
           'StatusReportedByName': statusReportedByName,
           'StatusCompletedCount': 1,
           'StatusReportedTime': Timestamp.now(),
+          'StatusShiftId': ShiftId
         });
       }
 
@@ -2832,6 +2832,7 @@ class FireStoreService {
           if (status['StatusReportedById'] == empId) {
             status['Status'] = 'started';
             status['StatusCompletedCount'] = 0;
+            status['StatusShiftId'] = shiftId;
             // status['StatusReportedTime'] = DateTime.now().toUtc().toString();
             break; // Exit loop once the status is updated
           }

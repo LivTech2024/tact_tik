@@ -13,7 +13,12 @@ class Button1 extends StatelessWidget {
     this.color,
     required this.onPressed,
     this.height = 65,
-    this.backgroundcolor = WidgetColor, this.borderRadius = 0, this.useBorderRadius = false, this.MyBorderRadius, this.useWidget = false, this.MyWidget,
+    this.backgroundcolor = WidgetColor,
+    this.borderRadius = 0,
+    this.useBorderRadius = false,
+    this.MyBorderRadius,
+    this.useWidget = false,
+    this.MyWidget,
   });
 
   final bool useBold;
@@ -36,22 +41,24 @@ class Button1 extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: backgroundcolor,
-            borderRadius: useBorderRadius ? MyBorderRadius : BorderRadius
-                .circular(borderRadius)
-        ),
+            borderRadius: useBorderRadius
+                ? MyBorderRadius
+                : BorderRadius.circular(borderRadius)),
         height: height,
         child: Center(
-          child: useWidget ? MyWidget : useBold
-              ? InterBold(
-            text: text,
-            fontsize: fontsize,
-            color: color,
-          )
-              : InterSemibold(
-            text: text,
-            fontsize: fontsize,
-            color: color,
-          ),
+          child: useWidget
+              ? MyWidget
+              : useBold
+                  ? InterBold(
+                      text: text,
+                      fontsize: fontsize,
+                      color: color,
+                    )
+                  : InterSemibold(
+                      text: text,
+                      fontsize: fontsize,
+                      color: color,
+                    ),
         ),
       ),
     );
