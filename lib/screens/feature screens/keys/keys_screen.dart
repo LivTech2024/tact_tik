@@ -13,8 +13,14 @@ class KeysScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return SafeArea(
       child: Scaffold(
@@ -68,7 +74,7 @@ class KeysScreen extends StatelessWidget {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) {
+                    (context, index) {
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: width / width30),
                     child: GestureDetector(
@@ -81,7 +87,7 @@ class KeysScreen extends StatelessWidget {
                       child: Container(
                         height: width / width60,
                         padding:
-                            EdgeInsets.symmetric(horizontal: width / width10),
+                        EdgeInsets.symmetric(horizontal: width / width10),
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
@@ -100,7 +106,7 @@ class KeysScreen extends StatelessWidget {
                                   width: width / width44,
                                   decoration: BoxDecoration(
                                     borderRadius:
-                                        BorderRadius.circular(width / width10),
+                                    BorderRadius.circular(width / width10),
                                     color: Primarycolorlight,
                                   ),
                                   child: Center(
