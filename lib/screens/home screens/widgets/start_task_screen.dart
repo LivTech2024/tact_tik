@@ -20,6 +20,7 @@ import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dar
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/shift_return_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
+import 'package:tact_tik/services/DAR/darFucntions.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/backgroundService/countDownTimer.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -83,6 +84,7 @@ class StartTaskScreen extends StatefulWidget {
 
 // final taskScreenProvider = StateNotifierProvider((ref) => TaskScreenState());
 FireStoreService fireStoreService = FireStoreService();
+DarFunctions darFunctions = DarFunctions();
 
 class _StartTaskScreenState extends State<StartTaskScreen> {
   Isolate? _isolate;
@@ -484,6 +486,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       setState(() {
                         _isLoading = true;
                       });
+                      await darFunctions.fetchShiftDetailsAndSubmitDAR();
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       await fireStoreService.changePatrolStatus(

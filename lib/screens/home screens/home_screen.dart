@@ -536,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     buildListTile(
                       Icons.restart_alt,
-                      'History',
+                    'History',
                       4,
                       () {
                         // customEmail();
