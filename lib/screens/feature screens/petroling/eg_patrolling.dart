@@ -1162,15 +1162,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       ),
                                                     ),
                                                   ),
-                                                  if (_isLoading)
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      margin: EdgeInsets.only(
-                                                          top: 10),
-                                                      child:
-                                                          CircularProgressIndicator(),
-                                                    ),
                                                 ],
                                               )
                                             ],
@@ -1623,8 +1614,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             ],
           ),
         ),
+        Visibility(
+          visible: _isLoading,
+          child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: 10),
+            child: CircularProgressIndicator(
+                color: Primarycolor,
+            ),
+          ),
+        ),
         Align(
-          alignment: Alignment(0,0),
+          alignment: Alignment(0, 0),
           child: Visibility(
             visible: isPopupVisible,
             child: Container(
@@ -1668,7 +1669,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withOpacity(0.5),
                                   borderRadius:
-                                  BorderRadius.circular(width / width10),
+                                      BorderRadius.circular(width / width10),
                                 ),
                                 margin: EdgeInsets.all(width / width8),
                                 child: Image.file(
@@ -1726,7 +1727,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             decoration: BoxDecoration(
                               color: Colors.grey.withOpacity(0.5),
                               borderRadius:
-                              BorderRadius.circular(width / width10),
+                                  BorderRadius.circular(width / width10),
                             ),
                             child: Center(
                               child: Icon(
@@ -1758,22 +1759,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       ),
                       uploadingLoading
                           ? CircularProgressIndicator(
-                        color: Primarycolor,
-                      )
+                              color: Primarycolor,
+                            )
                           : Button1(
-                        height: height / height30,
-                        borderRadius: width / width10,
-                        onPressed: () {
-                          // Logic to submit the report
-                          setState(() {
-                            uploadingLoading = true;
-                          });
-                        },
-                        text: 'Submit',
-                        fontsize: width / width14,
-                        backgroundcolor: Primarycolor,
-                        color: color1,
-                      ),
+                              height: height / height30,
+                              borderRadius: width / width10,
+                              onPressed: () {
+                                // Logic to submit the report
+                                setState(() {
+                                  uploadingLoading = true;
+                                });
+                              },
+                              text: 'Submit',
+                              fontsize: width / width14,
+                              backgroundcolor: Primarycolor,
+                              color: color1,
+                            ),
                     ],
                   ),
                 ],
@@ -1781,7 +1782,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             ),
           ),
         ),
-
       ],
     );
   }
