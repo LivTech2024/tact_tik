@@ -2586,24 +2586,24 @@ class FireStoreService {
           .orderBy('PatrolLogPatrolCount')
           .get();
 
-      List<String> specificDocIds = [
-        // '9cWqMvjiRXiyFhWDgN7q',
-        'jUTw8hz6rSJso3b5xrE9',
-        'VNPPr5OLCVNyYCzGVpAA',
-        'IuS66mHsqkIPgI57Ge5a'
-      ];
+      // List<String> specificDocIds = [
+      //   // '9cWqMvjiRXiyFhWDgN7q',
+      //   'jUTw8hz6rSJso3b5xrE9',
+      //   'VNPPr5OLCVNyYCzGVpAA',
+      //   'IuS66mHsqkIPgI57Ge5a'
+      // ];
 
       querySnapshot.docs.forEach((doc) {
         print("Doc id $doc");
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
-        if (specificDocIds.contains(doc.id)) {
-          // Check if the document ID already exists in pdfDataList
-          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-            pdfDataList.add(doc.data());
-            print("Data for Pdf: ${doc.data()}");
-          }
+        // if (specificDocIds.contains(doc.id)) {
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
         }
+        // }
       });
     } catch (e) {
       print(e);
