@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
@@ -40,13 +41,18 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
   void _uploadImages() async {
     print("Uploads ${uploads}");
     try {
-      await fireStoreService.addImagesToShiftGuardWellnessReport(
-          uploads, _controller.text);
+      await fireStoreService
+          .addImagesToShiftGuardWellnessReport(uploads, _controller.text)
+          .whenComplete(() {
+        Navigator.pop(context);
+      });
       uploads.clear();
       _controller.clear();
       showSuccessToast(context, "Uploaded");
-      Navigator.pop(context);
-    } catch (e) {}
+      Navigator.pop(context, true);
+    } catch (e) {
+      showErrorToast(context, "Try Again");
+    }
   }
 
   Future<void> _addVideo() async {
@@ -268,7 +274,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
           onPressed: _uploadImages,
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.cloud_upload),
+          child: Icon(Icons.check),
         ),
       ),
     );

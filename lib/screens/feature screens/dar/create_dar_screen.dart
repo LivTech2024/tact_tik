@@ -217,6 +217,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   // }
 
   void submitDarTileData() async {
+    setState(() {
+      _isSubmitting = true;
+      _isLoading = true;
+    });
     final date = widget.darTiles[widget.index]['TileTime'];
     await _uploadImages();
     final data = {
@@ -231,10 +235,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     localdarTiles.add(data);
     print("Updated ${widget.darTiles}");
     try {
-      setState(() {
-        _isSubmitting = true;
-        _isLoading = true;
-      });
       final user = FirebaseAuth.instance.currentUser;
       // if (user != null) {
       // await _getUserInfo();
@@ -286,6 +286,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     } catch (e) {
       print('Error creating blank DAR cards: $e');
     }
+    setState(() {
+      _isSubmitting = false;
+      _isLoading = false;
+    });
   }
 
   @override

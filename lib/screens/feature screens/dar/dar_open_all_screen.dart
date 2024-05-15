@@ -260,7 +260,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                   'TileImages': [],
                   'TileLocation': '',
                   'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
-                  'TileDate': '${date.year}-${date.month}-${date.day}',
+                  'TileDate': Timestamp.fromDate(date),
                 });
               }
             } else {
@@ -270,7 +270,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                   'TileImages': [],
                   'TileLocation': '',
                   'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
-                  'TileDate': '${date.year}-${date.month}-${date.day}',
+                  'TileDate': Timestamp.fromDate(date),
                 });
               }
             }
@@ -294,8 +294,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                 'TileImages': [],
                 'TileLocation': '',
                 'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
-                'TileDate':
-                    '${nextDate.year}-${nextDate.month}-${nextDate.day}',
+                'TileDate': Timestamp.fromDate(nextDate),
               });
             }
           }
@@ -333,10 +332,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     try {
       final FirebaseFirestore _firestore = FirebaseFirestore.instance;
       var docRef = await _firestore.collection('EmployeesDAR').add({
-        'EmpDarLocationId:': _userService.shiftLocationId,
+        'EmpDarLocationId': _userService.shiftLocationId,
         'EmpDarLocationName': _userService.shiftLocation,
         'EmpDarShiftId': _userService.ShiftId,
-        'EmpDarDate': _userService.shiftDate,
+        'EmpDarDate': Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
         'EmpDarCreatedAt':
             Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
         'EmpDarEmpName': _userService.userName,
@@ -463,6 +462,28 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
+        appBar: AppBar(
+          backgroundColor: AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: width / width24,
+            ),
+            padding: EdgeInsets.only(left: width / width20),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: InterRegular(
+            text: 'DAR',
+            fontsize: width / width18,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

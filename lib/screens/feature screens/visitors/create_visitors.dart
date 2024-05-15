@@ -250,10 +250,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         nameController.text.isEmpty ||
         EmailController.text.isEmpty ||
         ContactNoController.text.isEmpty ||
-        AssetHandoverController.text.isEmpty ||
-        LicensePlateNumberController.text.isEmpty ||
-        SetCountdownController.text.isEmpty ||
-        CommentsController.text.isEmpty ||
         NoOfPersonController.text.isEmpty ||
         CompanyNameController.text.isEmpty) {
       _showSnackbar('Please fill in all fields correctly');

@@ -77,6 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
   String _employeeId = "";
+  String _employeeCompanyID = "";
+
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -224,6 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String empEmail = userInfo['EmployeeEmail'];
         String empImage = userInfo['EmployeeImg'] ?? "";
+        String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
+        String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -233,6 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _employeeId = EmployeeId;
           _empEmail = empEmail;
           employeeImg = empImage;
+          _employeeCompanyID = empCompanyId;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -278,7 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
+          GeoPoint shiftGeolocation =
+              shiftInfo['ShiftLocation'] as GeoPoint? ?? GeoPoint(0.0, 0.0);
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
@@ -530,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     buildListTile(
                       Icons.restart_alt,
-                      'History',
+                    'History',
                       4,
                       () {
                         // customEmail();
@@ -544,7 +550,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-
                     buildListTile(
                       Icons.settings,
                       'Settings',
@@ -751,7 +756,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return PanicAlertDialog();
+                                            return PanicAlertDialog(
+                                              EmpId: _employeeId,
+                                              CompanyId: _employeeCompanyID,
+                                              Username: _userName,
+                                            );
                                           },
                                         );
                                         break;
