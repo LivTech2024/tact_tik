@@ -569,45 +569,46 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         // w4SIEtu5pcPKBwil64ARR
                         // var data =
-                        //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "VTvjMQKBpckEYxOkpW8V",
-                        // );
+                        //  await fireStoreService.fetchTemplateDataForPdf(
+                        // "paHVXXC99uNtXamURMBc",
+                        //  "flBKkQeP6fgMHqb7cx1E",
+                        //  );
                         // await sendShiftTemplateEmail(
                         //   "Leston holdings",
-                        //   emails,
-                        //   'Tacttik Shift Report',
+                        //     emails,
+                        //    'Tacttik Shift Report',
                         //   "Tacttik Shift Report",
-                        //   data,
-                        //   "Shift",
-                        //   "15 May",
-                        //   "Pankaj kumar",
+                        //    data,
+                        //  "Shift",
+                        //      "16 May",
+                        //    "Pankaj kumar",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        //    "completed",
+                        //      "formattedDateTime",
+                        //     "formattedEndTime",
+                        //    );
+
                         // await sendDARTemplateEmail(
-                        //   "Leston holdings ",
-                        //   emails,
-                        //   'Tacttik DAR',
-                        //   "Tacttik DAR",
-                        //   "Shift",
-                        //   "15 May",
-                        //   "Pankaj kumar",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        //         "Leston holdings ",
+                        //         emails,
+                        //         'Tacttik DAR',
+                        //         "Tacttik DAR",
+                        //         "Shift",
+                        //         "15 May",
+                        //         "sukhman kooner",
+                        //         "01:20:27",
+                        //         "06:00:00",
+                        //         "High level place",
+                        //         "completed",
+                        //         "formattedDateTime",
+                        //         "formattedEndTime",
+                        //       );
                         // 12:37 - 1-10
                         //5:15 - 5-47
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "hYCnrNiyVBww04EEquXe");
+                        //     "PatrolLogs", "bNql8BdNBoSKv8MfI4dD");
                         //     "EmployeesDAR", "YHRrTfgn07btcFtSLuAj");
                       },
                     ),
