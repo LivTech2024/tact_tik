@@ -355,6 +355,7 @@ class FireStoreService {
             statusReportedByName;
         currentStatusList[existingIndex]['StatusReportedTime'] =
             Timestamp.now();
+        currentStatusList[existingIndex]['StatusShiftId'] = ShiftId;
       } else {
         // If the status entry doesn't exist for today, add a new entry
         currentStatusList.add({
@@ -482,6 +483,7 @@ class FireStoreService {
             'Status': 'unchecked',
             'StatusReportedById': statusReportedById,
             'StatusReportedTime': Timestamp.now(),
+            'StatusShiftId': shiftId
           });
         } else {
           // Update the existing status with the current timestamp and 'unchecked' status
@@ -1984,16 +1986,16 @@ class FireStoreService {
           storageRef.child("employees/patrol/$uniqueName.jpg");
 
       // Upload the image file and get the download URL
-      // await uploadRef.putFile(file);
+      await uploadRef.putFile(file);
 
       // Get the download URL of the uploaded image
-      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-        file.absolute.path,
-        quality: 50, // Adjust the quality as needed
-      );
+      // Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+      //   file.absolute.path,
+      //   quality: 50, // Adjust the quality as needed
+      // );
 
       // Upload the compressed image to Firebase Storage
-      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+      // await uploadRef.putData(Uint8List.fromList(compressedImage!));
       String downloadURL = await uploadRef.getDownloadURL();
       // Return the download URL in a list
       print({'downloadURL': downloadURL});
@@ -2087,12 +2089,12 @@ class FireStoreService {
 
   // Add images and comment
   Future<void> addImagesToPatrol(
-    List<Map<String, dynamic>> uploads,
-    String comment,
-    String patrolID,
-    String empId,
-    String patrolCheckPointId,
-  ) async {
+      List<Map<String, dynamic>> uploads,
+      String comment,
+      String patrolID,
+      String empId,
+      String patrolCheckPointId,
+      String ShiftId) async {
     try {
       final querySnapshot = await patrols.doc(patrolID).get();
 
@@ -2130,6 +2132,7 @@ class FireStoreService {
               "StatusImage": [],
               "StatusComment": "",
               "StatusReportedTime": Timestamp.now(),
+              "StatusShiftId": ShiftId
             };
             checkPointStatus.add(status);
           }
@@ -2285,14 +2288,12 @@ class FireStoreService {
             String statusComment = status["StatusComment"] ?? "";
             String checkPointName = checkPoint["CheckPointName"] ?? "";
 
-            if (statusImageUrls.isNotEmpty) {
-              imageData.add({
-                "CheckPointName": checkPointName,
-                "StatusReportedTime": formattedTime,
-                "ImageUrls": statusImageUrls,
-                "StatusComment": statusComment,
-              });
-            }
+            imageData.add({
+              "CheckPointName": checkPointName,
+              "StatusReportedTime": formattedTime,
+              "ImageUrls": statusImageUrls,
+              "StatusComment": statusComment,
+            });
           }
         }
 
@@ -2300,7 +2301,7 @@ class FireStoreService {
           print("Images Data for Patrol : $imageData");
           return imageData;
         } else {
-          print("No image URLs found for EmpId: $EmpId in PatrolID: $PatrolID");
+          print("No image data found for EmpId: $EmpId in PatrolID: $PatrolID");
         }
       } else {
         print("No document found with PatrolID: $PatrolID");
@@ -2326,6 +2327,64 @@ class FireStoreService {
         String clientEmail = clientData['ClientEmail'];
         print('Client Email: $clientEmail');
         return clientEmail;
+      } else {
+        print('Client not found');
+        return null; // Return null if client is not found
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getClientPatrolEmail(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        bool clientSendEmailForEachPatrol =
+            clientData['ClientSendEmailForEachPatrol'];
+        if (clientSendEmailForEachPatrol) {
+          String clientEmail = clientData['ClientEmail'];
+          print('Client Email: $clientEmail');
+          return clientEmail;
+        } else {
+          print('ClientSendEmailForEachPatrol is false');
+          return null; // Return null if ClientSendEmailForEachPatrol is false
+        }
+      } else {
+        print('Client not found');
+        return null; // Return null if client is not found
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getClientShiftEmail(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        bool clientSendEmailForEachPatrol =
+            clientData['ClientSendEmailForEachShift'];
+        if (clientSendEmailForEachPatrol) {
+          String clientEmail = clientData['ClientEmail'];
+          print('Client Email: $clientEmail');
+          return clientEmail;
+        } else {
+          print('ClientSendEmailForEachPatrol is false');
+          return null; // Return null if ClientSendEmailForEachPatrol is false
+        }
       } else {
         print('Client not found');
         return null; // Return null if client is not found

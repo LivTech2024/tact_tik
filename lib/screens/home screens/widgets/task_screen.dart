@@ -132,6 +132,7 @@ class _TaskScreenState extends State<TaskScreen> {
   void refreshStartTaskScreen() {
     widget.onRefreshStartTaskScreen;
   }
+
   // bool isShiftStartTimeWithinRange(String shiftStartTime) {
   //   // Get the current time
   //   DateTime currentTime = DateTime.now();
@@ -216,22 +217,33 @@ class _TaskScreenState extends State<TaskScreen> {
       child: Column(
         children: [
           ShiftStarted
-              ? StartTaskScreen(
-                  ShiftDate: widget.ShiftDate,
-                  ShiftStartTime: widget.ShiftStartTime,
-                  ShiftEndTime: widget.ShiftEndTime,
-                  EmployeId: widget.empId,
-                  ShiftId: widget.shiftId,
-                  ShiftAddressName: widget.ShiftLocationName,
-                  ShiftCompanyId: widget.ShiftCompanyId,
-                  ShiftBranchId: widget.ShiftBranchId,
-                  EmployeeName: widget.EmpName,
-                  ShiftLocationId: widget.ShiftLocationId,
-                  ShiftClientID: widget.ShiftClientId,
-                  resetShiftStarted: resetShiftStarted,
-                  ShiftIN: ShiftIn,
-                  onRefresh: refreshStartTaskScreen,
-                  // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
+              ? FutureBuilder(
+                  future: Future.delayed(Duration(seconds: 3)),
+                  builder: (c, s) => s.connectionState == ConnectionState.done
+                      ? StartTaskScreen(
+                          ShiftDate: widget.ShiftDate,
+                          ShiftStartTime: widget.ShiftStartTime,
+                          ShiftEndTime: widget.ShiftEndTime,
+                          EmployeId: widget.empId,
+                          ShiftId: widget.shiftId,
+                          ShiftAddressName: widget.ShiftLocationName,
+                          ShiftCompanyId: widget.ShiftCompanyId,
+                          ShiftBranchId: widget.ShiftBranchId,
+                          EmployeeName: widget.EmpName,
+                          ShiftLocationId: widget.ShiftLocationId,
+                          ShiftClientID: widget.ShiftClientId,
+                          resetShiftStarted: resetShiftStarted,
+                          ShiftIN: ShiftIn,
+                          onRefresh: refreshStartTaskScreen,
+                          // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
+                        )
+                      : Center(
+                          child: InterMedium(
+                            text: 'Loading...',
+                            color: Primarycolor,
+                            fontsize: width / width14,
+                          ),
+                        ),
                 )
               : Column(
                   children: [
@@ -472,12 +484,13 @@ class _TaskScreenState extends State<TaskScreen> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ShiftTaskScreen(
-                                              shiftId: widget.shiftId,
-                                              Name: "Shift Task",
-                                              EmpId: widget.empId,
-                                              EmpName: widget.EmpName,
-                                            )));
+                                      builder: (context) => ShiftTaskScreen(
+                                        shiftId: widget.shiftId,
+                                        Name: "Shift Task",
+                                        EmpId: widget.empId,
+                                        EmpName: widget.EmpName,
+                                      ),
+                                    ));
                               } else {
                                 setState(() {
                                   ShiftStarted = true;
