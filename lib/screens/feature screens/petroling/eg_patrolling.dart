@@ -13,6 +13,7 @@ import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/dialogList.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -1265,7 +1266,18 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             // print(
                                                             //     "Checkpoint id ${checkpoint.id}");
                                                             _refresh();
-                                                            showDialog(
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            ReportCheckpointScreen(
+                                                                              CheckpointID: checkpoint.id,
+                                                                              PatrolID: widget.p.PatrolId,
+                                                                              ShiftId: widget.p.ShiftId,
+                                                                              empId: widget.p.EmpId,
+                                                                            )));
+                                                            /* showDialog(
                                                               context: context,
                                                               builder:
                                                                   (BuildContext
@@ -1469,7 +1481,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   );
                                                                 });
                                                               },
-                                                            );
+                                                            );*/
                                                           },
                                                           icon: Icon(
                                                             Icons.add_circle,

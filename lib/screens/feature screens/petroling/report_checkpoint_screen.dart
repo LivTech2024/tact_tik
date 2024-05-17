@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -13,11 +17,22 @@ import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
 class ReportCheckpointScreen extends StatefulWidget {
-  const ReportCheckpointScreen({super.key});
+  final String CheckpointID;
+  final String PatrolID;
+  final String ShiftId;
+  final String empId;
+  const ReportCheckpointScreen(
+      {super.key,
+      required this.CheckpointID,
+      required this.PatrolID,
+      required this.ShiftId,
+      required this.empId});
 
   @override
   State<ReportCheckpointScreen> createState() => _ReportCheckpointScreenState();
 }
+
+FireStoreService fireStoreService = FireStoreService();
 
 class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   bool _expand = false;
@@ -49,12 +64,24 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addImage() async {
-    final pickedFile =
+    XFile? pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+      try {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          File compressedFile = await _compressImage(file);
+          setState(() {
+            uploads.add({'type': 'image', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      } catch (e) {
+        print('Error adding image: $e');
+      }
+    } else {
+      print('No images selected');
     }
     print("Statis ${uploads}");
   }
@@ -64,21 +91,40 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
         await ImagePicker().pickMultiImage(imageQuality: 30);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
-        File file = File(pickedFile.path);
-        // await fireStoreService
-        //     .addImageToStorageShiftTask(File(pickedFile.path));
-        setState(() {
-          uploads.add({'type': 'image', 'file': file});
-        });
+        try {
+          File file = File(pickedFile.path);
+          if (file.existsSync()) {
+            File compressedFile = await _compressImage(file);
+            setState(() {
+              uploads.add({'type': 'image', 'file': file});
+            });
+          } else {
+            print('File does not exist: ${file.path}');
+          }
+        } catch (e) {
+          print('Error adding image: $e');
+        }
       }
+    } else {
+      print('No images selected');
     }
   }
 
+  Future<File> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 30,
+    );
+    return File(result!.path);
+  }
+
+// Adding compression here only
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    bool _isLoading = false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -125,6 +171,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     decoration: InputDecoration(
                       hintText: 'Add Comment',
                     ),
+                    style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: height / height10),
                   GestureDetector(
@@ -239,7 +286,44 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                   children: [
                     Button1(
                       text: 'Submit',
-                      onPressed: () {},
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
+                          await fireStoreService.addImagesToPatrol(
+                              uploads,
+                              Controller.text,
+                              widget.PatrolID,
+                              widget.empId,
+                              widget.CheckpointID,
+                              widget.ShiftId);
+                          toastification.show(
+                            context: context,
+                            type: ToastificationType.success,
+                            title: Text("Submitted"),
+                            autoCloseDuration: const Duration(seconds: 2),
+                          );
+
+                          // _refresh();
+                          // setState(() {
+                          //   _isLoading = false;
+                          // });
+                          uploads.clear();
+                          Controller.clear();
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          Navigator.pop(context);
+                          // Navigator.pop(
+                          //     context);
+                        } else {
+                          showErrorToast(context, "Fields cannot be empty");
+                        }
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      },
                       color: Colors.white,
                       borderRadius: width / width20,
                       backgroundcolor: Primarycolor,
@@ -249,7 +333,17 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     )
                   ],
                 ),
-              )
+              ),
+              Visibility(
+                visible: _isLoading,
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 10),
+                  child: CircularProgressIndicator(
+                    color: Primarycolor,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -1186,7 +1186,136 @@ Best regards,</p>
     }
   }
 }
+/*
+Dar template
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Activity Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+        .report-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .report-header, .report-section {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .report-header td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .report-header td.title {
+            text-align: center;
+            font-weight: bold;
+            background-color: #f4b400;
+            color: white;
+        }
+        .report-section th, .report-section td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .report-section th {
+            background-color: #f4b400;
+            color: white;
+        }
+        .report-section td {
+            vertical-align: top;
+        }
+        .report-section td img {
+            width: 100px;
+            height: auto;
+        }
+        .report-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .report-title img {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <div class="report-title">
+            <img src="logo.png" alt="TPS Logo">
+            <h1>Daily Activity Report</h1>
+        </div>
+        <table class="report-header">
+            <tr>
+                <td class="title">Employee Name: Pankaj Kumar</td>
+                <td>Date: May 16, 2024</td>
+            </tr>
+            <tr>
+                <td>Shift Start Time: 19:00</td>
+                <td>Shift End Time: 07:00</td>
+            </tr>
+            <tr>
+                <td>Shift Start Date: May 16, 2024</td>
+                <td>Shift End Date: May 17, 2024</td>
+            </tr>
+        </table>
+        <table class="report-section">
+            <tr>
+                <th>Place/Spot</th>
+                <th>Description</th>
+                <th>Images</th>
+            </tr>
+            <tr>
+                <td>Edmonton House</td>
+                <td>
+                    Date: May 16, 2024<br>
+                    Time: 19:00-20:00<br>
+                    follow up with Grace, showed her some concern regarding property camera monitoring cleaning requires
+                </td>
+                <td><img src="image1.jpg" alt="Image 1"></td>
+            </tr>
+            <tr>
+                <td>Edmonton House</td>
+                <td>
+                    Date: May 16, 2024<br>
+                    Time: 20:00-21:00<br>
+                    camera monitoring package delivery exterior watch
+                </td>
+                <td><img src="image2.jpg" alt="Image 2"></td>
+            </tr>
+            <tr>
+                <td>Edmonton House</td>
+                <td>
+                    Date: May 16, 2024<br>
+                    Time: 21:00-22:00<br>
+                    camera monitoring interior watch all safe and secure
+                </td>
+                <td><img src="image3.jpg" alt="Image 3"></td>
+            </tr>
+            <tr>
+                <td>Edmonton House</td>
+                <td>
+                    Date: May 16, 2024<br>
+                    Time: 22:00-23:00<br>
+                    interior and exterior patrol camera monitoring vagrant removal (dumpster area) all safe and secure
+                </td>
+                <td><img src="image4.jpg" alt="Image 4"></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
 
+*/
 
 
 
