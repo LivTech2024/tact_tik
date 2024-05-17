@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/offlineScreen.dart';
 import 'package:tact_tik/screens/SideBar%20Screens/employment_letter.dart';
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
             if (isConnected) {
               return child;
             } else {
-              return Scaffold(
+              return const Scaffold(
                 body: Center(
                   child: Text(
                     'No internet connection. Connect to Internet or Restart the app',
