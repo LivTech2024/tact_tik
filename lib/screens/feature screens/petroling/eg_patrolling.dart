@@ -141,6 +141,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
         String checkpointCategory = checkpoint['CheckPointCategory'] ?? "";
         String checkpointId = checkpoint['CheckPointId'];
         String checkpointName = checkpoint['CheckPointName'];
+        // String checkpointtimestamp =
+        //     checkpoint['StatusReportedTime']?.toString() ?? "";
 
         List<CheckPointStatus> checkPointStatuses =
             (checkpoint['CheckPointStatus'] as List<dynamic> ?? [])
@@ -180,6 +182,17 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           );
         }).toList();
         // Assuming CheckPointStatus is not used in this context
+        //    Timestamp? checkpointtimestamp = checkPointStatuses
+        // .firstWhere(
+        //     (status) => status.reportedById == widget.EmployeeID,
+        //     orElse: () => CheckPointStatus(
+        //         status: '',
+        //         StatusCompletedCount: 0,
+        //         reportedTime: '',
+        //         reportedById: '',
+        //         reportedByName: '',
+        //         statusShiftId: ''))
+        // .reportedTime;
         Category category = categories.firstWhere(
             (element) => element.title == checkpointCategory, orElse: () {
           Category newCategory =
@@ -194,6 +207,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           id: checkpointId,
           checkPointStatus: checkPointStatuses,
           patrolId: patrolId,
+          timestamp: "",
         ));
       }
 
@@ -662,10 +676,15 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         IconButton(
                                           onPressed: () {
                                             setState(() {
-                                              _expandCategoryMap[
+                                              if (_expandCategoryMap[
                                                       category.title] !=
-                                                  _expandCategoryMap[
-                                                      category.title];
+                                                  null) {
+                                                _expandCategoryMap[
+                                                        category.title] =
+                                                    !_expandCategoryMap[
+                                                        category.title]!;
+                                              }
+                                              // _expand2 = !_expand2;
                                             });
                                           },
                                           icon: Icon(
@@ -820,7 +839,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             height: height /
                                                                 height2),
                                                         InterRegular(
-                                                          text: "",
+                                                          text: checkpoint
+                                                              .timestamp,
                                                           color: Primarycolor,
                                                           fontsize:
                                                               width / width12,
@@ -934,14 +954,236 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                         child: IconButton(
                                                           onPressed: () {
                                                             setState(() {
-                                                              // isPopupVisible =
-                                                              //     true;
+                                                              isPopupVisible =
+                                                                  true;
+                                                              // CheckPointId =
+                                                              //     checkpoint.id;
+                                                            });
+                                                            Visibility(
+                                                              visible:
+                                                                  isPopupVisible,
+                                                              child: Container(
+                                                                constraints: BoxConstraints(
+                                                                    minHeight:
+                                                                        height /
+                                                                            height90),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color:
+                                                                      WidgetColor,
+                                                                ),
+                                                                padding: EdgeInsets
+                                                                    .all(width /
+                                                                        width16),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    Text(
+                                                                      'Add Image/Comment',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            width /
+                                                                                width14,
+                                                                        color:
+                                                                            Primarycolor,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height: height /
+                                                                            height10),
+                                                                    TextField(
+                                                                      controller:
+                                                                          Controller,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        hintText:
+                                                                            'Add Comment',
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height: height /
+                                                                            height10),
+                                                                    SingleChildScrollView(
+                                                                      scrollDirection:
+                                                                          Axis.horizontal,
+                                                                      child:
+                                                                          Row(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          for (int i = 0;
+                                                                              i < uploads.length;
+                                                                              i++)
+                                                                            Stack(
+                                                                              clipBehavior: Clip.none,
+                                                                              children: [
+                                                                                Container(
+                                                                                  height: height / height66,
+                                                                                  width: width / width66,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.grey.withOpacity(0.5),
+                                                                                    borderRadius: BorderRadius.circular(width / width10),
+                                                                                  ),
+                                                                                  margin: EdgeInsets.all(width / width8),
+                                                                                  child: Image.file(
+                                                                                    uploads[i]['file'],
+                                                                                    fit: BoxFit.cover,
+                                                                                  ),
+                                                                                ),
+                                                                                Positioned(
+                                                                                  top: -5,
+                                                                                  right: -5,
+                                                                                  child: IconButton(
+                                                                                    onPressed: () {
+                                                                                      _deleteItem(i);
+                                                                                    },
+                                                                                    icon: Icon(
+                                                                                      Icons.delete,
+                                                                                      color: Colors.black,
+                                                                                      size: width / width20,
+                                                                                    ),
+                                                                                    padding: EdgeInsets.zero,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              _refresh();
+                                                                              showModalBottomSheet(
+                                                                                context: context,
+                                                                                builder: (context) => Column(
+                                                                                  mainAxisSize: MainAxisSize.min,
+                                                                                  children: [
+                                                                                    ListTile(
+                                                                                      leading: Icon(Icons.camera),
+                                                                                      title: Text('Add Image'),
+                                                                                      onTap: () {
+                                                                                        _addImage();
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                    ),
+                                                                                    ListTile(
+                                                                                      leading: Icon(Icons.image),
+                                                                                      title: Text('Add from Gallery'),
+                                                                                      onTap: () {
+                                                                                        _addGallery();
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              );
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              height: height / height66,
+                                                                              width: width / width66,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Colors.grey.withOpacity(0.5),
+                                                                                borderRadius: BorderRadius.circular(width / width10),
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: Icon(
+                                                                                  Icons.add,
+                                                                                  size: width / width20,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        height: height /
+                                                                            height10),
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              isPopupVisible = false;
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            'Cancel',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.red,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        uploadingLoading
+                                                                            ? CircularProgressIndicator(
+                                                                                color: Primarycolor,
+                                                                              )
+                                                                            : Button1(
+                                                                                height: height / height30,
+                                                                                borderRadius: width / width10,
+                                                                                onPressed: () async {
+                                                                                  _refresh();
+                                                                                  // Logic to submit the report
+                                                                                  setState(() {
+                                                                                    uploadingLoading = true;
+                                                                                  });
+                                                                                  print("CheckpointId ${CheckPointId}");
+                                                                                  if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
+                                                                                    await fireStoreService.addImagesToPatrol(uploads, Controller.text, widget.p.PatrolId, widget.p.EmpId, CheckPointId);
+                                                                                    toastification.show(
+                                                                                      context: context,
+                                                                                      type: ToastificationType.success,
+                                                                                      title: Text("Submitted"),
+                                                                                      autoCloseDuration: const Duration(seconds: 2),
+                                                                                    );
+                                                                                    _refresh();
+                                                                                    setState(() {
+                                                                                      _isLoading = false;
+                                                                                    });
+                                                                                    uploads.clear();
+                                                                                    Controller.clear();
+
+                                                                                    // Navigator.pop(context);
+                                                                                  } else {
+                                                                                    showErrorToast(context, "Fields cannot be empty");
+                                                                                  }
+                                                                                  setState(() {
+                                                                                    uploadingLoading = false;
+                                                                                  });
+                                                                                },
+                                                                                text: 'Submit',
+                                                                                fontsize: width / width14,
+                                                                                backgroundcolor: Primarycolor,
+                                                                                color: color1,
+                                                                              ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                            setState(() {
+                                                              isPopupVisible =
+                                                                  false;
                                                               CheckPointId =
                                                                   checkpoint.id;
                                                             });
                                                             print(
                                                                 "Checkpoint id ${checkpoint.id}");
-                                                            showDialog(
+                                                            /* showDialog(
                                                               context: context,
                                                               builder:
                                                                   (BuildContext
@@ -1148,7 +1390,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   ],
                                                                 );
                                                               },
-                                                            );
+                                                            ); */
                                                           },
                                                           icon: Icon(
                                                             Icons.add_circle,
@@ -1876,6 +2118,7 @@ class Checkpoint {
   final String patrolId;
   final String title;
   final String description;
+  final String timestamp;
   final String id;
   final List<CheckPointStatus> checkPointStatus;
 
@@ -1885,6 +2128,7 @@ class Checkpoint {
     required this.description,
     required this.id,
     required this.checkPointStatus,
+    required this.timestamp,
   });
 
   bool isSameDay(Timestamp? timestamp1, Timestamp timestamp2) {
