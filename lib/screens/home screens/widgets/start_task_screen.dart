@@ -104,6 +104,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   DateTime inTime = DateTime.now();
   int _elapsedTime = 0;
   bool _isLoading = false;
+
   // late SharedPreferences prefs;
   void send_mail_onOut(data) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -423,7 +424,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 color: Colors.redAccent,
                                 fontsize: width / width12,
                               )
-                            : SizedBox()
+                            : SizedBox(),
                       ],
                     ),
                   ),
@@ -469,7 +470,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   })
                               : SizedBox(
                                   height: 5,
-                                )
+                                ),
                         ],
                       ),
                     ),
@@ -509,7 +510,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     if (!controller.stopWatchRunning.value) {
                       await controller.startStopWatch();
 
-                      /// TODO : Made changes here
                       setState(() {
                         _isLoading = true;
                       });
