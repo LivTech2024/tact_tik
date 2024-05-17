@@ -588,7 +588,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       /// Todo : Made changes here
 
                       if (controller.stopWatchRunning.value) {
-                        await controller.startStopWatch();
+                        // await controller.startStopWatch();
 
                         setState(() {
                           _isLoading = true;
@@ -603,9 +603,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             int.parse(endTimeParts[1]));
                         print("Formatted SHiftEnd time ${shiftEndDateTime}");
                         DateTime currentTime = DateTime.now();
+                        Duration bufferDuration = Duration(minutes: 10);
 
-                        if (currentTime.isBefore(shiftEndDateTime) ||
-                            currentTime.isAfter(shiftEndDateTime)) {
+// Calculate the time ranges for the buffer period
+                        DateTime bufferStart =
+                            shiftEndDateTime.subtract(bufferDuration);
+                        DateTime bufferEnd =
+                            shiftEndDateTime.add(bufferDuration);
+
+                        print("Buffer Start Time: $bufferStart");
+                        print("Buffer End Time: $bufferEnd");
+                        if (currentTime.isBefore(bufferStart) ||
+                            currentTime.isAfter(bufferEnd)) {
                           // Current time is before shift end time
                           showDialog(
                               context: context,
@@ -638,6 +647,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                       ),
                                       TextButton(
                                         onPressed: () async {
+                                          setState(() {
+                                            _isLoading = true;
+                                          });
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
                                           if (CommentController
                                               .text.isNotEmpty) {
                                             widget.onRefresh();
@@ -673,8 +688,19 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                     widget.EmployeeName,
                                                     widget.ShiftClientID,
                                                     CommentController.text);
+                                            setState(() {
+                                              // isPaused = !isPaused;
+                                              // prefs.setBool("pauseState", isPaused);
+                                              clickedIn = false;
+                                              resetStopwatch();
+                                              resetClickedState();
+                                              widget.resetShiftStarted();
+                                              prefs.setBool(
+                                                  'ShiftStarted', false);
+                                            });
+                                            await controller.startStopWatch();
                                             if (mounted) {
-                                              Navigator.push(
+                                              Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
@@ -686,6 +712,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                             showErrorToast(context,
                                                 "Reason cannot be empty");
                                           }
+                                          setState(() {
+                                            _isLoading = false;
+                                          });
                                         },
                                         child: InterRegular(
                                           text: 'Submit',
@@ -696,7 +725,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               });
                           print('Current time is before shift end time');
                         } else {
-                          // Current time is after or equal to shift end time
+                          // Current time i
+                          //s after or equal to shift end time
+                          setState(() {
+                            _isLoading = true;
+                          });
                           print(
                               'Current time is after or equal to shift end time');
 
@@ -746,7 +779,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 widget.ShiftCompanyId,
                                 widget.EmployeeName,
                                 widget.ShiftClientID);
-
+                            await controller.startStopWatch();
                             String? ClientName = await fireStoreService
                                 .getClientName(widget.ShiftClientID);
                             print("Client Name ${ClientName}");
@@ -768,13 +801,16 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               prefs.setBool('ShiftStarted', false);
                             });
                             if (mounted) {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => HomeScreen(),
                                 ),
                               );
                             }
+                            setState(() {
+                              _isLoading = false;
+                            });
                           }
                         }
                         setState(() {

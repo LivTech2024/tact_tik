@@ -1101,7 +1101,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                               .p
                                                                               .EmpId,
                                                                           checkpoint
-                                                                              .id);
+                                                                              .id,
+                                                                          widget
+                                                                              .p
+                                                                              .PatrolId);
                                                                       toastification
                                                                           .show(
                                                                         context:
