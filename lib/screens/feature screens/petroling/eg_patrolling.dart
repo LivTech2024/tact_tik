@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:tact_tik/common/widgets/dialogList.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
@@ -373,7 +374,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
 
   Future<void> _refreshData() async {
     // Fetch updated data
-
+    initState();
     setState(() {}); // Update the state to rebuild the widget
   }
 
@@ -383,6 +384,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     setState(() {
       uploads.removeAt(index);
     });
+    _refresh();
+    _refreshData();
   }
 
   Future<void> _addImage() async {
@@ -394,6 +397,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       });
     }
     print("Statis ${uploads}");
+    _refresh();
+    _refreshData();
   }
 
   Future<void> _addGallery() async {
@@ -409,6 +414,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         });
       }
     }
+    _refresh();
+    _refreshData();
   }
 
   String Result = "";
@@ -502,194 +509,201 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       );
     }
 
-
-    Widget ReportCheckpoint(){
-      return Container(
-        constraints: BoxConstraints(minHeight: height / height90),
-        decoration: BoxDecoration(
-          color: WidgetColor,
-        ),
-        padding: EdgeInsets.all(width / width16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Add Image/Comment',
-              style: TextStyle(
-                fontSize: width / width14,
-                color: Primarycolor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: height / height10),
-            TextField(
-              controller: Controller,
-              decoration: InputDecoration(
-                hintText: 'Add Comment',
-              ),
-            ),
-            SizedBox(height: height / height10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i < uploads.length; i++)
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          height: height / height66,
-                          width: width / width66,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.5),
-                            borderRadius:
-                            BorderRadius.circular(width / width10),
-                          ),
-                          margin: EdgeInsets.all(width / width8),
-                          child: Image.file(
-                            uploads[i]['file'],
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: -5,
-                          right: -5,
-                          child: IconButton(
-                            onPressed: () {
-                              _deleteItem(i);
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.black,
-                              size: width / width20,
-                            ),
-                            padding: EdgeInsets.zero,
-                          ),
-                        ),
-                      ],
-                    ),
-                  GestureDetector(
-                    onTap: () {
-                      _refresh();
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.camera),
-                              title: Text('Add Image'),
-                              onTap: () {
-                                _addImage();
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.image),
-                              title: Text('Add from Gallery'),
-                              onTap: () {
-                                _addGallery();
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: height / height66,
-                      width: width / width66,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.5),
-                        borderRadius:
-                        BorderRadius.circular(width / width10),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.add,
-                          size: width / width20,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: height / height10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      isPopupVisible = false;
-                    });
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-                uploadingLoading
-                    ? CircularProgressIndicator(
-                  color: Primarycolor,
-                )
-                    : Button1(
-                  height: height / height30,
-                  borderRadius: width / width10,
-                  onPressed: () async {
-                    _refresh();
-                    // Logic to submit the report
-                    setState(() {
-                      uploadingLoading = true;
-                    });
-                    print("CheckpointId ${CheckPointId}");
-                    if (uploads.isNotEmpty ||
-                        Controller.text.isNotEmpty) {
-                      await fireStoreService.addImagesToPatrol(
-                          uploads,
-                          Controller.text,
-                          widget.p.PatrolId,
-                          widget.p.EmpId,
-                          CheckPointId);
-                      toastification.show(
-                        context: context,
-                        type: ToastificationType.success,
-                        title: Text("Submitted"),
-                        autoCloseDuration:
-                        const Duration(seconds: 2),
-                      );
-                      _refresh();
-                      setState(() {
-                        _isLoading = false;
-                      });
-                      uploads.clear();
-                      Controller.clear();
-
-                      // Navigator.pop(context);
-                    } else {
-                      showErrorToast(
-                          context, "Fields cannot be empty");
-                    }
-                    setState(() {
-                      uploadingLoading = false;
-                    });
-                  },
-                  text: 'Submit',
-                  fontsize: width / width14,
-                  backgroundcolor: Primarycolor,
-                  color: color1,
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+    void _showPopup(String id) {
+      print("Then value of checkpoint id : ${id}");
+      setState(() {
+        CheckPointId = id;
+        isPopupVisible = true;
+      });
     }
+
+    // @override
+    // Widget ReportCheckpoint(String CheckpointId) {
+    //   print("Checkpoint id in widget ${CheckpointId}");
+    //   return Container(
+    //     constraints: BoxConstraints(minHeight: height / height90),
+    //     decoration: BoxDecoration(
+    //       color: WidgetColor,
+    //     ),
+    //     padding: EdgeInsets.all(width / width16),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: [
+    //         Text(
+    //           'Add Image/Comment',
+    //           style: TextStyle(
+    //             fontSize: width / width14,
+    //             color: Primarycolor,
+    //             fontWeight: FontWeight.bold,
+    //           ),
+    //         ),
+    //         SizedBox(height: height / height10),
+    //         TextField(
+    //           controller: Controller,
+    //           decoration: InputDecoration(
+    //             hintText: 'Add Comment',
+    //           ),
+    //         ),
+    //         SizedBox(height: height / height10),
+    //         SingleChildScrollView(
+    //           scrollDirection: Axis.horizontal,
+    //           child: Row(
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: [
+    //               for (int i = 0; i < uploads.length; i++)
+    //                 Stack(
+    //                   clipBehavior: Clip.none,
+    //                   children: [
+    //                     Container(
+    //                       height: height / height66,
+    //                       width: width / width66,
+    //                       decoration: BoxDecoration(
+    //                         color: Colors.grey.withOpacity(0.5),
+    //                         borderRadius:
+    //                             BorderRadius.circular(width / width10),
+    //                       ),
+    //                       margin: EdgeInsets.all(width / width8),
+    //                       child: Image.file(
+    //                         uploads[i]['file'],
+    //                         fit: BoxFit.cover,
+    //                       ),
+    //                     ),
+    //                     Positioned(
+    //                       top: -5,
+    //                       right: -5,
+    //                       child: IconButton(
+    //                         onPressed: () {
+    //                           _deleteItem(i);
+    //                         },
+    //                         icon: Icon(
+    //                           Icons.delete,
+    //                           color: Colors.black,
+    //                           size: width / width20,
+    //                         ),
+    //                         padding: EdgeInsets.zero,
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               GestureDetector(
+    //                 onTap: () {
+    //                   _refresh();
+    //                   showModalBottomSheet(
+    //                     context: context,
+    //                     builder: (context) => Column(
+    //                       mainAxisSize: MainAxisSize.min,
+    //                       children: [
+    //                         ListTile(
+    //                           leading: Icon(Icons.camera),
+    //                           title: Text('Add Image'),
+    //                           onTap: () {
+    //                             _addImage();
+    //                             Navigator.pop(context);
+    //                           },
+    //                         ),
+    //                         ListTile(
+    //                           leading: Icon(Icons.image),
+    //                           title: Text('Add from Gallery'),
+    //                           onTap: () {
+    //                             _addGallery();
+    //                             Navigator.pop(context);
+    //                           },
+    //                         ),
+    //                       ],
+    //                     ),
+    //                   );
+    //                 },
+    //                 child: Container(
+    //                   height: height / height66,
+    //                   width: width / width66,
+    //                   decoration: BoxDecoration(
+    //                     color: Colors.grey.withOpacity(0.5),
+    //                     borderRadius: BorderRadius.circular(width / width10),
+    //                   ),
+    //                   child: Center(
+    //                     child: Icon(
+    //                       Icons.add,
+    //                       size: width / width20,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               )
+    //             ],
+    //           ),
+    //         ),
+    //         SizedBox(height: height / height10),
+    //         Row(
+    //           mainAxisAlignment: MainAxisAlignment.end,
+    //           children: [
+    //             TextButton(
+    //               onPressed: () {
+    //                 setState(() {
+    //                   isPopupVisible = false;
+    //                 });
+    //               },
+    //               child: Text(
+    //                 'Cancel',
+    //                 style: TextStyle(
+    //                   color: Colors.red,
+    //                 ),
+    //               ),
+    //             ),
+    //             uploadingLoading
+    //                 ? CircularProgressIndicator(
+    //                     color: Primarycolor,
+    //                   )
+    //                 : Button1(
+    //                     height: height / height30,
+    //                     borderRadius: width / width10,
+    //                     onPressed: () async {
+    //                       _refresh();
+    //                       // Logic to submit the report
+    //                       setState(() {
+    //                         uploadingLoading = true;
+    //                       });
+    //                       print("CheckpointId ${CheckpointId}");
+    //                       if (uploads.isNotEmpty ||
+    //                           Controller.text.isNotEmpty) {
+    //                         await fireStoreService.addImagesToPatrol(
+    //                             uploads,
+    //                             Controller.text,
+    //                             widget.p.PatrolId,
+    //                             widget.p.EmpId,
+    //                             CheckpointId);
+    //                         toastification.show(
+    //                           context: context,
+    //                           type: ToastificationType.success,
+    //                           title: Text("Submitted"),
+    //                           autoCloseDuration: const Duration(seconds: 2),
+    //                         );
+    //                         _refresh();
+    //                         setState(() {
+    //                           _isLoading = false;
+    //                         });
+    //                         uploads.clear();
+    //                         Controller.clear();
+
+    //                         // Navigator.pop(context);
+    //                       } else {
+    //                         showErrorToast(context, "Fields cannot be empty");
+    //                       }
+    //                       setState(() {
+    //                         uploadingLoading = false;
+    //                       });
+    //                     },
+    //                     text: 'Submit',
+    //                     fontsize: width / width14,
+    //                     backgroundcolor: Primarycolor,
+    //                     color: color1,
+    //                   ),
+    //           ],
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
+
     return Stack(
       children: [
         RefreshIndicator(
@@ -1141,236 +1155,84 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       child: Center(
                                                         child: IconButton(
                                                           onPressed: () {
+                                                            // setState(() {
+                                                            //   isPopupVisible =
+                                                            //       true;
+                                                            //   CheckPointId =
+                                                            //       checkpoint     .id;
+                                                            // });
                                                             setState(() {
-                                                              isPopupVisible =
-                                                                  true;
-                                                              // CheckPointId =
-                                                              //     checkpoint.id;
-                                                            });
-                                                            Visibility(
-                                                              visible:
-                                                                  isPopupVisible,
-                                                              child: Container(
-                                                                constraints: BoxConstraints(
-                                                                    minHeight:
-                                                                        height /
-                                                                            height90),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color:
-                                                                      WidgetColor,
-                                                                ),
-                                                                padding: EdgeInsets
-                                                                    .all(width /
-                                                                        width16),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    Text(
-                                                                      'Add Image/Comment',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            width /
-                                                                                width14,
-                                                                        color:
-                                                                            Primarycolor,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height: height /
-                                                                            height10),
-                                                                    TextField(
-                                                                      controller:
-                                                                          Controller,
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        hintText:
-                                                                            'Add Comment',
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height: height /
-                                                                            height10),
-                                                                    SingleChildScrollView(
-                                                                      scrollDirection:
-                                                                          Axis.horizontal,
-                                                                      child:
-                                                                          Row(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          for (int i = 0;
-                                                                              i < uploads.length;
-                                                                              i++)
-                                                                            Stack(
-                                                                              clipBehavior: Clip.none,
-                                                                              children: [
-                                                                                Container(
-                                                                                  height: height / height66,
-                                                                                  width: width / width66,
-                                                                                  decoration: BoxDecoration(
-                                                                                    color: Colors.grey.withOpacity(0.5),
-                                                                                    borderRadius: BorderRadius.circular(width / width10),
-                                                                                  ),
-                                                                                  margin: EdgeInsets.all(width / width8),
-                                                                                  child: Image.file(
-                                                                                    uploads[i]['file'],
-                                                                                    fit: BoxFit.cover,
-                                                                                  ),
-                                                                                ),
-                                                                                Positioned(
-                                                                                  top: -5,
-                                                                                  right: -5,
-                                                                                  child: IconButton(
-                                                                                    onPressed: () {
-                                                                                      _deleteItem(i);
-                                                                                    },
-                                                                                    icon: Icon(
-                                                                                      Icons.delete,
-                                                                                      color: Colors.black,
-                                                                                      size: width / width20,
-                                                                                    ),
-                                                                                    padding: EdgeInsets.zero,
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              _refresh();
-                                                                              showModalBottomSheet(
-                                                                                context: context,
-                                                                                builder: (context) => Column(
-                                                                                  mainAxisSize: MainAxisSize.min,
-                                                                                  children: [
-                                                                                    ListTile(
-                                                                                      leading: Icon(Icons.camera),
-                                                                                      title: Text('Add Image'),
-                                                                                      onTap: () {
-                                                                                        _addImage();
-                                                                                        Navigator.pop(context);
-                                                                                      },
-                                                                                    ),
-                                                                                    ListTile(
-                                                                                      leading: Icon(Icons.image),
-                                                                                      title: Text('Add from Gallery'),
-                                                                                      onTap: () {
-                                                                                        _addGallery();
-                                                                                        Navigator.pop(context);
-                                                                                      },
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              );
-                                                                            },
-                                                                            child:
-                                                                                Container(
-                                                                              height: height / height66,
-                                                                              width: width / width66,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Colors.grey.withOpacity(0.5),
-                                                                                borderRadius: BorderRadius.circular(width / width10),
-                                                                              ),
-                                                                              child: Center(
-                                                                                child: Icon(
-                                                                                  Icons.add,
-                                                                                  size: width / width20,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height: height /
-                                                                            height10),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .end,
-                                                                      children: [
-                                                                        TextButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            setState(() {
-                                                                              isPopupVisible = false;
-                                                                            });
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            'Cancel',
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.red,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        uploadingLoading
-                                                                            ? CircularProgressIndicator(
-                                                                                color: Primarycolor,
-                                                                              )
-                                                                            : Button1(
-                                                                                height: height / height30,
-                                                                                borderRadius: width / width10,
-                                                                                onPressed: () async {
-                                                                                  _refresh();
-                                                                                  // Logic to submit the report
-                                                                                  setState(() {
-                                                                                    uploadingLoading = true;
-                                                                                  });
-                                                                                  print("CheckpointId ${CheckPointId}");
-                                                                                  if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
-                                                                                    await fireStoreService.addImagesToPatrol(uploads, Controller.text, widget.p.PatrolId, widget.p.EmpId, CheckPointId);
-                                                                                    toastification.show(
-                                                                                      context: context,
-                                                                                      type: ToastificationType.success,
-                                                                                      title: Text("Submitted"),
-                                                                                      autoCloseDuration: const Duration(seconds: 2),
-                                                                                    );
-                                                                                    _refresh();
-                                                                                    setState(() {
-                                                                                      _isLoading = false;
-                                                                                    });
-                                                                                    uploads.clear();
-                                                                                    Controller.clear();
-
-                                                                                    // Navigator.pop(context);
-                                                                                  } else {
-                                                                                    showErrorToast(context, "Fields cannot be empty");
-                                                                                  }
-                                                                                  setState(() {
-                                                                                    uploadingLoading = false;
-                                                                                  });
-                                                                                },
-                                                                                text: 'Submit',
-                                                                                fontsize: width / width14,
-                                                                                backgroundcolor: Primarycolor,
-                                                                                color: color1,
-                                                                              ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                            setState(() {
-                                                              isPopupVisible =
-                                                                  false;
                                                               CheckPointId =
                                                                   checkpoint.id;
                                                             });
-                                                            print(
-                                                                "Checkpoint id ${checkpoint.id}");
+                                                            _showPopup(
+                                                                checkpoint.id);
+                                                            showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return AlertDialog(
+                                                                  title: Text(
+                                                                      'Add Image/Comment'),
+                                                                  content:
+                                                                      Column(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      CustomeTextField(
+                                                                        hint:
+                                                                            'Add Comment',
+                                                                        showIcon:
+                                                                            false,
+                                                                        controller:
+                                                                            Controller,
+                                                                      ),
+                                                                      SizedBox(
+                                                                          height:
+                                                                              10),
+                                                                      ImageListDialog(
+                                                                          uploads:
+                                                                              uploads),
+                                                                    ],
+                                                                  ),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      },
+                                                                      child: Text(
+                                                                          'Cancel'),
+                                                                    ),
+                                                                    ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        // Logic to submit the report
+                                                                      },
+                                                                      child: Text(
+                                                                          'Submit'),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            );
+                                                            // ReportCheckpoint(
+                                                            //     checkpointId:
+                                                            //         checkpoint
+                                                            //             .id);
+                                                            // setState(() {
+                                                            //   isPopupVisible =
+                                                            //       false;
+                                                            //   CheckPointId =
+                                                            //       checkpoint.id;
+                                                            // });
+                                                            // ReportCheckpoint(
+                                                            //     checkpoint.id);
+                                                            // print(
+                                                            //     "Checkpoint id ${checkpoint.id}");
                                                             /* showDialog(
                                                               context: context,
                                                               builder:
@@ -1463,7 +1325,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                             GestureDetector(
                                                                               onTap: () {
                                                                                 print("Patrol Checkpoint Status ${widget.p.Allchecked}");
-                                                                                Navigator.pop(context);
+                                                                                // Navigator.pop(context);
                                                                                 showModalBottomSheet(
                                                                                   context: context,
                                                                                   builder: (context) => Column(
@@ -1474,6 +1336,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                         title: Text('Add Image'),
                                                                                         onTap: () {
                                                                                           _addImage();
+
                                                                                           Navigator.pop(context);
                                                                                         },
                                                                                       ),
@@ -1563,8 +1426,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                           Controller
                                                                               .clear();
 
-                                                                          Navigator.pop(
-                                                                              context);
+                                                                          // Navigator.pop(
+                                                                          //     context);
                                                                         } else {
                                                                           showErrorToast(
                                                                               context,
@@ -2060,7 +1923,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
           alignment: Alignment(0, 0),
           child: Visibility(
             visible: isPopupVisible,
-            child: ReportCheckpoint(),
+            child: CheckPointId.isNotEmpty
+                ? ReportCheckpoint(checkpointId: CheckPointId)
+                : Container(),
           ),
         ),
       ],
@@ -2109,6 +1974,107 @@ class Patrol {
     required this.ShiftId,
     required this.LocationId,
   });
+}
+
+class ReportCheckpoint extends StatelessWidget {
+  final String checkpointId;
+
+  ReportCheckpoint({required this.checkpointId});
+
+  @override
+  Widget build(BuildContext context) {
+    print("Checkpoint id in widget: $checkpointId");
+
+    // You can use MediaQuery to get height and width if not defined
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    return Container(
+      constraints: BoxConstraints(minHeight: height / 2),
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      padding: EdgeInsets.all(width / 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Add Image/Comment',
+            style: TextStyle(
+              fontSize: width / 14,
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: height / 30),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Add Comment',
+            ),
+          ),
+          SizedBox(height: height / 30),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Example for uploads (use your own implementation)
+                Container(
+                  height: height / 6,
+                  width: width / 6,
+                  color: Colors.grey,
+                  margin: EdgeInsets.all(width / 8),
+                  child: Center(
+                    child: Icon(Icons.image),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Example action
+                  },
+                  child: Container(
+                    height: height / 6,
+                    width: width / 6,
+                    color: Colors.grey.withOpacity(0.5),
+                    child: Center(
+                      child: Icon(Icons.add),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: height / 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  // Assuming you want to hide the popup here
+                  // Handle the state update in the parent widget
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle submit logic
+                  print("CheckpointId: $checkpointId");
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class Category {

@@ -252,8 +252,8 @@ class _HomeScreenState extends State<HomeScreen> {
           DateTime patrolDateTime = PatrolTime.toDate();
 
           // Format DateTime as String
-          String patrolTimeString =
-              DateFormat('hh:mm a').format(patrolDateTime);
+          // String patrolTimeString =
+          //     DateFormat('hh:mm a').format(patrolDateTime);
           String patrolDateString =
               DateFormat('yyyy-MM-dd').format(patrolDateTime);
           print('Patrol Info: ${patrolInfo.data()}');
@@ -469,7 +469,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                          ),
+                          ),//
                           child: ClipOval(
                             child: SizedBox.fromSize(
                                 size: Size.fromRadius(width / width50),
@@ -494,8 +494,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           letterSpacing: -.3,
                         )
                       ]),
-                ),
               ),
+                ),
               Expanded(
                 child: Column(
                   children: [
