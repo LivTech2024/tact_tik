@@ -138,6 +138,12 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
       });
       List<Category> categories = [];
       bool allChecked = false;
+      String _parseTimestamp(Timestamp timestamp) {
+        DateTime dateTime = timestamp.toDate();
+        return DateFormat.Hms()
+            .format(dateTime); // This will return time in 'HH:mm:ss' format
+      }
+
       for (var checkpoint in data['PatrolCheckPoints']) {
         String checkpointCategory = checkpoint['CheckPointCategory'] ?? "";
         String checkpointId = checkpoint['CheckPointId'];
@@ -145,20 +151,34 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
         // String checkpointtimestamp =
         //     checkpoint['StatusReportedTime']?.toString() ?? "";
 
+        String? reportedTime;
         List<CheckPointStatus> checkPointStatuses =
             (checkpoint['CheckPointStatus'] as List<dynamic> ?? [])
                 .map((status) {
           List<dynamic> checkPointStatuses =
               checkpoint['CheckPointStatus'] ?? [];
+
           if (checkPointStatuses == null ||
               checkPointStatuses.isEmpty ||
-              checkPointStatuses.any((status) =>
-                  status['Status'] == 'unchecked' &&
-                  status['StatusReportedById'] == widget.EmployeeID) ||
-              checkPointStatuses.any((status) =>
-                  status['Status'] != 'unchecked' &&
-                  checkPointStatuses.every(
-                      (s) => s['StatusReportedById'] != widget.EmployeeID))) {
+              checkPointStatuses.any((status) {
+                if (status['Status'] == 'unchecked' &&
+                    status['StatusReportedById'] == widget.EmployeeID &&
+                    status['StatusShiftId'] == widget.ShiftId) {
+                  // reportedTime = _parseTimestamp(status['StatusReportedTime']);
+                  return true;
+                }
+                return false;
+              }) ||
+              checkPointStatuses.any((status) {
+                if (status['Status'] != 'unchecked' &&
+                    checkPointStatuses.every((s) =>
+                        s['StatusReportedById'] != widget.EmployeeID &&
+                        s['StatusShiftId'] == widget.ShiftId)) {
+                  reportedTime = _parseTimestamp(status['StatusReportedTime']);
+                  return true;
+                }
+                return false;
+              })) {
             setState(() {
               allChecked =
                   false; // At least one checkpoint is not checked or does not have the specified 'empid'
@@ -169,10 +189,23 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                   true; // All checkpoints have at least one status and all statuses are checked
             });
           }
+          if (checkPointStatuses == null ||
+              checkPointStatuses.isEmpty ||
+              checkPointStatuses.any((status) {
+                if (status['Status'] == 'checked' &&
+                    status['StatusReportedById'] == widget.EmployeeID &&
+                    status['StatusShiftId'] == widget.ShiftId) {
+                  reportedTime = _parseTimestamp(status['StatusReportedTime']);
+                  return true;
+                }
+                return false;
+              })) ;
+
           // ... rest of the code
-          //  List<Map<String, dynamic>> filteredStatusList = statusList
-          // .where((status) => status['StatusReportedById'] == emplid)
-          // .toList();
+          // List<Map<String, dynamic>> filteredStatusList = checkpoint
+          //     .where(
+          //         (status) => status['StatusReportedById'] == widget.EmployeeID)
+          //     .toList();
           return CheckPointStatus(
             status: status['Status'],
             StatusCompletedCount: status['StatusCompletedCount'],
@@ -204,11 +237,11 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
         category.checkpoints.add(Checkpoint(
           title: checkpointName,
-          description: 'Description of $checkpointName',
+          description: checkpointName,
           id: checkpointId,
           checkPointStatus: checkPointStatuses,
           patrolId: patrolId,
-          timestamp: "",
+          timestamp: reportedTime?.toString() ?? "",
         ));
       }
 
@@ -378,9 +411,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     setState(() {}); // Update the state to rebuild the widget
   }
 
-  List<Map<String, dynamic>> uploads = [];
+  // List<Map<String, dynamic>> uploads = [];
 
-  void _deleteItem(int index) {
+  void _deleteItem(int index,List<Map<String, dynamic>> uploads) {
     setState(() {
       uploads.removeAt(index);
     });
@@ -388,7 +421,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     _refreshData();
   }
 
-  Future<void> _addImage() async {
+  Future<void> _addImage(List<Map<String, dynamic>> uploads) async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
@@ -401,7 +434,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     _refreshData();
   }
 
-  Future<void> _addGallery() async {
+  Future<void> _addGallery(List<Map<String, dynamic>> uploads) async {
     List<XFile>? pickedFiles =
         await ImagePicker().pickMultiImage(imageQuality: 30);
     if (pickedFiles != null) {
@@ -517,192 +550,193 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       });
     }
 
-    // @override
-    // Widget ReportCheckpoint(String CheckpointId) {
-    //   print("Checkpoint id in widget ${CheckpointId}");
-    //   return Container(
-    //     constraints: BoxConstraints(minHeight: height / height90),
-    //     decoration: BoxDecoration(
-    //       color: WidgetColor,
-    //     ),
-    //     padding: EdgeInsets.all(width / width16),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         Text(
-    //           'Add Image/Comment',
-    //           style: TextStyle(
-    //             fontSize: width / width14,
-    //             color: Primarycolor,
-    //             fontWeight: FontWeight.bold,
-    //           ),
-    //         ),
-    //         SizedBox(height: height / height10),
-    //         TextField(
-    //           controller: Controller,
-    //           decoration: InputDecoration(
-    //             hintText: 'Add Comment',
-    //           ),
-    //         ),
-    //         SizedBox(height: height / height10),
-    //         SingleChildScrollView(
-    //           scrollDirection: Axis.horizontal,
-    //           child: Row(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               for (int i = 0; i < uploads.length; i++)
-    //                 Stack(
-    //                   clipBehavior: Clip.none,
-    //                   children: [
-    //                     Container(
-    //                       height: height / height66,
-    //                       width: width / width66,
-    //                       decoration: BoxDecoration(
-    //                         color: Colors.grey.withOpacity(0.5),
-    //                         borderRadius:
-    //                             BorderRadius.circular(width / width10),
-    //                       ),
-    //                       margin: EdgeInsets.all(width / width8),
-    //                       child: Image.file(
-    //                         uploads[i]['file'],
-    //                         fit: BoxFit.cover,
-    //                       ),
-    //                     ),
-    //                     Positioned(
-    //                       top: -5,
-    //                       right: -5,
-    //                       child: IconButton(
-    //                         onPressed: () {
-    //                           _deleteItem(i);
-    //                         },
-    //                         icon: Icon(
-    //                           Icons.delete,
-    //                           color: Colors.black,
-    //                           size: width / width20,
-    //                         ),
-    //                         padding: EdgeInsets.zero,
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               GestureDetector(
-    //                 onTap: () {
-    //                   _refresh();
-    //                   showModalBottomSheet(
-    //                     context: context,
-    //                     builder: (context) => Column(
-    //                       mainAxisSize: MainAxisSize.min,
-    //                       children: [
-    //                         ListTile(
-    //                           leading: Icon(Icons.camera),
-    //                           title: Text('Add Image'),
-    //                           onTap: () {
-    //                             _addImage();
-    //                             Navigator.pop(context);
-    //                           },
-    //                         ),
-    //                         ListTile(
-    //                           leading: Icon(Icons.image),
-    //                           title: Text('Add from Gallery'),
-    //                           onTap: () {
-    //                             _addGallery();
-    //                             Navigator.pop(context);
-    //                           },
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   );
-    //                 },
-    //                 child: Container(
-    //                   height: height / height66,
-    //                   width: width / width66,
-    //                   decoration: BoxDecoration(
-    //                     color: Colors.grey.withOpacity(0.5),
-    //                     borderRadius: BorderRadius.circular(width / width10),
-    //                   ),
-    //                   child: Center(
-    //                     child: Icon(
-    //                       Icons.add,
-    //                       size: width / width20,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //         SizedBox(height: height / height10),
-    //         Row(
-    //           mainAxisAlignment: MainAxisAlignment.end,
-    //           children: [
-    //             TextButton(
-    //               onPressed: () {
-    //                 setState(() {
-    //                   isPopupVisible = false;
-    //                 });
-    //               },
-    //               child: Text(
-    //                 'Cancel',
-    //                 style: TextStyle(
-    //                   color: Colors.red,
-    //                 ),
-    //               ),
-    //             ),
-    //             uploadingLoading
-    //                 ? CircularProgressIndicator(
-    //                     color: Primarycolor,
-    //                   )
-    //                 : Button1(
-    //                     height: height / height30,
-    //                     borderRadius: width / width10,
-    //                     onPressed: () async {
-    //                       _refresh();
-    //                       // Logic to submit the report
-    //                       setState(() {
-    //                         uploadingLoading = true;
-    //                       });
-    //                       print("CheckpointId ${CheckpointId}");
-    //                       if (uploads.isNotEmpty ||
-    //                           Controller.text.isNotEmpty) {
-    //                         await fireStoreService.addImagesToPatrol(
-    //                             uploads,
-    //                             Controller.text,
-    //                             widget.p.PatrolId,
-    //                             widget.p.EmpId,
-    //                             CheckpointId);
-    //                         toastification.show(
-    //                           context: context,
-    //                           type: ToastificationType.success,
-    //                           title: Text("Submitted"),
-    //                           autoCloseDuration: const Duration(seconds: 2),
-    //                         );
-    //                         _refresh();
-    //                         setState(() {
-    //                           _isLoading = false;
-    //                         });
-    //                         uploads.clear();
-    //                         Controller.clear();
+   /* @override
+    Widget ReportCheckpoint(String CheckpointId) {
+      print("Checkpoint id in widget ${CheckpointId}");
+      return Container(
+        constraints: BoxConstraints(minHeight: height / height90),
+        decoration: BoxDecoration(
+          color: WidgetColor,
+        ),
+        padding: EdgeInsets.all(width / width16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Add Image/Comment',
+              style: TextStyle(
+                fontSize: width / width14,
+                color: Primarycolor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: height / height10),
+            TextField(
+              controller: Controller,
+              decoration: InputDecoration(
+                hintText: 'Add Comment',
+              ),
+            ),
+            SizedBox(height: height / height10),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (int i = 0; i < uploads.length; i++)
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          height: height / height66,
+                          width: width / width66,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.5),
+                            borderRadius:
+                                BorderRadius.circular(width / width10),
+                          ),
+                          margin: EdgeInsets.all(width / width8),
+                          child: Image.file(
+                            uploads[i]['file'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: -5,
+                          right: -5,
+                          child: IconButton(
+                            onPressed: () {
+                              _deleteItem(i);
+                            },
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.black,
+                              size: width / width20,
+                            ),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ],
+                    ),
+                  GestureDetector(
+                    onTap: () {
+                      _refresh();
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Icon(Icons.camera),
+                              title: Text('Add Image'),
+                              onTap: () {
+                                _addImage();
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.image),
+                              title: Text('Add from Gallery'),
+                              onTap: () {
+                                _addGallery();
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: height / height66,
+                      width: width / width66,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(width / width10),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.add,
+                          size: width / width20,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: height / height10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      isPopupVisible = false;
+                    });
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                uploadingLoading
+                    ? CircularProgressIndicator(
+                        color: Primarycolor,
+                      )
+                    : Button1(
+                        height: height / height30,
+                        borderRadius: width / width10,
+                        onPressed: () async {
+                          _refresh();
+                          // Logic to submit the report
+                          setState(() {
+                            uploadingLoading = true;
+                          });
+                          print("CheckpointId ${CheckpointId}");
+                          if (uploads.isNotEmpty ||
+                              Controller.text.isNotEmpty) {
+                            await fireStoreService.addImagesToPatrol(
+                                uploads,
+                                Controller.text,
+                                widget.p.PatrolId,
+                                widget.p.EmpId,
+                                CheckpointId);
+                            toastification.show(
+                              context: context,
+                              type: ToastificationType.success,
+                              title: Text("Submitted"),
+                              autoCloseDuration: const Duration(seconds: 2),
+                            );
+                            _refresh();
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            uploads.clear();
+                            Controller.clear();
 
-    //                         // Navigator.pop(context);
-    //                       } else {
-    //                         showErrorToast(context, "Fields cannot be empty");
-    //                       }
-    //                       setState(() {
-    //                         uploadingLoading = false;
-    //                       });
-    //                     },
-    //                     text: 'Submit',
-    //                     fontsize: width / width14,
-    //                     backgroundcolor: Primarycolor,
-    //                     color: color1,
-    //                   ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
+                            // Navigator.pop(context);
+                          } else {
+                            showErrorToast(context, "Fields cannot be empty");
+                          }
+                          setState(() {
+                            uploadingLoading = false;
+                          });
+                        },
+                        text: 'Submit',
+                        fontsize: width / width14,
+                        backgroundcolor: Primarycolor,
+                        color: color1,
+                      ),
+              ],
+            ),
+          ],
+        ),
+      );
+    } */
+
 
     return Stack(
       children: [
@@ -1155,6 +1189,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       child: Center(
                                                         child: IconButton(
                                                           onPressed: () {
+                                                            List<
+                                                                    Map<String,
+                                                                        dynamic>>
+                                                                uploads = [];
                                                             // setState(() {
                                                             //   isPopupVisible =
                                                             //       true;
@@ -1165,60 +1203,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                               CheckPointId =
                                                                   checkpoint.id;
                                                             });
-                                                            _showPopup(
-                                                                checkpoint.id);
-                                                            showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext
-                                                                      context) {
-                                                                return AlertDialog(
-                                                                  title: Text(
-                                                                      'Add Image/Comment'),
-                                                                  content:
-                                                                      Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    children: [
-                                                                      CustomeTextField(
-                                                                        hint:
-                                                                            'Add Comment',
-                                                                        showIcon:
-                                                                            false,
-                                                                        controller:
-                                                                            Controller,
-                                                                      ),
-                                                                      SizedBox(
-                                                                          height:
-                                                                              10),
-                                                                      ImageListDialog(
-                                                                          uploads:
-                                                                              uploads),
-                                                                    ],
-                                                                  ),
-                                                                  actions: [
-                                                                    TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                      },
-                                                                      child: Text(
-                                                                          'Cancel'),
-                                                                    ),
-                                                                    ElevatedButton(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        // Logic to submit the report
-                                                                      },
-                                                                      child: Text(
-                                                                          'Submit'),
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              },
-                                                            );
+                                                            // _showPopup(
+                                                            //     checkpoint.id);
+
                                                             // ReportCheckpoint(
                                                             //     checkpointId:
                                                             //         checkpoint
@@ -1233,7 +1220,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             //     checkpoint.id);
                                                             // print(
                                                             //     "Checkpoint id ${checkpoint.id}");
-                                                            /* showDialog(
+                                                            _refresh();
+                                                            showDialog(
                                                               context: context,
                                                               builder:
                                                                   (BuildContext
@@ -1307,7 +1295,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       child: IconButton(
                                                                                         onPressed: () {
                                                                                           setState(() {
-                                                                                            _deleteItem(index);
+                                                                                            _deleteItem(index,uploads);
                                                                                           });
                                                                                         },
                                                                                         icon: Icon(
@@ -1335,7 +1323,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                         leading: Icon(Icons.camera),
                                                                                         title: Text('Add Image'),
                                                                                         onTap: () {
-                                                                                          _addImage();
+                                                                                          _addImage(uploads);
 
                                                                                           Navigator.pop(context);
                                                                                         },
@@ -1345,7 +1333,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                         title: Text('Add from Gallery'),
                                                                                         onTap: () {
                                                                                           Navigator.pop(context);
-                                                                                          _addGallery();
+                                                                                          _addGallery(uploads);
                                                                                         },
                                                                                       ),
                                                                                     ],
@@ -1441,7 +1429,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   ],
                                                                 );
                                                               },
-                                                            ); */
+                                                            );
                                                           },
                                                           icon: Icon(
                                                             Icons.add_circle,
@@ -1596,8 +1584,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               List<String> emails = [];
                                               var ClientEmail =
                                                   await fireStoreService
-                                                      .getClientEmail(widget
-                                                          .p.PatrolClientID);
+                                                      .getClientPatrolEmail(
+                                                          widget.p
+                                                              .PatrolClientID);
                                               var AdminEmail =
                                                   await fireStoreService
                                                       .getAdminEmail(widget
@@ -1919,15 +1908,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment(0, 0),
-          child: Visibility(
-            visible: isPopupVisible,
-            child: CheckPointId.isNotEmpty
-                ? ReportCheckpoint(checkpointId: CheckPointId)
-                : Container(),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment(0, 0),
+        //   child: Visibility(
+        //     visible: isPopupVisible,
+        //     child: ReportCheckpoint(CheckPointId),
+        //   ),
+        // ),
       ],
     );
   }
@@ -1976,106 +1963,106 @@ class Patrol {
   });
 }
 
-class ReportCheckpoint extends StatelessWidget {
-  final String checkpointId;
+// class ReportCheckpoint extends StatelessWidget {
+//   final String checkpointId;
 
-  ReportCheckpoint({required this.checkpointId});
+//   ReportCheckpoint({required this.checkpointId});
 
-  @override
-  Widget build(BuildContext context) {
-    print("Checkpoint id in widget: $checkpointId");
+//   @override
+//   Widget build(BuildContext context) {
+//     print("Checkpoint id in widget: $checkpointId");
 
-    // You can use MediaQuery to get height and width if not defined
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+//     // You can use MediaQuery to get height and width if not defined
+//     final height = MediaQuery.of(context).size.height;
+//     final width = MediaQuery.of(context).size.width;
 
-    return Container(
-      constraints: BoxConstraints(minHeight: height / 2),
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
-      padding: EdgeInsets.all(width / 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Add Image/Comment',
-            style: TextStyle(
-              fontSize: width / 14,
-              color: Colors.blue,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: height / 30),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Add Comment',
-            ),
-          ),
-          SizedBox(height: height / 30),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Example for uploads (use your own implementation)
-                Container(
-                  height: height / 6,
-                  width: width / 6,
-                  color: Colors.grey,
-                  margin: EdgeInsets.all(width / 8),
-                  child: Center(
-                    child: Icon(Icons.image),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Example action
-                  },
-                  child: Container(
-                    height: height / 6,
-                    width: width / 6,
-                    color: Colors.grey.withOpacity(0.5),
-                    child: Center(
-                      child: Icon(Icons.add),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: height / 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () {
-                  // Assuming you want to hide the popup here
-                  // Handle the state update in the parent widget
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle submit logic
-                  print("CheckpointId: $checkpointId");
-                },
-                child: Text('Submit'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return Container(
+//       constraints: BoxConstraints(minHeight: height / 2),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//       ),
+//       padding: EdgeInsets.all(width / 16),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           Text(
+//             'Add Image/Comment',
+//             style: TextStyle(
+//               fontSize: width / 14,
+//               color: Colors.blue,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+//           SizedBox(height: height / 30),
+//           TextField(
+//             decoration: InputDecoration(
+//               hintText: 'Add Comment',
+//             ),
+//           ),
+//           SizedBox(height: height / 30),
+//           SingleChildScrollView(
+//             scrollDirection: Axis.horizontal,
+//             child: Row(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 // Example for uploads (use your own implementation)
+//                 Container(
+//                   height: height / 6,
+//                   width: width / 6,
+//                   color: Colors.grey,
+//                   margin: EdgeInsets.all(width / 8),
+//                   child: Center(
+//                     child: Icon(Icons.image),
+//                   ),
+//                 ),
+//                 GestureDetector(
+//                   onTap: () {
+//                     // Example action
+//                   },
+//                   child: Container(
+//                     height: height / 6,
+//                     width: width / 6,
+//                     color: Colors.grey.withOpacity(0.5),
+//                     child: Center(
+//                       child: Icon(Icons.add),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           SizedBox(height: height / 30),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.end,
+//             children: [
+//               TextButton(
+//                 onPressed: () {
+//                   // Assuming you want to hide the popup here
+//                   // Handle the state update in the parent widget
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text(
+//                   'Cancel',
+//                   style: TextStyle(
+//                     color: Colors.red,
+//                   ),
+//                 ),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   // Handle submit logic
+//                   print("CheckpointId: $checkpointId");
+//                 },
+//                 child: Text('Submit'),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class Category {
   final String title;
