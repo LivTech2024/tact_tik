@@ -1723,7 +1723,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       url['StatusComment'],
                                                   'CheckPointName':
                                                       url['CheckPointName'],
-                                                  'Status': url['Status']
+                                                  'CheckPointStatus':
+                                                      url['CheckPointStatus']
                                                 };
                                               }).toList();
                                               // var clientId = await fireStoreService
@@ -1870,7 +1871,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       url['StatusComment'],
                                                   'CheckPointName':
                                                       url['CheckPointName'],
-                                                  'Status':
+                                                  'CheckPointStatus':
                                                       url['CheckPointStatus']
                                                 };
                                               }).toList();

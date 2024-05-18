@@ -3069,11 +3069,44 @@ class FireStoreService {
       // Format DateTime as a date string
       String date = '${dateTime.day}${dateTime.month}';
 
-      // Format DateTime as a date strin
+      // Format DateTime as a date string
       // String date = '${dateTime.day}/${dateTime.month}/${dateTime.year}'
       var uniqueid = await generateUniqueID(date, reportName, categoryName);
       // ReportSearchId
       await reportDoc.update({"ReportSearchId": uniqueid});
+
+      // Push the unique ID to EmployeesDAR collection
+      final CollectionReference employeesDarRef =
+          FirebaseFirestore.instance.collection('EmployeesDAR');
+      final QuerySnapshot darSnapshot = await employeesDarRef
+          .where('EmpId', isEqualTo: employeeId)
+          .where('ShiftId', isEqualTo: shiftId)
+          .get();
+      if (darSnapshot.docs.isNotEmpty) {
+        final DocumentSnapshot darDoc = darSnapshot.docs.first;
+        await darDoc.reference.update({
+          'EmpDarTile': FieldValue.arrayUnion([uniqueid])
+        });
+
+        // Update TileContent based on ReportCreateTime
+        List<Map<String, dynamic>> tiles =
+            List<Map<String, dynamic>>.from(darDoc['EmpDarTile']);
+        for (var tile in tiles) {
+          Timestamp tileDate = tile['TileDate'];
+          DateTime tileDateTime = tileDate.toDate();
+          if (tileDateTime.year == dateTime.year &&
+              tileDateTime.month == dateTime.month &&
+              tileDateTime.day == dateTime.day) {
+            String reportTimeSlot =
+                "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
+            if (tile['TileTime'] == reportTimeSlot) {
+              tile['TileContent'] = data;
+            }
+          }
+        }
+        await darDoc.reference.update({'EmpDarTile': tiles});
+      }
+
       print('Report created successfully');
     } catch (e) {
       print('Error creating report: $e');

@@ -81,9 +81,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     final employeeId = FirebaseAuth.instance.currentUser?.uid;
 
     final patrolLogsCollection =
-        FirebaseFirestore.instance.collection('Reports');
+        FirebaseFirestore.instance.collection('PatrolLogs');
     final querySnapshot = await patrolLogsCollection
-        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .where('PatrolLogGuardId', isEqualTo: employeeId)
         .get();
 
     final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();
