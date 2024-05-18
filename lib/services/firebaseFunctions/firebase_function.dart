@@ -2159,6 +2159,7 @@ class FireStoreService {
               imgUrls.map((url) => url['downloadURL']).toList();
           status["StatusComment"] = comment;
           status["StatusReportedTime"] = Timestamp.now();
+          // status['StatusShiftId'] = ShiftId;
 
           // Update the Firestore document with the new wellness reports
           await patrols.doc(patrolID).update({
