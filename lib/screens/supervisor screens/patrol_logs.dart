@@ -714,7 +714,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               .updatePatrolsStatus(
                                                   checkpoint.patrolId,
                                                   checkpoint.id,
-                                                  widget.p.EmpId);
+                                                  widget.p.EmpId,
+                                                  widget.p.PatrolId);
                                           // await fireStoreService.addToLog(
                                           //     "check_point",
                                           //     "",
@@ -1101,7 +1102,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                               .p
                                                                               .EmpId,
                                                                           checkpoint
-                                                                              .id);
+                                                                              .id,
+                                                                          widget
+                                                                              .p
+                                                                              .PatrolId);
                                                                       toastification
                                                                           .show(
                                                                         context:
