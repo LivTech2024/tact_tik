@@ -63,6 +63,7 @@ const double height28 = 33.5;
 const double width74 = 5.8108108108;
 const double width13 = 33.0769230769;
 const double width4 = 107.5;
+const double width2 = 215;
 const double width8 = 53.75;
 const double width6 = 71.6666666667;
 const double width9 = 47.7777777778;

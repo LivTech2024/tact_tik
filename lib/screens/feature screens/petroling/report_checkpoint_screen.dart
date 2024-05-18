@@ -107,129 +107,119 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           padding: EdgeInsets.symmetric(horizontal: width / width30),
           child: Stack(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: height / height30),
-                  Text(
-                    'Add Image/Comment',
-                    style: TextStyle(
-                      fontSize: width / width14,
-                      color: Primarycolor,
-                      fontWeight: FontWeight.bold,
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: height / height30),
+                    Text(
+                      'Add Image/Comment',
+                      style: TextStyle(
+                        fontSize: width / width14,
+                        color: Primarycolor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: height / height10),
-                  TextField(
-                    controller: Controller,
-                    decoration: InputDecoration(
-                      hintText: 'Add Comment',
+                    SizedBox(height: height / height10),
+                    TextField(
+                      controller: Controller,
+                      decoration: InputDecoration(
+                        hintText: 'Add Comment',
+                      ),
                     ),
-                  ),
-                  SizedBox(height: height / height10),
-                  GestureDetector(
-                    onTap: () {
-                      // _refresh();
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.camera),
-                              title: Text('Add Image'),
-                              onTap: () {
-                                _addImage();
-                                Navigator.pop(context);
-                              },
+                    SizedBox(height: height / height20),
+                    GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: width / width10,
+                        mainAxisSpacing: height / height10,
+                        crossAxisCount: 3,
+                      ),
+                      itemCount: uploads.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return GestureDetector(
+                            onTap: () {
+                              // _refresh();
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(Icons.camera),
+                                      title: Text('Add Image'),
+                                      onTap: () {
+                                        _addImage();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.image),
+                                      title: Text('Add from Gallery'),
+                                      onTap: () {
+                                        _addGallery();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: height / height66,
+                              width: width / width66,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.5),
+                                borderRadius:
+                                    BorderRadius.circular(width / width10),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: width / width20,
+                                ),
+                              ),
                             ),
-                            ListTile(
-                              leading: Icon(Icons.image),
-                              title: Text('Add from Gallery'),
-                              onTap: () {
-                                _addGallery();
-                                Navigator.pop(context);
-                              },
+                          );
+                        } else {
+                          final upload = uploads[index - 1];
+                          return Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.5),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: SizedBox(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: width / width24,
-                          color: Primarycolor,
-                        ),
-                        SizedBox(
-                          width: width / width6,
-                        ),
-                        InterMedium(
-                          text: 'Add Images',
-                          color: Primarycolor,
-                          fontsize: width / width14,
-                        )
-                      ],
-                    )),
-                  ),
-                  SizedBox(height: height / height20),
-                  Expanded(
-                    child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          // crossAxisSpacing: 20,
-                          // mainAxisSpacing: 20,
-                          crossAxisCount: 3,
-                        ),
-                        itemCount: uploads.length,
-                        itemBuilder: (context, index) {
-                          // if (index == null) {
-
-                          // }
-                          return SizedBox(
-                            height: height / height30,
-                            width: width / width30,
+                            // margin: EdgeInsets.all(width / width8),
                             child: Stack(
-                              clipBehavior: Clip.none,
                               children: [
-                                Container(
-                                  height: height / height66,
-                                  width: width / width66,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  margin: EdgeInsets.all(width / width8),
+                                Positioned.fill(
                                   child: Image.file(
-                                    uploads[index]['file'],
+                                    upload['file'],
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                Positioned(
-                                  top: -5,
-                                  right: -5,
+                                Align(
+                                  alignment: Alignment.topRight,
                                   child: IconButton(
                                     onPressed: () {
-                                      _deleteItem(index);
+                                      _deleteItem(index - 1);
                                     },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                      size: width / width20,
-                                    ),
-                                    padding: EdgeInsets.zero,
+                                    icon: Icon(Icons.cancel),
                                   ),
-                                ),
+                                )
                               ],
                             ),
                           );
-                        }),
-                  )
-                ],
+                        }
+                      },
+                    ),
+                    SizedBox(height: height / height100)
+                  ],
+                ),
               ),
               Align(
                 // bottom: 10,
@@ -246,7 +236,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                     ),
                     SizedBox(
                       height: height / height20,
-                    )
+                    ),
                   ],
                 ),
               )

@@ -510,6 +510,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     if (!controller.stopWatchRunning.value) {
                       await controller.startStopWatch();
 
+                      /// TODO : Made changes here
                       setState(() {
                         _isLoading = true;
                       });
