@@ -211,8 +211,8 @@ class FireStoreService {
     return patrolStream;
   }
 
-  Future<void> updatePatrolsStatus(
-      String patrolId, String checkPointId, String Empid) async {
+  Future<void> updatePatrolsStatus(String patrolId, String checkPointId,
+      String Empid, String ShiftId) async {
     if (patrolId.isEmpty || checkPointId.isEmpty) {
       print('Patrol ID is empthy');
       return;
@@ -245,6 +245,7 @@ class FireStoreService {
               'Status': 'checked',
               'StatusReportedTime': Timestamp.now(),
               'StatusReportedById': Empid,
+              'StatusShiftId': ShiftId
             }
           ];
 

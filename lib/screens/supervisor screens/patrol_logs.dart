@@ -714,7 +714,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               .updatePatrolsStatus(
                                                   checkpoint.patrolId,
                                                   checkpoint.id,
-                                                  widget.p.EmpId);
+                                                  widget.p.EmpId,
+                                                  widget.p.PatrolId);
                                           // await fireStoreService.addToLog(
                                           //     "check_point",
                                           //     "",
