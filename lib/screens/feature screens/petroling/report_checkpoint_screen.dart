@@ -38,6 +38,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   bool _expand = false;
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -83,7 +84,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     } else {
       print('No images selected');
     }
-    print("Statis ${uploads}");
+    print("Status ${uploads}");
   }
 
   Future<void> _addGallery() async {
@@ -124,7 +125,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    bool _isLoading = false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -149,11 +149,11 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
-          child: Stack(
-            children: [
-              Column(
+        body: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width / width30),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height / height30),
@@ -176,7 +176,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                   SizedBox(height: height / height10),
                   GestureDetector(
                     onTap: () {
-                      // _refresh();
                       showModalBottomSheet(
                         context: context,
                         builder: (context) => Column(
@@ -202,8 +201,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                         ),
                       );
                     },
-                    child: SizedBox(
-                        child: Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Icon(
@@ -220,132 +218,120 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                           fontsize: width / width14,
                         )
                       ],
-                    )),
+                    ),
                   ),
                   SizedBox(height: height / height20),
                   Expanded(
                     child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          // crossAxisSpacing: 20,
-                          // mainAxisSpacing: 20,
-                          crossAxisCount: 3,
-                        ),
-                        itemCount: uploads.length,
-                        itemBuilder: (context, index) {
-                          // if (index == null) {
-
-                          // }
-                          return SizedBox(
-                            height: height / height30,
-                            width: width / width30,
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  height: height / height66,
-                                  width: width / width66,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  margin: EdgeInsets.all(width / width8),
-                                  child: Image.file(
-                                    uploads[index]['file'],
-                                    fit: BoxFit.cover,
-                                  ),
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                      ),
+                      itemCount: uploads.length,
+                      itemBuilder: (context, index) {
+                        return SizedBox(
+                          height: height / height30,
+                          width: width / width30,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: height / height66,
+                                width: width / width66,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  borderRadius:
+                                      BorderRadius.circular(width / width10),
                                 ),
-                                Positioned(
-                                  top: -5,
-                                  right: -5,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      _deleteItem(index);
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                      size: width / width20,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                  ),
+                                margin: EdgeInsets.all(width / width8),
+                                child: Image.file(
+                                  uploads[index]['file'],
+                                  fit: BoxFit.cover,
                                 ),
-                              ],
-                            ),
-                          );
-                        }),
-                  )
+                              ),
+                              Positioned(
+                                top: -5,
+                                right: -5,
+                                child: IconButton(
+                                  onPressed: () {
+                                    _deleteItem(index);
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                    size: width / width20,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
-              Align(
-                // bottom: 10,
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Button1(
-                      text: 'Submit',
-                      onPressed: () async {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
-                          await fireStoreService.addImagesToPatrol(
-                              uploads,
-                              Controller.text,
-                              widget.PatrolID,
-                              widget.empId,
-                              widget.CheckpointID,
-                              widget.ShiftId);
-                          toastification.show(
-                            context: context,
-                            type: ToastificationType.success,
-                            title: Text("Submitted"),
-                            autoCloseDuration: const Duration(seconds: 2),
-                          );
-
-                          // _refresh();
-                          // setState(() {
-                          //   _isLoading = false;
-                          // });
-                          uploads.clear();
-                          Controller.clear();
-                          setState(() {
-                            _isLoading = false;
-                          });
-                          Navigator.pop(context);
-                          // Navigator.pop(
-                          //     context);
-                        } else {
-                          showErrorToast(context, "Fields cannot be empty");
-                        }
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      },
-                      color: Colors.white,
-                      borderRadius: width / width20,
-                      backgroundcolor: Primarycolor,
-                    ),
-                    SizedBox(
-                      height: height / height20,
-                    )
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: _isLoading,
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 10),
+            ),
+            if (_isLoading)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
                   child: CircularProgressIndicator(
                     color: Primarycolor,
                   ),
                 ),
               ),
-            ],
-          ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Button1(
+                    text: 'Submit',
+                    onPressed: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
+                        await fireStoreService.addImagesToPatrol(
+                            uploads,
+                            Controller.text,
+                            widget.PatrolID,
+                            widget.empId,
+                            widget.CheckpointID,
+                            widget.ShiftId);
+                        toastification.show(
+                          context: context,
+                          type: ToastificationType.success,
+                          title: Text("Submitted"),
+                          autoCloseDuration: const Duration(seconds: 2),
+                        );
+
+                        uploads.clear();
+                        Controller.clear();
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        Navigator.pop(context);
+                      } else {
+                        showErrorToast(context, "Fields cannot be empty");
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    },
+                    color: Colors.white,
+                    borderRadius: width / width20,
+                    backgroundcolor: Primarycolor,
+                  ),
+                  SizedBox(
+                    height: height / height20,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
