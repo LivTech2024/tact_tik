@@ -556,11 +556,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       5,
                       () async {
                         List<String> emails = [];
-                        // emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("alerts.tactik@gmail.com");
+                        emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");
+                        emails.add("dan@tpssolution.com");
 
                         // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
@@ -569,10 +569,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // patrolLogIds.add("BrRI6OO1GRiwkuiXhLQZ");
                         // // //Sending Shift end report
                         // w4SIEtu5pcPKBwil64ARR
+
+                        // UDb6jyQBz2RzRp4b42XL
+                        // 6Muezqhg8gc1TsaHX9nD
+
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "3lCXi4rOE42GBh5AZZWc",
+                        //   "UDb6jyQBz2RzRp4b42XL",
+                        //   "6Muezqhg8gc1TsaHX9nD",
                         // );
                         // await sendShiftTemplateEmail(
                         //   "Leston holdings",
@@ -581,8 +585,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "17 May",
-                        //   "Pankaj kumar",
+                        //   "18 May",
+                        //   "livjeet kaur",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -591,21 +595,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
 
-                        // await sendDARTemplateEmail(
-                        //   "Leston holdings ",
-                        //   emails,
-                        //   'Tacttik DAR',
-                        //   "Tacttik DAR",
-                        //   "Shift",
-                        //   "16 May",
-                        //   "Pankaj Kumar",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        await sendDARTemplateEmail(
+                          "Leston holdings ",
+                          emails,
+                          'Tacttik DAR',
+                          "Tacttik DAR",
+                          "Shift",
+                          "18 May",
+                          "Harmandeep Singh",
+                          "01:20:27",
+                          "06:00:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                         // 12:37 - 1-10
                         //5:15 - 5-47
                         //5:15

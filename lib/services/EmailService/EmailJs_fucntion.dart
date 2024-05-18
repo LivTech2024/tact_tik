@@ -229,7 +229,7 @@ Future<void> sendShiftTemplateEmail(
                 <td> ${GuardName}</td>
                 <td>19:00</td>
                 <td>07:00</td>
-            </tr>
+            </tr> 
         </table>
 
         <h3>Patrol Information</h3>

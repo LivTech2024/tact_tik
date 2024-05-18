@@ -2647,12 +2647,10 @@ class FireStoreService {
           .orderBy('PatrolLogPatrolCount')
           .get();
 
-      // List<String> specificDocIds = [
-      //   // '9cWqMvjiRXiyFhWDgN7q',
-      //   'jUTw8hz6rSJso3b5xrE9',
-      //   'VNPPr5OLCVNyYCzGVpAA',
-      //   'IuS66mHsqkIPgI57Ge5a'
-      // ];
+      List<String> specificDocIds = [
+        'HafvGOTDWY5Qtzp8yWnb',
+        'DOohpWtIT28IC1V5Lfzy',
+      ];
 
       querySnapshot.docs.forEach((doc) {
         print("Doc id $doc");
@@ -2664,8 +2662,9 @@ class FireStoreService {
           pdfDataList.add(doc.data());
           print("Data for Pdf: ${doc.data()}");
         }
-        // }
-      });
+      }
+          // }
+          );
     } catch (e) {
       print(e);
     }
