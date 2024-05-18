@@ -212,9 +212,9 @@ class FireStoreService {
   }
 
   Future<void> updatePatrolsStatus(String patrolId, String checkPointId,
-      String Empid, String ShiftId) async {
+      String empId, String shiftId) async {
     if (patrolId.isEmpty || checkPointId.isEmpty) {
-      print('Patrol ID is empthy');
+      print('Patrol ID is empty');
       return;
     }
 
@@ -222,8 +222,6 @@ class FireStoreService {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Patrols')
           .where("PatrolId", isEqualTo: patrolId)
-          // .where("PatrolCurrentStatus",
-          //     whereIn: ["pending", "started", []])
           .get();
 
       print("Retrieved documents:");
@@ -239,20 +237,42 @@ class FireStoreService {
         );
 
         if (checkpointToUpdate != null) {
-          // Update the CheckPointStatus to "checked"
-          checkpointToUpdate['CheckPointStatus'] = [
-            {
+          // Get existing CheckPointStatus or initialize if null
+          var existingStatuses =
+              List.from(checkpointToUpdate['CheckPointStatus'] ?? []);
+
+          // Find the status to update or create a new one
+          var statusToUpdate = existingStatuses.firstWhere(
+            (status) =>
+                status['StatusReportedById'] == empId &&
+                status['StatusShiftId'] == shiftId,
+            orElse: () => null,
+          );
+
+          if (statusToUpdate != null) {
+            // Update the existing status
+            statusToUpdate['Status'] = 'checked';
+            statusToUpdate['StatusReportedTime'] = Timestamp.now();
+          } else {
+            // Add a new status entry
+            existingStatuses.add({
               'Status': 'checked',
               'StatusReportedTime': Timestamp.now(),
-              'StatusReportedById': Empid,
-              'StatusShiftId': ShiftId
-            }
-          ];
+              'StatusReportedById': empId,
+              'StatusShiftId': shiftId
+            });
+          }
+
+          // Update the checkpoint with the new status list
+          checkpointToUpdate['CheckPointStatus'] = existingStatuses;
 
           // Update the document in Firestore
           await doc.reference.update({'PatrolCheckPoints': checkpoints});
+          print("Updated Patrol Status for document: ${doc.id}");
+        } else {
+          print(
+              "No matching checkpoint found for CheckPointId: $checkPointId in document: ${doc.id}");
         }
-        print("Updated Patrol Status");
       }
     } catch (e) {
       print("Error updating patrols status: $e");
@@ -2287,12 +2307,14 @@ class FireStoreService {
 
             String statusComment = status["StatusComment"] ?? "";
             String checkPointName = checkPoint["CheckPointName"] ?? "";
+            String checkPointStatus = checkPoint["Status"] ?? "";
 
             imageData.add({
               "CheckPointName": checkPointName,
               "StatusReportedTime": formattedTime,
               "ImageUrls": statusImageUrls,
               "StatusComment": statusComment,
+              "CheckPointStatus": checkPointStatus
             });
           }
         }

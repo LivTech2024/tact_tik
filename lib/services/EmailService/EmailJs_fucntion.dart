@@ -472,10 +472,12 @@ Future<void> sendapiEmail(
       List<String> imageUrls = List<String>.from(data['ImageUrls']);
       String statusComment = data['StatusComment'] ?? "";
       String checkPointName = data['CheckPointName'] ?? "";
+      String status = data['CheckPointStatus'];
 
       print("Status Reported Time : ${statusReportedTime}");
       // Add a paragraph with the StatusReportedTime and StatusComment
       imagesHTML += '<p>CheckPointName: $checkPointName</p>';
+      imagesHTML += '<p>Status: $status</p>';
       imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
       imagesHTML += '<p>StatusComment: $statusComment</p>';
 

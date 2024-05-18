@@ -1564,7 +1564,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   prefs.getString("StartTime");
                                               DateTime now = DateTime.now();
                                               DateTime inTime =
-                                                  DateFormat("HH:mm:ss")
+                                                  DateFormat("HH:mm")
                                                       .parse(InTime ?? "");
                                               DateTime combinedDateTime =
                                                   DateTime(
@@ -1722,7 +1722,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   'StatusComment':
                                                       url['StatusComment'],
                                                   'CheckPointName':
-                                                      url['CheckPointName']
+                                                      url['CheckPointName'],
+                                                  'Status': url['Status']
                                                 };
                                               }).toList();
                                               // var clientId = await fireStoreService
@@ -1866,7 +1867,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       url['StatusReportedTime'],
                                                   'ImageUrls': url['ImageUrls'],
                                                   'StatusComment':
-                                                      url['StatusComment']
+                                                      url['StatusComment'],
+                                                  'CheckPointName':
+                                                      url['CheckPointName'],
+                                                  'Status':
+                                                      url['CheckPointStatus']
                                                 };
                                               }).toList();
                                               print(imageUrls);
