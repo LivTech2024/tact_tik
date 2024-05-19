@@ -2816,6 +2816,7 @@ class FireStoreService {
     String logBookBranchID,
     String logBookClientID,
     String logBookLocationID,
+    String ShiftName,
   ) async {
     try {
       final today = DateTime.now();
@@ -2872,6 +2873,7 @@ class FireStoreService {
             }
           ],
           'LogBookCreatedAt': timestamp,
+          'LogBookShiftName': ShiftName,
         });
 
         // Update the document to set LogBookId to the document ID
@@ -3106,38 +3108,38 @@ class FireStoreService {
       await reportDoc.update({"ReportSearchId": uniqueid});
 
       // Push the unique ID to EmployeesDAR collection
-      final CollectionReference employeesDarRef =
-          FirebaseFirestore.instance.collection('EmployeesDAR');
-      final QuerySnapshot darSnapshot = await employeesDarRef
-          .where('EmpId', isEqualTo: employeeId)
-          .where('ShiftId', isEqualTo: shiftId)
-          .get();
-      if (darSnapshot.docs.isNotEmpty) {
-        for (final DocumentSnapshot darDoc in darSnapshot.docs) {
-          await darDoc.reference.update({
-            'EmpDarTile': FieldValue.arrayUnion([uniqueid])
-          });
+      // final CollectionReference employeesDarRef =
+      //     FirebaseFirestore.instance.collection('EmployeesDAR');
+      // final QuerySnapshot darSnapshot = await employeesDarRef
+      //     .where('EmpDarEmpId', isEqualTo: employeeId)
+      //     .where('EmpDarShiftId', isEqualTo: shiftId)
+      //     .get();
+      // if (darSnapshot.docs.isNotEmpty) {
+      //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
+      //     await darDoc.reference.update({
+      //       'EmpDarTile': FieldValue.arrayUnion([uniqueid])
+      //     });
 
-          // Update TileContent based on ReportCreateTime
-          List<Map<String, dynamic>> tiles =
-              List<Map<String, dynamic>>.from(darDoc['EmpDarTile']);
-          for (var tile in tiles) {
-            Timestamp tileDate = tile['TileDate'];
-            DateTime tileDateTime = tileDate.toDate();
-            if (tileDateTime.year == dateTime.year &&
-                tileDateTime.month == dateTime.month &&
-                tileDateTime.day == dateTime.day) {
-              String reportTimeSlot =
-                  "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
-              if (tile['TileTime'] == reportTimeSlot) {
-                tile['TileContent'] = data;
-              }
-            }
-          }
-          print("Added to Dar ");
-          await darDoc.reference.update({'EmpDarTile': tiles});
-        }
-      }
+      //     // Update TileContent based on ReportCreateTime
+      //     List<Map<String, dynamic>> tiles =
+      //         List<Map<String, dynamic>>.from(darDoc['EmpDarTile']);
+      //     for (var tile in tiles) {
+      //       Timestamp tileDate = tile['TileDate'];
+      //       DateTime tileDateTime = tileDate.toDate();
+      //       if (tileDateTime.year == dateTime.year &&
+      //           tileDateTime.month == dateTime.month &&
+      //           tileDateTime.day == dateTime.day) {
+      //         String reportTimeSlot =
+      //             "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
+      //         if (tile['TileTime'] == reportTimeSlot) {
+      //           tile['TileContent'] = data;
+      //         }
+      //       }
+      //     }
+      //     print("Added to Dar ");
+      //     await darDoc.reference.update({'EmpDarTile': tiles});
+      //   }
+      // }
 
       print('Report created successfully');
     } catch (e) {

@@ -37,13 +37,15 @@ class MyPatrolsList extends StatefulWidget {
   final String ShiftId;
   final String EmployeeName;
   final String ShiftDate;
+  final String ShiftName;
 
   const MyPatrolsList(
       {required this.ShiftLocationId,
       required this.EmployeeID,
       required this.EmployeeName,
       required this.ShiftId,
-      required this.ShiftDate});
+      required this.ShiftDate,
+      required this.ShiftName});
 
   @override
   State<MyPatrolsList> createState() => _MyPatrolsListState();
@@ -265,7 +267,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           ShiftDate: widget.ShiftDate,
           ShiftId: widget.ShiftId,
           LocationId: widget.ShiftLocationId,
-          patrolClientId: patrolClientId,
+          patrolClientId: patrolClientId, ShiftName: widget.ShiftName,
         ),
       );
     }
@@ -538,7 +540,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             widget.p.PatrolCompanyID,
             "",
             widget.p.PatrolClientID,
-            widget.p.LocationId);
+            widget.p.LocationId,
+            widget.p.ShiftName);
         await fireStoreService.updatePatrolCurrentStatusToUnchecked(
             widget.p.PatrolId,
             "started",
@@ -1017,7 +1020,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   widget.p.PatrolCompanyID,
                                                   "",
                                                   widget.p.PatrolClientID,
-                                                  widget.p.LocationId);
+                                                  widget.p.LocationId,
+                                                  widget.p.ShiftName);
                                               showSuccessToast(context,
                                                   "${checkpoint.description} scanned ");
                                               _refresh();
@@ -1676,9 +1680,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     emails.add(TestinEmail);
                                                     // emails.add(testEmail3);
                                                     // emails.add(testEmail3);
-                                                    // emails.add(ClientEmail!);
-                                                    // emails.add(AdminEmail!);
-                                                    // emails.add(defaultEmail!);
+                                                    emails.add(ClientEmail!);
+                                                    emails.add(AdminEmail!);
+                                                    emails.add(defaultEmail!);
 
                                                     // DateFormat dateFormat =
                                                     //     DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1766,8 +1770,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             "",
                                                             widget.p
                                                                 .PatrolClientID,
-                                                            widget
-                                                                .p.LocationId);
+                                                            widget.p.LocationId,
+                                                            widget.p.ShiftName);
                                                     sendapiEmail(
                                                         emails,
                                                         "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
@@ -1927,9 +1931,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     emails.add(TestinEmail);
                                                     emails.add(testEmail3);
 
-                                                    // emails.add(ClientEmail!);
-                                                    // emails.add(AdminEmail!);
-                                                    // emails.add(defaultEmail!);
+                                                    emails.add(ClientEmail!);
+                                                    emails.add(AdminEmail!);
+                                                    emails.add(defaultEmail!);
                                                     // var clientId = await fireStoreService
                                                     //     .getShiftClientID(
                                                     //         widget.p.ShiftId);
@@ -1951,8 +1955,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             "",
                                                             widget.p
                                                                 .PatrolClientID,
-                                                            widget
-                                                                .p.LocationId);
+                                                            widget.p.LocationId,
+                                                            widget.p.ShiftName);
                                                     num newCount =
                                                         widget.p.CompletedCount;
                                                     sendapiEmail(
@@ -2048,6 +2052,7 @@ class Patrol {
   final String ShiftDate;
   final String ShiftId;
   final String LocationId;
+  final String ShiftName;
 
   final String patrolClientId;
 
@@ -2068,6 +2073,7 @@ class Patrol {
     required this.ShiftDate,
     required this.ShiftId,
     required this.LocationId,
+    required this.ShiftName,
   });
 }
 
