@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
-
+import 'package:flutter/widgets.dart' as widgets;
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -1169,37 +1169,4 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       print('Error generating PDF: $e');
     }
   }
-
-/*Container(
-                  height: height / height65,
-                  color: WidgetColor,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isPaused = !isPaused;
-                      });
-                      if (isPaused) {
-                        fireStoreService.BreakShiftLog(widget.EmployeIad);
-                      } else {
-                        fireStoreService.ResumeShiftLog(widget.EmployeId);
-                      }
-                    },
-                    child: InterBold(
-                      text: isPaused ? 'Resume' : 'Break',
-                      fontsize: width / width18,
-                      color: Primarycolor,
-                    ),
-                  ),
-                )*/
-
-/*() {
-                      setState(() {
-                        isPaused = !isPaused;
-                      });
-                      if (isPaused) {
-                        fireStoreService.BreakShiftLog(widget.EmployeId);
-                      } else {
-                        fireStoreService.ResumeShiftLog(widget.EmployeId);
-                      }
-                    }*/
 }
