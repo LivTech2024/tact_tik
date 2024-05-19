@@ -555,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        List<String> emails = [];
+                         List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
