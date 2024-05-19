@@ -469,7 +469,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                          ),//
+                          ), //
                           child: ClipOval(
                             child: SizedBox.fromSize(
                                 size: Size.fromRadius(width / width50),
@@ -494,8 +494,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           letterSpacing: -.3,
                         )
                       ]),
-              ),
                 ),
+              ),
               Expanded(
                 child: Column(
                   children: [
@@ -555,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                         List<String> emails = [];
+                        List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
@@ -825,7 +825,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LogBookScreen()));
+                                                    LogBookScreen(
+                                                      EmpId: _employeeId,
+                                                    )));
                                         break;
                                       case 7:
                                         Navigator.push(

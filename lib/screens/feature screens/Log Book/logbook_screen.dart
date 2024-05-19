@@ -11,9 +11,9 @@ import '../../../fonts/inter_regular.dart';
 import '../../../services/EmailService/EmailJs_fucntion.dart';
 import '../../../utils/colors.dart';
 
-
 class LogBookScreen extends StatefulWidget {
-  const LogBookScreen({super.key});
+  final String EmpId;
+  const LogBookScreen({super.key, required this.EmpId});
 
   @override
   State<LogBookScreen> createState() => _LogBookScreenState();
@@ -32,14 +32,17 @@ class _LogBookScreenState extends State<LogBookScreen> {
       return "";
     }
   }
+
 //tiDGAADcSl64Aq4bwg0E
   @override
   void initState() {
     super.initState();
     _logBookStream = FirebaseFirestore.instance
-      .collection('LogBook')
-      .where('LogBookEmpId', isEqualTo: 'tiDGAADcSl64Aq4bwg0E') //ONLY FOR TESTING REPLACE WITH BELOW COMMENTED OUT CODE FOR PRODUCTION
-      .snapshots();
+        .collection('LogBook')
+        .where('LogBookEmpId',
+            isEqualTo:
+                'tiDGAADcSl64Aq4bwg0E') //ONLY FOR TESTING REPLACE WITH BELOW COMMENTED OUT CODE FOR PRODUCTION
+        .snapshots();
     // getempID().then((empID) {
     //   _logBookStream = FirebaseFirestore.instance
     //       .collection('LogBook')
@@ -105,7 +108,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final entry = groups.entries.toList()[index];
                     final shiftName = entry.key;
                     final logsByDate = entry.value;
@@ -183,8 +186,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
     return groups;
   }
-
-
 }
 
 class LogBookWidget extends StatefulWidget {
@@ -192,10 +193,12 @@ class LogBookWidget extends StatefulWidget {
   final String shiftName;
   final List<Map<String, dynamic>> logs;
 
-  const LogBookWidget({super.key,
+  const LogBookWidget({
+    super.key,
     required this.date,
     required this.shiftName,
-    required this.logs,});
+    required this.logs,
+  });
 
   @override
   State<LogBookWidget> createState() => _LogBookWidgetState();
@@ -253,7 +256,11 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: height / height10),
               child: Flexible(
-                child: InterBold(text: widget.shiftName , fontsize: width / width18,color: Primarycolor,),
+                child: InterBold(
+                  text: widget.shiftName,
+                  fontsize: width / width18,
+                  color: Primarycolor,
+                ),
               ),
             ),
           Visibility(
@@ -263,7 +270,8 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               children: widget.logs.map((log) {
                 final logTimestamp = log['LOGTIMESTAMP'] as Timestamp;
                 final dateTime = logTimestamp.toDate();
-                final formattedDateTime = DateFormat('hh:mm:ss a').format(dateTime);
+                final formattedDateTime =
+                    DateFormat('hh:mm:ss a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
                   clientname: log['CLIENTNAME'],
@@ -273,7 +281,6 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 );
               }).toList(),
             ),
-
           ),
         ],
       ),
