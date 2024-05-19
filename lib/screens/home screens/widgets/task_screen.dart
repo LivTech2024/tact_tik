@@ -235,6 +235,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           resetShiftStarted: resetShiftStarted,
                           ShiftIN: ShiftIn,
                           onRefresh: refreshStartTaskScreen,
+                          ShiftName: widget.ShiftName,
                           // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                         )
                       : Center(
@@ -406,20 +407,9 @@ class _TaskScreenState extends State<TaskScreen> {
                             bool? taskStatus =
                                 await fireStoreService.checkShiftTaskStatus(
                                     widget.empId, widget.shiftId);
-
-                            // await fireStoreService.addToLog(
-                            //     'ShiftStarted',
-                            //     widget.ShiftLocation,
-                            //     "",
-                            //     Timestamp.now(),
-                            //     Timestamp.now(),
-                            //     widget.empId,
-                            //     widget.EmpName,
-                            //     widget.ShiftCompanyId,
-                            //     widget.ShiftBranchId,
-                            //     widget.ShiftClientId);
                             print("Status :$status");
                             if (status == true) {
+                              //CHeck the Time here
                               if (taskStatus == false) {
                                 print("taskStaus ${taskStatus}");
                                 Navigator.pushReplacement(
@@ -446,81 +436,105 @@ class _TaskScreenState extends State<TaskScreen> {
                                   "Move into Shift Radius to continue");
                             }
                           } else {
-                            bool? taskStatus =
-                                await fireStoreService.checkShiftTaskStatus(
-                                    widget.empId, widget.shiftId);
-                            if (taskStatus == false) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ShiftTaskScreen(
-                                            shiftId: widget.shiftId,
-                                            Name: "Shift Task",
-                                            EmpId: widget.empId,
-                                            EmpName: widget.EmpName,
-                                          )));
-                              print("Task Status false");
-                              setState(() {
-                                // ShiftStarted = true;
-                                fireStoreService.startShiftLog(widget.empId,
-                                    widget.shiftId, widget.EmpName);
-                              });
+                            List<String> StartTimeParts =
+                                widget.ShiftStartTime.split(':');
+                            DateTime shiftEndDateTime = DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                                int.parse(StartTimeParts[0]),
+                                int.parse(StartTimeParts[1]));
+                            print(
+                                "Formatted SHiftEnd time ${shiftEndDateTime}");
+                            DateTime currentTime = DateTime.now();
+                            Duration bufferDuration = Duration(minutes: 10);
+
+// Calculate the time ranges for the buffer period
+                            DateTime bufferStart =
+                                shiftEndDateTime.subtract(bufferDuration);
+                            // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
+
+                            print("Buffer Start Time: $bufferStart");
+                            // print("Buffer End Time: $bufferEnd");
+                            if (currentTime.isBefore(bufferStart)) {
+                              showErrorToast(context, "Start shift on Time");
                             } else {
-                              // await fireStoreService.addToLog(
-                              //     'ShiftStarted',
-                              //     widget.ShiftLocation,
-                              //     "",
-                              //     widget.empId,
-                              //     widget.EmpName,
-                              //     widget.ShiftCompanyId,
-                              //     widget.ShiftBranchId,
-                              //     widget.ShiftClientId);
                               bool? taskStatus =
                                   await fireStoreService.checkShiftTaskStatus(
                                       widget.empId, widget.shiftId);
-
                               if (taskStatus == false) {
-                                print("taskStaus ${taskStatus}");
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ShiftTaskScreen(
-                                        shiftId: widget.shiftId,
-                                        Name: "Shift Task",
-                                        EmpId: widget.empId,
-                                        EmpName: widget.EmpName,
-                                      ),
-                                    ));
-                              } else {
+                                        builder: (context) => ShiftTaskScreen(
+                                              shiftId: widget.shiftId,
+                                              Name: "Shift Task",
+                                              EmpId: widget.empId,
+                                              EmpName: widget.EmpName,
+                                            )));
+                                print("Task Status false");
                                 setState(() {
-                                  ShiftStarted = true;
+                                  // ShiftStarted = true;
                                   fireStoreService.startShiftLog(widget.empId,
                                       widget.shiftId, widget.EmpName);
                                 });
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.setBool('ShiftStarted', ShiftStarted);
-                              }
-                              Map<String, dynamic> emailParams = {
-                                'to_email': 'sutarvaibhav37@gmail.com',
-                                'from_name': 'Your Name',
-                                'reply_to': 'sutarvaibhav37@gmail.com',
-                                'subject':
-                                    'Your Shift has been Started ${widget.ShiftLocation}',
-                                'message': 'Your Message',
-                              };
-                              // await sendEmail(emailParams);
-                              // print('Email sent: $result');s
-                              // setState(() {
-                              //   ShiftStarted = true;
-                              // });
-                              // SharedPreferences prefs =
-                              //     await SharedPreferences.getInstance();
-                              // // Your existing logic
-                              // prefs.setBool('ShiftStarted', ShiftStarted);
-                            }
+                              } else {
+                                // await fireStoreService.addToLog(
+                                //     'ShiftStarted',
+                                //     widget.ShiftLocation,
+                                //     "",
+                                //     widget.empId,
+                                //     widget.EmpName,
+                                //     widget.ShiftCompanyId,
+                                //     widget.ShiftBranchId,
+                                //     widget.ShiftClientId);
+                                bool? taskStatus =
+                                    await fireStoreService.checkShiftTaskStatus(
+                                        widget.empId, widget.shiftId);
 
-                            //if the check user radius is off we can start the shift
+                                if (taskStatus == false) {
+                                  print("taskStaus ${taskStatus}");
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ShiftTaskScreen(
+                                          shiftId: widget.shiftId,
+                                          Name: "Shift Task",
+                                          EmpId: widget.empId,
+                                          EmpName: widget.EmpName,
+                                        ),
+                                      ));
+                                } else {
+                                  setState(() {
+                                    ShiftStarted = true;
+                                    fireStoreService.startShiftLog(widget.empId,
+                                        widget.shiftId, widget.EmpName);
+                                  });
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setBool('ShiftStarted', ShiftStarted);
+                                }
+                                Map<String, dynamic> emailParams = {
+                                  'to_email': 'sutarvaibhav37@gmail.com',
+                                  'from_name': 'Your Name',
+                                  'reply_to': 'sutarvaibhav37@gmail.com',
+                                  'subject':
+                                      'Your Shift has been Started ${widget.ShiftLocation}',
+                                  'message': 'Your Message',
+                                };
+                                // await sendEmail(emailParams);
+                                // print('Email sent: $result');s
+                                // setState(() {
+                                //   ShiftStarted = true;
+                                // });
+                                // SharedPreferences prefs =
+                                //     await SharedPreferences.getInstance();
+                                // // Your existing logic
+                                // prefs.setBool('ShiftStarted', ShiftStarted);
+                              }
+
+                              //if the check user radius is off we can start the shift
+                            }
                           }
 
                           // bool isWithInRaius = locationChecker.checkLocation();

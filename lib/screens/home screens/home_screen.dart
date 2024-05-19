@@ -850,7 +850,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LogBookScreen()));
+                                                    LogBookScreen(
+                                                      EmpId: _employeeId,
+                                                    )));
                                         break;
                                       case 7:
                                         Navigator.push(

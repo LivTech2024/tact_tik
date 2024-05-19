@@ -36,13 +36,15 @@ class MyPatrolsList extends StatefulWidget {
   final String ShiftId;
   final String EmployeeName;
   final String ShiftDate;
+  final String ShiftName;
 
   const MyPatrolsList(
       {required this.ShiftLocationId,
       required this.EmployeeID,
       required this.EmployeeName,
       required this.ShiftId,
-      required this.ShiftDate});
+      required this.ShiftDate,
+      required this.ShiftName});
 
   @override
   State<MyPatrolsList> createState() => _MyPatrolsListState();
@@ -74,14 +76,15 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     List<Patrol> patrols = [];
     for (var patrol in patrolInfoList) {
-      Map<String, dynamic> data = patrol.data() as Map<String, dynamic>;
+      Map<String, dynamic> data = patrol as Map<String, dynamic>;
+      print("Patrol Data : ${data["PatrolCurrentStatus"]}");
       String patrolCompanyId = data['PatrolCompanyId'];
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
       String patrolClientId = data['PatrolClientId'];
       // String patrolTime = data['PatrolTime'];
-      int requiredCount = data['PatrolRequiredCount'];
+      int requiredCount = data['LinkedPatrolReqHitCount'];
       List<dynamic>? patrolStatusDynamic =
           data['PatrolCurrentStatus'] is List<dynamic>
               ? data['PatrolCurrentStatus'] as List<dynamic>?
@@ -263,7 +266,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           ShiftDate: widget.ShiftDate,
           ShiftId: widget.ShiftId,
           LocationId: widget.ShiftLocationId,
-          patrolClientId: patrolClientId,
+          patrolClientId: patrolClientId, ShiftName: widget.ShiftName,
         ),
       );
     }
@@ -535,7 +538,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             widget.p.PatrolCompanyID,
             "",
             widget.p.PatrolClientID,
-            widget.p.LocationId);
+            widget.p.LocationId,
+            widget.p.ShiftName);
         await fireStoreService.updatePatrolCurrentStatusToUnchecked(
             widget.p.PatrolId,
             "started",
@@ -1014,7 +1018,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   widget.p.PatrolCompanyID,
                                                   "",
                                                   widget.p.PatrolClientID,
-                                                  widget.p.LocationId);
+                                                  widget.p.LocationId,
+                                                  widget.p.ShiftName);
                                               showSuccessToast(context,
                                                   "${checkpoint.description} scanned ");
                                               _refresh();
@@ -1523,7 +1528,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: InterRegular(
-                                      text: 'Add Comment',
+                                      text: 'Add note',
                                       color: color2,
                                       fontsize: width / width12,
                                     ),
@@ -1531,7 +1536,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         CustomeTextField(
-                                          hint: 'Add Comment',
+                                          hint: 'Add Note',
                                           showIcon: false,
                                           controller: CommentController,
                                         ),
@@ -1548,105 +1553,120 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         ),
                                       ),
                                       ElevatedButton(
-                                        onPressed: () async {
-                                          if (CommentController
-                                              .text.isNotEmpty) {
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
+                                        onPressed: _isLoading
+                                            ? null
+                                            : () async {
+                                                if (CommentController
+                                                    .text.isNotEmpty) {
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
 
-                                            if (widget.p.CompletedCount ==
-                                                widget.p.PatrolRequiredCount -
-                                                    1) {
-                                              String? InTime =
-                                                  prefs.getString("StartTime");
-                                              DateTime now = DateTime.now();
-                                              DateTime inTime =
-                                                  DateFormat("HH:mm")
-                                                      .parse(InTime ?? "");
-                                              DateTime combinedDateTime =
-                                                  DateTime(
-                                                      now.year,
-                                                      now.month,
-                                                      now.day,
-                                                      inTime.hour,
-                                                      inTime.minute,
-                                                      inTime.second);
-                                              Timestamp patrolInTimestamp = Timestamp
-                                                  .fromMillisecondsSinceEpoch(
-                                                      combinedDateTime
-                                                          .millisecondsSinceEpoch);
+                                                  if (widget.p.CompletedCount ==
+                                                      widget.p.PatrolRequiredCount -
+                                                          1) {
+                                                    String? InTime = prefs
+                                                        .getString("StartTime");
+                                                    DateTime now =
+                                                        DateTime.now();
+                                                    DateTime inTime =
+                                                        DateFormat("HH:mm")
+                                                            .parse(
+                                                                InTime ?? "");
+                                                    DateTime combinedDateTime =
+                                                        DateTime(
+                                                            now.year,
+                                                            now.month,
+                                                            now.day,
+                                                            inTime.hour,
+                                                            inTime.minute,
+                                                            inTime.second);
+                                                    Timestamp
+                                                        patrolInTimestamp =
+                                                        Timestamp
+                                                            .fromMillisecondsSinceEpoch(
+                                                                combinedDateTime
+                                                                    .millisecondsSinceEpoch);
 
-                                              print(
-                                                  "patrolIn time: ${patrolInTimestamp}");
+                                                    print(
+                                                        "patrolIn time: ${patrolInTimestamp}");
 
-                                              DateFormat dateFormat =
-                                                  DateFormat(
-                                                      "yyyy-MM-dd HH:mm:ss");
-                                              String formattedEndDate =
-                                                  dateFormat
-                                                      .format(DateTime.now());
-                                              Timestamp patrolOutTimestamp =
-                                                  Timestamp.fromDate(
-                                                      DateTime.now());
-                                              String formattedStartDate =
-                                                  dateFormat
-                                                      .format(DateTime.now());
-                                              String formattedEndTime =
-                                                  dateFormat
-                                                      .format(DateTime.now());
-                                              DateFormat timeformat = DateFormat(
-                                                  "HH:mm"); // Define the format for time
-                                              // String formattedPatrolInTime =
-                                              //     timeformat.format(StartTime);
-                                              String formattedPatrolOutTime =
-                                                  timeformat
-                                                      .format(DateTime.now());
-                                              String formattedDate =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(DateTime.now());
-                                              await fireStoreService
-                                                  .fetchAndCreatePatrolLogs(
-                                                      widget.p.PatrolId,
-                                                      widget.p.EmpId,
-                                                      widget.p.EmployeeName,
-                                                      widget.p.CompletedCount +
-                                                          1,
-                                                      formattedStartDate,
-                                                      patrolInTimestamp,
-                                                      patrolOutTimestamp,
-                                                      CommentController.text,
-                                                      widget.p.ShiftId);
-                                              print(
-                                                  "Patrol count == Required COunt");
-                                              setState(() {
-                                                _expand = false;
+                                                    DateFormat dateFormat =
+                                                        DateFormat(
+                                                            "yyyy-MM-dd HH:mm:ss");
+                                                    String formattedEndDate =
+                                                        dateFormat.format(
+                                                            DateTime.now());
+                                                    Timestamp
+                                                        patrolOutTimestamp =
+                                                        Timestamp.fromDate(
+                                                            DateTime.now());
+                                                    String formattedStartDate =
+                                                        dateFormat.format(
+                                                            DateTime.now());
+                                                    String formattedEndTime =
+                                                        dateFormat.format(
+                                                            DateTime.now());
+                                                    DateFormat timeformat =
+                                                        DateFormat(
+                                                            "HH:mm"); // Define the format for time
+                                                    // String formattedPatrolInTime =
+                                                    //     timeformat.format(StartTime);
+                                                    String
+                                                        formattedPatrolOutTime =
+                                                        timeformat.format(
+                                                            DateTime.now());
+                                                    String formattedDate =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(
+                                                                DateTime.now());
+                                                    await fireStoreService
+                                                        .fetchAndCreatePatrolLogs(
+                                                            widget.p.PatrolId,
+                                                            widget.p.EmpId,
+                                                            widget
+                                                                .p.EmployeeName,
+                                                            widget.p.CompletedCount +
+                                                                1,
+                                                            formattedStartDate,
+                                                            patrolInTimestamp,
+                                                            patrolOutTimestamp,
+                                                            CommentController
+                                                                .text,
+                                                            widget.p.ShiftId);
+                                                    print(
+                                                        "Patrol count == Required COunt");
+                                                    setState(() {
+                                                      _expand = false;
 
-                                                prefs.setBool(
-                                                    "expand", _expand);
-                                              });
-                                              //If the count is equal
-                                              await fireStoreService
-                                                  .LastEndPatrolupdatePatrolsStatus(
-                                                      widget.p.PatrolId,
-                                                      widget.p.EmpId,
-                                                      widget.p.EmployeeName,
-                                                      widget.p.ShiftId);
-                                              List<String> emails = [];
-                                              var ClientEmail =
-                                                  await fireStoreService
-                                                      .getClientPatrolEmail(
-                                                          widget.p
-                                                              .PatrolClientID);
-                                              var AdminEmail =
-                                                  await fireStoreService
-                                                      .getAdminEmail(widget
-                                                          .p.PatrolCompanyID);
-                                              var imageUrls =
-                                                  await fireStoreService
-                                                      .getImageUrlsForPatrol(
-                                                          widget.p.PatrolId,
-                                                          widget.p.EmpId);
+                                                      prefs.setBool(
+                                                          "expand", _expand);
+                                                    });
+                                                    //If the count is equal
+                                                    await fireStoreService
+                                                        .LastEndPatrolupdatePatrolsStatus(
+                                                            widget.p.PatrolId,
+                                                            widget.p.EmpId,
+                                                            widget
+                                                                .p.EmployeeName,
+                                                            widget.p.ShiftId);
+                                                    List<String> emails = [];
+                                                    var ClientEmail =
+                                                        await fireStoreService
+                                                            .getClientPatrolEmail(
+                                                                widget.p
+                                                                    .PatrolClientID);
+                                                    var AdminEmail =
+                                                        await fireStoreService
+                                                            .getAdminEmail(widget
+                                                                .p
+                                                                .PatrolCompanyID);
+                                                    var imageUrls =
+                                                        await fireStoreService
+                                                            .getImageUrlsForPatrol(
+                                                                widget
+                                                                    .p.PatrolId,
+                                                                widget.p.EmpId);
 
                                               print(imageUrls);
                                               var TestinEmail =
@@ -1665,283 +1685,313 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   "pankaj.kumar1312@yahoo.com";
                                               emails.add(defaultEmail2);
 
-                                              // DateFormat dateFormat =
-                                              //     DateFormat("yyyy-MM-dd HH:mm:ss");
-                                              // String formattedStartDate =
-                                              //     dateFormat.format(DateTime.now());
-                                              // String formattedEndDate =
-                                              //     dateFormat.format(DateTime.now());
-                                              // String formattedEndTime =
-                                              //     dateFormat.format(DateTime.now());
-                                              // DateFormat timeformat = DateFormat(
-                                              //     "HH:mm");
-                                              // Define the format for time
-                                              // if (InTime != null) {
-                                              //   String formattedPatrolInTime =
-                                              //       timeformat.format(InTime);
-                                              // }
-                                              // String formattedPatrolOutTime =
-                                              //     timeformat.format(DateTime.now());
-                                              // String formattedDate =
-                                              //     DateFormat('yyyy-MM-dd')
-                                              //         .format(DateTime.now());
-                                              DateFormat timeFormat =
-                                                  DateFormat("HH:mm");
+                                                    // DateFormat dateFormat =
+                                                    //     DateFormat("yyyy-MM-dd HH:mm:ss");
+                                                    // String formattedStartDate =
+                                                    //     dateFormat.format(DateTime.now());
+                                                    // String formattedEndDate =
+                                                    //     dateFormat.format(DateTime.now());
+                                                    // String formattedEndTime =
+                                                    //     dateFormat.format(DateTime.now());
+                                                    // DateFormat timeformat = DateFormat(
+                                                    //     "HH:mm");
+                                                    // Define the format for time
+                                                    // if (InTime != null) {
+                                                    //   String formattedPatrolInTime =
+                                                    //       timeformat.format(InTime);
+                                                    // }
+                                                    // String formattedPatrolOutTime =
+                                                    //     timeformat.format(DateTime.now());
+                                                    // String formattedDate =
+                                                    //     DateFormat('yyyy-MM-dd')
+                                                    //         .format(DateTime.now());
+                                                    DateFormat timeFormat =
+                                                        DateFormat("HH:mm");
 
-                                              // String? InTime =
-                                              //     prefs.getString("StartTime");
+                                                    // String? InTime =
+                                                    //     prefs.getString("StartTime");
 
-                                              // DateTime now = DateTime.now();
-                                              // DateTime inTime =
-                                              //     DateFormat("HH:mm:ss")
-                                              //         .parse(InTime ?? "");
-                                              // DateTime combinedDateTime = DateTime(
-                                              //     now.year,
-                                              //     now.month,
-                                              //     now.day,
-                                              //     inTime.hour,
-                                              //     inTime.minute,
-                                              //     inTime.second);
-                                              // Timestamp patrolInTimestamp = Timestamp
-                                              //     .fromMillisecondsSinceEpoch(
-                                              //         combinedDateTime
-                                              //             .millisecondsSinceEpoch);
+                                                    // DateTime now = DateTime.now();
+                                                    // DateTime inTime =
+                                                    //     DateFormat("HH:mm:ss")
+                                                    //         .parse(InTime ?? "");
+                                                    // DateTime combinedDateTime = DateTime(
+                                                    //     now.year,
+                                                    //     now.month,
+                                                    //     now.day,
+                                                    //     inTime.hour,
+                                                    //     inTime.minute,
+                                                    //     inTime.second);
+                                                    // Timestamp patrolInTimestamp = Timestamp
+                                                    //     .fromMillisecondsSinceEpoch(
+                                                    //         combinedDateTime
+                                                    //             .millisecondsSinceEpoch);
 
-                                              // Timestamp patrolOutTimestamp =
-                                              //     Timestamp.fromDate(
-                                              //         DateTime.now());
-                                              num count =
-                                                  widget.p.CompletedCount + 1;
+                                                    // Timestamp patrolOutTimestamp =
+                                                    //     Timestamp.fromDate(
+                                                    //         DateTime.now());
+                                                    num count = widget
+                                                            .p.CompletedCount +
+                                                        1;
 
-                                              List<Map<String, dynamic>>
-                                                  formattedImageUrls =
-                                                  imageUrls.map((url) {
-                                                return {
-                                                  'StatusReportedTime':
-                                                      url['StatusReportedTime'],
-                                                  'ImageUrls': url['ImageUrls'],
-                                                  'StatusComment':
-                                                      url['StatusComment'],
-                                                  'CheckPointName':
-                                                      url['CheckPointName'],
-                                                  'CheckPointStatus':
-                                                      url['CheckPointStatus']
-                                                };
-                                              }).toList();
-                                              // var clientId = await fireStoreService
-                                              //     .getShiftClientID(
-                                              //         widget.p.ShiftId);
-                                              var clientName =
-                                                  await fireStoreService
-                                                      .getClientName(widget
-                                                          .p.PatrolClientID);
-                                              await fireStoreService.addToLog(
-                                                  "patrol_end",
-                                                  "",
-                                                  clientName ?? "",
-                                                  widget.p.EmpId,
-                                                  widget.p.EmployeeName,
-                                                  widget.p.PatrolCompanyID,
-                                                  "",
-                                                  widget.p.PatrolClientID,
-                                                  widget.p.LocationId);
-                                              sendapiEmail(
-                                                  emails,
-                                                  "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                                  widget.p.EmployeeName,
-                                                  "",
-                                                  'Shift ',
-                                                  formattedStartDate,
-                                                  formattedImageUrls,
-                                                  widget.p.EmployeeName,
-                                                  InTime,
-                                                  formattedEndTime,
-                                                  widget.p.CompletedCount + 1,
-                                                  widget.p.PatrolRequiredCount
-                                                      .toString(),
-                                                  widget.p.description,
-                                                  "Completed",
-                                                  InTime,
-                                                  formattedPatrolOutTime,
-                                                  CommentController.text);
-                                              _refresh();
-                                              // sendFormattedEmail(emailParams);
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HomeScreen()));
-                                            } else {
-                                              String? InTime =
-                                                  prefs.getString("StartTime");
-                                              DateTime now = DateTime.now();
-                                              DateTime inTime =
-                                                  DateFormat("HH:mm:ss")
-                                                      .parse(InTime ?? "");
-                                              DateTime combinedDateTime =
-                                                  DateTime(
-                                                      now.year,
-                                                      now.month,
-                                                      now.day,
-                                                      inTime.hour,
-                                                      inTime.minute,
-                                                      inTime.second);
-                                              Timestamp patrolInTimestamp = Timestamp
-                                                  .fromMillisecondsSinceEpoch(
-                                                      combinedDateTime
-                                                          .millisecondsSinceEpoch);
+                                                    List<Map<String, dynamic>>
+                                                        formattedImageUrls =
+                                                        imageUrls.map((url) {
+                                                      return {
+                                                        'StatusReportedTime': url[
+                                                            'StatusReportedTime'],
+                                                        'ImageUrls':
+                                                            url['ImageUrls'],
+                                                        'StatusComment': url[
+                                                            'StatusComment'],
+                                                        'CheckPointName': url[
+                                                            'CheckPointName'],
+                                                        'CheckPointStatus': url[
+                                                            'CheckPointStatus']
+                                                      };
+                                                    }).toList();
+                                                    // var clientId = await fireStoreService
+                                                    //     .getShiftClientID(
+                                                    //         widget.p.ShiftId);
+                                                    var clientName =
+                                                        await fireStoreService
+                                                            .getClientName(widget
+                                                                .p
+                                                                .PatrolClientID);
+                                                    await fireStoreService
+                                                        .addToLog(
+                                                            "patrol_end",
+                                                            "",
+                                                            clientName ?? "",
+                                                            widget.p.EmpId,
+                                                            widget
+                                                                .p.EmployeeName,
+                                                            widget.p
+                                                                .PatrolCompanyID,
+                                                            "",
+                                                            widget.p
+                                                                .PatrolClientID,
+                                                            widget.p.LocationId,
+                                                            widget.p.ShiftName);
+                                                    sendapiEmail(
+                                                        emails,
+                                                        "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                                        widget.p.EmployeeName,
+                                                        "",
+                                                        'Shift ',
+                                                        formattedStartDate,
+                                                        formattedImageUrls,
+                                                        widget.p.EmployeeName,
+                                                        InTime,
+                                                        formattedEndTime,
+                                                        widget.p.CompletedCount +
+                                                            1,
+                                                        widget.p
+                                                            .PatrolRequiredCount
+                                                            .toString(),
+                                                        widget.p.description,
+                                                        "Completed",
+                                                        InTime,
+                                                        formattedPatrolOutTime,
+                                                        CommentController.text);
+                                                    _refresh();
+                                                    // sendFormattedEmail(emailParams);
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HomeScreen()));
+                                                  } else {
+                                                    String? InTime = prefs
+                                                        .getString("StartTime");
+                                                    DateTime now =
+                                                        DateTime.now();
+                                                    DateTime inTime =
+                                                        DateFormat("HH:mm:ss")
+                                                            .parse(
+                                                                InTime ?? "");
+                                                    DateTime combinedDateTime =
+                                                        DateTime(
+                                                            now.year,
+                                                            now.month,
+                                                            now.day,
+                                                            inTime.hour,
+                                                            inTime.minute,
+                                                            inTime.second);
+                                                    Timestamp
+                                                        patrolInTimestamp =
+                                                        Timestamp
+                                                            .fromMillisecondsSinceEpoch(
+                                                                combinedDateTime
+                                                                    .millisecondsSinceEpoch);
 
-                                              print(
-                                                  "patrolIn time: ${patrolInTimestamp}");
+                                                    print(
+                                                        "patrolIn time: ${patrolInTimestamp}");
 
-                                              DateFormat dateFormat =
-                                                  DateFormat(
-                                                      "yyyy-MM-dd HH:mm:ss");
-                                              String formattedEndDate =
-                                                  dateFormat
-                                                      .format(DateTime.now());
-                                              Timestamp patrolOutTimestamp =
-                                                  Timestamp.fromDate(
-                                                      DateTime.now());
-                                              String formattedStartDate =
-                                                  dateFormat
-                                                      .format(DateTime.now());
-                                              String formattedEndTime =
-                                                  dateFormat
-                                                      .format(DateTime.now());
-                                              DateFormat timeformat = DateFormat(
-                                                  "HH:mm"); // Define the format for time
-                                              // String formattedPatrolInTime =
-                                              //     timeformat.format(StartTime);
-                                              String formattedPatrolOutTime =
-                                                  timeformat
-                                                      .format(DateTime.now());
-                                              String formattedDate =
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(DateTime.now());
-                                              await fireStoreService
-                                                  .fetchAndCreatePatrolLogs(
-                                                      widget.p.PatrolId,
-                                                      widget.p.EmpId,
-                                                      widget.p.EmployeeName,
-                                                      widget.p.CompletedCount +
-                                                          1,
-                                                      formattedStartDate,
-                                                      patrolInTimestamp,
-                                                      patrolOutTimestamp,
-                                                      CommentController.text,
-                                                      widget.p.ShiftId);
-                                              //if normal update
-                                              setState(() {
-                                                _expand = false;
-                                                buttonEnabled = false;
+                                                    DateFormat dateFormat =
+                                                        DateFormat(
+                                                            "yyyy-MM-dd HH:mm:ss");
+                                                    String formattedEndDate =
+                                                        dateFormat.format(
+                                                            DateTime.now());
+                                                    Timestamp
+                                                        patrolOutTimestamp =
+                                                        Timestamp.fromDate(
+                                                            DateTime.now());
+                                                    String formattedStartDate =
+                                                        dateFormat.format(
+                                                            DateTime.now());
+                                                    String formattedEndTime =
+                                                        dateFormat.format(
+                                                            DateTime.now());
+                                                    DateFormat timeformat =
+                                                        DateFormat(
+                                                            "HH:mm"); // Define the format for time
+                                                    // String formattedPatrolInTime =
+                                                    //     timeformat.format(StartTime);
+                                                    String
+                                                        formattedPatrolOutTime =
+                                                        timeformat.format(
+                                                            DateTime.now());
+                                                    String formattedDate =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(
+                                                                DateTime.now());
+                                                    await fireStoreService
+                                                        .fetchAndCreatePatrolLogs(
+                                                            widget.p.PatrolId,
+                                                            widget.p.EmpId,
+                                                            widget
+                                                                .p.EmployeeName,
+                                                            widget.p.CompletedCount +
+                                                                1,
+                                                            formattedStartDate,
+                                                            patrolInTimestamp,
+                                                            patrolOutTimestamp,
+                                                            CommentController
+                                                                .text,
+                                                            widget.p.ShiftId);
+                                                    //if normal update
+                                                    setState(() {
+                                                      _expand = false;
+                                                      buttonEnabled = false;
 
-                                                prefs.setBool(
-                                                    "expand", _expand);
-                                              });
-                                              await fireStoreService
-                                                  .EndPatrolupdatePatrolsStatus(
-                                                      widget.p.PatrolId,
-                                                      widget.p.EmpId,
-                                                      widget.p.EmployeeName,
-                                                      widget.p.ShiftId);
+                                                      prefs.setBool(
+                                                          "expand", _expand);
+                                                    });
+                                                    await fireStoreService
+                                                        .EndPatrolupdatePatrolsStatus(
+                                                            widget.p.PatrolId,
+                                                            widget.p.EmpId,
+                                                            widget
+                                                                .p.EmployeeName,
+                                                            widget.p.ShiftId);
 
-                                              List<String> emails = [];
-                                              var ClientEmail =
-                                                  await fireStoreService
-                                                      .getClientEmail(widget
-                                                          .p.PatrolClientID);
-                                              var AdminEmail =
-                                                  await fireStoreService
-                                                      .getAdminEmail(widget
-                                                          .p.PatrolCompanyID);
-                                              var imageUrls =
-                                                  await fireStoreService
-                                                      .getImageUrlsForPatrol(
-                                                          widget.p.PatrolId,
-                                                          widget.p.EmpId);
+                                                    List<String> emails = [];
+                                                    var ClientEmail =
+                                                        await fireStoreService
+                                                            .getClientEmail(widget
+                                                                .p
+                                                                .PatrolClientID);
+                                                    var AdminEmail =
+                                                        await fireStoreService
+                                                            .getAdminEmail(widget
+                                                                .p
+                                                                .PatrolCompanyID);
+                                                    var imageUrls =
+                                                        await fireStoreService
+                                                            .getImageUrlsForPatrol(
+                                                                widget
+                                                                    .p.PatrolId,
+                                                                widget.p.EmpId);
 
-                                              List<Map<String, dynamic>>
-                                                  formattedImageUrls =
-                                                  imageUrls.map((url) {
-                                                return {
-                                                  'StatusReportedTime':
-                                                      url['StatusReportedTime'],
-                                                  'ImageUrls': url['ImageUrls'],
-                                                  'StatusComment':
-                                                      url['StatusComment'],
-                                                  'CheckPointName':
-                                                      url['CheckPointName'],
-                                                  'CheckPointStatus':
-                                                      url['CheckPointStatus']
-                                                };
-                                              }).toList();
-                                              print(imageUrls);
-                                              var TestinEmail =
-                                                  "sutarvaibhav37@gmail.com";
-                                              var defaultEmail =
-                                                  "tacttikofficial@gmail.com";
-                                              var defaultEmail2 =
-                                                  "pankaj.kumar1312@yahoo.com";
-                                              emails.add(defaultEmail2);
-                                              // var defaultEmail = "tacttikofficial@gmail.com";
-                                              var testEmail3 =
-                                                  "Swastikbthiramdas@gmail.com";
-                                              emails.add(TestinEmail);
-                                              emails.add(testEmail3);
+                                                    List<Map<String, dynamic>>
+                                                        formattedImageUrls =
+                                                        imageUrls.map((url) {
+                                                      return {
+                                                        'StatusReportedTime': url[
+                                                            'StatusReportedTime'],
+                                                        'ImageUrls':
+                                                            url['ImageUrls'],
+                                                        'StatusComment': url[
+                                                            'StatusComment'],
+                                                        'CheckPointName': url[
+                                                            'CheckPointName'],
+                                                        'CheckPointStatus': url[
+                                                            'CheckPointStatus']
+                                                      };
+                                                    }).toList();
+                                                    print(imageUrls);
+                                                    var TestinEmail =
+                                                        "sutarvaibhav37@gmail.com";
+                                                    var defaultEmail =
+                                                        "tacttikofficial@gmail.com";
+                                                    // var defaultEmail = "tacttikofficial@gmail.com";
+                                                    var testEmail3 =
+                                                        "Swastikbthiramdas@gmail.com";
+                                                    emails.add(TestinEmail);
+                                                    emails.add(testEmail3);
 
-                                              emails.add(ClientEmail!);
-                                              emails.add(AdminEmail!);
-                                              emails.add(defaultEmail!);
-                                              // var clientId = await fireStoreService
-                                              //     .getShiftClientID(
-                                              //         widget.p.ShiftId);
-                                              var clientName =
-                                                  await fireStoreService
-                                                      .getClientName(widget
-                                                          .p.PatrolClientID);
-                                              await fireStoreService.addToLog(
-                                                  "patrol_end",
-                                                  "",
-                                                  clientName ?? "",
-                                                  widget.p.EmpId,
-                                                  widget.p.EmployeeName,
-                                                  widget.p.PatrolCompanyID,
-                                                  "",
-                                                  widget.p.PatrolClientID,
-                                                  widget.p.LocationId);
-                                              num newCount =
-                                                  widget.p.CompletedCount;
-                                              sendapiEmail(
-                                                  emails,
-                                                  "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
-                                                  widget.p.EmployeeName,
-                                                  "",
-                                                  'Shift ',
-                                                  formattedStartDate,
-                                                  formattedImageUrls,
-                                                  widget.p.EmployeeName,
-                                                  InTime,
-                                                  formattedEndTime,
-                                                  widget.p.CompletedCount + 1,
-                                                  widget.p.PatrolRequiredCount
-                                                      .toString(),
-                                                  widget.p.description,
-                                                  "Completed",
-                                                  InTime,
-                                                  formattedPatrolOutTime,
-                                                  CommentController.text);
-                                            }
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HomeScreen()));
-                                          } else {
-                                            showErrorToast(context,
-                                                "Field cannot be empty");
-                                          }
-                                        },
+                                                    emails.add(ClientEmail!);
+                                                    emails.add(AdminEmail!);
+                                                    emails.add(defaultEmail!);
+                                                    // var clientId = await fireStoreService
+                                                    //     .getShiftClientID(
+                                                    //         widget.p.ShiftId);
+                                                    var clientName =
+                                                        await fireStoreService
+                                                            .getClientName(widget
+                                                                .p
+                                                                .PatrolClientID);
+                                                    await fireStoreService
+                                                        .addToLog(
+                                                            "patrol_end",
+                                                            "",
+                                                            clientName ?? "",
+                                                            widget.p.EmpId,
+                                                            widget
+                                                                .p.EmployeeName,
+                                                            widget.p
+                                                                .PatrolCompanyID,
+                                                            "",
+                                                            widget.p
+                                                                .PatrolClientID,
+                                                            widget.p.LocationId,
+                                                            widget.p.ShiftName);
+                                                    num newCount =
+                                                        widget.p.CompletedCount;
+                                                    sendapiEmail(
+                                                        emails,
+                                                        "Patrol update for ${widget.p.description} Date:- ${formattedStartDate}",
+                                                        widget.p.EmployeeName,
+                                                        "",
+                                                        'Shift ',
+                                                        formattedStartDate,
+                                                        formattedImageUrls,
+                                                        widget.p.EmployeeName,
+                                                        InTime,
+                                                        formattedEndTime,
+                                                        widget.p.CompletedCount +
+                                                            1,
+                                                        widget.p
+                                                            .PatrolRequiredCount
+                                                            .toString(),
+                                                        widget.p.description,
+                                                        "Completed",
+                                                        InTime,
+                                                        formattedPatrolOutTime,
+                                                        CommentController.text);
+                                                  }
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HomeScreen()));
+                                                } else {
+                                                  showErrorToast(context,
+                                                      "Field cannot be empty");
+                                                }
+                                              },
                                         child: InterRegular(
                                           text: 'Submit',
                                           fontsize: width / width18,
@@ -2003,6 +2053,7 @@ class Patrol {
   final String ShiftDate;
   final String ShiftId;
   final String LocationId;
+  final String ShiftName;
 
   final String patrolClientId;
 
@@ -2023,6 +2074,7 @@ class Patrol {
     required this.ShiftDate,
     required this.ShiftId,
     required this.LocationId,
+    required this.ShiftName,
   });
 }
 

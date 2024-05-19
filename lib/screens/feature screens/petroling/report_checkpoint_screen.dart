@@ -39,7 +39,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
   bool _isLoading = false;
-
   @override
   void initState() {
     super.initState();
@@ -120,11 +119,11 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return File(result!.path);
   }
 
-// Adding compression here only
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -149,189 +148,185 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           centerTitle: true,
         ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: width / width30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: height / height30),
-                  Text(
-                    'Add Image/Comment',
-                    style: TextStyle(
-                      fontSize: width / width14,
-                      color: Primarycolor,
-                      fontWeight: FontWeight.bold,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: height / height30),
+                    Text(
+                      'Add Image/Comment',
+                      style: TextStyle(
+                        fontSize: width / width14,
+                        color: Primarycolor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: height / height10),
-                  TextField(
-                    controller: Controller,
-                    decoration: InputDecoration(
-                      hintText: 'Add Comment',
+                    SizedBox(height: height / height10),
+                    TextField(
+                      controller: Controller,
+                      decoration: InputDecoration(
+                        hintText: 'Add Comment',
+                      ),
                     ),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(height: height / height10),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Icon(Icons.camera),
-                              title: Text('Add Image'),
-                              onTap: () {
-                                _addImage();
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.image),
-                              title: Text('Add from Gallery'),
-                              onTap: () {
-                                _addGallery();
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          size: width / width24,
-                          color: Primarycolor,
-                        ),
-                        SizedBox(
-                          width: width / width6,
-                        ),
-                        InterMedium(
-                          text: 'Add Images',
-                          color: Primarycolor,
-                          fontsize: width / width14,
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: height / height20),
-                  Expanded(
-                    child: GridView.builder(
+                    SizedBox(height: height / height20),
+                    GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: width / width10,
+                        mainAxisSpacing: height / height10,
                         crossAxisCount: 3,
                       ),
-                      itemCount: uploads.length,
+                      itemCount: uploads.length + 1,
                       itemBuilder: (context, index) {
-                        return SizedBox(
-                          height: height / height30,
-                          width: width / width30,
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Container(
-                                height: height / height66,
-                                width: width / width66,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  borderRadius:
-                                      BorderRadius.circular(width / width10),
+                        if (index == 0) {
+                          return GestureDetector(
+                            onTap: () {
+                              // _refresh();
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(Icons.camera),
+                                      title: Text('Add Image'),
+                                      onTap: () {
+                                        _addImage();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.image),
+                                      title: Text('Add from Gallery'),
+                                      onTap: () {
+                                        _addGallery();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                margin: EdgeInsets.all(width / width8),
-                                child: Image.file(
-                                  uploads[index]['file'],
-                                  fit: BoxFit.cover,
+                              );
+                            },
+                            child: Container(
+                              height: height / height66,
+                              width: width / width66,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.5),
+                                borderRadius:
+                                    BorderRadius.circular(width / width10),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: width / width20,
                                 ),
                               ),
-                              Positioned(
-                                top: -5,
-                                right: -5,
-                                child: IconButton(
-                                  onPressed: () {
-                                    _deleteItem(index);
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                    size: width / width20,
+                            ),
+                          );
+                        } else {
+                          final upload = uploads[index - 1];
+                          return Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.5),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                            ),
+                            // margin: EdgeInsets.all(width / width8),
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Image.file(
+                                    upload['file'],
+                                    fit: BoxFit.cover,
                                   ),
-                                  padding: EdgeInsets.zero,
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      _deleteItem(index - 1);
+                                    },
+                                    icon: Icon(Icons.cancel),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        }
                       },
                     ),
-                  ),
-                ],
-              ),
-            ),
-            if (_isLoading)
-              Container(
-                color: Colors.black.withOpacity(0.5),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: Primarycolor,
-                  ),
+                    SizedBox(height: height / height100)
+                  ],
                 ),
               ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Button1(
-                    text: 'Submit',
-                    onPressed: () async {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
-                        await fireStoreService.addImagesToPatrol(
-                            uploads,
-                            Controller.text,
-                            widget.PatrolID,
-                            widget.empId,
-                            widget.CheckpointID,
-                            widget.ShiftId);
-                        toastification.show(
-                          context: context,
-                          type: ToastificationType.success,
-                          title: Text("Submitted"),
-                          autoCloseDuration: const Duration(seconds: 2),
-                        );
+              if (_isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Primarycolor,
+                    ),
+                  ),
+                ),
+              Align(
+                // bottom: 10,
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Button1(
+                      text: 'Submit',
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        if (uploads.isNotEmpty || Controller.text.isNotEmpty) {
+                          await fireStoreService.addImagesToPatrol(
+                              uploads,
+                              Controller.text,
+                              widget.PatrolID,
+                              widget.empId,
+                              widget.CheckpointID,
+                              widget.ShiftId);
+                          toastification.show(
+                            context: context,
+                            type: ToastificationType.success,
+                            title: Text("Submitted"),
+                            autoCloseDuration: const Duration(seconds: 2),
+                          );
 
-                        uploads.clear();
-                        Controller.clear();
-                        setState(() {
-                          _isLoading = false;
-                        });
-                        Navigator.pop(context);
-                      } else {
-                        showErrorToast(context, "Fields cannot be empty");
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      }
-                    },
-                    color: Colors.white,
-                    borderRadius: width / width20,
-                    backgroundcolor: Primarycolor,
-                  ),
-                  SizedBox(
-                    height: height / height20,
-                  ),
-                ],
-              ),
-            ),
-          ],
+                          uploads.clear();
+                          Controller.clear();
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          Navigator.pop(context);
+                        } else {
+                          showErrorToast(context, "Fields cannot be empty");
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      },
+                      color: Colors.white,
+                      borderRadius: width / width20,
+                      backgroundcolor: Primarycolor,
+                    ),
+                    SizedBox(
+                      height: height / height20,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

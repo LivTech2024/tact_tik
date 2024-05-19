@@ -44,7 +44,7 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
 
     List<Patrol> patrols = [];
     for (var patrol in patrolInfoList) {
-      Map<String, dynamic> data = patrol.data() as Map<String, dynamic>;
+      Map<String, dynamic> data = patrol as Map<String, dynamic>;
       String patrolCompanyId = data['PatrolCompanyId'];
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];

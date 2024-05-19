@@ -565,7 +565,7 @@ Future<void> sendapiEmail(
       // Add image tags for each ImageUrl with a specific size
       for (var imageUrl in imageUrls) {
         imagesHTML +=
-            '<img src="$imageUrl" alt="Image" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
+            '<img src="$imageUrl" alt="Image" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
       }
     }
     final htmlcontent2 = """

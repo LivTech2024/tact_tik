@@ -1,29 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
-import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/widget/log_type_widget.dart';
-
 import '../../../common/enums/log_type_enums.dart';
 import '../../../fonts/inter_regular.dart';
+import '../../../services/EmailService/EmailJs_fucntion.dart';
 import '../../../utils/colors.dart';
 
 class LogBookScreen extends StatefulWidget {
-  const LogBookScreen({super.key});
+  final String EmpId;
+  const LogBookScreen({super.key, required this.EmpId});
 
   @override
   State<LogBookScreen> createState() => _LogBookScreenState();
 }
 
 class _LogBookScreenState extends State<LogBookScreen> {
-  List<Logs> logs = [
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-    Logs(type: 'type', clintName: 'clintName', location: 'location'),
-  ];
+  late Stream<QuerySnapshot> _logBookStream;
+
+  Future<String> getempID() async {
+    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    if (userInfo != null) {
+      String employeeId = userInfo['EmployeeId'];
+      return employeeId;
+    } else {
+      print('User info not found');
+      return "";
+    }
+  }
+
+//tiDGAADcSl64Aq4bwg0E
+  @override
+  void initState() {
+    super.initState();
+    _logBookStream = FirebaseFirestore.instance
+        .collection('LogBook')
+        .where('LogBookEmpId',
+            isEqualTo: widget
+                .EmpId) //ONLY FOR TESTING REPLACE WITH BELOW COMMENTED OUT CODE FOR PRODUCTION
+        .snapshots();
+    // getempID().then((empID) {
+    //   _logBookStream = FirebaseFirestore.instance
+    //       .collection('LogBook')
+    //       .where('LogBookEmpId', isEqualTo: empID)
+    //       .snapshots();
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,26 +88,117 @@ class _LogBookScreenState extends State<LogBookScreen> {
             centerTitle: true,
             floating: true, // Makes the app bar float above the content
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                return LogBookWidget(
-                  logs: logs,
+          StreamBuilder<QuerySnapshot>(
+            stream: _logBookStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return SliverToBoxAdapter(
+                  child: Text('Error: ${snapshot.error}'),
                 );
-              },
-              childCount: 10,
-            ),
+              }
+
+              if (!snapshot.hasData) {
+                return SliverToBoxAdapter(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              final documents = snapshot.data!.docs;
+              final groups = _groupLogsByDate(documents);
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final entry = groups.entries.toList()[index];
+                    final shiftName = entry.key;
+                    final logsByDate = entry.value;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: logsByDate.entries.map((dateEntry) {
+                        final date = dateEntry.key;
+                        final logs = dateEntry.value;
+
+                        return LogBookWidget(
+                          date: date,
+                          shiftName: shiftName,
+                          logs: logs,
+                        );
+                      }).toList(),
+                    );
+                  },
+                  childCount: groups.length,
+                ),
+              );
+            },
           ),
         ],
       ),
     );
   }
+
+  Map<String, Map<String, List<Map<String, dynamic>>>> _groupLogsByDate(
+      List<QueryDocumentSnapshot> documents) {
+    final groups = <String, Map<String, List<Map<String, dynamic>>>>{};
+
+    documents.sort((a, b) {
+      final timestampA = a['LogBookDate'] as Timestamp;
+      final timestampB = b['LogBookDate'] as Timestamp;
+      return timestampB.compareTo(timestampA);
+    });
+
+    for (final document in documents) {
+      final data = document.data() as Map<String, dynamic>;
+      final shiftName = document.id;
+      final logData = data['LogBookData'] as List<dynamic>;
+      final logTimestamp = data['LogBookDate'] as Timestamp;
+      final clientName = data['LogCleintName'] ?? '';
+      final logLocation = data['LogBookLocationName'] ?? '';
+      final logsByDate = <String, List<Map<String, dynamic>>>{};
+
+      for (final logMap in logData) {
+        final logMapData = logMap as Map<String, dynamic>;
+        final date = DateFormat('MMM d, yyyy').format(logTimestamp.toDate());
+
+        final logType = logMapData['LogType']; // Access LogType within each map
+
+        if (logsByDate.containsKey(date)) {
+          logsByDate[date]!.add({
+            'CLIENTNAME': clientName,
+            'LOCATION': logLocation,
+            'LOGTYPE': logType,
+            'LOGTIMESTAMP': logTimestamp,
+          });
+        } else {
+          logsByDate[date] = [
+            {
+              'CLIENTNAME': clientName,
+              'LOCATION': logLocation,
+              'LOGTYPE': logType,
+              'LOGTIMESTAMP': logTimestamp,
+            }
+          ];
+        }
+      }
+
+      groups[shiftName] = logsByDate;
+    }
+
+    return groups;
+  }
 }
 
 class LogBookWidget extends StatefulWidget {
-  final List<Logs> logs;
+  final String date;
+  final String shiftName;
+  final List<Map<String, dynamic>> logs;
 
-  const LogBookWidget({super.key, required this.logs});
+  const LogBookWidget({
+    super.key,
+    required this.date,
+    required this.shiftName,
+    required this.logs,
+  });
 
   @override
   State<LogBookWidget> createState() => _LogBookWidgetState();
@@ -120,7 +237,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InterBold(
-                    text: '15/04/2023',
+                    text: widget.date,
                     color: Primarycolor,
                     fontsize: width / width18,
                   ),
@@ -139,16 +256,28 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: height / height10),
               child: Flexible(
-                child: InterBold(text: 'Shift Name Here' , fontsize: width / width18,color: Primarycolor,),
+                child: InterBold(
+                  text: widget.shiftName,
+                  fontsize: width / width18,
+                  color: Primarycolor,
+                ),
               ),
             ),
           Visibility(
             visible: expand,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.logs.map((l) {
+              children: widget.logs.map((log) {
+                final logTimestamp = log['LOGTIMESTAMP'] as Timestamp;
+                final dateTime = logTimestamp.toDate();
+                final formattedDateTime =
+                    DateFormat('hh:mm:ss a').format(dateTime);
                 return LogTypeWidget(
-                  type: LogBookEnum.CheckPoint,
+                  type: LogBookEnum.values.byName(log['LOGTYPE']),
+                  clientname: log['CLIENTNAME'],
+                  logtype: log['LOGTYPE'],
+                  location: log['LOCATION'],
+                  time: formattedDateTime,
                 );
               }).toList(),
             ),
