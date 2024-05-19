@@ -75,14 +75,15 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     List<Patrol> patrols = [];
     for (var patrol in patrolInfoList) {
-      Map<String, dynamic> data = patrol.data() as Map<String, dynamic>;
+      Map<String, dynamic> data = patrol as Map<String, dynamic>;
+      print("Patrol Data : ${data["PatrolCurrentStatus"]}");
       String patrolCompanyId = data['PatrolCompanyId'];
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];
       String patrolId = data['PatrolId'];
       String patrolClientId = data['PatrolClientId'];
       // String patrolTime = data['PatrolTime'];
-      int requiredCount = data['PatrolRequiredCount'];
+      int requiredCount = data['LinkedPatrolReqHitCount'];
       List<dynamic>? patrolStatusDynamic =
           data['PatrolCurrentStatus'] is List<dynamic>
               ? data['PatrolCurrentStatus'] as List<dynamic>?
@@ -1525,7 +1526,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: InterRegular(
-                                      text: 'Add Comment',
+                                      text: 'Add note',
                                       color: color2,
                                       fontsize: width / width12,
                                     ),
@@ -1533,7 +1534,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         CustomeTextField(
-                                          hint: 'Add Comment',
+                                          hint: 'Add Note',
                                           showIcon: false,
                                           controller: CommentController,
                                         ),

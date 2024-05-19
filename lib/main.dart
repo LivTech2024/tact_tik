@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
               // return OfflineScreen();
             }
           },
-          child: ReportCheckpointScreen(),
+          child: AuthChecker(),
         ),
       ),
     );

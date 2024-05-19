@@ -161,11 +161,13 @@ class FireStoreService {
     }
   }
 
-  Future<List<DocumentSnapshot>> getAllPatrolsByShiftId(String shiftId) async {
+  Future<List<Map<String, dynamic>>> getAllPatrolsByShiftId(
+      String shiftId) async {
     if (shiftId.isEmpty) {
       return [];
     }
     print("Shift Id");
+
     // Fetch the Shift document
     final shiftDoc = await shifts.doc(shiftId).get();
     if (!shiftDoc.exists) {
@@ -183,23 +185,50 @@ class FireStoreService {
     // Print the shiftData for debugging
     print("Shift Data:");
     print(shiftData);
-    // Extract the ShiftLinkedPatrolIds array from the Shift document
-    final shiftLinkedPatrolIds =
-        List<String>.from(shiftData["ShiftLinkedPatrolIds"] ?? []);
 
-    print("Patrol Linked IDS fetched: ${shiftLinkedPatrolIds}");
-    // Fetch the Patrols using the ShiftLinkedPatrolIds
+    // Extract the ShiftLinkedPatrols array from the Shift document
+    final shiftLinkedPatrols =
+        List<Map<String, dynamic>>.from(shiftData["ShiftLinkedPatrols"] ?? []);
+
+    // Extract Patrol IDs
+    final patrolIds = shiftLinkedPatrols
+        .map((patrol) => patrol["LinkedPatrolId"] as String)
+        .toList();
+
+    print("Patrol Linked IDS fetched: ${patrolIds}");
+
+    // Fetch the Patrols using the Patrol IDs
     final querySnapshot =
-        await patrols.where("PatrolId", whereIn: shiftLinkedPatrolIds).get();
+        await patrols.where("PatrolId", whereIn: patrolIds).get();
 
     print("Retrieved documents Patrols:");
-    print(
-        "Get Patrol Info ${querySnapshot.docs}"); // Log all retrieved documents
     querySnapshot.docs.forEach((doc) {
       print("Patrols Fetched");
       print(doc.data());
     });
-    return querySnapshot.docs;
+
+    // Create a list to hold the patrol data along with required hit count
+    List<Map<String, dynamic>> patrolData = [];
+
+    for (var doc in querySnapshot.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+
+      // Find the corresponding ShiftLinkedPatrol data
+      var linkedPatrol = shiftLinkedPatrols.firstWhere(
+        (patrol) => patrol["LinkedPatrolId"] == data["PatrolId"],
+        orElse: () => {},
+      );
+
+      if (linkedPatrol.isNotEmpty) {
+        data["LinkedPatrolReqHitCount"] =
+            linkedPatrol["LinkedPatrolReqHitCount"];
+        data["LinkedPatrolReqHitCount"] =
+            linkedPatrol["LinkedPatrolReqHitCount"];
+        patrolData.add(data);
+      }
+    }
+
+    return patrolData;
   }
 
   Stream<QuerySnapshot> getPatrols(String EmpId) {
