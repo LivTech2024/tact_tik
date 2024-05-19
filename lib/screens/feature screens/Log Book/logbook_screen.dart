@@ -40,8 +40,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
     _logBookStream = FirebaseFirestore.instance
         .collection('LogBook')
         .where('LogBookEmpId',
-            isEqualTo:
-                'tiDGAADcSl64Aq4bwg0E') //ONLY FOR TESTING REPLACE WITH BELOW COMMENTED OUT CODE FOR PRODUCTION
+            isEqualTo: widget
+                .EmpId) //ONLY FOR TESTING REPLACE WITH BELOW COMMENTED OUT CODE FOR PRODUCTION
         .snapshots();
     // getempID().then((empID) {
     //   _logBookStream = FirebaseFirestore.instance
@@ -152,8 +152,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
       final shiftName = document.id;
       final logData = data['LogBookData'] as List<dynamic>;
       final logTimestamp = data['LogBookDate'] as Timestamp;
-      final clientName = data['LogCleintName'] ?? 'Unknown';
-      final logLocation = data['LogBookLocationName'] ?? 'Unknown';
+      final clientName = data['LogCleintName'] ?? '';
+      final logLocation = data['LogBookLocationName'] ?? '';
       final logsByDate = <String, List<Map<String, dynamic>>>{};
 
       for (final logMap in logData) {

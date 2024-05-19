@@ -235,6 +235,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           resetShiftStarted: resetShiftStarted,
                           ShiftIN: ShiftIn,
                           onRefresh: refreshStartTaskScreen,
+                          ShiftName: widget.ShiftName,
                           // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                         )
                       : Center(
