@@ -12,12 +12,14 @@ class CustomeTextField extends StatelessWidget {
     this.showIcon = true,
     this.isEnabled = true,
     this.controller,
+    this.textInputType,
   });
 
   final String hint;
   final bool isExpanded;
   final bool showIcon;
   final bool isEnabled;
+  final TextInputType? textInputType;
 
   final TextEditingController? controller;
 
@@ -28,9 +30,10 @@ class CustomeTextField extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.only(
-          left: width / width20,
-          top: height / height5,
-          bottom: height / height5),
+        left: width / width20,
+        top: height / height5,
+        bottom: height / height5,
+      ),
       decoration: BoxDecoration(
         color: WidgetColor,
         borderRadius: BorderRadius.circular(width / width10),
@@ -69,18 +72,20 @@ class CustomeTextField extends StatelessWidget {
                 hintText: hint,
                 contentPadding: EdgeInsets.zero, // Remove padding
               ),
+              keyboardType: textInputType,
               cursorColor: Primarycolor,
               enabled: isEnabled,
             ),
           ),
           if (showIcon)
             IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.mic,
-                  color: color33,
-                  size: width / width24,
-                ))
+              onPressed: () {},
+              icon: Icon(
+                Icons.mic,
+                color: color33,
+                size: width / width24,
+              ),
+            )
         ],
       ),
     );

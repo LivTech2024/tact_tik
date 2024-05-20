@@ -112,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
+
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -762,6 +763,246 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Username: _userName,
                                             );
                                           },
+                                        );
+                                        break;
+                                      case 1:
+                                        return Container(
+                                          height: 470,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                            color: Secondarycolor,
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(40),
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          40.0),
+                                                  child: GoogleMap(
+                                                    initialCameraPosition:
+                                                        CameraPosition(
+                                                      target: _center,
+                                                      zoom: _zoom,
+                                                    ),
+                                                    onMapCreated:
+                                                        (GoogleMapController
+                                                            controller) {
+                                                      mapController =
+                                                          controller;
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Container(
+                                                  height: 470,
+                                                  width: double.maxFinite,
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment(0, -1.5),
+                                                      end: Alignment
+                                                          .bottomCenter,
+                                                      colors: [
+                                                        Colors.black,
+                                                        Colors.transparent
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.topCenter,
+                                                child: Container(
+                                                  height: 45,
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 18,
+                                                      vertical: 25),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 45,
+                                                        width: 48,
+                                                        child: Image.asset(
+                                                          'assets/images/site_tours.png',
+                                                          fit: BoxFit.fitHeight,
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                        ),
+                                                      ),
+                                                      InterBold(
+                                                        text: 'Site Tours',
+                                                        fontsize: 18,
+                                                        color: Colors.white,
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {},
+                                                        icon: Icon(
+                                                          Icons.cancel_outlined,
+                                                          size: 30,
+                                                          color: color1,
+                                                        ),
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 24),
+                                                  width: 322,
+                                                  height: 165,
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 15.0,
+                                                    horizontal: 15.0,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Secondarycolor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 55,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                color: color9,
+                                                              ),
+                                                              height: 55,
+                                                              width: 55,
+                                                              child: Center(
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  height: 45,
+                                                                  width: 45,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                      6,
+                                                                    ),
+                                                                    color:
+                                                                        color9,
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color:
+                                                                          Primarycolor,
+                                                                      width: 1,
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      MyNetworkImage(
+                                                                    'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',20
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 15,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceAround,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                PoppinsBold(
+                                                                  text:
+                                                                      'Robert D. Vaughn',
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontsize: 16,
+                                                                ),
+                                                                RobotoMedium(
+                                                                  text:
+                                                                      '318 Grand St,  New York 10002, US',
+                                                                  color:
+                                                                      color10,
+                                                                )
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: Container(
+                                                          height: 55,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 16,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Primarycolor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              RobotoBold(
+                                                                text:
+                                                                    'Get Direction',
+                                                                color: color1,
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_forward_sharp,
+                                                                color: color1,
+                                                                size: 24,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         );
                                         break;
                                       case 2:
