@@ -1980,12 +1980,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                         InTime,
                                                         formattedPatrolOutTime,
                                                         CommentController.text);
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HomeScreen()));
                                                   }
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              HomeScreen()));
                                                 } else {
                                                   showErrorToast(context,
                                                       "Field cannot be empty");

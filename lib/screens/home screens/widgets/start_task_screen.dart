@@ -550,8 +550,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       } else {
                         showErrorToast(context, "ON current Date");
                       }
-                      if (shiftDate != DateTime.now ||
-                          currentTime.isBefore(bufferStart)) {
+                      if (currentTime.isBefore(bufferStart)) {
                         showErrorToast(context, "Start shift on Time");
                       } else {
                         await controller.startStopWatch();
