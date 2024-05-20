@@ -531,8 +531,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       print("Formatted SHiftEnd time ${shiftEndDateTime}");
                       DateTime currentTime = DateTime.now();
                       Duration bufferDuration = Duration(minutes: 10);
-
-// Calculate the time ranges for the buffer period
                       DateTime bufferStart =
                           shiftEndDateTime.subtract(bufferDuration);
                       // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);

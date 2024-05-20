@@ -925,10 +925,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       width: 1,
                                                                     ),
                                                                   ),
-                                                                  child:
-                                                                      MyNetworkImage(
-                                                                    'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',20
-                                                                  ),
+                                                                  child: MyNetworkImage(
+                                                                      'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                                      20),
                                                                 ),
                                                               ),
                                                             ),
