@@ -21,6 +21,7 @@ class ReportCheckpointScreen extends StatefulWidget {
   final String PatrolID;
   final String ShiftId;
   final String empId;
+
   const ReportCheckpointScreen(
       {super.key,
       required this.CheckpointID,
@@ -39,6 +40,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
   bool _isLoading = false;
+  String selectedOption = 'Normal';
+
   @override
   void initState() {
     super.initState();
@@ -166,11 +169,51 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       ),
                     ),
                     SizedBox(height: height / height10),
+                    // Row(
+                    //   children: [
+                    //     Radio(
+                    //       activeColor: Primarycolor,
+                    //       value: 'Emergency',
+                    //       groupValue: selectedOption,
+                    //       onChanged: (value) {
+                    //         setState(() {
+                    //           selectedOption = value!;
+                    //         });
+                    //       },
+                    //     ),
+                    //     InterRegular(
+                    //       text: 'Emergency',
+                    //       fontsize: width / width16,
+                    //       color: color1,
+                    //     )
+                    //   ],
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     Radio(
+                    //       activeColor: Primarycolor,
+                    //       value: 'Normal',
+                    //       groupValue: selectedOption,
+                    //       onChanged: (value) {
+                    //         setState(() {
+                    //           selectedOption = value!;
+                    //         });
+                    //       },
+                    //     ),
+                    //     InterRegular(
+                    //       text: 'Normal',
+                    //       fontsize: width / width16,
+                    //       color: color1,
+                    //     )
+                    //   ],
+                    // ),
+                    SizedBox(height: height / height10),
                     TextField(
                       controller: Controller,
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
+                      style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
@@ -183,7 +226,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       ),
                       itemCount: uploads.length + 1,
                       itemBuilder: (context, index) {
-                        if (index == 0) {
+                        if (index == uploads.length) {
                           return GestureDetector(
                             onTap: () {
                               // _refresh();
@@ -220,16 +263,27 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                 borderRadius:
                                     BorderRadius.circular(width / width10),
                               ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.add,
-                                  size: width / width20,
-                                ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    size: width / width20,
+                                    color: color1,
+                                  ),
+                                  SizedBox(height: height / height10),
+                                  InterMedium(
+                                    text: 'Add Image',
+                                    fontsize: width / width16,
+                                    color: color1,
+                                  )
+                                ],
                               ),
                             ),
                           );
                         } else {
-                          final upload = uploads[index - 1];
+                          final upload = uploads[index];
                           return Container(
                             height: height / height66,
                             width: width / width66,

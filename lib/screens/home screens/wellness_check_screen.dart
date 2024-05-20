@@ -16,7 +16,10 @@ import '../../fonts/inter_regular.dart';
 import '../../utils/colors.dart';
 
 class WellnessCheckScreen extends StatefulWidget {
-  const WellnessCheckScreen({super.key});
+  final String EmpId;
+  final String EmpName;
+  const WellnessCheckScreen(
+      {super.key, required this.EmpId, required this.EmpName});
 
   @override
   State<WellnessCheckScreen> createState() => _WellnessCheckScreenState();
@@ -42,7 +45,8 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
     print("Uploads ${uploads}");
     try {
       await fireStoreService
-          .addImagesToShiftGuardWellnessReport(uploads, _controller.text)
+          .addImagesToShiftGuardWellnessReport(
+              uploads, _controller.text, widget.EmpId, widget.EmpName)
           .whenComplete(() {
         Navigator.pop(context);
       });

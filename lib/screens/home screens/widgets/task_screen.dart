@@ -218,7 +218,7 @@ class _TaskScreenState extends State<TaskScreen> {
         children: [
           ShiftStarted
               ? FutureBuilder(
-                  future: Future.delayed(Duration(seconds: 3)),
+                  future: Future.delayed(Duration(seconds: 2)),
                   builder: (c, s) => s.connectionState == ConnectionState.done
                       ? StartTaskScreen(
                           ShiftDate: widget.ShiftDate,
@@ -249,135 +249,169 @@ class _TaskScreenState extends State<TaskScreen> {
               : Column(
                   children: [
                     widget.ShiftDate.isNotEmpty
-                        ? Container(
-                            constraints: BoxConstraints(),
-                            height: height / height242,
-                            color: WidgetColor,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        top: height / height20,
-                                        left: width / width26,
-                                      ),
-                                      width: width / width200,
-                                      height: height / height96,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InterBold(
-                                            text: widget.ShiftDate ?? "",
-                                            color: Colors.white,
-                                            fontsize: width / width18,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InterMedium(
-                                                text: 'In time',
-                                                color: Colors.white,
-                                                fontsize: width / width18,
-                                              ),
-                                              InterMedium(
-                                                text: widget.ShiftStartTime,
-                                                color: Colors.white,
-                                                fontsize: width / width16,
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InterMedium(
-                                                text: 'Out time',
-                                                color: Colors.white,
-                                                fontsize: width / width18,
-                                              ),
-                                              InterMedium(
-                                                text: widget.ShiftEndTime,
-                                                color: Colors.white,
-                                                fontsize: width / width16,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        right: width / width12,
-                                      ),
-                                      height: height / height74,
-                                      width: width / width70,
-                                      decoration: BoxDecoration(
-                                        // color: Colors.redAccent,
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/log_book.png'),
-                                            fit: BoxFit.fitHeight,
-                                            filterQuality: FilterQuality.high),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                widget.ShiftLocation.isNotEmpty
-                                    ? Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: width / width26),
-                                        height: height / height90,
-                                        color: colorRed,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                        ? FutureBuilder(
+                            future: Future.delayed(Duration(seconds: 1)),
+                            builder: (c, s) => s.connectionState ==
+                                    ConnectionState.done
+                                ? Container(
+                                    constraints: BoxConstraints(),
+                                    height: height / height242,
+                                    color: WidgetColor,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.redAccent,
-                                                  size: width / width20,
-                                                ),
-                                                SizedBox(
-                                                  height: height / height10,
-                                                ),
-                                                InterMedium(
-                                                  text: 'Location',
-                                                  color: Colors.white,
-                                                  fontsize: width / width16,
-                                                ),
-                                              ],
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                top: height / height20,
+                                                left: width / width26,
+                                              ),
+                                              width: width / width200,
+                                              height: height / height96,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  InterBold(
+                                                    text:
+                                                        widget.ShiftDate ?? "",
+                                                    color: Colors.white,
+                                                    fontsize: width / width18,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      InterMedium(
+                                                        text: 'In time',
+                                                        color: Colors.white,
+                                                        fontsize:
+                                                            width / width18,
+                                                      ),
+                                                      InterMedium(
+                                                        text: widget
+                                                            .ShiftStartTime,
+                                                        color: Colors.white,
+                                                        fontsize:
+                                                            width / width16,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      InterMedium(
+                                                        text: 'Out time',
+                                                        color: Colors.white,
+                                                        fontsize:
+                                                            width / width18,
+                                                      ),
+                                                      InterMedium(
+                                                        text:
+                                                            widget.ShiftEndTime,
+                                                        color: Colors.white,
+                                                        fontsize:
+                                                            width / width16,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                            SizedBox(width: width / width38),
-                                            Flexible(
-                                              child: InterRegular(
-                                                text: widget.ShiftLocation,
-                                                fontsize: width / width16,
-                                                color: Colors.white,
-                                                maxLines: 2,
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                right: width / width12,
+                                              ),
+                                              height: height / height74,
+                                              width: width / width70,
+                                              decoration: BoxDecoration(
+                                                // color: Colors.redAccent,
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        'assets/images/log_book.png'),
+                                                    fit: BoxFit.fitHeight,
+                                                    filterQuality:
+                                                        FilterQuality.high),
                                               ),
                                             )
                                           ],
                                         ),
-                                      )
-                                    : SizedBox(),
-                              ],
-                            ),
-                          )
+                                        widget.ShiftLocation.isNotEmpty
+                                            ? Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        width / width26),
+                                                height: height / height90,
+                                                color: colorRed,
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.location_on,
+                                                          color:
+                                                              Colors.redAccent,
+                                                          size: width / width20,
+                                                        ),
+                                                        SizedBox(
+                                                          height:
+                                                              height / height10,
+                                                        ),
+                                                        InterMedium(
+                                                          text: 'Location',
+                                                          color: Colors.white,
+                                                          fontsize:
+                                                              width / width16,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        width: width / width38),
+                                                    Flexible(
+                                                      child: InterRegular(
+                                                        text: widget
+                                                            .ShiftLocation,
+                                                        fontsize:
+                                                            width / width16,
+                                                        color: Colors.white,
+                                                        maxLines: 2,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox(),
+                                      ],
+                                    ),
+                                  )
+                                : Center(
+                                    child: InterMedium(
+                                      text: 'Loading...',
+                                      color: Primarycolor,
+                                      fontsize: width / width14,
+                                    ),
+                                  ),
+                          ) /**/
                         : Center(
                             child: InterMedium(
                               text: 'No Shifts',
@@ -438,6 +472,9 @@ class _TaskScreenState extends State<TaskScreen> {
                           } else {
                             List<String> StartTimeParts =
                                 widget.ShiftStartTime.split(':');
+                            print("Shift Date : ${widget.ShiftDate}");
+                            DateTime shiftDate = DateFormat('MMMM d, yyyy')
+                                .parse(widget.ShiftDate);
                             DateTime shiftEndDateTime = DateTime(
                                 DateTime.now().year,
                                 DateTime.now().month,

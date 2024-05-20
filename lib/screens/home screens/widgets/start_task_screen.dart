@@ -318,7 +318,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => WellnessCheckScreen(),
+                        builder: (context) => WellnessCheckScreen(
+                          EmpId: widget.EmployeId,
+                          EmpName: widget.EmployeeName,
+                        ),
                       ),
                     ).then((value) {
                       if (value == true) {
@@ -513,26 +516,41 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     print('on tap');
                     if (!controller.stopWatchRunning.value) {
                       print("ShiftStartTime ${shiftStartTime}");
+                      print('Shift Date ${widget.ShiftDate}');
                       //Check for the late timer or early
                       List<String> StartTimeParts =
                           widget.ShiftStartTime.split(':');
+                      DateTime shiftDate =
+                          DateFormat('MMMM d, yyyy').parse(widget.ShiftDate);
                       DateTime shiftEndDateTime = DateTime(
                           DateTime.now().year,
                           DateTime.now().month,
                           DateTime.now().day,
                           int.parse(StartTimeParts[0]),
                           int.parse(StartTimeParts[1]));
+                      print('Shift Date ${widget.ShiftDate}');
                       print("Formatted SHiftEnd time ${shiftEndDateTime}");
                       DateTime currentTime = DateTime.now();
                       Duration bufferDuration = Duration(minutes: 10);
-
-// Calculate the time ranges for the buffer period
                       DateTime bufferStart =
                           shiftEndDateTime.subtract(bufferDuration);
                       // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
 
                       print("Buffer Start Time: $bufferStart");
                       // print("Buffer End Time: $bufferEnd");
+                      if (shiftDate !=
+                          DateTime(currentTime.year, currentTime.month,
+                              currentTime.day)) {
+                        print(shiftDate);
+                        print(DateTime(currentTime.year, currentTime.month,
+                            currentTime.day));
+                        print(shiftDate !=
+                            DateTime(currentTime.year, currentTime.month,
+                                currentTime.day));
+                        showErrorToast(context, "Not On SHift Date");
+                      } else {
+                        showErrorToast(context, "ON current Date");
+                      }
                       if (currentTime.isBefore(bufferStart)) {
                         showErrorToast(context, "Start shift on Time");
                       } else {

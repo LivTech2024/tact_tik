@@ -22,7 +22,7 @@ class SCreateAssignAssetScreen extends StatefulWidget {
 class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List colors = [Primarycolor, color25];
   bool isChecked = false;
-  bool showCreate = true;
+  bool showCreate = false;
   TextEditingController _tittleController1 = TextEditingController();
   TextEditingController _tittleController2 = TextEditingController();
   TextEditingController _AllocateQtController1 = TextEditingController();

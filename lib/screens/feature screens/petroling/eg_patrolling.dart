@@ -266,7 +266,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           ShiftDate: widget.ShiftDate,
           ShiftId: widget.ShiftId,
           LocationId: widget.ShiftLocationId,
-          patrolClientId: patrolClientId, ShiftName: widget.ShiftName,
+          patrolClientId: patrolClientId,
+          ShiftName: widget.ShiftName,
         ),
       );
     }
@@ -982,12 +983,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       return GestureDetector(
                                         onTap: () async {
                                           if (checkpoint.getFirstStatus(
-                                                      widget.p.EmpId,
-                                                      widget.p.ShiftId) ==
+                                                    widget.p.EmpId,
+                                                    widget.p.ShiftId,
+                                                  ) ==
                                                   'unchecked' ||
                                               checkpoint.getFirstStatus(
-                                                      widget.p.EmpId,
-                                                      widget.p.ShiftId) ==
+                                                    widget.p.EmpId,
+                                                    widget.p.ShiftId,
+                                                  ) ==
                                                   null) {
                                             var res = await Navigator.push(
                                                 context,
@@ -1545,6 +1548,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     actions: [
                                       TextButton(
                                         onPressed: () async {
+                                          var imageUrls = await fireStoreService
+                                              .getImageUrlsForPatrol(
+                                                  widget.p.PatrolId,
+                                                  widget.p.EmpId);
+                                          print("IMages URl ${imageUrls}");
                                           Navigator.pop(context);
                                         },
                                         child: InterRegular(
@@ -1554,7 +1562,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       ),
                                       ElevatedButton(
                                         onPressed: _isLoading
-                                            ? null
+                                            ? () {
+                                                showErrorToast(
+                                                    context, "Already Clicked");
+                                              }
                                             : () async {
                                                 if (CommentController
                                                     .text.isNotEmpty) {
@@ -1981,12 +1992,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                         InTime,
                                                         formattedPatrolOutTime,
                                                         CommentController.text);
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HomeScreen()));
                                                   }
-                                                  Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              HomeScreen()));
                                                 } else {
                                                   showErrorToast(context,
                                                       "Field cannot be empty");
