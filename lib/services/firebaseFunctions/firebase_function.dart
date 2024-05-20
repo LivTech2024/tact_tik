@@ -1701,9 +1701,10 @@ class FireStoreService {
 
   //add wellness to the collection
   Future<void> addImagesToShiftGuardWellnessReport(
-    List<Map<String, dynamic>> uploads,
-    String comment,
-  ) async {
+      List<Map<String, dynamic>> uploads,
+      String comment,
+      String EmpId,
+      String EmpName) async {
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
@@ -1734,10 +1735,11 @@ class FireStoreService {
         }
 
         wellnessReports.add({
-          "WellnessEmployeeID": empId,
-          "timestamp": DateTime.now(),
-          "comment": comment,
-          "imageURL": imgUrls,
+          "WellnessEmpId": EmpId,
+          "WellnessEmpName": EmpName,
+          "WellnessReportedAt": DateTime.now(),
+          "WellnessComment": comment,
+          "WellnessImg": imgUrls,
         });
 
         // Update the Firestore document with the new wellness reports

@@ -472,6 +472,9 @@ class _TaskScreenState extends State<TaskScreen> {
                           } else {
                             List<String> StartTimeParts =
                                 widget.ShiftStartTime.split(':');
+                            print("Shift Date : ${widget.ShiftDate}");
+                            DateTime shiftDate = DateFormat('MMMM d, yyyy')
+                                .parse(widget.ShiftDate);
                             DateTime shiftEndDateTime = DateTime(
                                 DateTime.now().year,
                                 DateTime.now().month,
