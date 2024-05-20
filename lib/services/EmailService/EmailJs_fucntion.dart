@@ -742,7 +742,7 @@ Future<String> generateShiftReportPdf(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="max-width: 30%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
+              '<img src="$image" style="max-width: 20%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
         }
       }
       checkpointImagesHTML += '''
@@ -832,11 +832,11 @@ Future<String> generateShiftReportPdf(
         }
 
         img {
-            max-width: 30%;
+            max-width: 20%;
             height: auto;
             display: block;
             margin-bottom: 10px;
-            max-height: 200px; /* Define a max-height for the images */
+            max-height: 50px; /* Define a max-height for the images */
         }
 
         footer {
@@ -958,7 +958,7 @@ Future<void> sendShiftEmail(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="height: 100px;">'; // Set the height here
+              '<img src="$image" style="height: 20px;">'; // Set the height here
         }
       }
       checkpointImagesHTML += '''

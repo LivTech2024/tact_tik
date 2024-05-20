@@ -2698,14 +2698,9 @@ class FireStoreService {
           .orderBy('PatrolLogPatrolCount')
           .get();
 
-      // 'jwwJLoyIwB6CNeCEUjO7',
-      // 'PjA0XjUncrUGQk4RTlky',
       // 'jwwJLoyIwB6CNeCEUjO7'
-      List<String> specificDocIds = [
-        'bZdAMpydhdEsx988LaAS',
-        'SO8G1435UvMoQqmrsNFg',
-        '8pmV2jN3GJ0ionuuXDBY'
-      ];
+      // 'PjA0XjUncrUGQk4RTlky',
+      List<String> specificDocIds = ['tnc2nfZzDDXvleCL3k7i'];
 
       querySnapshot.docs.forEach((doc) {
         print("Doc id $doc");
