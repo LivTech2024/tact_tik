@@ -1946,6 +1946,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     emails.add(ClientEmail!);
                                                     emails.add(AdminEmail!);
                                                     emails.add(defaultEmail!);
+                                                    var defaultEmail2 =
+                                                        "pankaj.kumar1312@yahoo.com";
+                                                    emails.add(defaultEmail2);
                                                     // var clientId = await fireStoreService
                                                     //     .getShiftClientID(
                                                     //         widget.p.ShiftId);
