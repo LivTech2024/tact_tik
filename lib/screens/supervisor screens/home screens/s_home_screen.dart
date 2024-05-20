@@ -117,7 +117,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
       if (userInfo != null) {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
-        String CompanyId = userInfo['EmployeeCompanyId'];
+        String CompanyId = userInfo['EmployeeCompanyId']; 
         String Imgurl = userInfo['EmployeeImg'];
         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
         var guardsInfo =
