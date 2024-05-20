@@ -77,7 +77,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
     List<Patrol> patrols = [];
     for (var patrol in patrolInfoList) {
       Map<String, dynamic> data = patrol as Map<String, dynamic>;
-      print("Patrol Data : ${data["PatrolCurrentStatus"]}");
+      print("Patrol Data : ${data["PatrolCurrent Status"]}");
       String patrolCompanyId = data['PatrolCompanyId'];
       String patrolLocationName = data['PatrolLocationName'];
       String patrolName = data['PatrolName'];
@@ -1668,22 +1668,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                     .p.PatrolId,
                                                                 widget.p.EmpId);
 
-                                              print(imageUrls);
-                                              var TestinEmail =
-                                                  "sutarvaibhav37@gmail.com";
-                                              var defaultEmail =
-                                                  "tacttikofficial@gmail.com";
-                                              var testEmail3 =
-                                                  "Swastikbthiramdas@gmail.com";
-                                              emails.add(TestinEmail);
-                                              // emails.add(testEmail3);
-                                              // emails.add(testEmail3);
-                                              emails.add(ClientEmail!);
-                                              emails.add(AdminEmail!);
-                                              emails.add(defaultEmail!);
-                                              var defaultEmail2 =
-                                                  "pankaj.kumar1312@yahoo.com";
-                                              emails.add(defaultEmail2);
+                                                    print(imageUrls);
+                                                    var TestinEmail =
+                                                        "sutarvaibhav37@gmail.com";
+                                                    var defaultEmail =
+                                                        "tacttikofficial@gmail.com";
+                                                    var testEmail3 =
+                                                        "Swastikbthiramdas@gmail.com";
+                                                    emails.add(TestinEmail);
+                                                    // emails.add(testEmail3);
+                                                    // emails.add(testEmail3);
+                                                    emails.add(ClientEmail!);
+                                                    emails.add(AdminEmail!);
+                                                    emails.add(defaultEmail!);
+                                                    var defaultEmail2 =
+                                                        "pankaj.kumar1312@yahoo.com";
+                                                    emails.add(defaultEmail2);
 
                                                     // DateFormat dateFormat =
                                                     //     DateFormat("yyyy-MM-dd HH:mm:ss");
