@@ -140,7 +140,7 @@ Future<void> sendShiftTemplateEmail(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="height: 100px;">'; // Set the height here
+              '<img src="$image" style="height: 20px;">'; // Set the height here
         }
       }
       checkpointImagesHTML += '''
@@ -227,8 +227,8 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             <tr>
                 <td> ${GuardName}</td>
-                <td>19:00</td>
-                <td>07:00</td>
+                <td>20:00</td>
+                <td>06:00</td>
             </tr> 
         </table>
 
@@ -742,7 +742,7 @@ Future<String> generateShiftReportPdf(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="max-width: 100%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
+              '<img src="$image" style="max-width: 30%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
         }
       }
       checkpointImagesHTML += '''
@@ -832,7 +832,7 @@ Future<String> generateShiftReportPdf(
         }
 
         img {
-            max-width: 100%;
+            max-width: 30%;
             height: auto;
             display: block;
             margin-bottom: 10px;
