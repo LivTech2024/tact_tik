@@ -766,243 +766,322 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                         break;
                                       case 1:
-                                        return Container(
-                                          height: 470,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
-                                            color: Secondarycolor,
-                                          ),
-                                          child: Stack(
-                                            children: [
-                                              Container(
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: height / height470,
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.circular(40),
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
                                                       BorderRadius.circular(
-                                                          40.0),
-                                                  child: GoogleMap(
-                                                    initialCameraPosition:
-                                                        CameraPosition(
-                                                      target: _center,
-                                                      zoom: _zoom,
-                                                    ),
-                                                    onMapCreated:
-                                                        (GoogleMapController
-                                                            controller) {
-                                                      mapController =
-                                                          controller;
-                                                    },
-                                                  ),
+                                                          width / width40),
+                                                  color: Secondarycolor,
                                                 ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  height: 470,
-                                                  width: double.maxFinite,
-                                                  decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment(0, -1.5),
-                                                      end: Alignment
-                                                          .bottomCenter,
-                                                      colors: [
-                                                        Colors.black,
-                                                        Colors.transparent
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  height: 45,
-                                                  margin: EdgeInsets.symmetric(
-                                                      horizontal: 18,
-                                                      vertical: 25),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 45,
-                                                        width: 48,
-                                                        child: Image.asset(
-                                                          'assets/images/site_tours.png',
-                                                          fit: BoxFit.fitHeight,
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(width /
+                                                                    width40),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          width / width40,
+                                                        ),
+                                                        child: GoogleMap(
+                                                          initialCameraPosition:
+                                                              CameraPosition(
+                                                            target: _center,
+                                                            zoom: _zoom,
+                                                          ),
+                                                          onMapCreated:
+                                                              (GoogleMapController
+                                                                  controller) {
+                                                            mapController =
+                                                                controller;
+                                                          },
                                                         ),
                                                       ),
-                                                      InterBold(
-                                                        text: 'Site Tours',
-                                                        fontsize: 18,
-                                                        color: Colors.white,
-                                                      ),
-                                                      IconButton(
-                                                        onPressed: () {},
-                                                        icon: Icon(
-                                                          Icons.cancel_outlined,
-                                                          size: 30,
-                                                          color: color1,
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        height:
+                                                            height / height470,
+                                                        width: double.maxFinite,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment(
+                                                                0, -1.5),
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                            colors: [
+                                                              Colors.black,
+                                                              Colors.transparent
+                                                            ],
+                                                          ),
                                                         ),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Container(
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 24),
-                                                  width: 322,
-                                                  height: 165,
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 15.0,
-                                                    horizontal: 15.0,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Secondarycolor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 55,
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        height:
+                                                            height / height40,
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 18,
+                                                          vertical:
+                                                              height / height25,
+                                                        ),
                                                         child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
                                                           children: [
-                                                            Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12),
-                                                                color: color9,
-                                                              ),
-                                                              height: 55,
-                                                              width: 55,
-                                                              child: Center(
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  height: 45,
-                                                                  width: 45,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                      6,
-                                                                    ),
-                                                                    color:
-                                                                        color9,
-                                                                    border:
-                                                                        Border
-                                                                            .all(
-                                                                      color:
-                                                                          Primarycolor,
-                                                                      width: 1,
-                                                                    ),
-                                                                  ),
-                                                                  child: MyNetworkImage(
-                                                                      'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-                                                                      20),
-                                                                ),
-                                                              ),
-                                                            ),
                                                             SizedBox(
-                                                              width: 15,
+                                                              height: height /
+                                                                  height48,
+                                                              width: width /
+                                                                  width48,
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/site_tours.png',
+                                                                fit: BoxFit
+                                                                    .fitHeight,
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                              ),
                                                             ),
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceAround,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                PoppinsBold(
-                                                                  text:
-                                                                      'Robert D. Vaughn',
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontsize: 16,
-                                                                ),
-                                                                RobotoMedium(
-                                                                  text:
-                                                                      '318 Grand St,  New York 10002, US',
-                                                                  color:
-                                                                      color10,
-                                                                )
-                                                              ],
+                                                            InterBold(
+                                                              text:
+                                                                  'Site Tours',
+                                                              fontsize: width /
+                                                                  width18,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                });
+                                                              },
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .cancel_outlined,
+                                                                size: width /
+                                                                    width30,
+                                                                color: color1,
+                                                              ),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
                                                             )
                                                           ],
                                                         ),
                                                       ),
-                                                      GestureDetector(
-                                                        onTap: () {},
-                                                        child: Container(
-                                                          height: 55,
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            horizontal: 16,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Primarycolor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              RobotoBold(
-                                                                text:
-                                                                    'Get Direction',
-                                                                color: color1,
+                                                    ),
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      child: SizedBox(
+                                                        height: height /
+                                                            height180,
+                                                        child: PageView.builder(
+                                                          clipBehavior: Clip.antiAlias,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Container(
+                                                              margin:
+                                                                  EdgeInsets.only(
+                                                                bottom: height /
+                                                                    height24,
+                                                                    left: width / width40,
+                                                                    right: width / width30
                                                               ),
-                                                              Icon(
-                                                                Icons
-                                                                    .arrow_forward_sharp,
-                                                                color: color1,
-                                                                size: 24,
-                                                              )
-                                                            ],
-                                                          ),
+                                                              width: width /
+                                                                  width300,
+                                                              height: height /
+                                                                  height160,
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                vertical: height /
+                                                                    height14,
+                                                                horizontal:
+                                                                    width /
+                                                                        width15,
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    Secondarycolor,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                  width / width20,
+                                                                ),
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: height /
+                                                                        height55,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(
+                                                                              width /
+                                                                                  width12,
+                                                                            ),
+                                                                            color:
+                                                                                color9,
+                                                                          ),
+                                                                          height: height /
+                                                                              height55,
+                                                                          width: width /
+                                                                              width55,
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Container(
+                                                                              alignment:
+                                                                                  Alignment.center,
+                                                                              height:
+                                                                                  height / height40,
+                                                                              width:
+                                                                                  width / width45,
+                                                                              decoration:
+                                                                                  BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(width / width4),
+                                                                                color: color9,
+                                                                                border: Border.all(
+                                                                                  color: Primarycolor,
+                                                                                  width: 1,
+                                                                                ),
+                                                                              ),
+                                                                              child:
+                                                                                  MyNetworkImage(
+                                                                                'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                                                width / width20,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width: width /
+                                                                              width15,
+                                                                        ),
+                                                                        Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceAround,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            PoppinsBold(
+                                                                              text:
+                                                                                  'Robert D. Vaughn',
+                                                                              color:
+                                                                                  Colors.white,
+                                                                              fontsize:
+                                                                                  width / width16,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width:
+                                                                                  width / width180,
+                                                                              child:
+                                                                                  RobotoMedium(
+                                                                                    text: '318 Grand St,  New York 10002, US',
+                                                                                    color: color10,
+                                                                                    fontsize: width / width16,
+                                                                                    maxLines: 1,
+                                                                                  ),
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap: () {},
+                                                                    child:
+                                                                        Container(
+                                                                      height: height /
+                                                                          height55,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .symmetric(
+                                                                        horizontal:
+                                                                            width /
+                                                                                width16,
+                                                                      ),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color:
+                                                                            Primarycolor,
+                                                                        borderRadius:
+                                                                            BorderRadius
+                                                                                .circular(
+                                                                          width /
+                                                                              width16,
+                                                                        ),
+                                                                      ),
+                                                                      child: Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment
+                                                                                .spaceBetween,
+                                                                        children: [
+                                                                          RobotoBold(
+                                                                            text:
+                                                                                'Get Direction',
+                                                                            color:
+                                                                                color1,
+                                                                          ),
+                                                                          Icon(
+                                                                            Icons
+                                                                                .arrow_forward_sharp,
+                                                                            color:
+                                                                                color1,
+                                                                            size: width /
+                                                                                width24,
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
                                                         ),
-                                                      )
-                                                    ],
-                                                  ),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        );
+                                              );
+                                            });
                                         break;
                                       case 2:
                                         Navigator.push(

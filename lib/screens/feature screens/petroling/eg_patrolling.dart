@@ -267,7 +267,8 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
           ShiftDate: widget.ShiftDate,
           ShiftId: widget.ShiftId,
           LocationId: widget.ShiftLocationId,
-          patrolClientId: patrolClientId, ShiftName: widget.ShiftName,
+          patrolClientId: patrolClientId,
+          ShiftName: widget.ShiftName,
         ),
       );
     }
@@ -984,12 +985,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       return GestureDetector(
                                         onTap: () async {
                                           if (checkpoint.getFirstStatus(
-                                                      widget.p.EmpId,
-                                                      widget.p.ShiftId) ==
+                                                    widget.p.EmpId,
+                                                    widget.p.ShiftId,
+                                                  ) ==
                                                   'unchecked' ||
                                               checkpoint.getFirstStatus(
-                                                      widget.p.EmpId,
-                                                      widget.p.ShiftId) ==
+                                                    widget.p.EmpId,
+                                                    widget.p.ShiftId,
+                                                  ) ==
                                                   null) {
                                             var res = await Navigator.push(
                                                 context,

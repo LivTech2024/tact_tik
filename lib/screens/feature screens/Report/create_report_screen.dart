@@ -43,7 +43,7 @@ class CreateReportScreen extends StatefulWidget {
 }
 
 class _CreateReportScreenState extends State<CreateReportScreen> {
-  bool shouldShowButton = true;
+  bool shouldShowButton = false;
   List<String> imageUrls = [];
   List<Map<String, dynamic>> DisplayIMage = [];
 
