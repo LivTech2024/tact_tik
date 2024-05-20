@@ -2338,7 +2338,7 @@ class FireStoreService {
 
             String statusComment = status["StatusComment"] ?? "";
             String checkPointName = checkPoint["CheckPointName"] ?? "";
-            String checkPointStatus = checkPoint["Status"] ?? "";
+            String checkPointStatus = status["Status"] ?? "";
 
             imageData.add({
               "CheckPointName": checkPointName,

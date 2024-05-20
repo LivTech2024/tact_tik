@@ -1550,6 +1550,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     actions: [
                                       TextButton(
                                         onPressed: () async {
+                                          var imageUrls = await fireStoreService
+                                              .getImageUrlsForPatrol(
+                                                  widget.p.PatrolId,
+                                                  widget.p.EmpId);
+                                          print("IMages URl ${imageUrls}");
                                           Navigator.pop(context);
                                         },
                                         child: InterRegular(
@@ -1559,7 +1564,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       ),
                                       ElevatedButton(
                                         onPressed: _isLoading
-                                            ? null
+                                            ? () {
+                                                showErrorToast(
+                                                    context, "Already Clicked");
+                                              }
                                             : () async {
                                                 if (CommentController
                                                     .text.isNotEmpty) {

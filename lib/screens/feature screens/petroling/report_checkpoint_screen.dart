@@ -169,50 +169,51 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       ),
                     ),
                     SizedBox(height: height / height10),
-                    Row(
-                      children: [
-                        Radio(
-                          activeColor: Primarycolor,
-                          value: 'Emergency',
-                          groupValue: selectedOption,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedOption = value!;
-                            });
-                          },
-                        ),
-                        InterRegular(
-                          text: 'Emergency',
-                          fontsize: width / width16,
-                          color: color1,
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio(
-                          activeColor: Primarycolor,
-                          value: 'Normal',
-                          groupValue: selectedOption,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedOption = value!;
-                            });
-                          },
-                        ),
-                        InterRegular(
-                          text: 'Normal',
-                          fontsize: width / width16,
-                          color: color1,
-                        )
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Radio(
+                    //       activeColor: Primarycolor,
+                    //       value: 'Emergency',
+                    //       groupValue: selectedOption,
+                    //       onChanged: (value) {
+                    //         setState(() {
+                    //           selectedOption = value!;
+                    //         });
+                    //       },
+                    //     ),
+                    //     InterRegular(
+                    //       text: 'Emergency',
+                    //       fontsize: width / width16,
+                    //       color: color1,
+                    //     )
+                    //   ],
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     Radio(
+                    //       activeColor: Primarycolor,
+                    //       value: 'Normal',
+                    //       groupValue: selectedOption,
+                    //       onChanged: (value) {
+                    //         setState(() {
+                    //           selectedOption = value!;
+                    //         });
+                    //       },
+                    //     ),
+                    //     InterRegular(
+                    //       text: 'Normal',
+                    //       fontsize: width / width16,
+                    //       color: color1,
+                    //     )
+                    //   ],
+                    // ),
                     SizedBox(height: height / height10),
                     TextField(
                       controller: Controller,
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
+                      style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
