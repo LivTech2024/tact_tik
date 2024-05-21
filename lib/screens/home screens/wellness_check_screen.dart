@@ -86,7 +86,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.  AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -115,7 +115,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
               InterBold(
                 text: formattedTime,
                 fontsize: width / width18,
-                color: Primarycolor,
+                color: DarkColor.Primarycolor,
               ),
               SizedBox(height: height / height30),
               Container(
@@ -126,7 +126,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                 ),
                 margin: EdgeInsets.only(top: height / height10),
                 decoration: BoxDecoration(
-                  color: color15,
+                  color: DarkColor.color15,
                   borderRadius: BorderRadius.circular(width / width10),
                 ),
                 child: Row(
@@ -135,14 +135,14 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                       height: height / height48,
                       width: width / width48,
                       decoration: BoxDecoration(
-                        color: color16,
+                        color: DarkColor.color16,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.add_a_photo,
                           size: width / width24,
-                          color: Primarycolor,
+                          color: DarkColor.  Primarycolor,
                         ),
                       ),
                     ),
@@ -168,12 +168,12 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                           hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: width / width18,
-                            color: color2, // Change text color to white
+                            color: DarkColor.color2, // Change text color to white
                           ),
                           hintText: 'Upload Img / Comment',
                           contentPadding: EdgeInsets.zero, // Remove padding
                         ),
-                        cursorColor: Primarycolor,
+                        cursorColor: DarkColor.Primarycolor,
                       ),
                     )
                   ],
@@ -193,7 +193,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                                color: WidgetColor,
+                                color: DarkColor.WidgetColor,
                                 borderRadius: BorderRadius.circular(
                                   width / width10,
                                 )),
@@ -252,7 +252,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                       height: height / height66,
                       width: width / width66,
                       decoration: BoxDecoration(
-                          color: WidgetColor,
+                          color: DarkColor.WidgetColor,
                           borderRadius: BorderRadius.circular(width / width8)),
                       child: Center(
                         child: Icon(Icons.add),
@@ -266,7 +266,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: _uploadImages,
-          backgroundColor: Primarycolor,
+          backgroundColor: DarkColor.  Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.cloud_upload),
         ),

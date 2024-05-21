@@ -4,6 +4,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../../common/sizes.dart';
@@ -37,15 +38,16 @@ class PostOrder extends StatelessWidget {
         //   shape: const CircleBorder(),
         //   child: const Icon(Icons.add),
         // ),
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -57,7 +59,7 @@ class PostOrder extends StatelessWidget {
               title: InterRegular(
                 text: 'Post Order',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark?DarkColor.  color1:LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,
@@ -93,7 +95,9 @@ class PostOrder extends StatelessWidget {
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(width / width10),
-                          color: WidgetColor,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,14 +105,18 @@ class PostOrder extends StatelessWidget {
                             InterSemibold(
                               text: 'Supervisor Name here',
                               fontsize: width / width20,
-                              color: Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3,
                             ),
                             SizedBox(
                               height: height / height20,
                             ),
                             InterBold(
                               text: 'Title Here',
-                              color: color2,
+                              color: isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color3,
                               fontsize: width / width14,
                             ),
                             SizedBox(
@@ -120,7 +128,9 @@ class PostOrder extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(width / width10),
-                                color: color1,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
                               ),
                               child: Row(
                                 children: [
@@ -138,11 +148,15 @@ class PostOrder extends StatelessWidget {
                                     children: [
                                       PoppinsMedium(
                                         text: 'PDFNAME.pdf',
-                                        color: color15,
+                                        color: isDark
+                                            ? DarkColor.color15
+                                            : LightColor.color1,
                                       ),
                                       PoppinsRegular(
                                         text: '329 KB',
-                                        color: color16,
+                                        color: isDark
+                                            ? DarkColor.color16
+                                            : LightColor.color1,
                                       )
                                     ],
                                   )

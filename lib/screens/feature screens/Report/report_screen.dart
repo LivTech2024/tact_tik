@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -109,13 +110,14 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return SafeArea(
       child: Scaffold(
+        
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -126,12 +128,12 @@ class _ReportScreenState extends State<ReportScreen> {
           title: InterRegular(
             text: 'Report',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -153,7 +155,7 @@ class _ReportScreenState extends State<ReportScreen> {
               }
             });
           },
-          backgroundColor: Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
@@ -185,16 +187,22 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(width / width20),
-                          color: currentIndex == index
-                              ? Primarycolor
-                              : WidgetColor,
+                          color: isDark?(currentIndex == index
+                              ? DarkColor.  Primarycolor
+                              : DarkColor.  WidgetColor):(currentIndex == index
+                                  ? LightColor.Primarycolor
+                                  : LightColor.WidgetColor),
                         ),
                         duration: const Duration(microseconds: 500),
                         child: Center(
                           child: InterRegular(
                             text: tittles[index],
                             fontsize: width / width16,
-                            color: color18,
+                            color: isDark
+                                ? (DarkColor.color1)
+                                : (currentIndex == index
+                                    ? LightColor.color1
+                                    : LightColor.color3),
                           ),
                         ),
                       ),
@@ -218,7 +226,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         if (groupReports.isNotEmpty)
                           InterBold(
                             text: groupDate,
-                            color: Primarycolor,
+                            color: isDark?DarkColor.  Primarycolor:LightColor.Primarycolor,
                             fontsize: width / width20,
                           ),
                         SizedBox(height: height / height30),
@@ -264,7 +272,9 @@ class _ReportScreenState extends State<ReportScreen> {
                                     ),
                                     height: height / height100,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: isDark
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                           width / width10),
                                     ),
@@ -291,7 +301,9 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 report['ReportName'],
                                                 style: TextStyle(
                                                   fontSize: width / width20,
-                                                  color: color2,
+                                                  color: isDark
+                                                      ? DarkColor.color2
+                                                      : LightColor.color3,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -308,20 +320,32 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         text: 'CATEGORY: ',
                                                         fontsize:
                                                             width / width14,
-                                                        color: color32,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .color32
+                                                            : LightColor
+                                                                .color3,
                                                       ),
                                                       InterRegular(
                                                         text: report[
                                                             'ReportCategoryName'],
                                                         fontsize:
                                                             width / width14,
-                                                        color: color26,
+                                                        color:
+                                                            isDark
+                                                            ? DarkColor
+                                                                .color26
+                                                            : LightColor
+                                                                .color3,
                                                       ),
                                                     ],
                                                   ),
                                                   InterRegular(
                                                     text: formattedTime,
-                                                    color: color26,
+                                                    color: isDark
+                                                        ? DarkColor.color26
+                                                        : LightColor
+                                                            .color3,
                                                     fontsize: width / width14,
                                                   )
                                                 ],

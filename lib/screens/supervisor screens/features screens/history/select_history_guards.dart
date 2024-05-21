@@ -77,9 +77,9 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -111,8 +111,8 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                 DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     iconSize: width / width24,
-                    dropdownColor: WidgetColor,
-                    style: TextStyle(color: color2 , fontSize: width / width12,),
+                    dropdownColor: DarkColor.  WidgetColor,
+                    style: TextStyle(color: DarkColor.  color2 , fontSize: width / width12,),
                     borderRadius: BorderRadius.circular(width / width10),
                     value: dropdownValue,
                     onChanged: (String? newValue) {
@@ -160,7 +160,7 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                             child: Container(
                               height: height / height60,
                               decoration: BoxDecoration(
-                                color: color19,
+                                color: DarkColor.color19,
                                 borderRadius:
                                     BorderRadius.circular(width / width12),
                               ),
@@ -197,7 +197,7 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                             InterBold(
                                               text: name,
                                               letterSpacing: -.3,
-                                              color: color1,
+                                              color: DarkColor.color1,
                                             ),
                                           ],
                                         ),
@@ -228,7 +228,7 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                     : Center(
                         child: PoppinsBold(
                           text: 'No Guards Found',
-                          color: color2,
+                          color: DarkColor.  color2,
                           fontsize: width / width16,
                         ),
                       )

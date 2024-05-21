@@ -62,7 +62,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: AppBarcolor,
+            backgroundColor: DarkColor.  AppBarcolor,
             elevation: 0,
             leading: IconButton(
               icon: Icon(
@@ -98,7 +98,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                 DateTime(2024),
                 controller: datePickerController,
                 initialSelectedDate: DateTime.now(),
-                selectionColor: Primarycolor,
+                selectionColor: DarkColor.  Primarycolor,
                 selectedTextColor: Colors.white,
                 onDateChange: (date) {
                   setState(() {

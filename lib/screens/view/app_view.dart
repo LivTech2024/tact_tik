@@ -99,7 +99,7 @@ class AppView extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
-          cursorColor: Primarycolor,
+          cursorColor: DarkColor.Primarycolor,
         ),
         useMaterial3: true,
         brightness: Brightness.dark,

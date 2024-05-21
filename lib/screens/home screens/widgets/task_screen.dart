@@ -239,7 +239,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         ? Container(
                             constraints: BoxConstraints(),
                             height: height / height242,
-                            color: WidgetColor,
+                            color:  DarkColor.WidgetColor,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -323,7 +323,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: width / width26),
                                         height: height / height90,
-                                        color: colorRed,
+                                        color:  DarkColor.colorRed,
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -369,7 +369,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             child: InterMedium(
                               text: 'No Shifts',
                               textAlign: TextAlign.center,
-                              color: color2,
+                              color: DarkColor. color2,
                               fontsize: width / width18,
                             ),
                           ),
@@ -380,8 +380,9 @@ class _TaskScreenState extends State<TaskScreen> {
                       Button1(
                         text: 'Start Shift',
                         fontsize: width / width18,
-                        color: color5,
-                        backgroundcolor: WidgetColor /*.withOpacity(50)*/,
+                        color: DarkColor. color5,
+                        backgroundcolor:
+                            DarkColor. WidgetColor /*.withOpacity(50)*/,
                         onPressed: () async {
                           print(widget.CheckUserRadius);
                           // if (isShiftStartTimeWithinRange(

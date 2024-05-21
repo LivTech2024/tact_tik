@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/message%20screen/widgets/chat_list.dart';
 import 'package:tact_tik/utils/colors.dart';
 
@@ -17,14 +18,14 @@ class MobileChatScreen extends StatelessWidget {
 
 
     return Scaffold(
-      backgroundColor: Secondarycolor,
+      backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       appBar: AppBar(
-        backgroundColor: AppBarcolor,
+        backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
             size: width / width24,
           ),
           padding: EdgeInsets.only(left: width / width20),
@@ -35,7 +36,7 @@ class MobileChatScreen extends StatelessWidget {
         title: InterMedium(
           text: 'Message',
           fontsize: width / width18,
-          color: Colors.white,
+          color:  isDark ? DarkColor.color1 : LightColor.color3,
           letterSpacing: -.3,
         ),
         centerTitle: true,
@@ -53,7 +54,7 @@ class MobileChatScreen extends StatelessWidget {
                   child: TextField(
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: WidgetColor,
+                      fillColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       hintText: 'Type a message!',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),

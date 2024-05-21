@@ -11,7 +11,6 @@ import 'package:tact_tik/utils/colors.dart';
 
 import '../../../../fonts/inter_regular.dart';
 
-
 class SHistoryScreen extends StatefulWidget {
   final String empID;
   const SHistoryScreen({super.key, required this.empID});
@@ -70,7 +69,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: DarkColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
@@ -100,10 +99,10 @@ class _HistoryScreenState extends State<SHistoryScreen> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   var shift = shiftHistory[index];
                   DateTime shiftDate =
-                  (shift['ShiftDate'] as Timestamp).toDate();
+                      (shift['ShiftDate'] as Timestamp).toDate();
                   String date =
                       '${shiftDate.day}/${shiftDate.month}/${shiftDate.year}';
                   String dayOfWeek = _getDayOfWeek(shiftDate.weekday);
@@ -118,7 +117,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                         InterBold(
                           text: "${date}  ${dayOfWeek}",
                           fontsize: width / width18,
-                          color: color1,
+                          color: DarkColor.color1,
                         ),
                         SizedBox(height: height / height20),
                         Container(
@@ -129,8 +128,8 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                             borderRadius:
-                            BorderRadius.circular(width / width10),
-                            color: WidgetColor,
+                                BorderRadius.circular(width / width10),
+                            color: DarkColor.WidgetColor,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,14 +143,14 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     InterSemibold(
                                       text: 'Shift Name',
                                       fontsize: width / width16,
-                                      color: color1,
+                                      color: DarkColor.color1,
                                     ),
                                     SizedBox(width: width / width40),
                                     Flexible(
                                       child: InterSemibold(
                                         text: shift['ShiftName'],
                                         fontsize: width / width16,
-                                        color: color1,
+                                        color: DarkColor.color1,
                                       ),
                                     ),
                                   ],
@@ -162,7 +161,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                               ),
                               Container(
                                 height: height / height100,
-                                color: colorRed,
+                                color: DarkColor.colorRed,
                                 padding: EdgeInsets.symmetric(
                                     horizontal: width / width20),
                                 child: Row(
@@ -171,14 +170,14 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     InterSemibold(
                                       text: 'Location',
                                       fontsize: width / width16,
-                                      color: color1,
+                                      color: DarkColor.color1,
                                     ),
                                     SizedBox(width: width / width40),
                                     Flexible(
                                       child: InterSemibold(
                                         text: shift['ShiftLocationAddress'],
                                         fontsize: width / width16,
-                                        color: color1,
+                                        color: DarkColor.color1,
                                       ),
                                     ),
                                   ],
@@ -191,25 +190,25 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                 width: double.maxFinite,
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         InterSemibold(
                                           text: 'Shift Timimg',
                                           fontsize: width / width16,
-                                          color: color1,
+                                          color: DarkColor.color1,
                                         ),
                                         SizedBox(
                                           height: height / height20,
                                         ),
                                         InterSemibold(
                                           text:
-                                          '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
+                                              '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
                                           fontsize: width / width16,
-                                          color: color1,
+                                          color: DarkColor.color1,
                                         ),
                                       ],
                                     ),
@@ -217,12 +216,12 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     SizedBox(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           InterSemibold(
                                             text: 'Total',
                                             fontsize: width / width16,
-                                            color: color1,
+                                            color: DarkColor.color1,
                                           ),
                                           SizedBox(
                                             height: height / height20,
@@ -230,7 +229,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                           InterSemibold(
                                             text: '02hr 36min',
                                             fontsize: width / width16,
-                                            color: color1,
+                                            color: DarkColor.color1,
                                           ),
                                         ],
                                       ),
@@ -249,7 +248,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                   children: [
                                     Icon(
                                       Icons.download_for_offline,
-                                      color: color1,
+                                      color: DarkColor.color1,
                                       size: width / width24,
                                     ),
                                     SizedBox(
@@ -257,13 +256,13 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     ),
                                     InterSemibold(
                                       text: 'Download',
-                                      color: color1,
+                                      color: DarkColor.color1,
                                       fontsize: width / width16,
                                     )
                                   ],
                                 ),
                                 onPressed: () {},
-                                backgroundcolor: Primarycolorlight,
+                                backgroundcolor: DarkColor.Primarycolorlight,
                                 useBorderRadius: true,
                                 MyBorderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(width / width12),

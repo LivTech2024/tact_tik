@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
@@ -32,7 +33,7 @@ class CustomeTextField extends StatelessWidget {
           top: height / height5,
           bottom: height / height5),
       decoration: BoxDecoration(
-        color: WidgetColor,
+        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
         borderRadius: BorderRadius.circular(width / width10),
       ),
       constraints: isExpanded
@@ -51,7 +52,9 @@ class CustomeTextField extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
                 fontSize: width / width18,
-                color: Colors.white, // Change text color to white
+                color: isDark
+                    ? DarkColor.color1
+                    : LightColor.color3, // Change text color to white
               ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -64,12 +67,14 @@ class CustomeTextField extends StatelessWidget {
                 hintStyle: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  color: color2, // Change text color to white
+                  color: isDark
+                      ? DarkColor.color2
+                      : LightColor.color3, // Change text color to white
                 ),
                 hintText: hint,
                 contentPadding: EdgeInsets.zero, // Remove padding
               ),
-              cursorColor: Primarycolor,
+              cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
               enabled: isEnabled,
             ),
           ),
@@ -78,7 +83,7 @@ class CustomeTextField extends StatelessWidget {
                 onPressed: () {},
                 icon: Icon(
                   Icons.mic,
-                  color: color33,
+                  color: isDark ? DarkColor.color33 : LightColor.color3,
                   size: width / width24,
                 ))
         ],

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
@@ -159,13 +160,14 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     return SafeArea(
       child: Scaffold(
+        
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -176,12 +178,12 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
           title: InterRegular(
             text: 'Post Order',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: width / width30),
@@ -191,7 +193,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               InterSemibold(
                 text: '11/02/2024',
                 fontsize: width / width20,
-                color: Primarycolor,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
               SizedBox(height: height / height30),
               CustomeTextField(
@@ -224,7 +226,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                        color: WidgetColor,
+                                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                                         borderRadius: BorderRadius.circular(
                                           width / width10,
                                         )),
@@ -243,7 +245,9 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                       onPressed: () => _deleteItem(index),
                                       icon: Icon(
                                         Icons.delete,
-                                        color: Colors.black,
+                                        color: isDark
+                                      ? DarkColor.color3
+                                      : LightColor.color1,
                                       ),
                                       padding: EdgeInsets.zero,
                                     ),
@@ -264,7 +268,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                        color: WidgetColor,
+                                        color: DarkColor.  WidgetColor,
                                         borderRadius: BorderRadius.circular(
                                           width / width10,
                                         )),
@@ -332,11 +336,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                  color: WidgetColor,
+                                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                                   borderRadius:
                                       BorderRadius.circular(width / width8)),
                               child: Center(
-                                child: Icon(Icons.add),
+                                child: Icon(Icons.add, color: isDark ? DarkColor.color1 : LightColor.color3, size: width / width20),
                               ),
                             ),
                           ),
@@ -356,7 +360,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                     height: height / height46,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(width / width10),
-                      color: color1,
+                      color: DarkColor.  color1,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -376,11 +380,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               children: [
                                 PoppinsMedium(
                                   text: 'PDFNAME.pdf',
-                                  color: color15,
+                                  color: DarkColor.color15,
                                 ),
                                 PoppinsRegular(
                                   text: '329 KB',
-                                  color: color16,
+                                  color: DarkColor.  color16,
                                 )
                               ],
                             ),
@@ -392,7 +396,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                           },
                           icon: Icon(
                             Icons.close,
-                            color: color19,
+                            color: DarkColor.color19,
                             size: width / width30,
                           ),
                         )
@@ -413,7 +417,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                     height: height / height46,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(width / width10),
-                      color: color1,
+                      color: DarkColor.  color1,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -433,11 +437,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               children: [
                                 PoppinsMedium(
                                   text: 'PDFNAME.pdf',
-                                  color: color15,
+                                  color: DarkColor.  color15,
                                 ),
                                 PoppinsRegular(
                                   text: '329 KB',
-                                  color: color16,
+                                  color: DarkColor.color16,
                                 )
                               ],
                             ),
@@ -449,7 +453,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                           },
                           icon: Icon(
                             Icons.close,
-                            color: color19,
+                            color: DarkColor.color19,
                             size: width / width30,
                           ),
                         )
@@ -460,8 +464,9 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               ),
               widget.isDisplay?SizedBox() :Button1(
                 text: 'Done',
+                color: isDark ? DarkColor.color15 : LightColor.color1,
                 onPressed: () {},
-                backgroundcolor: Primarycolor,
+                backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                 borderRadius: width / width10,
               )
             ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/task/task_feature_create_screen.dart';
 
 import '../../../common/sizes.dart';
@@ -19,7 +20,7 @@ class TaskFeatureScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -28,7 +29,7 @@ class TaskFeatureScreen extends StatelessWidget {
                   builder: (context) => TaskFeatureCreateScreen(),
                 ));
           },
-          backgroundColor: Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
@@ -36,7 +37,7 @@ class TaskFeatureScreen extends StatelessWidget {
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
@@ -53,7 +54,7 @@ class TaskFeatureScreen extends StatelessWidget {
               title: InterRegular(
                 text: 'Task',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,
@@ -81,7 +82,9 @@ class TaskFeatureScreen extends StatelessWidget {
                           horizontal: width / width14,
                           vertical: height / height10),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Column(
@@ -90,13 +93,17 @@ class TaskFeatureScreen extends StatelessWidget {
                           InterSemibold(
                             text: 'Guard Name',
                             fontsize: width / width20,
-                            color: Primarycolor,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
                           ),
                           SizedBox(height: height / height10),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
                             fontsize: width / width20,
-                            color: color1,
+                            color: isDark
+                                ? DarkColor.color1
+                                : LightColor.color3,
                             maxLines: 5,
                           ),
                           SizedBox(height: height / height5),
@@ -104,7 +111,9 @@ class TaskFeatureScreen extends StatelessWidget {
                             text:
                                 'Take care of all the computers Make sure they are properly turned off',
                             fontsize: width / width14,
-                            color: color3,
+                            color: isDark
+                                ? DarkColor.color3
+                                : LightColor.color3,
                             maxLines: 4,
                           ),
                         ],

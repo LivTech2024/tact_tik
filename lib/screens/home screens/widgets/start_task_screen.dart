@@ -353,7 +353,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         Container(
           height: height / height200,
           decoration: const BoxDecoration(
-            color: WidgetColor,
+            color: DarkColor. WidgetColor,
           ),
           padding: EdgeInsets.only(
               left: width / width26,
@@ -365,7 +365,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 children: [
                   InterBold(
                     text: widget.ShiftDate,
-                    color: color1,
+                    color:  DarkColor.color1,
                     fontsize: width / width18,
                   ),
                   SizedBox(
@@ -395,13 +395,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'In time',
                           fontsize: width / width14,
-                          color: color1,
+                          color: DarkColor. color1,
                         ),
                         SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: width / width16,
-                          color: color7,
+                          color:  DarkColor.color7,
                         ),
                         SizedBox(height: height / height20),
                         clickedIn
@@ -422,20 +422,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'Out time',
                           fontsize: width / width14,
-                          color: color1,
+                          color: DarkColor. color1,
                         ),
                         SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: width / width16,
-                          color: color7,
+                          color: DarkColor. color7,
                         ),
                         SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
                                 text:
                                     '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
-                                color: color8,
+                                color: DarkColor. color8,
                                 fontsize: width / width12,
                               )
                             : SizedBox()
@@ -466,7 +466,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: height / height5),
           decoration: BoxDecoration(
-            color: WidgetColor,
+            color:  DarkColor.WidgetColor,
           ),
           child: Row(
             children: [
@@ -525,12 +525,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       });
                     },
                     child: Container(
-                      color: WidgetColor,
+                      color: DarkColor. WidgetColor,
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
                           fontsize: width / width18,
-                          color: clickedIn ? Primarycolorlight : Primarycolor,
+                          color: clickedIn ?  DarkColor.Primarycolorlight :  DarkColor.Primarycolor,
                         ),
                       ),
                     ),
@@ -627,12 +627,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       }
                     },
                     child: Container(
-                      color: WidgetColor,
+                      color: DarkColor. WidgetColor,
                       child: Center(
                         child: InterBold(
                           text: 'End Shift',
                           fontsize: width / width18,
-                          color: clickedIn ? Primarycolor : Primarycolorlight,
+                          color: clickedIn ? DarkColor. Primarycolor :  DarkColor.Primarycolorlight,
                         ),
                       ),
                     ),
@@ -650,8 +650,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   height: height / height65,
                   text: isPaused ? 'Resume' : (onBreak ? 'Resume' : 'Break'),
                   fontsize: width / width18,
-                  color: color5,
-                  backgroundcolor: WidgetColor,
+                  color: DarkColor. color5,
+                  backgroundcolor: DarkColor. WidgetColor,
                   onPressed: () async {
                     var data = await fireStoreService.fetchDataForPdf(
                         widget.EmployeId, widget.ShiftId);
@@ -713,8 +713,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           child: Button1(
             text: 'Check Patrolling',
             fontsize: width / width18,
-            color: color5,
-            backgroundcolor: WidgetColor,
+            color:  DarkColor.color5,
+            backgroundcolor:  DarkColor.WidgetColor,
             onPressed: () {
               Navigator.push(
                   context,

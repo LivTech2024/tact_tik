@@ -11,6 +11,7 @@ import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_regular.dart';
+import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../supervisor screens/home screens/widgets/set_details_widget.dart';
 
@@ -118,8 +119,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor,
-              secondary: Primarycolor,
+              primary: isDark ? DarkColor.Primarycolor : LightColor.Secondarycolor,
+              secondary: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
             ),
           ),
           child: child!,
@@ -279,16 +280,16 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -300,7 +301,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
               title: InterRegular(
                 text: 'Create Visitors',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,
@@ -315,7 +316,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     SizedBox(height: height / height30),
                     InterBold(
                       text: 'Add Visitor',
-                      color: Primarycolor,
+                      color: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
                       fontsize: width / width20,
                     ),
                     SizedBox(height: height / height30),
@@ -430,8 +433,12 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           // Handle the case when saving or updating visitor data fails
                         }
                       },
-                      backgroundcolor: Primarycolor,
-                      color: color22,
+                      backgroundcolor: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
+                      color: isDark
+                          ? DarkColor.color22
+                          : LightColor.color1,
                       borderRadius: width / width10,
                       fontsize: width / width18,
                     ),

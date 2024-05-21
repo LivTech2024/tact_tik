@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/main.dart';
 import '../sizes.dart';
 import '../../utils/colors.dart';
 
@@ -46,7 +47,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
       padding: EdgeInsets.symmetric(horizontal: width / width20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(width / width10),
-        color: WidgetColor,
+        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
       ),
       margin: EdgeInsets.only(top: height / height10),
       child: Center(
@@ -57,7 +58,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
             fontSize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           onSubmitted: (value) {
             setState(() {
@@ -75,12 +76,12 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             hintStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w300,
               fontSize: width / width18,
-              color: color2,
+              color: isDark ? DarkColor.color2 : LightColor.color3,
             ),
             hintText: widget.hintText,
             contentPadding: EdgeInsets.zero,
           ),
-          cursorColor: Primarycolor,
+          cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           controller: widget.controller,
           inputFormatters: widget.inputFormatters,
         ),

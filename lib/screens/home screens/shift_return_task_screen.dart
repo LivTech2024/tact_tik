@@ -83,7 +83,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -122,13 +122,13 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                         child: InterBold(
                           text: "${widget.ShiftName}",
                           fontsize: width / width18,
-                          color: Primarycolor,
+                          color: DarkColor.Primarycolor,
                         ),
                       ),
                       InterBold(
                         text: '$completedTaskCount/$totalTaskCount',
                         fontsize: width / width18,
-                        color: Primarycolor,
+                        color: DarkColor.Primarycolor,
                       ),
                     ],
                   ),

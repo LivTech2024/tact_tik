@@ -7,6 +7,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -53,14 +54,14 @@ class AllSchedulesScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark?DarkColor. AppBarcolor:LightColor.WidgetColor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color:isDark? Colors.white:LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -72,7 +73,7 @@ class AllSchedulesScreen extends StatelessWidget {
           title: InterRegular(
             text: 'All Schedule',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? Colors.white : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -81,7 +82,7 @@ class AllSchedulesScreen extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             shape: const CircleBorder(),
-            backgroundColor: Primarycolor,
+            backgroundColor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
             onPressed: () => {},
             // NavigateScreen(
             //     context,
@@ -109,7 +110,7 @@ class AllSchedulesScreen extends StatelessWidget {
                     InterBold(
                       text: 'Search',
                       fontsize: width / width20,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : LightColor.color3,
                     ),
                     SizedBox(height: height / height24),
                     Container(
@@ -117,7 +118,7 @@ class AllSchedulesScreen extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width10),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width13),
                       ),
                       child: Row(
@@ -142,20 +143,25 @@ class AllSchedulesScreen extends StatelessWidget {
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
                                   fontSize: width / width18,
-                                  color: color2, // Change text color to white
+                                  color: isDark
+                                      ? Colors.white
+                                      : LightColor
+                                          .color3, // Change text color to white
                                 ),
                                 hintText: 'Search',
                                 contentPadding:
                                     EdgeInsets.zero, // Remove padding
                               ),
-                              cursorColor: Primarycolor,
+                              cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                             ),
                           ),
                           Container(
                             height: height / height44,
                             width: width / width44,
                             decoration: BoxDecoration(
-                              color: Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
                               borderRadius:
                                   BorderRadius.circular(width / width10),
                             ),
@@ -163,7 +169,9 @@ class AllSchedulesScreen extends StatelessWidget {
                               child: Icon(
                                 Icons.search,
                                 size: width / width20,
-                                color: Colors.black,
+                                color: isDark
+                                    ? DarkColor.Secondarycolor
+                                    : LightColor.color1,
                               ),
                             ),
                           )
@@ -189,7 +197,9 @@ class AllSchedulesScreen extends StatelessWidget {
                       margin: EdgeInsets.only(top: height / height10),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
-                        color: Primarycolor,
+                        color: isDark
+                            ? DarkColor.Primarycolor
+                            : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width14),
                       ),
                       padding:
@@ -208,7 +218,9 @@ class AllSchedulesScreen extends StatelessWidget {
                                     bottomRight:
                                         Radius.circular(width / width10),
                                   ),
-                                  color: color22,
+                                  color: isDark
+                                      ? DarkColor.color22
+                                      : LightColor.color3,
                                 ),
                               ),
                               SizedBox(width: width / width14),
@@ -220,7 +232,9 @@ class AllSchedulesScreen extends StatelessWidget {
                                   children: [
                                     InterSemibold(
                                       text: 'Marvin McKinney',
-                                      color: color22,
+                                      color: isDark
+                                          ? DarkColor.color22
+                                          : LightColor.color3,
                                       fontsize: width / width14,
                                     ),
                                     SizedBox(height: height / height5),
@@ -254,7 +268,9 @@ class AllSchedulesScreen extends StatelessWidget {
                                       InterRegular(
                                         text: 'Guards',
                                         fontsize: width / width14,
-                                        color: color22,
+                                        color: isDark
+                                            ? DarkColor.color22
+                                            : LightColor.color3,
                                       ),
                                       SizedBox(height: height / height12),
                                       Wrap(
@@ -276,7 +292,9 @@ class AllSchedulesScreen extends StatelessWidget {
                                           if (members.length > 3)
                                             CircleAvatar(
                                               radius: width / width10,
-                                              backgroundColor: color23,
+                                              backgroundColor: isDark
+                                                  ? DarkColor.color23
+                                                  : LightColor.Primarycolor,
                                               child: InterMedium(
                                                 text: '+${members.length - 3}',
                                                 fontsize: width / width12,
@@ -297,7 +315,9 @@ class AllSchedulesScreen extends StatelessWidget {
                                     children: [
                                       InterRegular(
                                         text: 'Shift',
-                                        color: color22,
+                                        color: isDark
+                                            ? DarkColor.color22
+                                            : LightColor.color3,
                                         fontsize: width / width14,
                                       ),
                                       SizedBox(height: height / height5),

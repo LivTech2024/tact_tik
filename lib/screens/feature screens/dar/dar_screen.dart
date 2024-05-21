@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_open_all_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -99,7 +100,7 @@ class DarDisplayScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -112,7 +113,7 @@ class DarDisplayScreen extends StatelessWidget {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    backgroundColor: AppBarcolor,
+                    backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                     elevation: 0,
                     leading: IconButton(
                       icon: Icon(
@@ -128,7 +129,7 @@ class DarDisplayScreen extends StatelessWidget {
                     title: InterRegular(
                       text: 'DAR',
                       fontsize: width / width18,
-                      color: Colors.white,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     centerTitle: true,
@@ -149,7 +150,9 @@ class DarDisplayScreen extends StatelessWidget {
                                   text: _formatTimestamp(
                                       document['EmpDarCreatedAt']),
                                   fontsize: width / width20,
-                                  color: Primarycolor,
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.color3,
                                   letterSpacing: -.3,
                                 ),
                                 SizedBox(height: height / height30),
@@ -174,7 +177,9 @@ class DarDisplayScreen extends StatelessWidget {
                                     //     minHeight: height / height200,
                                     //     ),
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: isDark
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                           width / width20),
                                     ),
@@ -191,7 +196,9 @@ class DarDisplayScreen extends StatelessWidget {
                                         InterBold(
                                           text: document['EmpDarEmpName'],
                                           fontsize: width / width18,
-                                          color: Primarycolor,
+                                          color: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                         ),
                                         SizedBox(height: height / height10),
                                         Flexible(
@@ -199,7 +206,9 @@ class DarDisplayScreen extends StatelessWidget {
                                             text:
                                                 document['EmpDarLocationName'],
                                             fontsize: width / width16,
-                                            color: color26,
+                                            color: isDark
+                                                ? DarkColor.color26
+                                                : LightColor.color3,
                                             maxLines: 4,
                                           ),
                                         ),
@@ -212,7 +221,9 @@ class DarDisplayScreen extends StatelessWidget {
                                               icon: Icon(
                                                 Icons.image,
                                                 size: width / width18,
-                                                color: color2,
+                                                color: isDark
+                                                    ? DarkColor.color2
+                                                    : LightColor.color3,
                                               ),
                                             ),
                                             IconButton(
@@ -220,7 +231,9 @@ class DarDisplayScreen extends StatelessWidget {
                                               icon: Icon(
                                                 Icons.video_collection,
                                                 size: width / width18,
-                                                color: color2,
+                                                color: isDark
+                                                    ? DarkColor.color2
+                                                    : LightColor.color3,
                                               ),
                                             )
                                           ],
@@ -263,7 +276,7 @@ class DarDisplayScreen extends StatelessWidget {
                   ));
             });
           },
-          backgroundColor: Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: const CircleBorder(),
           child: const Icon(Icons.add),
         ),

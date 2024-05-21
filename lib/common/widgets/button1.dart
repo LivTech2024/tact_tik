@@ -13,7 +13,7 @@ class Button1 extends StatelessWidget {
     this.color,
     required this.onPressed,
     this.height = 65,
-    this.backgroundcolor = WidgetColor, this.borderRadius = 0, this.useBorderRadius = false, this.MyBorderRadius, this.useWidget = false, this.MyWidget,
+    this.backgroundcolor = DarkColor. WidgetColor, this.borderRadius = 0, this.useBorderRadius = false, this.MyBorderRadius, this.useWidget = false, this.MyWidget,
   });
 
   final bool useBold;

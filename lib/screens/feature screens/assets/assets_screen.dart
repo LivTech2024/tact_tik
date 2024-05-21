@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/assets/view_assets_screen.dart';
 
 import '../../../common/sizes.dart';
@@ -17,15 +18,16 @@ class AssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: isDark?DarkColor.AppBarcolor:LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark?DarkColor.color1:LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -35,9 +37,9 @@ class AssetsScreen extends StatelessWidget {
                 },
               ),
               title: InterRegular(
-                text: 'Visitors',
+                text: 'Key & Assets',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark?DarkColor.color1:LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -55,7 +57,7 @@ class AssetsScreen extends StatelessWidget {
                     InterBold(
                       text: 'Today',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: isDark?DarkColor.Primarycolor:LightColor.color3,
                     ),
                     SizedBox(
                       height: height / height30,
@@ -83,7 +85,7 @@ class AssetsScreen extends StatelessWidget {
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(width / width10),
-                          color: WidgetColor,
+                          color: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,12 +100,14 @@ class AssetsScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius:
                                         BorderRadius.circular(width / width10),
-                                    color: Primarycolorlight,
+                                    color: isDark?DarkColor.Primarycolorlight:LightColor.Primarycolorlight,
                                   ),
                                   child: Center(
                                     child: Icon(
                                       Icons.home_repair_service,
-                                      color: Primarycolor,
+                                      color: isDark
+                                          ? DarkColor.Primarycolor
+                                          : LightColor.Primarycolor,
                                       size: width / width24,
                                     ),
                                   ),
@@ -112,13 +116,17 @@ class AssetsScreen extends StatelessWidget {
                                 InterMedium(
                                   text: 'Equipment Title',
                                   fontsize: width / width16,
-                                  color: color1,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
                                 ),
                               ],
                             ),
                             InterMedium(
                               text: '11 : 36 pm',
-                              color: color17,
+                              color: isDark
+                                  ? DarkColor.color17
+                                  : LightColor.color3,
                               fontsize: width / width16,
                             ),
                             SizedBox(width: width / width20),

@@ -2,6 +2,7 @@ import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
@@ -31,7 +32,12 @@ class SHomeScreen extends StatefulWidget {
 }
 
 class _SHomeScreenState extends State<SHomeScreen> {
-  List IconColors = [Primarycolor, color4, color4, color4];
+  List IconColors = [
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3
+  ];
   int ScreenIndex = 0;
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -63,29 +69,33 @@ class _SHomeScreenState extends State<SHomeScreen> {
     setState(() {
       switch (index) {
         case 0:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 1:
-          IconColors[0] = color4;
-          IconColors[1] = Primarycolor;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 2:
-          IconColors[0] = color4;
-          IconColors[1] = color4;
-          IconColors[2] = Primarycolor;
-          IconColors[3] = color4;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           NavigateScreen(AllSchedulesScreen(BranchId: _CompanyId));
           break;
         case 3:
-          IconColors[0] = color4;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = Primarycolor;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           NavigateScreen(SuperInboxScreen(
             companyId: 'aSvLtwII6Cjs7uCISBRR',
           ));
@@ -101,10 +111,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
-    IconColors[0] = Primarycolor;
-    IconColors[1] = color4;
-    IconColors[2] = color4;
-    IconColors[3] = color4;
+    IconColors[0] = isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+    IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+    IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+    IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
     ScreenIndex = 0;
     _getUserInfo();
     // checkLocation();
@@ -172,14 +182,18 @@ class _SHomeScreenState extends State<SHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isSelected
-              ? Primarycolor
-              : color3, // Change color based on selection
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected
+                  ? LightColor.Primarycolor
+                  : LightColor.color3), // Change color based on selection
           size: width / width24,
         ),
         title: PoppinsBold(
           text: title,
-          color: isSelected ? Primarycolor : color3,
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
           fontsize: width / width14,
         ),
         onTap: () {
@@ -195,8 +209,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         endDrawer: Drawer(
+          backgroundColor:
+              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           child: Column(
             children: [
               Container(
@@ -204,7 +221,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(width / width15),
-                  color: Primarycolor, // Background color for the drawer header
+                  color: isDark
+                      ? DarkColor.Primarycolor
+                      : LightColor
+                          .Primarycolor, // Background color for the drawer header
                 ),
               ),
               Expanded(
@@ -270,7 +290,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               text: 'Guards',
                               icon: Icons.add_task,
                               color: IconColors[0],
-                              textcolor: ScreenIndex == 0 ? color1 : color4,
+                              textcolor: isDark
+                                  ? (ScreenIndex == 0
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 0
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -279,7 +305,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               text: 'Explore',
                               icon: Icons.grid_view_rounded,
                               color: IconColors[1],
-                              textcolor: ScreenIndex == 1 ? color1 : color4,
+                              textcolor: isDark
+                                  ? (ScreenIndex == 1
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 1
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -291,7 +323,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               text: 'Calendar',
                               icon: Icons.calendar_today,
                               color: IconColors[2],
-                              textcolor: ScreenIndex == 2 ? color1 : color4,
+                              textcolor: isDark
+                                  ? (ScreenIndex == 2
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 2
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -308,7 +346,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               text: 'Message',
                               icon: Icons.chat_bubble_outline,
                               color: IconColors[3],
-                              textcolor: ScreenIndex == 3 ? color1 : color4,
+                              textcolor: isDark
+                                  ? (ScreenIndex == 3
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 3
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                         ],
@@ -455,7 +499,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
             ? BoxConstraints(minHeight: height / height140)
             : BoxConstraints(minHeight: height / height60),
         decoration: BoxDecoration(
-          color: color19,
+          color: isDark ? DarkColor.color19 : LightColor.WidgetColor,
           borderRadius: BorderRadius.circular(width / width12),
         ),
         margin: EdgeInsets.only(bottom: height / height10),
@@ -488,7 +532,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       InterBold(
                         text: widget.guardsInfo['EmployeeName'] ?? "",
                         letterSpacing: -.3,
-                        color: color1,
+                        color: isDark ? DarkColor.color1 : LightColor.color3,
                       ),
                     ],
                   ),

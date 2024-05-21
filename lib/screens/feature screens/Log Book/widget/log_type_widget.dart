@@ -42,7 +42,7 @@ class LogTypeWidget extends StatelessWidget {
             width: double.maxFinite,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(width / width10),
-              color: WidgetColor,
+              color: DarkColor. WidgetColor,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +53,7 @@ class LogTypeWidget extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       'assets/images/avg_pace.svg',
-                      color: Primarycolor,
+                      color: DarkColor. Primarycolor,
                       width: width / width24,
                     ),
                     SizedBox(width: width / width30),
@@ -64,7 +64,7 @@ class LogTypeWidget extends StatelessWidget {
                         InterMedium(
                           text: 'Patrolling',
                           fontsize: width / width14,
-                          color: color2,
+                          color: DarkColor. color2,
                         ),
                         Padding(
                           padding:
@@ -72,13 +72,13 @@ class LogTypeWidget extends StatelessWidget {
                           child: InterMedium(
                             text: 'Clark Place interior',
                             fontsize: width / width14,
-                            color: color1,
+                            color: DarkColor.color1,
                           ),
                         ),
                         InterBold(
                           text: 'Client: $clientName',
                           fontsize: width / width14,
-                          color: color2,
+                          color: DarkColor.color2,
                         ),
                       ],
                     ),
@@ -90,12 +90,12 @@ class LogTypeWidget extends StatelessWidget {
                   children: [
                     InterMedium(
                       text: DateFormat('hh:mm a').format(time.toDate()),
-                      color: color1,
+                      color: DarkColor.color1,
                       fontsize: width / width14,
                     ),
                     InterBold(
                       text: '12 hr 36 mn',
-                      color: color1,
+                      color: DarkColor.color1,
                       fontsize: width / width14,
                     ),
                   ],
@@ -110,7 +110,7 @@ class LogTypeWidget extends StatelessWidget {
             width: double.maxFinite,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(width / width10),
-              color: WidgetColor,
+              color: DarkColor.WidgetColor,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +131,7 @@ class LogTypeWidget extends StatelessWidget {
                                       : logTypeEnum == LogBookEnum.CheckPoint
                                           ? Icons.qr_code_scanner
                                           : Icons.error,
-                      color: Primarycolor,
+                      color: DarkColor.Primarycolor,
                       size: width / width24,
                     ),
                     SizedBox(width: width / width30),
@@ -142,7 +142,7 @@ class LogTypeWidget extends StatelessWidget {
                         InterMedium(
                           text: '$logtype',
                           fontsize: width / width14,
-                          color: color2,
+                          color: DarkColor.color2,
                         ),
                         Padding(
                           padding:
@@ -152,14 +152,14 @@ class LogTypeWidget extends StatelessWidget {
                             child: InterMedium(
                               text: '$location',
                               fontsize: width / width14,
-                              color: color1,
+                              color: DarkColor. color1,
                             ),
                           ),
                         ),
                         InterBold(
                           text: 'Client: $clientName',
                           fontsize: width / width14,
-                          color: color2,
+                          color: DarkColor. color2,
                         ),
                       ],
                     ),
@@ -170,7 +170,7 @@ class LogTypeWidget extends StatelessWidget {
 
                 InterMedium(
                   text: DateFormat('hh:mm a').format(time.toDate()),
-                  color: color1,
+                  color: DarkColor.color1,
                   fontsize: width / width14,
                 ),
               ],

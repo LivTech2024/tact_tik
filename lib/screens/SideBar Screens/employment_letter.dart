@@ -6,6 +6,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path_provider/path_provider.dart';
@@ -53,14 +54,14 @@ class EmploymentLetterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -71,7 +72,7 @@ class EmploymentLetterScreen extends StatelessWidget {
           title: InterRegular(
             text: 'Employment Letter',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -82,7 +83,7 @@ class EmploymentLetterScreen extends StatelessWidget {
             width: double.maxFinite,
             margin: EdgeInsets.symmetric(horizontal: width / width30),
             decoration: BoxDecoration(
-              color: WidgetColor,
+              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               borderRadius: BorderRadius.circular(width / width12),
             ),
             child: Column(
@@ -97,7 +98,9 @@ class EmploymentLetterScreen extends StatelessWidget {
                   child: InterBold(
                     text: '',
                     fontsize: width / width18,
-                    color: Primarycolor,
+                    color: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.Primarycolor,
                   ),
                 ),
                 Center(
@@ -114,7 +117,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.download_for_offline,
-                        color: color1,
+                        color: DarkColor.  color1,
                         size: width / width24,
                       ),
                       SizedBox(
@@ -122,13 +125,13 @@ class EmploymentLetterScreen extends StatelessWidget {
                       ),
                       InterSemibold(
                         text: 'Download',
-                        color: color1,
+                        color: DarkColor.color1,
                         fontsize: width / width16,
                       )
                     ],
                   ),
                   onPressed: () => _downloadAndOpenPdf(context),
-                  backgroundcolor: Primarycolorlight,
+                  backgroundcolor: isDark ? DarkColor.Primarycolorlight : LightColor.Primarycolorlight,
                   useBorderRadius: true,
                   MyBorderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(width / width12),

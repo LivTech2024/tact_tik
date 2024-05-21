@@ -55,7 +55,7 @@ class SetDetailsWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(width / width10),
         border: Border(
           bottom: BorderSide(
-            color: color19,
+            color: DarkColor.color19,
           ),
         ),
       ),
@@ -67,7 +67,7 @@ class SetDetailsWidget extends StatelessWidget {
           Icon(
             icon,
             size: width / width24,
-            color: color1,
+            color: DarkColor.color1,
           ),
           SizedBox(width: width / width10),
           useTextField
@@ -90,12 +90,12 @@ class SetDetailsWidget extends StatelessWidget {
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
                         fontSize: width / width18,
-                        color: color2, // Change text color to white
+                        color: DarkColor.  color2, // Change text color to white
                       ),
                       hintText: hintText,
                       contentPadding: EdgeInsets.zero, // Remove padding
                     ),
-                    cursorColor: Primarycolor,
+                    cursorColor: DarkColor.Primarycolor,
                     controller: controller,
                   ),
                 )
@@ -104,7 +104,7 @@ class SetDetailsWidget extends StatelessWidget {
                   child: InterMedium(
                     text: hintText,
                     fontsize: width / width18,
-                    color: color25,
+                    color: DarkColor.  color25,
                   ),
                 ),
         ],

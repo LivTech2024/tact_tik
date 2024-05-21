@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
@@ -30,7 +31,7 @@ class HomeScreenCustomNavigation extends StatelessWidget {
       height: height / height74,
       width: width / width74,
       decoration: BoxDecoration(
-        color: WidgetColor,
+        color: isDark? DarkColor. WidgetColor:LightColor.WidgetColor,
         borderRadius: BorderRadius.circular(width / width13),
       ),
       child: Column(

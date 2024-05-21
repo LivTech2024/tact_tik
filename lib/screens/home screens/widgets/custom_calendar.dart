@@ -1,6 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
@@ -36,9 +37,9 @@ class _CustomCalenderState extends State<CustomCalendar> {
           child: Theme(
             data: ThemeData.dark().copyWith(
               colorScheme: ColorScheme.dark(
-                primary: const Color(0xFFCBA76B), // Background color
+                primary: isDark? Color(0xFFCBA76B):LightColor.WidgetColor, // Background color
                 onPrimary:
-                    const Color(0xFF704600), // Text color for selected dates
+                    isDark?const Color(0xFF704600):LightColor.WidgetColor, // Text color for selected dates
               ),
             ),
             child: Column(

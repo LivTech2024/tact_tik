@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../common/sizes.dart';
 import '../../fonts/poppins_regular.dart';
@@ -38,7 +39,7 @@ class PageType1 extends StatelessWidget {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     return Container(
-      color: Secondarycolor,
+      color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +48,7 @@ class PageType1 extends StatelessWidget {
             height: height / height470,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: Primarycolor,
+              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(width / width40),
                 bottomLeft: Radius.circular(width / width40),
@@ -74,7 +75,7 @@ class PageType1 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
             fontsize: width / width32,
-            color: color1,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           SizedBox(height: height / height27),
           SizedBox(
@@ -87,7 +88,7 @@ class PageType1 extends StatelessWidget {
           PoppinsRegular(
             text: description[index],
             fontsize: width / width14,
-            color: color2,
+            color: isDark ? DarkColor.color2 : LightColor.color3,
             textAlign: TextAlign.center,
           ),
         ],

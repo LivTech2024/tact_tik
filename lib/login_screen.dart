@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: width / width30, vertical: height / height20),
@@ -81,7 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  color: Colors.white, // Change text color to white
+                  color: isDark
+                      ? Colors.white
+                      : LightColor.color3, // Change text color to white
                 ),
                 controller: _emailcontrller,
                 decoration: const InputDecoration(
@@ -95,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  color: Colors.white, // Change text color to white
+                  color:isDark? Colors.white:LightColor.color3, // Change text color to white
                 ),
                 controller: _passwordcontrller,
                 obscureText: _obscureText,
@@ -109,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
                       size: width / width24,
-                      color: color6,
+                      color: DarkColor.color6,
                     ),
                   ),
                   labelText: 'Password',
@@ -126,9 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               Button1(
-                backgroundcolor: Primarycolor,
+                backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
                 text: 'Login',
-                color: color1,
+                color: DarkColor.color1,
                 borderRadius: 10,
                 onPressed: () {
                   Auth().signInWithEmailAndPassword(

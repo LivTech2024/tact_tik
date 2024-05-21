@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/main.dart';
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
@@ -29,14 +30,14 @@ class ProfileEditWidget extends StatelessWidget {
           InterSemibold(
             text: tittle,
             fontsize: width / width20,
-            color: color1,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
           ),
           SizedBox(height: height / height10),
           InterRegular(
             text: content,
             fontsize: width / width16,
             letterSpacing: -.05,
-            color: color3,
+            color:  isDark ? DarkColor.color3 : LightColor.color3,
           ),
         ],
       ),

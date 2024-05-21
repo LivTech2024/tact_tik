@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/widget/log_type_widget.dart';
 
 import '../../../common/enums/log_type_enums.dart';
@@ -60,15 +61,16 @@ class _LogBookScreenState extends State<LogBookScreen> {
     final double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: AppBarcolor,
+            backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
             elevation: 0,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 size: width / width24,
               ),
               padding: EdgeInsets.only(left: width / width20),
@@ -80,7 +82,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
             title: InterRegular(
               text: 'LogBook',
               fontsize: width / width18,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               letterSpacing: -.3,
             ),
             centerTitle: true,
@@ -99,7 +101,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
                 DateTime(2024),
                 controller: datePickerController,
                 initialSelectedDate: DateTime.now(),
-                selectionColor: Primarycolor,
+                selectionColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                 selectedTextColor: Colors.white,
                 onDateChange: (date) {
                   setState(() {

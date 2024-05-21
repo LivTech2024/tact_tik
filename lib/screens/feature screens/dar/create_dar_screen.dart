@@ -218,9 +218,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:DarkColor. Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor. AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -251,7 +251,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                 InterBold(
                   text: widget.darTiles[widget.index]['TileTime'],
                   fontsize: width / width20,
-                  color: Primarycolor,
+                  color: DarkColor. Primarycolor,
                 ),
                 SizedBox(height: height / height30),
                 CustomeTextField(
@@ -280,7 +280,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 height: height / height66,
                                 width: width / width66,
                                 decoration: BoxDecoration(
-                                  color: WidgetColor,
+                                  color: DarkColor.WidgetColor,
                                   borderRadius: BorderRadius.circular(
                                     width / width10,
                                   ),
@@ -357,7 +357,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         height: height / height66,
                         width: width / width66,
                         decoration: BoxDecoration(
-                          color: WidgetColor,
+                          color: DarkColor. WidgetColor,
                           borderRadius: BorderRadius.circular(width / width8),
                         ),
                         child: Center(
@@ -413,7 +413,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                 Button1(
                   text: _isSubmitting ? 'Submitting...' : 'Submit',
                   onPressed: submitDarTileData,
-                  backgroundcolor: Primarycolor,
+                  backgroundcolor: DarkColor. Primarycolor,
                   borderRadius: 20,
                 ),
               ],

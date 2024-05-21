@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/get%20started/page_type1.dart';
 import 'package:tact_tik/screens/get%20started/page_type2.dart';
 import '../../common/sizes.dart';
@@ -41,7 +42,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
             ? const SizedBox()
             : Container(
                 height: height / height66,
-                color: Secondarycolor,
+                color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: width / width40),
                   child: Row(
@@ -55,15 +56,19 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         child: PoppinsBold(
                           text: 'Skip',
                           fontsize: width / width16,
-                          color: Primarycolor,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                         ),
                       ),
                       SmoothPageIndicator(
                         controller: _pagecontroller,
                         count: 3,
                         effect: WormEffect(
-                          dotColor: color3,
-                          activeDotColor: Primarycolor,
+                          dotColor: DarkColor.color3,
+                          activeDotColor: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                           dotHeight: height / height13,
                           dotWidth: width / width13,
                           type: WormType.thinUnderground,
@@ -82,7 +87,9 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         icon: Icon(
                           Icons.arrow_forward_ios,
                           size: width / width24,
-                          color: Primarycolor,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                         ),
                       )
                     ],

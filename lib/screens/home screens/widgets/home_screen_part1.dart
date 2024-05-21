@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/main.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
@@ -82,7 +83,8 @@ class HomeScreenPart1 extends StatelessWidget {
                           Icon(
                             Icons.notifications,
                             // Use the notifications_active icon
-                            color: Primarycolor, // Change color if unread
+                            color:  isDark?DarkColor
+                                .Primarycolor:LightColor.color3, // Change color if unread
                             size: width / width28,
                           ),
                           if (isUnread)
@@ -91,10 +93,13 @@ class HomeScreenPart1 extends StatelessWidget {
                               right: 0,
                               child: Container(
                                 padding: EdgeInsets.all(width / width4 / 2),
-                                decoration: const BoxDecoration(
+                                decoration:  BoxDecoration(
                                   shape: BoxShape.circle,
                                   color:
-                                      Primarycolor, // Background color for unread indicator
+                                        isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor
+                                          .color3, // Background color for unread indicator
                                 ),
                               ),
                             ),
@@ -109,7 +114,9 @@ class HomeScreenPart1 extends StatelessWidget {
                           scaleX: -1,
                           child: Icon(
                             Icons.short_text_rounded,
-                            color: Primarycolor,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
                             size: width / width40,
                           ),
                         ),
@@ -126,14 +133,14 @@ class HomeScreenPart1 extends StatelessWidget {
                     children: [
                       PoppinsSemibold(
                         text: '${greeting}',
-                        color: Primarycolor,
+                        color:    isDark ? DarkColor.Primarycolor : LightColor.color3,
                         letterSpacing: -.5,
                         fontsize: width / width35,
                       ),
                       SizedBox(height: height / height10),
                       PoppinsLight(
                         text: userName,
-                        color: Primarycolor,
+                        color:    isDark ? DarkColor.Primarycolor : LightColor.color3,
                         fontsize: width / width30,
                       ),
                       SizedBox(height: height / height46),
@@ -144,7 +151,7 @@ class HomeScreenPart1 extends StatelessWidget {
               height: height / height64,
               padding: EdgeInsets.symmetric(horizontal: width / width10),
               decoration: BoxDecoration(
-                color: WidgetColor,
+                color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(width / width13),
               ),
               child: Row(
@@ -155,7 +162,7 @@ class HomeScreenPart1 extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
                         fontSize: width / width18,
-                        color: Colors.white, // Change text color to white
+                        color:isDark? Colors.white:LightColor.color3, // Change text color to white
                       ),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -168,26 +175,26 @@ class HomeScreenPart1 extends StatelessWidget {
                         hintStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: width / width18,
-                          color: color2, // Change text color to white
+                          color:  DarkColor.color2, // Change text color to white
                         ),
                         hintText: 'Search',
                         contentPadding: EdgeInsets.zero, // Remove padding
                       ),
-                      cursorColor: Primarycolor,
+                      cursorColor:   isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                     ),
                   ),
                   Container(
                     height: height / height44,
                     width: width / width44,
                     decoration: BoxDecoration(
-                      color: Primarycolor,
+                      color:   isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                       borderRadius: BorderRadius.circular(width / width10),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.search,
                         size: width / width20,
-                        color: Colors.black,
+                        color: isDark?Colors.black:Colors.white,
                       ),
                     ),
                   )

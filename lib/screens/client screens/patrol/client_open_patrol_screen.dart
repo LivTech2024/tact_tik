@@ -60,7 +60,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         icon: Icons.calendar_today,
                         text: '23 / 04 / 2024',
                         fontsize: width / width14,
-                        color: Primarycolor,
+                        color: DarkColor. Primarycolor,
                       ),
                     ),
                     SizedBox(
@@ -70,8 +70,8 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: width / width14,
-                        color: Primarycolor,
-                        Iconcolor: color1,
+                        color: DarkColor. Primarycolor,
+                        Iconcolor: DarkColor. color1,
                       ),
                     ),
                   ],
@@ -84,7 +84,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                   margin: EdgeInsets.only(top: height / height10),
                   width: double.maxFinite,
                   decoration: BoxDecoration(
-                    color: color30,
+                    color: DarkColor. color30,
                     borderRadius: BorderRadius.circular(width / width14),
                   ),
                   padding: EdgeInsets.symmetric(vertical: height / height20),
@@ -106,7 +106,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     bottomRight:
                                     Radius.circular(width / width10),
                                   ),
-                                  color: color22,
+                                  color: DarkColor.color22,
                                 ),
                               ),
                             ],
@@ -120,7 +120,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                               children: [
                                 InterSemibold(
                                   text: 'Guard Name',
-                                  color: color22,
+                                  color: DarkColor.color22,
                                   fontsize: width / width18,
                                 ),
                                 // SizedBox(height: height / height5),
@@ -147,7 +147,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   InterRegular(
                                     text: 'Started at',
                                     fontsize: width / width14,
-                                    color: color22,
+                                    color: DarkColor. color22,
                                   ),
                                   SizedBox(height: height / height12),
                                   InterMedium(
@@ -165,7 +165,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   InterRegular(
                                     text: 'Ended at',
                                     fontsize: width / width14,
-                                    color: color22,
+                                    color: DarkColor.color22,
                                   ),
                                   SizedBox(height: height / height12),
                                   InterMedium(
@@ -183,7 +183,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   InterRegular(
                                     text: 'Count',
                                     fontsize: width / width14,
-                                    color: color22,
+                                    color: DarkColor.color22,
                                   ),
                                   SizedBox(height: height / height12),
                                   InterMedium(
@@ -201,7 +201,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   InterRegular(
                                     text: 'Status',
                                     fontsize: width / width14,
-                                    color: color22,
+                                    color: DarkColor. color22,
                                   ),
                                   SizedBox(height: height / height12),
                                   InterBold(

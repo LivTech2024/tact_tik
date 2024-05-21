@@ -3,6 +3,7 @@ import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/roboto_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -50,14 +51,14 @@ class PanicAlertDialog extends StatelessWidget {
               PoppinsMedium(
                 text: 'Are you in panic?',
                 fontsize: width / width18,
-                color: colorRed3,
+                color: DarkColor. colorRed3,
               ),
               SizedBox(height: height / height8),
               PoppinsRegular(
                 text:
                     'If yes, then your supervisor and admin will get notified!',
                 textAlign: TextAlign.center,
-                color: color16,
+                color: DarkColor. color16,
               ),
               SizedBox(height: height / height16),
               Row(
@@ -69,7 +70,7 @@ class PanicAlertDialog extends StatelessWidget {
                     },
                     child: RobotoMedium(
                       text: 'No',
-                      color: color27,
+                      color: DarkColor.color27,
                       fontsize: width / width18,
                     ),
                   ),
@@ -81,7 +82,7 @@ class PanicAlertDialog extends StatelessWidget {
                     },
                     child: RobotoMedium(
                       text: 'Yes',
-                      color: color27,
+                      color: DarkColor. color27,
                       fontsize: width / width18,
                     ),
                   ),
@@ -147,6 +148,7 @@ class PanicAlertDialog extends StatelessWidget {
                           TextButton(
                             onPressed: () {
                               showModalBottomSheet(
+                                backgroundColor: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
                                 context: context,
                                 builder: (context) => Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -163,12 +165,17 @@ class PanicAlertDialog extends StatelessWidget {
                                         return ListTile(
                                           leading: Icon(
                                             Icons.call,
-                                            color: Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                             size: width / width20,
                                           ),
                                           title: InterMedium(
                                             text: contactName,
                                             fontsize: width / width12,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
                                           ),
                                           onTap: () async {
                                             final url = 'tel://$phoneNumber';
@@ -190,7 +197,7 @@ class PanicAlertDialog extends StatelessWidget {
                             child: RobotoMedium(
                               text: 'Call',
                               fontsize: width / width18,
-                              color: colorRed3,
+                              color: DarkColor. colorRed3,
                             ),
                           ),
                           SizedBox(width: width / width10),
@@ -201,7 +208,7 @@ class PanicAlertDialog extends StatelessWidget {
                             child: RobotoMedium(
                               text: 'OK',
                               fontsize: width / width18,
-                              color: color27,
+                              color: isDark ? DarkColor.color27 : LightColor.color3,
                             ),
                           ),
                         ],
