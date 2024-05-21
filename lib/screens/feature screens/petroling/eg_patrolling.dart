@@ -56,6 +56,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   String _PatrolId = '';
   int totalCount = 0;
   bool buttonClicked = false;
+  bool buttonClicked1 = false;
 
   TextEditingController CommentController = TextEditingController();
 
@@ -391,6 +392,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   TextEditingController Controller = TextEditingController();
   TextEditingController CommentController = TextEditingController();
   bool buttonClicked = true;
+  bool buttonClicked1 = true;
 
   bool uploadingLoading = false;
 
@@ -526,9 +528,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
         setState(() {
           buttonEnabled = false; // Disable the button
         });
-        var clientID =
-            await fireStoreService.getShiftClientID(widget.p.ShiftId);
-        var clientName = await fireStoreService.getClientName(clientID!);
+        // var clientID =
+        //     await fireStoreService.getShiftClientID(widget.p.patrolClientId);
+        print(widget.p.patrolClientId);
+        var clientName =
+            await fireStoreService.getClientName(widget.p.patrolClientId);
 
         await fireStoreService.addToLog(
             "patrol_start",
@@ -873,7 +877,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       backgroundcolor: colorGreen,
                       color: Colors.green,
                       borderRadius: width / width10,
-                      onPressed: buttonClicked ? handleStartButton : () {},
+                      onPressed: buttonClicked
+                          ? handleStartButton
+                          : () {
+                              showErrorToast(
+                                  context, "Patrol it already completed");
+                            },
                     ),
                     Visibility(
                         visible: _expand,
@@ -1199,6 +1208,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       empName: widget.p.EmployeeName,
                                                                                       ClientId: widget.p.PatrolClientID,
                                                                                       reportId: '',
+                                                                                      buttonEnable: true,
                                                                                     )));
                                                                         ;
                                                                       },
@@ -1551,7 +1561,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           var imageUrls = await fireStoreService
                                               .getImageUrlsForPatrol(
                                                   widget.p.PatrolId,
-                                                  widget.p.EmpId);
+                                                  widget.p.EmpId,
+                                                  widget.p.ShiftId);
                                           print("IMages URl ${imageUrls}");
                                           Navigator.pop(context);
                                         },
@@ -1561,12 +1572,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         ),
                                       ),
                                       ElevatedButton(
-                                        onPressed: _isLoading
-                                            ? () {
-                                                showErrorToast(
-                                                    context, "Already Clicked");
-                                              }
-                                            : () async {
+                                        onPressed: buttonClicked1
+                                            ?
+                                            // () {
+                                            //     showErrorToast(
+                                            //         context, "Already Clicked");
+                                            //   }
+                                            // :
+                                            () async {
+                                                setState(() {
+                                                  buttonClicked1 = false;
+                                                });
                                                 if (CommentController
                                                     .text.isNotEmpty) {
                                                   SharedPreferences prefs =
@@ -1654,6 +1670,32 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           "expand", _expand);
                                                     });
                                                     //If the count is equal
+                                                    var imageUrls =
+                                                        await fireStoreService
+                                                            .getImageUrlsForPatrol(
+                                                                widget
+                                                                    .p.PatrolId,
+                                                                widget.p.EmpId,
+                                                                widget
+                                                                    .p.ShiftId);
+
+                                                    print(imageUrls);
+                                                    List<Map<String, dynamic>>
+                                                        formattedImageUrls =
+                                                        imageUrls.map((url) {
+                                                      return {
+                                                        'StatusReportedTime': url[
+                                                            'StatusReportedTime'],
+                                                        'ImageUrls':
+                                                            url['ImageUrls'],
+                                                        'StatusComment': url[
+                                                            'StatusComment'],
+                                                        'CheckPointName': url[
+                                                            'CheckPointName'],
+                                                        'CheckPointStatus': url[
+                                                            'CheckPointStatus']
+                                                      };
+                                                    }).toList();
                                                     await fireStoreService
                                                         .LastEndPatrolupdatePatrolsStatus(
                                                             widget.p.PatrolId,
@@ -1672,14 +1714,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             .getAdminEmail(widget
                                                                 .p
                                                                 .PatrolCompanyID);
-                                                    var imageUrls =
-                                                        await fireStoreService
-                                                            .getImageUrlsForPatrol(
-                                                                widget
-                                                                    .p.PatrolId,
-                                                                widget.p.EmpId);
 
-                                                    print(imageUrls);
                                                     var TestinEmail =
                                                         "sutarvaibhav37@gmail.com";
                                                     var defaultEmail =
@@ -1692,78 +1727,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     emails.add(ClientEmail!);
                                                     emails.add(AdminEmail!);
                                                     emails.add(defaultEmail!);
-                                                    var defaultEmail2 =
-                                                        "pankaj.kumar1312@yahoo.com";
-                                                    emails.add(defaultEmail2);
-
-                                                    // DateFormat dateFormat =
-                                                    //     DateFormat("yyyy-MM-dd HH:mm:ss");
-                                                    // String formattedStartDate =
-                                                    //     dateFormat.format(DateTime.now());
-                                                    // String formattedEndDate =
-                                                    //     dateFormat.format(DateTime.now());
-                                                    // String formattedEndTime =
-                                                    //     dateFormat.format(DateTime.now());
-                                                    // DateFormat timeformat = DateFormat(
-                                                    //     "HH:mm");
-                                                    // Define the format for time
-                                                    // if (InTime != null) {
-                                                    //   String formattedPatrolInTime =
-                                                    //       timeformat.format(InTime);
-                                                    // }
-                                                    // String formattedPatrolOutTime =
-                                                    //     timeformat.format(DateTime.now());
-                                                    // String formattedDate =
-                                                    //     DateFormat('yyyy-MM-dd')
-                                                    //         .format(DateTime.now());
                                                     DateFormat timeFormat =
                                                         DateFormat("HH:mm");
 
-                                                    // String? InTime =
-                                                    //     prefs.getString("StartTime");
-
-                                                    // DateTime now = DateTime.now();
-                                                    // DateTime inTime =
-                                                    //     DateFormat("HH:mm:ss")
-                                                    //         .parse(InTime ?? "");
-                                                    // DateTime combinedDateTime = DateTime(
-                                                    //     now.year,
-                                                    //     now.month,
-                                                    //     now.day,
-                                                    //     inTime.hour,
-                                                    //     inTime.minute,
-                                                    //     inTime.second);
-                                                    // Timestamp patrolInTimestamp = Timestamp
-                                                    //     .fromMillisecondsSinceEpoch(
-                                                    //         combinedDateTime
-                                                    //             .millisecondsSinceEpoch);
-
-                                                    // Timestamp patrolOutTimestamp =
-                                                    //     Timestamp.fromDate(
                                                     //         DateTime.now());
                                                     num count = widget
                                                             .p.CompletedCount +
                                                         1;
-
-                                                    List<Map<String, dynamic>>
-                                                        formattedImageUrls =
-                                                        imageUrls.map((url) {
-                                                      return {
-                                                        'StatusReportedTime': url[
-                                                            'StatusReportedTime'],
-                                                        'ImageUrls':
-                                                            url['ImageUrls'],
-                                                        'StatusComment': url[
-                                                            'StatusComment'],
-                                                        'CheckPointName': url[
-                                                            'CheckPointName'],
-                                                        'CheckPointStatus': url[
-                                                            'CheckPointStatus']
-                                                      };
-                                                    }).toList();
-                                                    // var clientId = await fireStoreService
-                                                    //     .getShiftClientID(
-                                                    //         widget.p.ShiftId);
                                                     var clientName =
                                                         await fireStoreService
                                                             .getClientName(widget
@@ -1818,7 +1788,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     DateTime now =
                                                         DateTime.now();
                                                     DateTime inTime =
-                                                        DateFormat("HH:mm:ss")
+                                                        DateFormat("HH:mm")
                                                             .parse(
                                                                 InTime ?? "");
                                                     DateTime combinedDateTime =
@@ -1890,6 +1860,30 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       prefs.setBool(
                                                           "expand", _expand);
                                                     });
+                                                    var imageUrls =
+                                                        await fireStoreService
+                                                            .getImageUrlsForPatrol(
+                                                                widget
+                                                                    .p.PatrolId,
+                                                                widget.p.EmpId,
+                                                                widget
+                                                                    .p.ShiftId);
+                                                    List<Map<String, dynamic>>
+                                                        formattedImageUrls =
+                                                        imageUrls.map((url) {
+                                                      return {
+                                                        'StatusReportedTime': url[
+                                                            'StatusReportedTime'],
+                                                        'ImageUrls':
+                                                            url['ImageUrls'],
+                                                        'StatusComment': url[
+                                                            'StatusComment'],
+                                                        'CheckPointName': url[
+                                                            'CheckPointName'],
+                                                        'CheckPointStatus': url[
+                                                            'CheckPointStatus']
+                                                      };
+                                                    }).toList();
                                                     await fireStoreService
                                                         .EndPatrolupdatePatrolsStatus(
                                                             widget.p.PatrolId,
@@ -1909,29 +1903,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             .getAdminEmail(widget
                                                                 .p
                                                                 .PatrolCompanyID);
-                                                    var imageUrls =
-                                                        await fireStoreService
-                                                            .getImageUrlsForPatrol(
-                                                                widget
-                                                                    .p.PatrolId,
-                                                                widget.p.EmpId);
 
-                                                    List<Map<String, dynamic>>
-                                                        formattedImageUrls =
-                                                        imageUrls.map((url) {
-                                                      return {
-                                                        'StatusReportedTime': url[
-                                                            'StatusReportedTime'],
-                                                        'ImageUrls':
-                                                            url['ImageUrls'],
-                                                        'StatusComment': url[
-                                                            'StatusComment'],
-                                                        'CheckPointName': url[
-                                                            'CheckPointName'],
-                                                        'CheckPointStatus': url[
-                                                            'CheckPointStatus']
-                                                      };
-                                                    }).toList();
                                                     print(imageUrls);
                                                     var TestinEmail =
                                                         "sutarvaibhav37@gmail.com";
@@ -2005,6 +1977,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   showErrorToast(context,
                                                       "Field cannot be empty");
                                                 }
+                                                setState(() {
+                                                  buttonClicked1 = true;
+                                                });
+                                              }
+                                            : () {
+                                                showErrorToast(context,
+                                                    "Already Clicked, Wait for processing");
                                               },
                                         child: InterRegular(
                                           text: 'Submit',

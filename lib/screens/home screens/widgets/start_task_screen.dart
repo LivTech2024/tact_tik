@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/riverpod/task_screen_provider.dart';
@@ -107,6 +108,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   DateTime inTime = DateTime.now();
   int _elapsedTime = 0;
   bool _isLoading = false;
+  bool buttonClicked = true;
 
   // late SharedPreferences prefs;
   void send_mail_onOut(data) async {
@@ -514,107 +516,120 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             children: [
               Expanded(
                 child: Bounce(
-                  onTap: () async {
-                    print('on tap');
-                    if (!controller.stopWatchRunning.value) {
-                      print("ShiftStartTime ${shiftStartTime}");
-                      print('Shift Date ${widget.ShiftDate}');
-                      //Check for the late timer or early
-                      List<String> StartTimeParts =
-                          widget.ShiftStartTime.split(':');
-                      DateTime shiftDate =
-                          DateFormat('MMMM d, yyyy').parse(widget.ShiftDate);
-                      DateTime shiftEndDateTime = DateTime(
-                          DateTime.now().year,
-                          DateTime.now().month,
-                          DateTime.now().day,
-                          int.parse(StartTimeParts[0]),
-                          int.parse(StartTimeParts[1]));
-                      print('Shift Date ${widget.ShiftDate}');
-                      print("Formatted SHiftEnd time ${shiftEndDateTime}");
-                      DateTime currentTime = DateTime.now();
-                      Duration bufferDuration = Duration(minutes: 10);
-                      DateTime bufferStart =
-                          shiftEndDateTime.subtract(bufferDuration);
-                      // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
-
-                      print("Buffer Start Time: $bufferStart");
-                      // print("Buffer End Time: $bufferEnd");
-                      if (shiftDate !=
-                          DateTime(currentTime.year, currentTime.month,
-                              currentTime.day)) {
-                        print(shiftDate);
-                        print(DateTime(currentTime.year, currentTime.month,
-                            currentTime.day));
-                        print(shiftDate !=
-                            DateTime(currentTime.year, currentTime.month,
-                                currentTime.day));
-                        showErrorToast(context, "Not On SHift Date");
-                      } else {
-                        showErrorToast(context, "ON current Date");
-                      }
-                      if (currentTime.isBefore(bufferStart)) {
-                        showErrorToast(context, "Start shift on Time");
-                      } else {
-                        await controller.startStopWatch();
-
-                        /// TODO : Made changes here
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        await darFunctions.fetchShiftDetailsAndSubmitDAR();
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await fireStoreService.changePatrolStatus(
-                            widget.ShiftId, widget.EmployeId);
-                        bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus(
-                                widget.EmployeId, widget.ShiftId);
-                        var clientName = await fireStoreService
-                            .getClientName(widget.ShiftClientID);
-                        await fireStoreService.addToLog(
-                            'shift_start',
-                            widget.ShiftAddressName,
-                            clientName ?? "",
-                            widget.EmployeId,
-                            widget.EmployeeName,
-                            widget.ShiftCompanyId,
-                            widget.ShiftBranchId,
-                            widget.ShiftClientID,
-                            widget.ShiftLocationId,
-                            widget.ShiftName);
-                        setState(() {
-                          if (!clickedIn) {
-                            clickedIn = true;
-                            prefs.setBool('clickedIn', clickedIn);
+                  onTap: buttonClicked
+                      ? () async {
+                          setState(() {
+                            buttonClicked = false;
+                          });
+                          print('on tap');
+                          if (!controller.stopWatchRunning.value) {
+                            print("ShiftStartTime ${shiftStartTime}");
+                            print('Shift Date ${widget.ShiftDate}');
+                            //Check for the late timer or early
+                            List<String> StartTimeParts =
+                                widget.ShiftStartTime.split(':');
+                            DateTime shiftDate = DateFormat('MMMM d, yyyy')
+                                .parse(widget.ShiftDate);
+                            DateTime shiftEndDateTime = DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                                int.parse(StartTimeParts[0]),
+                                int.parse(StartTimeParts[1]));
+                            print('Shift Date ${widget.ShiftDate}');
+                            print(
+                                "Formatted SHiftEnd time ${shiftEndDateTime}");
                             DateTime currentTime = DateTime.now();
-                            inTime = currentTime;
-                            prefs.setInt(
-                                'InTime', currentTime.millisecondsSinceEpoch);
-                            prefs.setInt('savedInTime',
-                                currentTime.millisecondsSinceEpoch);
-                            Timestamp.now();
-                            if (status == false) {
-                              print("Staus is false");
+                            Duration bufferDuration = Duration(minutes: 10);
+                            DateTime bufferStart =
+                                shiftEndDateTime.subtract(bufferDuration);
+                            // DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
+
+                            print("Buffer Start Time: $bufferStart");
+                            // print("Buffer End Time: $bufferEnd");
+                            if (shiftDate !=
+                                DateTime(currentTime.year, currentTime.month,
+                                    currentTime.day)) {
+                              print(shiftDate);
+                              print(DateTime(currentTime.year,
+                                  currentTime.month, currentTime.day));
+                              print(shiftDate !=
+                                  DateTime(currentTime.year, currentTime.month,
+                                      currentTime.day));
+                              showErrorToast(context, "Not On SHift Date");
                             } else {
-                              print("Staus is true");
+                              showSuccessToast(context, "On current Date");
                             }
-                            fireStoreService
-                                .fetchreturnShiftTasks(widget.ShiftId);
-                            startStopwatch();
-                          } else {
-                            print('already clicked');
+                            if (currentTime.isBefore(bufferStart)) {
+                              showErrorToast(context, "Start shift on Time");
+                            } else {
+                              await controller.startStopWatch();
+
+                              /// TODO : Made changes here
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              await darFunctions
+                                  .fetchShiftDetailsAndSubmitDAR();
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await fireStoreService.changePatrolStatus(
+                                  widget.ShiftId, widget.EmployeId);
+                              bool? status = await fireStoreService
+                                  .checkShiftReturnTaskStatus(
+                                      widget.EmployeId, widget.ShiftId);
+                              var clientName = await fireStoreService
+                                  .getClientName(widget.ShiftClientID);
+                              await fireStoreService.addToLog(
+                                  'shift_start',
+                                  widget.ShiftAddressName,
+                                  clientName ?? "",
+                                  widget.EmployeId,
+                                  widget.EmployeeName,
+                                  widget.ShiftCompanyId,
+                                  widget.ShiftBranchId,
+                                  widget.ShiftClientID,
+                                  widget.ShiftLocationId,
+                                  widget.ShiftName);
+                              setState(() {
+                                if (!clickedIn) {
+                                  clickedIn = true;
+                                  prefs.setBool('clickedIn', clickedIn);
+                                  DateTime currentTime = DateTime.now();
+                                  inTime = currentTime;
+                                  prefs.setInt('InTime',
+                                      currentTime.millisecondsSinceEpoch);
+                                  prefs.setInt('savedInTime',
+                                      currentTime.millisecondsSinceEpoch);
+                                  Timestamp.now();
+                                  if (status == false) {
+                                    print("Staus is false");
+                                  } else {
+                                    print("Staus is true");
+                                  }
+                                  fireStoreService
+                                      .fetchreturnShiftTasks(widget.ShiftId);
+                                  startStopwatch();
+                                } else {
+                                  print('already clicked');
+                                }
+                              });
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
+                            setState(() {
+                              _isLoading = false;
+                            });
                           }
-                        });
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      }
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
-                  },
+                          setState(() {
+                            buttonClicked = true;
+                          });
+                        }
+                      : () {
+                          showErrorToast(
+                              context, "Already Clicked please wait");
+                        },
                   child: Container(
                     color: WidgetColor,
                     child: Center(
