@@ -146,6 +146,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           empName: widget.empName,
                           ClientId: widget.clientId,
                           reportId: "",
+                          buttonEnable: true,
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -248,6 +249,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                       // clientId: widget.clientId,
                                       ClientId: widget.clientId,
                                       reportId: report['ReportId'],
+                                      buttonEnable: false,
                                     ),
                                   ),
                                 );

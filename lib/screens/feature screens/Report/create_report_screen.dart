@@ -27,6 +27,7 @@ class CreateReportScreen extends StatefulWidget {
 
   final String empName;
   final String reportId;
+  bool buttonEnable;
 
   CreateReportScreen(
       {super.key,
@@ -36,7 +37,8 @@ class CreateReportScreen extends StatefulWidget {
       required this.empId,
       required this.empName,
       required this.ClientId,
-      required this.reportId});
+      required this.reportId,
+      required this.buttonEnable});
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
@@ -64,6 +66,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     getAllTitles();
     getAllReports();
     super.initState();
+    shouldShowButton = widget.buttonEnable;
   }
 
   void getAllTitles() async {
@@ -93,6 +96,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
         setState(() {
           shouldShowButton = false;
         });
+      } else {
+        setState(() {
+          shouldShowButton = true;
+        });
       }
       if (reportData['ReportImage'] != null) {
         // Add existing report images URLs to uploads list
@@ -103,6 +110,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
         }
       }
       print(reportData['ReportIsFollowUpRequired']);
+    } else {
+      setState(() {
+        shouldShowButton = true;
+      });
     }
     print("Report Data for ${widget.reportId} $reportData");
   }
@@ -592,7 +603,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryName: newCategoryController.text,
                                 categoryId: newId ?? "",
                                 data: explainController.text,
-                                status: "started",
+                                status: "pending",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
                                 createdAt: Timestamp.now());
@@ -658,7 +669,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 categoryName: dropdownValue,
                                 categoryId: id ?? "",
                                 data: explainController.text,
-                                status: "started",
+                                status: "pending",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
                                 createdAt: Timestamp.now());

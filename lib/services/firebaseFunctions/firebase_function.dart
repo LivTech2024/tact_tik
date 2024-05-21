@@ -2312,7 +2312,7 @@ class FireStoreService {
 
   //fetch images from patrol
   Future<List<Map<String, dynamic>>> getImageUrlsForPatrol(
-      String PatrolID, String EmpId) async {
+      String PatrolID, String EmpId, String ShiftId) async {
     try {
       final querySnapshot = await patrols.doc(PatrolID).get();
 
@@ -2326,7 +2326,9 @@ class FireStoreService {
           List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
 
           var status = checkPointStatus.firstWhere(
-            (s) => s["StatusReportedById"] == EmpId,
+            (s) =>
+                s["StatusReportedById"] == EmpId &&
+                s['StatusShiftId'] == ShiftId,
             orElse: () => null,
           );
 
@@ -3118,28 +3120,38 @@ class FireStoreService {
       //     .get();
       // if (darSnapshot.docs.isNotEmpty) {
       //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
-      //     await darDoc.reference.update({
-      //       'EmpDarTile': FieldValue.arrayUnion([uniqueid])
-      //     });
+      //     if (darDoc.exists) {
+      //       // Check if the EmpDarTile field exists
+      //       List<Map<String, dynamic>> tiles = [];
+      //       final data = darDoc.data() as Map<String, dynamic>?;
 
-      //     // Update TileContent based on ReportCreateTime
-      //     List<Map<String, dynamic>> tiles =
-      //         List<Map<String, dynamic>>.from(darDoc['EmpDarTile']);
-      //     for (var tile in tiles) {
-      //       Timestamp tileDate = tile['TileDate'];
-      //       DateTime tileDateTime = tileDate.toDate();
-      //       if (tileDateTime.year == dateTime.year &&
-      //           tileDateTime.month == dateTime.month &&
-      //           tileDateTime.day == dateTime.day) {
-      //         String reportTimeSlot =
-      //             "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
-      //         if (tile['TileTime'] == reportTimeSlot) {
-      //           tile['TileContent'] = data;
+      //       if (data != null && data.containsKey('EmpDarTile')) {
+      //         tiles = List<Map<String, dynamic>>.from(data['EmpDarTile']);
+      //       }
+
+      //       // Update TileContent based on ReportCreateTime
+      //       for (var tile in tiles) {
+      //         Timestamp tileDate = tile['TileDate'];
+      //         DateTime tileDateTime = tileDate.toDate();
+      //         if (tileDateTime.year == dateTime.year &&
+      //             tileDateTime.month == dateTime.month &&
+      //             tileDateTime.day == dateTime.day) {
+      //           String reportTimeSlot =
+      //               "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
+      //           if (tile['TileTime'] == reportTimeSlot) {
+      //             tile['TileContent'] = data;
+      //           }
       //         }
       //       }
+
+      //       // Update the document with the modified tiles array
+      //       await darDoc.reference.update({
+      //         'EmpDarTile': FieldValue.arrayUnion([uniqueid])
+      //       });
+      //       await darDoc.reference.update({'EmpDarTile': tiles});
+
+      //       print("Added to DAR");
       //     }
-      //     print("Added to Dar ");
-      //     await darDoc.reference.update({'EmpDarTile': tiles});
       //   }
       // }
 
