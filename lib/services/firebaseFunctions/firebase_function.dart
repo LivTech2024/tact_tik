@@ -2688,9 +2688,15 @@ class FireStoreService {
           .doc(ShiftId)
           .get();
       print("Shift Doc : ${shiftDoc.data()}");
-      var shiftLinkedPatrolIds =
-          List<String>.from(shiftDoc.data()?['ShiftLinkedPatrolIds'] ?? []);
-      print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
+      // var shiftLinkedPatrolIds =
+      //     List<String>.from(shiftDoc.data()?['ShiftLinkedPatrolIds'] ?? []);
+      // print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
+
+      var shiftLinkedPatrolIds = [
+        "T6DWZ2kpj8nlwhP1qKi3",
+        "474ZS6GremcQn2rt7SbR",
+        "vU6dRzrjLfzo0S1KK4hJ"
+      ];
       // Query PatrolLogs for data
       var querySnapshot = await FirebaseFirestore.instance
           .collection('PatrolLogs')
@@ -2702,19 +2708,23 @@ class FireStoreService {
 
       // 'jwwJLoyIwB6CNeCEUjO7'
       // 'PjA0XjUncrUGQk4RTlky',
-      List<String> specificDocIds = ['tnc2nfZzDDXvleCL3k7i'];
+      List<String> specificDocIds = [
+        'l97LkTKaPxKH2nHALaAj',
+        'ieqFMq142QT7Eh8Ef5P4',
+        '7wEYGeA4um2goDpTHwer'
+      ];
 
       querySnapshot.docs.forEach((doc) {
         print("Doc id $doc");
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
-        if (specificDocIds.contains(doc.id)) {
-          // Check if the document ID already exists in pdfDataList
-          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-            pdfDataList.add(doc.data());
-            print("Data for Pdf: ${doc.data()}");
-          }
+        // if (specificDocIds.contains(doc.id)) {
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
         }
+        // }
       });
     } catch (e) {
       print(e);

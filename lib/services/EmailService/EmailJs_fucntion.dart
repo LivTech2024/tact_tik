@@ -128,8 +128,8 @@ Future<void> sendShiftTemplateEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  final pdfBase64 = await generateShiftReportPdf(
-      ClientName, Data, GuardName, "19:00", "07:00");
+  // final pdfBase64 = await generateShiftReportPdf(
+  //     ClientName, Data, GuardName, "23:00", "07:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -140,7 +140,7 @@ Future<void> sendShiftTemplateEmail(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="height: 20px;">'; // Set the height here
+              '<img src="$image" style="height: 50px;">'; // Set the height here
         }
       }
       checkpointImagesHTML += '''
@@ -227,8 +227,8 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             <tr>
                 <td> ${GuardName}</td>
-                <td>20:00</td>
-                <td>06:00</td>
+                <td>23:00</td>
+                <td>07:00</td>
             </tr> 
         </table>
 
@@ -263,13 +263,13 @@ Best regards,</p>
         'subject': Subject,
         'from_name': fromName,
         'html': htmlcontent2,
-        'attachments': [
-          {
-            'filename': 'security_report.pdf',
-            'content': pdfBase64,
-            'contentType': 'application/pdf',
-          }
-        ],
+        // 'attachments': [
+        //   {
+        //     'filename': 'security_report.pdf',
+        //     'content': pdfBase64,
+        //     'contentType': 'application/pdf',
+        //   }
+        // ],
       }),
     );
 

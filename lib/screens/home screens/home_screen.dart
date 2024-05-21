@@ -557,8 +557,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       5,
                       () async {
                         List<String> emails = [];
-                        emails.add("sutarvaibhav37@gmail.com");
+                        // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
+
                         // emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
                         // emails.add("dan@tpssolution.com");
@@ -576,8 +577,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "j7zzA9FrZXgzTT9Mgd6X",
+                        //   "UDb6jyQBz2RzRp4b42XL",
+                        //   "wFpkfR1VreJ4633Khhia",
                         // );
                         // await sendShiftTemplateEmail(
                         //   "Leston holdings",
@@ -586,8 +587,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "20 May",
-                        //   "Pankaj Kumar",
+                        //   "21 May",
+                        //   "livjeet kaur",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -597,13 +598,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         // );
 
                         // await sendDARTemplateEmail(
-                        //   "Leston holdings ",
+                        //   "Leston holdings",
                         //   emails,
                         //   'Tacttik DAR',
                         //   "Tacttik DAR",
                         //   "Shift",
-                        //   "20 May",
-                        //   "Pankaj Kumar",
+                        //   "21 May",
+                        //   "livjeet kaur",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -614,8 +615,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // 12:37 - 1-10
                         //5:15 - 5-47
                         //5:15
-                        await fireStoreService.copyAndCreateDocument(
-                            "PatrolLogs", "dFloS4lNwPR9ELmY6MbV");
+                        // await fireStoreService.copyAndCreateDocument(
+                        //     "PatrolLogs", "JKxzgp6rtqOQHLlzKaOm");
                         // await fireStoreService.fetchAndCreatePatrolLogs(
                         //   "474ZS6GremcQn2rt7SbR",
                         //   'paHVXXC99uNtXamURMBc',
