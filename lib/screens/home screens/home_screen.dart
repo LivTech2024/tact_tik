@@ -673,6 +673,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Bounce(
+                              onTap: () => ChangeScreenIndex(3),
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
