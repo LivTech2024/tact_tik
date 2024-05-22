@@ -63,15 +63,15 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
           textTheme: GoogleFonts.poppinsTextTheme(
-            Theme
-                .of(context)
-                .textTheme,
+            Theme.of(context).textTheme,
           ),
         ),
         home: OfflineBuilder(
-          connectivityBuilder: (BuildContext context,
-              ConnectivityResult connectivity,
-              Widget child,) {
+          connectivityBuilder: (
+            BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,
+          ) {
             final bool isConnected = connectivity != ConnectivityResult.none;
             if (isConnected) {
               return child;
@@ -91,8 +91,7 @@ class MyApp extends StatelessWidget {
               // return OfflineScreen();
             }
           },
-          child: EndCheckpointScreen(
-            CheckpointID: '', PatrolID: '', ShiftId: '', empId: '',),
+          child: AuthChecker(),
         ),
       ),
     );
