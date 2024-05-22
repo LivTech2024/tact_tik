@@ -185,9 +185,9 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                 boxShadow: [
                                   BoxShadow(
                                     color: isDark
-                                        ? DarkColor.color1.withOpacity(.1)
-                                        : LightColor.color3.withOpacity(.1),
-                                    blurRadius: 1,
+                                        ? Colors.transparent
+                                        : LightColor.color3.withOpacity(.05),
+                                    blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
                                   )

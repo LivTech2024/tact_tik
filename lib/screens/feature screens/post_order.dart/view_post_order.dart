@@ -394,7 +394,8 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
               widget.isDisplay?SizedBox() :Button1(
                 text: 'Done',
                 onPressed: () {},
-                backgroundcolor: DarkColor.  Primarycolor,
+                color: isDark?DarkColor.  color15:LightColor.color1,
+                backgroundcolor: isDark?DarkColor.  Primarycolor:LightColor.Primarycolor,
                 borderRadius: width / width10,
               )
             ],

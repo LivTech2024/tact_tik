@@ -273,10 +273,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: LightColor.color3.withOpacity(.2),
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
-                          ),
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
                         ],
                         color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
@@ -336,10 +339,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: LightColor.color3.withOpacity(.2),
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
-                          ),
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
                         ],
                        
                       ),
@@ -361,11 +367,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color:  
-                              LightColor.color3.withOpacity(.2),
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
-                          ),
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
                         ],
                         color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),

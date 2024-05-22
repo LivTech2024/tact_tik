@@ -400,12 +400,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                   boxShadow: [
                     BoxShadow(
                       color: isDark
-                          ? DarkColor.color24
-                          : LightColor.color3.withOpacity(0.1),
-                      spreadRadius: 5,
-                      blurRadius: 3,
-                      offset: Offset(0, 0), // changes position of shadow
-                    ),
+                          ? Colors.transparent
+                          : LightColor.color3.withOpacity(.05),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: Offset(0, 3),
+                    )
                   ],
                 ),
                 child: Row(
@@ -502,12 +502,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               boxShadow: [
                                 BoxShadow(
                                   color: isDark
-                                      ? DarkColor.color24
-                                      : LightColor.color3.withOpacity(0.1),
-                                  spreadRadius: 5,
-                                  blurRadius: 3,
-                                  offset: Offset(0, 0), // changes position of shadow
-                                ),
+                                      ? Colors.transparent
+                                      : LightColor.color3.withOpacity(.05),
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
                               ],
                               color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                               borderRadius:

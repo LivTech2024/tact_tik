@@ -100,7 +100,20 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
             Container(
               height: height / height65,
               width: double.maxFinite,
-              color:  isDark ? DarkColor.color24 : LightColor.WidgetColor,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.transparent
+                        : LightColor.color3.withOpacity(.05),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
+                color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+              ),
+             
               padding: EdgeInsets.symmetric(vertical: height / height16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -221,6 +234,16 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               child: Container(
                                 height: height / height60,
                                 decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3.withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
                                   color: isDark
                                       ? DarkColor.color19
                                       : LightColor.WidgetColor,
