@@ -72,8 +72,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
+              shadowColor: isDark?DarkColor.color3.withOpacity(.1):LightColor.color3.withOpacity(.1),
               backgroundColor: isDark?DarkColor.  AppBarcolor:LightColor.AppBarcolor,
-              elevation: 0,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -135,6 +136,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ),
                           width: double.maxFinite,
                           decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? DarkColor.color1.withOpacity(.1)
+                                    : LightColor.color3.withOpacity(.1),
+                                blurRadius: 1,
+                                spreadRadius: 2,
+                                offset: Offset(0, 3),
+                              )
+                            ],
                             borderRadius:
                                 BorderRadius.circular(width / width10),
                             color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,

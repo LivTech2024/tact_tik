@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/riverpod/auth_provider.dart';
+import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
@@ -21,7 +22,7 @@ class AuthChecker extends ConsumerWidget {
       future: currentUserFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -41,7 +42,9 @@ class AuthChecker extends ConsumerWidget {
     if (role != null) {
       switch (role) {
         case 'SUPERVISOR':
-          return const SHomeScreen(); // Navigate to supervisor screen
+          return const SHomeScreen();
+        case 'CLIENT':
+          return const ClientHomeScreen(); // Navigate to supervisor screen
         default:
           return const HomeScreen(); // Navigate to home screen
       }

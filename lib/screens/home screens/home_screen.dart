@@ -45,6 +45,7 @@ import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
 import '../feature screens/assets/assets_screen.dart';
+import '../feature screens/keys/keys_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/task/task_feature_screen.dart';
@@ -77,6 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLatitude = 0;
   double _shiftLongitude = 0;
   String _employeeId = "";
+  String _employeeCompanyID = "";
+
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -100,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
- List IconColors = [
+  List IconColors = [
     isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
     isDark ? DarkColor.color4 : LightColor.color3,
     isDark ? DarkColor.color4 : LightColor.color3,
@@ -115,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
+
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -180,28 +184,32 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       switch (index) {
         case 0:
-          IconColors[0] = isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[0] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 1:
           IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] = isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[1] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 2:
           IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] = isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[2] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 3:
           IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[3] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           break;
       }
     });
@@ -229,6 +237,8 @@ class _HomeScreenState extends State<HomeScreen> {
         String EmployeeId = userInfo['EmployeeId'];
         String empEmail = userInfo['EmployeeEmail'];
         String empImage = userInfo['EmployeeImg'] ?? "";
+        String empCompanyId = userInfo['EmployeeCompanyId'] ?? "";
+        String empBranchId = userInfo['EmployeeCompanyBranchId'] ?? "";
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo = await fireStoreService
@@ -238,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _employeeId = EmployeeId;
           _empEmail = empEmail;
           employeeImg = empImage;
+          _employeeCompanyID = empCompanyId;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -252,8 +263,8 @@ class _HomeScreenState extends State<HomeScreen> {
           DateTime patrolDateTime = PatrolTime.toDate();
 
           // Format DateTime as String
-          String patrolTimeString =
-              DateFormat('hh:mm a').format(patrolDateTime);
+          // String patrolTimeString =
+          //     DateFormat('hh:mm a').format(patrolDateTime);
           String patrolDateString =
               DateFormat('yyyy-MM-dd').format(patrolDateTime);
           print('Patrol Info: ${patrolInfo.data()}');
@@ -283,7 +294,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
+          GeoPoint shiftGeolocation =
+              shiftInfo['ShiftLocation'] as GeoPoint? ?? GeoPoint(0.0, 0.0);
           double shiftLocationLatitude = shiftGeolocation.latitude;
           double shiftLocationLongitude = shiftGeolocation.longitude;
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
@@ -432,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color:  isDark
+          color: isDark
               ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
               : (isSelected
                   ? LightColor.Primarycolor
@@ -441,7 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: PoppinsBold(
           text: title,
-          color:  isDark
+          color: isDark
               ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
               : (isSelected ? LightColor.Primarycolor : LightColor.color3),
           fontsize: width / width14,
@@ -478,7 +490,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                          ),
+                          ), //
                           child: ClipOval(
                             child: SizedBox.fromSize(
                                 size: Size.fromRadius(width / width50),
@@ -568,7 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Settings',
                       5,
                       () async {
-                        // List<String> emails = [];
+                        List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
@@ -582,8 +594,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "mgypv1SYC1RrXjJ90Eyl",
+                        //   "Hijql0nkNjA1tOhSf8wW",
+                        //   "qRtZHPi8a4JOUUwmG1Wj",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -593,8 +605,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "9 May",
-                        //   "Pankaj Kumar",
+                        //   "10 May",
+                        //   "Dan Martin",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -603,17 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // await fireStoreService.copyAndCreateDocument(
-                        //     'EmployeesDAR', 'YHRrTfgn07btcFtSLuAj');
-                        // String path = 'employees/patrol';
-                        // String fileName = '2024-05-08 05:00:13.307902.jpg';
-                        // await fireStoreService
-                        //     .fetchImagesWithDate(path, fileName)
-                        //     .then((imageUrls) {
-                        //   // Print the list of image URLs
-                        //   for (String url in imageUrls) {
-                        //     print(url);
-                        //   }
-                        // });
+                        //     "PatrolLogs", "htqtVzVzdb4ejCl7VvBf");
                       },
                     ),
                   ],
@@ -804,25 +806,352 @@ class _HomeScreenState extends State<HomeScreen> {
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return PanicAlertDialog();
+                                            return PanicAlertDialog(
+                                              EmpId: _employeeId,
+                                              CompanyId: _employeeCompanyID,
+                                              Username: _userName,
+                                            );
                                           },
                                         );
+                                        break;
+                                      case 1:
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: height / height470,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          width / width40),
+                                                  color:
+                                                      DarkColor.Secondarycolor,
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(width /
+                                                                    width40),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          width / width40,
+                                                        ),
+                                                        child: GoogleMap(
+                                                          initialCameraPosition:
+                                                              CameraPosition(
+                                                            target: _center,
+                                                            zoom: _zoom,
+                                                          ),
+                                                          onMapCreated:
+                                                              (GoogleMapController
+                                                                  controller) {
+                                                            mapController =
+                                                                controller;
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        height:
+                                                            height / height470,
+                                                        width: double.maxFinite,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment(
+                                                                0, -1.5),
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                            colors: [
+                                                              Colors.black,
+                                                              Colors.transparent
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        height:
+                                                            height / height40,
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 18,
+                                                          vertical:
+                                                              height / height25,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: height /
+                                                                  height48,
+                                                              width: width /
+                                                                  width48,
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/site_tours.png',
+                                                                fit: BoxFit
+                                                                    .fitHeight,
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                              ),
+                                                            ),
+                                                            InterBold(
+                                                              text:
+                                                                  'Site Tours',
+                                                              fontsize: width /
+                                                                  width18,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                });
+                                                              },
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .cancel_outlined,
+                                                                size: width /
+                                                                    width30,
+                                                                color: DarkColor
+                                                                    .color1,
+                                                              ),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      child: SizedBox(
+                                                        height:
+                                                            height / height180,
+                                                        child: PageView.builder(
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Container(
+                                                              margin: EdgeInsets.only(
+                                                                  bottom: height /
+                                                                      height24,
+                                                                  left: width /
+                                                                      width40,
+                                                                  right: width /
+                                                                      width30),
+                                                              width: width /
+                                                                  width300,
+                                                              height: height /
+                                                                  height160,
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                vertical:
+                                                                    height /
+                                                                        height14,
+                                                                horizontal:
+                                                                    width /
+                                                                        width15,
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: isDark
+                                                                    ? DarkColor
+                                                                        .Secondarycolor
+                                                                    : LightColor
+                                                                        .Secondarycolor,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                  width /
+                                                                      width20,
+                                                                ),
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: height /
+                                                                        height55,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(
+                                                                              width / width12,
+                                                                            ),
+                                                                            color: isDark
+                                                                                ? DarkColor.color9
+                                                                                : LightColor.color3,
+                                                                          ),
+                                                                          height:
+                                                                              height / height55,
+                                                                          width:
+                                                                              width / width55,
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Container(
+                                                                              alignment: Alignment.center,
+                                                                              height: height / height40,
+                                                                              width: width / width45,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(width / width4),
+                                                                                color: isDark ? DarkColor.color1 : LightColor.color1,
+                                                                                border: Border.all(
+                                                                                  color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                                                                                  width: 1,
+                                                                                ),
+                                                                              ),
+                                                                              child: MyNetworkImage(
+                                                                                'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                                                width / width20,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / width15,
+                                                                        ),
+                                                                        Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceAround,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            PoppinsBold(
+                                                                              text: 'Robert D. Vaughn',
+                                                                              color: isDark ? DarkColor.color1 : LightColor.color3,
+                                                                              fontsize: width / width16,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / width180,
+                                                                              child: RobotoMedium(
+                                                                                text: '318 Grand St,  New York 10002, US',
+                                                                                color: isDark ? DarkColor.color10 : LightColor.color2,
+                                                                                fontsize: width / width16,
+                                                                                maxLines: 1,
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () {},
+                                                                    child:
+                                                                        Container(
+                                                                      height: height /
+                                                                          height55,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .symmetric(
+                                                                        horizontal:
+                                                                            width /
+                                                                                width16,
+                                                                      ),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: isDark
+                                                                            ? DarkColor.Primarycolor
+                                                                            : LightColor.Primarycolor,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                          width /
+                                                                              width16,
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          RobotoBold(
+                                                                            text:
+                                                                                'Get Direction',
+                                                                            color:
+                                                                                DarkColor.color1,
+                                                                          ),
+                                                                          Icon(
+                                                                            Icons.arrow_forward_sharp,
+                                                                            color:
+                                                                                DarkColor.color1,
+                                                                            size:
+                                                                                width / width24,
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            });
                                         break;
                                       case 2:
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
+
+                                                    // CreateDarScreen(
+                                                    //   EmpEmail: _empEmail,
+                                                    //   Username: _userName,
+                                                    //   EmpId: _employeeId,
+                                                    // )
                                                     DarDisplayScreen(
                                                       EmpEmail: _empEmail,
                                                       EmpID: _employeeId,
                                                       EmpDarCompanyId:
-                                                          _ShiftCompanyId ?? '',
-                                                      EmpDarCompanyBranchId:
                                                           _ShiftCompanyId ?? "",
+                                                      EmpDarCompanyBranchId:
+                                                          _branchId,
                                                       EmpDarShiftID: _shiftId,
                                                       EmpDarClientID:
-                                                          _shiftCLientId ?? "",
+                                                          _shiftCLientId,
+                                                      Username: _userName,
                                                     )));
                                         break;
                                       case 3:
@@ -862,7 +1191,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LogBookScreen()));
+                                                    LogBookScreen(
+                                                      EmpId: _employeeId,
+                                                    )));
                                         break;
                                       case 7:
                                         Navigator.push(
@@ -877,7 +1208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AssetsScreen()));
+                                                    KeysScreen()));
                                         break;
                                       default:
                                     }
@@ -915,7 +1246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         children: [
                                           InterBold(
                                             text: 'Received Message ',
-                                            color:  isDark
+                                            color: isDark
                                                 ? DarkColor.Primarycolor
                                                 : LightColor.Primarycolor,
                                             fontsize: width / width14,
@@ -990,7 +1321,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           right: width / width10,
                                           bottom: height / height20),
                                       decoration: BoxDecoration(
-                                        color:  DarkColor.color31,
+                                        color: isDark
+                                            ? DarkColor.color31
+                                            : LightColor.Primarycolorlight,
                                         borderRadius: BorderRadius.circular(
                                           width / width10,
                                         ),
@@ -1003,12 +1336,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         children: [
                                           InterBold(
                                             text: shiftDate,
-                                            color:  DarkColor.color30,
+                                            color: DarkColor.color30,
                                             fontsize: width / width16,
                                           ),
                                           InterBold(
                                             text: dayOfWeek,
-                                            color: DarkColor. color30,
+                                            color: DarkColor.color30,
                                             fontsize: width / width12,
                                           ),
                                         ],
@@ -1024,7 +1357,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                         vertical: height / height30,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: DarkColor. color27,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: isDark
+                                                ? DarkColor.color2.withOpacity(.1)
+                                                : LightColor.color3.withOpacity(.1),
+                                            blurRadius: 1,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ],
+                                        color: isDark
+                                            ? DarkColor.color27
+                                            : LightColor.WidgetColor,
                                         borderRadius: BorderRadius.circular(
                                             width / width10),
                                       ),
@@ -1040,7 +1385,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               text: schedules[
                                                       'ShiftLocationAddress'] ??
                                                   "",
-                                              color: DarkColor. color30,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color3,
                                               Iconcolor: Colors.redAccent,
                                               space: width / width8,
                                               fontsize: width / width14,
@@ -1053,8 +1400,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                               icon: Icons.access_time,
                                               text:
                                                   '${schedules['ShiftStartTime'] ?? ""} - ${schedules['ShiftEndTime'] ?? ""}',
-                                              color:  DarkColor.color30,
-                                              Iconcolor: DarkColor. Primarycolor,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color3,
+                                              Iconcolor: isDark
+                                                  ? DarkColor.Primarycolorlight
+                                                  : LightColor.Primarycolorlight,
                                               space: width / width8,
                                               fontsize: width / width14,
                                             ),
@@ -1091,7 +1442,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         border: Border(
                                           bottom: BorderSide(
                                             width: 1,
-                                            color:  isDark?DarkColor.Primarycolor:LightColor.Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                           ),
                                         ),
                                         // color: WidgetColor,
@@ -1147,20 +1500,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       text: 'Supervisor',
                                                       fontsize: width / width16,
                                                       color: isDark
-                                                          ? DarkColor
-                                                              .color3
-                                                          : LightColor
-                                                              .color3,
+                                                          ? DarkColor.color3
+                                                          : LightColor.color3,
                                                     ),
                                                     Row(
                                                       // mainAxisAlignment: MainAxisAlignment.end,
                                                       children: [
                                                         PoppinsRegular(
                                                           text: '9:36 AM',
-                                                          color:
-                                                              isDark
-                                                              ? DarkColor
-                                                                  .color3
+                                                          color: isDark
+                                                              ? DarkColor.color3
                                                               : LightColor
                                                                   .color3,
                                                           fontsize:
@@ -1169,9 +1518,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         Icon(
                                                           Icons
                                                               .arrow_forward_ios,
-                                                          color:  isDark
-                                                              ? DarkColor
-                                                                  .color1
+                                                          color: isDark
+                                                              ? DarkColor.color1
                                                               : LightColor
                                                                   .color3,
                                                           size: width / width18,
@@ -1189,8 +1537,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     fontsize: width / width14,
                                                     color: isDark
                                                         ? DarkColor.color3
-                                                        : LightColor
-                                                            .color3,
+                                                        : LightColor.color3,
                                                   ),
                                                 ),
                                               ],

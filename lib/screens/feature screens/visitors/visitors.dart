@@ -81,8 +81,9 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
                   backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                  elevation: 0,
+                  elevation: 5,
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
@@ -181,6 +182,16 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                               margin:
                                   EdgeInsets.only(bottom: height / height10),
                               decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: isDark
+                                        ? DarkColor.color1.withOpacity(.1)
+                                        : LightColor.color3.withOpacity(.1),
+                                    blurRadius: 1,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
                                 borderRadius:
                                     BorderRadius.circular(width / width10),
                                 color: isDark

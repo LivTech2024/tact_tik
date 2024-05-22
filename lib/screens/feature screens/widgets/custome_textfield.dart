@@ -13,12 +13,14 @@ class CustomeTextField extends StatelessWidget {
     this.showIcon = true,
     this.isEnabled = true,
     this.controller,
+    this.textInputType,
   });
 
   final String hint;
   final bool isExpanded;
   final bool showIcon;
   final bool isEnabled;
+  final TextInputType? textInputType;
 
   final TextEditingController? controller;
 
@@ -28,11 +30,23 @@ class CustomeTextField extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Container(
+
       padding: EdgeInsets.only(
-          left: width / width20,
-          top: height / height5,
-          bottom: height / height5),
+        left: width / width20,
+        top: height / height5,
+        bottom: height / height5,
+      ),
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? DarkColor.color1.withOpacity(.1)
+                : LightColor.color3.withOpacity(.1),
+            blurRadius: 1,
+            spreadRadius: 2,
+            offset: Offset(0, 0),
+          )
+        ],
         color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
         borderRadius: BorderRadius.circular(width / width10),
       ),
@@ -74,18 +88,20 @@ class CustomeTextField extends StatelessWidget {
                 hintText: hint,
                 contentPadding: EdgeInsets.zero, // Remove padding
               ),
-              cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              keyboardType: textInputType,
+              cursorColor: DarkColor.Primarycolor,
               enabled: isEnabled,
             ),
           ),
           if (showIcon)
             IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.mic,
-                  color: isDark ? DarkColor.color33 : LightColor.color3,
-                  size: width / width24,
-                ))
+              onPressed: () {},
+              icon: Icon(
+                Icons.mic,
+                color: DarkColor.color33,
+                size: width / width24,
+              ),
+            )
         ],
       ),
     );

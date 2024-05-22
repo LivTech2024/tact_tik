@@ -41,6 +41,16 @@ class SetTimeWidget extends StatelessWidget {
         height: height / height60,
         width: double.maxFinite,
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? DarkColor.color1.withOpacity(.1)
+                  : LightColor.color3.withOpacity(.1),
+              blurRadius: 1,
+              spreadRadius: 2,
+              offset: Offset(0, 0),
+            )
+          ],
           borderRadius: BorderRadius.circular(width / width10),
           color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
         ),

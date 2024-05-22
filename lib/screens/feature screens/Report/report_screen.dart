@@ -110,10 +110,12 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          shadowColor:
+              isDark ? DarkColor.color3 : LightColor.color3.withOpacity(0.1),
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -133,7 +135,8 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
           centerTitle: true,
         ),
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -155,7 +158,8 @@ class _ReportScreenState extends State<ReportScreen> {
               }
             });
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor:
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
@@ -186,10 +190,22 @@ class _ReportScreenState extends State<ReportScreen> {
                           minWidth: width / width70,
                         ),
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDark
+                                  ? DarkColor.color1.withOpacity(.1)
+                                  : LightColor.color3.withOpacity(.1),
+                              blurRadius: 1,
+                              spreadRadius: 2,
+                              offset: Offset(0, 3),
+                            )
+                          ],
                           borderRadius: BorderRadius.circular(width / width20),
-                          color: isDark?(currentIndex == index
-                              ? DarkColor.  Primarycolor
-                              : DarkColor.  WidgetColor):(currentIndex == index
+                          color: isDark
+                              ? (currentIndex == index
+                                  ? DarkColor.Primarycolor
+                                  : DarkColor.WidgetColor)
+                              : (currentIndex == index
                                   ? LightColor.Primarycolor
                                   : LightColor.WidgetColor),
                         ),
@@ -226,7 +242,9 @@ class _ReportScreenState extends State<ReportScreen> {
                         if (groupReports.isNotEmpty)
                           InterBold(
                             text: groupDate,
-                            color: isDark?DarkColor.  Primarycolor:LightColor.Primarycolor,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
                             fontsize: width / width20,
                           ),
                         SizedBox(height: height / height30),
@@ -272,6 +290,17 @@ class _ReportScreenState extends State<ReportScreen> {
                                     ),
                                     height: height / height100,
                                     decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: isDark
+                                              ? DarkColor.color1.withOpacity(.1)
+                                              : LightColor.color3
+                                                  .withOpacity(.1),
+                                          blurRadius: 1,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
                                       color: isDark
                                           ? DarkColor.WidgetColor
                                           : LightColor.WidgetColor,
@@ -321,22 +350,17 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         fontsize:
                                                             width / width14,
                                                         color: isDark
-                                                            ? DarkColor
-                                                                .color32
-                                                            : LightColor
-                                                                .color3,
+                                                            ? DarkColor.color32
+                                                            : LightColor.color3,
                                                       ),
                                                       InterRegular(
                                                         text: report[
                                                             'ReportCategoryName'],
                                                         fontsize:
                                                             width / width14,
-                                                        color:
-                                                            isDark
-                                                            ? DarkColor
-                                                                .color26
-                                                            : LightColor
-                                                                .color3,
+                                                        color: isDark
+                                                            ? DarkColor.color26
+                                                            : LightColor.color3,
                                                       ),
                                                     ],
                                                   ),
@@ -344,8 +368,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                     text: formattedTime,
                                                     color: isDark
                                                         ? DarkColor.color26
-                                                        : LightColor
-                                                            .color3,
+                                                        : LightColor.color3,
                                                     fontsize: width / width14,
                                                   )
                                                 ],

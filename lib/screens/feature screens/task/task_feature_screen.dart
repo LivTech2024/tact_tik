@@ -37,12 +37,13 @@ class TaskFeatureScreen extends StatelessWidget {
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
+              shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
               backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
+              elevation: 10,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -82,6 +83,16 @@ class TaskFeatureScreen extends StatelessWidget {
                           horizontal: width / width14,
                           vertical: height / height10),
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? DarkColor.color1.withOpacity(.1)
+                                : LightColor.color3.withOpacity(.1),
+                            blurRadius: 1,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                         color: isDark
                             ? DarkColor.WidgetColor
                             : LightColor.WidgetColor,

@@ -151,6 +151,16 @@ class HomeScreenPart1 extends StatelessWidget {
               height: height / height64,
               padding: EdgeInsets.symmetric(horizontal: width / width10),
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? DarkColor.color1.withOpacity(.1)
+                        : LightColor.color3.withOpacity(.1),
+                    blurRadius: 1,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
                 color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(width / width13),
               ),

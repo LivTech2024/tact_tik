@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -18,7 +17,16 @@ import '../../../utils/colors.dart';
 
 class DarOpenAllScreen extends StatefulWidget {
   final DateTime? passdate;
-  const DarOpenAllScreen({super.key, this.passdate});
+  final String? DarId;
+  final String Username;
+  final String Empid;
+
+  const DarOpenAllScreen(
+      {super.key,
+      this.passdate,
+      this.DarId,
+      required this.Username,
+      required this.Empid});
 
   @override
   State<DarOpenAllScreen> createState() => _DarOpenAllScreenState();
@@ -29,6 +37,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     isDark ? DarkColor.Primarycolor : LightColor.Primarycolor, DarkColor.color25];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
+  List<Map<String, dynamic>> hourlyShiftDetails2 = [];
+
   final _userService = UserService(firestoreService: FireStoreService());
   String _employeeId = '';
 
@@ -74,9 +84,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     final employeeId = FirebaseAuth.instance.currentUser?.uid;
 
     final patrolLogsCollection =
-        FirebaseFirestore.instance.collection('Reports');
+        FirebaseFirestore.instance.collection('PatrolLogs');
     final querySnapshot = await patrolLogsCollection
-        .where('ReportEmployeeId', isEqualTo: employeeId)
+        .where('PatrolLogGuardId', isEqualTo: employeeId)
         .get();
 
     final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -112,7 +122,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             'endTime': shiftEndTime,
           },
         ];
-
+        print("_fetchShiftDetails startTime&endTime ${shiftDetails}");
         _processShiftDetails(shiftDetails);
         _createBlankDARCards();
         setState(() {});
@@ -123,82 +133,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       print('Error fetching shift details: $e');
     }
   }
-
-  // void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
-  //   hourlyShiftDetails.clear(); // Clear previous details
-  //   for (var shift in shiftDetails) {
-  //     //
-
-  //     final startTime = '09:00'; // Extract startTime
-  //     final endTime = '13:00'; // Extract endTime
-
-  //     // Split startTime and endTime strings to get hours and minutes
-  //     final startTimeParts = startTime.split(':');
-  //     final endTimeParts = endTime.split(':');
-
-  //     final startHour = int.parse(startTimeParts[0]);
-  //     final startMinute = int.parse(startTimeParts[1]);
-  //     final endHour = int.parse(endTimeParts[0]);
-  //     final endMinute = int.parse(endTimeParts[1]);
-
-  //     if (endHour > startHour ||
-  //         (endHour == startHour && endMinute > startMinute)) {
-  //       // Shift doesn't cross midnight
-  //       for (int hour = startHour; hour < endHour; hour++) {
-  //         final hourStart =
-  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //         final hourEnd =
-  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-
-  //         hourlyShiftDetails.add({
-  //           'startTime': hourStart,
-  //           'endTime': hourEnd,
-  //         });
-  //       }
-  //       // Add last hour
-  //       final lastHourStart =
-  //           '${endHour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //       final lastHourEnd =
-  //           '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
-  //       hourlyShiftDetails.add({
-  //         'startTime': lastHourStart,
-  //         'endTime': lastHourEnd,
-  //       });
-  //     } else {
-  //       // Shift crosses midnight
-  //       for (int hour = startHour; hour < 24; hour++) {
-  //         final hourStart =
-  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //         final hourEnd =
-  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-
-  //         hourlyShiftDetails.add({
-  //           'startTime': hourStart,
-  //           'endTime': hourEnd,
-  //         });
-  //       }
-  //       for (int hour = 0; hour < endHour; hour++) {
-  //         final hourStart =
-  //             '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-  //         final hourEnd =
-  //             '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-
-  //         hourlyShiftDetails.add({
-  //           'startTime': hourStart,
-  //           'endTime': hourEnd,
-  //         });
-  //       }
-  //       // Add last hour
-  //       // final lastHourStart = '00:${startMinute.toString().padLeft(2, '0')}';
-  //       // final lastHourEnd =
-  //       //     '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
-  //       // hourlyShiftDetails.add({
-  //       //   'startTime': lastHourStart,
-  //       //   'endTime': lastHourEnd,
-  //       // });
-  //     }
-  //   }
-  // }
 
   void _processShiftDetails(List<Map<String, dynamic>> shiftDetails) {
     hourlyShiftDetails.clear(); // Clear previous details
@@ -214,43 +148,59 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       final endHour = int.parse(endTimeParts[0]);
       final endMinute = int.parse(endTimeParts[1]);
 
+      // Handle shifts starting before and ending after midnight
       if (endHour > startHour ||
           (endHour == startHour && endMinute > startMinute)) {
         // Shift doesn't cross midnight
-        for (int hour = startHour; hour < endHour; hour++) {
-          final hourStart =
-              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-          final hourEnd =
-              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+        for (int hour = startHour; hour < 24; hour++) {
+          if (hour < 24) {
+            // Ensure hours are within a day
+            final hourStart =
+                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+            final hourEnd =
+                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
-          hourlyShiftDetails.add({
-            'startTime': hourStart,
-            'endTime': hourEnd,
-          });
+            hourlyShiftDetails.add({
+              'startTime': hourStart,
+              'endTime': hourEnd,
+            });
+            print("process 1 ${hourlyShiftDetails}");
+          }
         }
       } else {
         // Shift crosses midnight
         for (int hour = startHour; hour < 24; hour++) {
-          final hourStart =
-              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-          final hourEnd =
-              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+          if (hour < 24) {
+            // Ensure hours are within a day
+            final hourStart =
+                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+            final hourEnd =
+                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
 
-          hourlyShiftDetails.add({
-            'startTime': hourStart,
-            'endTime': hourEnd,
-          });
+            hourlyShiftDetails.add({
+              'startTime': hourStart,
+              'endTime': hourEnd,
+            });
+            print("process 2 ${hourlyShiftDetails}");
+          }
         }
-        for (int hour = 0; hour < endHour; hour++) {
-          final hourStart =
-              '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
-          final hourEnd =
-              '${(hour + 1).toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+        // Add tiles for remaining hours after midnight (if any)
+        final remainingEndHour = endHour < startHour ? endHour + 24 : endHour;
 
-          hourlyShiftDetails.add({
-            'startTime': hourStart,
-            'endTime': hourEnd,
-          });
+        for (int hour = 0; hour <= remainingEndHour; hour++) {
+          if (hour < endHour) {
+            // Ensure hours are within a day
+            final hourStart =
+                '${hour.toString().padLeft(2, '0')}:${startMinute.toString().padLeft(2, '0')}';
+            final hourEnd =
+                '${(hour + 1).toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+
+            hourlyShiftDetails2.add({
+              'startTime': hourStart,
+              'endTime': hourEnd,
+            });
+            print("process 3 ${hourlyShiftDetails2}");
+          }
         }
       }
     }
@@ -277,39 +227,95 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           bool isDarlistPresent = false;
 
           for (var dar in querySnapshot.docs) {
+            print('DarID ${widget.DarId}');
             final data = dar.data() as Map<String, dynamic>;
-            final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
-            print('date = ${date2[0]}');
-            if (date2[0] == date.day &&
-                date2[1] == date.month &&
-                date2[2] == date.year) {
-              if (data['EmpDarTile'] != null) {
-                isDarlistPresent = true;
-              }
+            if (data['EmpDarId'] == widget.DarId) {
+              // Assuming YOUR_EMPDARID_HERE is the EmpDarId you're checking for
               docRef = dar.reference;
+              if (data['EmpDarTile'] == null || data['EmpDarTile'] == "") {
+                isDarlistPresent = false; // Tile does not exist
+              } else {
+                isDarlistPresent = true; // Tile exists
+              }
+              break; // Exit the loop once the DAR is found
             }
           }
 
           final List<Map<String, dynamic>> darTiles = [];
+          final List<Map<String, dynamic>> darTiles2 = [];
+
           for (var shift in hourlyShiftDetails) {
             final String startTime = shift['startTime']!;
             final String endTime = shift['endTime']!;
-            final Map<String, dynamic> darTile = {
-              'TileContent': '',
-              'TileTime': '$startTime - $endTime',
-              'TileImages': [],
-              'TileLocation:': '',
-            };
-            darTiles.add(darTile);
+            print("shiftStartTime $startTime");
+            print("shiftEndTime $endTime");
+
+            final int startHour = int.parse(startTime.split(':')[0]);
+            final int endHour = int.parse(endTime.split(':')[0]);
+            print("startHour $startHour");
+            print("endHour $endHour");
+
+            if (endHour < startHour) {
+              // Handle shifts that span across midnight
+              for (int hour = startHour; hour < 24; hour++) {
+                darTiles.add({
+                  'TileContent': '',
+                  'TileImages': [],
+                  'TileLocation': '',
+                  'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
+                  'TileDate': Timestamp.fromDate(date),
+                });
+              }
+            } else {
+              for (int hour = startHour; hour < endHour; hour++) {
+                darTiles.add({
+                  'TileContent': '',
+                  'TileImages': [],
+                  'TileLocation': '',
+                  'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
+                  'TileDate': Timestamp.fromDate(date),
+                });
+              }
+            }
           }
+          // final DateTime date = DateTime.now();
+          final DateTime nextDate = date.add(Duration(days: 1)); // Next day
+          for (var shift in hourlyShiftDetails2) {
+            final String startTime = shift['startTime']!;
+            final String endTime = shift['endTime']!;
+            print("shiftStartTime $startTime");
+            print("shiftEndTime $endTime");
+
+            final int startHour = int.parse(startTime.split(':')[0]);
+            final int endHour = int.parse(endTime.split(':')[0]);
+            print("startHour $startHour");
+            print("endHour $endHour");
+
+            for (int hour = startHour; hour < endHour; hour++) {
+              darTiles2.add({
+                'TileContent': '',
+                'TileImages': [],
+                'TileLocation': '',
+                'TileTime': '$hour:00 - ${(hour + 1) % 24}:00',
+                'TileDate': Timestamp.fromDate(nextDate),
+              });
+            }
+          }
+          // var id = await _submitDAR();
+          // await id?.set({'EmpDarTile': darTiles2}, SetOptions(merge: true));
 
           if (docRef != null) {
             if (!isDarlistPresent) {
               await docRef
                   .set({'EmpDarTile': darTiles}, SetOptions(merge: true));
+              if (darTiles2.isNotEmpty) {
+                var id = await _submitDAR();
+                await id
+                    ?.set({'EmpDarTile': darTiles2}, SetOptions(merge: true));
+              }
             }
           } else {
-            print('No document found with the matching date.');
+            // await
           }
         } else {
           print('No document found with the matching _employeeId.');
@@ -319,6 +325,34 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
       }
     } catch (e) {
       print('Error creating blank DAR cards: $e');
+    }
+  }
+
+  Future<DocumentReference?> _submitDAR() async {
+    final _userService = UserService(firestoreService: FireStoreService());
+    await _userService.getShiftInfo();
+
+    try {
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      var docRef = await _firestore.collection('EmployeesDAR').add({
+        'EmpDarLocationId': _userService.shiftLocationId,
+        'EmpDarLocationName': _userService.shiftLocation,
+        'EmpDarShiftId': _userService.ShiftId,
+        'EmpDarDate': Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
+        'EmpDarCreatedAt':
+            Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
+        'EmpDarEmpName': _userService.userName,
+        'EmpDarEmpId': FirebaseAuth.instance.currentUser!.uid,
+        'EmpDarCompanyId': _userService.shiftCompanyId,
+        'EmpDarCompanyBranchId': _userService.shiftCompanyBranchId,
+        'EmpDarClientId': _userService.shiftClientId,
+        'EmpDarShiftName': _userService.shiftName
+      });
+      await docRef.update({'EmpDarId': docRef.id});
+      return docRef;
+    } catch (e) {
+      print('error = $e');
+      return null;
     }
   }
 
@@ -347,19 +381,32 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     }
   }
 
-  Future<List> fetchDarTileData(DateTime? time) async {
+  Future<List> fetchDarTileData(DateTime? time, String? DarID) async {
     final date = time ?? DateTime.now();
     print("aajkadin:$date");
     List darList = [];
+    List<Map<String, dynamic>> empDarTile = [];
     final CollectionReference employeesDARCollection =
         FirebaseFirestore.instance.collection('EmployeesDAR');
     print('empid = ${_employeeId}');
 
+    DateTime today = DateTime.now();
+    DateTime startDate = DateTime(today.year, today.month, today.day);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(startDate);
+    print('Formatted Date: $formattedDate');
+    print("startDate $startDate");
+    DateTime endDate = DateTime(today.year, today.month, today.day, 23, 59, 59);
+
     final QuerySnapshot querySnapshot = await employeesDARCollection
         .where('EmpDarEmpId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('EmpDarId', isEqualTo: DarID)
+        // .where('EmpDarShiftId', isEqualTo: _userService.ShiftId)
+        // .where('TileDate', isEqualTo: formattedDate)
+        // .where('TileDate', isLessThan: Timestamp.fromDate(endDate))
         .get();
-
+    String formattedDate2 = DateFormat('yyyy-M-dd').format(startDate);
     if (querySnapshot.docs.isNotEmpty) {
+      // Assuming there is only one document for today's date
       Map<String, dynamic>? docRef;
 
       for (var dar in querySnapshot.docs) {
@@ -368,23 +415,53 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         print('date3 = ${date2[0]}');
         if (date2[0] == date.day &&
             date2[1] == date.month &&
-            date2[2] == date.year) {
-          docRef = dar.data() as Map<String, dynamic>;
-        }
+            date2[2] == date.year) {}
+        docRef = dar.data() as Map<String, dynamic>;
       }
       print('docRef = ${docRef}');
       if (docRef != null) {
         darList = docRef['EmpDarTile'];
       }
+      if (docRef != null) {
+        darList = docRef['EmpDarTile'];
+      }
+      // print("darList2 ${darList2}");
+    } else {
+      print("doc is empty");
     }
-// print('darList = ${darList[0]}');
+    print("darlist ${darList}");
     return darList;
   }
+
+  // Future<List<Map<String, dynamic>>> fetchDarTileData(DateTime? time) async {
+  //   final date = time ?? DateTime.now();
+  //   print("aajkadin:$date");
+  //   List<Map<String, dynamic>> darList = [];
+  //   final CollectionReference employeesDARCollection =
+  //       FirebaseFirestore.instance.collection('EmployeesDAR');
+  //   print('empid = ${_employeeId}');
+
+  //   final QuerySnapshot querySnapshot = await employeesDARCollection
+  //       .where('EmpDarEmpId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+  //       .get();
+
+  //   if (querySnapshot.docs.isNotEmpty) {
+  //     for (var dar in querySnapshot.docs) {
+  //       final data = dar.data() as Map<String, dynamic>;
+  //       darList.addAll(data['EmpDarTile']);
+  //     }
+  //   } else {
+  //     print("No DAR documents found for the current user.");
+  //   }
+  //   print("darList: $darList");
+  //   return darList;
+  // }
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
@@ -403,7 +480,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
             },
           ),
           title: InterRegular(
-            text: '',
+            text: 'DAR',
             fontsize: width / width18,
             color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
@@ -444,10 +521,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         ),
                       ),
                     ),
-                     VerticalDivider(
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
+                    VerticalDivider(
+                      color:DarkColor. Primarycolor,
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -533,7 +608,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           ),
                           SizedBox(height: height / height20),
                           FutureBuilder(
-                            future: fetchDarTileData(widget.passdate),
+                            future:
+                                fetchDarTileData(widget.passdate, widget.DarId),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -547,6 +623,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                 );
                               }
                               final data = snapshot.data;
+                              print("Data length ${data?.length}");
                               // print(
                               //     'image length = ${(data![0]['images'] as List).length}');
                               return data == null
@@ -560,23 +637,30 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                     )
                                   : Column(
                                       children: List.generate(
-                                        data.length,
+                                        data?.length ?? 0,
                                         (index) => GestureDetector(
                                           onTap: () {
+                                            print(data[index]);
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     CreateDarScreen(
+                                                  // darTiles: data,
+                                                  // index: index,
                                                   index: index,
+                                                  DarId: widget.DarId,
                                                   darTiles: data,
+                                                  EmployeeId: widget.Empid,
+                                                  EmployeeName: widget.Username,
                                                 ),
                                               ),
                                             );
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
-                                                bottom: height / height10),
+                                              bottom: height / height10,
+                                            ),
                                             width: double.maxFinite,
                                             decoration: BoxDecoration(
                                               color: DarkColor. WidgetColor,
@@ -585,20 +669,22 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                       width / width10),
                                             ),
                                             padding: EdgeInsets.symmetric(
-                                                vertical: height / height20,
-                                                horizontal: width / width20),
+                                              vertical: height / height20,
+                                              horizontal: width / width20,
+                                            ),
                                             child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   InterMedium(
                                                     text:
-                                                        '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: DarkColor. color21,
+                                                        "${data[index]['TileTime']}",
+                                                    // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
+                                                    color: DarkColor.color21,
                                                   ),
                                                   SizedBox(
-                                                      height:
-                                                          height / height10),
+                                                    height: height / height10,
+                                                  ),
                                                   InterRegular(
                                                     text:
                                                         '${data[index]['TileContent']}',
@@ -625,8 +711,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                             BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(width /
-                                                                      width10),
+                                                                  .circular(
+                                                            width / width10,
+                                                          ),
                                                           image:
                                                               DecorationImage(
                                                             image: NetworkImage(
@@ -659,8 +746,12 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                           reportsSnapshot
                                                                   .data ??
                                                               {};
-                                                      final hourKey =
-                                                          '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00';
+                                                      final hourKey = data[
+                                                                      index][
+                                                                  'startTime'] !=
+                                                              null
+                                                          ? '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00'
+                                                          : '';
                                                       final reportsForHour =
                                                           reportsByHour[
                                                                   hourKey] ??
@@ -712,21 +803,25 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                                             as List<dynamic>? ??
                                                                         [];
 
-                                                                return checkPointImages
-                                                                    .map(
-                                                                        (imageUrl) {
-                                                                  return Image
-                                                                      .network(
-                                                                    imageUrl
-                                                                        .toString(),
-                                                                    width:
-                                                                        100, // Adjust the width as per your requirement
-                                                                    height:
-                                                                        100, // Adjust the height as per your requirement
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  );
-                                                                }).toList();
+                                                                if (checkPointImages
+                                                                    .isNotEmpty) {
+                                                                  return [
+                                                                    Image
+                                                                        .network(
+                                                                      checkPointImages
+                                                                          .first
+                                                                          .toString(),
+                                                                      width: width /
+                                                                          width100,
+                                                                      height: height /
+                                                                          height100,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )
+                                                                  ];
+                                                                } else {
+                                                                  return [];
+                                                                }
                                                               }).toList(),
                                                             ],
                                                           );
@@ -745,18 +840,19 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                       ),
                     )
                   : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width / 30),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterBold(
                             text: 'Reports',
-                            fontsize: width / 20,
+                            fontsize: width / width20,
                             color: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.color3,
                           ),
-                          SizedBox(height: height / 25),
+                          SizedBox(height: height / height25),
                           FutureBuilder<
                               Map<String, List<Map<String, dynamic>>>>(
                             future: fetchReportLogs(),
@@ -807,19 +903,19 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                             : '';
                                         return Container(
                                           margin: EdgeInsets.only(
-                                              bottom: height / 30),
-                                          height: height / 25,
+                                              bottom: height / height30),
+                                          height: height / height25,
                                           color: const Color(0xFF7C7C7C),
                                           child: Row(
                                             children: [
                                               Container(
-                                                width: 20,
+                                                width: width / width20,
                                                 height: double.infinity,
                                                 color: isDark
                                                     ? Colors.red
                                                     : LightColor.Primarycolor,
                                               ),
-                                              const SizedBox(width: 2),
+                                              SizedBox(width: width / width2),
                                               Expanded(
                                                 child: Text(
                                                   '# ${report['ReportSearchId'] ?? ''}',
@@ -830,7 +926,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(width: 2),
+                                              SizedBox(width: width / width2),
                                               Text(
                                                 formattedTime,
                                                 style: const TextStyle(

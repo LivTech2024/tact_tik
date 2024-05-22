@@ -5,7 +5,8 @@ import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/main.dart';
-import 'package:workmanager/workmanager.dart';
+// import 'package:workmanager/workmanager.dart';
+// import 'package:workmanager/workmanager.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -42,8 +43,9 @@ class PostOrder extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
+              shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
               backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -94,6 +96,16 @@ class PostOrder extends StatelessWidget {
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDark
+                                  ? DarkColor.color1.withOpacity(.1)
+                                  : LightColor.color3.withOpacity(.1),
+                              blurRadius: 1,
+                              spreadRadius: 2,
+                              offset: Offset(0, 3),
+                            )
+                          ],
                           borderRadius: BorderRadius.circular(width / width10),
                           color: isDark
                               ? DarkColor.WidgetColor
@@ -126,6 +138,7 @@ class PostOrder extends StatelessWidget {
                               width: width / width200,
                               height: height / height46,
                               decoration: BoxDecoration(
+                                
                                 borderRadius:
                                     BorderRadius.circular(width / width10),
                                 color: isDark

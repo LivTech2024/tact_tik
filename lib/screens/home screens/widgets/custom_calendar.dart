@@ -31,15 +31,31 @@ class _CustomCalenderState extends State<CustomCalendar> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
+            boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? DarkColor.color1.withOpacity(.1)
+                    : LightColor.color3.withOpacity(.1),
+                blurRadius: 1,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            color:  isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Theme(
-            data: ThemeData.dark().copyWith(
+            data: isDark?ThemeData.dark().copyWith(
               colorScheme: ColorScheme.dark(
-                primary: isDark? Color(0xFFCBA76B):LightColor.WidgetColor, // Background color
+                primary:  Color(0xFFCBA76B), // Background color
                 onPrimary:
-                    isDark?const Color(0xFF704600):LightColor.WidgetColor, // Text color for selected dates
+                    const Color(0xFF704600), // Text color for selected dates
+              ),
+            ):ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light(
+                primary:  LightColor.Primarycolorlight, // Background color
+                onPrimary:
+                    LightColor.Primarycolor, // Text color for selected dates
               ),
             ),
             child: Column(
@@ -52,12 +68,12 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     disableModePicker: true,
                     calendarType: CalendarDatePicker2Type.multi,
                     selectedDayTextStyle: TextStyle(
-                      color: Colors.white,
+                      color: isDark ? DarkColor.color2 : LightColor.color3,
                     ),
                     selectedYearTextStyle: TextStyle(
-                      color: Colors.white,
+                      color: isDark ? DarkColor.color2 : LightColor.color3,
                     ),
-                    selectedDayHighlightColor: Color(0xFF704600),
+                    selectedDayHighlightColor:isDark? Color(0xFF704600):LightColor.Primarycolor,
                     currentDate: DateTime.now(),
                     selectableDayPredicate: _selectableDayPredicate,
                     dayBorderRadius: BorderRadius.circular(
@@ -80,7 +96,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
         InterBold(
           text: 'Weekly Shifts',
           fontsize: width / width18,
-          color: Color(0xFFE9E9E9),
+          color: isDark ? DarkColor.color2 : LightColor.color3,
         )
       ],
     );

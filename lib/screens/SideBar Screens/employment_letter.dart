@@ -56,8 +56,9 @@ class EmploymentLetterScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
+          shadowColor: isDark ? DarkColor.color3.withOpacity(.1) : LightColor.color3.withOpacity(0.1),
           backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -83,6 +84,16 @@ class EmploymentLetterScreen extends StatelessWidget {
             width: double.maxFinite,
             margin: EdgeInsets.symmetric(horizontal: width / width30),
             decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: isDark
+                      ? DarkColor.color1.withOpacity(.1)
+                      : LightColor.color3.withOpacity(.1),
+                  blurRadius: 1,
+                  spreadRadius: 2,
+                  offset: Offset(0, 3),
+                )
+              ],
               color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               borderRadius: BorderRadius.circular(width / width12),
             ),

@@ -31,6 +31,16 @@ class HomeScreenCustomNavigation extends StatelessWidget {
       height: height / height74,
       width: width / width74,
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? DarkColor.color1.withOpacity(.1)
+                : LightColor.color3.withOpacity(.1),
+            blurRadius: 1,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
         color: isDark? DarkColor. WidgetColor:LightColor.WidgetColor,
         borderRadius: BorderRadius.circular(width / width13),
       ),

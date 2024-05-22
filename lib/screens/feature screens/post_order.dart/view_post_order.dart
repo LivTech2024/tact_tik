@@ -160,8 +160,9 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
           backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,

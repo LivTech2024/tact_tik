@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -11,46 +8,42 @@ import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/widget/log_type_widget.dart';
+
 import '../../../../common/enums/log_type_enums.dart';
 import '../../../../fonts/inter_regular.dart';
+import '../../../../services/EmailService/EmailJs_fucntion.dart';
 import '../../../../utils/colors.dart';
 
-class SLogBookScreen extends StatefulWidget {
-  const SLogBookScreen({super.key});
+class LogBookScreen extends StatefulWidget {
+  const LogBookScreen({super.key});
 
   @override
-  State<SLogBookScreen> createState() => _LogBookScreenState();
+  State<LogBookScreen> createState() => _LogBookScreenState();
 }
 
-class _LogBookScreenState extends State<SLogBookScreen> {
-  DateTime _selectedDate = DateTime.now();
-  DatePickerController datePickerController = DatePickerController();
+class _LogBookScreenState extends State<LogBookScreen> {
+  late Stream<QuerySnapshot> _logBookStream;
+  
+  get datePickerController => null;
 
-  List convertDate(Timestamp timestamp) {
-    DateTime date = timestamp.toDate();
-    return [date.day, date.month, date.year];
-  }
-
-  Map<String, dynamic>? fetchLogsByDateAndId(
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> logs) {
-    for (var log in logs) {
-      List date = convertDate(log['LogBookDate'] as Timestamp);
-      if (date[0] == _selectedDate.day &&
-          date[1] == _selectedDate.month &&
-          date[2] == _selectedDate.year &&
-          log['LogBookEmpId'] == FirebaseAuth.instance.currentUser!.uid) {
-        return log.data();
-      }
+  Future<String> getempID() async {
+    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+    if (userInfo != null) {
+      String employeeId = userInfo['EmployeeId'];
+      return employeeId;
+    } else {
+      print('User info not found');
+      return "";
     }
-    return null;
   }
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      datePickerController.jumpToSelection();
-    });
     super.initState();
+    _logBookStream = FirebaseFirestore.instance
+        .collection('LogBook')
+        .where('LogBookEmpId', isEqualTo: 'ecn7fE3IigfnWe6EHyu2')
+        .snapshots();
   }
 
   @override
@@ -61,6 +54,11 @@ class _LogBookScreenState extends State<SLogBookScreen> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: height / height30,
+            ),
+          ),
           SliverAppBar(
             backgroundColor: DarkColor.  AppBarcolor,
             elevation: 0,
@@ -85,89 +83,195 @@ class _LogBookScreenState extends State<SLogBookScreen> {
             centerTitle: true,
             floating: true, // Makes the app bar float above the content
           ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: height / height30,
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              height: 100,
-              width: double.infinity,
-              child: DatePicker(
-                DateTime(2024),
-                controller: datePickerController,
-                initialSelectedDate: DateTime.now(),
-                selectionColor: DarkColor.  Primarycolor,
-                selectedTextColor: Colors.white,
-                onDateChange: (date) {
-                  setState(() {
-                    _selectedDate = date;
-                  });
-                },
-              ),
-            ),
-          ),
-          StreamBuilder(
-            stream:
-            FirebaseFirestore.instance.collection('LogBook').snapshots(),
+          StreamBuilder<QuerySnapshot>(
+            stream: _logBookStream,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
-                  child: Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  ),
+                  child: Text('Error: ${snapshot.error}'),
                 );
               }
 
               if (!snapshot.hasData) {
-                return const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                return SliverToBoxAdapter(
+                  child: CircularProgressIndicator(),
                 );
               }
-              Map<String, dynamic>? logBookDoc =
-              fetchLogsByDateAndId(snapshot.data!.docs);
 
-              // print(logBookDocs);
-              if (logBookDoc == null) {
-                print('No data found');
-                return const SliverToBoxAdapter(
-                  child: Center(
-                    child: Text(
-                      'No data found!',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                );
-              } else {
-                List<dynamic> logs = logBookDoc['LogBookData'];
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    //
-                        (context, index) {
-                      Map<String, dynamic> logBookId = logs[index];
-                      // final logData =
-                      //     logBookDocs[index].data() as Map<String, dynamic>;
-                      // return LogBookWidget(
-                      //   logBookId: logBookId,
-                      //   // log: Logs.fromDocument(logData),
-                      // );
-                      // Logs log = Logs.fromDocument(logBookId);
-                      return LogTypeWidget(
-                        clientName: logBookDoc['LogBookCleintName'] ?? "",
-                        location: logBookDoc['LogBookLocationName'] ?? "",
-                        logtype: logBookId['LogType'],
-                        logEnum: LogBookEnum.CheckPoint,
-                        time: logBookId['LogReportedAt'],
-                      );
-                    },
-                    childCount: logs.length,
-                  ),
-                );
-              }
+              final documents = snapshot.data!.docs;
+              final groups = _groupLogsByDate(documents);
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    final entry = groups.entries.toList()[index];
+                    final shiftName = entry.key;
+                    final logsByDate = entry.value;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: logsByDate.entries.map((dateEntry) {
+                        final date = dateEntry.key;
+                        final logs = dateEntry.value;
+
+                        return LogBookWidget(
+                          date: date,
+                          shiftName: shiftName,
+                          logs: logs,
+                        );
+                      }).toList(),
+                    );
+                  },
+                  childCount: groups.length,
+                ),
+              );
             },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Map<String, Map<String, List<Map<String, dynamic>>>> _groupLogsByDate(
+      List<QueryDocumentSnapshot> documents) {
+    final groups = <String, Map<String, List<Map<String, dynamic>>>>{};
+
+    documents.sort((a, b) {
+      final timestampA = a['LogBookDate'] as Timestamp;
+      final timestampB = b['LogBookDate'] as Timestamp;
+      return timestampB.compareTo(timestampA);
+    });
+
+    for (final document in documents) {
+      final data = document.data() as Map<String, dynamic>;
+      final shiftName = document.id;
+      final logData = data['LogBookData'] as List<dynamic>;
+      final logTimestamp = data['LogBookDate'] as Timestamp;
+      final clientName = data['LogCleintName'] ?? 'Unknown';
+      final logLocation = data['LogBookLocationName'] ?? 'Unknown';
+      final logsByDate = <String, List<Map<String, dynamic>>>{};
+
+      for (final logMap in logData) {
+        final logMapData = logMap as Map<String, dynamic>;
+        final date = DateFormat('MMM d, yyyy').format(logTimestamp.toDate());
+
+        final logType = logMapData['LogType']; // Access LogType within each map
+
+        if (logsByDate.containsKey(date)) {
+          logsByDate[date]!.add({
+            'CLIENTNAME': clientName,
+            'LOCATION': logLocation,
+            'LOGTYPE': logType,
+            'LOGTIMESTAMP': logTimestamp,
+          });
+        } else {
+          logsByDate[date] = [
+            {
+              'CLIENTNAME': clientName,
+              'LOCATION': logLocation,
+              'LOGTYPE': logType,
+              'LOGTIMESTAMP': logTimestamp,
+            }
+          ];
+        }
+      }
+
+      groups[shiftName] = logsByDate;
+    }
+
+    return groups;
+  }
+
+
+}
+
+class LogBookWidget extends StatefulWidget {
+  final String date;
+  final String shiftName;
+  final List<Map<String, dynamic>> logs;
+
+  const LogBookWidget({super.key,
+    required this.date,
+    required this.shiftName,
+    required this.logs,});
+
+  @override
+  State<LogBookWidget> createState() => _LogBookWidgetState();
+}
+
+class _LogBookWidgetState extends State<LogBookWidget> {
+  bool expand = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: width / width30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                expand = !expand;
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: height / height10),
+              padding: EdgeInsets.symmetric(horizontal: width / width20),
+              height: height / height70,
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(width / width10),
+                color: DarkColor.WidgetColor,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InterBold(
+                    text: widget.date,
+                    color: DarkColor.Primarycolor,
+                    fontsize: width / width18,
+                  ),
+                  Icon(
+                    expand
+                        ? Icons.arrow_circle_up_outlined
+                        : Icons.arrow_circle_down_outlined,
+                    size: width / width24,
+                    color: DarkColor. Primarycolor,
+                  )
+                ],
+              ),
+            ),
+          ),
+          if (expand)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: height / height10),
+              child: Flexible(
+                child: InterBold(text: widget.shiftName , fontsize: width / width18,color:DarkColor. Primarycolor,),
+              ),
+            ),
+          Visibility(
+            visible: expand,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.logs.map((log) {
+                final logTimestamp = log['LOGTIMESTAMP'] as Timestamp;
+                final dateTime = logTimestamp.toDate();
+                final formattedDateTime = DateFormat('hh:mm:ss a').format(dateTime);
+                return LogTypeWidget(
+                  type: LogBookEnum.values.byName(log['LOGTYPE']),
+                  clientname: log['CLIENTNAME'],
+                  logtype: log['LOGTYPE'],
+                  location: log['LOCATION'],
+                  time: formattedDateTime,
+                );
+              }).toList(),
+            ),
+
           ),
         ],
       ),
@@ -175,132 +279,14 @@ class _LogBookScreenState extends State<SLogBookScreen> {
   }
 }
 
-// class LogBookWidget extends StatefulWidget {
-//   // final String logBookId;
-//   final Logs log;
-
-//   const LogBookWidget({
-//     super.key,
-//     // required this.logBookId,
-//     required this.log,
-//   });
-
-//   @override
-//   State<LogBookWidget> createState() => _LogBookWidgetState();
-// }
-
-// class _LogBookWidgetState extends State<LogBookWidget> {
-//   bool expand = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final double height = MediaQuery.of(context).size.height;
-//     final double width = MediaQuery.of(context).size.width;
-
-//     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: width / width30),
-//       child:  Column(
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 GestureDetector(
-//                   onTap: () {
-//                     print('on ckick');
-//                     setState(() {
-//                       expand = !expand;
-//                     });
-//                   },
-//                   child: Container(
-//                     margin: EdgeInsets.only(top: height / height10),
-//                     padding: EdgeInsets.symmetric(horizontal: width / width20),
-//                     height: height / height70,
-//                     width: double.maxFinite,
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(width / width10),
-//                       color: WidgetColor,
-//                     ),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         InterBold(
-//                           text: widget.logBookId,
-//                           color: Primarycolor,
-//                           fontsize: width / width18,
-//                         ),
-//                         Icon(
-//                           expand
-//                               ? Icons.arrow_circle_up_outlined
-//                               : Icons.arrow_circle_down_outlined,
-//                           size: width / width24,
-//                           color: Primarycolor,
-//                         )
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//                 // Visibility(
-//                 //   visible: expand,
-//                 //   child: Column(
-//                 //     children: List.generate(
-//                 //       logs.length,
-//                 //       (index) => FirebaseAuth.instance.currentUser!.uid ==
-//                 //               logs[index]['LogBookEmployeeId']
-//                 //           ? LogTypeWidget(
-//                 //               clientName: logs[index]['LogbookEmployeeName'],
-//                 //               location: logs[index]['LogBookLocation'],
-//                 //               logtype: logs[index]['LogBookType'],
-//                 //               time: LogBookEnum.CheckPoint,
-//                 //             )
-//                 //           : const SizedBox(),
-//                 //     ),
-//                 //   ),
-//                 // ),
-//               ],
-//             )
-//     );
-//   }
-// }
-
 class Logs {
-  final String time;
+  final String type;
   final String location;
-  final String clientName;
-  final String timeStamp;
-  final String logtype;
+  final String clintName;
 
   Logs({
-    required this.time,
-    required this.clientName,
+    required this.type,
+    required this.clintName,
     required this.location,
-    required this.timeStamp,
-    required this.logtype,
   });
-
-  factory Logs.fromDocument(Map<String, dynamic>? data) {
-    if (data == null) {
-      throw Exception('Data is null');
-    }
-
-    final String? logBookLocation = data['LogBookLocation'];
-    final String? logbookEmployeeName = data['LogbookEmployeeName'];
-    final String? logBookType = data['LogBookType'];
-
-    if (logBookLocation == null ||
-        logbookEmployeeName == null ||
-        logBookType == null) {
-      throw Exception('Required data is missing');
-    }
-
-    Timestamp timestamp = Timestamp.now();
-    DateTime dateTime = timestamp.toDate();
-    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
-
-    return Logs(
-      time: formattedDate,
-      location: logBookLocation,
-      clientName: logbookEmployeeName,
-      timeStamp: formattedDate,
-      logtype: logBookType,
-    );
-  }
 }

@@ -22,6 +22,7 @@ class TaskFeatureCreateScreen extends StatefulWidget {
 class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
   final TextEditingController _tittleController = TextEditingController();
   final TextEditingController _explainController = TextEditingController();
+  bool _isLoading = false;
 
   Future<void> saveTaskToFirestore() async {
     final _userService = UserService(firestoreService: FireStoreService());
@@ -77,8 +78,10 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? DarkColor.color3 : LightColor.color3.withOpacity(0.1),
+          
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -98,33 +101,43 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width / width30),
-            child: Column(
-              children: [
-                SizedBox(height: height / height30),
-                CustomeTextField(
-                  hint: 'Tittle',
-                  controller: _tittleController,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  children: [
+                    SizedBox(height: height / height30),
+                    CustomeTextField(
+                      hint: 'Tittle',
+                      controller: _tittleController,
+                    ),
+                    SizedBox(height: height / height20),
+                    CustomeTextField(
+                      hint: 'Explain',
+                      isExpanded: true,
+                      controller: _explainController,
+                    ),
+                    SizedBox(height: height / height20),
+                    Button1(
+                      text: 'Done',
+                      onPressed: saveTaskToFirestore,
+                      backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
+                      borderRadius: width / width10,
+                    )
+                  ],
                 ),
-                SizedBox(height: height / height20),
-                CustomeTextField(
-                  hint: 'Explain',
-                  isExpanded: true,
-                  controller: _explainController,
-                ),
-                SizedBox(height: height / height20),
-                Button1(
-                  text: 'Done',
-                  color: isDark ? DarkColor.color15 : LightColor.color1,
-                  onPressed: saveTaskToFirestore,
-                  backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                  borderRadius: width / width10,
-                )
-              ],
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.center,
+              child: Visibility(
+                visible: _isLoading,
+                child: CircularProgressIndicator(),
+              ),
+            )
+          ],
         ),
       ),
     );

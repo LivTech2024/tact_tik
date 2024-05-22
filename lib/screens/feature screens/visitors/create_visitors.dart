@@ -17,6 +17,7 @@ import '../../supervisor screens/home screens/widgets/set_details_widget.dart';
 
 class CreateVisitors extends StatefulWidget {
   final Map<String, dynamic>? visitorData;
+
   CreateVisitors({super.key, this.visitorData});
 
   @override
@@ -38,6 +39,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   TimeOfDay? InTime;
   TimeOfDay? OutTime;
+  bool _isLoading = false;
 
   late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -251,10 +253,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         nameController.text.isEmpty ||
         EmailController.text.isEmpty ||
         ContactNoController.text.isEmpty ||
-        AssetHandoverController.text.isEmpty ||
-        LicensePlateNumberController.text.isEmpty ||
-        SetCountdownController.text.isEmpty ||
-        CommentsController.text.isEmpty ||
         NoOfPersonController.text.isEmpty ||
         CompanyNameController.text.isEmpty) {
       _showSnackbar('Please fill in all fields correctly');
@@ -280,172 +278,182 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: width / width24,
-                ),
-                padding: EdgeInsets.only(left: width / width20),
-                onPressed: () {
-                  Navigator.pop(context);
-                  print("Navigtor debug: ${Navigator.of(context).toString()}");
-                },
-              ),
-              title: InterRegular(
-                text: 'Create Visitors',
-                fontsize: width / width18,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -.3,
-              ),
-              centerTitle: true,
-              floating: true, // Makes the app bar float above the content
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: height / height30),
-                    InterBold(
-                      text: 'Add Visitor',
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
-                      fontsize: width / width20,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        body: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  shadowColor:  isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
+                  backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                  elevation: 5,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color:  isDark ? DarkColor.color1 : LightColor.color3,
+                      size: width / width24,
                     ),
-                    SizedBox(height: height / height30),
-                    Row(
+                    padding: EdgeInsets.only(left: width / width20),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print("Navigtor debug: ${Navigator.of(context).toString()}");
+                    },
+                  ),
+                  title: InterRegular(
+                    text: 'Create Visitors',
+                    fontsize: width / width18,
+                    color:  isDark ? DarkColor.color1 : LightColor.color3,
+                    letterSpacing: -.3,
+                  ),
+                  centerTitle: true,
+                  floating: true, // Makes the app bar float above the content
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SetTimeWidget(
-                          hintText: InTime == null
-                              ? 'In Time'
-                              : '${_formatTime(InTime!, true)}',
-                          onTap: () => _selectTime(context, true),
-                          flex: 2,
-                          isEnabled: true,
+                        SizedBox(height: height / height30),
+                        InterBold(
+                          text: 'Add Visitor',
+                          color:  isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.color3 ,
+                          fontsize: width / width20,
+                        ),
+                        SizedBox(height: height / height30),
+                        Row(
+                          children: [
+                            SetTimeWidget(
+                              hintText: InTime == null
+                                  ? 'In Time'
+                                  : '${_formatTime(InTime!, true)}',
+                              onTap: () => _selectTime(context, true),
+                              flex: 2,
+                              isEnabled: true,
+                              enabled: !isEditMode,
+                              isEditMode: isEditMode,
+                            ),
+                            SizedBox(width: width / width6),
+                            SetTimeWidget(
+                              hintText: OutTime == null
+                                  ? 'Out Time'
+                                  : '${_formatTime(OutTime!, false)}',
+                              onTap: () => _selectTime(context, false),
+                              flex: 2,
+                              isEnabled: isEditMode,
+                              enabled: isEditMode,
+                              isEditMode: isEditMode,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Name',
+                          controller: nameController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(width: width / width6),
-                        SetTimeWidget(
-                          hintText: OutTime == null
-                              ? 'Out Time'
-                              : '${_formatTime(OutTime!, false)}',
-                          onTap: () => _selectTime(context, false),
-                          flex: 2,
-                          isEnabled: isEditMode,
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Email',
+                          controller: EmailController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Contact Number',
+                          controller: ContactNoController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(10),
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Allows only digits
+                          ],
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Asset Handover',
+                          controller: AssetHandoverController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Asset Return',
+                          controller: AssetReturnController,
                           enabled: isEditMode,
                           isEditMode: isEditMode,
                         ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'License Plate Number ',
+                          controller: LicensePlateNumberController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Set Countdown',
+                          controller: SetCountdownController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Comments ',
+                          controller: CommentsController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'No. Of Person',
+                          controller: NoOfPersonController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(height: height / height20),
+                        SetTextfieldWidget(
+                          hintText: 'Company Name',
+                          controller: CompanyNameController,
+                          enabled: !isEditMode,
+                          isEditMode: isEditMode,
+                        ),
+                        SizedBox(
+                          height: height / height30,
+                        ),
+                        Button1(
+                          text: 'Save',
+                          onPressed: () async {
+                            bool isSuccessful = await _saveVisitorData();
+                            if (!isSuccessful) {
+                              // Handle the case when saving or updating visitor data fails
+                            }
+                          },
+                          backgroundcolor: isDark?DarkColor.Primarycolor:LightColor.Primarycolor,
+                          color: isDark
+                              ? DarkColor.color22
+                              : LightColor.color1,
+                          borderRadius: width / width10,
+                          fontsize: width / width18,
+                        ),
                       ],
                     ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Name',
-                      controller: nameController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Email',
-                      controller: EmailController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Contact Number',
-                      controller: ContactNoController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(10),
-                        FilteringTextInputFormatter
-                            .digitsOnly, // Allows only digits
-                      ],
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Asset Handover',
-                      controller: AssetHandoverController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Asset Return',
-                      controller: AssetReturnController,
-                      enabled: isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'License Plate Number ',
-                      controller: LicensePlateNumberController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Set Countdown',
-                      controller: SetCountdownController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Comments ',
-                      controller: CommentsController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'No. Of Person',
-                      controller: NoOfPersonController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(height: height / height20),
-                    SetTextfieldWidget(
-                      hintText: 'Company Name',
-                      controller: CompanyNameController,
-                      enabled: !isEditMode,
-                      isEditMode: isEditMode,
-                    ),
-                    SizedBox(
-                      height: height / height30,
-                    ),
-                    Button1(
-                      text: 'Save',
-                      onPressed: () async {
-                        bool isSuccessful = await _saveVisitorData();
-                        if (!isSuccessful) {
-                          // Handle the case when saving or updating visitor data fails
-                        }
-                      },
-                      backgroundcolor: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
-                      color: isDark
-                          ? DarkColor.color22
-                          : LightColor.color1,
-                      borderRadius: width / width10,
-                      fontsize: width / width18,
-                    ),
-                  ],
-                ),
+                  ),
+                )
+              ],
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Visibility(
+                visible: _isLoading,
+                child: CircularProgressIndicator(),
               ),
-            )
+            ),
           ],
         ),
       ),

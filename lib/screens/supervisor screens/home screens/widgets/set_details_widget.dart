@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../utils/colors.dart';
@@ -67,7 +68,7 @@ class SetDetailsWidget extends StatelessWidget {
           Icon(
             icon,
             size: width / width24,
-            color: DarkColor.color1,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
           ),
           SizedBox(width: width / width10),
           useTextField
@@ -77,7 +78,9 @@ class SetDetailsWidget extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
                       fontSize: width / width18,
-                      color: Colors.white, // Change text color to white
+                      color:  isDark
+                          ? DarkColor.color1
+                          : LightColor.color3, // Change text color to white
                     ),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -90,12 +93,14 @@ class SetDetailsWidget extends StatelessWidget {
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
                         fontSize: width / width18,
-                        color: DarkColor.  color2, // Change text color to white
+                        color:  isDark
+                            ? DarkColor.color2
+                            : LightColor.color3, // Change text color to white
                       ),
                       hintText: hintText,
                       contentPadding: EdgeInsets.zero, // Remove padding
                     ),
-                    cursorColor: DarkColor.Primarycolor,
+                    cursorColor:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                     controller: controller,
                   ),
                 )
@@ -104,7 +109,7 @@ class SetDetailsWidget extends StatelessWidget {
                   child: InterMedium(
                     text: hintText,
                     fontsize: width / width18,
-                    color: DarkColor.  color25,
+                    color:  isDark ? DarkColor.color25 : LightColor.color3,
                   ),
                 ),
         ],

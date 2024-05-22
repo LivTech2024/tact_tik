@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:bounce/bounce.dart';
+import 'package:tact_tik/main.dart';
 import '../../fonts/inter_bold.dart';
 import '../../utils/colors.dart';
 
@@ -35,23 +36,35 @@ class Button1 extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: isDark
+                    ? DarkColor.color1.withOpacity(.1)
+                    : LightColor.color3.withOpacity(.1),
+                blurRadius: 1,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+          ],
             color: backgroundcolor,
-            borderRadius: useBorderRadius ? MyBorderRadius : BorderRadius
-                .circular(borderRadius)
-        ),
+            borderRadius: useBorderRadius
+                ? MyBorderRadius
+                : BorderRadius.circular(borderRadius)),
         height: height,
         child: Center(
-          child: useWidget ? MyWidget : useBold
-              ? InterBold(
-            text: text,
-            fontsize: fontsize,
-            color: color,
-          )
-              : InterSemibold(
-            text: text,
-            fontsize: fontsize,
-            color: color,
-          ),
+          child: useWidget
+              ? MyWidget
+              : useBold
+                  ? InterBold(
+                      text: text,
+                      fontsize: fontsize,
+                      color: color,
+                    )
+                  : InterSemibold(
+                      text: text,
+                      fontsize: fontsize,
+                      color: color,
+                    ),
         ),
       ),
     );

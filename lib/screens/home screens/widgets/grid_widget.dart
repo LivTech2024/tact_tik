@@ -24,6 +24,16 @@ class gridWidget extends StatelessWidget {
           height: height / height100,
           width: width / width100,
           decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? DarkColor.color1.withOpacity(.1)
+                    : LightColor.color3.withOpacity(.1),
+                blurRadius: 1,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
             color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
             borderRadius: BorderRadius.circular(width / width18),
           ),

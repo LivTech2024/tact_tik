@@ -22,7 +22,8 @@ class SuperInboxScreen extends StatefulWidget {
 }
 
 class _SuperInboxScreenState extends State<SuperInboxScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor. color25];
+  List colors = [isDark?DarkColor.Primarycolor:LightColor.Primarycolor, isDark ? DarkColor.color25 : LightColor.Primarycolorlight
+  ];
 
   bool showGuards = true;
 

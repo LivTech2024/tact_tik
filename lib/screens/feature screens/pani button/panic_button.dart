@@ -4,12 +4,27 @@ import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/roboto_medium.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/sizes.dart';
 
-class PanicAlertDialog extends StatelessWidget {
+class PanicAlertDialog extends StatefulWidget {
+  final String EmpId;
+  final String CompanyId;
+  final String Username;
+  const PanicAlertDialog(
+      {super.key,
+      required this.EmpId,
+      required this.CompanyId,
+      required this.Username});
+  @override
+  State<PanicAlertDialog> createState() => _PanicAlertDialogState();
+}
+
+class _PanicAlertDialogState extends State<PanicAlertDialog> {
   final Map<String, String> emergencyContacts = {
     'Ambulance': '102',
     'Police': '100',
@@ -21,7 +36,7 @@ class PanicAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    bool _isLoading = false;
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -76,9 +91,39 @@ class PanicAlertDialog extends StatelessWidget {
                   ),
                   SizedBox(width: width / width16),
                   TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      //fetch supervisor admins
+                      List<String> receiversId = [];
+                      String? adminId =
+                          await fireStoreService.getAdminID(widget.CompanyId);
+                      List<String>? supervisorID =
+                          await fireStoreService.getSupervisorIDs(widget.EmpId);
+
+                      if (adminId != null) {
+                        receiversId.add(adminId);
+                      }
+
+                      if (supervisorID != null) {
+                        receiversId.addAll(supervisorID);
+                      }
+                      print(" CompanyId ${widget.CompanyId}");
+                      print(adminId);
+
+                      print(supervisorID);
+                      print(receiversId);
+
+                      String Data =
+                          "Panic Button pressed by ${widget.Username}";
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await fireStoreService.SendMessage(widget.CompanyId,
+                          widget.Username, Data, receiversId, widget.EmpId);
+                      setState(() {
+                        _isLoading = false;
+                      });
                       _showSupervisorDialog(context);
+                      // Navigator.pop(context);
                     },
                     child: RobotoMedium(
                       text: 'Yes',
@@ -89,6 +134,13 @@ class PanicAlertDialog extends StatelessWidget {
                 ],
               ),
             ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Visibility(
+            visible: _isLoading,
+            child: CircularProgressIndicator(),
           ),
         ),
       ],
@@ -203,7 +255,12 @@ class PanicAlertDialog extends StatelessWidget {
                           SizedBox(width: width / width10),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(),
+                                ),
+                              );
                             },
                             child: RobotoMedium(
                               text: 'OK',
