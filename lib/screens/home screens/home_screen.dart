@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
@@ -65,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _userName = "";
   String employeeImg = "";
   String _ShiftDate = "";
+  String _ShiftStatus = "";
+
   String _ShiftLocation = "";
   String _ShiftLocationName = "";
 
@@ -281,7 +284,6 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
           String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
           String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
-
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
           GeoPoint shiftGeolocation =
@@ -291,7 +293,28 @@ class _HomeScreenState extends State<HomeScreen> {
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
           String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
           String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+          List<Map<String, dynamic>> shiftCurrentStatus =
+              List<Map<String, dynamic>>.from(shiftInfo['ShiftCurrentStatus']);
 
+          List<Map<String, dynamic>> filteredStatus = shiftCurrentStatus
+              .where((status) => status['StatusReportedById'] == _employeeId)
+              .toList();
+
+          String statusString = filteredStatus
+                  .map((status) => status['Status'] as String)
+                  .join(', ') ??
+              "";
+
+          print("Shift CUrrent Status ${statusString}");
+          if (statusString == "started") {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', true);
+            prefs.setBool('clickedIn', true);
+          } else {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', false);
+            prefs.setBool('clickedIn', false);
+          }
           int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
           bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
           // String ShiftClientId = shiftInfo['ShiftClientId'];
@@ -315,6 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             _shiftLocationId = shiftLocationId;
             _shiftCLientId = shiftClientId;
+            _ShiftStatus = statusString;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -736,6 +760,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   refreshHomeScreen();
                                 },
                                 ShiftLocationName: _ShiftLocationName,
+                                ShiftStatus: _ShiftStatus,
                               ),
                             )),
                       )
@@ -900,30 +925,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       alignment: Alignment
                                                           .bottomCenter,
                                                       child: SizedBox(
-                                                        height: height /
-                                                            height180,
+                                                        height:
+                                                            height / height180,
                                                         child: PageView.builder(
-                                                          clipBehavior: Clip.antiAlias,
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
                                                           scrollDirection:
                                                               Axis.horizontal,
                                                           itemBuilder:
                                                               (context, index) {
                                                             return Container(
-                                                              margin:
-                                                                  EdgeInsets.only(
-                                                                bottom: height /
-                                                                    height24,
-                                                                    left: width / width40,
-                                                                    right: width / width30
-                                                              ),
+                                                              margin: EdgeInsets.only(
+                                                                  bottom: height /
+                                                                      height24,
+                                                                  left: width /
+                                                                      width40,
+                                                                  right: width /
+                                                                      width30),
                                                               width: width /
                                                                   width300,
                                                               height: height /
                                                                   height160,
                                                               padding: EdgeInsets
                                                                   .symmetric(
-                                                                vertical: height /
-                                                                    height14,
+                                                                vertical:
+                                                                    height /
+                                                                        height14,
                                                                 horizontal:
                                                                     width /
                                                                         width15,
@@ -935,7 +962,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                  width / width20,
+                                                                  width /
+                                                                      width20,
                                                                 ),
                                                               ),
                                                               child: Column(
@@ -953,28 +981,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               BoxDecoration(
                                                                             borderRadius:
                                                                                 BorderRadius.circular(
-                                                                              width /
-                                                                                  width12,
+                                                                              width / width12,
                                                                             ),
                                                                             color:
                                                                                 color9,
                                                                           ),
-                                                                          height: height /
-                                                                              height55,
-                                                                          width: width /
-                                                                              width55,
+                                                                          height:
+                                                                              height / height55,
+                                                                          width:
+                                                                              width / width55,
                                                                           child:
                                                                               Center(
                                                                             child:
                                                                                 Container(
-                                                                              alignment:
-                                                                                  Alignment.center,
-                                                                              height:
-                                                                                  height / height40,
-                                                                              width:
-                                                                                  width / width45,
-                                                                              decoration:
-                                                                                  BoxDecoration(
+                                                                              alignment: Alignment.center,
+                                                                              height: height / height40,
+                                                                              width: width / width45,
+                                                                              decoration: BoxDecoration(
                                                                                 borderRadius: BorderRadius.circular(width / width4),
                                                                                 color: color9,
                                                                                 border: Border.all(
@@ -982,8 +1005,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                                   width: 1,
                                                                                 ),
                                                                               ),
-                                                                              child:
-                                                                                  MyNetworkImage(
+                                                                              child: MyNetworkImage(
                                                                                 'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
                                                                                 width / width20,
                                                                               ),
@@ -991,8 +1013,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           ),
                                                                         ),
                                                                         SizedBox(
-                                                                          width: width /
-                                                                              width15,
+                                                                          width:
+                                                                              width / width15,
                                                                         ),
                                                                         Column(
                                                                           mainAxisAlignment:
@@ -1001,23 +1023,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               CrossAxisAlignment.start,
                                                                           children: [
                                                                             PoppinsBold(
-                                                                              text:
-                                                                                  'Robert D. Vaughn',
-                                                                              color:
-                                                                                  Colors.white,
-                                                                              fontsize:
-                                                                                  width / width16,
+                                                                              text: 'Robert D. Vaughn',
+                                                                              color: Colors.white,
+                                                                              fontsize: width / width16,
                                                                             ),
                                                                             SizedBox(
-                                                                              width:
-                                                                                  width / width180,
-                                                                              child:
-                                                                                  RobotoMedium(
-                                                                                    text: '318 Grand St,  New York 10002, US',
-                                                                                    color: color10,
-                                                                                    fontsize: width / width16,
-                                                                                    maxLines: 1,
-                                                                                  ),
+                                                                              width: width / width180,
+                                                                              child: RobotoMedium(
+                                                                                text: '318 Grand St,  New York 10002, US',
+                                                                                color: color10,
+                                                                                fontsize: width / width16,
+                                                                                maxLines: 1,
+                                                                              ),
                                                                             )
                                                                           ],
                                                                         )
@@ -1025,7 +1042,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     ),
                                                                   ),
                                                                   GestureDetector(
-                                                                    onTap: () {},
+                                                                    onTap:
+                                                                        () {},
                                                                     child:
                                                                         Container(
                                                                       height: height /
@@ -1042,16 +1060,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         color:
                                                                             Primarycolor,
                                                                         borderRadius:
-                                                                            BorderRadius
-                                                                                .circular(
+                                                                            BorderRadius.circular(
                                                                           width /
                                                                               width16,
                                                                         ),
                                                                       ),
-                                                                      child: Row(
+                                                                      child:
+                                                                          Row(
                                                                         mainAxisAlignment:
-                                                                            MainAxisAlignment
-                                                                                .spaceBetween,
+                                                                            MainAxisAlignment.spaceBetween,
                                                                         children: [
                                                                           RobotoBold(
                                                                             text:
@@ -1060,12 +1077,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                                 color1,
                                                                           ),
                                                                           Icon(
-                                                                            Icons
-                                                                                .arrow_forward_sharp,
+                                                                            Icons.arrow_forward_sharp,
                                                                             color:
                                                                                 color1,
-                                                                            size: width /
-                                                                                width24,
+                                                                            size:
+                                                                                width / width24,
                                                                           )
                                                                         ],
                                                                       ),
