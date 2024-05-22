@@ -89,7 +89,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                         },
                       ),
                       title: InterRegular(
-                        text: 'Visitors',
+                        text: 'Assets',
                         fontsize: width / width18,
                         color: Colors.white,
                         letterSpacing: -0.3,
