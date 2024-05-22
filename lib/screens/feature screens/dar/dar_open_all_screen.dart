@@ -330,6 +330,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     } catch (e) {
       print('Error creating blank DAR cards: $e');
     }
+
   }
 
   Future<DocumentReference?> _submitDAR() async {

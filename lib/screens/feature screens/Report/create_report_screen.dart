@@ -56,7 +56,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController newCategoryController = TextEditingController();
   bool isChecked = false;
-  String dropdownValue = 'Other';
+  String dropdownValue = 'Incident';
   bool dropdownShoe = false;
   bool _isLoading = false;
 

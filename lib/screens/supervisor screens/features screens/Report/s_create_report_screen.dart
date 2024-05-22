@@ -18,7 +18,6 @@ import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
 
-
 class SCreateReportScreen extends StatefulWidget {
   final String locationId;
   final String locationName;
@@ -55,13 +54,12 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController newCategoryController = TextEditingController();
   bool isChecked = false;
-  String dropdownValue = 'Other';
+  String dropdownValue = 'Incident';
   bool dropdownShoe = false;
   bool _isLoading = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     getAllTitles();
     getAllReports();
     super.initState();

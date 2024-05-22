@@ -15,7 +15,7 @@ import 'package:tact_tik/utils/utils_functions.dart';
 import '../../../common/sizes.dart';
 import 'dar_open_all_screen.dart';
 
-class DarDisplayScreen extends StatelessWidget {
+class DarDisplayScreen extends StatefulWidget {
   final String EmpEmail;
   final String EmpID;
   final String Username;
@@ -34,6 +34,15 @@ class DarDisplayScreen extends StatelessWidget {
       required this.EmpDarClientID,
       required this.Username})
       : super(key: key);
+
+  @override
+  State<DarDisplayScreen> createState() => _DarDisplayScreenState();
+}
+
+class _DarDisplayScreenState extends State<DarDisplayScreen> {
+  List colors = [Primarycolor, color25];
+
+  bool showAllDARS = true;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -86,7 +95,7 @@ class DarDisplayScreen extends StatelessWidget {
     }
 
     bool isNewEntry(DocumentSnapshot document) {
-      return document['EmpDarShiftId'] == EmpDarShiftID;
+      return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
 
     return SafeArea(
@@ -95,7 +104,7 @@ class DarDisplayScreen extends StatelessWidget {
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
-              .where('EmpDarEmpId', isEqualTo: EmpID)
+              .where('EmpDarEmpId', isEqualTo: widget.EmpID)
               .orderBy('EmpDarDate', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
@@ -143,7 +152,64 @@ class DarDisplayScreen extends StatelessWidget {
                     centerTitle: true,
                     floating: true,
                   ),
-                  SliverPadding(
+                  SliverToBoxAdapter(
+                    child: Container(
+                      height: height / height65,
+                      width: double.maxFinite,
+                      color: color24,
+                      padding:
+                          EdgeInsets.symmetric(vertical: height / height16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  showAllDARS = true;
+                                  colors[0] = Primarycolor;
+                                  colors[1] = color25;
+                                });
+                              },
+                              child: SizedBox(
+                                child: Center(
+                                  child: InterBold(
+                                    text: 'History',
+                                    color: colors[0],
+                                    fontsize: width / width18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          VerticalDivider(
+                            color: Primarycolor,
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  showAllDARS = false;
+                                  colors[0] = color25;
+                                  colors[1] = Primarycolor;
+                                });
+                              },
+                              child: SizedBox(
+                                child: Center(
+                                  child: InterBold(
+                                    text: 'Today',
+                                    color: colors[1],
+                                    fontsize: width / width18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  showAllDARS? SliverPadding(
                     padding: EdgeInsets.symmetric(horizontal: width / width20),
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
@@ -171,8 +237,8 @@ class DarDisplayScreen extends StatelessWidget {
                                           passdate: (document['EmpDarCreatedAt']
                                                   as Timestamp)
                                               .toDate(),
-                                          Username: Username,
-                                          Empid: EmpID,
+                                          Username: widget.Username,
+                                          Empid: widget.EmpID,
                                           DarId: document['EmpDarId'],
                                           editable: isNew,
                                         ),
@@ -252,6 +318,82 @@ class DarDisplayScreen extends StatelessWidget {
                           );
                         },
                         childCount: groupedByDate.length,
+                      ),
+                    ),
+                  ) : GestureDetector(
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => DarOpenAllScreen(
+                      //       passdate: (document['EmpDarCreatedAt']
+                      //       as Timestamp)
+                      //           .toDate(),
+                      //       Username: widget.Username,
+                      //       Empid: widget.EmpID,
+                      //       DarId: document['EmpDarId'],
+                      //       editable: isNew,
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                    child: Container(
+                      width: double.maxFinite,
+                      height: height / height200,
+                      decoration: BoxDecoration(
+                        color: WidgetColor,
+                        borderRadius: BorderRadius.circular(
+                            width / width20),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width / width20,
+                        vertical: height / height10,
+                      ),
+                      child: Column(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          InterBold(
+                            text:
+                            "document['EmpDarShiftName']" ?? "",
+                            fontsize: width / width18,
+                            color: Primarycolor,
+                          ),
+                          SizedBox(height: height / height10),
+                          Flexible(
+                            child: InterRegular(
+                              text:
+                              "document['EmpDarLocationName']",
+                              fontsize: width / width16,
+                              color: color26,
+                              maxLines: 4,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width / width10),
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.image,
+                                  size: width / width18,
+                                  color: color2,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.video_collection,
+                                  size: width / width18,
+                                  color: color2,
+                                ),
+                              )
+                            ],
+                          )
+                        ],
                       ),
                     ),
                   ),

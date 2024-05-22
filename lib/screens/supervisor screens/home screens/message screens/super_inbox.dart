@@ -252,61 +252,39 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                           ),
                                         ],
                                       ),
-                                      Row(
+                                      Stack(
+                                        clipBehavior: Clip.none,
                                         children: [
-                                          Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              SvgPicture.asset(
-                                                  'assets/images/chat_bubble.svg'),
-                                              Positioned(
-                                                top: -4,
-                                                left: -8,
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: width / width4,
-                                                  ),
-                                                  height: height / height14,
-                                                  // width: width / width20,
-                                                  constraints: BoxConstraints(
-                                                    minWidth: width / width20,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.red,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      width / width50,
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: InterBold(
-                                                      text: '2',
-                                                      fontsize: width / width8,
-                                                      color: color1,
-                                                    ),
-                                                  ),
+                                          SvgPicture.asset(
+                                              'assets/images/chat_bubble.svg'),
+                                          Positioned(
+                                            top: -4,
+                                            left: -8,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: width / width4,
+                                              ),
+                                              height: height / height14,
+                                              // width: width / width20,
+                                              constraints: BoxConstraints(
+                                                minWidth: width / width20,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  width / width50,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                left: width / width20),
-                                            height: height / height16,
-                                            width: width / width16,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: /*guardInfo[
-                                          'EmployeeIsAvailable'] ==
-                                              "available"
-                                              ? Colors.green
-                                              : guardInfo['EmployeeIsAvailable'] ==
-                                              "on_shift"
-                                              ? Colors.orange
-                                              : */
-                                                  Colors.red,
+                                              child: Center(
+                                                child: InterBold(
+                                                  text: '2',
+                                                  fontsize: width / width8,
+                                                  color: color1,
+                                                ),
+                                              ),
                                             ),
-                                          )
+                                          ),
                                         ],
                                       )
                                     ],
