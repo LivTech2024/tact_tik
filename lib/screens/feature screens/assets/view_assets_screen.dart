@@ -14,7 +14,8 @@ class ViewAssetsScreen extends StatelessWidget {
   final String startDate;
   final String endDate;
   final String equipmentId;
-  ViewAssetsScreen({super.key, required this.startDate, required this.endDate, required this.equipmentId});
+  final int equipmentQty;
+  ViewAssetsScreen({super.key, required this.startDate, required this.endDate, required this.equipmentId, required this.equipmentQty});
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
     TimeOfDay? selectedTime;
@@ -156,6 +157,12 @@ class ViewAssetsScreen extends StatelessWidget {
                         SizedBox(width: width / width10),
                         InterMedium(
                           text: equipmentName,
+                          color: color2,
+                          fontsize: width / width16,
+                        ),
+                        SizedBox(width: width / width200),
+                        InterMedium(
+                          text: "Quantity: $equipmentQty",
                           color: color2,
                           fontsize: width / width16,
                         ),
