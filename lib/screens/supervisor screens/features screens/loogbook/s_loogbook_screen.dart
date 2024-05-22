@@ -13,15 +13,17 @@ import '../../../../fonts/inter_regular.dart';
 import '../../../../services/EmailService/EmailJs_fucntion.dart';
 import '../../../../utils/colors.dart';
 
-class LogBookScreen extends StatefulWidget {
+class SLogBookScreen extends StatefulWidget {
   final String empId;
-  const LogBookScreen({super.key, required this.empId});
+  final String empName;
+
+  const SLogBookScreen({super.key, required this.empId, required this.empName});
 
   @override
-  State<LogBookScreen> createState() => _LogBookScreenState();
+  State<SLogBookScreen> createState() => _LogBookScreenState();
 }
 
-class _LogBookScreenState extends State<LogBookScreen> {
+class _LogBookScreenState extends State<SLogBookScreen> {
   late Stream<QuerySnapshot> _logBookStream;
 
   // Future<String> getempID() async {
@@ -73,7 +75,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
               },
             ),
             title: InterRegular(
-              text: 'LogBook',
+              text: 'LogBook -  ${widget.empName}',
               fontsize: width / width18,
               color: Colors.white,
               letterSpacing: -.3,
@@ -101,7 +103,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final entry = groups.entries.toList()[index];
                     final shiftName = entry.key;
                     final logsByDate = entry.value;
@@ -143,7 +145,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
     for (int i = 0; i < documents.length; i++) {
       final document = documents[i];
       final data = document.data() as Map<String, dynamic>;
-      final shiftName = data['ShiftName'] ?? 'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
+      final shiftName = data['ShiftName'] ??
+          'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
       final logData = data['LogBookData'] as List<dynamic>;
       final logTimestamp = data['LogBookDate'] as Timestamp;
       final clientName = data['LogCleintName'] ?? '';
@@ -180,8 +183,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
     return groups;
   }
-
-
 }
 
 class LogBookWidget extends StatefulWidget {
@@ -189,10 +190,12 @@ class LogBookWidget extends StatefulWidget {
   final String shiftName;
   final List<Map<String, dynamic>> logs;
 
-  const LogBookWidget({super.key,
+  const LogBookWidget({
+    super.key,
     required this.date,
     required this.shiftName,
-    required this.logs,});
+    required this.logs,
+  });
 
   @override
   State<LogBookWidget> createState() => _LogBookWidgetState();
@@ -250,7 +253,11 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: height / height10),
               child: Flexible(
-                child: InterBold(text: widget.shiftName , fontsize: width / width18,color: Primarycolor,),
+                child: InterBold(
+                  text: widget.shiftName,
+                  fontsize: width / width18,
+                  color: Primarycolor,
+                ),
               ),
             ),
           Visibility(
@@ -260,7 +267,8 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               children: widget.logs.map((log) {
                 final logTimestamp = log['LOGTIMESTAMP'] as Timestamp;
                 final dateTime = logTimestamp.toDate();
-                final formattedDateTime = DateFormat('hh:mm:ss a').format(dateTime);
+                final formattedDateTime =
+                    DateFormat('hh:mm:ss a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
                   clientname: log['CLIENTNAME'],
@@ -270,7 +278,6 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 );
               }).toList(),
             ),
-
           ),
         ],
       ),
