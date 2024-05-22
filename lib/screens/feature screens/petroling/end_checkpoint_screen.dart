@@ -237,8 +237,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                               dateFormat.format(DateTime.now());
                           String formattedEndTime =
                               dateFormat.format(DateTime.now());
-                          DateFormat timeformat =
-                              DateFormat("HH:mm"); // Define the format for time
+                          DateFormat timeformat = DateFormat(
+                              "HH:mm:ss"); // Define the format for time
                           // String formattedPatrolInTime =
                           //     timeformat.format(StartTime);
                           String formattedPatrolOutTime =
@@ -375,8 +375,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                               dateFormat.format(DateTime.now());
                           String formattedEndTime =
                               dateFormat.format(DateTime.now());
-                          DateFormat timeformat =
-                              DateFormat("HH:mm"); // Define the format for time
+                          DateFormat timeformat = DateFormat(
+                              "HH:mm:ss"); // Define the format for time
                           // String formattedPatrolInTime =
                           //     timeformat.format(StartTime);
                           String formattedPatrolOutTime =

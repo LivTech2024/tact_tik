@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (statusString == "started") {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', true);
-            prefs.setBool('clickedIn', true);
+            // prefs.setBool('clickedIn', true);
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);

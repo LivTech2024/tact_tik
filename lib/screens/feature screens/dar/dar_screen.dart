@@ -85,6 +85,10 @@ class DarDisplayScreen extends StatelessWidget {
       }
     }
 
+    bool isNewEntry(DocumentSnapshot document) {
+      return document['EmpDarShiftId'] == EmpDarShiftID;
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -157,6 +161,7 @@ class DarDisplayScreen extends StatelessWidget {
                               ),
                               SizedBox(height: height / height20),
                               ...darEntries.map((document) {
+                                bool isNew = isNewEntry(document);
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -169,6 +174,7 @@ class DarDisplayScreen extends StatelessWidget {
                                           Username: Username,
                                           Empid: EmpID,
                                           DarId: document['EmpDarId'],
+                                          editable: isNew,
                                         ),
                                       ),
                                     );
@@ -197,6 +203,13 @@ class DarDisplayScreen extends StatelessWidget {
                                           fontsize: width / width18,
                                           color: Primarycolor,
                                         ),
+                                        isNew
+                                            ? InterBold(
+                                                text: "New",
+                                                fontsize: width / width18,
+                                                color: Colors.green,
+                                              )
+                                            : SizedBox(),
                                         SizedBox(height: height / height10),
                                         Flexible(
                                           child: InterRegular(
@@ -255,25 +268,25 @@ class DarDisplayScreen extends StatelessWidget {
             }
           },
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            var id = await _submitDAR();
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () async {
+        //     var id = await _submitDAR();
 
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DarOpenAllScreen(
-                    Username: Username,
-                    Empid: EmpID,
-                    DarId: id,
-                  ),
-                ));
-          },
-          backgroundColor: Primarycolor,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add),
-        ),
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => DarOpenAllScreen(
+        //             Username: Username,
+        //             Empid: EmpID,
+        //             DarId: id,
+        //           ),
+        //         ));
+        //   },
+        //   backgroundColor: Primarycolor,
+        //   shape: const CircleBorder(),
+        //   child: const Icon(Icons.add),
+        // ),
       ),
     );
   }

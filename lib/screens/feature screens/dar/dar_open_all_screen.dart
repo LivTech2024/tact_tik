@@ -19,11 +19,13 @@ class DarOpenAllScreen extends StatefulWidget {
   final String? DarId;
   final String Username;
   final String Empid;
+  bool editable;
 
-  const DarOpenAllScreen(
+  DarOpenAllScreen(
       {super.key,
       this.passdate,
       this.DarId,
+      this.editable = true,
       required this.Username,
       required this.Empid});
 
@@ -45,6 +47,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     super.initState();
     _fetchShiftDetails();
     // fetchDarTileData();
+  }
+
+  void refresh() {
+    _fetchShiftDetails();
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
@@ -509,7 +515,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         child: SizedBox(
                           child: Center(
                             child: InterBold(
-                              text: 'Edit',
+                              text: widget.editable ? 'Edit' : 'Read',
                               color: colors[0],
                               fontsize: width / width18,
                             ),
@@ -639,9 +645,12 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   darTiles: data,
                                                   EmployeeId: widget.Empid,
                                                   EmployeeName: widget.Username,
+                                                  iseditable: widget.editable,
                                                 ),
                                               ),
                                             );
+                                            //refresh the screen
+                                            refresh();
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(

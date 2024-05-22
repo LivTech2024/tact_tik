@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/setTextfieldWidget.dart';
@@ -15,7 +16,12 @@ class ViewAssetsScreen extends StatelessWidget {
   final String endDate;
   final String equipmentId;
   final int equipmentQty;
-  ViewAssetsScreen({super.key, required this.startDate, required this.endDate, required this.equipmentId, required this.equipmentQty});
+  ViewAssetsScreen(
+      {super.key,
+      required this.startDate,
+      required this.endDate,
+      required this.equipmentId,
+      required this.equipmentQty});
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
     TimeOfDay? selectedTime;
@@ -66,17 +72,33 @@ class ViewAssetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: width / width24,
+            ),
+            padding: EdgeInsets.only(left: width / width20),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: InterRegular(
+            text: 'View Assets',
+            fontsize: width / width18,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,11 +121,15 @@ class ViewAssetsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InterMedium(text: startDate,
+                        InterMedium(
+                          text: startDate,
                           fontsize: width / width16,
-                          color: color2,),
-                        SvgPicture.asset('assets/images/calendar_clock.svg',
-                          width: width / width20,)
+                          color: color2,
+                        ),
+                        SvgPicture.asset(
+                          'assets/images/calendar_clock.svg',
+                          width: width / width20,
+                        )
                       ],
                     ),
                   ),
@@ -119,11 +145,15 @@ class ViewAssetsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InterMedium(text: endDate,
+                        InterMedium(
+                          text: endDate,
                           fontsize: width / width16,
-                          color: color2,),
-                        SvgPicture.asset('assets/images/calendar_clock.svg',
-                          width: width / width20,)
+                          color: color2,
+                        ),
+                        SvgPicture.asset(
+                          'assets/images/calendar_clock.svg',
+                          width: width / width20,
+                        )
                       ],
                     ),
                   ),
@@ -131,7 +161,11 @@ class ViewAssetsScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: height / height30),
-            InterBold(text: 'Equipment' , color: color1,fontsize: width / width16,),
+            InterBold(
+              text: 'Equipment',
+              color: color1,
+              fontsize: width / width16,
+            ),
             SizedBox(height: height / height20),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
@@ -142,7 +176,8 @@ class ViewAssetsScreen extends StatelessWidget {
                 if (snapshot.hasData) {
                   final documents = snapshot.data!.docs;
                   final equipmentName = documents.isNotEmpty
-                      ? (documents.first.data()['EquipmentName'] ?? 'Equipment Not Available')
+                      ? (documents.first.data()['EquipmentName'] ??
+                          'Equipment Not Available')
                       : 'Equipment Not Available';
 
                   return Container(

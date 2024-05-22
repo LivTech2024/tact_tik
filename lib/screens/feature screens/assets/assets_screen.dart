@@ -20,7 +20,8 @@ class AssetsScreen extends StatefulWidget {
 class _AssetsScreenState extends State<AssetsScreen> {
   late Stream<QuerySnapshot> _assetAllocationStream;
 
-  Map<DateTime, List<QueryDocumentSnapshot>> groupDocumentsByDate(List<QueryDocumentSnapshot>? documents) {
+  Map<DateTime, List<QueryDocumentSnapshot>> groupDocumentsByDate(
+      List<QueryDocumentSnapshot>? documents) {
     documents?.sort((a, b) {
       final timestampA = a['EquipmentAllocationCreatedAt'] as Timestamp;
       final timestampB = b['EquipmentAllocationCreatedAt'] as Timestamp;
@@ -31,8 +32,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
     if (documents != null) {
       for (final document in documents) {
-        final allocationDate = (document['EquipmentAllocationCreatedAt'] as Timestamp).toDate();
-        final date = DateTime(allocationDate.year, allocationDate.month, allocationDate.day);
+        final allocationDate =
+            (document['EquipmentAllocationCreatedAt'] as Timestamp).toDate();
+        final date = DateTime(
+            allocationDate.year, allocationDate.month, allocationDate.day);
 
         documentsByDate.putIfAbsent(date, () => []).add(document);
       }
@@ -40,16 +43,15 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
     return documentsByDate;
   }
-  
+
   @override
   void initState() {
     super.initState();
     _assetAllocationStream = FirebaseFirestore.instance
         .collection('EquipmentAllocations')
-        .where('EquipmentAllocationEmpId',
-        isEqualTo: widget.assetEmpId)
+        .where('EquipmentAllocationEmpId', isEqualTo: widget.assetEmpId)
         .snapshots();
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,197 +62,252 @@ class _AssetsScreenState extends State<AssetsScreen> {
       child: Scaffold(
         backgroundColor: Secondarycolor,
         body: StreamBuilder(
-          stream: _assetAllocationStream,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            else {
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+            stream: _assetAllocationStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
               } else {
-                final documents = snapshot.data?.docs;
-                return CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      backgroundColor: AppBarcolor,
-                      elevation: 0,
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_ios,
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final documents = snapshot.data?.docs;
+                  return CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor: AppBarcolor,
+                        elevation: 0,
+                        leading: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                            size: width / width24,
+                          ),
+                          padding: EdgeInsets.only(left: width / width20),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            print(
+                                "Navigator debug: ${Navigator.of(context).toString()}");
+                          },
+                        ),
+                        title: InterRegular(
+                          text: 'Assets',
+                          fontsize: width / width18,
                           color: Colors.white,
-                          size: width / width24,
+                          letterSpacing: -0.3,
                         ),
-                        padding: EdgeInsets.only(left: width / width20),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          print("Navigator debug: ${Navigator.of(context)
-                              .toString()}");
-                        },
+                        centerTitle: true,
+                        floating: true,
                       ),
-                      title: InterRegular(
-                        text: 'Visitors',
-                        fontsize: width / width18,
-                        color: Colors.white,
-                        letterSpacing: -0.3,
-                      ),
-                      centerTitle: true,
-                      floating: true,
-                    ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: width / width30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: height / height30,
-                            ),
-                            // InterBold(
-                            //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
-                            //   fontsize: width / width20,
-                            //   color: Primarycolor,
-                            // ),
-                            // SizedBox(
-                            //   height: height / height30,
-                            // ),
-                          ],
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width / width30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: height / height30,
+                              ),
+                              // InterBold(
+                              //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
+                              //   fontsize: width / width20,
+                              //   color: Primarycolor,
+                              // ),
+                              // SizedBox(
+                              //   height: height / height30,
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                          final documentsByDate = groupDocumentsByDate(documents);
-                          final dates = documentsByDate.keys.toList();
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final documentsByDate =
+                                groupDocumentsByDate(documents);
+                            final dates = documentsByDate.keys.toList();
 
-                          if (index < dates.length) {
-                            final date = dates[index];
-                            final isToday = date.year == DateTime.now().year &&
-                                date.month == DateTime.now().month &&
-                                date.day == DateTime.now().day;
+                            if (index < dates.length) {
+                              final date = dates[index];
+                              final isToday =
+                                  date.year == DateTime.now().year &&
+                                      date.month == DateTime.now().month &&
+                                      date.day == DateTime.now().day;
 
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width / width30,
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: width / width30,
+                                    ),
+                                    child: InterBold(
+                                      text: isToday
+                                          ? 'Today'
+                                          : DateFormat.yMMMd().format(date),
+                                      fontsize: width / width20,
+                                      color: Primarycolor,
+                                    ),
                                   ),
-                                  child: InterBold(
-                                    text: isToday ? 'Today' : DateFormat.yMMMd().format(date),
-                                    fontsize: width / width20,
-                                    color: Primarycolor,
-                                  ),
-                                ),
-                                SizedBox(height: height / height30),
-                                ...documentsByDate[date]!.map(
-                                      (document) {
-                                    final allocationDate = (document['EquipmentAllocationCreatedAt'] as Timestamp).toDate();
-                                    final allocationDateTime = DateFormat.Hm().format(allocationDate);
-                                    final startDate = (document['EquipmentAllocationStartDate'] as Timestamp).toDate();
-                                    final endDate = (document['EquipmentAllocationEndDate'] as Timestamp).toDate();
-                                    final equipmentId = document['EquipmentAllocationEquipId'];
-                                    final equipmentQty = document['EquipmentAllocationEquipQty'];
+                                  SizedBox(height: height / height30),
+                                  ...documentsByDate[date]!.map(
+                                    (document) {
+                                      final allocationDate = (document[
+                                                  'EquipmentAllocationCreatedAt']
+                                              as Timestamp)
+                                          .toDate();
+                                      final allocationDateTime = DateFormat.Hm()
+                                          .format(allocationDate);
+                                      final startDate = (document[
+                                                  'EquipmentAllocationStartDate']
+                                              as Timestamp)
+                                          .toDate();
+                                      final endDate = (document[
+                                                  'EquipmentAllocationEndDate']
+                                              as Timestamp)
+                                          .toDate();
+                                      final equipmentId = document[
+                                          'EquipmentAllocationEquipId'];
+                                      final equipmentQty = document[
+                                          'EquipmentAllocationEquipQty'];
 
-                                    return Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: width / width30),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ViewAssetsScreen(startDate: DateFormat.yMd().format(startDate),
-                                                endDate: DateFormat.yMd().format(endDate),
-                                                equipmentId: equipmentId,
-                                              equipmentQty: equipmentQty,),
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width / width30),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewAssetsScreen(
+                                                  startDate: DateFormat.yMd()
+                                                      .format(startDate),
+                                                  endDate: DateFormat.yMd()
+                                                      .format(endDate),
+                                                  equipmentId: equipmentId,
+                                                  equipmentQty: equipmentQty,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: width / width60,
+                                            width: double.maxFinite,
+                                            margin: EdgeInsets.only(
+                                                bottom: height / height10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      width / width10),
+                                              color: WidgetColor,
                                             ),
-                                          );
-                                        },
-                                        child: Container(
-                                          height: width / width60,
-                                          width: double.maxFinite,
-                                          margin: EdgeInsets.only(bottom: height / height10),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(width / width10),
-                                            color: WidgetColor,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    height: height / height44,
-                                                    width: width / width44,
-                                                    padding: EdgeInsets.symmetric(horizontal: width / width10),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(width / width10),
-                                                      color: Primarycolorlight,
-                                                    ),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.home_repair_service,
-                                                        color: Primarycolor,
-                                                        size: width / width24,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      height: height / height44,
+                                                      width: width / width44,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal:
+                                                                  width /
+                                                                      width10),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(width /
+                                                                    width10),
+                                                        color:
+                                                            Primarycolorlight,
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .home_repair_service,
+                                                          color: Primarycolor,
+                                                          size: width / width24,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(width: width / width20),
-                                                  StreamBuilder<QuerySnapshot>(
-                                                    stream: FirebaseFirestore.instance
-                                                        .collection('Equipments')
-                                                        .where('EquipmentId', isEqualTo: equipmentId)
-                                                        .snapshots(),
-                                                    builder: (context, snapshot) {
-                                                      String equipmentName = 'Equipment Not Available';
-                                                      if (snapshot.hasData) {
-                                                        final documents = snapshot.data!.docs;
-                                                        equipmentName = documents.isNotEmpty
-                                                            ? (documents.first.data() as Map<String, dynamic>)['EquipmentName'] ??
-                                                            'Equipment Not Available'
-                                                            : 'Equipment Not Available';
-                                                      }
-                                                      return InterMedium(
-                                                        text: equipmentName,
-                                                        fontsize: width / width16,
-                                                        color: color1,
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              InterMedium(
-                                                text: allocationDateTime,
-                                                color: color17,
-                                                fontsize: width / width16,
-                                              ),
-                                              SizedBox(width: width / width20),
-                                            ],
+                                                    SizedBox(
+                                                        width: width / width20),
+                                                    StreamBuilder<
+                                                        QuerySnapshot>(
+                                                      stream: FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'Equipments')
+                                                          .where('EquipmentId',
+                                                              isEqualTo:
+                                                                  equipmentId)
+                                                          .snapshots(),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        String equipmentName =
+                                                            'Equipment Not Available';
+                                                        if (snapshot.hasData) {
+                                                          final documents =
+                                                              snapshot
+                                                                  .data!.docs;
+                                                          equipmentName = documents
+                                                                  .isNotEmpty
+                                                              ? (documents.first
+                                                                          .data()
+                                                                      as Map<
+                                                                          String,
+                                                                          dynamic>)['EquipmentName'] ??
+                                                                  'Equipment Not Available'
+                                                              : 'Equipment Not Available';
+                                                        }
+                                                        return InterMedium(
+                                                          text: equipmentName,
+                                                          fontsize:
+                                                              width / width16,
+                                                          color: color1,
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                InterMedium(
+                                                  text: allocationDateTime,
+                                                  color: color17,
+                                                  fontsize: width / width16,
+                                                ),
+                                                SizedBox(
+                                                    width: width / width20),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          }
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            }
 
-                          return SizedBox.shrink();
-                        },
-                        childCount: groupDocumentsByDate(documents).keys.length + 1,
+                            return SizedBox.shrink();
+                          },
+                          childCount:
+                              groupDocumentsByDate(documents).keys.length + 1,
+                        ),
                       ),
-                    ),
-                  ],
-                );
+                    ],
+                  );
+                }
               }
-            };
-          }
-        ),
+              ;
+            }),
       ),
     );
   }

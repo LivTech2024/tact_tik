@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
@@ -22,14 +23,14 @@ class CreateDarScreen extends StatefulWidget {
   final int index;
   final String EmployeeId;
   final String EmployeeName;
-
-  const CreateDarScreen({
-
+  bool iseditable;
+  CreateDarScreen({
     required this.darTiles,
     required this.index,
     required this.EmployeeId,
     required this.EmployeeName,
     this.DarId,
+    this.iseditable = true,
   });
 
   @override
@@ -106,24 +107,59 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   Future<void> _addImage() async {
-    final pickedFile =
+    XFile? pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+      try {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          File compressedFile = await _compressImage(file);
+          setState(() {
+            uploads.add({'type': 'image', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      } catch (e) {
+        print('Error adding image: $e');
+      }
+    } else {
+      print('No images selected');
     }
-    print("Statis ${uploads}");
+    print("Status ${uploads}");
   }
 
   Future<void> _addGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 30);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        try {
+          File file = File(pickedFile.path);
+          if (file.existsSync()) {
+            File compressedFile = await _compressImage(file);
+            setState(() {
+              uploads.add({'type': 'image', 'file': file});
+            });
+          } else {
+            print('File does not exist: ${file.path}');
+          }
+        } catch (e) {
+          print('Error adding image: $e');
+        }
+      }
+    } else {
+      print('No images selected');
     }
+  }
+
+  Future<File> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 30,
+    );
+    return File(result!.path);
   }
 
   Future<void> _uploadImages() async {
@@ -501,12 +537,14 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         },
                       ),
                     SizedBox(height: height / height30),
-                    Button1(
-                      text: _isSubmitting ? 'Submitting...' : 'Submit',
-                      onPressed: submitDarTileData,
-                      backgroundcolor: Primarycolor,
-                      borderRadius: 20,
-                    ),
+                    widget.iseditable
+                        ? Button1(
+                            text: _isSubmitting ? 'Submitting...' : 'Submit',
+                            onPressed: submitDarTileData,
+                            backgroundcolor: Primarycolor,
+                            borderRadius: 20,
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
