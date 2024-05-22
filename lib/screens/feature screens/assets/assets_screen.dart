@@ -22,8 +22,8 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
   Map<DateTime, List<QueryDocumentSnapshot>> groupDocumentsByDate(List<QueryDocumentSnapshot>? documents) {
     documents?.sort((a, b) {
-      final timestampA = a['EquipmentAllocationDate'] as Timestamp;
-      final timestampB = b['EquipmentAllocationDate'] as Timestamp;
+      final timestampA = a['EquipmentAllocationCreatedAt'] as Timestamp;
+      final timestampB = b['EquipmentAllocationCreatedAt'] as Timestamp;
       return timestampB.compareTo(timestampA);
     });
 
@@ -31,7 +31,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
     if (documents != null) {
       for (final document in documents) {
-        final allocationDate = (document['EquipmentAllocationDate'] as Timestamp).toDate();
+        final allocationDate = (document['EquipmentAllocationCreatedAt'] as Timestamp).toDate();
         final date = DateTime(allocationDate.year, allocationDate.month, allocationDate.day);
 
         documentsByDate.putIfAbsent(date, () => []).add(document);
@@ -108,7 +108,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                               height: height / height30,
                             ),
                             // InterBold(
-                            //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationDate)
+                            //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
                             //   fontsize: width / width20,
                             //   color: Primarycolor,
                             // ),
@@ -147,11 +147,12 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                 SizedBox(height: height / height30),
                                 ...documentsByDate[date]!.map(
                                       (document) {
-                                    final allocationDate = (document['EquipmentAllocationDate'] as Timestamp).toDate();
+                                    final allocationDate = (document['EquipmentAllocationCreatedAt'] as Timestamp).toDate();
                                     final allocationDateTime = DateFormat.Hm().format(allocationDate);
                                     final startDate = (document['EquipmentAllocationStartDate'] as Timestamp).toDate();
                                     final endDate = (document['EquipmentAllocationEndDate'] as Timestamp).toDate();
                                     final equipmentId = document['EquipmentAllocationEquipId'];
+                                    final equipmentQty = document['EquipmentAllocationEquipQty'];
 
                                     return Padding(
                                       padding: EdgeInsets.symmetric(horizontal: width / width30),
@@ -162,7 +163,8 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                             MaterialPageRoute(
                                               builder: (context) => ViewAssetsScreen(startDate: DateFormat.yMd().format(startDate),
                                                 endDate: DateFormat.yMd().format(endDate),
-                                                equipmentId: equipmentId,),
+                                                equipmentId: equipmentId,
+                                              equipmentQty: equipmentQty,),
                                             ),
                                           );
                                         },
