@@ -62,70 +62,70 @@ class _AssetsScreenState extends State<AssetsScreen> {
       child: Scaffold(
         backgroundColor: Secondarycolor,
         body: StreamBuilder(
-            stream: _assetAllocationStream,
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+          stream: _assetAllocationStream,
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            else {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
               } else {
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  final documents = snapshot.data?.docs;
-                  return CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        backgroundColor: AppBarcolor,
-                        elevation: 0,
-                        leading: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
-                            size: width / width24,
-                          ),
-                          padding: EdgeInsets.only(left: width / width20),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            print(
-                                "Navigator debug: ${Navigator.of(context).toString()}");
-                          },
-                        ),
-                        title: InterRegular(
-                          text: 'Assets',
-                          fontsize: width / width18,
+                final documents = snapshot.data?.docs;
+                return CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      backgroundColor: AppBarcolor,
+                      elevation: 0,
+                      leading: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back_ios,
                           color: Colors.white,
-                          letterSpacing: -0.3,
+                          size: width / width24,
                         ),
-                        centerTitle: true,
-                        floating: true,
+                        padding: EdgeInsets.only(left: width / width20),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          print("Navigator debug: ${Navigator.of(context)
+                              .toString()}");
+                        },
                       ),
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width / width30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: height / height30,
-                              ),
-                              // InterBold(
-                              //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
-                              //   fontsize: width / width20,
-                              //   color: Primarycolor,
-                              // ),
-                              // SizedBox(
-                              //   height: height / height30,
-                              // ),
-                            ],
-                          ),
+                      title: InterRegular(
+                        text: 'Assets',
+                        fontsize: width / width18,
+                        color: Colors.white,
+                        letterSpacing: -0.3,
+                      ),
+                      centerTitle: true,
+                      floating: true,
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width / width30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: height / height30,
+                            ),
+                            // InterBold(
+                            //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
+                            //   fontsize: width / width20,
+                            //   color: Primarycolor,
+                            // ),
+                            // SizedBox(
+                            //   height: height / height30,
+                            // ),
+                          ],
                         ),
                       ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final documentsByDate =
-                                groupDocumentsByDate(documents);
-                            final dates = documentsByDate.keys.toList();
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                          final documentsByDate = groupDocumentsByDate(documents);
+                          final dates = documentsByDate.keys.toList();
 
                             if (index < dates.length) {
                               final date = dates[index];
