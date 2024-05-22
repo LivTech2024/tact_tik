@@ -7,15 +7,15 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/s_dar_open_all_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
 
-import '../../../common/sizes.dart';
-import 'dar_open_all_screen.dart';
+import '../../../../common/sizes.dart';
 
-class DarDisplayScreen extends StatelessWidget {
+class SDarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
   final String EmpID;
   final String Username;
@@ -24,7 +24,7 @@ class DarDisplayScreen extends StatelessWidget {
   final String EmpDarShiftID;
   final String EmpDarClientID;
 
-  DarDisplayScreen(
+  SDarDisplayScreen(
       {Key? key,
       required this.EmpEmail,
       required this.EmpID,
@@ -162,7 +162,7 @@ class DarDisplayScreen extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => DarOpenAllScreen(
+                                        builder: (context) => SDarOpenAllScreen(
                                           passdate: (document['EmpDarCreatedAt']
                                                   as Timestamp)
                                               .toDate(),
@@ -263,7 +263,7 @@ class DarDisplayScreen extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DarOpenAllScreen(
+                  builder: (context) => SDarOpenAllScreen(
                     Username: Username,
                     Empid: EmpID,
                     DarId: id,

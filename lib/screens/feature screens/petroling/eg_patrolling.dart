@@ -11,7 +11,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/dialogList.dart';
-import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
@@ -25,6 +24,7 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
+import '../Report/create_report_screen.dart';
 import '../widgets/custome_textfield.dart';
 
 FireStoreService fireStoreService = FireStoreService();

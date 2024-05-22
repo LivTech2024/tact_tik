@@ -17,6 +17,7 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/assets/assets_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/keys_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/post_order.dart/post_order_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/task/task_feature_screen.dart';
@@ -28,10 +29,12 @@ import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/message%20screen/message_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
+
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/screens/view/app_view.dart';
+
 // import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 
@@ -60,15 +63,15 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
           textTheme: GoogleFonts.poppinsTextTheme(
-            Theme.of(context).textTheme,
+            Theme
+                .of(context)
+                .textTheme,
           ),
         ),
         home: OfflineBuilder(
-          connectivityBuilder: (
-            BuildContext context,
-            ConnectivityResult connectivity,
-            Widget child,
-          ) {
+          connectivityBuilder: (BuildContext context,
+              ConnectivityResult connectivity,
+              Widget child,) {
             final bool isConnected = connectivity != ConnectivityResult.none;
             if (isConnected) {
               return child;
@@ -88,7 +91,8 @@ class MyApp extends StatelessWidget {
               // return OfflineScreen();
             }
           },
-          child: AuthChecker(),
+          child: EndCheckpointScreen(
+            CheckpointID: '', PatrolID: '', ShiftId: '', empId: '',),
         ),
       ),
     );
