@@ -14,7 +14,8 @@ import '../../../../services/EmailService/EmailJs_fucntion.dart';
 import '../../../../utils/colors.dart';
 
 class LogBookScreen extends StatefulWidget {
-  const LogBookScreen({super.key});
+  final String empId;
+  const LogBookScreen({super.key, required this.empId});
 
   @override
   State<LogBookScreen> createState() => _LogBookScreenState();
@@ -23,23 +24,23 @@ class LogBookScreen extends StatefulWidget {
 class _LogBookScreenState extends State<LogBookScreen> {
   late Stream<QuerySnapshot> _logBookStream;
 
-  Future<String> getempID() async {
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    if (userInfo != null) {
-      String employeeId = userInfo['EmployeeId'];
-      return employeeId;
-    } else {
-      print('User info not found');
-      return "";
-    }
-  }
+  // Future<String> getempID() async {
+  //   var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
+  //   if (userInfo != null) {
+  //     String employeeId = userInfo['EmployeeId'];
+  //     return employeeId;
+  //   } else {
+  //     print('User info not found');
+  //     return "";
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     _logBookStream = FirebaseFirestore.instance
         .collection('LogBook')
-        .where('LogBookEmpId', isEqualTo: 'ecn7fE3IigfnWe6EHyu2')
+        .where('LogBookEmpId', isEqualTo: widget.empId)
         .snapshots();
   }
 
@@ -139,20 +140,21 @@ class _LogBookScreenState extends State<LogBookScreen> {
       return timestampB.compareTo(timestampA);
     });
 
-    for (final document in documents) {
+    for (int i = 0; i < documents.length; i++) {
+      final document = documents[i];
       final data = document.data() as Map<String, dynamic>;
-      final shiftName = document.id;
+      final shiftName = data['ShiftName'] ?? 'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
       final logData = data['LogBookData'] as List<dynamic>;
       final logTimestamp = data['LogBookDate'] as Timestamp;
-      final clientName = data['LogCleintName'] ?? 'Unknown';
-      final logLocation = data['LogBookLocationName'] ?? 'Unknown';
+      final clientName = data['LogCleintName'] ?? '';
+      final logLocation = data['LogBookLocationName'] ?? '';
       final logsByDate = <String, List<Map<String, dynamic>>>{};
 
       for (final logMap in logData) {
         final logMapData = logMap as Map<String, dynamic>;
         final date = DateFormat('MMM d, yyyy').format(logTimestamp.toDate());
 
-        final logType = logMapData['LogType']; // Access LogType within each map
+        final logType = logMapData['LogType'];
 
         if (logsByDate.containsKey(date)) {
           logsByDate[date]!.add({

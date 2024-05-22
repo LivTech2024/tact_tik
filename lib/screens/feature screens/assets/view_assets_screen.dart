@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +11,10 @@ import '../../../utils/colors.dart';
 import '../visitors/widgets/setTimeWidget.dart';
 
 class ViewAssetsScreen extends StatelessWidget {
-  ViewAssetsScreen({super.key});
+  final String startDate;
+  final String endDate;
+  final String equipmentId;
+  ViewAssetsScreen({super.key, required this.startDate, required this.endDate, required this.equipmentId});
 
   Future<TimeOfDay?> showCustomTimePicker(BuildContext context) async {
     TimeOfDay? selectedTime;
@@ -94,7 +98,7 @@ class ViewAssetsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InterMedium(text: '21 / 04 / 2024',
+                        InterMedium(text: startDate,
                           fontsize: width / width16,
                           color: color2,),
                         SvgPicture.asset('assets/images/calendar_clock.svg',
@@ -114,7 +118,7 @@ class ViewAssetsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        InterMedium(text: '22 / 04 / 2024',
+                        InterMedium(text: endDate,
                           fontsize: width / width16,
                           color: color2,),
                         SvgPicture.asset('assets/images/calendar_clock.svg',
@@ -128,35 +132,43 @@ class ViewAssetsScreen extends StatelessWidget {
             SizedBox(height: height / height30),
             InterBold(text: 'Equipment' , color: color1,fontsize: width / width16,),
             SizedBox(height: height / height20),
-            Container(
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width10),
-                  color: WidgetColor,
-                ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(width: width / width10),
-                  InterMedium(text: 'Suit' , color: color2,fontsize: width / width16,),
-                ],
-              ),
-            ),
-            SizedBox(height: height / height12),
-            Container(
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(width / width10),
-                color: WidgetColor,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(width: width / width10),
-                  InterMedium(text: 'Suit' , color: color2,fontsize: width / width16,),
-                ],
-              ),
-            ),
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance
+                  .collection('Equipments')
+                  .where('EquipmentId', isEqualTo: equipmentId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final documents = snapshot.data!.docs;
+                  final equipmentName = documents.isNotEmpty
+                      ? (documents.first.data()['EquipmentName'] ?? 'Equipment Not Available')
+                      : 'Equipment Not Available';
+
+                  return Container(
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(width / width10),
+                      color: WidgetColor,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(width: width / width10),
+                        InterMedium(
+                          text: equipmentName,
+                          color: color2,
+                          fontsize: width / width16,
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            )
           ],
         ),
       ),
