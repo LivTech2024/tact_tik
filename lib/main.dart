@@ -14,6 +14,10 @@ import 'package:tact_tik/common/widgets/offlineScreen.dart';
 import 'package:tact_tik/screens/SideBar%20Screens/employment_letter.dart';
 import 'package:tact_tik/screens/SideBar%20Screens/profile_screen.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
+import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/assets/assets_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/keys/keys_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/post_order.dart/post_order_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/task/task_feature_screen.dart';
@@ -23,11 +27,16 @@ import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/message%20screen/message_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_managment_view_screen.dart';
+
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/screens/view/app_view.dart';
+
 // import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 

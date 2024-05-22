@@ -47,6 +47,7 @@ class TaskScreen extends StatefulWidget {
   final Function() onRefreshHomeScreen;
   final Function() onEndTask;
   final VoidCallback onRefreshStartTaskScreen;
+  final String ShiftStatus;
 
   TaskScreen({
     required this.ShiftDate,
@@ -77,6 +78,7 @@ class TaskScreen extends StatefulWidget {
     required this.onRefreshHomeScreen,
     required this.onEndTask,
     required this.onRefreshStartTaskScreen,
+    required this.ShiftStatus,
   });
 
   @override
@@ -171,8 +173,16 @@ class _TaskScreenState extends State<TaskScreen> {
 
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("Shift Start Status ${widget.ShiftStatus}");
+    // if (widget.ShiftStatus == 'started') {
+    //   setState(() {
+    //     ShiftStarted = true;
+    //   });
+    // }
+
+    bool? ShiftStus = prefs.getBool('ShiftStarted') ?? false;
     setState(() {
-      ShiftStarted = prefs.getBool('ShiftStarted') ?? false;
+      ShiftStarted = ShiftStus;
     });
     bool? savedClickedIn = prefs.getBool('clickedIn') ?? false;
     setState(() {
@@ -236,6 +246,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           ShiftIN: ShiftIn,
                           onRefresh: refreshStartTaskScreen,
                           ShiftName: widget.ShiftName,
+                          ShiftStatus: widget.ShiftStatus,
                           // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                         )
                       : Center(

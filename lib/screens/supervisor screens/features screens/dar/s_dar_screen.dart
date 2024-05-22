@@ -7,15 +7,15 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/s_dar_open_all_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
 
-import '../../../common/sizes.dart';
-import 'dar_open_all_screen.dart';
+import '../../../../common/sizes.dart';
 
-class DarDisplayScreen extends StatelessWidget {
+class SDarDisplayScreen extends StatelessWidget {
   final String EmpEmail;
   final String EmpID;
   final String Username;
@@ -24,7 +24,7 @@ class DarDisplayScreen extends StatelessWidget {
   final String EmpDarShiftID;
   final String EmpDarClientID;
 
-  DarDisplayScreen(
+  SDarDisplayScreen(
       {Key? key,
       required this.EmpEmail,
       required this.EmpID,
@@ -64,7 +64,7 @@ class DarDisplayScreen extends StatelessWidget {
         }
 
         var docRef = await employeesDARCollection.add({
-          'EmpDarLocationId': _userService.shiftLocationId,
+          'EmpDarLocationId:': _userService.shiftLocationId,
           'EmpDarLocationName': _userService.shiftLocation,
           'EmpDarShiftId': _userService.ShiftId,
           'EmpDarDate': FieldValue.serverTimestamp(),
@@ -83,10 +83,6 @@ class DarDisplayScreen extends StatelessWidget {
       } catch (e) {
         print('Error creating document: $e');
       }
-    }
-
-    bool isNewEntry(DocumentSnapshot document) {
-      return document['EmpDarShiftId'] == EmpDarShiftID;
     }
 
     return SafeArea(
@@ -161,20 +157,18 @@ class DarDisplayScreen extends StatelessWidget {
                               ),
                               SizedBox(height: height / height20),
                               ...darEntries.map((document) {
-                                bool isNew = isNewEntry(document);
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => DarOpenAllScreen(
+                                        builder: (context) => SDarOpenAllScreen(
                                           passdate: (document['EmpDarCreatedAt']
                                                   as Timestamp)
                                               .toDate(),
                                           Username: Username,
                                           Empid: EmpID,
                                           DarId: document['EmpDarId'],
-                                          editable: isNew,
                                         ),
                                       ),
                                     );
@@ -198,28 +192,16 @@ class DarDisplayScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         InterBold(
-                                          text: document != null &&
-                                                  document.data
-                                                      is DocumentSnapshot
-                                              ? document['EmpDarShiftName'] ??
-                                                  '' // Use nullish coalescing for default value
-                                              : document['EmpDarEmpName'],
+                                          text:
+                                              document['EmpDarShiftName'] ?? "",
                                           fontsize: width / width18,
                                           color: Primarycolor,
                                         ),
-                                        isNew
-                                            ? InterBold(
-                                                text: "New",
-                                                fontsize: width / width18,
-                                                color: Colors.green,
-                                              )
-                                            : SizedBox(),
                                         SizedBox(height: height / height10),
                                         Flexible(
                                           child: InterRegular(
-                                            text: document[
-                                                    'EmpDarLocationName'] ??
-                                                "",
+                                            text:
+                                                document['EmpDarLocationName'],
                                             fontsize: width / width16,
                                             color: color26,
                                             maxLines: 4,
@@ -273,25 +255,25 @@ class DarDisplayScreen extends StatelessWidget {
             }
           },
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () async {
-        //     var id = await _submitDAR();
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            var id = await _submitDAR();
 
-        //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => DarOpenAllScreen(
-        //             Username: Username,
-        //             Empid: EmpID,
-        //             DarId: id,
-        //           ),
-        //         ));
-        //   },
-        //   backgroundColor: Primarycolor,
-        //   shape: const CircleBorder(),
-        //   child: const Icon(Icons.add),
-        // ),
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SDarOpenAllScreen(
+                    Username: Username,
+                    Empid: EmpID,
+                    DarId: id,
+                  ),
+                ));
+          },
+          backgroundColor: Primarycolor,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

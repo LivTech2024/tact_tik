@@ -11,10 +11,11 @@ import 'package:tact_tik/utils/colors.dart';
 
 import '../../../../fonts/inter_regular.dart';
 
-
 class SHistoryScreen extends StatefulWidget {
   final String empID;
-  const SHistoryScreen({super.key, required this.empID});
+  final String empName;
+
+  const SHistoryScreen({super.key, required this.empID, required this.empName});
 
   @override
   State<SHistoryScreen> createState() => _HistoryScreenState();
@@ -85,7 +86,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                 },
               ),
               title: InterRegular(
-                text: 'My History',
+                text: '${widget.empName} History',
                 fontsize: width / width18,
                 color: Colors.white,
                 letterSpacing: -.3,
@@ -100,10 +101,10 @@ class _HistoryScreenState extends State<SHistoryScreen> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   var shift = shiftHistory[index];
                   DateTime shiftDate =
-                  (shift['ShiftDate'] as Timestamp).toDate();
+                      (shift['ShiftDate'] as Timestamp).toDate();
                   String date =
                       '${shiftDate.day}/${shiftDate.month}/${shiftDate.year}';
                   String dayOfWeek = _getDayOfWeek(shiftDate.weekday);
@@ -129,7 +130,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                           width: double.maxFinite,
                           decoration: BoxDecoration(
                             borderRadius:
-                            BorderRadius.circular(width / width10),
+                                BorderRadius.circular(width / width10),
                             color: WidgetColor,
                           ),
                           child: Column(
@@ -191,11 +192,11 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                 width: double.maxFinite,
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         InterSemibold(
                                           text: 'Shift Timimg',
@@ -207,7 +208,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                         ),
                                         InterSemibold(
                                           text:
-                                          '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
+                                              '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
                                           fontsize: width / width16,
                                           color: color1,
                                         ),
@@ -217,7 +218,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     SizedBox(
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           InterSemibold(
                                             text: 'Total',

@@ -12,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
@@ -65,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _userName = "";
   String employeeImg = "";
   String _ShiftDate = "";
+  String _ShiftStatus = "";
+
   String _ShiftLocation = "";
   String _ShiftLocationName = "";
 
@@ -281,7 +284,6 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
           String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
           String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
-
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
           GeoPoint shiftGeolocation =
@@ -291,7 +293,28 @@ class _HomeScreenState extends State<HomeScreen> {
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
           String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
           String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+          List<Map<String, dynamic>> shiftCurrentStatus =
+              List<Map<String, dynamic>>.from(shiftInfo['ShiftCurrentStatus']);
 
+          List<Map<String, dynamic>> filteredStatus = shiftCurrentStatus
+              .where((status) => status['StatusReportedById'] == _employeeId)
+              .toList();
+
+          String statusString = filteredStatus
+                  .map((status) => status['Status'] as String)
+                  .join(', ') ??
+              "";
+
+          print("Shift CUrrent Status ${statusString}");
+          if (statusString == "started") {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', true);
+            // prefs.setBool('clickedIn', true);
+          } else {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', false);
+            prefs.setBool('clickedIn', false);
+          }
           int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
           bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
           // String ShiftClientId = shiftInfo['ShiftClientId'];
@@ -315,6 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             _shiftLocationId = shiftLocationId;
             _shiftCLientId = shiftClientId;
+            _ShiftStatus = statusString;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -705,6 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Bounce(
+                              onTap: () => ChangeScreenIndex(3),
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
@@ -768,6 +793,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   refreshHomeScreen();
                                 },
                                 ShiftLocationName: _ShiftLocationName,
+                                ShiftStatus: _ShiftStatus,
                               ),
                             )),
                       )
@@ -1184,7 +1210,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    KeysScreen()));
+                                                    AssetsScreen(
+                                                        assetEmpId:
+                                                            _employeeId)));
                                         break;
                                       default:
                                     }

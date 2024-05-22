@@ -10,30 +10,29 @@ import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
 
-import '../../../common/sizes.dart';
-import '../../../fonts/inter_bold.dart';
-import '../../../utils/colors.dart';
+import '../../../../common/sizes.dart';
+import '../../../../fonts/inter_bold.dart';
+import '../../../../utils/colors.dart';
 
-class DarOpenAllScreen extends StatefulWidget {
+
+class SDarOpenAllScreen extends StatefulWidget {
   final DateTime? passdate;
   final String? DarId;
   final String Username;
   final String Empid;
-  bool editable;
 
-  DarOpenAllScreen(
+  const SDarOpenAllScreen(
       {super.key,
       this.passdate,
       this.DarId,
-      this.editable = true,
       required this.Username,
       required this.Empid});
 
   @override
-  State<DarOpenAllScreen> createState() => _DarOpenAllScreenState();
+  State<SDarOpenAllScreen> createState() => _DarOpenAllScreenState();
 }
 
-class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
+class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
   List colors = [Primarycolor, color25];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
@@ -47,10 +46,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     super.initState();
     _fetchShiftDetails();
     // fetchDarTileData();
-  }
-
-  void refresh() {
-    _fetchShiftDetails();
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
@@ -515,7 +510,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         child: SizedBox(
                           child: Center(
                             child: InterBold(
-                              text: widget.editable ? 'Edit' : 'Read',
+                              text: 'Edit',
                               color: colors[0],
                               fontsize: width / width18,
                             ),
@@ -645,12 +640,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   darTiles: data,
                                                   EmployeeId: widget.Empid,
                                                   EmployeeName: widget.Username,
-                                                  iseditable: widget.editable,
                                                 ),
                                               ),
                                             );
-                                            //refresh the screen
-                                            refresh();
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(

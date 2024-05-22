@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
-import '../../../common/sizes.dart';
-import '../../../fonts/inter_bold.dart';
-import '../../../fonts/inter_regular.dart';
-import '../../../utils/colors.dart';
-import 'create_report_screen.dart';
+import '../../../../common/sizes.dart';
+import '../../../../fonts/inter_bold.dart';
+import '../../../../fonts/inter_regular.dart';
+import '../../../../utils/colors.dart';
 
 class ReportScreen extends StatefulWidget {
   final String locationId;
@@ -18,6 +18,7 @@ class ReportScreen extends StatefulWidget {
   final String empId;
   final String empName;
   final String clientId;
+
   const ReportScreen(
       {super.key,
       required this.locationId,
@@ -37,6 +38,7 @@ class _ReportScreenState extends State<ReportScreen> {
   List<String> tittles = [];
   List<Map<String, dynamic>> groupedReportData = [];
   List<Map<String, dynamic>> reportData = [];
+
   @override
   void initState() {
     super.initState();
@@ -138,7 +140,7 @@ class _ReportScreenState extends State<ReportScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CreateReportScreen(
+                    builder: (context) => SCreateReportScreen(
                           locationId: widget.locationId,
                           companyID: widget.companyId,
                           locationName: widget.locationName,
@@ -146,7 +148,6 @@ class _ReportScreenState extends State<ReportScreen> {
                           empName: widget.empName,
                           ClientId: widget.clientId,
                           reportId: "",
-                          buttonEnable: true,
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -239,7 +240,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => CreateReportScreen(
+                                    builder: (context) => SCreateReportScreen(
                                       locationId: widget.locationId,
                                       locationName: widget.locationName,
                                       companyID: widget.companyId,
@@ -249,7 +250,6 @@ class _ReportScreenState extends State<ReportScreen> {
                                       // clientId: widget.clientId,
                                       ClientId: widget.clientId,
                                       reportId: report['ReportId'],
-                                      buttonEnable: false,
                                     ),
                                   ),
                                 );

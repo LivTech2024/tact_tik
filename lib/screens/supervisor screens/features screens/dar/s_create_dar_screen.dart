@@ -3,44 +3,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
-import 'package:tact_tik/common/widgets/customErrorToast.dart';
-import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
-import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
-import '../../../fonts/inter_regular.dart';
-import '../widgets/custome_textfield.dart';
 
-class CreateDarScreen extends StatefulWidget {
+import '../../../../fonts/inter_regular.dart';
+import '../../../feature screens/widgets/custome_textfield.dart';
+
+
+class SCreateDarScreen extends StatefulWidget {
   final List<dynamic> darTiles;
   final String? DarId;
   final int index;
   final String EmployeeId;
   final String EmployeeName;
-  bool iseditable;
-  CreateDarScreen({
+
+  const SCreateDarScreen({
+
     required this.darTiles,
     required this.index,
     required this.EmployeeId,
     required this.EmployeeName,
     this.DarId,
-    this.iseditable = true,
   });
 
   @override
-  State<CreateDarScreen> createState() => _CreateDarScreenState();
+  State<SCreateDarScreen> createState() => _CreateDarScreenState();
 }
 
-class _CreateDarScreenState extends State<CreateDarScreen> {
+class _CreateDarScreenState extends State<SCreateDarScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final TextEditingController _titleController;
   late final TextEditingController _darController;
@@ -110,69 +108,25 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile =
+    final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      try {
-        File file = File(pickedFile.path);
-        if (file.existsSync()) {
-          File compressedFile = await _compressImage(file);
-          setState(() {
-            uploads.add({'type': 'image', 'file': file});
-          });
-        } else {
-          print('File does not exist: ${file.path}');
-        }
-      } catch (e) {
-        print('Error adding image: $e');
-      }
-    } else {
-      print('No images selected');
+      setState(() {
+        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+      });
     }
-    print("Status ${uploads}");
+    print("Statis ${uploads}");
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30);
-    if (pickedFiles != null) {
-      for (var pickedFile in pickedFiles) {
-        try {
-          File file = File(pickedFile.path);
-          if (file.existsSync()) {
-            File compressedFile = await _compressImage(file);
-            setState(() {
-              uploads.add({'type': 'image', 'file': file});
-            });
-          } else {
-            print('File does not exist: ${file.path}');
-          }
-        } catch (e) {
-          print('Error adding image: $e');
-        }
-      }
-    } else {
-      print('No images selected');
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+      });
     }
   }
-
-  Future<File> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      file.absolute.path + '_compressed.jpg',
-      quality: 30,
-    );
-    return File(result!.path);
-  }
-
-  // Future<File> _compressImage(File file) async {
-  //   final result = await FlutterImageCompress.compressAndGetFile(
-  //     file.absolute.path,
-  //     file.absolute.path + '_compressed.jpg',
-  //     quality: 30,
-  //   );
-  //   return File(result!.path);
-  // }
 
   Future<void> _uploadImages() async {
     print("Uploads Images  $uploads");
@@ -195,38 +149,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       uploads.removeAt(index);
     });
   }
-
-  // Future<void> _uploadImages() async {
-  //   print("Uploads Images  $uploads");
-  //   try {
-  //     for (var image in uploads) {
-  //       final im = await fireStoreService.addImageToDarStorage(image['file']);
-  //       print('Image url = ${im}');
-  //       imageUrls.add(im);
-  //     }
-  //     uploads.clear();
-  //     showSuccessToast(context, "Uploaded Successfully");
-  //   } catch (e) {
-  //     showErrorToast(context, "$e");
-  //     print('Error uploading images: $e');
-  //   }
-  // }
-
-  // Future<void> _uploadImages() async {
-  //   print("Uploads Images  $uploads");
-  //   try {
-  //     for (var image in uploads) {
-  //       final im = await fireStoreService.addImageToDarStorage(image['file']);
-  //       print('Image url = ${im}');
-  //       imageUrls.add(im);
-  //     }
-  //     uploads.clear();
-  //     showSuccessToast(context, "Uploaded Successfully");
-  //   } catch (e) {
-  //     showErrorToast(context, "$e");
-  //     print('Error uploading images: $e');
-  //   }
-  // }
 
   void _removeImage(int index) {
     setState(() {
@@ -564,15 +486,15 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    // IconButton(
-                                    //   onPressed: () {
-                                    //     _removeImage(index);
-                                    //   },
-                                    //   icon: const Icon(
-                                    //     Icons.delete,
-                                    //     color: Colors.white,
-                                    //   ),
-                                    // ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _removeImage(index);
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -581,14 +503,12 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         },
                       ),
                     SizedBox(height: height / height30),
-                    widget.iseditable
-                        ? Button1(
-                            text: _isSubmitting ? 'Submitting...' : 'Submit',
-                            onPressed: submitDarTileData,
-                            backgroundcolor: Primarycolor,
-                            borderRadius: 20,
-                          )
-                        : SizedBox(),
+                    Button1(
+                      text: _isSubmitting ? 'Submitting...' : 'Submit',
+                      onPressed: submitDarTileData,
+                      backgroundcolor: Primarycolor,
+                      borderRadius: 20,
+                    ),
                   ],
                 ),
               ),
