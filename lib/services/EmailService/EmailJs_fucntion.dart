@@ -129,7 +129,7 @@ Future<void> sendShiftTemplateEmail(
   String shiftOutTime,
 ) async {
   // final pdfBase64 = await generateShiftReportPdf(
-  //     ClientName, Data, GuardName, "23:00", "07:00");
+  //     ClientName, Data, GuardName, "19:00", "07:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -227,7 +227,7 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             <tr>
                 <td> ${GuardName}</td>
-                <td>23:00</td>
+                <td>20:00</td>
                 <td>07:00</td>
             </tr> 
         </table>

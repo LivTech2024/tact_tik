@@ -2713,7 +2713,7 @@ class FireStoreService {
       List<String> specificDocIds = [
         'l97LkTKaPxKH2nHALaAj',
         'ieqFMq142QT7Eh8Ef5P4',
-        '7wEYGeA4um2goDpTHwer'
+        'OaUqjWN1wwKcR4h4VeuZ'
       ];
 
       querySnapshot.docs.forEach((doc) {
