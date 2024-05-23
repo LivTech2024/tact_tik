@@ -24,11 +24,13 @@ class CreateDarScreen extends StatefulWidget {
   final String EmployeeId;
   final String EmployeeName;
   bool iseditable;
+  final VoidCallback? onCallback;
   CreateDarScreen({
     required this.darTiles,
     required this.index,
     required this.EmployeeId,
     required this.EmployeeName,
+    required this.onCallback,
     this.DarId,
     this.iseditable = true,
   });
@@ -308,6 +310,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           await docRef
               .set({'EmpDarTile': widget.darTiles}, SetOptions(merge: true));
         }
+        widget.onCallback?.call();
         Navigator.pop(context);
       } else {
         print('No document found with the matching _employeeId.');
