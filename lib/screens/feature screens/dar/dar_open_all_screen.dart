@@ -646,6 +646,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   EmployeeId: widget.Empid,
                                                   EmployeeName: widget.Username,
                                                   iseditable: widget.editable,
+                                                  onCallback: () {
+                                                    print("Callback Called");
+                                                    refresh();
+                                                  },
                                                 ),
                                               ),
                                             );
