@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -9,16 +9,16 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class SelectLoogBookGuardsScreen extends StatefulWidget {
+class SelectAssetsGuardsScreen extends StatefulWidget {
   final String companyId;
 
-  const SelectLoogBookGuardsScreen({super.key, required this.companyId});
+  const SelectAssetsGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectLoogBookGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectAssetsGuardsScreen> createState() => _SelectGuardsScreenState();
 }
 
-class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
+class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
@@ -113,7 +113,10 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                   child: DropdownButton<String>(
                     iconSize: width / width24,
                     dropdownColor: WidgetColor,
-                    style: TextStyle(color: color2, fontSize: width / width14),
+                    style: TextStyle(
+                      color: color2,
+                      fontSize: width / width12,
+                    ),
                     borderRadius: BorderRadius.circular(width / width10),
                     value: dropdownValue,
                     onChanged: (String? newValue) {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 
@@ -91,8 +92,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     });
   }
 
-  void NavigateScreen(Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+
+  void NavigateScreen(Widget screen , BuildContext context) {
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => screen));
   }
 
   void ChangeIconColor(int index) {
@@ -635,7 +641,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  NavigateScreen(ClientOpenPatrolScreen());
+                                  NavigateScreen(ClientCheckPatrolScreen() , context);
                                 },
                                 child: Container(
                                   height: height / height160,
@@ -665,7 +671,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 bottomRight: Radius.circular(
                                                     width / width10),
                                               ),
-                                              color: color22,
+                                              color: WidgetColor,
                                             ),
                                           ),
                                           SizedBox(width: width / width14),
@@ -853,7 +859,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      NavigateScreen(ClientOpenPatrolScreen());
+                                      NavigateScreen(ClientCheckPatrolScreen() , context);
                                     },
                                     child: Column(
                                       crossAxisAlignment:
@@ -1157,7 +1163,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  NavigateScreen(ClientOpenPatrolScreen());
+                                  NavigateScreen(ClientOpenPatrolScreen() , context);
                                 },
                                 child: Container(
                                   height: height / height80,

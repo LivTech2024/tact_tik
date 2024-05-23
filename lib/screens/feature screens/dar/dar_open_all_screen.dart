@@ -54,7 +54,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
-    final employeeId = FirebaseAuth.instance.currentUser?.uid;
+    final employeeId = _userService.employeeId;
     print("testtfwdf:$employeeId");
 
     final reportsCollection =
@@ -64,7 +64,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         .get();
 
     final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
-
+    print("Report ${reports}");
     Map<String, List<Map<String, dynamic>>> reportsByHour = {};
     for (var report in reports) {
       final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
@@ -78,7 +78,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         reportsByHour[hourKey] = [report];
       }
     }
-
+    print("Report By HOur ${reportsByHour}");
     return reportsByHour;
   }
 
@@ -88,9 +88,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     final employeeId = FirebaseAuth.instance.currentUser?.uid;
 
     final patrolLogsCollection =
-        FirebaseFirestore.instance.collection('PatrolLogs');
+        FirebaseFirestore.instance.collection('Reports');
     final querySnapshot = await patrolLogsCollection
-        .where('PatrolLogGuardId', isEqualTo: employeeId)
+        .where('ReportEmployeeId', isEqualTo: employeeId)
         .get();
 
     final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();

@@ -2695,9 +2695,10 @@ class FireStoreService {
       // print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
 
       var shiftLinkedPatrolIds = [
-        "T6DWZ2kpj8nlwhP1qKi3",
-        "474ZS6GremcQn2rt7SbR",
+        // "T6DWZ2kpj8nlwhP1qKi3",
+        // "474ZS6GremcQn2rt7SbR",
         "vU6dRzrjLfzo0S1KK4hJ"
+        // "kIcKW9RlqPmr40tXU4lP"
       ];
       // Query PatrolLogs for data
       var querySnapshot = await FirebaseFirestore.instance
@@ -2711,9 +2712,9 @@ class FireStoreService {
       // 'jwwJLoyIwB6CNeCEUjO7'
       // 'PjA0XjUncrUGQk4RTlky',
       List<String> specificDocIds = [
-        'l97LkTKaPxKH2nHALaAj',
-        'ieqFMq142QT7Eh8Ef5P4',
-        'OaUqjWN1wwKcR4h4VeuZ'
+        'kIcKW9RlqPmr40tXU4lP',
+        // 'ieqFMq142QT7Eh8Ef5P4',
+        // 'OaUqjWN1wwKcR4h4VeuZ'
       ];
 
       querySnapshot.docs.forEach((doc) {
@@ -3087,7 +3088,7 @@ class FireStoreService {
     try {
       final CollectionReference reportsRef =
           FirebaseFirestore.instance.collection('Reports');
-      final reportDoc = await reportsRef.add({
+      final DocumentReference reportDoc = await reportsRef.add({
         'ReportLocationId': locationId,
         'ReportLocationName': locationName,
         'ReportIsFollowUpRequired': isFollowUpRequired,
@@ -3108,6 +3109,7 @@ class FireStoreService {
         'ReportClientId': clientId,
         'ReportCreatedAt': createdAt,
       });
+
       await reportDoc.update({"ReportId": reportDoc.id});
       Timestamp timestamp = Timestamp.now();
 
@@ -3119,6 +3121,7 @@ class FireStoreService {
 
       // Generate a unique ID
       var uniqueid = await generateUniqueID(date, reportName, categoryName);
+
       // Update ReportSearchId
       await reportDoc.update({"ReportSearchId": uniqueid});
 
@@ -3129,6 +3132,7 @@ class FireStoreService {
       //     .where('EmpDarEmpId', isEqualTo: employeeId)
       //     .where('EmpDarShiftId', isEqualTo: shiftId)
       //     .get();
+
       // if (darSnapshot.docs.isNotEmpty) {
       //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
       //     if (darDoc.exists) {
@@ -3142,28 +3146,32 @@ class FireStoreService {
 
       //       // Update TileContent based on ReportCreateTime
       //       for (var tile in tiles) {
-      //         Timestamp tileDate = tile['TileDate'];
-      //         DateTime tileDateTime = tileDate.toDate();
-      //         if (tileDateTime.year == dateTime.year &&
-      //             tileDateTime.month == dateTime.month &&
-      //             tileDateTime.day == dateTime.day) {
-      //           String reportTimeSlot =
-      //               "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
-      //           if (tile['TileTime'] == reportTimeSlot) {
-      //             tile['TileContent'] = data;
+      //         if (tile['TileDate'] != null) {
+      //           Timestamp tileDate = tile['TileDate'];
+      //           DateTime tileDateTime = tileDate.toDate();
+      //           if (tileDateTime.year == dateTime.year &&
+      //               tileDateTime.month == dateTime.month &&
+      //               tileDateTime.day == dateTime.day) {
+      //             String reportTimeSlot =
+      //                 "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
+      //             if (tile['TileTime'] == reportTimeSlot) {
+      //               tile['TileContent'] = data;
+      //             }
       //           }
       //         }
       //       }
 
       //       // Update the document with the modified tiles array
+      //       await darDoc.reference.update({'EmpDarTile': tiles});
+
+      //       // Add the unique ID to the EmpDarTile field
       //       await darDoc.reference.update({
       //         'EmpDarTile': FieldValue.arrayUnion([uniqueid])
       //       });
-      //       await darDoc.reference.update({'EmpDarTile': tiles});
 
       //       print("Added to DAR");
       //     }
-      //   }
+      // }
       // }
 
       print('Report created successfully');

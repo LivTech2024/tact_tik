@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
-import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 
 import '../../../common/sizes.dart';
@@ -10,9 +8,10 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
+import 'client_open_patrol_screen.dart';
 
-class ClientOpenPatrolScreen extends StatelessWidget {
-  ClientOpenPatrolScreen({super.key});
+class ClientCheckPatrolScreen extends StatelessWidget {
+  ClientCheckPatrolScreen({super.key});
 
   final List<String> members = [
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
@@ -32,7 +31,8 @@ class ClientOpenPatrolScreen extends StatelessWidget {
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
   ];
 
-  void NavigateScreen(Widget screen , BuildContext context) {
+  void NavigateScreen(Widget screen, BuildContext context) {
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
@@ -40,7 +40,6 @@ class ClientOpenPatrolScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
 
     return SafeArea(
       child: Scaffold(
@@ -60,7 +59,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
             },
           ),
           title: InterRegular(
-            text: 'Guard Name',
+            text: 'Guards',
             fontsize: width / width18,
             color: Colors.white,
             letterSpacing: -.3,
@@ -71,7 +70,6 @@ class ClientOpenPatrolScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: width / width30),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: height / height30,
@@ -108,10 +106,11 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // NavigateScreen();
+                    NavigateScreen(ClientOpenPatrolScreen() , context);
+
                   },
                   child: Container(
-                    height: height / height200,
+                    height: height / height140,
                     margin: EdgeInsets.only(top: height / height10),
                     width: double.maxFinite,
                     decoration: BoxDecoration(
@@ -152,7 +151,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                 children: [
                                   InterSemibold(
                                     text: 'Guard Name',
-                                    color: color1,
+                                    color: color21,
                                     fontsize: width / width18,
                                   ),
                                   // SizedBox(height: height / height5),
@@ -172,38 +171,38 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: width / width100,
+                                width: width / width80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Started at',
-                                      fontsize: width / width14,
+                                      fontsize: width / width12,
                                       color: color21,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
                                       text: '11:36',
-                                      fontsize: width / width14,
+                                      fontsize: width / width12,
                                       color: color1,
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                width: width / width100,
+                                width: width / width80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Ended at',
-                                      fontsize: width / width14,
+                                      fontsize: width / width12,
                                       color: color21,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
                                       text: '16:56',
-                                      fontsize: width / width14,
+                                      fontsize: width / width12,
                                       color: color1,
                                     ),
                                   ],
@@ -216,32 +215,44 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   children: [
                                     InterRegular(
                                       text: 'Count',
-                                      fontsize: width / width14,
+                                      fontsize: width / width12,
                                       color: color21,
                                     ),
                                     SizedBox(height: height / height12),
-                                    InterMedium(
-                                      text: '100',
-                                      fontsize: width / width14,
-                                      color: color1,
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle_outline,
+                                          color: Primarycolor,
+                                          size: width / width16,
+                                        ),
+                                        SizedBox(
+                                          width: width / width2,
+                                        ),
+                                        InterMedium(
+                                          text: '100',
+                                          fontsize: width / width12,
+                                          color: color1,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                width: width / width60,
+                                width: width / width80,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Status',
-                                      fontsize: width / width14,
+                                      fontsize: width / width12,
                                       color: color21,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterBold(
-                                      text: '1/3',
-                                      fontsize: width / width14,
+                                      text: 'Completed',
+                                      fontsize: width / width12,
                                       color: Colors.green,
                                     ),
                                   ],
@@ -249,96 +260,11 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(height: height / height14),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width / width18),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InterRegular(
-                                text: 'Feedback :',
-                                color: color21,
-                                fontsize: width / width14,
-                              ),
-                              SizedBox(width: width / width4),
-                              Flexible(
-                                  child: InterRegular(
-                                text:
-                                    ' If you have already purchased the premium, please wait a few minutes for the system to update your status and dont forget to run /premium to activate your premium status!',
-                                color: color10,
-                                fontsize: width / width14,
-                                maxLines: 3,
-                              )),
-                            ],
-                          ),
                         )
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: height / height30),
-                InterBold(
-                  text: 'Checkpoints',
-                  fontsize: width / width18,
-                  color: color21,
-                ),
-                SizedBox(height: height / height20),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: (){
-                        NavigateScreen(ViewCheckpointScreen() , context);
-                      },
-                      child: Container(
-                        height: height / height50,
-                        width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: height / height10),
-                        decoration: BoxDecoration(
-                          color: WidgetColor,
-                          borderRadius: BorderRadius.circular(width / width10),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: width / width20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: height / height12,
-                                  width: width / width12,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                SizedBox(width: width / width10),
-                                SizedBox(
-                                  width: width / width120,
-                                  child: InterMedium(
-                                    text: 'Checkpoint name Checkpoint name..',
-                                    color: color21,
-                                    fontsize: width / width16,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: width / width24,
-                              color: color17,
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                )
               ],
             ),
           ),

@@ -112,6 +112,118 @@ Future<void> callPdfApi() async {
   }
 }
 
+Future<void> sendShiftMultiplePdfEmail(
+    String? ClientName,
+    List<String> toEmails,
+    String Subject,
+    String fromName,
+    String type,
+    String date,
+    String GuardName,
+    String StartTime,
+    String EndTime,
+    String Location,
+    String Status,
+    String shiftinTime,
+    String shiftOutTime,
+    String empId,
+    String ShiftId) async {
+  try {
+    for (var toEmail in toEmails) {
+      final List<Map<String, dynamic>> pdfDataList =
+          await fireStoreService.fetchTemplateDataForPdf(empId, ShiftId);
+
+      final List<String> pdfBase64List = [];
+      for (var data in pdfDataList) {
+        final pdfBase64 = await generateShiftReportPdf(
+            ClientName, [data], GuardName, "19:00", "07:00");
+        pdfBase64List.add(pdfBase64);
+      }
+
+      // Generate the HTML content for the email
+      String patrolInfoHTML = '';
+      for (var item in pdfDataList) {
+        // Generate HTML for each patrol item
+        // You can modify this based on your data structure
+        patrolInfoHTML += '''
+          <tr>
+            <td>${item['PatrolLogPatrolCount']}</td>
+            <td>${item['PatrolLogStartedAt']}</td>
+            <td>${item['PatrolLogEndedAt']}</td>
+            <!-- Add more fields as needed -->
+          </tr>
+        ''';
+      }
+
+      final htmlcontent2 = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Security Report</title>
+        </head>
+        <body>
+            <header>
+                <h1>Security Report</h1>
+            </header>
+            <section>
+                <h2>Dear ${ClientName},</h2>
+                <p>I hope this email finds you well. Below is a detailed breakdown of the patrols conducted:</p>
+            </section>
+            <section>
+                <table>
+                    <tr>
+                        <th>Patrol Count</th>
+                        <th>Started At</th>
+                        <th>Ended At</th>
+                        <!-- Add more headers as needed -->
+                    </tr>
+                    $patrolInfoHTML
+                </table>
+            </section>
+            <footer>
+                <p>Best regards,</p>
+                <p>TEAM TACTTIK</p>
+            </footer>
+        </body>
+        </html>
+      """;
+
+      final emailResponse = await http.post(
+        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'to_email': toEmail,
+          'subject': Subject,
+          'from_name': fromName,
+          'html': htmlcontent2,
+          'attachments': [
+            for (var i = 0; i < pdfBase64List.length; i++)
+              {
+                'filename': 'security_report_$i.pdf',
+                'content': pdfBase64List[i],
+                'contentType': 'application/pdf',
+              }
+          ],
+        }),
+      );
+
+      if (emailResponse.statusCode == 201) {
+        print('Email sent successfully to $toEmail');
+        // Handle success
+      } else {
+        print(
+            'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+        // Handle failure
+      }
+    }
+  } catch (e) {
+    print('Error sending email: $e');
+    // Handle error
+  }
+}
+
 Future<void> sendShiftTemplateEmail(
   String? ClientName,
   List<String> toEmails,
@@ -227,7 +339,7 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             <tr>
                 <td> ${GuardName}</td>
-                <td>20:00</td>
+                <td>19:00</td>
                 <td>07:00</td>
             </tr> 
         </table>
@@ -617,6 +729,9 @@ Future<void> sendapiEmail(
             display: block; /* Prevent inline images from affecting layout */
             margin-bottom: 0.5rem; /* Add some space between images */
         }
+        .important-note {
+            color: red; /* Set text color to red */
+        }
     </style>
 </head>
 <body>
@@ -921,7 +1036,6 @@ Future<String> generateShiftReportPdf(
       'file_name': 'security_report.pdf',
     }),
   );
-
   if (pdfResponse.statusCode == 200) {
     print('PDF generated successfully');
     final pdfBase64 = await base64Encode(pdfResponse.bodyBytes);

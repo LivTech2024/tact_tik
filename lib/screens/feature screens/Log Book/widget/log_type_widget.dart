@@ -63,6 +63,7 @@ class LogTypeWidget extends StatelessWidget {
                       text: '$location',
                       fontsize: width / width14,
                       color: color1,
+                      maxLines: 1,
                     ),
                   ),
                   InterBold(
