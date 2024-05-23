@@ -256,11 +256,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                               Controller.text,
                               widget.ShiftId);
                           print("Patrol count == Required COunt");
-                          setState(() {
-                            _expand = false;
 
-                            prefs.setBool("expand", _expand);
-                          });
                           //If the count is equal
                           var imageUrls =
                               await fireStoreService.getImageUrlsForPatrol(
@@ -292,6 +288,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                           var defaultEmail = "tacttikofficial@gmail.com";
                           var testEmail3 = "Swastikbthiramdas@gmail.com";
                           emails.add(TestinEmail);
+                          var defaultEmail2 = "pankaj.kumar1312@yahoo.com";
+                          emails.add(defaultEmail2);
                           // emails.add(testEmail3);
                           // emails.add(testEmail3);
                           emails.add(ClientEmail!);
@@ -337,6 +335,11 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                               selectedOption);
                           // _refresh();
                           // sendFormattedEmail(emailParams);
+                          setState(() {
+                            _expand = false;
+
+                            prefs.setBool("expand", _expand);
+                          });
                           setState(() {
                             _isLoading = false;
                           });
@@ -430,7 +433,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                           print(imageUrls);
                           var TestinEmail = "sutarvaibhav37@gmail.com";
                           var defaultEmail = "tacttikofficial@gmail.com";
-                          // var defaultEmail = "tacttikofficial@gmail.com";
+                          var defaultEmail2 = "pankaj.kumar1312@yahoo.com";
+                          emails.add(defaultEmail2);
                           var testEmail3 = "Swastikbthiramdas@gmail.com";
                           emails.add(TestinEmail);
                           emails.add(testEmail3);

@@ -536,6 +536,9 @@ Future<void> sendapiEmail(
             display: block; /* Prevent inline images from affecting layout */
             margin-bottom: 0.5rem; /* Add some space between images */
         }
+        .important-note {
+            color: red; /* Set text color to red */
+        }
     </style>
 </head>
 <body>

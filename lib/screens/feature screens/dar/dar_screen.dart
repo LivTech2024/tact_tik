@@ -127,6 +127,121 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                 groupedByDate[formattedDate]!.add(document);
               });
 
+              List<Widget> buildDarEntries() {
+                List<Widget> entries = [];
+                groupedByDate.forEach((date, darEntries) {
+                  if (showAllDARS) {
+                    // In History tab, filter out DARs with isNew true
+                    darEntries = darEntries
+                        .where((document) => !isNewEntry(document))
+                        .toList();
+                  }
+                  if (showAllDARS || darEntries.any(isNewEntry)) {
+                    entries.add(Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InterBold(
+                          text: date,
+                          fontsize: width / width20,
+                          color: Primarycolor,
+                          letterSpacing: -.3,
+                        ),
+                        SizedBox(height: height / height20),
+                        ...darEntries.map((document) {
+                          bool isNew = isNewEntry(document);
+                          if (!showAllDARS && !isNew) {
+                            return SizedBox();
+                          }
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DarOpenAllScreen(
+                                    passdate: (document['EmpDarCreatedAt']
+                                            as Timestamp)
+                                        .toDate(),
+                                    Username: widget.Username,
+                                    Empid: widget.EmpID,
+                                    DarId: document['EmpDarId'],
+                                    editable: isNew,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: double.maxFinite,
+                              height: height / height200,
+                              decoration: BoxDecoration(
+                                color: WidgetColor,
+                                borderRadius:
+                                    BorderRadius.circular(width / width20),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: width / width20,
+                                vertical: height / height10,
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterBold(
+                                    text: document['EmpDarShiftName'] ?? "",
+                                    fontsize: width / width18,
+                                    color: Primarycolor,
+                                  ),
+                                  isNew
+                                      ? InterBold(
+                                          text: "New",
+                                          fontsize: width / width18,
+                                          color: Colors.green,
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(height: height / height10),
+                                  Flexible(
+                                    child: InterRegular(
+                                      text: document['EmpDarLocationName'],
+                                      fontsize: width / width16,
+                                      color: color26,
+                                      maxLines: 4,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width / width10),
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.image,
+                                          size: width / width18,
+                                          color: color2,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.video_collection,
+                                          size: width / width18,
+                                          color: color2,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        SizedBox(height: height / height10),
+                      ],
+                    ));
+                  }
+                });
+                return entries;
+              }
+
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -166,6 +281,26 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  showAllDARS = false;
+                                  colors[0] = color25;
+                                  colors[1] = Primarycolor;
+                                });
+                              },
+                              child: SizedBox(
+                                child: Center(
+                                  child: InterBold(
+                                    text: 'Today',
+                                    color: colors[1],
+                                    fontsize: width / width18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
                                   showAllDARS = true;
                                   colors[0] = Primarycolor;
                                   colors[1] = color25;
@@ -182,218 +317,18 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               ),
                             ),
                           ),
-                          VerticalDivider(
-                            color: Primarycolor,
-                          ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  showAllDARS = false;
-                                  colors[0] = color25;
-                                  colors[1] = Primarycolor;
-                                });
-                              },
-                              child: SizedBox(
-                                child: Center(
-                                  child: InterBold(
-                                    text: 'Today',
-                                    color: colors[1],
-                                    fontsize: width / width18,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
                   ),
-                  showAllDARS? SliverPadding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width20),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final date = groupedByDate.keys.elementAt(index);
-                          final darEntries = groupedByDate[date]!;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InterBold(
-                                text: date,
-                                fontsize: width / width20,
-                                color: Primarycolor,
-                                letterSpacing: -.3,
-                              ),
-                              SizedBox(height: height / height20),
-                              ...darEntries.map((document) {
-                                bool isNew = isNewEntry(document);
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => DarOpenAllScreen(
-                                          passdate: (document['EmpDarCreatedAt']
-                                                  as Timestamp)
-                                              .toDate(),
-                                          Username: widget.Username,
-                                          Empid: widget.EmpID,
-                                          DarId: document['EmpDarId'],
-                                          editable: isNew,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: double.maxFinite,
-                                    height: height / height200,
-                                    decoration: BoxDecoration(
-                                      color: WidgetColor,
-                                      borderRadius: BorderRadius.circular(
-                                          width / width20),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
-                                      vertical: height / height10,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        InterBold(
-                                          text:
-                                              document['EmpDarShiftName'] ?? "",
-                                          fontsize: width / width18,
-                                          color: Primarycolor,
-                                        ),
-                                        isNew
-                                            ? InterBold(
-                                                text: "New",
-                                                fontsize: width / width18,
-                                                color: Colors.green,
-                                              )
-                                            : SizedBox(),
-                                        SizedBox(height: height / height10),
-                                        Flexible(
-                                          child: InterRegular(
-                                            text:
-                                                document['EmpDarLocationName'],
-                                            fontsize: width / width16,
-                                            color: color26,
-                                            maxLines: 4,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: width / width10),
-                                              onPressed: () {},
-                                              icon: Icon(
-                                                Icons.image,
-                                                size: width / width18,
-                                                color: color2,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: Icon(
-                                                Icons.video_collection,
-                                                size: width / width18,
-                                                color: color2,
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                              SizedBox(height: height / height10),
-                            ],
-                          );
-                        },
-                        childCount: groupedByDate.length,
-                      ),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: width / width16,
+                      vertical: height / height20,
                     ),
-                  ) : GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => DarOpenAllScreen(
-                      //       passdate: (document['EmpDarCreatedAt']
-                      //       as Timestamp)
-                      //           .toDate(),
-                      //       Username: widget.Username,
-                      //       Empid: widget.EmpID,
-                      //       DarId: document['EmpDarId'],
-                      //       editable: isNew,
-                      //     ),
-                      //   ),
-                      // );
-                    },
-                    child: Container(
-                      width: double.maxFinite,
-                      height: height / height200,
-                      decoration: BoxDecoration(
-                        color: WidgetColor,
-                        borderRadius: BorderRadius.circular(
-                            width / width20),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width / width20,
-                        vertical: height / height10,
-                      ),
-                      child: Column(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: [
-                          InterBold(
-                            text:
-                            "document['EmpDarShiftName']" ?? "",
-                            fontsize: width / width18,
-                            color: Primarycolor,
-                          ),
-                          SizedBox(height: height / height10),
-                          Flexible(
-                            child: InterRegular(
-                              text:
-                              "document['EmpDarLocationName']",
-                              fontsize: width / width16,
-                              color: color26,
-                              maxLines: 4,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: width / width10),
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.image,
-                                  size: width / width18,
-                                  color: color2,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.video_collection,
-                                  size: width / width18,
-                                  color: color2,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate(
+                        buildDarEntries(),
                       ),
                     ),
                   ),
@@ -401,41 +336,54 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               );
             } else if (snapshot.hasError) {
               return Center(
-                child: Text('Error: ${snapshot.error}'),
+                child: Text('Error loading DAR entries.'),
               );
             } else {
-              return const Center(
+              return Center(
                 child: CircularProgressIndicator(),
               );
             }
           },
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () async {
-        //     var id = await _submitDAR();
-
+        // floatingActionButton: GestureDetector(
+        //   onTap: () async {
+        //     String? result = await _submitDAR();
+        //     if (result != null) {
+        //       print('DAR Submitted successfully');
+        //     }
         //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => DarOpenAllScreen(
-        //             Username: Username,
-        //             Empid: EmpID,
-        //             DarId: id,
-        //           ),
-        //         ));
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => CreateDarScreen(
+        //           EmpEmail: widget.EmpEmail,
+        //           EmpID: widget.EmpID,
+        //           Username: widget.Username,
+        //           EmpDarCompanyId: widget.EmpDarCompanyId,
+        //           EmpDarCompanyBranchId: widget.EmpDarCompanyBranchId,
+        //           EmpDarShiftID: widget.EmpDarShiftID,
+        //           EmpDarClientID: widget.EmpDarClientID,
+        //         ),
+        //       ),
+        //     );
         //   },
-        //   backgroundColor: Primarycolor,
-        //   shape: const CircleBorder(),
-        //   child: const Icon(Icons.add),
+        //   child: Container(
+        //     height: height / height15,
+        //     width: height / height15,
+        //     decoration: BoxDecoration(
+        //       color: Primarycolor,
+        //       shape: BoxShape.circle,
+        //     ),
+        //     child: Center(
+        //       child: SvgPicture.asset(
+        //         'assets/images/create.svg',
+        //         width: width / width18,
+        //         height: height / height18,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //   ),
         // ),
       ),
     );
   }
-}
-
-String _formatTimestamp(Timestamp timestamp) {
-  DateTime dateTime = timestamp.toDate();
-
-  return DateFormat('dd /MM /yyyy').format(dateTime);
 }
