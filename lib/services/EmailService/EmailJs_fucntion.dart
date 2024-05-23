@@ -657,9 +657,9 @@ Future<void> sendapiEmail(
         <div class="report-section">
             <h3>Important Note</h3>
             <p id="important-note"></p>
-            $importantNoteContent
+         <span style="color: red;">$importantNoteContent</span>
             <h3>Feedback Note</h3>
-            <p id="important-note"></p>
+            <p id="Feedback-note"></p>
             $feedbackNoteContent
         </div>
     </div>
