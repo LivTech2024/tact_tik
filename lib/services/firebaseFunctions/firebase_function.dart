@@ -3114,53 +3114,53 @@ class FireStoreService {
       await reportDoc.update({"ReportSearchId": uniqueid});
 
       // Push the unique ID to EmployeesDAR collection
-      final CollectionReference employeesDarRef =
-          FirebaseFirestore.instance.collection('EmployeesDAR');
-      final QuerySnapshot darSnapshot = await employeesDarRef
-          .where('EmpDarEmpId', isEqualTo: employeeId)
-          .where('EmpDarShiftId', isEqualTo: shiftId)
-          .get();
+      // final CollectionReference employeesDarRef =
+      //     FirebaseFirestore.instance.collection('EmployeesDAR');
+      // final QuerySnapshot darSnapshot = await employeesDarRef
+      //     .where('EmpDarEmpId', isEqualTo: employeeId)
+      //     .where('EmpDarShiftId', isEqualTo: shiftId)
+      //     .get();
 
-      if (darSnapshot.docs.isNotEmpty) {
-        for (final DocumentSnapshot darDoc in darSnapshot.docs) {
-          if (darDoc.exists) {
-            // Check if the EmpDarTile field exists
-            List<Map<String, dynamic>> tiles = [];
-            final data = darDoc.data() as Map<String, dynamic>?;
+      // if (darSnapshot.docs.isNotEmpty) {
+      //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
+      //     if (darDoc.exists) {
+      //       // Check if the EmpDarTile field exists
+      //       List<Map<String, dynamic>> tiles = [];
+      //       final data = darDoc.data() as Map<String, dynamic>?;
 
-            if (data != null && data.containsKey('EmpDarTile')) {
-              tiles = List<Map<String, dynamic>>.from(data['EmpDarTile']);
-            }
+      //       if (data != null && data.containsKey('EmpDarTile')) {
+      //         tiles = List<Map<String, dynamic>>.from(data['EmpDarTile']);
+      //       }
 
-            // Update TileContent based on ReportCreateTime
-            for (var tile in tiles) {
-              if (tile['TileDate'] != null) {
-                Timestamp tileDate = tile['TileDate'];
-                DateTime tileDateTime = tileDate.toDate();
-                if (tileDateTime.year == dateTime.year &&
-                    tileDateTime.month == dateTime.month &&
-                    tileDateTime.day == dateTime.day) {
-                  String reportTimeSlot =
-                      "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
-                  if (tile['TileTime'] == reportTimeSlot) {
-                    tile['TileContent'] = data;
-                  }
-                }
-              }
-            }
+      //       // Update TileContent based on ReportCreateTime
+      //       for (var tile in tiles) {
+      //         if (tile['TileDate'] != null) {
+      //           Timestamp tileDate = tile['TileDate'];
+      //           DateTime tileDateTime = tileDate.toDate();
+      //           if (tileDateTime.year == dateTime.year &&
+      //               tileDateTime.month == dateTime.month &&
+      //               tileDateTime.day == dateTime.day) {
+      //             String reportTimeSlot =
+      //                 "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
+      //             if (tile['TileTime'] == reportTimeSlot) {
+      //               tile['TileContent'] = data;
+      //             }
+      //           }
+      //         }
+      //       }
 
-            // Update the document with the modified tiles array
-            await darDoc.reference.update({'EmpDarTile': tiles});
+      //       // Update the document with the modified tiles array
+      //       await darDoc.reference.update({'EmpDarTile': tiles});
 
-            // Add the unique ID to the EmpDarTile field
-            await darDoc.reference.update({
-              'EmpDarTile': FieldValue.arrayUnion([uniqueid])
-            });
+      //       // Add the unique ID to the EmpDarTile field
+      //       await darDoc.reference.update({
+      //         'EmpDarTile': FieldValue.arrayUnion([uniqueid])
+      //       });
 
-            print("Added to DAR");
-          }
-        }
-      }
+      //       print("Added to DAR");
+      //     }
+      // }
+      // }
 
       print('Report created successfully');
     } catch (e) {
