@@ -2695,8 +2695,8 @@ class FireStoreService {
       // print("shiftLinkedPatrolIds Doc : ${shiftLinkedPatrolIds}");
 
       var shiftLinkedPatrolIds = [
-        // "T6DWZ2kpj8nlwhP1qKi3",
-        // "474ZS6GremcQn2rt7SbR",
+        "T6DWZ2kpj8nlwhP1qKi3",
+        "474ZS6GremcQn2rt7SbR",
         "vU6dRzrjLfzo0S1KK4hJ"
         // "kIcKW9RlqPmr40tXU4lP"
       ];
@@ -2712,9 +2712,9 @@ class FireStoreService {
       // 'jwwJLoyIwB6CNeCEUjO7'
       // 'PjA0XjUncrUGQk4RTlky',
       List<String> specificDocIds = [
-        'kIcKW9RlqPmr40tXU4lP',
-        // 'ieqFMq142QT7Eh8Ef5P4',
-        // 'OaUqjWN1wwKcR4h4VeuZ'
+        'MrD1s1QNTFzBeavKEG0X',
+        'cGpSLB8w63ksY9bVMM3V',
+        '1KBvSxOtTCErixuPTKOJ'
       ];
 
       querySnapshot.docs.forEach((doc) {
