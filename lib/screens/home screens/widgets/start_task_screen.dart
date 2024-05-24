@@ -356,6 +356,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final controller = Get.put(StopWatchBackgroundService(), permanent: true);
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+    bool islate = false;
     TextEditingController CommentController = TextEditingController();
     // Get the current time
     DateTime currentTime = DateTime.now();
@@ -438,7 +439,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
-                                text: "",
+                                text: islate ? "Late" : "",
                                 color: Colors.redAccent,
                                 fontsize: width / width12,
                               )
@@ -568,6 +569,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 showErrorToast(context, "Not On SHift Date");
                               } else {
                                 showSuccessToast(context, "On current Date");
+                              }
+                              if (currentTime.isAfter(bufferStart)) {
+                                setState(() {
+                                  islate = true;
+                                });
+                                showErrorToast(context, "Started Late");
                               }
                               if (currentTime.isBefore(bufferStart)) {
                                 showErrorToast(context, "Start shift on Time");

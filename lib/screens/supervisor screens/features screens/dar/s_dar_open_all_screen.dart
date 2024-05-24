@@ -14,7 +14,6 @@ import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../utils/colors.dart';
 
-
 class SDarOpenAllScreen extends StatefulWidget {
   final DateTime? passdate;
   final String? DarId;
@@ -640,6 +639,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                   darTiles: data,
                                                   EmployeeId: widget.Empid,
                                                   EmployeeName: widget.Username,
+                                                  onCallback: () {},
                                                 ),
                                               ),
                                             );
