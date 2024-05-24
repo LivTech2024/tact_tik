@@ -14,6 +14,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
@@ -28,6 +29,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -81,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _employeeCompanyID = "";
-
+  bool ShiftStarted = false;
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -309,11 +311,17 @@ class _HomeScreenState extends State<HomeScreen> {
           if (statusString == "started") {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', true);
+            setState(() {
+              ShiftStarted = true;
+            });
             // prefs.setBool('clickedIn', true);
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
-            prefs.setBool('clickedIn', false);
+            // prefs.setBool('clickedIn', false);
+            setState(() {
+              ShiftStarted = false;
+            });
           }
           int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
           bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
@@ -437,6 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/key&assets.png', 'Key & Assets'],
+      ['assets/images/key&assets.png', 'Key'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -685,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height20)
+              SizedBox(height: height / height10)
             ],
           ),
         ),
@@ -776,43 +785,40 @@ class _HomeScreenState extends State<HomeScreen> {
                               left: width / width30,
                               right: width / width30,
                             ),
-                            child: PageStorage(
-                              bucket: PageStorageBucket(),
-                              child: TaskScreen(
-                                ShiftDate: _ShiftDate,
-                                ShiftStartTime: _ShiftStartTime,
-                                ShiftLocation: _ShiftLocation,
-                                ShiftName: _ShiftLocation,
-                                ShiftEndTime: _ShiftEndTime,
-                                isWithINRadius: isWithinRadius,
-                                empId: _employeeId,
-                                shiftId: _shiftId,
-                                patrolDate: _patrolDate,
-                                patrolTime: _patrolTime,
-                                patrollocation: _patrolArea,
-                                issShiftFetched: issShift,
-                                EmpEmail: _empEmail,
-                                Branchid: _branchId,
-                                cmpId: _cmpId,
-                                EmpName: _userName,
-                                ShiftLatitude: _shiftLatitude,
-                                shiftLongitude: _shiftLongitude,
-                                ShiftRadius: _shiftRestrictedRadius,
-                                CheckUserRadius:
-                                    _shiftKeepGuardInRadiusOfLocation,
-                                ShiftCompanyId: _ShiftCompanyId ?? "",
-                                ShiftBranchId: _ShiftBranchId ?? "",
-                                ShiftLocationId: _shiftLocationId,
-                                ShiftClientId: _shiftCLientId,
-                                onRefreshHomeScreen: _refreshScreen,
-                                onEndTask: _refreshScreen,
-                                onRefreshStartTaskScreen: () {
-                                  refreshHomeScreen();
-                                },
-                                ShiftLocationName: _ShiftLocationName,
-                                ShiftStatus: _ShiftStatus,
-                              ),
-                            )),
+                            child: ShiftStarted
+                                ? FutureBuilder(
+                                    future:
+                                        Future.delayed(Duration(seconds: 2)),
+                                    builder: (c, s) => s.connectionState ==
+                                            ConnectionState.done
+                                        ? StartTaskScreen(
+                                            ShiftDate: _ShiftDate,
+                                            ShiftClientID: _shiftCLientId,
+                                            ShiftEndTime: _ShiftEndTime,
+                                            ShiftStartTime: _ShiftStartTime,
+                                            EmployeId: _employeeId,
+                                            ShiftId: _shiftId,
+                                            ShiftAddressName:
+                                                _ShiftLocationName,
+                                            ShiftCompanyId:
+                                                _ShiftCompanyId ?? "",
+                                            ShiftBranchId: _ShiftBranchId,
+                                            EmployeeName: _userName ?? "",
+                                            ShiftLocationId: _shiftLocationId,
+                                            resetShiftStarted: () {},
+                                            ShiftIN: true,
+                                            onRefresh: refreshHomeScreen,
+                                            ShiftName: _ShiftName,
+                                            ShiftStatus: _ShiftStatus)
+                                        : Center(
+                                            child: InterMedium(
+                                              text: 'Loading...',
+                                              color: Primarycolor,
+                                              fontsize: width / width14,
+                                            ),
+                                          ),
+                                  )
+                                : SizedBox()),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(
@@ -1227,9 +1233,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
+                                                    // KeysScreen(
+                                                    //     keyId: _employeeId)
                                                     AssetsScreen(
                                                         assetEmpId:
                                                             _employeeId)));
+                                        break;
+                                      case 9:
+                                        // AssetsScreen
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    KeysScreen(
+                                                        keyId: _employeeId)
+                                                // AssetsScreen(
+                                                //     assetEmpId:
+                                                //         _employeeId)
+
+                                                ));
                                         break;
                                       default:
                                     }
@@ -1240,7 +1262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              childCount: 9,
+                              childCount: 10,
                             ),
                           )
                         : ScreenIndex == 2
