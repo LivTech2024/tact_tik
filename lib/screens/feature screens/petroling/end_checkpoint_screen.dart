@@ -292,9 +292,9 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                           emails.add(defaultEmail2);
                           // emails.add(testEmail3);
                           // emails.add(testEmail3);
-                          emails.add(ClientEmail!);
-                          emails.add(AdminEmail!);
-                          emails.add(defaultEmail!);
+                          // emails.add(ClientEmail!);
+                          // emails.add(AdminEmail!);
+                          // emails.add(defaultEmail!);
                           DateFormat timeFormat = DateFormat("HH:mm");
 
                           //         DateTime.now());
@@ -439,9 +439,9 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                           emails.add(TestinEmail);
                           emails.add(testEmail3);
 
-                          emails.add(ClientEmail!);
-                          emails.add(AdminEmail!);
-                          emails.add(defaultEmail!);
+                          // emails.add(ClientEmail!);
+                          // emails.add(AdminEmail!);
+                          // emails.add(defaultEmail!);
                           // var clientId = await fireStoreService
                           //     .getShiftClientID(
                           //         widget.p.ShiftId);
