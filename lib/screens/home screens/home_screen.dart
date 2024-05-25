@@ -139,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _requestPermissions() async {
+    //notifcation permissison
     var status = await Permission.locationWhenInUse.request();
     if (status.isGranted) {
       var statusAlways = await Permission.locationAlways.request();
@@ -743,44 +744,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
                         child: Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: ShiftExist
-                                ? FutureBuilder(
-                                    future:
-                                        Future.delayed(Duration(seconds: 2)),
-                                    builder: (c, s) => s.connectionState ==
-                                            ConnectionState.done
-                                        ? StartTaskScreen(
-                                            ShiftDate: _ShiftDate,
-                                            ShiftClientID: _shiftCLientId,
-                                            ShiftEndTime: _ShiftEndTime,
-                                            ShiftStartTime: _ShiftStartTime,
-                                            EmployeId: _employeeId,
-                                            ShiftId: _shiftId,
-                                            ShiftAddressName:
-                                                _ShiftLocationName,
-                                            ShiftCompanyId:
-                                                _ShiftCompanyId ?? "",
-                                            ShiftBranchId: _ShiftBranchId,
-                                            EmployeeName: _userName ?? "",
-                                            ShiftLocationId: _shiftLocationId,
-                                            resetShiftStarted: () {},
-                                            ShiftIN: true,
-                                            onRefresh: refreshHomeScreen,
-                                            ShiftName: _ShiftName,
-                                            ShiftStatus: _ShiftStatus)
-                                        : Center(
-                                            child: InterMedium(
-                                              text: 'Loading...',
-                                              color: Primarycolor,
-                                              fontsize: width / width14,
-                                            ),
+                          padding: EdgeInsets.only(
+                            left: width / width30,
+                            right: width / width30,
+                          ),
+                          child: ShiftExist
+                              ? FutureBuilder(
+                                  future: Future.delayed(Duration(seconds: 2)),
+                                  builder: (c, s) => s.connectionState ==
+                                          ConnectionState.done
+                                      ? StartTaskScreen(
+                                          ShiftDate: _ShiftDate,
+                                          ShiftClientID: _shiftCLientId,
+                                          ShiftEndTime: _ShiftEndTime,
+                                          ShiftStartTime: _ShiftStartTime,
+                                          EmployeId: _employeeId,
+                                          ShiftId: _shiftId,
+                                          ShiftAddressName: _ShiftLocationName,
+                                          ShiftCompanyId: _ShiftCompanyId ?? "",
+                                          ShiftBranchId: _ShiftBranchId,
+                                          EmployeeName: _userName ?? "",
+                                          ShiftLocationId: _shiftLocationId,
+                                          resetShiftStarted: () {},
+                                          ShiftIN: true,
+                                          onRefresh: refreshHomeScreen,
+                                          ShiftName: _ShiftName,
+                                          ShiftStatus: _ShiftStatus)
+                                      : Center(
+                                          child: InterMedium(
+                                            text: 'Loading...',
+                                            color: Primarycolor,
+                                            fontsize: width / width14,
                                           ),
-                                  )
-                                : SizedBox()),
+                                        ),
+                                )
+                              : Center(
+                                  child: InterMedium(
+                                    text: 'No Shift',
+                                    color: Primarycolor,
+                                    fontsize: width / width14,
+                                  ),
+                                ),
+                        ),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(

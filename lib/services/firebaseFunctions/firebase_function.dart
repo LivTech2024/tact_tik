@@ -2478,26 +2478,24 @@ class FireStoreService {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     try {
-      // Step 1: Get ShiftLinkedPatrolIds
+      // Step 1: Get ShiftLinkedPatrols
       DocumentSnapshot shiftDoc =
           await firestore.collection('Shifts').doc(shiftId).get();
-      List<String> shiftLinkedPatrolIds =
-          List<String>.from(shiftDoc.get('ShiftLinkedPatrolIds'));
+      List<dynamic> shiftLinkedPatrols = shiftDoc.get('ShiftLinkedPatrols');
 
-      // Step 2: Iterate over ShiftLinkedPatrolIds
-      for (String patrolId in shiftLinkedPatrolIds) {
-        // Step 3: Get PatrolName
-        DocumentSnapshot patrolDoc =
-            await firestore.collection('Patrols').doc(patrolId).get();
-        String patrolName = patrolDoc.get('PatrolName');
+      // Step 2: Iterate over ShiftLinkedPatrols
+      for (var patrol in shiftLinkedPatrols) {
+        String patrolId = patrol['LinkedPatrolId'];
+        String patrolName = patrol['LinkedPatrolName'];
+        int patrolReqHitCount = patrol['LinkedPatrolReqHitCount'];
 
-        // Step 4: Query PatrolCheckPoints
+        // Step 3: Query PatrolCheckPoints
         QuerySnapshot checkPointsQuery = await firestore
             .collection('PatrolCheckPoints')
             .where('PatrolId', isEqualTo: patrolId)
             .get();
 
-        // Step 5: Iterate over matching CheckPoints
+        // Step 4: Iterate over matching CheckPoints
         for (QueryDocumentSnapshot checkPointDoc in checkPointsQuery.docs) {
           List<dynamic> checkPointStatusList =
               checkPointDoc.get('CheckPointStatus');
