@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
@@ -21,7 +21,6 @@ import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
-import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
@@ -30,18 +29,14 @@ import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+// import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
-import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../common/sizes.dart';
-import '../../fonts/poppins_light.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
-import '../../services/EmailService/EmailJs_fucntion.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
@@ -52,6 +47,7 @@ import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/task/task_feature_screen.dart';
 import '../feature screens/visitors/visitors.dart';
+import 'controller/home_screen_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -84,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _employeeId = "";
   String _employeeCompanyID = "";
   bool ShiftStarted = false;
+  bool ShiftExist = false;
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -131,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
     getAndPrintAllSchedules();
+    _requestPermissions();
     // _getCurrentUserUid();
 
     // checkLocation();
@@ -138,6 +136,17 @@ class _HomeScreenState extends State<HomeScreen> {
     //   // checkLocation();
     // });
     super.initState();
+  }
+
+  void _requestPermissions() async {
+    //notifcation permissison
+    var status = await Permission.locationWhenInUse.request();
+    if (status.isGranted) {
+      var statusAlways = await Permission.locationAlways.request();
+      if (statusAlways.isGranted) {
+      } else {}
+    } else if (status.isDenied) {
+    } else if (status.isPermanentlyDenied) {}
   }
 
   // Future<void> _getCurrentUserUid() async {
@@ -347,6 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftLocationId = shiftLocationId;
             _shiftCLientId = shiftClientId;
             _ShiftStatus = statusString;
+            ShiftExist = true;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -435,6 +445,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeScreenController(), permanent: true);
+
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
@@ -592,9 +604,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         List<String> emails = [];
                         emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("alerts.tactik@gmail.com");
-                        emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
+                        // emails.add("alerts.tactik@gmail.com");
+                        // emails.add("security@lestonholdings.com");
+                        // emails.add("dan@tpssolution.com");
 
                         // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
@@ -607,27 +619,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         // UDb6jyQBz2RzRp4b42XL
                         // 6Muezqhg8gc1TsaHX9nD
 
-                        var data =
-                            await fireStoreService.fetchTemplateDataForPdf(
-                          "UDb6jyQBz2RzRp4b42XL",
-                          "UVsnr5h7XbhW5LP3Wt1v",
-                        );
-                        await sendShiftTemplateEmail(
-                          "Leston holdings",
-                          emails,
-                          'Tacttik Shift Report',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "25 May",
-                          "livjeet kaur",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // var data =
+                        //     await fireStoreService.fetchTemplateDataForPdf(
+                        //   "UDb6jyQBz2RzRp4b42XL",
+                        //   "UVsnr5h7XbhW5LP3Wt1v",
+                        // );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "25 May",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // await sendShiftMultiplePdfEmail(
                         //   "Leston holdings",
                         //   emails,
@@ -646,21 +658,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "kdCOKWcNKF3BSRu0QNyF",
                         // );
 
-                        await sendDARTemplateEmail(
-                          "Leston holdings",
-                          emails,
-                          'Tacttik DAR',
-                          "Tacttik DAR",
-                          "Shift",
-                          "25 May",
-                          "livjeet kaur",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "25 May",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // 12:37 - 1-10
                         //5:15 - 5-47
                         //5:15
@@ -781,44 +793,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
                         child: Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: ShiftStarted
-                                ? FutureBuilder(
-                                    future:
-                                        Future.delayed(Duration(seconds: 2)),
-                                    builder: (c, s) => s.connectionState ==
-                                            ConnectionState.done
-                                        ? StartTaskScreen(
-                                            ShiftDate: _ShiftDate,
-                                            ShiftClientID: _shiftCLientId,
-                                            ShiftEndTime: _ShiftEndTime,
-                                            ShiftStartTime: _ShiftStartTime,
-                                            EmployeId: _employeeId,
-                                            ShiftId: _shiftId,
-                                            ShiftAddressName:
-                                                _ShiftLocationName,
-                                            ShiftCompanyId:
-                                                _ShiftCompanyId ?? "",
-                                            ShiftBranchId: _ShiftBranchId,
-                                            EmployeeName: _userName ?? "",
-                                            ShiftLocationId: _shiftLocationId,
-                                            resetShiftStarted: () {},
-                                            ShiftIN: true,
-                                            onRefresh: refreshHomeScreen,
-                                            ShiftName: _ShiftName,
-                                            ShiftStatus: _ShiftStatus)
-                                        : Center(
-                                            child: InterMedium(
-                                              text: 'Loading...',
-                                              color: Primarycolor,
-                                              fontsize: width / width14,
-                                            ),
+                          padding: EdgeInsets.only(
+                            left: width / width30,
+                            right: width / width30,
+                          ),
+                          child: ShiftExist
+                              ? FutureBuilder(
+                                  future: Future.delayed(Duration(seconds: 2)),
+                                  builder: (c, s) => s.connectionState ==
+                                          ConnectionState.done
+                                      ? StartTaskScreen(
+                                          ShiftDate: _ShiftDate,
+                                          ShiftClientID: _shiftCLientId,
+                                          ShiftEndTime: _ShiftEndTime,
+                                          ShiftStartTime: _ShiftStartTime,
+                                          EmployeId: _employeeId,
+                                          ShiftId: _shiftId,
+                                          ShiftAddressName: _ShiftLocationName,
+                                          ShiftCompanyId: _ShiftCompanyId ?? "",
+                                          ShiftBranchId: _ShiftBranchId,
+                                          EmployeeName: _userName ?? "",
+                                          ShiftLocationId: _shiftLocationId,
+                                          resetShiftStarted: () {},
+                                          ShiftIN: true,
+                                          onRefresh: refreshHomeScreen,
+                                          ShiftName: _ShiftName,
+                                          ShiftStatus: _ShiftStatus)
+                                      : Center(
+                                          child: InterMedium(
+                                            text: 'Loading...',
+                                            color: Primarycolor,
+                                            fontsize: width / width14,
                                           ),
-                                  )
-                                : SizedBox()),
+                                        ),
+                                )
+                              : Center(
+                                  child: InterMedium(
+                                    text: 'No Shift',
+                                    color: Primarycolor,
+                                    fontsize: width / width14,
+                                  ),
+                                ),
+                        ),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(

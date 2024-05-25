@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -80,7 +81,6 @@ class FireStoreService {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      // Return the first document found
       print(querySnapshot.docs.first);
       return querySnapshot.docs.first;
     } else {
@@ -2479,26 +2479,24 @@ class FireStoreService {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     try {
-      // Step 1: Get ShiftLinkedPatrolIds
+      // Step 1: Get ShiftLinkedPatrols
       DocumentSnapshot shiftDoc =
           await firestore.collection('Shifts').doc(shiftId).get();
-      List<String> shiftLinkedPatrolIds =
-          List<String>.from(shiftDoc.get('ShiftLinkedPatrolIds'));
+      List<dynamic> shiftLinkedPatrols = shiftDoc.get('ShiftLinkedPatrols');
 
-      // Step 2: Iterate over ShiftLinkedPatrolIds
-      for (String patrolId in shiftLinkedPatrolIds) {
-        // Step 3: Get PatrolName
-        DocumentSnapshot patrolDoc =
-            await firestore.collection('Patrols').doc(patrolId).get();
-        String patrolName = patrolDoc.get('PatrolName');
+      // Step 2: Iterate over ShiftLinkedPatrols
+      for (var patrol in shiftLinkedPatrols) {
+        String patrolId = patrol['LinkedPatrolId'];
+        String patrolName = patrol['LinkedPatrolName'];
+        int patrolReqHitCount = patrol['LinkedPatrolReqHitCount'];
 
-        // Step 4: Query PatrolCheckPoints
+        // Step 3: Query PatrolCheckPoints
         QuerySnapshot checkPointsQuery = await firestore
             .collection('PatrolCheckPoints')
             .where('PatrolId', isEqualTo: patrolId)
             .get();
 
-        // Step 5: Iterate over matching CheckPoints
+        // Step 4: Iterate over matching CheckPoints
         for (QueryDocumentSnapshot checkPointDoc in checkPointsQuery.docs) {
           List<dynamic> checkPointStatusList =
               checkPointDoc.get('CheckPointStatus');

@@ -83,7 +83,14 @@ dependencies:
   flutter_offline: ^3.0.1
   flutter_background_service: ^5.0.5
   get: ^4.6.6
-  # firebase_app_check: ^0.2.2+5
+  mapbox_maps_flutter: ^2.0.0-rc.1
+  lottie: ^3.1.1
+  screenshot: ^2.5.0
+  flutter_email_sender: ^6.0.3
+  flutter_native_screenshot: ^1.1.2
+  background_locator_2: ^2.0.6
+  shimmer: ^3.0.0
+
 
 dev_dependencies:
   flutter_test:
