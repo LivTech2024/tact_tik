@@ -84,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _employeeId = "";
   String _employeeCompanyID = "";
   bool ShiftStarted = false;
+  bool ShiftExist = false;
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -347,6 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftLocationId = shiftLocationId;
             _shiftCLientId = shiftClientId;
             _ShiftStatus = statusString;
+            ShiftExist = true;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -736,7 +738,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               left: width / width30,
                               right: width / width30,
                             ),
-                            child: ShiftStarted
+                            child: ShiftExist
                                 ? FutureBuilder(
                                     future:
                                         Future.delayed(Duration(seconds: 2)),
