@@ -81,7 +81,6 @@ class FireStoreService {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      // Return the first document found
       print(querySnapshot.docs.first);
       return querySnapshot.docs.first;
     } else {
