@@ -383,6 +383,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
     final date = time ?? DateTime.now();
     print("aajkadin:$date");
     List darList = [];
+
     List<Map<String, dynamic>> empDarTile = [];
     final CollectionReference employeesDARCollection =
         FirebaseFirestore.instance.collection('EmployeesDAR');

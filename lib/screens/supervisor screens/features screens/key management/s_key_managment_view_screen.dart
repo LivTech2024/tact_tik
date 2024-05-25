@@ -7,13 +7,16 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 's_key_manag_create_screen.dart';
 
 class SKeyManagementViewScreen extends StatefulWidget {
   final String companyId;
+
   const SKeyManagementViewScreen({super.key, required this.companyId});
 
   @override
-  _SKeyManagementViewScreenState createState() => _SKeyManagementViewScreenState();
+  _SKeyManagementViewScreenState createState() =>
+      _SKeyManagementViewScreenState();
 }
 
 class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
@@ -73,7 +76,10 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
           },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add, size: width / width24,),
+          child: Icon(
+            Icons.add,
+            size: width / width24,
+          ),
         ),
         body: CustomScrollView(
           slivers: [
@@ -128,10 +134,12 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     if (index == 0) {
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height30),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width / width30,
+                            vertical: height / height30),
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: width / width20,
@@ -141,24 +149,27 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                     }
                     final key = keysForDate[index - 1];
                     final createdAt = key['KeyCreatedAt'].toDate();
-                    final formattedTime = DateFormat('hh:mm a').format(createdAt);
+                    final formattedTime =
+                        DateFormat('hh:mm a').format(createdAt);
 
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width / width30),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width30),
                       child: GestureDetector(
                         onTap: () {
-                          /*Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewAssetsScreen()));*/
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SCreateKeyManagScreen()));
                         },
                         child: Container(
                           height: width / width60,
                           width: double.maxFinite,
                           margin: EdgeInsets.only(bottom: height / height10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width / width10),
+                            borderRadius:
+                                BorderRadius.circular(width / width10),
                             color: WidgetColor,
                           ),
                           child: Row(
@@ -171,9 +182,11 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                   Container(
                                     height: height / height44,
                                     width: width / width44,
-                                    padding: EdgeInsets.symmetric(horizontal: width / width10),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / width10),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(width / width10),
+                                      borderRadius: BorderRadius.circular(
+                                          width / width10),
                                       color: Primarycolorlight,
                                     ),
                                     child: Center(
@@ -218,7 +231,9 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
     final today = DateTime.now().toUtc().toLocal();
     final dateTime = DateTime.parse(date);
 
-    if (dateTime.year == today.year && dateTime.month == today.month && dateTime.day == today.day) {
+    if (dateTime.year == today.year &&
+        dateTime.month == today.month &&
+        dateTime.day == today.day) {
       return 'Today';
     } else {
       return DateFormat('EEEE, MMMM d, yyyy').format(dateTime);

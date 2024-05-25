@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   final LocalStorage storage = LocalStorage('currentUserEmail');
   String _errorMessage = '';
+
   Future<void> signInEmailPassword(BuildContext context) async {
     setState(() {
       _isLoading = true;
@@ -138,10 +139,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 Button1(
+                  height: height / height50,
                   backgroundcolor: Primarycolor,
                   text: 'Login',
-                  color: color1,
-                  borderRadius: 10,
+                  fontsize: width / width16,
+                  color: Colors.black,
+                  borderRadius: width / width10,
                   onPressed: () {
                     Auth().signInWithEmailAndPassword(
                         _emailcontrller.text, _passwordcontrller.text, context);

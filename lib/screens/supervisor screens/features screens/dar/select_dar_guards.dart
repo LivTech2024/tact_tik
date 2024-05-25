@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/s_dar_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
@@ -9,16 +10,16 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class SelectHistoryGuardsScreen extends StatefulWidget {
+class SelectDARGuardsScreen extends StatefulWidget {
   final String companyId;
 
-  const SelectHistoryGuardsScreen({super.key, required this.companyId});
+  const SelectDARGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectHistoryGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectDARGuardsScreen> createState() => _SelectGuardsScreenState();
 }
 
-class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
+class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
@@ -152,14 +153,13 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                           print(guardInfo);
                           return GestureDetector(
                             onTap: () {
-                              Navigator.pop(
-                                context,
-                                {
-                                  'name': name,
-                                  'id': id,
-                                  'url': url,
-                                },
-                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SDarDisplayScreen(EmpEmail: '', EmpID: '', EmpDarCompanyId: '', EmpDarCompanyBranchId: '', EmpDarShiftID: '', EmpDarClientID: '', Username: '',
+
+                                          )));
                             },
                             child: Container(
                               height: height / height60,

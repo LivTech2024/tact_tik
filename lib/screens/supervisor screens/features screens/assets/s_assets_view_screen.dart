@@ -7,6 +7,7 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 's_create_assign_asset.dart';
 
 class SAssetsViewScreen extends StatefulWidget {
   final String companyId;
@@ -127,11 +128,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       padding: EdgeInsets.symmetric(horizontal: width / width30),
                       child: GestureDetector(
                         onTap: () {
-                          /*Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ViewAssetsScreen()));*/
+                                    SCreateAssignAssetScreen()));
                         },
                         child: Container(
                           height: width / width60,
