@@ -19,10 +19,13 @@ class DarOpenAllScreen extends StatefulWidget {
   final String? DarId;
   final String Username;
   final String Empid;
-  const DarOpenAllScreen(
+  bool editable;
+
+  DarOpenAllScreen(
       {super.key,
       this.passdate,
       this.DarId,
+      this.editable = true,
       required this.Username,
       required this.Empid});
 
@@ -46,8 +49,12 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     // fetchDarTileData();
   }
 
+  void refresh() {
+    _fetchShiftDetails();
+  }
+
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
-    final employeeId = FirebaseAuth.instance.currentUser?.uid;
+    final employeeId = _userService.employeeId;
     print("testtfwdf:$employeeId");
 
     final reportsCollection =
@@ -57,7 +64,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         .get();
 
     final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
-
+    print("Report ${reports}");
     Map<String, List<Map<String, dynamic>>> reportsByHour = {};
     for (var report in reports) {
       final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
@@ -71,7 +78,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         reportsByHour[hourKey] = [report];
       }
     }
-
+    print("Report By HOur ${reportsByHour}");
     return reportsByHour;
   }
 
@@ -508,7 +515,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         child: SizedBox(
                           child: Center(
                             child: InterBold(
-                              text: 'Edit',
+                              text: widget.editable ? 'Edit' : 'Read',
                               color: colors[0],
                               fontsize: width / width18,
                             ),
@@ -638,13 +645,21 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   darTiles: data,
                                                   EmployeeId: widget.Empid,
                                                   EmployeeName: widget.Username,
+                                                  iseditable: widget.editable,
+                                                  onCallback: () {
+                                                    print("Callback Called");
+                                                    refresh();
+                                                  },
                                                 ),
                                               ),
                                             );
+                                            //refresh the screen
+                                            refresh();
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
-                                                bottom: height / height10),
+                                              bottom: height / height10,
+                                            ),
                                             width: double.maxFinite,
                                             decoration: BoxDecoration(
                                               color: WidgetColor,
@@ -653,8 +668,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                       width / width10),
                                             ),
                                             padding: EdgeInsets.symmetric(
-                                                vertical: height / height20,
-                                                horizontal: width / width20),
+                                              vertical: height / height20,
+                                              horizontal: width / width20,
+                                            ),
                                             child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -666,8 +682,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                     color: color21,
                                                   ),
                                                   SizedBox(
-                                                      height:
-                                                          height / height10),
+                                                    height: height / height10,
+                                                  ),
                                                   InterRegular(
                                                     text:
                                                         '${data[index]['TileContent']}',
@@ -694,8 +710,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                             BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(width /
-                                                                      width10),
+                                                                  .circular(
+                                                            width / width10,
+                                                          ),
                                                           image:
                                                               DecorationImage(
                                                             image: NetworkImage(
@@ -793,10 +810,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                                       checkPointImages
                                                                           .first
                                                                           .toString(),
-                                                                      width:
-                                                                          100,
-                                                                      height:
-                                                                          100,
+                                                                      width: width /
+                                                                          width100,
+                                                                      height: height /
+                                                                          height100,
                                                                       fit: BoxFit
                                                                           .cover,
                                                                     )
@@ -822,16 +839,17 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                       ),
                     )
                   : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: width / 30),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterBold(
                             text: 'Reports',
-                            fontsize: width / 20,
+                            fontsize: width / width20,
                             color: Primarycolor,
                           ),
-                          SizedBox(height: height / 25),
+                          SizedBox(height: height / height25),
                           FutureBuilder<
                               Map<String, List<Map<String, dynamic>>>>(
                             future: fetchReportLogs(),
@@ -880,17 +898,17 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                             : '';
                                         return Container(
                                           margin: EdgeInsets.only(
-                                              bottom: height / 30),
-                                          height: height / 25,
+                                              bottom: height / height30),
+                                          height: height / height25,
                                           color: const Color(0xFF7C7C7C),
                                           child: Row(
                                             children: [
                                               Container(
-                                                width: 20,
+                                                width: width / width20,
                                                 height: double.infinity,
                                                 color: Colors.red,
                                               ),
-                                              const SizedBox(width: 2),
+                                              SizedBox(width: width / width2),
                                               Expanded(
                                                 child: Text(
                                                   '# ${report['ReportSearchId'] ?? ''}',
@@ -901,7 +919,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(width: 2),
+                                              SizedBox(width: width / width2),
                                               Text(
                                                 formattedTime,
                                                 style: const TextStyle(

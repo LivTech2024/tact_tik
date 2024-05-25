@@ -160,11 +160,13 @@ class FireStoreService {
     }
   }
 
-  Future<List<DocumentSnapshot>> getAllPatrolsByShiftId(String shiftId) async {
+  Future<List<Map<String, dynamic>>> getAllPatrolsByShiftId(
+      String shiftId) async {
     if (shiftId.isEmpty) {
       return [];
     }
     print("Shift Id");
+
     // Fetch the Shift document
     final shiftDoc = await shifts.doc(shiftId).get();
     if (!shiftDoc.exists) {
@@ -182,23 +184,50 @@ class FireStoreService {
     // Print the shiftData for debugging
     print("Shift Data:");
     print(shiftData);
-    // Extract the ShiftLinkedPatrolIds array from the Shift document
-    final shiftLinkedPatrolIds =
-        List<String>.from(shiftData["ShiftLinkedPatrolIds"] ?? []);
 
-    print("Patrol Linked IDS fetched: ${shiftLinkedPatrolIds}");
-    // Fetch the Patrols using the ShiftLinkedPatrolIds
+    // Extract the ShiftLinkedPatrols array from the Shift document
+    final shiftLinkedPatrols =
+        List<Map<String, dynamic>>.from(shiftData["ShiftLinkedPatrols"] ?? []);
+
+    // Extract Patrol IDs
+    final patrolIds = shiftLinkedPatrols
+        .map((patrol) => patrol["LinkedPatrolId"] as String)
+        .toList();
+
+    print("Patrol Linked IDS fetched: ${patrolIds}");
+
+    // Fetch the Patrols using the Patrol IDs
     final querySnapshot =
-        await patrols.where("PatrolId", whereIn: shiftLinkedPatrolIds).get();
+        await patrols.where("PatrolId", whereIn: patrolIds).get();
 
     print("Retrieved documents Patrols:");
-    print(
-        "Get Patrol Info ${querySnapshot.docs}"); // Log all retrieved documents
     querySnapshot.docs.forEach((doc) {
       print("Patrols Fetched");
       print(doc.data());
     });
-    return querySnapshot.docs;
+
+    // Create a list to hold the patrol data along with required hit count
+    List<Map<String, dynamic>> patrolData = [];
+
+    for (var doc in querySnapshot.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+
+      // Find the corresponding ShiftLinkedPatrol data
+      var linkedPatrol = shiftLinkedPatrols.firstWhere(
+        (patrol) => patrol["LinkedPatrolId"] == data["PatrolId"],
+        orElse: () => {},
+      );
+
+      if (linkedPatrol.isNotEmpty) {
+        data["LinkedPatrolReqHitCount"] =
+            linkedPatrol["LinkedPatrolReqHitCount"];
+        data["LinkedPatrolReqHitCount"] =
+            linkedPatrol["LinkedPatrolReqHitCount"];
+        patrolData.add(data);
+      }
+    }
+
+    return patrolData;
   }
 
   Stream<QuerySnapshot> getPatrols(String EmpId) {
@@ -210,10 +239,10 @@ class FireStoreService {
     return patrolStream;
   }
 
-  Future<void> updatePatrolsStatus(
-      String patrolId, String checkPointId, String Empid) async {
+  Future<void> updatePatrolsStatus(String patrolId, String checkPointId,
+      String empId, String shiftId) async {
     if (patrolId.isEmpty || checkPointId.isEmpty) {
-      print('Patrol ID is empthy');
+      print('Patrol ID is empty');
       return;
     }
 
@@ -221,8 +250,6 @@ class FireStoreService {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('Patrols')
           .where("PatrolId", isEqualTo: patrolId)
-          // .where("PatrolCurrentStatus",
-          //     whereIn: ["pending", "started", []])
           .get();
 
       print("Retrieved documents:");
@@ -238,19 +265,42 @@ class FireStoreService {
         );
 
         if (checkpointToUpdate != null) {
-          // Update the CheckPointStatus to "checked"
-          checkpointToUpdate['CheckPointStatus'] = [
-            {
+          // Get existing CheckPointStatus or initialize if null
+          var existingStatuses =
+              List.from(checkpointToUpdate['CheckPointStatus'] ?? []);
+
+          // Find the status to update or create a new one
+          var statusToUpdate = existingStatuses.firstWhere(
+            (status) =>
+                status['StatusReportedById'] == empId &&
+                status['StatusShiftId'] == shiftId,
+            orElse: () => null,
+          );
+
+          if (statusToUpdate != null) {
+            // Update the existing status
+            statusToUpdate['Status'] = 'checked';
+            statusToUpdate['StatusReportedTime'] = Timestamp.now();
+          } else {
+            // Add a new status entry
+            existingStatuses.add({
               'Status': 'checked',
               'StatusReportedTime': Timestamp.now(),
-              'StatusReportedById': Empid,
-            }
-          ];
+              'StatusReportedById': empId,
+              'StatusShiftId': shiftId
+            });
+          }
+
+          // Update the checkpoint with the new status list
+          checkpointToUpdate['CheckPointStatus'] = existingStatuses;
 
           // Update the document in Firestore
           await doc.reference.update({'PatrolCheckPoints': checkpoints});
+          print("Updated Patrol Status for document: ${doc.id}");
+        } else {
+          print(
+              "No matching checkpoint found for CheckPointId: $checkPointId in document: ${doc.id}");
         }
-        print("Updated Patrol Status");
       }
     } catch (e) {
       print("Error updating patrols status: $e");
@@ -353,6 +403,7 @@ class FireStoreService {
             statusReportedByName;
         currentStatusList[existingIndex]['StatusReportedTime'] =
             Timestamp.now();
+        currentStatusList[existingIndex]['StatusShiftId'] = ShiftId;
       } else {
         // If the status entry doesn't exist for today, add a new entry
         currentStatusList.add({
@@ -480,6 +531,7 @@ class FireStoreService {
             'Status': 'unchecked',
             'StatusReportedById': statusReportedById,
             'StatusReportedTime': Timestamp.now(),
+            'StatusShiftId': shiftId
           });
         } else {
           // Update the existing status with the current timestamp and 'unchecked' status
@@ -1648,9 +1700,10 @@ class FireStoreService {
 
   //add wellness to the collection
   Future<void> addImagesToShiftGuardWellnessReport(
-    List<Map<String, dynamic>> uploads,
-    String comment,
-  ) async {
+      List<Map<String, dynamic>> uploads,
+      String comment,
+      String EmpId,
+      String EmpName) async {
     try {
       final LocalStorage storage = LocalStorage('ShiftDetails');
       String shiftId = storage.getItem('shiftId');
@@ -1681,10 +1734,11 @@ class FireStoreService {
         }
 
         wellnessReports.add({
-          "WellnessEmployeeID": empId,
-          "timestamp": DateTime.now(),
-          "comment": comment,
-          "imageURL": imgUrls,
+          "WellnessEmpId": EmpId,
+          "WellnessEmpName": EmpName,
+          "WellnessReportedAt": DateTime.now(),
+          "WellnessComment": comment,
+          "WellnessImg": imgUrls,
         });
 
         // Update the Firestore document with the new wellness reports
@@ -1982,16 +2036,16 @@ class FireStoreService {
           storageRef.child("employees/patrol/$uniqueName.jpg");
 
       // Upload the image file and get the download URL
-      // await uploadRef.putFile(file);
+      await uploadRef.putFile(file);
 
       // Get the download URL of the uploaded image
-      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-        file.absolute.path,
-        quality: 50, // Adjust the quality as needed
-      );
+      // Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+      //   file.absolute.path,
+      //   quality: 50, // Adjust the quality as needed
+      // );
 
       // Upload the compressed image to Firebase Storage
-      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+      // await uploadRef.putData(Uint8List.fromList(compressedImage!));
       String downloadURL = await uploadRef.getDownloadURL();
       // Return the download URL in a list
       print({'downloadURL': downloadURL});
@@ -2085,12 +2139,12 @@ class FireStoreService {
 
   // Add images and comment
   Future<void> addImagesToPatrol(
-    List<Map<String, dynamic>> uploads,
-    String comment,
-    String patrolID,
-    String empId,
-    String patrolCheckPointId,
-  ) async {
+      List<Map<String, dynamic>> uploads,
+      String comment,
+      String patrolID,
+      String empId,
+      String patrolCheckPointId,
+      String ShiftId) async {
     try {
       final querySnapshot = await patrols.doc(patrolID).get();
 
@@ -2128,6 +2182,7 @@ class FireStoreService {
               "StatusImage": [],
               "StatusComment": "",
               "StatusReportedTime": Timestamp.now(),
+              "StatusShiftId": ShiftId
             };
             checkPointStatus.add(status);
           }
@@ -2256,7 +2311,7 @@ class FireStoreService {
 
   //fetch images from patrol
   Future<List<Map<String, dynamic>>> getImageUrlsForPatrol(
-      String PatrolID, String EmpId) async {
+      String PatrolID, String EmpId, String ShiftId) async {
     try {
       final querySnapshot = await patrols.doc(PatrolID).get();
 
@@ -2270,7 +2325,9 @@ class FireStoreService {
           List<dynamic> checkPointStatus = checkPoint["CheckPointStatus"] ?? [];
 
           var status = checkPointStatus.firstWhere(
-            (s) => s["StatusReportedById"] == EmpId,
+            (s) =>
+                s["StatusReportedById"] == EmpId &&
+                s['StatusShiftId'] == ShiftId,
             orElse: () => null,
           );
 
@@ -2282,15 +2339,15 @@ class FireStoreService {
 
             String statusComment = status["StatusComment"] ?? "";
             String checkPointName = checkPoint["CheckPointName"] ?? "";
+            String checkPointStatus = status["Status"] ?? "";
 
-            if (statusImageUrls.isNotEmpty) {
-              imageData.add({
-                "CheckPointName": checkPointName,
-                "StatusReportedTime": formattedTime,
-                "ImageUrls": statusImageUrls,
-                "StatusComment": statusComment,
-              });
-            }
+            imageData.add({
+              "CheckPointName": checkPointName,
+              "StatusReportedTime": formattedTime,
+              "ImageUrls": statusImageUrls,
+              "StatusComment": statusComment,
+              "CheckPointStatus": checkPointStatus
+            });
           }
         }
 
@@ -2298,7 +2355,7 @@ class FireStoreService {
           print("Images Data for Patrol : $imageData");
           return imageData;
         } else {
-          print("No image URLs found for EmpId: $EmpId in PatrolID: $PatrolID");
+          print("No image data found for EmpId: $EmpId in PatrolID: $PatrolID");
         }
       } else {
         print("No document found with PatrolID: $PatrolID");
@@ -2324,6 +2381,64 @@ class FireStoreService {
         String clientEmail = clientData['ClientEmail'];
         print('Client Email: $clientEmail');
         return clientEmail;
+      } else {
+        print('Client not found');
+        return null; // Return null if client is not found
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getClientPatrolEmail(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        bool clientSendEmailForEachPatrol =
+            clientData['ClientSendEmailForEachPatrol'];
+        if (clientSendEmailForEachPatrol) {
+          String clientEmail = clientData['ClientEmail'];
+          print('Client Email: $clientEmail');
+          return clientEmail;
+        } else {
+          print('ClientSendEmailForEachPatrol is false');
+          return null; // Return null if ClientSendEmailForEachPatrol is false
+        }
+      } else {
+        print('Client not found');
+        return null; // Return null if client is not found
+      }
+    } catch (e) {
+      print('Error fetching client: $e');
+      return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> getClientShiftEmail(String clientId) async {
+    try {
+      DocumentSnapshot clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(clientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        var clientData = clientSnapshot.data() as Map<String, dynamic>;
+        bool clientSendEmailForEachPatrol =
+            clientData['ClientSendEmailForEachShift'];
+        if (clientSendEmailForEachPatrol) {
+          String clientEmail = clientData['ClientEmail'];
+          print('Client Email: $clientEmail');
+          return clientEmail;
+        } else {
+          print('ClientSendEmailForEachPatrol is false');
+          return null; // Return null if ClientSendEmailForEachPatrol is false
+        }
       } else {
         print('Client not found');
         return null; // Return null if client is not found
@@ -2704,6 +2819,7 @@ class FireStoreService {
     String logBookBranchID,
     String logBookClientID,
     String logBookLocationID,
+    String ShiftName,
   ) async {
     try {
       final today = DateTime.now();
@@ -2760,6 +2876,7 @@ class FireStoreService {
             }
           ],
           'LogBookCreatedAt': timestamp,
+          'LogBookShiftName': ShiftName,
         });
 
         // Update the document to set LogBookId to the document ID
@@ -2777,13 +2894,15 @@ class FireStoreService {
         .collection('Shifts')
         .doc(shiftId)
         .get();
-    List<String> shiftLinkedPatrolIds =
-        List<String>.from(shiftSnapshot['ShiftLinkedPatrolIds'] ?? []);
-
+    final shiftLinkedPatrolIds = List<Map<String, dynamic>>.from(
+        shiftSnapshot['ShiftLinkedPatrols'] ?? []);
+    final patrolIds = shiftLinkedPatrolIds
+        .map((patrol) => patrol["LinkedPatrolId"] as String)
+        .toList();
     print('ShiftLinkedPatrolIds: $shiftLinkedPatrolIds');
 
     // Update Patrol documents for each patrolId in ShiftLinkedPatrolIds
-    for (String patrolId in shiftLinkedPatrolIds) {
+    for (String patrolId in patrolIds) {
       DocumentSnapshot patrolSnapshot = await FirebaseFirestore.instance
           .collection('Patrols')
           .doc(patrolId)
@@ -2956,7 +3075,7 @@ class FireStoreService {
     try {
       final CollectionReference reportsRef =
           FirebaseFirestore.instance.collection('Reports');
-      final reportDoc = await reportsRef.add({
+      final DocumentReference reportDoc = await reportsRef.add({
         'ReportLocationId': locationId,
         'ReportLocationName': locationName,
         'ReportIsFollowUpRequired': isFollowUpRequired,
@@ -2977,6 +3096,7 @@ class FireStoreService {
         'ReportClientId': clientId,
         'ReportCreatedAt': createdAt,
       });
+
       await reportDoc.update({"ReportId": reportDoc.id});
       Timestamp timestamp = Timestamp.now();
 
@@ -2986,11 +3106,61 @@ class FireStoreService {
       // Format DateTime as a date string
       String date = '${dateTime.day}${dateTime.month}';
 
-      // Format DateTime as a date strin
-      // String date = '${dateTime.day}/${dateTime.month}/${dateTime.year}'
+      // Generate a unique ID
       var uniqueid = await generateUniqueID(date, reportName, categoryName);
-      // ReportSearchId
+
+      // Update ReportSearchId
       await reportDoc.update({"ReportSearchId": uniqueid});
+
+      // Push the unique ID to EmployeesDAR collection
+      // final CollectionReference employeesDarRef =
+      //     FirebaseFirestore.instance.collection('EmployeesDAR');
+      // final QuerySnapshot darSnapshot = await employeesDarRef
+      //     .where('EmpDarEmpId', isEqualTo: employeeId)
+      //     .where('EmpDarShiftId', isEqualTo: shiftId)
+      //     .get();
+
+      // if (darSnapshot.docs.isNotEmpty) {
+      //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
+      //     if (darDoc.exists) {
+      //       // Check if the EmpDarTile field exists
+      //       List<Map<String, dynamic>> tiles = [];
+      //       final data = darDoc.data() as Map<String, dynamic>?;
+
+      //       if (data != null && data.containsKey('EmpDarTile')) {
+      //         tiles = List<Map<String, dynamic>>.from(data['EmpDarTile']);
+      //       }
+
+      //       // Update TileContent based on ReportCreateTime
+      //       for (var tile in tiles) {
+      //         if (tile['TileDate'] != null) {
+      //           Timestamp tileDate = tile['TileDate'];
+      //           DateTime tileDateTime = tileDate.toDate();
+      //           if (tileDateTime.year == dateTime.year &&
+      //               tileDateTime.month == dateTime.month &&
+      //               tileDateTime.day == dateTime.day) {
+      //             String reportTimeSlot =
+      //                 "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
+      //             if (tile['TileTime'] == reportTimeSlot) {
+      //               tile['TileContent'] = data;
+      //             }
+      //           }
+      //         }
+      //       }
+
+      //       // Update the document with the modified tiles array
+      //       await darDoc.reference.update({'EmpDarTile': tiles});
+
+      //       // Add the unique ID to the EmpDarTile field
+      //       await darDoc.reference.update({
+      //         'EmpDarTile': FieldValue.arrayUnion([uniqueid])
+      //       });
+
+      //       print("Added to DAR");
+      //     }
+      // }
+      // }
+
       print('Report created successfully');
     } catch (e) {
       print('Error creating report: $e');

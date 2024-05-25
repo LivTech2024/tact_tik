@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
@@ -382,11 +384,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                                   const SPostOrder()));
                                       break;
                                     case 5:
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PatrollLogsScreen()));
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             PatrollLogsScreen()));
                                       break;
                                     // case 6:
                                     //   Navigator.push(
@@ -546,13 +548,39 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         RoundedButton(
                           icon: Icons.add_card,
                         ),
-                        RoundedButton(
-                          useSVG: true,
-                          svg: 'assets/images/lab_profile.svg',
+                        Bounce(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SLogBookScreen(
+                                          empId:
+                                              widget.guardsInfo['EmployeeId'],
+                                          empName:
+                                              widget.guardsInfo['EmployeeName'],
+                                        )));
+                          },
+                          child: RoundedButton(
+                            useSVG: true,
+                            svg: 'assets/images/lab_profile.svg',
+                          ),
                         ),
-                        RoundedButton(
-                          useSVG: true,
-                          svg: 'assets/images/device_reset.svg',
+                        Bounce(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SHistoryScreen(
+                                          empID:
+                                              widget.guardsInfo['EmployeeId'],
+                                          empName:
+                                              widget.guardsInfo['EmployeeName'],
+                                        )));
+                          },
+                          child: RoundedButton(
+                            useSVG: true,
+                            svg: 'assets/images/device_reset.svg',
+                          ),
                         ),
                       ],
                     ),

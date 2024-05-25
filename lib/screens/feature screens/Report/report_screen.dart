@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
-import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
+import 'create_report_screen.dart';
 
 class ReportScreen extends StatefulWidget {
   final String locationId;
@@ -146,6 +146,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           empName: widget.empName,
                           ClientId: widget.clientId,
                           reportId: "",
+                          buttonEnable: true,
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -248,6 +249,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                       // clientId: widget.clientId,
                                       ClientId: widget.clientId,
                                       reportId: report['ReportId'],
+                                      buttonEnable: false,
                                     ),
                                   ),
                                 );

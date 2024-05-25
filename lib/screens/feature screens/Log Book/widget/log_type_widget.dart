@@ -7,9 +7,13 @@ import '../../../../fonts/inter_medium.dart';
 import '../../../../utils/colors.dart';
 
 class LogTypeWidget extends StatelessWidget {
-  const LogTypeWidget({super.key, required this.type});
+  const LogTypeWidget({super.key, required this.type, required this.clientname, required this.logtype, required this.location, required this.time});
 
   final LogBookEnum type;
+  final String clientname;
+  final String logtype;
+  final String location;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +53,21 @@ class LogTypeWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InterMedium(
-                    text: 'Patrolling',
+                    text: '$logtype',
                     fontsize: width / width14,
                     color: color2,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: height / height4),
                     child: InterMedium(
-                      text: 'Clark Place interior',
+                      text: '$location',
                       fontsize: width / width14,
                       color: color1,
+                      maxLines: 1,
                     ),
                   ),
                   InterBold(
-                    text: 'Client: Anas Kumar',
+                    text: 'Client: $clientname',
                     fontsize: width / width14,
                     color: color2,
                   ),
@@ -71,7 +76,7 @@ class LogTypeWidget extends StatelessWidget {
             ],
           ),
           InterMedium(
-            text: '5:84 pm',
+            text: '$time',
             color: color1,
             fontsize: width / width14,
           ),

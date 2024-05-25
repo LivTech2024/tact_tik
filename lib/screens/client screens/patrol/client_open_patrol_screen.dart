@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 
 import '../../../common/sizes.dart';
@@ -30,23 +32,46 @@ class ClientOpenPatrolScreen extends StatelessWidget {
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
   ];
 
+  void NavigateScreen(Widget screen , BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
+        appBar: AppBar(
+          backgroundColor: AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: width / width24,
+            ),
+            padding: EdgeInsets.only(left: width / width20),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: InterRegular(
+            text: 'Guard Name',
+            fontsize: width / width18,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
+        ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / width30),
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: height / height30,
@@ -66,7 +91,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                     SizedBox(
                       width: width / width140,
                       child: IconTextWidget(
+                        space: width / width6,
                         icon: Icons.add,
+                        iconSize: width / width20,
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: width / width14,
@@ -79,145 +106,239 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                 SizedBox(
                   height: height / height20,
                 ),
-                Container(
-                  height: 1800,
-                  margin: EdgeInsets.only(top: height / height10),
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    color: color30,
-                    borderRadius: BorderRadius.circular(width / width14),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: height / height20),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              SizedBox(height: height / height5),
-                              Container(
-                                height: height / height30,
-                                width: width / width4,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(width / width10),
-                                    bottomRight:
-                                    Radius.circular(width / width10),
+                GestureDetector(
+                  onTap: () {
+                    // NavigateScreen();
+                  },
+                  child: Container(
+                    height: height / height200,
+                    margin: EdgeInsets.only(top: height / height10),
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      color: WidgetColor,
+                      borderRadius: BorderRadius.circular(width / width14),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: height / height20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                SizedBox(height: height / height5),
+                                Container(
+                                  height: height / height30,
+                                  width: width / width4,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topRight:
+                                          Radius.circular(width / width10),
+                                      bottomRight:
+                                          Radius.circular(width / width10),
+                                    ),
+                                    color: Primarycolor,
                                   ),
-                                  color: color22,
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: width / width14),
+                            SizedBox(
+                              width: width / width190,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InterSemibold(
+                                    text: 'Guard Name',
+                                    color: color1,
+                                    fontsize: width / width18,
+                                  ),
+                                  // SizedBox(height: height / height5),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        // SizedBox(height: height / height10),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: width / width18,
+                            right: width / width24,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: width / width100,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InterRegular(
+                                      text: 'Started at',
+                                      fontsize: width / width14,
+                                      color: color21,
+                                    ),
+                                    SizedBox(height: height / height12),
+                                    InterMedium(
+                                      text: '11:36',
+                                      fontsize: width / width14,
+                                      color: color1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: width / width100,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InterRegular(
+                                      text: 'Ended at',
+                                      fontsize: width / width14,
+                                      color: color21,
+                                    ),
+                                    SizedBox(height: height / height12),
+                                    InterMedium(
+                                      text: '16:56',
+                                      fontsize: width / width14,
+                                      color: color1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: width / width60,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InterRegular(
+                                      text: 'Count',
+                                      fontsize: width / width14,
+                                      color: color21,
+                                    ),
+                                    SizedBox(height: height / height12),
+                                    InterMedium(
+                                      text: '100',
+                                      fontsize: width / width14,
+                                      color: color1,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: width / width60,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    InterRegular(
+                                      text: 'Status',
+                                      fontsize: width / width14,
+                                      color: color21,
+                                    ),
+                                    SizedBox(height: height / height12),
+                                    InterBold(
+                                      text: '1/3',
+                                      fontsize: width / width14,
+                                      color: Colors.green,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(width: width / width14),
-                          SizedBox(
-                            width: width / width190,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InterSemibold(
-                                  text: 'Guard Name',
-                                  color: color22,
-                                  fontsize: width / width18,
-                                ),
-                                // SizedBox(height: height / height5),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      // SizedBox(height: height / height10),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: width / width18,
-                          right: width / width24,
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: width / width100,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InterRegular(
-                                    text: 'Started at',
-                                    fontsize: width / width14,
-                                    color: color22,
-                                  ),
-                                  SizedBox(height: height / height12),
-                                  InterMedium(
-                                    text: '11:36',
-                                    fontsize: width / width14,
-                                  ),
-                                ],
+                        SizedBox(height: height / height14),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width / width18),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterRegular(
+                                text: 'Feedback :',
+                                color: color21,
+                                fontsize: width / width14,
                               ),
-                            ),
-                            SizedBox(
-                              width: width / width100,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InterRegular(
-                                    text: 'Ended at',
-                                    fontsize: width / width14,
-                                    color: color22,
-                                  ),
-                                  SizedBox(height: height / height12),
-                                  InterMedium(
-                                    text: '16:56',
-                                    fontsize: width / width14,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: width / width60,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InterRegular(
-                                    text: 'Count',
-                                    fontsize: width / width14,
-                                    color: color22,
-                                  ),
-                                  SizedBox(height: height / height12),
-                                  InterMedium(
-                                    text: '100',
-                                    fontsize: width / width14,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: width / width60,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InterRegular(
-                                    text: 'Status',
-                                    fontsize: width / width14,
-                                    color: color22,
-                                  ),
-                                  SizedBox(height: height / height12),
-                                  InterBold(
-                                    text: '1/3',
-                                    fontsize: width / width14,
-                                    color: Colors.green,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                              SizedBox(width: width / width4),
+                              Flexible(
+                                  child: InterRegular(
+                                text:
+                                    ' If you have already purchased the premium, please wait a few minutes for the system to update your status and dont forget to run /premium to activate your premium status!',
+                                color: color10,
+                                fontsize: width / width14,
+                                maxLines: 3,
+                              )),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
+                SizedBox(height: height / height30),
+                InterBold(
+                  text: 'Checkpoints',
+                  fontsize: width / width18,
+                  color: color21,
+                ),
+                SizedBox(height: height / height20),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: 4,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: (){
+                        NavigateScreen(ViewCheckpointScreen() , context);
+                      },
+                      child: Container(
+                        height: height / height50,
+                        width: double.maxFinite,
+                        margin: EdgeInsets.only(bottom: height / height10),
+                        decoration: BoxDecoration(
+                          color: WidgetColor,
+                          borderRadius: BorderRadius.circular(width / width10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: width / width20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  height: height / height12,
+                                  width: width / width12,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                SizedBox(width: width / width10),
+                                SizedBox(
+                                  width: width / width120,
+                                  child: InterMedium(
+                                    text: 'Checkpoint name Checkpoint name..',
+                                    color: color21,
+                                    fontsize: width / width16,
+                                  ),
+                                )
+                              ],
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_outlined,
+                              size: width / width24,
+                              color: color17,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
               ],
             ),
           ),

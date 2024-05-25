@@ -119,7 +119,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height / height60),
+            SizedBox(height: height / height40),
             showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +136,7 @@ class HomeScreenPart1 extends StatelessWidget {
                         color: Primarycolor,
                         fontsize: width / width30,
                       ),
-                      SizedBox(height: height / height46),
+                      SizedBox(height: height / height14),
                     ],
                   )
                 : SizedBox(),

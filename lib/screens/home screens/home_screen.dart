@@ -12,7 +12,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
@@ -26,14 +28,20 @@ import 'package:tact_tik/screens/home%20screens/widgets/grid_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+// import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../common/sizes.dart';
+import '../../fonts/roboto_bold.dart';
+import '../../fonts/roboto_medium.dart';
+import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
+import '../feature screens/assets/assets_screen.dart';
 import '../feature screens/keys/keys_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
@@ -56,6 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _userName = "";
   String employeeImg = "";
   String _ShiftDate = "";
+  String _ShiftStatus = "";
+
   String _ShiftLocation = "";
   String _ShiftLocationName = "";
 
@@ -69,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _employeeCompanyID = "";
-
+  bool ShiftStarted = false;
   String _shiftLocationId = "";
   String _shiftId = "";
   String _empEmail = "";
@@ -103,6 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
+
   @override
   void refreshHomeScreen() {
     _getUserInfo();
@@ -254,8 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
           DateTime patrolDateTime = PatrolTime.toDate();
 
           // Format DateTime as String
-          String patrolTimeString =
-              DateFormat('hh:mm a').format(patrolDateTime);
+          // String patrolTimeString =
+          //     DateFormat('hh:mm a').format(patrolDateTime);
           String patrolDateString =
               DateFormat('yyyy-MM-dd').format(patrolDateTime);
           print('Patrol Info: ${patrolInfo.data()}');
@@ -282,7 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
           String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
           String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
           String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
-
           String shiftName = shiftInfo['ShiftName'] ?? " ";
           String shiftId = shiftInfo['ShiftId'] ?? " ";
           GeoPoint shiftGeolocation =
@@ -292,7 +302,34 @@ class _HomeScreenState extends State<HomeScreen> {
           String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
           String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
           String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+          List<Map<String, dynamic>> shiftCurrentStatus =
+              List<Map<String, dynamic>>.from(shiftInfo['ShiftCurrentStatus']);
 
+          List<Map<String, dynamic>> filteredStatus = shiftCurrentStatus
+              .where((status) => status['StatusReportedById'] == _employeeId)
+              .toList();
+
+          String statusString = filteredStatus
+                  .map((status) => status['Status'] as String)
+                  .join(', ') ??
+              "";
+
+          print("Shift CUrrent Status ${statusString}");
+          if (statusString == "started") {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', true);
+            setState(() {
+              ShiftStarted = true;
+            });
+            // prefs.setBool('clickedIn', true);
+          } else {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('ShiftStarted', false);
+            // prefs.setBool('clickedIn', false);
+            setState(() {
+              ShiftStarted = false;
+            });
+          }
           int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
           bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
           // String ShiftClientId = shiftInfo['ShiftClientId'];
@@ -316,6 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
             _shiftLocationId = shiftLocationId;
             _shiftCLientId = shiftClientId;
+            _ShiftStatus = statusString;
             // _shiftCLientId = ShiftClientId;
             // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
             DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
@@ -416,6 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
       ['assets/images/key&assets.png', 'Key & Assets'],
+      ['assets/images/key&assets.png', 'Key'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -473,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                          ),
+                          ), //
                           child: ClipOval(
                             child: SizedBox.fromSize(
                                 size: Size.fromRadius(width / width50),
@@ -562,7 +601,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("alerts.tactik@gmail.com");
+                        // emails.add("alerts.tactik@gmail.com");ƒ
                         // emails.add("security@lestonholdings.com");
                         // emails.add("dan@tpssolution.com");
                         // // "security@lestonholdings.com"
@@ -615,7 +654,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   auth.signOut(context, GetStartedScreens(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height20)
+              SizedBox(height: height / height10)
             ],
           ),
         ),
@@ -676,6 +715,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Bounce(
+                              onTap: () => ChangeScreenIndex(3),
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
@@ -705,42 +745,40 @@ class _HomeScreenState extends State<HomeScreen> {
                               left: width / width30,
                               right: width / width30,
                             ),
-                            child: PageStorage(
-                              bucket: PageStorageBucket(),
-                              child: TaskScreen(
-                                ShiftDate: _ShiftDate,
-                                ShiftStartTime: _ShiftStartTime,
-                                ShiftLocation: _ShiftLocation,
-                                ShiftName: _ShiftLocation,
-                                ShiftEndTime: _ShiftEndTime,
-                                isWithINRadius: isWithinRadius,
-                                empId: _employeeId,
-                                shiftId: _shiftId,
-                                patrolDate: _patrolDate,
-                                patrolTime: _patrolTime,
-                                patrollocation: _patrolArea,
-                                issShiftFetched: issShift,
-                                EmpEmail: _empEmail,
-                                Branchid: _branchId,
-                                cmpId: _cmpId,
-                                EmpName: _userName,
-                                ShiftLatitude: _shiftLatitude,
-                                shiftLongitude: _shiftLongitude,
-                                ShiftRadius: _shiftRestrictedRadius,
-                                CheckUserRadius:
-                                    _shiftKeepGuardInRadiusOfLocation,
-                                ShiftCompanyId: _ShiftCompanyId ?? "",
-                                ShiftBranchId: _ShiftBranchId ?? "",
-                                ShiftLocationId: _shiftLocationId,
-                                ShiftClientId: _shiftCLientId,
-                                onRefreshHomeScreen: _refreshScreen,
-                                onEndTask: _refreshScreen,
-                                onRefreshStartTaskScreen: () {
-                                  refreshHomeScreen();
-                                },
-                                ShiftLocationName: _ShiftLocationName,
-                              ),
-                            )),
+                            child: ShiftStarted
+                                ? FutureBuilder(
+                                    future:
+                                        Future.delayed(Duration(seconds: 2)),
+                                    builder: (c, s) => s.connectionState ==
+                                            ConnectionState.done
+                                        ? StartTaskScreen(
+                                            ShiftDate: _ShiftDate,
+                                            ShiftClientID: _shiftCLientId,
+                                            ShiftEndTime: _ShiftEndTime,
+                                            ShiftStartTime: _ShiftStartTime,
+                                            EmployeId: _employeeId,
+                                            ShiftId: _shiftId,
+                                            ShiftAddressName:
+                                                _ShiftLocationName,
+                                            ShiftCompanyId:
+                                                _ShiftCompanyId ?? "",
+                                            ShiftBranchId: _ShiftBranchId,
+                                            EmployeeName: _userName ?? "",
+                                            ShiftLocationId: _shiftLocationId,
+                                            resetShiftStarted: () {},
+                                            ShiftIN: true,
+                                            onRefresh: refreshHomeScreen,
+                                            ShiftName: _ShiftName,
+                                            ShiftStatus: _ShiftStatus)
+                                        : Center(
+                                            child: InterMedium(
+                                              text: 'Loading...',
+                                              color: Primarycolor,
+                                              fontsize: width / width14,
+                                            ),
+                                          ),
+                                  )
+                                : SizedBox()),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(
@@ -768,14 +806,315 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                         );
                                         break;
-                                      // case 1:
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder: (context) => MapScreen(
-                                      //                 onDone: () {},
-                                      //               )));
-                                      //   break;
+                                      case 1:
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: height / height470,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          width / width40),
+                                                  color: Secondarycolor,
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(width /
+                                                                    width40),
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          width / width40,
+                                                        ),
+                                                        child: GoogleMap(
+                                                          initialCameraPosition:
+                                                              CameraPosition(
+                                                            target: _center,
+                                                            zoom: _zoom,
+                                                          ),
+                                                          onMapCreated:
+                                                              (GoogleMapController
+                                                                  controller) {
+                                                            mapController =
+                                                                controller;
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        height:
+                                                            height / height470,
+                                                        width: double.maxFinite,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment(
+                                                                0, -1.5),
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                            colors: [
+                                                              Colors.black,
+                                                              Colors.transparent
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topCenter,
+                                                      child: Container(
+                                                        height:
+                                                            height / height40,
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 18,
+                                                          vertical:
+                                                              height / height25,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: height /
+                                                                  height48,
+                                                              width: width /
+                                                                  width48,
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/site_tours.png',
+                                                                fit: BoxFit
+                                                                    .fitHeight,
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                              ),
+                                                            ),
+                                                            InterBold(
+                                                              text:
+                                                                  'Site Tours',
+                                                              fontsize: width /
+                                                                  width18,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                });
+                                                              },
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .cancel_outlined,
+                                                                size: width /
+                                                                    width30,
+                                                                color: color1,
+                                                              ),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      child: SizedBox(
+                                                        height:
+                                                            height / height180,
+                                                        child: PageView.builder(
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Container(
+                                                              margin: EdgeInsets.only(
+                                                                  bottom: height /
+                                                                      height24,
+                                                                  left: width /
+                                                                      width40,
+                                                                  right: width /
+                                                                      width30),
+                                                              width: width /
+                                                                  width300,
+                                                              height: height /
+                                                                  height160,
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                vertical:
+                                                                    height /
+                                                                        height14,
+                                                                horizontal:
+                                                                    width /
+                                                                        width15,
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color:
+                                                                    Secondarycolor,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                  width /
+                                                                      width20,
+                                                                ),
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height: height /
+                                                                        height55,
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(
+                                                                              width / width12,
+                                                                            ),
+                                                                            color:
+                                                                                color9,
+                                                                          ),
+                                                                          height:
+                                                                              height / height55,
+                                                                          width:
+                                                                              width / width55,
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Container(
+                                                                              alignment: Alignment.center,
+                                                                              height: height / height40,
+                                                                              width: width / width45,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(width / width4),
+                                                                                color: color9,
+                                                                                border: Border.all(
+                                                                                  color: Primarycolor,
+                                                                                  width: 1,
+                                                                                ),
+                                                                              ),
+                                                                              child: MyNetworkImage(
+                                                                                'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                                                width / width20,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          width:
+                                                                              width / width15,
+                                                                        ),
+                                                                        Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceAround,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            PoppinsBold(
+                                                                              text: 'Robert D. Vaughn',
+                                                                              color: Colors.white,
+                                                                              fontsize: width / width16,
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: width / width180,
+                                                                              child: RobotoMedium(
+                                                                                text: '318 Grand St,  New York 10002, US',
+                                                                                color: color10,
+                                                                                fontsize: width / width16,
+                                                                                maxLines: 1,
+                                                                              ),
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () {},
+                                                                    child:
+                                                                        Container(
+                                                                      height: height /
+                                                                          height55,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .symmetric(
+                                                                        horizontal:
+                                                                            width /
+                                                                                width16,
+                                                                      ),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color:
+                                                                            Primarycolor,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                          width /
+                                                                              width16,
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          RobotoBold(
+                                                                            text:
+                                                                                'Get Direction',
+                                                                            color:
+                                                                                color1,
+                                                                          ),
+                                                                          Icon(
+                                                                            Icons.arrow_forward_sharp,
+                                                                            color:
+                                                                                color1,
+                                                                            size:
+                                                                                width / width24,
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            });
+                                        break;
                                       case 2:
                                         Navigator.push(
                                             context,
@@ -837,7 +1176,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    LogBookScreen()));
+                                                    LogBookScreen(
+                                                      EmpId: _employeeId,
+                                                    )));
                                         break;
                                       case 7:
                                         Navigator.push(
@@ -852,7 +1193,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    KeysScreen()));
+                                                    // KeysScreen(
+                                                    //     keyId: _employeeId)
+                                                    AssetsScreen(
+                                                        assetEmpId:
+                                                            _employeeId)));
+                                        break;
+                                      case 9:
+                                        // AssetsScreen
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    KeysScreen(
+                                                        keyId: _employeeId)
+                                                // AssetsScreen(
+                                                //     assetEmpId:
+                                                //         _employeeId)
+
+                                                ));
                                         break;
                                       default:
                                     }
@@ -863,7 +1222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              childCount: 9,
+                              childCount: 10,
                             ),
                           )
                         : ScreenIndex == 2
