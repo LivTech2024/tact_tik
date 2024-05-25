@@ -590,11 +590,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       5,
                       () async {
                         List<String> emails = [];
-                        // emails.add("sutarvaibhav37@gmail.com");
+                        emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("alerts.tactik@gmail.com");
-                        // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");
+                        emails.add("alerts.tactik@gmail.com");
+                        emails.add("security@lestonholdings.com");
+                        emails.add("dan@tpssolution.com");
 
                         // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
@@ -607,35 +607,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         // UDb6jyQBz2RzRp4b42XL
                         // 6Muezqhg8gc1TsaHX9nD
 
-                        // var data =
-                        //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "paHVXXC99uNtXamURMBc",
-                        //   "JfgMkUK2x9lFJyfsAbaj",
-                        // );
-                        // await sendShiftTemplateEmail(
-                        //   "Leston holdings",
-                        //   emails,
-                        //   'Tacttik Shift Report',
-                        //   "Tacttik Shift Report",
-                        //   data,
-                        //   "Shift",
-                        //   "24 May",
-                        //   "Pankaj Kumar",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        var data =
+                            await fireStoreService.fetchTemplateDataForPdf(
+                          "UDb6jyQBz2RzRp4b42XL",
+                          "UVsnr5h7XbhW5LP3Wt1v",
+                        );
+                        await sendShiftTemplateEmail(
+                          "Leston holdings",
+                          emails,
+                          'Tacttik Shift Report',
+                          "Tacttik Shift Report",
+                          data,
+                          "Shift",
+                          "25 May",
+                          "livjeet kaur",
+                          "01:20:27",
+                          "06:00:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                         // await sendShiftMultiplePdfEmail(
                         //   "Leston holdings",
                         //   emails,
                         //   'Tacttik Shift Report',
                         //   "Tacttik Shift Report",
                         //   "Shift",
-                        //   "23 May",
-                        //   "Pankaj kumar",
+                        //   "25 May",
+                        //   "Livjeet Kaur",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -646,26 +646,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "kdCOKWcNKF3BSRu0QNyF",
                         // );
 
-                        // await sendDARTemplateEmail(
-                        //   "Leston holdings",
-                        //   emails,
-                        //   'Tacttik DAR',
-                        //   "Tacttik DAR",
-                        //   "Shift",
-                        //   "24 May",
-                        //   "Pankaj kumar",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        await sendDARTemplateEmail(
+                          "Leston holdings",
+                          emails,
+                          'Tacttik DAR',
+                          "Tacttik DAR",
+                          "Shift",
+                          "25 May",
+                          "livjeet kaur",
+                          "01:20:27",
+                          "06:00:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                         // 12:37 - 1-10
                         //5:15 - 5-47
                         //5:15
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "s8wecQs0A5eecXAY7lHF");
+                        //     "PatrolLogs", "MrD1s1QNTFzBeavKEG0X");
                         // await fireStoreService.fetchAndCreatePatrolLogs(
                         //   "474ZS6GremcQn2rt7SbR",
                         //   'paHVXXC99uNtXamURMBc',
