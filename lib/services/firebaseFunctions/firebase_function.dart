@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -119,9 +120,10 @@ class FireStoreService {
         return doc;
       }
 
-      final statusDoc = shiftTasks.any((status) =>
-          status['StatusReportedById'] == empId &&
-          (status['Status'] == 'pending' || status['Status'] == 'started'));
+      final statusDoc = shiftTasks.isEmpty ||
+          shiftTasks.any((status) =>
+              status['StatusReportedById'] == empId &&
+              (status['Status'] == 'pending' || status['Status'] == 'started'));
       if (statusDoc) {
         print(
             "Found shift with status pending for EmployeeId: $empId in Document ID: ${doc.id}");
