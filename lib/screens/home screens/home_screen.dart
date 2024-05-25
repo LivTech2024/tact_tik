@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:localstorage/localstorage.dart';
@@ -19,7 +19,6 @@ import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
-import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/custom_calendar.dart';
@@ -28,27 +27,19 @@ import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
-import 'package:tact_tik/services/LocationChecker/LocationCheckerFucntions.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import '../../common/sizes.dart';
-import '../../fonts/poppins_light.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../fonts/roboto_bold.dart';
-import '../../fonts/roboto_medium.dart';
-import '../../services/EmailService/EmailJs_fucntion.dart';
-import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
-import '../feature screens/assets/assets_screen.dart';
 import '../feature screens/keys/keys_screen.dart';
 import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/task/task_feature_screen.dart';
 import '../feature screens/visitors/visitors.dart';
+import 'controller/home_screen_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -125,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // selectedEvent = events[selectedDay] ?? [];
     _getUserInfo();
     getAndPrintAllSchedules();
+    _requestPermissions();
     // _getCurrentUserUid();
 
     // checkLocation();
@@ -132,6 +124,16 @@ class _HomeScreenState extends State<HomeScreen> {
     //   // checkLocation();
     // });
     super.initState();
+  }
+
+  void _requestPermissions() async {
+    var status = await Permission.locationWhenInUse.request();
+    if (status.isGranted) {
+      var statusAlways = await Permission.locationAlways.request();
+      if (statusAlways.isGranted) {
+      } else {}
+    } else if (status.isDenied) {
+    } else if (status.isPermanentlyDenied) {}
   }
 
   // Future<void> _getCurrentUserUid() async {
@@ -402,6 +404,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeScreenController(), permanent: true);
+
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
@@ -764,6 +768,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                         );
                                         break;
+                                      // case 1:
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder: (context) => MapScreen(
+                                      //                 onDone: () {},
+                                      //               )));
+                                      //   break;
                                       case 2:
                                         Navigator.push(
                                             context,

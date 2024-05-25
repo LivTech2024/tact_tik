@@ -1,6 +1,8 @@
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/rounded_button.dart';
@@ -19,6 +21,7 @@ import '../../get started/getstarted_screen.dart';
 import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
+import '../TrackingScreen/s_tracking_screen.dart';
 import '../features screens/post order/s_post_order_screen.dart';
 import 'Scheduling/all_schedules_screen.dart';
 import 'message screens/super_inbox.dart';
@@ -356,29 +359,27 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               return Bounce(
                                 onTap: () {
                                   switch (index) {
+                                    case 1:
+                                      Get.to(() => SupervisorTrackingScreen(
+                                            companyId: _CompanyId,
+                                            guardsInfo: _guardsInfo,
+                                          ));
+                                      break;
                                     case 4:
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return SPostOrder();
+                                          return const SPostOrder();
                                         },
                                       );
                                       break;
-                                    // case 2:
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               DarDisplayScreen(
-                                    //                 EmpEmail: _employeeId,
-                                    //               )));
-                                    //   break;
+
                                     case 4:
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SPostOrder()));
+                                                  const SPostOrder()));
                                       break;
                                     case 5:
                                       Navigator.push(
