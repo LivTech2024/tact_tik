@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // for date formatting
+import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_manag_create_screen.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
@@ -68,11 +69,11 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
         backgroundColor: Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => (),
-            //     ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SCreateKeyManagScreen(),
+                ));
           },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
