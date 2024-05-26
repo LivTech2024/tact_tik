@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // for date formatting
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
-import 's_create_assign_asset.dart';
 
 class SAssetsViewScreen extends StatefulWidget {
   final String companyId;

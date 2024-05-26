@@ -21,54 +21,28 @@ class SelectReportsGuardsScreen extends StatefulWidget {
 }
 
 class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> _guardsInfo = [];
+
   @override
   void initState() {
-    // selectedEvent = events[selectedDay] ?? [];
-    _getUserInfo();
-    // checkLocation();
     super.initState();
+    _getEmployeesByCompanyId();
   }
 
-  Future<void> _refreshdata() async {
-    // Fetch patrol data from Firestore (assuming your logic exists)
-
-    _getUserInfo();
+  Future<void> _refreshData() async {
+    _getEmployeesByCompanyId();
   }
 
-  List<DocumentSnapshot<Object?>> _guardsInfo = [];
+  Future<void> _getEmployeesByCompanyId() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+        .where('EmployeeRole', isEqualTo: "GUARD")
+        .get();
 
-  void _getUserInfo() async {
-    FireStoreService fireStoreService = FireStoreService();
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    if (mounted) {
-      if (userInfo != null) {
-        String userName = userInfo['EmployeeName'] ?? "";
-        String EmployeeId = userInfo['EmployeeId'] ?? "";
-        String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
-        var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
-        var patrolInfo = await fireStoreService
-            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print("All Guards : ${doc.data()}");
-        }
-        // setState(() {
-        //   _userName = userName;
-        //   _employeeId = EmployeeId;
-        //   _CompanyId = CompanyId;
-        // });
-        if (guardsInfo != null) {
-          setState(() {
-            _guardsInfo = guardsInfo;
-          });
-        } else {
-          print('GUards Info: ${guardsInfo}');
-        }
-        print('User Info: ${userInfo.data()}');
-      } else {
-        print('User info not found');
-      }
-    }
+    setState(() {
+      _guardsInfo = querySnapshot.docs;
+    });
   }
 
   String dropdownValue = 'All'; // Initialize default value
@@ -104,7 +78,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
           centerTitle: true,
         ),
         body: RefreshIndicator(
-          onRefresh: _refreshdata,
+          onRefresh: _refreshData,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: width / width30),
             child: Column(
@@ -115,7 +89,10 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                   child: DropdownButton<String>(
                     iconSize: width / width24,
                     dropdownColor: WidgetColor,
-                    style: TextStyle(color: color2 , fontSize: width / width12,),
+                    style: TextStyle(
+                      color: color2,
+                      fontSize: width / width12,
+                    ),
                     borderRadius: BorderRadius.circular(width / width10),
                     value: dropdownValue,
                     onChanged: (String? newValue) {
@@ -137,97 +114,126 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                   ),
                 ),
                 SizedBox(height: height / height20),
-                _guardsInfo.length != 0
+                _guardsInfo.isNotEmpty
                     ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: PageScrollPhysics(),
-                        itemCount: _guardsInfo.length,
-                        itemBuilder: (context, index) {
-                          var guardInfo = _guardsInfo[index];
-                          String name = guardInfo['EmployeeName'] ?? "";
-                          String id = guardInfo['EmployeeId'] ?? "";
-                          String url = guardInfo['EmployeeImg'] ?? "";
+                  shrinkWrap: true,
+                  physics: PageScrollPhysics(),
+                  itemCount: _guardsInfo.length,
+                  itemBuilder: (context, index) {
+                    final guardInfo = _guardsInfo[index].data();
+                    final String name = guardInfo['EmployeeName'] ?? "";
+                    final String id = guardInfo['EmployeeId'] ?? "";
+                    final String url = guardInfo['EmployeeImg'] ?? "";
+                    final String documentId = _guardsInfo[index].id;
 
-                          print(guardInfo);
-                          return GestureDetector(
-                            onTap: () {
-                              // TODO Pass values hear.
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SReportScreen(locationId: '', locationName: '', companyId: '', empId: '', empName: '', clientId: '',
+                    return GestureDetector(
+                      onTap: () async {
+                        final reportsSnapshot = await FirebaseFirestore
+                            .instance
+                            .collection('Reports')
+                            .where('ReportEmployeeId', isEqualTo: documentId)
+                            .get();
 
-                                          )));
-                            },
-                            child: Container(
-                              height: height / height60,
-                              decoration: BoxDecoration(
-                                color: color19,
-                                borderRadius:
-                                    BorderRadius.circular(width / width12),
-                              ),
-                              margin:
-                                  EdgeInsets.only(bottom: height / height10),
-                              width: double.maxFinite,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: height / height48,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / width20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              height: height / height50,
-                                              width: width / width50,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(url),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: width / width20),
-                                            InterBold(
-                                              text: name,
-                                              letterSpacing: -.3,
-                                              color: color1,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: height / height14,
-                                          width: width / width24,
-                                          child: SvgPicture.asset(
-                                            'assets/images/arrow.svg',
-                                            fit: BoxFit.fitWidth,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                        if (reportsSnapshot.docs.isNotEmpty) {
+                          final reportData = reportsSnapshot.docs.first.data();
+                          final String locationId = reportData['ReportLocationId'] ?? '';
+                          final String locationName = reportData['ReportLocationName'] ?? '';
+                          final String companyId = reportData['ReportCompanyId'] ?? '';
+                          final String empId = reportData['ReportEmployeeId'] ?? '';
+                          final String empName = reportData['ReportEmployeeName'] ?? '';
+                          final String clientId = reportData['ReportClientId'] ?? '';
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SReportScreen(
+                                locationId: locationId,
+                                locationName: locationName,
+                                companyId: companyId,
+                                empId: empId,
+                                empName: empName,
+                                clientId: clientId,
                               ),
                             ),
                           );
-                        },
-                      )
-                    : Center(
-                        child: PoppinsBold(
-                          text: 'No Guards Found',
-                          color: color2,
-                          fontsize: width / width16,
+                        } else {
+                          // Show a SnackBar when no reports are found for the selected employee
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('No reports found for the selected employee.'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        height: height / height60,
+                        decoration: BoxDecoration(
+                          color: color19,
+                          borderRadius:
+                          BorderRadius.circular(width / width12),
                         ),
-                      )
+                        margin:
+                        EdgeInsets.only(bottom: height / height10),
+                        width: double.maxFinite,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: height / height48,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width / width20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: height / height50,
+                                        width: width / width50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: NetworkImage(url),
+                                            filterQuality:
+                                            FilterQuality.high,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: width / width20),
+                                      InterBold(
+                                        text: name,
+                                        letterSpacing: -.3,
+                                        color: color1,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: height / height14,
+                                    width: width / width24,
+                                    child: SvgPicture.asset(
+                                      'assets/images/arrow.svg',
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+                    : Center(
+                  child: PoppinsBold(
+                    text: 'No Guards Found',
+                    color: color2,
+                    fontsize: width / width16,
+                  ),
+                )
               ],
             ),
           ),
