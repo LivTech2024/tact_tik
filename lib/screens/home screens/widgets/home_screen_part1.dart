@@ -57,14 +57,14 @@ class HomeScreenPart1 extends StatelessWidget {
                     height: height / height55,
                     width: width / width55,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: employeeImg != null
-                            ? NetworkImage(employeeImg)
-                            : NetworkImage(
-                                'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                        filterQuality: FilterQuality.high,
-                        fit: BoxFit.cover,
-                      ),
+                      // image: DecorationImage(
+                      //   image: employeeImg != null
+                      //       ? NetworkImage(employeeImg)
+                      //       : NetworkImage(
+                      //           'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
+                      //   filterQuality: FilterQuality.high,
+                      //   fit: BoxFit.cover,
+                      // ),
                       shape: BoxShape.circle,
                     ),
                   ),

@@ -66,6 +66,7 @@ class FireStoreService {
 
   Future<DocumentSnapshot?> getClientInfoByCurrentUserEmail() async {
     String? currentUser = storage.getItem("CurrentUser");
+    print("Curretn User ${currentUser}");
 
     if (currentUser == null || currentUser.isEmpty) {
       return null;
@@ -81,7 +82,7 @@ class FireStoreService {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      print(querySnapshot.docs.first);
+      print("Fetched CLient data ${querySnapshot.docs.first}");
       return querySnapshot.docs.first;
     } else {
       return null;
@@ -159,6 +160,92 @@ class FireStoreService {
     } else {
       print("No pending shift found for EmployeeId: $EmpId");
       return null;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getPatrolsByClientId(
+      String clientId) async {
+    List<Map<String, dynamic>> patrolsList = [];
+
+    try {
+      // Query the Patrols collection where PatrolClientId equals the provided clientId
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .where('PatrolClientId', isEqualTo: clientId)
+          .get();
+
+      // Iterate over the query results and add them to the list
+      for (var doc in querySnapshot.docs) {
+        patrolsList.add(doc.data() as Map<String, dynamic>);
+      }
+    } catch (e) {
+      print('Error fetching patrols: $e');
+    }
+
+    return patrolsList;
+  }
+
+  //Fetching the patrolLogs Data
+  // Future<List<Map<String, dynamic>>> getPatrolsLogs(String PatrolID) async {
+  //   List<Map<String, dynamic>> patrolsList = [];
+
+  //   try {
+  //     // Query the Patrols collection where PatrolClientId equals the provided clientId
+  //     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //         .collection('PatrolLogs')
+  //         .where('PatrolId', isEqualTo: PatrolID)
+  //         .get();
+
+  //     // Iterate over the query results and add them to the list
+  //     for (var doc in querySnapshot.docs) {
+  //       patrolsList.add(doc.data() as Map<String, dynamic>);
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching patrols: $e');
+  //   }
+
+  //   return patrolsList;
+  // }
+
+  Future<List<Map<String, dynamic>>> getPatrolsLogs(String patrolId) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('PatrolLogs')
+          .where('PatrolId', isEqualTo: patrolId)
+          .get();
+
+      // Convert documents to a list of maps
+      List<Map<String, dynamic>> patrolLogs = querySnapshot.docs.map((doc) {
+        return doc.data() as Map<String, dynamic>;
+      }).toList();
+
+      // Group by ShiftId and order by PatrolLogCount
+      Map<String, List<Map<String, dynamic>>> groupedByShiftId = {};
+      for (var log in patrolLogs) {
+        String shiftId = log['PatrolShiftId'];
+        if (groupedByShiftId[shiftId] == null) {
+          groupedByShiftId[shiftId] = [];
+        }
+        groupedByShiftId[shiftId]!.add(log);
+      }
+
+      // Sort each group by PatrolLogCount
+      for (var shiftId in groupedByShiftId.keys) {
+        groupedByShiftId[shiftId]!.sort((a, b) {
+          return b['PatrolLogPatrolCount'].compareTo(a['PatrolLogPatrolCount']);
+        });
+      }
+
+      // Flatten the list of grouped logs
+      List<Map<String, dynamic>> sortedPatrolLogs = [];
+      groupedByShiftId.forEach((shiftId, logs) {
+        sortedPatrolLogs.addAll(logs);
+      });
+
+      return sortedPatrolLogs;
+    } catch (e) {
+      print('Error getting patrol logs: $e');
+      return [];
     }
   }
 

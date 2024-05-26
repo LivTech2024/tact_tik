@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
@@ -12,7 +13,24 @@ import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
 
 class ClientOpenPatrolScreen extends StatelessWidget {
-  ClientOpenPatrolScreen({super.key});
+  final String guardName;
+  final String startDate;
+  final String startTime;
+  final String endTime;
+  final int patrolLogCount;
+  final String status;
+  final String feedback;
+  final List<Map<String, dynamic>> checkpoints;
+  ClientOpenPatrolScreen(
+      {super.key,
+      required this.guardName,
+      required this.startDate,
+      required this.startTime,
+      required this.endTime,
+      required this.patrolLogCount,
+      required this.status,
+      required this.feedback,
+      required this.checkpoints});
 
   final List<String> members = [
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
@@ -32,7 +50,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
   ];
 
-  void NavigateScreen(Widget screen , BuildContext context) {
+  void NavigateScreen(Widget screen, BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
@@ -40,7 +58,22 @@ class ClientOpenPatrolScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    // final String guardName = Data['PatrolLogGuardName'] ?? '';
+    // final String startDate = Data['PatrolDate'] ?? '';
+    // final String startTime = Data['PatrolLogStartedAt'] != null
+    //     ? DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+    //         Data['PatrolLogStartedAt'].millisecondsSinceEpoch))
+    //     : "";
+    // final String endTime = Data['PatrolLogEndedAt'] != null
+    //     ? DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+    //         Data['PatrolLogEndedAt'].millisecondsSinceEpoch))
+    //     : "";
+    // final int patrolLogCount = Data['PatrolLogPatrolCount'] ?? 0;
+    // final String status = Data['PatrolLogStatus'] ?? 'N/A';
+    // final String feedback =
+    //     Data['PatrolLogFeedbackComment'] ?? 'No feedback provided';
+    // final List<Map<String, dynamic>> checkpoints =
+    //     Data['PatrolLogCheckPoints'] ?? [];
 
     return SafeArea(
       child: Scaffold(
@@ -60,7 +93,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
             },
           ),
           title: InterRegular(
-            text: 'Guard Name',
+            text: guardName,
             fontsize: width / width18,
             color: Colors.white,
             letterSpacing: -.3,
@@ -291,8 +324,8 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: (){
-                        NavigateScreen(ViewCheckpointScreen() , context);
+                      onTap: () {
+                        NavigateScreen(ViewCheckpointScreen(), context);
                       },
                       child: Container(
                         height: height / height50,
