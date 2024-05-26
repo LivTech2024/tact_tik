@@ -114,6 +114,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   int _elapsedTime = 0;
   bool _isLoading = false;
   bool buttonClicked = true;
+  bool isLate = false;
+  String lateTime = "";
 
   // late SharedPreferences prefs;
   void send_mail_onOut(data) async {
@@ -173,14 +175,53 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   @override
   void initState() {
     super.initState();
-    inTime = DateTime.now();
-
+    // inTime = DateTime.now();
+    // startStopwatch();
     initPrefs();
     // initStopwatch();
     // startStopwatch();
 
     // clickedIn update this status
+    checkWeatherEmployeeIsLateOrNot();
     checkWellnessReport(); // Call the wellness check function
+  }
+
+  checkWeatherEmployeeIsLateOrNot() {
+    // Parsing the shift start and end times
+    DateFormat dateFormat = DateFormat("HH:mm");
+    DateTime now = DateTime.now();
+
+    DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+    shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+        shiftStartTime.minute);
+
+    DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+    shiftEndTime = DateTime(
+        now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+    // Add buffer time to shift start time
+    DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+    // Adjust for next day shift end time if it's earlier than shift start time
+    if (shiftEndTime.isBefore(shiftStartTime)) {
+      shiftEndTime = shiftEndTime.add(Duration(days: 1));
+    }
+
+    // Calculate remaining time
+    Duration remainingTime = deadline.difference(now);
+
+    if (remainingTime.isNegative) {
+      print("The user is already late.");
+      Duration lateDuration = now.difference(deadline);
+      setState(() {
+        isLate = true;
+        lateTime = "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+        print("Late time: $lateTime");
+      });
+    } else {
+      print(
+          "Remaining time to start the shift: ${remainingTime.inMinutes} minutes.");
+    }
   }
 
   void reload() {
@@ -203,6 +244,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
     if (widget.ShiftStatus == 'started') {
+      _startTimer();
+
       /// Todo update timer
       setState(() {
         clickedIn = true;
@@ -380,6 +423,71 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
+  String remainingTimeFormatted = "";
+  Timer? _timer;
+  Duration remainingTime = Duration.zero;
+
+  updateLateTimeAndStartTimer() {
+    print('update late time and start timer function');
+
+    /// -- update late time
+    DateFormat dateFormat = DateFormat("HH:mm");
+    DateTime now = DateTime.now();
+
+    DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
+    shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
+        shiftStartTime.minute);
+
+    DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
+    shiftEndTime = DateTime(
+        now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+
+    DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
+
+    if (shiftEndTime.isBefore(shiftStartTime)) {
+      shiftEndTime = shiftEndTime.add(Duration(days: 1));
+    }
+
+    Duration remainingTimeToStart = deadline.difference(now);
+
+    if (remainingTimeToStart.isNegative) {
+      print("The user is already late.");
+      Duration lateDuration = now.difference(deadline);
+      setState(() {
+        isLate = true;
+        lateTime = "${lateDuration.inHours}h : ${lateDuration.inMinutes % 60}m";
+        print("Late time: $lateTime");
+      });
+    } else {
+      print(
+          "Remaining time to start the shift: ${remainingTimeToStart.inMinutes} minutes.");
+    }
+
+    /// -- start timer
+    remainingTime = shiftEndTime.difference(now);
+    _startTimer();
+  }
+
+  void _startTimer() {
+    print('start timer');
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (remainingTime.inSeconds > 0) {
+          remainingTime = remainingTime - Duration(seconds: 1);
+          remainingTimeFormatted =
+              "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
+          print("Timer ${remainingTimeFormatted}");
+        } else {
+          _timer!.cancel();
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // final controller = Get.put(StopWatchBackgroundService(), permanent: true);
@@ -471,7 +579,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
-                                text: islate ? "Late" : "",
+                                text: isLate ? "Late $lateTime" : "",
                                 color: Colors.redAccent,
                                 fontsize: width / width12,
                               )
@@ -481,48 +589,46 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                   SizedBox(
                     width: width / width100,
-                    child: Obx(
-                      () => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InterMedium(
-                            text: 'Out time',
-                            fontsize: width / width14,
-                            color: color1,
-                          ),
-                          SizedBox(height: height / height10),
-                          InterRegular(
-                            text: widget.ShiftEndTime,
-                            fontsize: width / width16,
-                            color: color7,
-                          ),
-                          SizedBox(height: height / height20),
-                          // controller.stopWatchRunning.value
-                          //     ? StreamBuilder<Map<String, dynamic>?>(
-                          //         stream:
-                          //             FlutterBackgroundService().on('update'),
-                          //         builder: (context, snapshot) {
-                          //           if (!snapshot.hasData) {
-                          //             return Container(
-                          //               height: 5,
-                          //             );
-                          //           }
-                          //           final data = snapshot.data!;
-                          //           String? stopWatch = data["elapsed_time"];
-                          //
-                          //           return
-                          InterSemibold(
-                            text: 'stopWatch',
-                            // '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
-                            color: color8,
-                            fontsize: width / width12,
-                          )
-                          // })
-                          // : SizedBox(
-                          //     height: 5,
-                          //   ),
-                        ],
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InterMedium(
+                          text: 'Out time',
+                          fontsize: width / width14,
+                          color: color1,
+                        ),
+                        SizedBox(height: height / height10),
+                        InterRegular(
+                          text: widget.ShiftEndTime,
+                          fontsize: width / width16,
+                          color: color7,
+                        ),
+                        SizedBox(height: height / height20),
+                        // controller.stopWatchRunning.value
+                        //     ? StreamBuilder<Map<String, dynamic>?>(
+                        //         stream:
+                        //             FlutterBackgroundService().on('update'),
+                        //         builder: (context, snapshot) {
+                        //           if (!snapshot.hasData) {
+                        //             return Container(
+                        //               height: 5,
+                        //             );
+                        //           }
+                        //           final data = snapshot.data!;
+                        //           String? stopWatch = data["elapsed_time"];
+                        //
+                        //           return
+                        InterSemibold(
+                          text: remainingTimeFormatted,
+                          // '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
+                          color: color8,
+                          fontsize: width / width12,
+                        )
+                        // })
+                        // : SizedBox(
+                        //     height: 5,
+                        //   ),
+                      ],
                     ),
                   ),
                   Container(
@@ -581,6 +687,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                             EmpName: widget.EmployeeName,
                                           )));
                             } else {
+                              // updateLateTimeAndStartTimer();
+
                               // if (!controller.stopWatchRunning.value) {
                               //   print("ShiftStartTime ${shiftStartTime}");
                               print('Shift Date ${widget.ShiftDate}');
@@ -630,6 +738,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               if (currentTime.isBefore(bufferStart)) {
                                 showErrorToast(context, "Start shift on Time");
                               } else {
+                                updateLateTimeAndStartTimer();
+
                                 ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
                                 FirebaseFirestore firestore =
                                     FirebaseFirestore.instance;
@@ -739,14 +849,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     child: Container(
                       color: WidgetColor,
                       child: Center(
-                        child: Obx(
-                          () => InterBold(
-                            text: 'Start Shift',
-                            fontsize: width / width18,
-                            color:
-                                // controller.stopWatchRunning.value ||
-                                clickedIn ? Primarycolorlight : Primarycolor,
-                          ),
+                        child: InterBold(
+                          text: 'Start Shift',
+                          fontsize: width / width18,
+                          color:
+                              // controller.stopWatchRunning.value ||
+                              clickedIn ? Primarycolorlight : Primarycolor,
                         ),
                       ),
                     ),
@@ -1030,13 +1138,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     child: Container(
                       color: WidgetColor,
                       child: Center(
-                        child: Obx(
-                          () => InterBold(
-                            text: 'End Shift',
-                            fontsize: width / width18,
-                            // color: controller.stopWatchRunning.value
-                            color: clickedIn ? Primarycolor : Primarycolorlight,
-                          ),
+                        child: InterBold(
+                          text: 'End Shift',
+                          fontsize: width / width18,
+                          // color: controller.stopWatchRunning.value
+                          color: clickedIn ? Primarycolor : Primarycolorlight,
                         ),
                       ),
                     ),
@@ -1048,78 +1154,76 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         ),
         SizedBox(height: height / height10),
         clickedIn
-            ? Obx(
-                () => Button1(
-                  height: height / height65,
-                  // text: controller.isPaused.value ? 'Resume' : 'Break',
-                  text: true ? 'Resume' : 'Break',
-                  fontsize: width / width18,
-                  color: color5,
-                  backgroundcolor: WidgetColor,
-                  onPressed: () async {
-                    /// TODO : Made changes here
-                    // if (controller.isPaused.value) {
-                    //   print('resume clicked');
-                    //   await controller.resumeStopWatch();
-                    // } else {
-                    //   print('break clicked');
-                    //   await controller.pauseStopWatch();
-                    // }
+            ? Button1(
+                height: height / height65,
+                // text: controller.isPaused.value ? 'Resume' : 'Break',
+                text: true ? 'Resume' : 'Break',
+                fontsize: width / width18,
+                color: color5,
+                backgroundcolor: WidgetColor,
+                onPressed: () async {
+                  /// TODO : Made changes here
+                  // if (controller.isPaused.value) {
+                  //   print('resume clicked');
+                  //   await controller.resumeStopWatch();
+                  // } else {
+                  //   print('break clicked');
+                  //   await controller.pauseStopWatch();
+                  // }
+                  var data = await fireStoreService.fetchDataForPdf(
+                      widget.EmployeId, widget.ShiftId);
+                  print("Fetched Data for generating pdf: ${data}");
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(() {
+                    isPaused = !isPaused;
+                    onBreak = false;
+                    prefs.setBool('pauseState', isPaused);
+                  });
+                  // isPaused ? stopStopwatch() : startStopwatch();
+                  if (isPaused) {
                     var data = await fireStoreService.fetchDataForPdf(
                         widget.EmployeId, widget.ShiftId);
+                    var clientName = await fireStoreService
+                        .getClientName(widget.ShiftClientID);
                     print("Fetched Data for generating pdf: ${data}");
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
+                    await fireStoreService.addToLog(
+                        'shift_break',
+                        widget.ShiftAddressName,
+                        clientName ?? "",
+                        widget.EmployeId,
+                        widget.EmployeeName,
+                        widget.ShiftCompanyId,
+                        widget.ShiftBranchId,
+                        widget.ShiftClientID,
+                        widget.ShiftLocationId,
+                        widget.ShiftName);
+                    // stopStopwatch();
                     setState(() {
-                      isPaused = !isPaused;
-                      onBreak = false;
-                      prefs.setBool('pauseState', isPaused);
-                    });
-                    // isPaused ? stopStopwatch() : startStopwatch();
-                    if (isPaused) {
-                      var data = await fireStoreService.fetchDataForPdf(
-                          widget.EmployeId, widget.ShiftId);
-                      var clientName = await fireStoreService
-                          .getClientName(widget.ShiftClientID);
-                      print("Fetched Data for generating pdf: ${data}");
-                      await fireStoreService.addToLog(
-                          'shift_break',
-                          widget.ShiftAddressName,
-                          clientName ?? "",
-                          widget.EmployeId,
-                          widget.EmployeeName,
-                          widget.ShiftCompanyId,
-                          widget.ShiftBranchId,
-                          widget.ShiftClientID,
-                          widget.ShiftLocationId,
-                          widget.ShiftName);
-                      // stopStopwatch();
-                      setState(() {
-                        onBreak = true;
-                        prefs.setBool('onBreak', onBreak);
-                      });
-                      fireStoreService.BreakShiftLog(widget.EmployeId);
-                    } else {
-                      onBreak = false;
-                      var clientName = await fireStoreService
-                          .getClientName(widget.ShiftClientID);
-                      await fireStoreService.addToLog(
-                          'shift_resume',
-                          widget.ShiftAddressName,
-                          clientName ?? "",
-                          widget.EmployeId,
-                          widget.EmployeeName,
-                          widget.ShiftCompanyId,
-                          widget.ShiftBranchId,
-                          widget.ShiftClientID,
-                          widget.ShiftLocationId,
-                          widget.ShiftName);
+                      onBreak = true;
                       prefs.setBool('onBreak', onBreak);
-                      startStopwatch();
-                      fireStoreService.ResumeShiftLog(widget.EmployeId);
-                    }
-                  },
-                ),
+                    });
+                    fireStoreService.BreakShiftLog(widget.EmployeId);
+                  } else {
+                    onBreak = false;
+                    var clientName = await fireStoreService
+                        .getClientName(widget.ShiftClientID);
+                    await fireStoreService.addToLog(
+                        'shift_resume',
+                        widget.ShiftAddressName,
+                        clientName ?? "",
+                        widget.EmployeId,
+                        widget.EmployeeName,
+                        widget.ShiftCompanyId,
+                        widget.ShiftBranchId,
+                        widget.ShiftClientID,
+                        widget.ShiftLocationId,
+                        widget.ShiftName);
+                    prefs.setBool('onBreak', onBreak);
+                    startStopwatch();
+                    fireStoreService.ResumeShiftLog(widget.EmployeId);
+                  }
+                },
               )
             : const SizedBox(),
         IgnorePointer(

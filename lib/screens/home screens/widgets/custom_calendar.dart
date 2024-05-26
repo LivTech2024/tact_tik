@@ -6,7 +6,7 @@ import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
 final today = DateUtils.dateOnly(DateTime.now());
-
+  
 class CustomCalendar extends StatefulWidget {
   final List<DateTime?> selectedDates;
   const CustomCalendar({Key? key, required this.selectedDates})
