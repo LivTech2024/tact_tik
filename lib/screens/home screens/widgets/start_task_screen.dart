@@ -99,6 +99,7 @@ class StartTaskScreen extends StatefulWidget {
 FireStoreService fireStoreService = FireStoreService();
 DarFunctions darFunctions = DarFunctions();
 
+
 class _StartTaskScreenState extends State<StartTaskScreen> {
   Isolate? _isolate;
   SendPort? _sendPort;
@@ -146,7 +147,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     String formattedEndDate = dateFormat.format(DateTime.now());
     String formattedEndTime = dateFormat.format(DateTime.now());
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
-    final homeScreenController = HomeScreenController.instance;
+
     if (ClientEmail != null && AdminEmail != null) {
       emails.add(AdminEmail);
       emails.add(TestinEmail);
@@ -185,7 +186,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     checkWeatherEmployeeIsLateOrNot();
     checkWellnessReport(); // Call the wellness check function
   }
-
+    final homeScreenController = HomeScreenController.instance;
   checkWeatherEmployeeIsLateOrNot() {
     // Parsing the shift start and end times
     DateFormat dateFormat = DateFormat("HH:mm");
@@ -243,15 +244,21 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
+    // if (clickedIn == true) {
+    //   _startTimer();
+    // }
+    print("Clicked Saved PRef ${clickedIn}");
     if (widget.ShiftStatus == 'started') {
-      _startTimer();
+      // _startTimer();
 
       /// Todo update timer
       setState(() {
         clickedIn = true;
         prefs.setBool('clickedIn', clickedIn);
       });
+      // print("Shift Status from HomeScreen ${}")
       await homeScreenController.startBgLocationService();
+      _startTimer();
     } else {
       setState(() {
         prefs.setBool('clickedIn', clickedIn);
@@ -266,6 +273,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     setState(() {
       clickedIn = savedClickedIn!;
     });
+    if (clickedIn == true) {
+      _startTimer();
+    }
     if (pauseState != null) {
       setState(() {
         isPaused = pauseState;
@@ -908,9 +918,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       //           .stopBgLocationService();
                       //     }));
 
-                      setState(() {
-                        _isLoading = true;
-                      });
+                      // setState(() {
+                      //   _isLoading = true;
+                      // });
                       List<String> endTimeParts =
                           widget.ShiftEndTime.split(':');
                       DateTime shiftEndDateTime = DateTime(
@@ -966,20 +976,29 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        setState(() {
-                                          _isLoading = true;
-                                        });
                                         SharedPreferences prefs =
                                             await SharedPreferences
                                                 .getInstance();
 
                                         if (CommentController.text.isNotEmpty) {
+                                          await homeScreenController
+                                              .stopBgLocationService();
                                           widget.onRefresh();
                                           var data = await fireStoreService
                                               .fetchDataForPdf(widget.EmployeId,
                                                   widget.ShiftId);
 
-                                          send_mail_onOut(data);
+                                          // send_mail_onOut(data); //Need to uncomment this
+                                          setState(() {
+                                            // isPaused = !isPaused;
+                                            // prefs.setBool("pauseState", isPaused);
+                                            clickedIn = false;
+                                            resetStopwatch();
+                                            resetClickedState();
+                                            widget.resetShiftStarted();
+                                            prefs.setBool(
+                                                'ShiftStarted', false);
+                                          });
 
                                           var clientName =
                                               await fireStoreService
@@ -1007,32 +1026,21 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                   widget.EmployeeName,
                                                   widget.ShiftClientID,
                                                   CommentController.text);
-                                          setState(() {
-                                            // isPaused = !isPaused;
-                                            // prefs.setBool("pauseState", isPaused);
-                                            clickedIn = false;
-                                            resetStopwatch();
-                                            resetClickedState();
-                                            widget.resetShiftStarted();
-                                            prefs.setBool(
-                                                'ShiftStarted', false);
-                                          });
-                                          if (mounted) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomeScreen(),
-                                              ),
-                                            );
-                                          }
+                                          print("Reached Here");
+                                          Navigator.pop(context);
+                                          // if (mounted) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const HomeScreen(),
+                                            ),
+                                          );
+                                          // }
                                         } else {
                                           showErrorToast(context,
                                               "Reason cannot be empty");
                                         }
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
                                       },
                                       child: InterRegular(
                                         text: 'Submit',
@@ -1045,9 +1053,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       } else {
                         // Current time i
                         //s after or equal to shift end time
-                        setState(() {
-                          _isLoading = true;
-                        });
 
                         print(
                             'Current time is after or equal to shift end time');
@@ -1075,7 +1080,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           var data = await fireStoreService.fetchDataForPdf(
                               widget.EmployeId, widget.ShiftId);
 
-                          send_mail_onOut(data);
+                          // send_mail_onOut(data); //Need to uncomment this too
 
                           var clientName = await fireStoreService
                               .getClientName(widget.ShiftClientID);
@@ -1115,24 +1120,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             // isPaused = !isPaused;
                             // prefs.setBool("pauseState", isPaused);
                             clickedIn = false;
-                            resetStopwatch();
+                            // resetStopwatch();
                             resetClickedState();
                             widget.resetShiftStarted();
                             prefs.setBool('ShiftStarted', false);
                           });
-                          if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
-                              ),
-                            );
-                          }
+                          // if (mounted) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                          // }
                         }
                       }
-                      setState(() {
-                        _isLoading = false;
-                      });
+
                       // }
                     },
                     child: Container(
