@@ -20,12 +20,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailcontrller = TextEditingController();
-  final TextEditingController _passwordcontrller = TextEditingController();
+  TextEditingController _emailcontrller = TextEditingController();
 
+  TextEditingController _passwordcontrller = TextEditingController();
   bool _isLoading = false;
   final LocalStorage storage = LocalStorage('currentUserEmail');
-
   String _errorMessage = '';
   Future<void> signInEmailPassword(BuildContext context) async {
     setState(() {
@@ -83,90 +82,83 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        body: SingleChildScrollView(
-          child: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: width / width30, vertical: height / height20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextField(
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w300,
-                        fontSize: width / width18,
-                        color: Colors.white, // Change text color to white
-                      ),
-                      controller: _emailcontrller,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(height: height / height10),
-                    TextField(
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w300,
-                        fontSize: width / width18,
-                        color: Colors.white, // Change text color to white
-                      ),
-                      controller: _passwordcontrller,
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            size: width / width24,
-                            color: color6,
-                          ),
-                        ),
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
-                      ),
-                    ),
-                    SizedBox(height: height / height20),
-                    if (_errorMessage.isNotEmpty)
-                      Text(
-                        _errorMessage,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: width / width24,
-                        ),
-                      ),
-                    Button1(
-                      backgroundcolor: Primarycolor,
-                      text: 'Login',
-                      color: color1,
-                      borderRadius: 10,
-                      onPressed: () {
-                        Auth().signInWithEmailAndPassword(_emailcontrller.text,
-                            _passwordcontrller.text, context);
-                      },
-                    ),
-                    if (_isLoading)
-                      Align(
-                        alignment: Alignment.center,
-                        child: Visibility(
-                          visible: _isLoading,
-                          child: const CircularProgressIndicator(),
-                        ),
-                      ),
-                  ],
+        body: Stack(children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: width / width30, vertical: height / height20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w300,
+                    fontSize: width / width18,
+                    color: Colors.white, // Change text color to white
+                  ),
+                  controller: _emailcontrller,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Enter your email',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                 ),
-              ),
-            ]),
+                SizedBox(height: height / height10),
+                TextField(
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w300,
+                    fontSize: width / width18,
+                    color: Colors.white, // Change text color to white
+                  ),
+                  controller: _passwordcontrller,
+                  obscureText: _obscureText,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                        size: width / width24,
+                        color: color6,
+                      ),
+                    ),
+                    labelText: 'Password',
+                    hintText: 'Enter your password',
+                  ),
+                ),
+                SizedBox(height: height / height20),
+                if (_errorMessage.isNotEmpty)
+                  Text(
+                    _errorMessage,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: width / width24,
+                    ),
+                  ),
+                Button1(
+                  backgroundcolor: Primarycolor,
+                  text: 'Login',
+                  color: color1,
+                  borderRadius: 10,
+                  onPressed: () {
+                    Auth().signInWithEmailAndPassword(
+                        _emailcontrller.text, _passwordcontrller.text, context);
+                  },
+                ),
+                if (_isLoading)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Visibility(
+                      visible: _isLoading,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
+        ]),
       ),
     );
   }
