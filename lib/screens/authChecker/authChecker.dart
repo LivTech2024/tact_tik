@@ -9,30 +9,31 @@ import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
+import 'package:tact_tik/utils/colors.dart';
 
 class AuthChecker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _authState = ref.watch(authStateProvider);
     final LocalStorage storage = LocalStorage('currentUserEmail');
-    final Future<String?> currentUserFuture =
-        storage.ready.then((_) => storage.getItem("CurrentUser"));
-
-    return FutureBuilder<String?>(
-      future: currentUserFuture,
+    return FutureBuilder(
+      future: storage.ready,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Primarycolor,
             ),
           );
-        } else if (snapshot.hasData && _authState != null) {
-          final String? role = storage.getItem("Role");
-          print("Role: $role");
-          return _handleAuthenticatedUser(role);
         } else {
-          return LoginScreen();
+          final String? currentUser = storage.getItem("CurrentUser");
+          if (currentUser != null && _authState != null) {
+            final String? role = storage.getItem("Role");
+            print("Role: $role");
+            return _handleAuthenticatedUser(role);
+          } else {
+            return LoginScreen();
+          }
         }
       },
     );
@@ -53,3 +54,51 @@ class AuthChecker extends ConsumerWidget {
     }
   }
 }
+
+
+/*Widget build(BuildContext context, WidgetRef ref) {
+    final _authState = ref.watch(authStateProvider);
+    final LocalStorage storage = LocalStorage('currentUserEmail');
+    final Future<String?> currentUserFuture =
+        storage.ready.then((_) => storage.getItem("CurrentUser"));
+
+    return FutureBuilder<String?>(
+      future: currentUserFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Primarycolor,
+            ),
+          );
+        } else if (snapshot.hasData && _authState != null || snapshot.connectionState == ConnectionState.active) {
+          final String? role = storage.getItem("Role");
+          print("Role: $role");
+          return _handleAuthenticatedUser(role);
+        }
+        return LoginScreen();
+
+      },
+    );
+  }*/
+
+
+
+/* return FutureBuilder<String?>(
+      future: currentUserFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Primarycolor,
+            ),
+          );
+        } else if (snapshot.hasData && _authState != null || snapshot.connectionState == ConnectionState.active) {
+          final String? role = storage.getItem("Role");
+          print("Role: $role");
+          return _handleAuthenticatedUser(role);
+        } else {
+          return LoginScreen();
+        }
+      },
+    );*/
