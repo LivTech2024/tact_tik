@@ -144,7 +144,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     String formattedEndDate = dateFormat.format(DateTime.now());
     String formattedEndTime = dateFormat.format(DateTime.now());
     await fireStoreService.fetchPatrolData(widget.ShiftId, widget.EmployeId);
-
+    final homeScreenController = HomeScreenController.instance;
     if (ClientEmail != null && AdminEmail != null) {
       emails.add(AdminEmail);
       // emails.add(TestinEmail);
@@ -200,6 +200,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   void initPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    final homeScreenController = HomeScreenController.instance;
     print("Shift Status at StartTask Screen ${widget.ShiftStatus}");
     if (widget.ShiftStatus == 'started') {
       /// Todo update timer and start location
@@ -207,6 +208,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         clickedIn = true;
         prefs.setBool('clickedIn', clickedIn);
       });
+      await homeScreenController.startBgLocationService();
     } else {
       setState(() {
         prefs.setBool('clickedIn', clickedIn);
@@ -381,7 +383,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
   @override
   Widget build(BuildContext context) {
     // final controller = Get.put(StopWatchBackgroundService(), permanent: true);
-    final homeScreenController = HomeScreenController.instance;
+
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     bool islate = false;
@@ -634,6 +636,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 FirebaseFirestore firestore =
                                     FirebaseFirestore.instance;
                                 // Create a new document reference
+                                final homeScreenController =
+                                    HomeScreenController.instance;
                                 DocumentReference docRef = firestore
                                     .collection('EmployeeRoutes')
                                     .doc();
@@ -864,6 +868,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         await SharedPreferences.getInstance();
 
                                     if (CommentController.text.isNotEmpty) {
+                                      final homeScreenController =
+                                          HomeScreenController.instance;
                                       // widget.onRefresh();
                                       var data = await fireStoreService
                                           .fetchDataForPdf(
