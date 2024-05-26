@@ -3,8 +3,6 @@ PODS:
     - GoogleUtilities/Environment (~> 7.13)
     - GoogleUtilities/UserDefaults (~> 7.13)
     - PromisesObjC (~> 2.3)
-  - audioplayers_darwin (0.0.1):
-    - Flutter
   - background_locator_2 (0.0.1):
     - Flutter
   - cloud_firestore (4.15.9):
@@ -254,7 +252,6 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - background_locator_2 (from `.symlinks/plugins/background_locator_2/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -329,8 +326,6 @@ SPEC REPOS:
     - Turf
 
 EXTERNAL SOURCES:
-  audioplayers_darwin:
-    :path: ".symlinks/plugins/audioplayers_darwin/ios"
   background_locator_2:
     :path: ".symlinks/plugins/background_locator_2/ios"
   cloud_firestore:
@@ -399,10 +394,9 @@ CHECKOUT OPTIONS:
     :tag: 10.25.0
 
 SPEC CHECKSUMS:
-  AppCheckCore: ef7a5f4ae432941d2835c7c9ba14131028aa33bd
-  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
+  AppCheckCore: db04d539b37794558391bc56bc65e2440b01a195
   background_locator_2: bc8a422343ab656d5bd98e08694c6f89fef20418
-  cloud_firestore: 9d69182af1d677062f005584ca5470a19e1f68e7
+  cloud_firestore: 95fc0f210d6a1e5b9bebca9330999ce633cdaf0a
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
@@ -469,6 +463,6 @@ SPEC CHECKSUMS:
   Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
   url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
 
-PODFILE CHECKSUM: d285da527ba004d8e8830fce0be61808b4fd4580
+PODFILE CHECKSUM: 8c714006449db0e01540c11d243b2ae7d934366e
 
 COCOAPODS: 1.15.2
