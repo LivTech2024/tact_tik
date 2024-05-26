@@ -2,24 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 's_key_managment_view_screen.dart';
 
-class SelectAssetsGuardsScreen extends StatefulWidget {
+class SelectKeysGuardsScreen extends StatefulWidget {
   final String companyId;
 
-  const SelectAssetsGuardsScreen({super.key, required this.companyId});
+  const SelectKeysGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectAssetsGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectKeysGuardsScreen> createState() => _SelectGuardsScreenState();
 }
 
-class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
+class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
@@ -157,7 +157,7 @@ class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                      SAssetsViewScreen(companyId: '',)));
+                                          SKeyManagementViewScreen(companyId: '',)));
                             },
                             child: Container(
                               height: height / height60,

@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 'visitors.dart';
 
-class SelectAssetsGuardsScreen extends StatefulWidget {
+class SelectVisitorsGuardsScreen extends StatefulWidget {
   final String companyId;
 
-  const SelectAssetsGuardsScreen({super.key, required this.companyId});
+  const SelectVisitorsGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectAssetsGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectVisitorsGuardsScreen> createState() => _SelectGuardsScreenState();
 }
 
-class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
+class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
@@ -114,10 +114,7 @@ class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
                   child: DropdownButton<String>(
                     iconSize: width / width24,
                     dropdownColor: WidgetColor,
-                    style: TextStyle(
-                      color: color2,
-                      fontSize: width / width12,
-                    ),
+                    style: TextStyle(color: color2, fontSize: width / width14),
                     borderRadius: BorderRadius.circular(width / width10),
                     value: dropdownValue,
                     onChanged: (String? newValue) {
@@ -125,11 +122,7 @@ class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
                         dropdownValue = newValue!;
                       });
                     },
-                    items: <String>[
-                      'All',
-                      'available',
-                      'unavailable'
-                    ] // Add your options here
+                    items: <String>['All', 'available', 'unavailable']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -156,8 +149,7 @@ class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                      SAssetsViewScreen(companyId: '',)));
+                                      builder: (context) => SVisiTorsScreen()));
                             },
                             child: Container(
                               height: height / height60,

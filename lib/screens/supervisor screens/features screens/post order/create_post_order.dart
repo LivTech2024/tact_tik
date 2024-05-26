@@ -4,16 +4,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tact_tik/fonts/inter_semibold.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
 import '../../../../fonts/inter_regular.dart';
+import '../../../../fonts/inter_semibold.dart';
 import '../../../../fonts/poppins_medium.dart';
 import '../../../../fonts/poppins_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
-
 
 class CreateSPostOrder extends StatefulWidget {
   CreateSPostOrder({super.key, this.isDisplay = true});
@@ -195,8 +194,9 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               ),
               SizedBox(height: height / height30),
               CustomeTextField(
-                isEnabled: !widget.isDisplay,
+                isEnabled: widget.isDisplay,
                 hint: 'Title',
+                showIcon: false,
                 // controller: _titleController,
               ),
               SizedBox(height: height / height20),
@@ -208,143 +208,101 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               ),
               SizedBox(height: height / height30),
               SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          // This List will be for displaying and editing the DB uploaded images
-                          // Display In this list
-                          Row(
-                            children: uploads.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final upload = entry.value;
-                              return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    height: height / height66,
-                                    width: width / width66,
-                                    decoration: BoxDecoration(
-                                        color: WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                          width / width10,
-                                        )),
-                                    margin: EdgeInsets.all(width / width8),
-                                    child: upload['type'] == 'image'
-                                        ? Image.file(
-                                      upload['file'],
-                                      fit: BoxFit.cover,
-                                    )
-                                        :   Icon(Icons.videocam),
-                                  ),
-                                  Positioned(
-                                    top: -5,
-                                    right: -5,
-                                    child: IconButton(
-                                      onPressed: () => _deleteItem(index),
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                          // This list is for adding more images in it.
-                          Row(
-                            children: uploads.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final upload = entry.value;
-                              return Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    height: height / height66,
-                                    width: width / width66,
-                                    decoration: BoxDecoration(
-                                        color: WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                          width / width10,
-                                        )),
-                                    margin: EdgeInsets.all(width / width8),
-                                    child: upload['type'] == 'image'
-                                        ? Image.file(
-                                            upload['file'],
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Icon(Icons.videocam),
-                                  ),
-                                  Positioned(
-                                    top: -5,
-                                    right: -5,
-                                    child: IconButton(
-                                      onPressed: () => _deleteItem(index),
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.black,
-                                      ),
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // _addImage();
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) => Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(Icons.camera),
-                                      title: Text('Add Image'),
-                                      onTap: () {
-                                        _addImage();
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.image),
-                                      title: Text('Add from Gallery'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _addGallery();
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.picture_as_pdf),
-                                      title: Text('Add PDF'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _openFileExplorer();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Container(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Row(
+                      children: uploads.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final upload = entry.value;
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
                                   color: WidgetColor,
-                                  borderRadius:
-                                      BorderRadius.circular(width / width8)),
-                              child: Center(
-                                child: Icon(Icons.add),
+                                  borderRadius: BorderRadius.circular(
+                                    width / width10,
+                                  )),
+                              margin: EdgeInsets.all(width / width8),
+                              child: upload['type'] == 'image'
+                                  ? Image.file(
+                                      upload['file'],
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Icon(Icons.videocam),
+                            ),
+                            Positioned(
+                              top: -5,
+                              right: -5,
+                              child: IconButton(
+                                onPressed: () => _deleteItem(index),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.black,
+                                ),
+                                padding: EdgeInsets.zero,
                               ),
                             ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // _addImage();
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.camera),
+                                title: Text('Add Image'),
+                                onTap: () {
+                                  _addImage();
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.image),
+                                title: Text('Add from Gallery'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _addGallery();
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.picture_as_pdf),
+                                title: Text('Add PDF'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _openFileExplorer();
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        );
+                      },
+                      child: Container(
+                        height: height / height66,
+                        width: width / width66,
+                        decoration: BoxDecoration(
+                            color: WidgetColor,
+                            borderRadius:
+                                BorderRadius.circular(width / width8)),
+                        child: Center(
+                          child: Icon(Icons.add),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ),
               SizedBox(height: height / height30),
-              // this list will be for displaying DB PDFS , modify according to you're preference
+
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -386,7 +344,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                             ),
                           ],
                         ),
-                        IconButton(
+                       IconButton(
                           onPressed: () {
                             removeButton(index);
                           },
@@ -401,11 +359,10 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                   );
                 },
               ),
-              // This will be newly added ones
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: selectedFilePaths.length,
+                itemCount: 3,
                 itemBuilder: (context, index) {
                   return Container(
                     margin: EdgeInsets.only(bottom: height / height10),
@@ -443,27 +400,17 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                             ),
                           ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            removeButton(index);
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: color19,
-                            size: width / width30,
-                          ),
-                        )
                       ],
                     ),
                   );
                 },
               ),
-              widget.isDisplay?SizedBox() :Button1(
-                text: 'Done',
-                onPressed: () {},
-                backgroundcolor: Primarycolor,
-                borderRadius: width / width10,
-              )
+              Button1(
+                      text: 'Done',
+                      onPressed: () {},
+                      backgroundcolor: Primarycolor,
+                      borderRadius: width / width10,
+                    ),
             ],
           ),
         ),

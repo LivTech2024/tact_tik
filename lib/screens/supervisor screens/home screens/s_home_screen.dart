@@ -1,8 +1,6 @@
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
@@ -23,8 +21,13 @@ import '../../get started/getstarted_screen.dart';
 import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
-import '../TrackingScreen/s_tracking_screen.dart';
+import '../features screens/assets/select_assets_guards.dart';
+import '../features screens/dar/select_dar_guards.dart';
+import '../features screens/key management/select_keys_guards.dart';
+import '../features screens/loogbook/select_loogbook_guards.dart';
+import '../features screens/panic/s_panic_screen.dart';
 import '../features screens/post order/s_post_order_screen.dart';
+import '../features screens/visitors/select_visitors_guards.dart';
 import 'Scheduling/all_schedules_screen.dart';
 import 'message screens/super_inbox.dart';
 
@@ -152,14 +155,15 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
-      ['assets/images/site_tour.png', 'Site Tours'],
+      ['assets/images/site_tour.png', 'Track Guard'],
       ['assets/images/dar.png', 'DAR'],
       ['assets/images/reports.png', 'Reports'],
       ['assets/images/post_order.png', 'Post Orders'],
-      ['assets/images/task.png', 'Task'],
+      ['assets/images/task.png', 'Task'], // TODO
       ['assets/images/log_book.png', 'Log Book'],
-      ['assets/images/visitors.png', 'Visitors'],
-      ['assets/images/key&assets.png', 'Key & Assets'],
+      ['assets/images/visitors.png', 'Visitors'], // TODO
+      ['assets/images/assets.png', 'Assets'],
+      ['assets/images/keys.png', 'Key'],
     ];
 
     int _selectedIndex = 0; // Index of the selected screen
@@ -362,48 +366,94 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                 onTap: () {
                                   switch (index) {
                                     case 1:
-                                      Get.to(() => SupervisorTrackingScreen(
-                                            companyId: _CompanyId,
-                                            guardsInfo: _guardsInfo,
-                                          ));
-                                      break;
-                                    case 4:
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const SPostOrder();
-                                        },
-                                      );
-                                      break;
-
-                                    case 4:
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const SPostOrder()));
-                                      break;
-                                    case 5:
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             PatrollLogsScreen()));
-                                      break;
-                                    // case 6:
+                                                  SPanicScreen()));
+                                    //   break;
+                                    // case 2:
                                     //   Navigator.push(
                                     //       context,
                                     //       MaterialPageRoute(
                                     //           builder: (context) =>
-                                    //               LogBookScreen()));
+                                    //               DarDisplayScreen(
+                                    //                 EmpEmail: _employeeId,
+                                    //               )));
                                     //   break;
-                                    // case 7:
+                                    case 3:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectDARGuardsScreen(
+                                            companyId: '',
+                                          ),
+                                        ),
+                                      );
+                                      break;
+                                    case 4:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SPostOrder(),
+                                        ),
+                                      );
+                                      break;
+                                    // case 5:
+                                    //   // TODO Task Screen
                                     //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               VisiTorsScreen()));
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //       builder: (context) =>
+                                    //           PatrollLogsScreen(),
+                                    //     ),
+                                    //   );
                                     //   break;
+                                    case 6:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectLoogBookGuardsScreen(
+                                            companyId: '',
+                                          ),
+                                        ),
+                                      );
+                                      break;
+                                    case 7:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectVisitorsGuardsScreen(
+                                            companyId: '',
+                                          ),
+                                        ),
+                                      );
+                                      break;
+                                    case 8:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectAssetsGuardsScreen(
+                                            companyId: '',
+                                          ),
+                                        ),
+                                      );
+                                      break;
+                                    case 9:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectKeysGuardsScreen(
+                                            companyId: '',
+                                          ),
+                                        ),
+                                      );
+                                      break;
                                     default:
                                   }
                                 },
@@ -413,7 +463,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                 ),
                               );
                             },
-                            childCount: 9,
+                            childCount: data.length,
                           ),
                         )
                       : SliverToBoxAdapter(),

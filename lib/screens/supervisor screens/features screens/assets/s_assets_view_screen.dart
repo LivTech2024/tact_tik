@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // for date formatting
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
@@ -127,11 +128,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       padding: EdgeInsets.symmetric(horizontal: width / width30),
                       child: GestureDetector(
                         onTap: () {
-                          /*Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ViewAssetsScreen()));*/
+                                    SCreateAssignAssetScreen()));
                         },
                         child: Container(
                           height: width / width60,

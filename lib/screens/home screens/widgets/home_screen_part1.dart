@@ -26,7 +26,7 @@ class HomeScreenPart1 extends StatelessWidget {
   bool isUnread = true;
   DateTime now = DateTime.now();
   int hour = DateTime.now().hour;
-  String greeting = '';
+  String greeting = 'Good ';
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height / height40),
+            SizedBox(height: height / height30),
             showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,11 +132,11 @@ class HomeScreenPart1 extends StatelessWidget {
                       ),
                       SizedBox(height: height / height10),
                       PoppinsLight(
-                        text: userName,
+                        text: userName ?? 'User',
                         color: Primarycolor,
                         fontsize: width / width30,
                       ),
-                      SizedBox(height: height / height14),
+                      SizedBox(height: height / height16),
                     ],
                   )
                 : SizedBox(),

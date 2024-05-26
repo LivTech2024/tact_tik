@@ -11,7 +11,7 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class ReportScreen extends StatefulWidget {
+class SReportScreen extends StatefulWidget {
   final String locationId;
   final String locationName;
   final String companyId;
@@ -19,7 +19,7 @@ class ReportScreen extends StatefulWidget {
   final String empName;
   final String clientId;
 
-  const ReportScreen(
+  const SReportScreen(
       {super.key,
       required this.locationId,
       required this.locationName,
@@ -29,10 +29,10 @@ class ReportScreen extends StatefulWidget {
       required this.clientId});
 
   @override
-  State<ReportScreen> createState() => _ReportScreenState();
+  State<SReportScreen> createState() => _ReportScreenState();
 }
 
-class _ReportScreenState extends State<ReportScreen> {
+class _ReportScreenState extends State<SReportScreen> {
   int currentIndex = 0;
   FireStoreService fireStoreService = FireStoreService();
   List<String> tittles = [];

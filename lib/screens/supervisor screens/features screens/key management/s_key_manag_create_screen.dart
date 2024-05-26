@@ -319,6 +319,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
               ),
             ),
             Align(
+              alignment: Alignment.bottomCenter,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
