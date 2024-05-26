@@ -246,7 +246,7 @@ class Auth {
         if (role == "SUPERVISOR") {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => SHomeScreen()));
-        } else if (role == "GUARD") {
+        } else {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => HomeScreen()));
         }

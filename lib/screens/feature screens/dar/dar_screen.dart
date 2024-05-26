@@ -42,7 +42,7 @@ class DarDisplayScreen extends StatefulWidget {
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
   List colors = [Primarycolor, color25];
 
-  bool showAllDARS = true;
+  bool showAllDARS = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
