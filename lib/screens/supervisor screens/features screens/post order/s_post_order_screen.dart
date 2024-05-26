@@ -22,7 +22,7 @@ class SPostOrder extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        /*floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -37,7 +37,7 @@ class SPostOrder extends StatelessWidget {
           backgroundColor: Primarycolor,
           shape: const CircleBorder(),
           child: const Icon(Icons.add),
-        ),
+        ),*/
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -73,7 +73,7 @@ class SPostOrder extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreatePostOrder(
+                          builder: (context) => CreateSPostOrder(
                             isDisplay: false,
                           ),
                         ),
