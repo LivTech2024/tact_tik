@@ -241,7 +241,7 @@ Future<void> sendShiftTemplateEmail(
   String shiftOutTime,
 ) async {
   // final pdfBase64 = await generateShiftReportPdf(
-  //     ClientName, Data, GuardName, "19:00", "07:00");
+  //     ClientName, Data, GuardName, "20:00", "06:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -278,74 +278,114 @@ Future<void> sendShiftTemplateEmail(
 
   final htmlcontent2 = """
     <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Security Report</title>
-        <style>
-          body {
-                font-family: sans-serif;
-                margin: 0;
-                padding: 0;
-            }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-            header {
-                background-color: #ddd;
-                padding: 20px;
-                text-align: center;
-            }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
 
-            h1 {
-                margin-bottom: 0;
-            }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
 
-            table {
-                border-collapse: collapse;
-                width: 100%;
-                margin-bottom: 20px;
-            }
+        .logo-container img {
+            max-height: 50px; /* Set the max-height for the logos */
+        }
 
-            th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
-            }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 1; /* Allow the <h1> to grow and fill the space */
+        }
 
-            th {
-                text-align: left;
-            }
+        section {
+            padding: 15px;
+            background-color: #fff;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
 
-            .patrol-info tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <h1>Security Report</h1>
-        </header>
+        /* Other styles for tables, images, and footer */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-        <section>
-            <h2>Dear ${ClientName},</h2>
-            <p>I hope this email finds you well,I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during thier shif.Below is a detailed breakdown of the patrols conducted.</p>
-        </section>
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 20%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            max-height: 50px; /* Define a max-height for the images */
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Security Report</h1>
+    </header>
+
+    <section>
+        <h2>Dear ${ClientName},</h2>
+        <p>I hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted.</p>
+    </section>
+
+    <section>
         <h3>Shift Information</h3>
-        <table class="shift-info">
+        <table>
             <tr>
                 <th>Guard Name</th>
                 <th>Shift Time In</th>
-                <th>Shift Time Out</th> 
+                <th>Shift Time Out</th>
             </tr>
             <tr>
-                <td> ${GuardName}</td>
+                <td>${GuardName}</td>
                 <td>19:00</td>
                 <td>07:00</td>
-            </tr> 
+            </tr>
         </table>
+    </section>
 
+    <section>
         <h3>Patrol Information</h3>
-        <table class="patrol-info">
+        <table>
             <tr>
                 <th>Patrol Count</th>
                 <th>Patrol Time In</th>
@@ -354,15 +394,28 @@ Future<void> sendShiftTemplateEmail(
             </tr>
             ${patrolInfoHTML}
         </table>
-
-        <p>Please review the information provided and let us know if you have any questions or require further 
-details. We are committed to ensuring the safety and security of your premises, and your feedback is 
-invaluable to us.</p>
-        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.
-Best regards,</p>
-        <p>TEAM TACTTIK<p>
-    </body>
-    </html>
+    </section>
+    <section>
+        <h3>Comments</h3>
+        <table>
+            <tr>
+                <th>Incident</th>
+                <th>Important Note</th>
+                <th>Feedback Note</th>
+            </tr>
+        </table>
+    </section>
+    <section>
+        <p>Please review the information provided and let us know if you have any questions or require further details. We are committed to ensuring the safety and security of your premises, and your feedback is invaluable to us.</p>
+        <p>Thank you for your continued trust in our services. We look forward to hearing from you soon.</p>
+        <p>Best regards,</p>
+    <p>TEAM TACTTIK</p>
+    </section>
+    <footer>
+        <p>&copy; 2024 TEAM TACTTIK. All rights reserved.</p>
+    </footer>
+</body>
+</html>
   """;
 
   // Send the email
