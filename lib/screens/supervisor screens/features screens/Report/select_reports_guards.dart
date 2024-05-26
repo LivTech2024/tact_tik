@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/s_dar_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
@@ -10,16 +11,16 @@ import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class SelectDARGuardsScreen extends StatefulWidget {
+class SelectReportsGuardsScreen extends StatefulWidget {
   final String companyId;
 
-  const SelectDARGuardsScreen({super.key, required this.companyId});
+  const SelectReportsGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectDARGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectReportsGuardsScreen> createState() => _SelectGuardsScreenState();
 }
 
-class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
+class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
   List<QueryDocumentSnapshot<Map<String, dynamic>>> _guardsInfo = [];
 
   @override
@@ -127,40 +128,39 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
 
                     return GestureDetector(
                       onTap: () async {
-                        final darSnapshot = await FirebaseFirestore
+                        final reportsSnapshot = await FirebaseFirestore
                             .instance
-                            .collection('EmployeesDAR')
-                            .where('EmpDarEmpId', isEqualTo: documentId)
+                            .collection('Reports')
+                            .where('ReportEmployeeId', isEqualTo: documentId)
                             .get();
 
-                        if (darSnapshot.docs.isNotEmpty) {
-                          final darData = darSnapshot.docs.first.data();
-                          final String empId = darData['EmpDarEmpId'] ?? '';
-                          final String companyId = darData['EmpDarCompanyId'] ?? '';
-                          final String companyBranchId = darData['EmpDarCompanyBranchId'] ?? '';
-                          final String shiftId = darData['EmpDarShiftId'] ?? '';
-                          final String clientId = darData['EmpDarClientId'] ?? '';
-                          final String empName = darData['EmpDarEmpName'] ?? '';
+                        if (reportsSnapshot.docs.isNotEmpty) {
+                          final reportData = reportsSnapshot.docs.first.data();
+                          final String locationId = reportData['ReportLocationId'] ?? '';
+                          final String locationName = reportData['ReportLocationName'] ?? '';
+                          final String companyId = reportData['ReportCompanyId'] ?? '';
+                          final String empId = reportData['ReportEmployeeId'] ?? '';
+                          final String empName = reportData['ReportEmployeeName'] ?? '';
+                          final String clientId = reportData['ReportClientId'] ?? '';
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SDarDisplayScreen(
-                                EmpEmail: '',
-                                EmpID: empId,
-                                EmpDarCompanyId: companyId,
-                                EmpDarCompanyBranchId: companyBranchId,
-                                EmpDarShiftID: shiftId,
-                                EmpDarClientID: clientId,
-                                Username: empName,
+                              builder: (context) => SReportScreen(
+                                locationId: locationId,
+                                locationName: locationName,
+                                companyId: companyId,
+                                empId: empId,
+                                empName: empName,
+                                clientId: clientId,
                               ),
                             ),
                           );
                         } else {
-                          // Show a SnackBar when no DAR data is found for the selected employee
+                          // Show a SnackBar when no reports are found for the selected employee
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('No DAR data found for the selected employee.'),
+                              content: Text('No reports found for the selected employee.'),
                               duration: Duration(seconds: 2),
                             ),
                           );

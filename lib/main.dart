@@ -9,6 +9,14 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/select_dar_guards.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_managment_view_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -31,43 +39,44 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: GetMaterialApp(
-        title: 'Tact Tik',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          textTheme: GoogleFonts.poppinsTextTheme(
-            Theme.of(context).textTheme,
+          title: 'Tact Tik',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            textTheme: GoogleFonts.poppinsTextTheme(
+              Theme.of(context).textTheme,
+            ),
           ),
-        ),
-        home: OfflineBuilder(
-          connectivityBuilder: (
-            BuildContext context,
-            ConnectivityResult connectivity,
-            Widget child,
-          ) {
-            final bool isConnected = connectivity != ConnectivityResult.none;
-            if (isConnected) {
-              return child;
-            } else {
-              return const Scaffold(
-                body: Center(
-                  child: Text(
-                    'No internet connection. Connect to Internet or Restart the app',
-                    style: TextStyle(
-                      fontSize: 20, // Adjust the font size as needed
-                      fontWeight: FontWeight.bold, // Add bold font weight
-                      color: Colors.white, // Change text color to red
-                    ),
-                  ),
-                ),
-              );
-              // return OfflineScreen();
-            }
-          },
-          child: AuthChecker(),
-        ),
-      ),
+          home: AuthChecker()
+          // OfflineBuilder(
+          //   connectivityBuilder: (
+          //     BuildContext context,
+          //     ConnectivityResult connectivity,
+          //     Widget child,
+          //   ) {
+          //     final bool isConnected = connectivity != ConnectivityResult.none;
+          //     if (isConnected) {
+          //       return child;
+          //     } else {
+          //       return const Scaffold(
+          //         body: Center(
+          //           child: Text(
+          //             'No internet connection. Connect to Internet or Restart the app',
+          //             style: TextStyle(
+          //               fontSize: 20, // Adjust the font size as needed
+          //               fontWeight: FontWeight.bold, // Add bold font weight
+          //               color: Colors.white, // Change text color to red
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //       // return OfflineScreen();
+          //     }
+          //   },
+          //   child: AuthChecker(),
+          // ),
+          ),
     );
   }
 }

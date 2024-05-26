@@ -8,6 +8,7 @@ import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 's_loogbook_screen.dart';
 
 class SelectLoogBookGuardsScreen extends StatefulWidget {
   final String companyId;
@@ -149,14 +150,13 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                           print(guardInfo);
                           return GestureDetector(
                             onTap: () {
-                              Navigator.pop(
-                                context,
-                                {
-                                  'name': name,
-                                  'id': id,
-                                  'url': url,
-                                },
-                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SLogBookScreen(
+                                            empId: '',
+                                            empName: '',
+                                          )));
                             },
                             child: Container(
                               height: height / height60,

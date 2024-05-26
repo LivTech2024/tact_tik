@@ -26,7 +26,7 @@ class HomeScreenPart1 extends StatelessWidget {
   bool isUnread = true;
   DateTime now = DateTime.now();
   int hour = DateTime.now().hour;
-  String greeting = '';
+  String greeting = 'Good ';
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +57,14 @@ class HomeScreenPart1 extends StatelessWidget {
                     height: height / height55,
                     width: width / width55,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: employeeImg != null
-                            ? NetworkImage(employeeImg)
-                            : NetworkImage(
-                                'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                        filterQuality: FilterQuality.high,
-                        fit: BoxFit.cover,
-                      ),
+                      // image: DecorationImage(
+                      //   image: employeeImg != null
+                      //       ? NetworkImage(employeeImg)
+                      //       : NetworkImage(
+                      //           'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
+                      //   filterQuality: FilterQuality.high,
+                      //   fit: BoxFit.cover,
+                      // ),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -119,7 +119,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height / height40),
+            SizedBox(height: height / height30),
             showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,11 +132,11 @@ class HomeScreenPart1 extends StatelessWidget {
                       ),
                       SizedBox(height: height / height10),
                       PoppinsLight(
-                        text: userName,
+                        text: userName ?? 'User',
                         color: Primarycolor,
                         fontsize: width / width30,
                       ),
-                      SizedBox(height: height / height14),
+                      SizedBox(height: height / height16),
                     ],
                   )
                 : SizedBox(),
