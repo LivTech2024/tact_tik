@@ -8,18 +8,18 @@ import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
-import 's_loogbook_screen.dart';
+import 'visitors.dart';
 
-class SelectLoogBookGuardsScreen extends StatefulWidget {
+class SelectVisitorsGuardsScreen extends StatefulWidget {
   final String companyId;
 
-  const SelectLoogBookGuardsScreen({super.key, required this.companyId});
+  const SelectVisitorsGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectLoogBookGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectVisitorsGuardsScreen> createState() => _SelectGuardsScreenState();
 }
 
-class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
+class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
@@ -122,11 +122,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                         dropdownValue = newValue!;
                       });
                     },
-                    items: <String>[
-                      'All',
-                      'available',
-                      'unavailable'
-                    ] // Add your options here
+                    items: <String>['All', 'available', 'unavailable']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -153,10 +149,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SLogBookScreen(
-                                            empId: '',
-                                            empName: '',
-                                          )));
+                                      builder: (context) => SVisiTorsScreen()));
                             },
                             child: Container(
                               height: height / height60,

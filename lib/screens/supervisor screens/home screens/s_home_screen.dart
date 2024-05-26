@@ -24,8 +24,10 @@ import '../../home screens/widgets/homescreen_custom_navigation.dart';
 import '../features screens/assets/select_assets_guards.dart';
 import '../features screens/dar/select_dar_guards.dart';
 import '../features screens/key management/select_keys_guards.dart';
+import '../features screens/loogbook/select_loogbook_guards.dart';
 import '../features screens/panic/s_panic_screen.dart';
 import '../features screens/post order/s_post_order_screen.dart';
+import '../features screens/visitors/select_visitors_guards.dart';
 import 'Scheduling/all_schedules_screen.dart';
 import 'message screens/super_inbox.dart';
 
@@ -398,30 +400,38 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         ),
                                       );
                                       break;
-                                    case 5:
-                                      // TODO Task Screen
+                                    // case 5:
+                                    //   // TODO Task Screen
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //       builder: (context) =>
+                                    //           PatrollLogsScreen(),
+                                    //     ),
+                                    //   );
+                                    //   break;
+                                    case 6:
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              PatrollLogsScreen(),
+                                              SelectLoogBookGuardsScreen(
+                                            companyId: '',
+                                          ),
                                         ),
                                       );
-                                    //   break;
-                                    // case 6:
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               LogBookScreen()));
-                                    //   break;
-                                    // case 7:
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               VisiTorsScreen()));
-                                    //   break;
+                                      break;
+                                    case 7:
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectVisitorsGuardsScreen(
+                                            companyId: '',
+                                          ),
+                                        ),
+                                      );
+                                      break;
                                     case 8:
                                       Navigator.push(
                                         context,
