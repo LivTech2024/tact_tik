@@ -2,6 +2,7 @@ import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/create_shedule_screen.dart';
@@ -365,12 +366,21 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               return Bounce(
                                 onTap: () {
                                   switch (index) {
-                                    case 1:
+                                    case 0:
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   SPanicScreen()));
+                                    case 1:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SupervisorTrackingScreen(
+                                                    companyId: _CompanyId,
+                                                    guardsInfo: _guardsInfo,
+                                                  )));
                                     //   break;
                                     // case 2:
                                     //   Navigator.push(
@@ -381,13 +391,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     //                 EmpEmail: _employeeId,
                                     //               )));
                                     //   break;
-                                    case 3:
+                                    case 2:
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectDARGuardsScreen(
-                                            companyId: '',
+                                            companyId: _CompanyId,
                                           ),
                                         ),
                                       );
@@ -416,7 +426,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectLoogBookGuardsScreen(
-                                            companyId: '',
+                                            companyId: _CompanyId,
                                           ),
                                         ),
                                       );
@@ -427,7 +437,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectVisitorsGuardsScreen(
-                                            companyId: '',
+                                            companyId: _CompanyId,
                                           ),
                                         ),
                                       );
@@ -438,7 +448,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectAssetsGuardsScreen(
-                                            companyId: '',
+                                            companyId: _CompanyId,
                                           ),
                                         ),
                                       );
@@ -449,7 +459,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectKeysGuardsScreen(
-                                            companyId: '',
+                                            companyId: _CompanyId,
                                           ),
                                         ),
                                       );
