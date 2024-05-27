@@ -99,7 +99,6 @@ class StartTaskScreen extends StatefulWidget {
 FireStoreService fireStoreService = FireStoreService();
 DarFunctions darFunctions = DarFunctions();
 
-
 class _StartTaskScreenState extends State<StartTaskScreen> {
   Isolate? _isolate;
   SendPort? _sendPort;
@@ -186,7 +185,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     checkWeatherEmployeeIsLateOrNot();
     checkWellnessReport(); // Call the wellness check function
   }
-    final homeScreenController = HomeScreenController.instance;
+
+  final homeScreenController = HomeScreenController.instance;
   checkWeatherEmployeeIsLateOrNot() {
     // Parsing the shift start and end times
     DateFormat dateFormat = DateFormat("HH:mm");
@@ -770,6 +770,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   'EmpRouteLocations': [],
                                   'EmpRouteShiftId': widget.ShiftId,
                                   'EmpRouteShiftStatus': 'started',
+                                  'EmployeeShiftStartTime':
+                                      widget.ShiftStartTime,
+                                  'EmployeeShiftEndTime': widget.ShiftEndTime,
+                                  'EmployeeShiftShiftName': widget.ShiftName
                                 };
                                 try {
                                   // Add the document to the collection

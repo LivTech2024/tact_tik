@@ -70,10 +70,11 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SCreateKeyManagScreen(),
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => SCreateKeyManagScreen(keyId: '', companyId: widget.companyId,),
+              ),
+            );
           },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
@@ -135,7 +136,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) {
+                      (context, index) {
                     if (index == 0) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
@@ -151,18 +152,23 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                     final key = keysForDate[index - 1];
                     final createdAt = key['KeyCreatedAt'].toDate();
                     final formattedTime =
-                        DateFormat('hh:mm a').format(createdAt);
+                    DateFormat('hh:mm a').format(createdAt);
+                    final keyId = key.id; // Get the document ID
 
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                      EdgeInsets.symmetric(horizontal: width / width30),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      SCreateKeyManagScreen()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SCreateKeyManagScreen(
+                                keyId: keyId,
+                                companyId: widget.companyId,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           height: width / width60,
@@ -170,7 +176,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                           margin: EdgeInsets.only(bottom: height / height10),
                           decoration: BoxDecoration(
                             borderRadius:
-                                BorderRadius.circular(width / width10),
+                            BorderRadius.circular(width / width10),
                             color: WidgetColor,
                           ),
                           child: Row(

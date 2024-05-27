@@ -46,7 +46,7 @@ dependencies:
   intl: ^0.18.1
   geolocator: ^11.0.0
   permission_handler: ^10.2.0
-  flutter_svg: ^2.0.10+1
+  flutter_svg: ^2.0.4
   localstorage: ^4.0.0+1
   simple_barcode_scanner: ^0.0.8
   google_places_flutter: ^2.0.8
@@ -94,6 +94,7 @@ dependencies:
   multi_dropdown: ^2.1.4
   searchfield: ^1.0.2
   flutter_polyline_points: ^2.0.0
+  flutter_svg_provider: ^1.0.7
 
 
 dev_dependencies:
