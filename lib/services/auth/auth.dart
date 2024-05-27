@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tact_tik/login_screen.dart';
-import 'package:tact_tik/riverpod/auth_provider.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';

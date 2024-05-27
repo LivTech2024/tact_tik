@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +9,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SiteTourScreenController extends GetxController {
   final List<DocumentSnapshot> schedulesList;
@@ -20,7 +21,11 @@ class SiteTourScreenController extends GetxController {
   Position? currentLocation;
   RxBool isLoading = true.obs;
   Set<Marker> markers = {};
-  Set<Polyline> polylines = {};
+  Map<PolylineId, Polyline> polylines = {};
+  List<LatLng> polylineCoordinates = [];
+  PolylinePoints polylinePoints = PolylinePoints();
+  var currentIndex = 0.obs;
+  PageController pageController = PageController();
 
   @override
   void onInit() {
@@ -39,14 +44,14 @@ class SiteTourScreenController extends GetxController {
         Get.snackbar('LocationAlways permission denied',
             'Please enable permission in settings.');
         Get.back();
-        openAppSettings();
+        // openAppSettings();
       }
     } else if (status.isDenied || status.isPermanentlyDenied) {
       // LocationWhenInUse permission denied, navigate to the previous screen or open settings
       Get.snackbar('LocationWhenInUse permission denied',
           'Please enable LocationWhenInUse permission in settings.');
       Get.back();
-      openAppSettings();
+      // openAppSettings();
     }
   }
 
@@ -82,7 +87,10 @@ class SiteTourScreenController extends GetxController {
 
     // Get the current location.
     if (currentLocation != null) {
+      /// adding markers to the shift locations
       await _addShiftMarkers();
+
+      /// adding marker to current location
       markers.add(
         Marker(
           markerId: const MarkerId('currentLocation'),
@@ -96,13 +104,14 @@ class SiteTourScreenController extends GetxController {
         GeoPoint firstLocation = schedulesList.first['ShiftLocation'];
         LatLng firstPosition =
             LatLng(firstLocation.latitude, firstLocation.longitude);
-        _addRoute();
+        // await _getPolyline();
       }
       isLoading.value = false;
     }
   }
 
   void onPageChanged(int index, GoogleMapController mapController) {
+    currentIndex.value = index;
     var schedule = schedulesList[index];
     GeoPoint geoPoint = schedule['ShiftLocation'];
     LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
@@ -121,7 +130,7 @@ class SiteTourScreenController extends GetxController {
     try {
       return BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 20, size: Size(20, 20)),
-        'assets/images/guard_current_marker.png',
+        'assets/images/guard.png',
       );
     } catch (e) {
       print('error: $e');
@@ -146,6 +155,7 @@ class SiteTourScreenController extends GetxController {
     for (var schedule in schedulesList) {
       GeoPoint geoPoint = schedule['ShiftLocation'];
       LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);
+
       BitmapDescriptor customMarker = await _addMarkerToShiftLocation();
       markers.add(
         Marker(
@@ -158,51 +168,44 @@ class SiteTourScreenController extends GetxController {
     }
   }
 
-  Future<void> _addRoute() async {
-    if (schedulesList.isNotEmpty) {
-      GeoPoint firstLocation = schedulesList.first['ShiftLocation'];
-      LatLng firstPosition = LatLng(18.585337398793033, 73.98480327852225);
+  // Future<void> _getPolyline() async {
+  //   List<LatLng> polylineCoordinates = [];
+  //
+  //   if (schedulesList.isNotEmpty) {
+  //     GeoPoint firstLocation = schedulesList.first['ShiftLocation'];
+  //     // LatLng firstPosition = LatLng(firstLocation.latitude, firstLocation.longitude);
+  //
+  //     final result = await polylinePoints.getRouteBetweenCoordinates(
+  //       "AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc", // Replace with your actual API key
+  //       PointLatLng(currentLocation!.latitude, currentLocation!.longitude),
+  //       PointLatLng(firstPosition.latitude, firstPosition.longitude),
+  //       travelMode: TravelMode.driving,
+  //     );
+  //
+  //     if (result.points.isNotEmpty) {
+  //       result.points.forEach((PointLatLng point) {
+  //         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+  //       });
+  //     } else {
+  //       print(result.errorMessage);
+  //     }
+  //     _addPolyLine(polylineCoordinates);
+  //   }
+  // }
 
-      final directions = await _fetchRoute(
-        LatLng(currentLocation!.latitude, currentLocation!.longitude),
-        firstPosition,
-      );
-
-      if (directions != null) {
-        final List<LatLng> polylineCoordinates = [];
-        for (var point in directions['routes'][0]['overview_polyline']
-            ['points']) {
-          polylineCoordinates.add(LatLng(point['lat'], point['lng']));
-        }
-
-        polylines.add(
-          Polyline(
-            polylineId: PolylineId('route'),
-            points: polylineCoordinates,
-            color: Colors.blue,
-            width: 5,
-          ),
-        );
-      } else {
-        Get.snackbar('Failed to fetch route', 'Failed to fetch route');
-      }
-    }
-  }
-
-  Future<Map<String, dynamic>?> _fetchRoute(
-      LatLng origin, LatLng destination) async {
-    const String apiKey =
-        'AIzaSyDd_MBd7IV8MRQKpyrhW9O1BGLlp-mlOSc'; // Replace with your API key
-    final String url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$apiKey';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      print('Failed to fetch route: ${response.statusCode}');
-      return null;
+  // void _addPolyLine(List<LatLng> polylineCoordinates) {
+  //   PolylineId id = const PolylineId("poly");
+  //   Polyline polyline = Polyline(
+  //     polylineId: id,
+  //     points: polylineCoordinates,
+  //     width: 8,
+  //     color: Colors.red,
+  //   );
+  //   polylines[id] = polyline;
+  // }
+  Future<void> launchUrlToOpenGoogleMap(_url) async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
     }
   }
 }
