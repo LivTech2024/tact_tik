@@ -157,7 +157,9 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          SKeyManagementViewScreen(companyId: '',)));
+                                          SKeyManagementViewScreen(
+                                            companyId: '',
+                                          )));
                             },
                             child: Container(
                               height: height / height60,
