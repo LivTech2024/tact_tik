@@ -24,6 +24,8 @@ class SiteTourScreenController extends GetxController {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
+  var currentIndex = 0.obs;
+  PageController pageController = PageController();
 
   @override
   void onInit() {
@@ -109,6 +111,7 @@ class SiteTourScreenController extends GetxController {
   }
 
   void onPageChanged(int index, GoogleMapController mapController) {
+    currentIndex.value = index;
     var schedule = schedulesList[index];
     GeoPoint geoPoint = schedule['ShiftLocation'];
     LatLng position = LatLng(geoPoint.latitude, geoPoint.longitude);

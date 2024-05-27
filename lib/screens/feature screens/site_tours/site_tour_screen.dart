@@ -70,7 +70,7 @@ class SiteTourScreen extends StatelessWidget {
       () => controller.isLoading.value
 
           /// loading widget
-          ? const SiteTourLoadingWidget()
+          ? SiteTourLoadingWidget(width: width, height: height)
           : Padding(
               padding: EdgeInsets.symmetric(horizontal: width / width30),
               child: Column(
@@ -115,7 +115,7 @@ class SiteTourScreen extends StatelessWidget {
                             child: Container(
                               height: height / height470,
                               width: double.maxFinite,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment(0, -1.5),
                                   end: Alignment.bottomCenter,
@@ -171,6 +171,7 @@ class SiteTourScreen extends StatelessWidget {
                           child: SizedBox(
                             height: height / height180,
                             child: PageView.builder(
+                              controller: controller.pageController,
                               onPageChanged: (index) {
                                 controller.onPageChanged(index, mapController);
                               },
@@ -178,7 +179,8 @@ class SiteTourScreen extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               itemCount: schedulesList.length,
                               itemBuilder: (context, index) {
-                                var schedule = schedulesList[index];
+                                var schedule = schedulesList[
+                                    controller.currentIndex.value];
 
                                 return Container(
                                   margin: EdgeInsets.only(
@@ -347,7 +349,11 @@ class SiteTourScreen extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () {
-                            
+                            int newIndex = (controller.currentIndex.value - 1) %
+                                schedulesList.length;
+
+                            controller.pageController.jumpToPage(newIndex);
+                            controller.onPageChanged(newIndex, mapController);
                           },
                           icon: Icon(
                             Icons.keyboard_arrow_left,
@@ -356,7 +362,10 @@ class SiteTourScreen extends StatelessWidget {
                           ),
                         ),
                         Bounce(
-                          onTap: () {},
+                          onTap: () {
+                            controller.onPageChanged(
+                                controller.currentIndex.value, mapController);
+                          },
                           child: InterBold(
                             text: 'Go to shift',
                             color: color1,
@@ -365,7 +374,10 @@ class SiteTourScreen extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () {
-                            _updateMapLocation(1);
+                            int newIndex = (controller.currentIndex.value + 1) %
+                                schedulesList.length;
+                            controller.pageController.jumpToPage(newIndex);
+                            controller.onPageChanged(newIndex, mapController);
                           },
                           icon: Icon(
                             Icons.keyboard_arrow_right,

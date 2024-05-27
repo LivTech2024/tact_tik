@@ -821,9 +821,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             );
                                           },
                                         );
-                                        // Get.to(
-                                        //   () => ,
-                                        // );
                                         break;
                                       case 2:
                                         Navigator.push(
