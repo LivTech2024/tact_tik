@@ -3454,6 +3454,7 @@ class FireStoreService {
         'MessageCreatedByName': UserName,
         'MessageData': MessageData,
         'MessageReceiversId': receiversId,
+        'MessageType': 'panic'
       };
       DocumentReference newDocRef = await messagesCollection.add(messageData);
 
