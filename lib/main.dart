@@ -17,6 +17,7 @@ import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20m
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
+import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: SPostOrder(locationId: 'DrD1H6YXEui4G72EHTEZ',),
+        home: AuthChecker(),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,

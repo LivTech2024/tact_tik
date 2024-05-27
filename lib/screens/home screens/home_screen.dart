@@ -30,6 +30,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/home_screen_part1.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/homescreen_custom_navigation.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
+
 // import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
@@ -810,10 +811,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                         break;
                                       case 1:
-                                        Get.to(() => SiteTourScreen(
-                                            height: height,
-                                            width: width,
-                                            schedulesList: schedules_list));
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SiteTourScreen(
+                                              height: height,
+                                              width: width,
+                                              schedulesList: schedules_list,
+                                            );
+                                          },
+                                        );
+                                        // Get.to(
+                                        //   () => ,
+                                        // );
                                         break;
                                       case 2:
                                         Navigator.push(
