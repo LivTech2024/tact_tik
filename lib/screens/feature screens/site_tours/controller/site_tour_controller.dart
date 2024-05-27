@@ -125,7 +125,7 @@ class SiteTourScreenController extends GetxController {
     try {
       return BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 20, size: Size(20, 20)),
-        'assets/images/guard_current_marker.png',
+        'assets/images/guard.png',
       );
     } catch (e) {
       print('error: $e');

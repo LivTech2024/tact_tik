@@ -47,34 +47,34 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        // home: SPostOrder(locationId: 'DrD1H6YXEui4G72EHTEZ',),
-        home: OfflineBuilder(
-          connectivityBuilder: (
-            BuildContext context,
-            ConnectivityResult connectivity,
-            Widget child,
-          ) {
-            final bool isConnected = connectivity != ConnectivityResult.none;
-            if (isConnected) {
-              return child;
-            } else {
-              return const Scaffold(
-                body: Center(
-                  child: Text(
-                    'No internet connection. Connect to Internet or Restart the app',
-                    style: TextStyle(
-                      fontSize: 20, // Adjust the font size as needed
-                      fontWeight: FontWeight.bold, // Add bold font weight
-                      color: Colors.white, // Change text color to red
-                    ),
-                  ),
-                ),
-              );
-              // return OfflineScreen();
-            }
-          },
-          child: AuthChecker(),
-        ),
+        home: AuthChecker(),
+        // OfflineBuilder(
+        //   connectivityBuilder: (
+        //     BuildContext context,
+        //     ConnectivityResult connectivity,
+        //     Widget child,
+        //   ) {
+        //     final bool isConnected = connectivity != ConnectivityResult.none;
+        //     if (isConnected) {
+        //       return child;
+        //     } else {
+        //       return const Scaffold(
+        //         body: Center(
+        //           child: Text(
+        //             'No internet connection. Connect to Internet or Restart the app',
+        //             style: TextStyle(
+        //               fontSize: 20, // Adjust the font size as needed
+        //               fontWeight: FontWeight.bold, // Add bold font weight
+        //               color: Colors.white, // Change text color to red
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //       // return OfflineScreen();
+        //     }
+        //   },
+        //   child: AuthChecker(),
+        // ),
       ),
     );
   }
