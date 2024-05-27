@@ -131,6 +131,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
         var guardsInfo =
             await fireStoreService.getGuardForSupervisor(CompanyId);
+        print("Guards INfor ${guardsInfo}");
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         setState(() {
@@ -406,7 +407,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => SPostOrder(locationId: 'DrD1H6YXEui4G72EHTEZ',),
+                                          builder: (context) => SPostOrder(
+                                            locationId: 'DrD1H6YXEui4G72EHTEZ',
+                                          ),
                                         ),
                                       );
                                       break;

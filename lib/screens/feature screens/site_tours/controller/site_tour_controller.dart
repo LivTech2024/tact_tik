@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,14 +42,14 @@ class SiteTourScreenController extends GetxController {
         Get.snackbar('LocationAlways permission denied',
             'Please enable permission in settings.');
         Get.back();
-        openAppSettings();
+        // openAppSettings();
       }
     } else if (status.isDenied || status.isPermanentlyDenied) {
       // LocationWhenInUse permission denied, navigate to the previous screen or open settings
       Get.snackbar('LocationWhenInUse permission denied',
           'Please enable LocationWhenInUse permission in settings.');
       Get.back();
-      openAppSettings();
+      // openAppSettings();
     }
   }
 
@@ -198,7 +200,6 @@ class SiteTourScreenController extends GetxController {
   //   );
   //   polylines[id] = polyline;
   // }
-
   Future<void> launchUrlToOpenGoogleMap(_url) async {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');

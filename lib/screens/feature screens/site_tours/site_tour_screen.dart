@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -193,9 +195,17 @@ class SiteTourScreen extends StatelessWidget {
                                                     schedule['ShiftLocation'];
                                                 var location =
                                                     '${geoPoint.latitude},${geoPoint.longitude}';
-                                                controller.launchUrlToOpenGoogleMap(
-                                                    Uri.parse(
-                                                        'https://maps.google.com/?q=$location'));
+                                                if (Platform.isIOS) {
+                                                  controller
+                                                      .launchUrlToOpenGoogleMap(
+                                                          Uri.parse(
+                                                              'http://maps.apple.com/?q=$location'));
+                                                } else {
+                                                  controller
+                                                      .launchUrlToOpenGoogleMap(
+                                                          Uri.parse(
+                                                              'https://maps.google.com/?q=$location'));
+                                                }
                                               },
                                               child: Container(
                                                 height: height / height55,
