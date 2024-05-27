@@ -16,61 +16,39 @@ class SelectVisitorsGuardsScreen extends StatefulWidget {
   const SelectVisitorsGuardsScreen({super.key, required this.companyId});
 
   @override
-  State<SelectVisitorsGuardsScreen> createState() => _SelectGuardsScreenState();
+  State<SelectVisitorsGuardsScreen> createState() =>
+      _SelectGuardsScreenState();
 }
 
 class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> _guardsInfo = [];
+
   @override
   void initState() {
-    // selectedEvent = events[selectedDay] ?? [];
-    _getUserInfo();
-    // checkLocation();
     super.initState();
+    _getEmployeesByCompanyId();
   }
 
-  Future<void> _refreshdata() async {
-    // Fetch patrol data from Firestore (assuming your logic exists)
-
-    _getUserInfo();
+  Future<void> _refreshData() async {
+    setState(() {
+      _guardsInfo = [];
+    });
+    await _getEmployeesByCompanyId();
   }
 
-  List<DocumentSnapshot<Object?>> _guardsInfo = [];
+  Future<void> _getEmployeesByCompanyId() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+        .where('EmployeeRole', isEqualTo: "GUARD")
+        .get();
 
-  void _getUserInfo() async {
-    FireStoreService fireStoreService = FireStoreService();
-    var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
-    if (mounted) {
-      if (userInfo != null) {
-        String userName = userInfo['EmployeeName'] ?? "";
-        String EmployeeId = userInfo['EmployeeId'] ?? "";
-        String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
-        var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
-        var patrolInfo = await fireStoreService
-            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
-        for (var doc in guardsInfo) {
-          print("All Guards : ${doc.data()}");
-        }
-        // setState(() {
-        //   _userName = userName;
-        //   _employeeId = EmployeeId;
-        //   _CompanyId = CompanyId;
-        // });
-        if (guardsInfo != null) {
-          setState(() {
-            _guardsInfo = guardsInfo;
-          });
-        } else {
-          print('GUards Info: ${guardsInfo}');
-        }
-        print('User Info: ${userInfo.data()}');
-      } else {
-        print('User info not found');
-      }
-    }
+    setState(() {
+      _guardsInfo = querySnapshot.docs;
+    });
   }
 
-  String dropdownValue = 'All'; // Initialize default value
+  String dropdownValue = 'All';
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +81,7 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
           centerTitle: true,
         ),
         body: RefreshIndicator(
-          onRefresh: _refreshdata,
+          onRefresh: _refreshData,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: width / width30),
             child: Column(
@@ -132,93 +110,94 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                   ),
                 ),
                 SizedBox(height: height / height20),
-                _guardsInfo.length != 0
+                _guardsInfo.isNotEmpty
                     ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: PageScrollPhysics(),
-                        itemCount: _guardsInfo.length,
-                        itemBuilder: (context, index) {
-                          var guardInfo = _guardsInfo[index];
-                          String name = guardInfo['EmployeeName'] ?? "";
-                          String id = guardInfo['EmployeeId'] ?? "";
-                          String url = guardInfo['EmployeeImg'] ?? "";
+                  shrinkWrap: true,
+                  physics: PageScrollPhysics(),
+                  itemCount: _guardsInfo.length,
+                  itemBuilder: (context, index) {
+                    var guardInfo = _guardsInfo[index].data();
+                    String name = guardInfo['EmployeeName'] ?? '';
+                    String id = guardInfo['EmployeeId'] ?? '';
+                    String url = guardInfo['EmployeeImg'] ?? '';
 
-                          print(guardInfo);
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SVisiTorsScreen()));
-                            },
-                            child: Container(
-                              height: height / height60,
-                              decoration: BoxDecoration(
-                                color: color19,
-                                borderRadius:
-                                    BorderRadius.circular(width / width12),
-                              ),
-                              margin:
-                                  EdgeInsets.only(bottom: height / height10),
-                              width: double.maxFinite,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SVisiTorsScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: height / height60,
+                        decoration: BoxDecoration(
+                          color: color19,
+                          borderRadius:
+                          BorderRadius.circular(width / width12),
+                        ),
+                        margin:
+                        EdgeInsets.only(bottom: height / height10),
+                        width: double.maxFinite,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: height / height48,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width / width20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    height: height / height48,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / width20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              height: height / height50,
-                                              width: width / width50,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: DecorationImage(
-                                                  image: NetworkImage(url),
-                                                  filterQuality:
-                                                      FilterQuality.high,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: width / width20),
-                                            InterBold(
-                                              text: name,
-                                              letterSpacing: -.3,
-                                              color: color1,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: height / height14,
-                                          width: width / width24,
-                                          child: SvgPicture.asset(
-                                            'assets/images/arrow.svg',
-                                            fit: BoxFit.fitWidth,
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: height / height50,
+                                        width: width / width50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: NetworkImage(url),
+                                            filterQuality:
+                                            FilterQuality.high,
+                                            fit: BoxFit.cover,
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      ),
+                                      SizedBox(width: width / width20),
+                                      InterBold(
+                                        text: name,
+                                        letterSpacing: -.3,
+                                        color: color1,
+                                      ),
+                                    ],
                                   ),
+                                  SizedBox(
+                                    height: height / height14,
+                                    width: width / width24,
+                                    child: SvgPicture.asset(
+                                      'assets/images/arrow.svg',
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
-                          );
-                        },
-                      )
-                    : Center(
-                        child: PoppinsBold(
-                          text: 'No Guards Found',
-                          color: color2,
-                          fontsize: width / width16,
+                          ],
                         ),
-                      )
+                      ),
+                    );
+                  },
+                )
+                    : Center(
+                  child: PoppinsBold(
+                    text: 'No Guards Found',
+                    color: color2,
+                    fontsize: width / width16,
+                  ),
+                )
               ],
             ),
           ),

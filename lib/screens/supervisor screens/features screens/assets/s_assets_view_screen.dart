@@ -132,7 +132,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    SCreateAssignAssetScreen()));
+                                    SCreateAssignAssetScreen(companyId: widget.companyId,)));
                         },
                         child: Container(
                           height: width / width60,
