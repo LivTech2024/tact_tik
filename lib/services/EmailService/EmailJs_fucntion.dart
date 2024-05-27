@@ -373,7 +373,7 @@ Future<void> sendShiftTemplateEmail(
             <tr>
                 <th>Guard Name</th>
                 <th>Shift Time In</th>
-                <th>Shift Time Out</th>
+              <th>Shift Time Out</th>
             </tr>
             <tr>
                 <td>${GuardName}</td>
