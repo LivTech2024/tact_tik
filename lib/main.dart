@@ -28,7 +28,6 @@ Future<void> main() async {
     appleProvider: AppleProvider.appAttest,
   );
   MapboxOptions.setAccessToken(appConstants.mapBoxPublicKey);
-  // Get.put(LocationController());
   runApp(const MyApp());
 }
 

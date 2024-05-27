@@ -93,6 +93,7 @@ dependencies:
   cr_calendar: ^1.2.1
   multi_dropdown: ^2.1.4
   searchfield: ^1.0.2
+  flutter_polyline_points: ^2.0.0
 
 
 dev_dependencies:

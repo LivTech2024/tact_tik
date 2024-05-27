@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/controller/site_tour_controller.dart';
+import 'package:tact_tik/screens/feature%20screens/site_tours/widgets/site_tour_loading_widget.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -38,22 +39,9 @@ class SiteTourScreen extends StatelessWidget {
       child: Obx(
         () => Scaffold(
           body: controller.isLoading.value
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                          height: 70, 'assets/images/location_loader.json'),
-                      Text(
-                        'Getting your location...',
-                        style: GoogleFonts.inter(
-                            color: const Color(0xffD0D0D0),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                      )
-                    ],
-                  ),
-                )
+
+              /// loading widget
+              ? const SiteTourLoadingWidget()
               : Stack(
                   children: [
                     GoogleMap(
@@ -66,7 +54,7 @@ class SiteTourScreen extends StatelessWidget {
                         mapController = controller;
                       },
                       markers: controller.markers,
-                      polylines: controller.polylines,
+                      polylines: controller.polylines.values.toSet(),
                     ),
                     Align(
                       alignment: Alignment.topCenter,
@@ -200,7 +188,15 @@ class SiteTourScreen extends StatelessWidget {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: () {},
+                                              onTap: () {
+                                                GeoPoint geoPoint =
+                                                    schedule['ShiftLocation'];
+                                                var location =
+                                                    '${geoPoint.latitude},${geoPoint.longitude}';
+                                                controller.launchUrlToOpenGoogleMap(
+                                                    Uri.parse(
+                                                        'https://maps.google.com/?q=$location'));
+                                              },
                                               child: Container(
                                                 height: height / height55,
                                                 padding: EdgeInsets.symmetric(
