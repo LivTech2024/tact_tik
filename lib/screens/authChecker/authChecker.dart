@@ -81,9 +81,6 @@ class AuthChecker extends ConsumerWidget {
       },
     );
   }*/
-
-
-
 /* return FutureBuilder<String?>(
       future: currentUserFuture,
       builder: (context, snapshot) {

@@ -51,83 +51,85 @@ class _LogBookScreenState extends State<SLogBookScreen> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: height / height30,
-            ),
-          ),
-          SliverAppBar(
-            backgroundColor: AppBarcolor,
-            elevation: 0,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-                size: width / width24,
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: height / height30,
               ),
-              padding: EdgeInsets.only(left: width / width20),
-              onPressed: () {
-                Navigator.pop(context);
-                print("Navigtor debug: ${Navigator.of(context).toString()}");
+            ),
+            SliverAppBar(
+              backgroundColor: AppBarcolor,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                  size: width / width24,
+                ),
+                padding: EdgeInsets.only(left: width / width20),
+                onPressed: () {
+                  Navigator.pop(context);
+                  print("Navigtor debug: ${Navigator.of(context).toString()}");
+                },
+              ),
+              title: InterRegular(
+                text: 'LogBook -  ${widget.empName}',
+                fontsize: width / width18,
+                color: Colors.white,
+                letterSpacing: -.3,
+              ),
+              centerTitle: true,
+              floating: true, // Makes the app bar float above the content
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _logBookStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+
+                if (!snapshot.hasData) {
+                  return SliverToBoxAdapter(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                final documents = snapshot.data!.docs;
+                final groups = _groupLogsByDate(documents);
+
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final entry = groups.entries.toList()[index];
+                      final shiftName = entry.key;
+                      final logsByDate = entry.value;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: logsByDate.entries.map((dateEntry) {
+                          final date = dateEntry.key;
+                          final logs = dateEntry.value;
+
+                          return LogBookWidget(
+                            date: date,
+                            shiftName: shiftName,
+                            logs: logs,
+                          );
+                        }).toList(),
+                      );
+                    },
+                    childCount: groups.length,
+                  ),
+                );
               },
             ),
-            title: InterRegular(
-              text: 'LogBook -  ${widget.empName}',
-              fontsize: width / width18,
-              color: Colors.white,
-              letterSpacing: -.3,
-            ),
-            centerTitle: true,
-            floating: true, // Makes the app bar float above the content
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: _logBookStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return SliverToBoxAdapter(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              }
-
-              if (!snapshot.hasData) {
-                return SliverToBoxAdapter(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              final documents = snapshot.data!.docs;
-              final groups = _groupLogsByDate(documents);
-
-              return SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final entry = groups.entries.toList()[index];
-                    final shiftName = entry.key;
-                    final logsByDate = entry.value;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: logsByDate.entries.map((dateEntry) {
-                        final date = dateEntry.key;
-                        final logs = dateEntry.value;
-
-                        return LogBookWidget(
-                          date: date,
-                          shiftName: shiftName,
-                          logs: logs,
-                        );
-                      }).toList(),
-                    );
-                  },
-                  childCount: groups.length,
-                ),
-              );
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
