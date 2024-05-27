@@ -39,44 +39,44 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: GetMaterialApp(
-          title: 'Tact Tik',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
-            brightness: Brightness.dark,
-            textTheme: GoogleFonts.poppinsTextTheme(
-              Theme.of(context).textTheme,
-            ),
+        title: 'Tact Tik',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          textTheme: GoogleFonts.poppinsTextTheme(
+            Theme.of(context).textTheme,
           ),
-          home: AuthChecker()
-          // OfflineBuilder(
-          //   connectivityBuilder: (
-          //     BuildContext context,
-          //     ConnectivityResult connectivity,
-          //     Widget child,
-          //   ) {
-          //     final bool isConnected = connectivity != ConnectivityResult.none;
-          //     if (isConnected) {
-          //       return child;
-          //     } else {
-          //       return const Scaffold(
-          //         body: Center(
-          //           child: Text(
-          //             'No internet connection. Connect to Internet or Restart the app',
-          //             style: TextStyle(
-          //               fontSize: 20, // Adjust the font size as needed
-          //               fontWeight: FontWeight.bold, // Add bold font weight
-          //               color: Colors.white, // Change text color to red
-          //             ),
-          //           ),
-          //         ),
-          //       );
-          //       // return OfflineScreen();
-          //     }
-          //   },
-          //   child: AuthChecker(),
-          // ),
-          ),
+        ),
+        home: SPostOrder(locationId: 'DrD1H6YXEui4G72EHTEZ',),
+        // OfflineBuilder(
+        //   connectivityBuilder: (
+        //     BuildContext context,
+        //     ConnectivityResult connectivity,
+        //     Widget child,
+        //   ) {
+        //     final bool isConnected = connectivity != ConnectivityResult.none;
+        //     if (isConnected) {
+        //       return child;
+        //     } else {
+        //       return const Scaffold(
+        //         body: Center(
+        //           child: Text(
+        //             'No internet connection. Connect to Internet or Restart the app',
+        //             style: TextStyle(
+        //               fontSize: 20, // Adjust the font size as needed
+        //               fontWeight: FontWeight.bold, // Add bold font weight
+        //               color: Colors.white, // Change text color to red
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //       // return OfflineScreen();
+        //     }
+        //   },
+        //   child: AuthChecker(),
+        // ),
+      ),
     );
   }
 }
