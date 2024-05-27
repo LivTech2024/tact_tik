@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/controller/site_tour_controller.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/widgets/site_tour_loading_widget.dart';
-
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/poppins_bold.dart';

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,6 +45,7 @@ class SupervisorTrackingScreenController extends GetxController
   int? selectedIndex;
   String? selectedEmployeeId;
   RxList<Company> companies = <Company>[].obs;
+  final List<StreamSubscription> _subscriptions = [];
 
   @override
   void onInit() {
@@ -61,9 +63,18 @@ class SupervisorTrackingScreenController extends GetxController
   @override
   void onClose() {
     print('onClose called');
+    for (var subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    _subscriptions.clear();
+    super.onClose();
     Get.delete<SupervisorTrackingScreenController>();
     pointAnnotationManager?.deleteAll();
-    super.onClose();
+    employeeShiftDetailsList.clear();
+    filteredEmployeeShiftDetailsList.clear();
+    currentAnnotations.clear();
+    mapboxMapController = null; // Set to null to avoid further usage
+    companies.clear();
   }
 
   // Fetch companies from the Companies collection
@@ -116,6 +127,13 @@ class SupervisorTrackingScreenController extends GetxController
             for (var doc in routeSnapshot.docs) {
               var routeData = doc.data() as Map<String, dynamic>;
               print('Active guard found: ${routeData['EmpRouteEmpId']}');
+              String shiftStartTime =
+                  routeData['EmployeeShiftStartTime'].toString() ?? '05:00';
+              String startEndTime =
+                  routeData['EmployeeShiftEndTime'].toString() ?? '17:00';
+              String shiftName =
+                  routeData['EmployeeShiftShiftName'].toString() ??
+                      'Shift Name...';
               QuerySnapshot snapshot = await _firestore
                   .collection('Employees')
                   .where('EmployeeId', isEqualTo: routeData['EmpRouteEmpId'])
@@ -141,9 +159,9 @@ class SupervisorTrackingScreenController extends GetxController
                   imageUrl: data['EmployeeImg'] ??
                       'https://img.freepik.com/free-psd/3d-illustration-human-avatar-profile_23-2150671122.jpg',
                   name: data['EmployeeName'] ?? '',
-                  shiftName: 'Shift Name...',
-                  inTime: '02 : 10 pm',
-                  outTime: '12 : 00 am',
+                  shiftName: shiftName,
+                  inTime: shiftStartTime,
+                  outTime: startEndTime,
                   id: doc.id,
                   companyLogoUrl: companyLogoUrl,
                   companyId: companyId,
@@ -164,7 +182,7 @@ class SupervisorTrackingScreenController extends GetxController
   }
 
   void listenToEmployeeLocations(String employeeId) {
-    _firestore
+    var subscription = _firestore
         .collection('EmployeeRoutes')
         .where('EmpRouteEmpId', isEqualTo: employeeId)
         .where('EmpRouteShiftStatus', isEqualTo: 'started')
@@ -197,6 +215,7 @@ class SupervisorTrackingScreenController extends GetxController
         }
       }
     });
+    _subscriptions.add(subscription);
   }
 
   Future<void> updateAnnotations(
@@ -304,6 +323,7 @@ class SupervisorTrackingScreenController extends GetxController
   }
 
   flyToLocation(List<Position> polyline) {
+    print('fly to location function');
     if (polyline.isNotEmpty) {
       Position endPoint = polyline.last;
       mapboxMapController?.flyTo(
@@ -316,6 +336,8 @@ class SupervisorTrackingScreenController extends GetxController
           duration: 4000,
         ),
       );
+    } else {
+      print('polyline is empty');
     }
   }
 

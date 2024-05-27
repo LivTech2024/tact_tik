@@ -1,6 +1,8 @@
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
@@ -373,14 +375,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                               builder: (context) =>
                                                   SPanicScreen()));
                                     case 1:
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SupervisorTrackingScreen(
-                                                    companyId: _CompanyId,
-                                                    guardsInfo: _guardsInfo,
-                                                  )));
+                                      Get.to(() => SupervisorTrackingScreen(
+                                            companyId: _CompanyId,
+                                            guardsInfo: _guardsInfo,
+                                          ));
                                     //   break;
                                     // case 2:
                                     //   Navigator.push(
@@ -406,7 +404,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => SPostOrder(locationId: 'DrD1H6YXEui4G72EHTEZ',),
+                                          builder: (context) => SPostOrder(
+                                            locationId: 'DrD1H6YXEui4G72EHTEZ',
+                                          ),
                                         ),
                                       );
                                       break;
