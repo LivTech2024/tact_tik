@@ -180,6 +180,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     return SafeArea(
       child: Scaffold(
+
         appBar: AppBar(
           backgroundColor: AppBarcolor,
           elevation: 0,
