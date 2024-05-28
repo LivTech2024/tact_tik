@@ -9,6 +9,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
@@ -19,6 +20,7 @@ import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogboo
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: SelectAssetsGuardsScreen(companyId: 'aSvLtwII6Cjs7uCISBRR'),
+        home: SPanicScreen(empId: '5AjFgIVm3DXUEZ4Hc1URAnU5bXa2',),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,

@@ -374,7 +374,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SPanicScreen()));
+                                                  SPanicScreen(empId: '',)));
                                     case 1:
                                       Get.to(() => SupervisorTrackingScreen(
                                             companyId: _CompanyId,
