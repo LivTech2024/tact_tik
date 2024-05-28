@@ -38,9 +38,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
     super.initState();
     _logBookStream = FirebaseFirestore.instance
         .collection('LogBook')
-        .where('LogBookEmpId',
-            isEqualTo: widget
-                .EmpId)
+        .where('LogBookEmpId', isEqualTo: widget.EmpId)
         .snapshots();
     // getempID().then((empID) {
     //   _logBookStream = FirebaseFirestore.instance
@@ -149,7 +147,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
     for (int i = 0; i < documents.length; i++) {
       final document = documents[i];
       final data = document.data() as Map<String, dynamic>;
-      final shiftName = data['ShiftName'] ?? 'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
+      final shiftName = data['ShiftName'] ??
+          'Shift_$i'; // Use 'Shift_$i' as a unique identifier if ShiftName is absent
       final logData = data['LogBookData'] as List<dynamic>;
       final logTimestamp = data['LogBookDate'] as Timestamp;
       final clientName = data['LogCleintName'] ?? '';
@@ -255,14 +254,14 @@ class _LogBookWidgetState extends State<LogBookWidget> {
           if (expand)
             Padding(
               padding: EdgeInsets.symmetric(vertical: height / height10),
-              child: Flexible(
-                child: InterBold(
-                  text: widget.shiftName,
-                  fontsize: width / width18,
-                  color: Primarycolor,
-                ),
+              // child: Flexible(
+              child: InterBold(
+                text: widget.shiftName,
+                fontsize: width / width18,
+                color: Primarycolor,
               ),
             ),
+          // ),
           Visibility(
             visible: expand,
             child: Column(

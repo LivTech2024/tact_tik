@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: SelectAssetsGuardsScreen(companyId: 'aSvLtwII6Cjs7uCISBRR'),
+        home: AuthChecker(),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,

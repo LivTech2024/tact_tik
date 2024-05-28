@@ -788,8 +788,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 // await controller.startStopWatch();
                                 //
                                 // // start bg service that get locations and send it to the firebase
-                                // await homeScreenController
-                                //     .startBgLocationService();
+                                await homeScreenController
+                                    .startBgLocationService();
 
                                 setState(() {
                                   _isLoading = true;
