@@ -667,7 +667,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   print('Error creating employee route: $e');
                                 }
 
-                                // start bg service that get locations and send it to the firebase
+                                // start stop watch
+                                // await controller.startStopWatch();
+                                //
+                                // // start bg service that get locations and send it to the firebase
                                 await homeScreenController
                                     .startBgLocationService();
 
@@ -762,6 +765,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ignoring: !clickedIn,
                   child: Bounce(
                     onTap: () async {
+                      // if (controller.stopWatchRunning.value) {
                       /// TODO paste this code to end shift
                       Get.to(() => MapScreen(onDone: (File file) async {
                             // Fetch the employee's current route document

@@ -254,13 +254,13 @@ class _LogBookWidgetState extends State<LogBookWidget> {
           if (expand)
             Padding(
               padding: EdgeInsets.symmetric(vertical: height / height10),
-              child: Flexible(
-                child: InterBold(
-                  text: widget.shiftName,
-                  fontsize: width / width18,
-                  color: Primarycolor,
-                ),
+              // child: Flexible(
+              child: InterBold(
+                text: widget.shiftName,
+                fontsize: width / width18,
+                color: Primarycolor,
               ),
+              // ),
             ),
           Visibility(
             visible: expand,

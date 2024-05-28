@@ -3,6 +3,11 @@ import Flutter
 import background_locator_2
 import GoogleMaps
 @UIApplicationMain
+func registerPlugins(registry: FlutterPluginRegistry) -> () {
+    if (!registry.hasPlugin("BackgroundLocatorPlugin")) {
+        GeneratedPluginRegistrant.register(with: registry)
+    } 
+}
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
@@ -13,11 +18,5 @@ import GoogleMaps
     GeneratedPluginRegistrant.register(with: self)
     BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-}
-
-func registerPlugins(registry: FlutterPluginRegistry) {
-  if !registry.hasPlugin("BackgroundLocatorPlugin") {
-    BackgroundLocatorPlugin.register(with: registry.registrar(forPlugin: "BackgroundLocatorPlugin")!)
   }
 }

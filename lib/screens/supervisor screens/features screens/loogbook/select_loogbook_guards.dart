@@ -156,8 +156,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => SLogBookScreen(
-                                              empId: '',
-                                              empName: '',
+                                              empId: id,
+                                              empName: name,
                                             )));
                               },
                               child: Container(
