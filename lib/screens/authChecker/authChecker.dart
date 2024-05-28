@@ -55,7 +55,6 @@ class AuthChecker extends ConsumerWidget {
   }
 }
 
-
 /*Widget build(BuildContext context, WidgetRef ref) {
     final _authState = ref.watch(authStateProvider);
     final LocalStorage storage = LocalStorage('currentUserEmail');
