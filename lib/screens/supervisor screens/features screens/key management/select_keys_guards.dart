@@ -47,7 +47,7 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
     });
   }
 
-  String dropdownValue = 'All';
+  String dropdownValue = 'All Guards';
 
   @override
   Widget build(BuildContext context) {
@@ -81,131 +81,131 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
         ),
         body: RefreshIndicator(
           onRefresh: _refreshData,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width / width30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: height / height30),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    iconSize: width / width24,
-                    dropdownColor: WidgetColor,
-                    style: TextStyle(
-                      color: color2,
-                      fontSize: width / width12,
-                    ),
-                    borderRadius: BorderRadius.circular(width / width10),
-                    value: dropdownValue,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                      });
-                    },
-                    items: <String>[
-                      'All',
-                      'available',
-                      'unavailable'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                SizedBox(height: height / height20),
-                _guardsInfo.isNotEmpty
-                    ? ListView.builder(
-                  shrinkWrap: true,
-                  physics: PageScrollPhysics(),
-                  itemCount: _guardsInfo.length,
-                  itemBuilder: (context, index) {
-                    var guardInfo = _guardsInfo[index].data();
-                    String name = guardInfo['EmployeeName'] ?? '';
-                    String id = guardInfo['EmployeeId'] ?? '';
-                    String url = guardInfo['EmployeeImg'] ?? '';
-
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SKeyManagementViewScreen(
-                              companyId: widget.companyId,
-                            ),
-                          ),
-                        );
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: width / width30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: height / height30),
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      iconSize: width / width24,
+                      dropdownColor: WidgetColor,
+                      style:
+                      TextStyle(color: color2, fontSize: width / width14),
+                      borderRadius: BorderRadius.circular(width / width10),
+                      value: dropdownValue,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
                       },
-                      child: Container(
-                        height: height / height60,
-                        decoration: BoxDecoration(
-                          color: color19,
-                          borderRadius:
-                          BorderRadius.circular(width / width12),
-                        ),
-                        margin:
-                        EdgeInsets.only(bottom: height / height10),
-                        width: double.maxFinite,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: height / height48,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: width / width20),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: height / height50,
-                                        width: width / width50,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: NetworkImage(url),
-                                            filterQuality:
-                                            FilterQuality.high,
-                                            fit: BoxFit.cover,
+                      items: <String>[
+                        'All Guards',
+                        'available',
+                        'unavailable'
+                      ] // Add your options here
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: height / height20),
+                  _guardsInfo.length != 0
+                      ? ListView.builder(
+                    shrinkWrap: true,
+                    physics: PageScrollPhysics(),
+                    itemCount: _guardsInfo.length,
+                    itemBuilder: (context, index) {
+                      var guardInfo = _guardsInfo[index];
+                      String name = guardInfo['EmployeeName'] ?? "";
+                      String id = guardInfo['EmployeeId'] ?? "";
+                      String url = guardInfo['EmployeeImg'] ?? "";
+
+                      print(guardInfo);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SKeyManagementViewScreen(
+                                     companyId: '',
+                                  )));
+                        },
+                        child: Container(
+                          height: height / height60,
+                          decoration: BoxDecoration(
+                            color: color19,
+                            borderRadius:
+                            BorderRadius.circular(width / width12),
+                          ),
+                          margin:
+                          EdgeInsets.only(bottom: height / height10),
+                          width: double.maxFinite,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: height / height48,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width / width20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: height / height50,
+                                          width: width / width50,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: NetworkImage(url),
+                                              filterQuality:
+                                              FilterQuality.high,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: width / width20),
-                                      InterBold(
-                                        text: name,
-                                        letterSpacing: -.3,
-                                        color: color1,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: height / height14,
-                                    width: width / width24,
-                                    child: SvgPicture.asset(
-                                      'assets/images/arrow.svg',
-                                      fit: BoxFit.fitWidth,
+                                        SizedBox(width: width / width20),
+                                        InterBold(
+                                          text: name,
+                                          letterSpacing: -.3,
+                                          color: color1,
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                ],
+                                    SizedBox(
+                                      height: height / height14,
+                                      width: width / width24,
+                                      child: SvgPicture.asset(
+                                        'assets/images/arrow.svg',
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                )
-                    : Center(
-                  child: PoppinsBold(
-                    text: 'No Guards Found',
-                    color: color2,
-                    fontsize: width / width16,
-                  ),
-                )
-              ],
+                      );
+                    },
+                  )
+                      : Center(
+                    child: PoppinsBold(
+                      text: 'No Guards Found',
+                      color: color2,
+                      fontsize: width / width16,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

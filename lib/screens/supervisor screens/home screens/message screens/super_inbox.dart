@@ -61,7 +61,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
     }
   }*/
 
-  String dropdownValue = 'All'; // Initialize default value
+  String dropdownValue = 'All Guards'; // Initialize default value
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +70,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
         appBar: AppBar(
           backgroundColor: AppBarcolor,
           elevation: 0,
@@ -114,7 +115,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       child: SizedBox(
                         child: Center(
                           child: InterBold(
-                            text: 'Edit',
+                            text: 'Guards',
                             color: colors[0],
                             fontsize: width / width18,
                           ),
@@ -137,7 +138,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       child: SizedBox(
                         child: Center(
                           child: InterBold(
-                            text: 'Reports',
+                            text: 'Admin',
                             color: colors[1],
                             fontsize: width / width18,
                           ),
@@ -170,7 +171,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               });
                             },
                             items: <String>[
-                              'All',
+                              'All Guards',
                               'available',
                               'unavailable'
                             ] // Add your options here

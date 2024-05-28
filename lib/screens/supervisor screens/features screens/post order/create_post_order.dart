@@ -180,6 +180,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     return SafeArea(
       child: Scaffold(
+
         appBar: AppBar(
           backgroundColor: AppBarcolor,
           elevation: 0,
@@ -430,7 +431,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                     );
                   } else {
                     return SizedBox(
-                      height: height / height20,
+                      height: height / height100,
                       width: width / width20,
                       child: Image.network(url),
                     );

@@ -919,8 +919,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PostOrder()));
+                                                builder: (context) => PostOrder(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));
                                         break;
                                       case 5:
                                         /*TaskScreen*/
@@ -1169,7 +1171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: GestureDetector(
                                     onTap: () {},
                                     child: Container(
-                                      height: height / height80,
+                                      height: height / height120,
                                       margin: EdgeInsets.only(
                                         top: height / height10,
                                       ),
@@ -1219,7 +1221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: width / width10,
+                                            width: width / width6,
                                           ),
                                           SizedBox(
                                             width: width / width300,
@@ -1255,7 +1257,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ],
                                                 ),
                                                 SizedBox(
-                                                    height: height / height5),
+                                                  height: height / height5,
+                                                ),
                                                 Flexible(
                                                   child: InterRegular(
                                                     text:

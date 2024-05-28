@@ -39,6 +39,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
     _logBookStream = FirebaseFirestore.instance
         .collection('LogBook')
         .where('LogBookEmpId', isEqualTo: widget.EmpId)
+        .where('LogBookEmpId', isEqualTo: widget.EmpId)
         .snapshots();
     // getempID().then((empID) {
     //   _logBookStream = FirebaseFirestore.instance
@@ -254,14 +255,14 @@ class _LogBookWidgetState extends State<LogBookWidget> {
           if (expand)
             Padding(
               padding: EdgeInsets.symmetric(vertical: height / height10),
-              child: Flexible(
-                child: InterBold(
-                  text: widget.shiftName,
-                  fontsize: width / width18,
-                  color: Primarycolor,
-                ),
+              // child: Flexible(
+              child: InterBold(
+                text: widget.shiftName,
+                fontsize: width / width18,
+                color: Primarycolor,
               ),
             ),
+          // ),
           Visibility(
             visible: expand,
             child: Column(

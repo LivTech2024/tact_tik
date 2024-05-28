@@ -374,7 +374,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SPanicScreen()));
+                                                  SPanicScreen(
+                                                    empId: _employeeId,
+                                                  )));
                                     case 1:
                                       Navigator.push(
                                           context,
