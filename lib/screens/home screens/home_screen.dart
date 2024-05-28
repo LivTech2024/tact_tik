@@ -512,18 +512,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                          ), //
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                                size: Size.fromRadius(width / width50),
-                                child: Image.network(
-                                  employeeImg!,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/default.png'),
+                          foregroundImage: NetworkImage(employeeImg!),
+                          radius: width / width50,
+                          backgroundColor: Primarycolor,
+                          // maxRadius: width / width50,
+                          // minRadius: width / width50,
                         ),
                         SizedBox(height: height / height10),
                         PoppinsSemibold(
