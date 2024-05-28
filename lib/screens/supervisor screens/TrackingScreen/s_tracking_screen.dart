@@ -18,7 +18,6 @@ class SupervisorTrackingScreen extends StatelessWidget {
   final String companyId;
   const SupervisorTrackingScreen(
       {super.key, required this.companyId, required this.guardsInfo});
-
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
