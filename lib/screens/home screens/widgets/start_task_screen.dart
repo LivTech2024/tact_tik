@@ -237,6 +237,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       });
       if (!onBreak) {
         startStopwatch();
+        // updateLateTimeAndStartTimer();
       }
     }
     int? savedSeconds = prefs.getInt('stopwatchSeconds');
@@ -1048,6 +1049,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 color: color5,
                 backgroundcolor: WidgetColor,
                 onPressed: () async {
+                  await fireStoreService.fetchPatrolData(
+                      widget.ShiftId, widget.EmployeId);
+
                   /// TODO : Made changes here
                   // if (controller.isPaused.value) {
                   //   print('resume clicked');
