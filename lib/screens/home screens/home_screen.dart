@@ -456,8 +456,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/task.png', 'Task'],
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
-      ['assets/images/key&assets.png', 'Key & Assets'],
-      ['assets/images/key&assets.png', 'Key'],
+      ['assets/images/assets.png', 'Assets'],
+      ['assets/images/keys.png', 'Key'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -926,7 +926,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              childCount: 10,
+                              childCount: data.length,
                             ),
                           )
                         : ScreenIndex == 2
