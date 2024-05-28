@@ -132,7 +132,8 @@ class _SelectGuardsScreenState extends State<SelectAssetsGuardsScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => SAssetsViewScreen(
-                                     companyId: '',
+                                    companyId: widget.companyId,
+                                     empId: id,
                                   )));
                         },
                         child: Container(

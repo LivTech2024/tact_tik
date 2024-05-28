@@ -10,9 +10,10 @@ import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
 class SAssetsViewScreen extends StatefulWidget {
+  final String empId;
   final String companyId;
 
-  const SAssetsViewScreen({super.key, required this.companyId});
+  const SAssetsViewScreen({super.key, required this.empId, required this.companyId});
 
   @override
   _SAssetsViewScreenState createState() => _SAssetsViewScreenState();
@@ -29,8 +30,8 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
   Future<void> fetchEquipments() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Equipments')
-        .where('EquipmentCompanyId', isEqualTo: widget.companyId)
+        .collection('EquipmentAllocations')
+        .where('EquipmentAllocationEmpId', isEqualTo: widget.empId)
         .get();
 
     groupEquipmentsByDate(querySnapshot.docs);
@@ -40,7 +41,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
     final Map<String, List<QueryDocumentSnapshot>> tempGroupedEquipments = {};
 
     for (var equipment in equipments) {
-      final createdAt = equipment['EquipmentCreatedAt'].toDate();
+      final createdAt = equipment['EquipmentAllocationCreatedAt'].toDate();
       final dateKey = DateFormat('yyyy-MM-dd').format(createdAt);
 
       if (!tempGroupedEquipments.containsKey(dateKey)) {
@@ -71,7 +72,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      SCreateAssignAssetScreen(companyId: '', OnlyView: true),
+                      SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: true),
                 ));
           },
           backgroundColor: Primarycolor,
@@ -137,7 +138,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       );
                     }
                     final equipment = equipmentsForDate[index - 1];
-                    final createdAt = equipment['EquipmentCreatedAt'].toDate();
+                    final createdAt = equipment['EquipmentAllocationCreatedAt'].toDate();
                     final formattedTime =
                         DateFormat('hh:mm a').format(createdAt);
 
@@ -152,6 +153,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                   builder: (context) =>
                                       SCreateAssignAssetScreen(
                                         companyId: widget.companyId,
+                                        empId: widget.empId,
                                       )));
                         },
                         child: Container(
@@ -189,10 +191,29 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                     ),
                                   ),
                                   SizedBox(width: width / width20),
-                                  InterMedium(
-                                    text: equipment['EquipmentName'],
-                                    fontsize: width / width16,
-                                    color: color1,
+                                  FutureBuilder<String>(
+                                    future: getEquipmentName(equipment['EquipmentAllocationEquipId']),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return InterMedium(
+                                          text: 'Loading...',
+                                          fontsize: width / width16,
+                                          color: color1,
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return InterMedium(
+                                          text: 'Error: ${snapshot.error}',
+                                          fontsize: width / width16,
+                                          color: color1,
+                                        );
+                                      } else {
+                                        return InterMedium(
+                                          text: snapshot.data ?? 'Unknown Equipment',
+                                          fontsize: width / width16,
+                                          color: color1,
+                                        );
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
@@ -216,6 +237,19 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
         ),
       ),
     );
+  }
+
+  Future<String> getEquipmentName(String equipmentId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('Equipments')
+        .where('EquipmentId', isEqualTo: equipmentId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first['EquipmentName'];
+    }
+
+    return 'Unknown Equipment';
   }
 
   String getDateHeader(String date) {

@@ -61,7 +61,7 @@ class _SPostOrderState extends State<SPostOrder> {
     try {
       final ref = FirebaseStorage.instance.refFromURL(url);
       final metadata = await ref.getMetadata();
-      final fileSize = (metadata.size ?? 0) / 1024; // size in KB
+      final fileSize = (metadata.size ?? 0) / 1024;
       return {
         'name': metadata.name,
         'size': '${fileSize.toStringAsFixed(2)} KB',

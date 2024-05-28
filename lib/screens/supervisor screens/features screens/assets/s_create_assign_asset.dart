@@ -19,8 +19,9 @@ import '../../home screens/widgets/set_details_widget.dart';
 
 class SCreateAssignAssetScreen extends StatefulWidget {
   final String companyId;
+  final String empId;
   final bool OnlyView;
-  SCreateAssignAssetScreen({super.key, required this.companyId, this.OnlyView = false});
+  SCreateAssignAssetScreen({super.key, required this.companyId, required this.empId, this.OnlyView = false});
 
   @override
   State<SCreateAssignAssetScreen> createState() =>
@@ -30,7 +31,7 @@ class SCreateAssignAssetScreen extends StatefulWidget {
 class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List colors = [Primarycolor, color25];
   bool isChecked = false;
-  bool showCreate = true;  // Initially show the create form
+  bool showCreate = true;
   TextEditingController _titleController1 = TextEditingController();
   TextEditingController _titleController2 = TextEditingController();
   TextEditingController _allocateQtController1 = TextEditingController();
@@ -49,7 +50,49 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   @override
   void initState() {
     super.initState();
+    fetchEquipmentAllocationData();
     fetchEquipment();
+  }
+
+  Future<void> fetchEquipmentAllocationData() async {
+    if (widget.empId.isNotEmpty) {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('EquipmentAllocations')
+          .where('EquipmentAllocationEmpId', isEqualTo: widget.empId)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot document = querySnapshot.docs.first;
+        setState(() async {
+          _allocateQtController1.text =
+              document['EquipmentAllocationEquipQty'].toString();
+          isChecked = document['EquipmentAllocationIsReturned'];
+          StartDate = (document['EquipmentAllocationStartDate'] as Timestamp)
+              .toDate()
+              .toLocal();
+          EndDate = (document['EquipmentAllocationEndDate'] as Timestamp)
+              .toDate()
+              .toLocal();
+
+          String employeeId = document['EquipmentAllocationEmpId'];
+          DocumentSnapshot employeeSnapshot = await FirebaseFirestore.instance
+              .collection('Employees')
+              .doc(employeeId)
+              .get();
+          _searchController.text = employeeSnapshot['EmployeeName'];
+          selectedGuardId = employeeId;
+
+          String equipmentId = document['EquipmentAllocationEquipId'];
+          DocumentSnapshot equipmentSnapshot = await FirebaseFirestore.instance
+              .collection('Equipments')
+              .doc(equipmentId)
+              .get();
+          selectedEquipmentName = equipmentSnapshot['EquipmentName'];
+          selectedEquipmentId = equipmentId;
+        });
+      }
+    }
   }
 
   Future<void> searchGuards(String query) async {
