@@ -448,7 +448,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeScreenController(), permanent: true);
-
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
