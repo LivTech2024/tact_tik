@@ -578,6 +578,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     Visibility(
                       visible: shouldShowButton,
                       child: Button1(
+                        
                         text: 'Submit',
                         onPressed: () async {
                           setState(() {
@@ -743,7 +744,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: DarkColor. Primarycolor,
+                        backgroundcolor: isDark
+                            ? DarkColor.Primarycolor
+                            : LightColor.Primarycolor,
                         borderRadius: width / width10,
                       ),
                     ),

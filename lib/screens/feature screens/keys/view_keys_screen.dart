@@ -173,6 +173,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
     bool isEditMode = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +181,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
               SizedBox(height: height / height30),
               InterBold(
                 text: 'Allocation Date',
-                color: DarkColor. Primarycolor,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                 fontsize: width / width20,
               ),
               SizedBox(height: height / height30),
@@ -191,12 +192,16 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: height / height60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(width / width10),
-                        color: DarkColor.WidgetColor,
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.startDate, fontsize: width / width16, color: DarkColor. color2),
+                          InterMedium(text: widget.startDate, fontsize: width / width16, color: isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color2),
                           SvgPicture.asset('assets/images/calendar_clock.svg', width: width / width20)
                         ],
                       ),
@@ -208,12 +213,16 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: height / height60,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(width / width10),
-                        color: DarkColor. WidgetColor,
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.endDate, fontsize: width / width16, color: DarkColor. color2),
+                          InterMedium(text: widget.endDate, fontsize: width / width16, color: isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color2),
                           SvgPicture.asset('assets/images/calendar_clock.svg', width: width / width20)
                         ],
                       ),
@@ -222,14 +231,14 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                 ],
               ),
               SizedBox(height: height / height30),
-              InterBold(text: 'Key', color: DarkColor. color1, fontsize: width / width16),
+              InterBold(text: 'Key', color: isDark ? DarkColor.color1 : LightColor.color3, fontsize: width / width16),
               Container(
                 height: width / width60,
                 width: double.maxFinite,
                 margin: EdgeInsets.only(bottom: height / height10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(width / width10),
-                  color: DarkColor. WidgetColor,
+                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,12 +252,16 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           width: width / width44,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(width / width10),
-                            color: DarkColor.Primarycolorlight,
+                            color: isDark
+                                ? DarkColor.Primarycolorlight
+                                : LightColor.Primarycolorlight,
                           ),
                           child: Center(
                             child: Icon(
                               Icons.home_repair_service,
-                              color: DarkColor. Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
                               size: width / width24,
                             ),
                           ),
@@ -270,7 +283,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                             return InterMedium(
                               text: keyName,
                               fontsize: width / width16,
-                              color: DarkColor. color1,
+                              color: isDark
+                                  ? DarkColor.color1
+                                  : LightColor.color3,
                             );
                           },
                         ),
@@ -278,7 +293,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     ),
                     InterMedium(
                       text: widget.time,
-                      color: DarkColor. color17,
+                      color: isDark
+                          ? DarkColor.color17
+                          : LightColor.color2,
                       fontsize: width / width16,
                     ),
                     SizedBox(width: width / width20),
@@ -292,7 +309,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                   SizedBox(height: height / height30),
                   InterBold(
                     text: 'Add Visitor',
-                    color: DarkColor. Primarycolor,
+                    color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     fontsize: width / width20,
                   ),
                   SizedBox(height: height / height30),
@@ -397,8 +414,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     onPressed: () async {
                       await _saveVisitorData();
                     },
-                    backgroundcolor: DarkColor. Primarycolor,
-                    color: DarkColor.color22,
+                    backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                    color: isDark ? DarkColor.color22 : LightColor.color1,
                     borderRadius: width / width10,
                     fontsize: width / width18,
                   ),

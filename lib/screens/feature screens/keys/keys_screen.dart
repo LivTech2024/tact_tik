@@ -102,7 +102,9 @@ class _KeysScreenState extends State<KeysScreen> {
                     InterBold(
                       text: 'Today',
                       fontsize: width / width20,
-                      color: DarkColor. Primarycolor,
+                      color: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.color3,
                     ),
                     SizedBox(
                       height: height / height30,
@@ -131,7 +133,9 @@ class _KeysScreenState extends State<KeysScreen> {
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(width / width10),
-                          color: DarkColor.WidgetColor,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,12 +150,16 @@ class _KeysScreenState extends State<KeysScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius:
                                     BorderRadius.circular(width / width10),
-                                    color: DarkColor. Primarycolorlight,
+                                    color: isDark
+                                        ? DarkColor.Primarycolorlight
+                                        : LightColor.Primarycolorlight,
                                   ),
                                   child: Center(
                                     child: Icon(
                                       Icons.home_repair_service,
-                                      color: DarkColor. Primarycolor,
+                                      color: isDark
+                                          ? DarkColor.Primarycolor
+                                          : LightColor.Primarycolor,
                                       size: width / width24,
                                     ),
                                   ),
@@ -160,13 +168,17 @@ class _KeysScreenState extends State<KeysScreen> {
                                 InterMedium(
                                   text: 'Equipment Title',
                                   fontsize: width / width16,
-                                  color: DarkColor. color1,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
                                 ),
                               ],
                             ),
                             InterMedium(
                               text: '11 : 36 pm',
-                              color: DarkColor.color17,
+                              color: isDark
+                                  ? DarkColor.color17
+                                  : LightColor.color2,
                               fontsize: width / width16,
                             ),
                             // SizedBox(width: width / width10),

@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:DarkColor.Secondarycolor,
+        backgroundColor:isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
         body: Stack(
           children: [
             Padding(
@@ -145,7 +145,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
                       fontSize: width / width18,
-                      color: Colors.white, // Change text color to white
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor
+                              .color3, // Change text color to white
                     ),
                     controller: _emailcontrller,
                     decoration: const InputDecoration(
@@ -159,7 +162,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
                       fontSize: width / width18,
-                      color: Colors.white, // Change text color to white
+                      color:  isDark
+                          ? DarkColor.color1
+                          : LightColor.color3, // Change text color to white
                     ),
                     controller: _passwordcontrller,
                     obscureText: _obscureText,
@@ -175,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                           size: width / width24,
-                          color: DarkColor. color6,
+                          color: DarkColor. color6, 
                         ),
                       ),
                       labelText: 'Password',
@@ -193,10 +198,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   Button1(
                     height: height / height50,
-                    backgroundcolor: DarkColor. Primarycolor,
+                    backgroundcolor: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.Primarycolor,
                     text: 'Login',
                     fontsize: width / width16,
-                    color: Colors.black,
+                    color: isDark
+                        ? DarkColor.Secondarycolor
+                        : LightColor.Secondarycolor,
                     borderRadius: width / width10,
                     onPressed: () {
                       Auth().signInWithEmailAndPassword(_emailcontrller.text,
@@ -208,8 +217,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.center,
                       child: Visibility(
                         visible: _isLoading,
-                        child: const CircularProgressIndicator(
-                          color: DarkColor. Primarycolor,
+                        child:  CircularProgressIndicator(
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                         ),
                       ),
                     ),

@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/controller/site_tour_controller.dart';
 import 'package:tact_tik/screens/feature%20screens/site_tours/widgets/site_tour_loading_widget.dart';
 import '../../../common/sizes.dart';
@@ -109,7 +110,7 @@ class SiteTourScreen extends StatelessWidget {
                                 gradient: LinearGradient(
                                   begin: Alignment(0, -1.5),
                                   end: Alignment.bottomCenter,
-                                  colors: [Colors.black, Colors.transparent],
+                                  colors:isDark? [Colors.black, Colors.transparent]:[Colors.transparent, Colors.transparent],
                                 ),
                               ),
                             ),
@@ -139,7 +140,9 @@ class SiteTourScreen extends StatelessWidget {
                                 InterBold(
                                   text: 'Site Tours',
                                   fontsize: width / width18,
-                                  color: Colors.white,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -148,7 +151,9 @@ class SiteTourScreen extends StatelessWidget {
                                   icon: Icon(
                                     Icons.cancel_outlined,
                                     size: width / width30,
-                                    color: DarkColor. color1,
+                                    color: isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
                                   ),
                                   padding: EdgeInsets.zero,
                                 )
@@ -326,7 +331,9 @@ class SiteTourScreen extends StatelessWidget {
                     ),
                     height: height / height60,
                     decoration: BoxDecoration(
-                      color: DarkColor. WidgetColor,
+                      color: isDark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor,
                       borderRadius: BorderRadius.circular(
                         width / width16,
                       ),
@@ -340,14 +347,18 @@ class SiteTourScreen extends StatelessWidget {
                           icon: Icon(
                             Icons.keyboard_arrow_left,
                             size: width / width24,
-                            color: DarkColor. color1,
+                            color: isDark
+                                ? DarkColor.color1
+                                : LightColor.color3,
                           ),
                         ),
                         Bounce(
                           onTap: () {},
                           child: InterBold(
                             text: 'Go to shift',
-                            color: DarkColor.color1,
+                            color: isDark
+                                ? DarkColor.color1
+                                : LightColor.color3,
                             fontsize: width / width18,
                           ),
                         ),
@@ -356,7 +367,9 @@ class SiteTourScreen extends StatelessWidget {
                           icon: Icon(
                             Icons.keyboard_arrow_right,
                             size: width / width24,
-                            color: DarkColor. color1,
+                            color: isDark
+                                ? DarkColor.color1
+                                : LightColor.color3,
                           ),
                         ),
                       ],

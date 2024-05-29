@@ -8,7 +8,7 @@ import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
 
-class HomeScreenPart1 extends StatelessWidget {
+class HomeScreenPart1 extends StatefulWidget {
   final String userName;
   final String employeeImg;
   // final String url;
@@ -24,9 +24,17 @@ class HomeScreenPart1 extends StatelessWidget {
     this.showWish = true,
   }) : super(key: key);
 
+  @override
+  State<HomeScreenPart1> createState() => _HomeScreenPart1State();
+}
+
+class _HomeScreenPart1State extends State<HomeScreenPart1> {
   bool isUnread = true;
+
   DateTime now = DateTime.now();
+
   int hour = DateTime.now().hour;
+
   String greeting = 'Good ';
 
   @override
@@ -83,8 +91,9 @@ class HomeScreenPart1 extends StatelessWidget {
                           Icon(
                             Icons.notifications,
                             // Use the notifications_active icon
-                            color:  isDark?DarkColor
-                                .Primarycolor:LightColor.color3, // Change color if unread
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3, // Change color if unread
                             size: width / width28,
                           ),
                           if (isUnread)
@@ -93,10 +102,9 @@ class HomeScreenPart1 extends StatelessWidget {
                               right: 0,
                               child: Container(
                                 padding: EdgeInsets.all(width / width4 / 2),
-                                decoration:  BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color:
-                                        isDark
+                                  color: isDark
                                       ? DarkColor.Primarycolor
                                       : LightColor
                                           .color3, // Background color for unread indicator
@@ -109,7 +117,7 @@ class HomeScreenPart1 extends StatelessWidget {
                         width: width / width30,
                       ),
                       GestureDetector(
-                        onTap: drawerOnClicked,
+                        onTap: widget.drawerOnClicked,
                         child: Transform.scale(
                           scaleX: -1,
                           child: Icon(
@@ -127,20 +135,22 @@ class HomeScreenPart1 extends StatelessWidget {
               ),
             ),
             SizedBox(height: height / height30),
-            showWish!
+            widget.showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PoppinsSemibold(
                         text: '${greeting}',
-                        color:    isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        color:
+                            isDark ? DarkColor.Primarycolor : LightColor.color3,
                         letterSpacing: -.5,
                         fontsize: width / width35,
                       ),
                       SizedBox(height: height / height10),
                       PoppinsLight(
-                        text: userName,
-                        color:    isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        text: widget.userName,
+                        color:
+                            isDark ? DarkColor.Primarycolor : LightColor.color3,
                         fontsize: width / width30,
                       ),
                       SizedBox(height: height / height16),
@@ -161,7 +171,7 @@ class HomeScreenPart1 extends StatelessWidget {
                     offset: Offset(0, 3),
                   )
                 ],
-                color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(width / width13),
               ),
               child: Row(
@@ -172,7 +182,9 @@ class HomeScreenPart1 extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
                         fontSize: width / width18,
-                        color:isDark? Colors.white:LightColor.color3, // Change text color to white
+                        color: isDark
+                            ? Colors.white
+                            : LightColor.color3, // Change text color to white
                       ),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -185,26 +197,30 @@ class HomeScreenPart1 extends StatelessWidget {
                         hintStyle: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: width / width18,
-                          color:  DarkColor.color2, // Change text color to white
+                          color: DarkColor.color2, // Change text color to white
                         ),
                         hintText: 'Search',
                         contentPadding: EdgeInsets.zero, // Remove padding
                       ),
-                      cursorColor:   isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      cursorColor: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
                     ),
                   ),
                   Container(
                     height: height / height44,
                     width: width / width44,
                     decoration: BoxDecoration(
-                      color:   isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      color: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
                       borderRadius: BorderRadius.circular(width / width10),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.search,
                         size: width / width20,
-                        color: isDark?Colors.black:Colors.white,
+                        color: isDark ? Colors.black : Colors.white,
                       ),
                     ),
                   )
