@@ -240,8 +240,8 @@ Future<void> sendShiftTemplateEmail(
   String shiftinTime,
   String shiftOutTime,
 ) async {
-  // final pdfBase64 = await generateShiftReportPdf(
-  //     ClientName, Data, GuardName, "20:00", "06:00");
+  final pdfBase64 = await generateShiftReportPdf(
+      ClientName, Data, GuardName, "19:00", "07:00");
 
   // Generate the HTML content for the email
   String patrolInfoHTML = '';
@@ -342,7 +342,7 @@ Future<void> sendShiftTemplateEmail(
         }
 
         img {
-            max-width: 20%;
+            max-width: 30%;
             height: auto;
             display: block;
             margin-bottom: 10px;
@@ -428,13 +428,13 @@ Future<void> sendShiftTemplateEmail(
         'subject': Subject,
         'from_name': fromName,
         'html': htmlcontent2,
-        // 'attachments': [
-        //   {
-        //     'filename': 'security_report.pdf',
-        //     'content': pdfBase64,
-        //     'contentType': 'application/pdf',
-        //   }
-        // ],
+        'attachments': [
+          {
+            'filename': 'security_report.pdf',
+            'content': pdfBase64,
+            'contentType': 'application/pdf',
+          }
+        ],
       }),
     );
 
@@ -914,7 +914,7 @@ Future<String> generateShiftReportPdf(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="max-width: 20%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
+              '<p>$image</p>'; // Set max-width to ensure responsiveness
         }
       }
       checkpointImagesHTML += '''
@@ -1004,11 +1004,11 @@ Future<String> generateShiftReportPdf(
         }
 
         img {
-            max-width: 20%;
+            max-width: 2%;
             height: auto;
             display: block;
             margin-bottom: 10px;
-            max-height: 50px; /* Define a max-height for the images */
+            max-height: 2px; /* Define a max-height for the images */
         }
 
         footer {

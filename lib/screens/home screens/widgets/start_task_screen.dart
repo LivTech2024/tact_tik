@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'package:flutter/widgets.dart' as widgets;
+
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -135,8 +135,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // emails.add(ClientEmail!);
     // emails.add("sutarvaibhav37@student.sfit.ac.in");
     emails.add("sutarvaibhav37@gmail.com");
-    // emails.add(TestinEmail);
-    // emails.add(TestinEmail);
     var testEmail3 = "sales@tpssolution.com";
     // var testEmail5 = "pankaj.kumar1312@yahoo.com";
     int? savedInTimeMillis = prefs.getInt('InTime');
@@ -362,18 +360,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   updateLateTimeAndStartTimer() {
     print('update late time and start timer function');
+    DateTime now = DateTime.now();
 
     /// -- update late time
     DateFormat dateFormat = DateFormat("HH:mm");
-    DateTime now = DateTime.now();
 
     DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
     shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
         shiftStartTime.minute);
 
     DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
-    shiftEndTime = DateTime(
-        now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+    shiftEndTime = DateTime(shiftEndTime.year, shiftEndTime.month,
+        shiftEndTime.day, shiftEndTime.hour, shiftEndTime.minute);
 
     DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
 
@@ -1322,4 +1320,37 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       print('Error generating PDF: $e');
     }
   }
+
+/*Container(
+                  height: height / height65,
+                  color: WidgetColor,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPaused = !isPaused;
+                      });
+                      if (isPaused) {
+                        fireStoreService.BreakShiftLog(widget.EmployeIad);
+                      } else {
+                        fireStoreService.ResumeShiftLog(widget.EmployeId);
+                      }
+                    },
+                    child: InterBold(
+                      text: isPaused ? 'Resume' : 'Break',
+                      fontsize: width / width18,
+                      color: Primarycolor,
+                    ),
+                  ),
+                )*/
+
+/*() {
+                      setState(() {
+                        isPaused = !isPaused;
+                      });
+                      if (isPaused) {
+                        fireStoreService.BreakShiftLog(widget.EmployeId);
+                      } else {
+                        fireStoreService.ResumeShiftLog(widget.EmployeId);
+                      }
+                    }*/
 }
