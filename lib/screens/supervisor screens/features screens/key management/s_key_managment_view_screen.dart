@@ -66,28 +66,6 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
-            ),
-            padding: EdgeInsets.only(left: width / width20),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: InterRegular(
-            text: 'keys',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
-          ),
-          centerTitle: true,
-        ),
         backgroundColor: Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {

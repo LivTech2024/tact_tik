@@ -85,35 +85,6 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height / height30),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      iconSize: width / width24,
-                      dropdownColor: WidgetColor,
-                      style: TextStyle(
-                        color: color2,
-                        fontSize: width / width12,
-                      ),
-                      borderRadius: BorderRadius.circular(width / width10),
-                      value: dropdownValue,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'All',
-                        'available',
-                        'unavailable'
-                      ] // Add your options here
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: height / height20),
                   _guardsInfo.isNotEmpty
                       ? ListView.builder(
                     shrinkWrap: true,
