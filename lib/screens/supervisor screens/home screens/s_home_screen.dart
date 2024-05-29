@@ -625,6 +625,8 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       CreateSheduleScreen(
+                                        BranchId:
+                                        widget.guardsInfo["EmployeeCompanyBranchId"] ?? "",
                                         GuardId:
                                         widget.guardsInfo["EmployeeId"] ??
                                             "",
