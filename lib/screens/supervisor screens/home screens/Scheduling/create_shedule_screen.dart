@@ -1061,7 +1061,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Button1(
                             text: 'Done',
                             onPressed: () async {
-                              String address = "";
+
+                              // Todo check weather values are not null then only move to the next screen.......
+                              setState(() {
+                                nextScreen = !nextScreen;
+                              });
+                              // TODO Commented the backend code hear
+                              /*String address = "";
                               GeoPoint coordinates = GeoPoint(0, 0);
                               String name = "";
                               String locationId = "";
@@ -1134,7 +1140,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               print("Shift ID : ${id}");
                               setState(() {
                                 CreatedshiftId = id;
-                              });
+                              });*/
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,

@@ -126,9 +126,12 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                     children: [
                                       Row(
                                         children: [
+                                          // TODO pass the image value there
                                           CircleAvatar(
                                             backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
+                                            foregroundImage: AssetImage('assets/images/default.png'),
                                             radius: width / width20,
+                                            backgroundColor: Primarycolor,
                                           ),
                                           SizedBox(width: width / width20),
                                           InterBold(

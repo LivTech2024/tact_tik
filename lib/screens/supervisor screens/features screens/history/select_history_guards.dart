@@ -186,12 +186,24 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                         Container(
                                           height: height / height50,
                                           width: width / width50,
-                                          decoration: BoxDecoration(
+                                          decoration: guardInfo['EmployeeImg'] != null
+                                              ? BoxDecoration(
                                             shape: BoxShape.circle,
+                                            // color: Primarycolor,
                                             image: DecorationImage(
-                                              image: NetworkImage(url),
-                                              filterQuality:
-                                              FilterQuality.high,
+                                              image: NetworkImage(
+                                                  url) ,
+                                              filterQuality: FilterQuality.high,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                              : BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Primarycolor,
+                                            image: DecorationImage(
+                                              image:  AssetImage(
+                                                  'assets/images/default.png'),
+                                              filterQuality: FilterQuality.high,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
