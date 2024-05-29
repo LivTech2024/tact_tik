@@ -360,18 +360,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   updateLateTimeAndStartTimer() {
     print('update late time and start timer function');
+    DateTime now = DateTime.now();
 
     /// -- update late time
     DateFormat dateFormat = DateFormat("HH:mm");
-    DateTime now = DateTime.now();
 
     DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
     shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
         shiftStartTime.minute);
 
     DateTime shiftEndTime = dateFormat.parse(widget.ShiftEndTime);
-    shiftEndTime = DateTime(
-        now.year, now.month, now.day, shiftEndTime.hour, shiftEndTime.minute);
+    shiftEndTime = DateTime(shiftEndTime.year, shiftEndTime.month,
+        shiftEndTime.day, shiftEndTime.hour, shiftEndTime.minute);
 
     DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
 

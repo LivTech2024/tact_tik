@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: SPostOrder(locationId: 'DrD1H6YXEui4G72EHTEZ'),
+        home: AuthChecker(),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,
