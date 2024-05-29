@@ -141,6 +141,7 @@ class SupervisorTrackingScreenController extends GetxController
               for (var doc in snapshot.docs) {
                 var data = doc.data() as Map<String, dynamic>;
                 String companyId = data['EmployeeCompanyId'] ?? '';
+                String EmployeeRole = data['EmployeeRole'] ?? 'GUARD';
                 String companyLogoUrl = companyLogoCache[companyId] ??
                     (await _firestore
                         .collection('Companies')
@@ -165,6 +166,7 @@ class SupervisorTrackingScreenController extends GetxController
                   id: doc.id,
                   companyLogoUrl: companyLogoUrl,
                   companyId: companyId,
+                  role: EmployeeRole,
                 ));
               }
             }
@@ -230,9 +232,11 @@ class SupervisorTrackingScreenController extends GetxController
     var annotationsToRemove = <PointAnnotation>[];
 
     for (var document in snapshot.docs) {
-      final bytes = await rootBundle.load('assets/images/guard.png');
-      Uint8List? imageData = bytes.buffer.asUint8List();
       var data = document.data() as Map<String, dynamic>;
+      final bytes = data['EmpRouteEmpRole'] == 'GUARD'
+          ? await rootBundle.load('assets/images/guard.png')
+          : await rootBundle.load('assets/images/car_marker.png');
+      Uint8List? imageData = bytes.buffer.asUint8List();
       if (data.containsKey('EmpRouteLocations')) {
         var locations = data['EmpRouteLocations'] as List<dynamic>?;
         if (locations != null && locations.isNotEmpty) {

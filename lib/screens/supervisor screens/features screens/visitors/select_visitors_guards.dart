@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';

@@ -165,6 +165,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                     Empid: widget.EmpID,
                                     DarId: document['EmpDarId'],
                                     editable: isNew,
+                                    shifID: widget.EmpDarShiftID,
                                   ),
                                 ),
                               );

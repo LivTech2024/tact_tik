@@ -1212,6 +1212,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       ClientId: widget.p.PatrolClientID,
                                                                                       reportId: '',
                                                                                       buttonEnable: true,
+                                                                                      ShiftId: widget.p.ShiftId,
+                                                                                      SearchId: '',
                                                                                     )));
                                                                         ;
                                                                       },
