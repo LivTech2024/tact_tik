@@ -21,7 +21,8 @@ class SCreateAssignAssetScreen extends StatefulWidget {
   final String companyId;
   final String empId;
   final bool OnlyView;
-  SCreateAssignAssetScreen({super.key, required this.companyId, required this.empId, this.OnlyView = false});
+  final String equipemtAllocId;
+  SCreateAssignAssetScreen({super.key, required this.companyId, required this.empId, this.OnlyView = false, required this.equipemtAllocId});
 
   @override
   State<SCreateAssignAssetScreen> createState() =>
@@ -145,6 +146,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
     // Update the document with the generated document reference ID
     await docRef.update({
       'EquipmentAllocationId': docRef.id,
+    });
+  }
+
+  Future<void> updateEquipmentAllocation() async {
+    CollectionReference equipmentAllocations = FirebaseFirestore.instance.collection('EquipmentAllocations');
+    await equipmentAllocations.doc(widget.equipemtAllocId).update({
+      'EquipmentAllocationIsReturned': isChecked,
     });
   }
 
@@ -537,7 +545,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                       child: Button1(
                         text: 'Done',
                         onPressed: () {
-                          createEquipmentAllocation();
+                          if (widget.OnlyView) {
+                            updateEquipmentAllocation();
+                          } else {
+                            createEquipmentAllocation();
+                          }
                         },
                         backgroundcolor: widget.OnlyView ? isChecked == false ? Primarycolorlight : Primarycolor : Primarycolorlight,
                         borderRadius: width / width10,
@@ -598,8 +610,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                   ],
                 ),
               ),
-
-
             ],
           ),
         ),

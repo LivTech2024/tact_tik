@@ -42,9 +42,11 @@ class HomeScreenController extends GetxController {
   Future<void> updateUI(dynamic data) async {
     LocationDto? locationDto =
         (data != null) ? LocationDto.fromJson(data) : null;
-    await _updateNotificationText(locationDto!);
-    if (data != null) {
+    if (locationDto != null) {
+      await _updateNotificationText(locationDto);
       lastLocation = locationDto;
+    } else {
+      print('Received null location data');
     }
   }
 

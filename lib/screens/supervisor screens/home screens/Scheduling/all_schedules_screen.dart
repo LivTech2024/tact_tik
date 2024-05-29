@@ -82,15 +82,7 @@ class AllSchedulesScreen extends StatelessWidget {
           child: FloatingActionButton(
             shape: const CircleBorder(),
             backgroundColor: Primarycolor,
-            onPressed: () => {},
-            // NavigateScreen(
-            //     context,
-            //     CreateSheduleScreen(
-            //       GuardId: '',
-            //       GuardName: '',
-            //       GuardImg: '',
-            //       CompanyId: '',
-            //     )),
+            onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (builder) => CreateSheduleScreen(GuardId: '', GuardName: '', GuardImg: '', CompanyId: '')));},
             child: Icon(Icons.add),
           ),
         ),
