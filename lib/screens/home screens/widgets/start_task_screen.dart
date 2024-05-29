@@ -653,7 +653,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   'EmployeeShiftStartTime':
                                       widget.ShiftStartTime,
                                   'EmployeeShiftEndTime': widget.ShiftEndTime,
-                                  'EmployeeShiftShiftName': widget.ShiftName
+                                  'EmployeeShiftShiftName': widget.ShiftName,
+                                  'EmpRouteEmpRole':
+                                      userStorage.getItem("Role"),
                                 };
                                 try {
                                   // Add the document to the collection

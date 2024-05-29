@@ -60,6 +60,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 final LocalStorage storage = LocalStorage('ShiftDetails');
+final LocalStorage userStorage = LocalStorage('currentUserEmail');
 
 class _HomeScreenState extends State<HomeScreen> {
   //Get the current User

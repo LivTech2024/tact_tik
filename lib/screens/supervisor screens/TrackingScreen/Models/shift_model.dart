@@ -7,6 +7,7 @@ class ShiftDetails {
   final String outTime;
   final String id;
   final String companyLogoUrl;
+  final String role;
 
   ShiftDetails({
     required this.imageUrl,
@@ -17,5 +18,6 @@ class ShiftDetails {
     required this.outTime,
     required this.id,
     required this.companyLogoUrl,
+    required this.role,
   });
 }
