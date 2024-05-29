@@ -62,7 +62,7 @@ class _SPostOrderState extends State<SPostOrder> {
     try {
       final ref = FirebaseStorage.instance.refFromURL(url);
       final metadata = await ref.getMetadata();
-      final fileSize = (metadata.size ?? 0) / 1024; // size in KB
+      final fileSize = (metadata.size ?? 0) / 1024;
       return {
         'name': metadata.name,
         'size': '${fileSize.toStringAsFixed(2)} KB',
@@ -83,6 +83,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: DarkColor. Secondarycolor,
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
           future: _locationDataFuture,
           builder: (context, snapshot) {
@@ -118,7 +119,7 @@ class _SPostOrderState extends State<SPostOrder> {
                     },
                   ),
                   title: InterRegular(
-                    text: 'Post Order',
+                    text: 'Post Orders',
                     fontsize: width / width18,
                     color: Colors.white,
                     letterSpacing: -.3,
@@ -136,7 +137,7 @@ class _SPostOrderState extends State<SPostOrder> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height40),
+                            padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height30),
                             child: InterSemibold(
                               text: date,
                               fontsize: width / width20,
@@ -203,7 +204,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                             height: height / height16,
                                           ),
                                           Container(
-                                            width: width / width200,
+                                            constraints: BoxConstraints(minWidth: width / width200),
                                             height: height / height46,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(width / width10),
@@ -245,10 +246,10 @@ class _SPostOrderState extends State<SPostOrder> {
                                               crossAxisSpacing: 10.0,
                                               mainAxisSpacing: 10.0,
                                             ),
-                                            itemCount: postOrderOtherData.length,
+                                            itemCount: postOrderOtherData.length < 3 ? postOrderOtherData.length : 3,
                                             itemBuilder: (context, index) {
                                               String url = postOrderOtherData[index];
-                                              if (url.contains('.pdf')) {
+                                              /*if (url.contains('.pdf')) {
                                                 return FutureBuilder<Map<String, dynamic>>(
                                                   future: _fetchFileMetadata(url),
                                                   builder: (context, snapshot) {
@@ -296,13 +297,13 @@ class _SPostOrderState extends State<SPostOrder> {
                                                     );
                                                   },
                                                 );
-                                              } else {
+                                              } else {*/
                                                 return SizedBox(
                                                   height: height / height20,
                                                   width: width / width20,
                                                   child: Image.network(url),
                                                 );
-                                              }
+                                              // }
                                             },
                                           ),
                                         ],

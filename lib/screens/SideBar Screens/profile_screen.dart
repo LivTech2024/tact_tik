@@ -170,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: isDark?Color(0xFFAC7310):LightColor.Primarycolorlight,
+                            color: _employeeImageUrl != null ? Color(0xFFAC7310) : DarkColor. Primarycolor,
                             shape: BoxShape.circle,
                           ),
                           child: ClipOval(
@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           _employeeImageUrl!,
                                           fit: BoxFit.cover,
                                         )
-                                      : Icon(Icons.person, size: 100),
+                                      : Image.asset('assets/images/default.png'),
                             ),
                           ),
                         ),
@@ -352,6 +352,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(height: height / height60),
+              if (_employeeImageUrl == null || _employeeRole == null || _employeeEmail == null || _employeePhone == null || _employeeName == null)
               Center(
                 child: PoppinsRegular(
                   text: 'complete your profile !',

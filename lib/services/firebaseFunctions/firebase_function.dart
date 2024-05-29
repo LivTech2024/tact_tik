@@ -2568,7 +2568,20 @@ class FireStoreService {
       // Step 1: Get ShiftLinkedPatrols
       DocumentSnapshot shiftDoc =
           await firestore.collection('Shifts').doc(shiftId).get();
-      List<dynamic> shiftLinkedPatrols = shiftDoc.get('ShiftLinkedPatrols');
+      Map<String, dynamic>? shiftData =
+          shiftDoc.data() as Map<String, dynamic>?;
+
+      if (shiftData == null) {
+        print('Shift data not found.');
+        return;
+      }
+
+      List<dynamic> shiftLinkedPatrols = shiftData['ShiftLinkedPatrols'];
+
+      if (shiftLinkedPatrols.isEmpty) {
+        print('No linked patrols found for this shift.');
+        return;
+      }
 
       // Step 2: Iterate over ShiftLinkedPatrols
       for (var patrol in shiftLinkedPatrols) {
@@ -2578,9 +2591,14 @@ class FireStoreService {
 
         // Step 3: Query PatrolCheckPoints
         QuerySnapshot checkPointsQuery = await firestore
-            .collection('PatrolCheckPoints')
+            .collection('Patrols')
             .where('PatrolId', isEqualTo: patrolId)
             .get();
+
+        if (checkPointsQuery.docs.isEmpty) {
+          print('No checkpoints found for patrol: $patrolName.');
+          continue;
+        }
 
         // Step 4: Iterate over matching CheckPoints
         for (QueryDocumentSnapshot checkPointDoc in checkPointsQuery.docs) {
@@ -2593,15 +2611,19 @@ class FireStoreService {
 
           if (status != null) {
             // Get StatusComment
-            String statusComment = status['StatusComment'];
+            String statusComment = status['StatusComment'] ?? 'No comment';
 
             // Get StatusImage URLs
             List<String> statusImageUrls =
-                List<String>.from(status['StatusImage']);
+                List<String>.from(status['StatusImage'] ?? []);
 
             // Process statusComment and statusImageUrls as needed
             print(
-                'Patrol: $patrolName, StatusComment: $statusComment, StatusImageUrls: $statusImageUrls');
+              'Patrol: $patrolName, StatusComment: $statusComment, StatusImageUrls: $statusImageUrls',
+            );
+          } else {
+            print(
+                'No status found for employee $empid in checkpoint ${checkPointDoc.id}.');
           }
         }
       }
@@ -3454,6 +3476,7 @@ class FireStoreService {
         'MessageCreatedByName': UserName,
         'MessageData': MessageData,
         'MessageReceiversId': receiversId,
+        'MessageType': 'panic'
       };
       DocumentReference newDocRef = await messagesCollection.add(messageData);
 

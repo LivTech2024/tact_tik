@@ -57,6 +57,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                   Navigator.pop(context);
                 },
               ),
+
               title: InterRegular(
                 text: 'Paystub',
                 fontsize: width / width18,

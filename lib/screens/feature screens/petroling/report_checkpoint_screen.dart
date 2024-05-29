@@ -66,8 +66,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 2);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -90,7 +90,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
 
   Future<void> _addGallery() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30);
+        await ImagePicker().pickMultiImage(imageQuality: 2);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -112,13 +112,48 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     }
   }
 
+  // Future<File> _compressImage(File file) async {
+  //   final result = await FlutterImageCompress.compressAndGetFile(
+  //     file.absolute.path,
+  //     file.absolute.path + '_compressed.jpg',
+  //     quality: 1,
+  //   );
+  //   return File(result!.path);
+  // }
+
   Future<File> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      file.absolute.path + '_compressed.jpg',
-      quality: 30,
-    );
-    return File(result!.path);
+    int quality = 90; // Starting quality
+    int minWidth = 800; // Minimum width to reduce resolution step by step
+    int minHeight = 800; // Minimum height to reduce resolution step by step
+    XFile? result;
+
+    do {
+      result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        file.absolute.path + '_compressed.jpg',
+        quality: quality,
+        minWidth: minWidth,
+        minHeight: minHeight,
+      );
+
+      if (result != null && File(result.path).lengthSync() <= 100 * 1024) {
+        break;
+      }
+
+      quality -= 10;
+      minWidth = (minWidth * 0.9).toInt(); // Reduce resolution by 10%
+      minHeight = (minHeight * 0.9).toInt();
+
+      if (quality <= 0 || minWidth <= 0 || minHeight <= 0) {
+        break; // Stop if quality or resolution goes to 0
+      }
+    } while (result == null || File(result.path).lengthSync() > 100 * 1024);
+
+    if (result == null || File(result.path).lengthSync() > 100 * 1024) {
+      throw Exception('Could not compress image to under 100 KB.');
+    }
+
+    return File(result.path);
   }
 
   @override

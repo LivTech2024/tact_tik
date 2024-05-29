@@ -17,7 +17,9 @@ import '../../home screens/widgets/set_details_widget.dart';
 class SCreateKeyManagScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
-  SCreateKeyManagScreen({super.key, required this.keyId, required this.companyId});
+
+  SCreateKeyManagScreen(
+      {super.key, required this.keyId, required this.companyId});
 
   @override
   State<SCreateKeyManagScreen> createState() => _SCreateAssignAssetScreenState();
@@ -26,7 +28,7 @@ class SCreateKeyManagScreen extends StatefulWidget {
 class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   List colors = [DarkColor.Primarycolor, DarkColor. color25];
   bool isChecked = false;
-  bool showCreate = false;
+  bool showCreate = true;
 
   TextEditingController _tittleController = TextEditingController();
   TextEditingController _RecipientNameController = TextEditingController();
@@ -59,7 +61,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   }
 
   Future<void> _saveData() async {
-    CollectionReference keyAllocations = FirebaseFirestore.instance.collection('KeyAllocations');
+    CollectionReference keyAllocations =
+        FirebaseFirestore.instance.collection('KeyAllocations');
     DocumentReference docRef = await keyAllocations.add({
       'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
       'KeyAllocationDate': FieldValue.serverTimestamp(),
@@ -87,7 +90,29 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor:DarkColor. Secondarycolor,
+        appBar: AppBar(
+          backgroundColor: DarkColor.AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: width / width24,
+            ),
+            padding: EdgeInsets.only(left: width / width20),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: InterRegular(
+            text: 'Keys Guards',
+            fontsize: width / width18,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
+        ),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -137,7 +162,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                             child: SizedBox(
                               child: Center(
                                 child: InterBold(
-                                  text: 'Reports',
+                                  text: 'Create',
                                   color: colors[1],
                                   fontsize: width / width18,
                                 ),
@@ -151,109 +176,82 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                   SizedBox(height: height / height20),
                   showCreate
                       ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InterBold(
-                          text: 'Recipient Name',
-                          fontsize: width / width16,
-                          color:DarkColor. color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: 'Eg. Leslie Alexander',
-                          controller: _RecipientNameController,
-                          showIcon: false,
-                        ),
-                        SizedBox(height: height / height20),
-                        InterBold(
-                          text: 'Contact',
-                          fontsize: width / width16,
-                          color: DarkColor.color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: '9876543210',
-                          controller: _ContactController,
-                          showIcon: false,
-                          textInputType: TextInputType.number,
-                        ),
-                        SizedBox(height: height / height20),
-                        InterBold(
-                          text: 'Company Name',
-                          fontsize: width / width16,
-                          color:DarkColor. color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: 'Eg. Tacttik',
-                          controller: _CompanyNameController,
-                          showIcon: false,
-                        ),
-                        SizedBox(height: height / height20),
-                        InterBold(
-                          text: 'Allocate Qt.',
-                          fontsize: width / width16,
-                          color:DarkColor. color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: '0',
-                          controller: _AllocateQtController1,
-                          showIcon: false,
-                          textInputType: TextInputType.number,
-                        ),
-                        SizedBox(height: height / height20),
-                        InterBold(
-                          text: 'Date',
-                          color:DarkColor. color1,
-                          fontsize: width / width16,
-                        ),
-                        SizedBox(height: height / height10),
-                        Container(
-                          height: height / height60,
-                          padding: EdgeInsets.symmetric(horizontal: width / width20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width / width10),
-                            color:DarkColor. WidgetColor,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width / width30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              InterMedium(
-                                text: 'Select Date',
+                              InterBold(
+                                text: 'Recipient Name',
                                 fontsize: width / width16,
-                                color: DarkColor.color2,
+                                color: DarkColor.color1,
                               ),
-                              SvgPicture.asset(
-                                'assets/images/calendar_clock.svg',
-                                width: width / width20,
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: height / height20),
-                        InterBold(
-                          text: 'Allocation Date',
-                          color:DarkColor. color1,
-                          fontsize: width / width16,
-                        ),
-                        SizedBox(height: height / height10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: 'Eg. Leslie Alexander',
+                                controller: _RecipientNameController,
+                                showIcon: false,
+                              ),
+                              SizedBox(height: height / height20),
+                              InterBold(
+                                text: 'Contact',
+                                fontsize: width / width16,
+                                color: DarkColor.color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: '9876543210',
+                                controller: _ContactController,
+                                showIcon: false,
+                                textInputType: TextInputType.number,
+                              ),
+                              SizedBox(height: height / height20),
+                              InterBold(
+                                text: 'Company Name',
+                                fontsize: width / width16,
+                                color: DarkColor.color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: 'Eg. Tacttik',
+                                controller: _CompanyNameController,
+                                showIcon: false,
+                              ),
+                              SizedBox(height: height / height20),
+                              InterBold(
+                                text: 'Allocate Qt.',
+                                fontsize: width / width16,
+                                color: DarkColor.color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: '0',
+                                controller: _AllocateQtController1,
+                                showIcon: false,
+                                textInputType: TextInputType.number,
+                              ),
+                              SizedBox(height: height / height20),
+                              InterBold(
+                                text: 'Date',
+                                color: DarkColor.color1,
+                                fontsize: width / width16,
+                              ),
+                              SizedBox(height: height / height10),
+                              Container(
                                 height: height / height60,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width / width20),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(width / width10),
-                                  color:DarkColor. WidgetColor,
+                                  borderRadius:
+                                      BorderRadius.circular(width / width10),
+                                  color: DarkColor. WidgetColor,
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     InterMedium(
-                                      text: 'Start date',
+                                      text: 'Select Date',
                                       fontsize: width / width16,
                                       color: DarkColor. color2,
                                     ),
@@ -264,115 +262,160 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   ],
                                 ),
                               ),
-                            ),
-                            SizedBox(width: width / width6),
-                            Expanded(
-                              child: Container(
-                                height: height / height60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(width / width10),
-                                  color:DarkColor. WidgetColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    InterMedium(
-                                      text: 'End date',
-                                      fontsize: width / width16,
-                                      color:DarkColor. color2,
+                              SizedBox(height: height / height20),
+                              InterBold(
+                                text: 'Allocation Date',
+                                color: DarkColor. color1,
+                                fontsize: width / width16,
+                              ),
+                              SizedBox(height: height / height10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: height / height60,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                        color: DarkColor.WidgetColor,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          InterMedium(
+                                            text: 'Start date',
+                                            fontsize: width / width16,
+                                            color: DarkColor. color2,
+                                          ),
+                                          SvgPicture.asset(
+                                            'assets/images/calendar_clock.svg',
+                                            width: width / width20,
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    SvgPicture.asset(
-                                      'assets/images/calendar_clock.svg',
-                                      width: width / width20,
-                                    )
-                                  ],
+                                  ),
+                                  SizedBox(width: width / width6),
+                                  Expanded(
+                                    child: Container(
+                                      height: height / height60,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                        color: DarkColor.WidgetColor,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          InterMedium(
+                                            text: 'End date',
+                                            fontsize: width / width16,
+                                            color: DarkColor. color2,
+                                          ),
+                                          SvgPicture.asset(
+                                            'assets/images/calendar_clock.svg',
+                                            width: width / width20,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: height / height20),
+                              InterBold(
+                                text: 'Allocation Purpose',
+                                fontsize: width / width16,
+                                color: DarkColor. color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: 'Write something...',
+                                controller: _AllocationPurposeController,
+                                showIcon: true,
+                                isExpanded: true,
+                              ),
+                              SizedBox(height: height / height20),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: width / width30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterBold(
+                                text: 'Key Name',
+                                fontsize: width / width16,
+                                color: DarkColor. color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              DropdownButtonFormField<String>(
+                                value: selectedKeyName,
+                                items: keys.map((DocumentSnapshot document) {
+                                  Map<String, dynamic> data =
+                                      document.data() as Map<String, dynamic>;
+                                  return DropdownMenuItem<String>(
+                                    value: data['KeyName'],
+                                    child: Text(data['KeyName']),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedKeyName = newValue;
+                                    selectedKeyId = keys
+                                        .firstWhere((document) =>
+                                            (document.data() as Map<String,
+                                                dynamic>)['KeyName'] ==
+                                            newValue)
+                                        .id;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(width / width10),
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: width / width20,
+                                      vertical: height / height60),
+                                  hintText: 'Select Key Name',
+                                  hintStyle: TextStyle(color: DarkColor.color2),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height / height20),
-                        InterBold(
-                          text: 'Allocation Purpose',
-                          fontsize: width / width16,
-                          color: DarkColor.color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: 'Write something...',
-                          controller: _AllocationPurposeController,
-                          showIcon: true,
-                          isExpanded: true,
-                        ),
-                        SizedBox(height: height / height20),
-                      ],
-                    ),
-                  )
-                      : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InterBold(
-                          text: 'Key Name',
-                          fontsize: width / width16,
-                          color:DarkColor. color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        DropdownButtonFormField<String>(
-                          value: selectedKeyName,
-                          items: keys.map((DocumentSnapshot document) {
-                            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                            return DropdownMenuItem<String>(
-                              value: data['KeyName'],
-                              child: Text(data['KeyName']),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedKeyName = newValue;
-                              selectedKeyId = keys.firstWhere((document) => (document.data() as Map<String, dynamic>)['KeyName'] == newValue).id;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(width / width10),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: width / width20, vertical: height / height60),
-                            hintText: 'Select Key Name',
-                            hintStyle: TextStyle(color: DarkColor.color2),
+                              SizedBox(height: height / height10),
+                              InterBold(
+                                text: 'Allocate Qt.',
+                                fontsize: width / width16,
+                                color: DarkColor. color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: '0',
+                                controller: _AllocateQtController2,
+                                showIcon: false,
+                                textInputType: TextInputType.number,
+                              ),
+                              SizedBox(height: height / height10),
+                              InterBold(
+                                text: 'Description',
+                                fontsize: width / width16,
+                                color: DarkColor. color1,
+                              ),
+                              SizedBox(height: height / height10),
+                              CustomeTextField(
+                                hint: 'Write something...',
+                                controller: _DescriptionController,
+                                showIcon: true,
+                                isExpanded: true,
+                              ),
+                              SizedBox(height: height / height20),
+                            ],
                           ),
                         ),
-                        SizedBox(height: height / height10),
-                        InterBold(
-                          text: 'Allocate Qt.',
-                          fontsize: width / width16,
-                          color: DarkColor.color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: '0',
-                          controller: _AllocateQtController2,
-                          showIcon: false,
-                          textInputType: TextInputType.number,
-                        ),
-                        SizedBox(height: height / height10),
-                        InterBold(
-                          text: 'Description',
-                          fontsize: width / width16,
-                          color: DarkColor.color1,
-                        ),
-                        SizedBox(height: height / height10),
-                        CustomeTextField(
-                          hint: 'Write something...',
-                          controller: _DescriptionController,
-                          showIcon: true,
-                          isExpanded: true,
-                        ),
-                        SizedBox(height: height / height20),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),

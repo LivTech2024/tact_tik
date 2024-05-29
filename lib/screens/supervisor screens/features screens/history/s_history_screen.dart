@@ -67,12 +67,12 @@ class _HistoryScreenState extends State<SHistoryScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              backgroundColor: DarkColor.AppBarcolor,
+              backgroundColor: DarkColor. AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
@@ -120,7 +120,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                         InterBold(
                           text: "${date}  ${dayOfWeek}",
                           fontsize: width / width18,
-                          color: DarkColor.color1,
+                          color: DarkColor. color1,
                         ),
                         SizedBox(height: height / height20),
                         Container(
@@ -132,7 +132,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(width / width10),
-                            color: DarkColor.WidgetColor,
+                            color: DarkColor. WidgetColor,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,7 +146,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     InterSemibold(
                                       text: 'Shift Name',
                                       fontsize: width / width16,
-                                      color: DarkColor. color1,
+                                      color: DarkColor.color1,
                                     ),
                                     SizedBox(width: width / width40),
                                     Flexible(
@@ -180,7 +180,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                       child: InterSemibold(
                                         text: shift['ShiftLocationAddress'],
                                         fontsize: width / width16,
-                                        color: DarkColor.color1,
+                                        color: DarkColor. color1,
                                       ),
                                     ),
                                   ],
@@ -232,7 +232,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                           InterSemibold(
                                             text: '02hr 36min',
                                             fontsize: width / width16,
-                                            color: DarkColor. color1,
+                                            color: DarkColor.color1,
                                           ),
                                         ],
                                       ),
@@ -265,7 +265,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                   ],
                                 ),
                                 onPressed: () {},
-                                backgroundcolor: DarkColor. Primarycolorlight,
+                                backgroundcolor: DarkColor.Primarycolorlight,
                                 useBorderRadius: true,
                                 MyBorderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(width / width12),

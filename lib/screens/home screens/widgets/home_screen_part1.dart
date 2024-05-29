@@ -36,6 +36,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
   int hour = DateTime.now().hour;
 
   String greeting = 'Good ';
+  
+  get employeeImg => null;
 
   @override
   Widget build(BuildContext context) {
@@ -63,18 +65,29 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: height / height55,
-                    width: width / width55,
-                    decoration: BoxDecoration(
-                      // image: DecorationImage(
-                      //   image: employeeImg != null
-                      //       ? NetworkImage(employeeImg)
-                      //       : NetworkImage(
-                      //           'https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg'),
-                      //   filterQuality: FilterQuality.high,
-                      //   fit: BoxFit.cover,
-                      // ),
+                    height: height / height50,
+                    width: width / width50,
+                    decoration: employeeImg != null
+                        ? BoxDecoration(
                       shape: BoxShape.circle,
+                      // color: Primarycolor,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            employeeImg ?? ""),
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                        : BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: DarkColor. Primarycolor,
+                      image: DecorationImage(
+                        image: /*widget.guardsInfo['EmployeeImg'] != null ? NetworkImage(
+                                widget.guardsInfo['EmployeeImg'] ?? "") :*/
+                        AssetImage('assets/images/default.png'),
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   /*CircleAvatar(

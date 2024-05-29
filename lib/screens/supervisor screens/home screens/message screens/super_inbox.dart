@@ -63,7 +63,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
     }
   }*/
 
-  String dropdownValue = 'All'; // Initialize default value
+  String dropdownValue = 'All Guards'; // Initialize default value
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       child: SizedBox(
                         child: Center(
                           child: InterBold(
-                            text: 'Edit',
+                            text: 'Guards',
                             color: colors[0],
                             fontsize: width / width18,
                           ),
@@ -158,7 +158,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       child: SizedBox(
                         child: Center(
                           child: InterBold(
-                            text: 'Reports',
+                            text: 'Admin',
                             color: colors[1],
                             fontsize: width / width18,
                           ),
@@ -175,7 +175,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: height / height30),
+                        SizedBox(height: height / height20),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             iconSize: width / width24,
@@ -195,7 +195,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               });
                             },
                             items: <String>[
-                              'All',
+                              'All Guards',
                               'available',
                               'unavailable'
                             ] // Add your options here
@@ -269,14 +269,15 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                             width: width / width50,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  'url',
-                                                ),
-                                                filterQuality:
-                                                    FilterQuality.high,
-                                                fit: BoxFit.cover,
-                                              ),
+                                              color:DarkColor.Primarycolor ,
+                                              // image: DecorationImage(
+                                              //   image: NetworkImage(
+                                              //     'url',
+                                              //   ),
+                                              //   filterQuality:
+                                              //       FilterQuality.high,
+                                              //   fit: BoxFit.cover,
+                                              // ),
                                             ),
                                           ),
                                           SizedBox(

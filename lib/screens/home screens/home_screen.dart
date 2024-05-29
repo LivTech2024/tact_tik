@@ -40,6 +40,7 @@ import 'package:tact_tik/utils/colors.dart';
 import '../../common/sizes.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
+import '../../login_screen.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
@@ -457,7 +458,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeScreenController(), permanent: true);
-
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Site Tours'],
@@ -467,8 +467,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/task.png', 'Task'],
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
-      ['assets/images/key&assets.png', 'Key & Assets'],
-      ['assets/images/key&assets.png', 'Key'],
+      ['assets/images/assets.png', 'Assets'],
+      ['assets/images/keys.png', 'Key'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -533,18 +533,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                          ), //
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                                size: Size.fromRadius(width / width50),
-                                child: Image.network(
-                                  employeeImg!,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/default.png'),
+                          foregroundImage: NetworkImage(employeeImg!),
+                          radius: width / width50,
+                          backgroundColor: DarkColor.Primarycolor,
+                          // maxRadius: width / width50,
+                          // minRadius: width / width50,
                         ),
                         SizedBox(height: height / height10),
                         PoppinsSemibold(
@@ -589,9 +585,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     buildListTile(
                       Icons.add_card,
-                      'Payment',
+                      'Wages',
                       2,
-                      () {},
+                      () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             EmploymentLetterScreen()));
+                      },
                     ),
                     buildListTile(
                       Icons.article,
@@ -622,11 +624,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     buildListTile(
-                      Icons.settings,
-                      'Settings',
+                      Icons.switch_left,
+                      'Theme',
                       5,
                       () async {
-                        List<String> emails = [];
+                        // List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");ƒ
@@ -679,7 +681,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontsize: width / width14,
                 ),
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens(), _employeeId);
+                  auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
               SizedBox(height: height / height10)
@@ -793,44 +795,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
                         child: Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: ShiftExist
-                                ? FutureBuilder(
-                                    future:
-                                        Future.delayed(Duration(seconds: 2)),
-                                    builder: (c, s) => s.connectionState ==
-                                            ConnectionState.done
-                                        ? StartTaskScreen(
-                                            ShiftDate: _ShiftDate,
-                                            ShiftClientID: _shiftCLientId,
-                                            ShiftEndTime: _ShiftEndTime,
-                                            ShiftStartTime: _ShiftStartTime,
-                                            EmployeId: _employeeId,
-                                            ShiftId: _shiftId,
-                                            ShiftAddressName:
-                                                _ShiftLocationName,
-                                            ShiftCompanyId:
-                                                _ShiftCompanyId ?? "",
-                                            ShiftBranchId: _ShiftBranchId,
-                                            EmployeeName: _userName ?? "",
-                                            ShiftLocationId: _shiftLocationId,
-                                            resetShiftStarted: () {},
-                                            ShiftIN: true,
-                                            onRefresh: refreshHomeScreen,
-                                            ShiftName: _ShiftName,
-                                            ShiftStatus: _ShiftStatus)
-                                        : Center(
-                                            child: InterMedium(
-                                              text: 'Loading...',
-                                              color: DarkColor.Primarycolor,
-                                              fontsize: width / width14,
-                                            ),
+                          padding: EdgeInsets.only(
+                            left: width / width30,
+                            right: width / width30,
+                          ),
+                          child: ShiftExist
+                              ? FutureBuilder(
+                                  future: Future.delayed(Duration(seconds: 2)),
+                                  builder: (c, s) => s.connectionState ==
+                                          ConnectionState.done
+                                      ? StartTaskScreen(
+                                          ShiftDate: _ShiftDate,
+                                          ShiftClientID: _shiftCLientId,
+                                          ShiftEndTime: _ShiftEndTime,
+                                          ShiftStartTime: _ShiftStartTime,
+                                          EmployeId: _employeeId,
+                                          ShiftId: _shiftId,
+                                          ShiftAddressName: _ShiftLocationName,
+                                          ShiftCompanyId: _ShiftCompanyId ?? "",
+                                          ShiftBranchId: _ShiftBranchId,
+                                          EmployeeName: _userName ?? "",
+                                          ShiftLocationId: _shiftLocationId,
+                                          resetShiftStarted: () {},
+                                          ShiftIN: true,
+                                          onRefresh: refreshHomeScreen,
+                                          ShiftName: _ShiftName,
+                                          ShiftStatus: _ShiftStatus)
+                                      : Center(
+                                          child: InterMedium(
+                                            text: 'Loading...',
+                                            color: DarkColor. Primarycolor,
+                                            fontsize: width / width14,
                                           ),
-                                  )
-                                : SizedBox()),
+                                        ),
+                                )
+                              : SizedBox(),
+                        ),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(
@@ -869,9 +869,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             );
                                           },
                                         );
-                                        // Get.to(
-                                        //   () => ,
-                                        // );
                                         break;
                                       case 2:
                                         Navigator.push(
@@ -918,8 +915,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PostOrder()));
+                                                builder: (context) => PostOrder(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));
                                         break;
                                       case 5:
                                         /*TaskScreen*/
@@ -980,7 +979,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              childCount: 10,
+                              childCount: data.length,
                             ),
                           )
                         : ScreenIndex == 2
@@ -1195,7 +1194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: GestureDetector(
                                     onTap: () {},
                                     child: Container(
-                                      height: height / height80,
+                                      height: height / height120,
                                       margin: EdgeInsets.only(
                                         top: height / height10,
                                       ),
@@ -1247,7 +1246,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: width / width10,
+                                            width: width / width6,
                                           ),
                                           SizedBox(
                                             width: width / width300,
@@ -1291,7 +1290,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ],
                                                 ),
                                                 SizedBox(
-                                                    height: height / height5),
+                                                  height: height / height5,
+                                                ),
                                                 Flexible(
                                                   child: InterRegular(
                                                     text:
