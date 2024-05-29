@@ -304,9 +304,16 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               right: -5,
                               child: IconButton(
                                 onPressed: () => _deleteItem(index),
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
+                                icon: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white
+                                  ),
+                                  child: Icon(
+                                    Icons.close_sharp,
+                                    color: Colors.black,
+                                    size: width / width20,
+                                  ),
                                 ),
                                 padding: EdgeInsets.zero,
                               ),
@@ -431,12 +438,15 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                     );
                   } else {
                     return SizedBox(
-                      height: height / height100,
-                      width: width / width20,
-                      child: Image.network(url),
+                      height: height / height80,
+                      width: width / width80,
+                      child: Image.network(url , fit: BoxFit.contain,),
                     );
                   }
                 },
+              ),
+              SizedBox(
+                height: height / height40,
               ),
               Button1(
                 text: 'Done',

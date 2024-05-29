@@ -456,8 +456,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/task.png', 'Task'],
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
-      ['assets/images/key&assets.png', 'Key & Assets'],
-      ['assets/images/key&assets.png', 'Key'],
+      ['assets/images/assets.png', 'Assets'],
+      ['assets/images/keys.png', 'Key'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -512,18 +512,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                          ), //
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                                size: Size.fromRadius(width / width50),
-                                child: Image.network(
-                                  employeeImg!,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/default.png'),
+                          foregroundImage: NetworkImage(employeeImg!),
+                          radius: width / width50,
+                          backgroundColor: Primarycolor,
+                          // maxRadius: width / width50,
+                          // minRadius: width / width50,
                         ),
                         SizedBox(height: height / height10),
                         PoppinsSemibold(
@@ -930,7 +926,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              childCount: 10,
+                              childCount: data.length,
                             ),
                           )
                         : ScreenIndex == 2

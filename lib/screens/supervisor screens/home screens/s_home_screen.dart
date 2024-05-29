@@ -132,7 +132,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String Imgurl = userInfo['EmployeeImg'];
         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(CompanyId);
+        await fireStoreService.getGuardForSupervisor(CompanyId);
         print("Guards INfor ${guardsInfo}");
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
@@ -154,8 +154,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
@@ -212,14 +218,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
         endDrawer: Drawer(
           child: Column(
             children: [
-              Container(
-                height: height / height180,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
-                  color: Primarycolor, // Background color for the drawer header
-                ),
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/images/default.png'),
+                foregroundImage: NetworkImage(_userImg),
+                radius: width / width50,
+                backgroundColor: Primarycolor,
+                // maxRadius: width / width50,
+                // minRadius: width / width50,
               ),
+
+              /*CircleAvatar(
+                                            backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
+                                            radius: width / width20,
+                                            backgroundColor: Primarycolor,
+                                          )*/
               Expanded(
                 child: Column(
                   children: [
@@ -313,11 +325,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               useSVG: true,
                               SVG: NewMessage
                                   ? ScreenIndex == 3
-                                      ? 'assets/images/message_dot.svg'
-                                      : 'assets/images/no_message_dot.svg'
+                                  ? 'assets/images/message_dot.svg'
+                                  : 'assets/images/no_message_dot.svg'
                                   : ScreenIndex == 3
-                                      ? 'assets/images/message.svg'
-                                      : 'assets/images/no_message.svg',
+                                  ? 'assets/images/message.svg'
+                                  : 'assets/images/no_message.svg',
                               text: 'Message',
                               icon: Icons.chat_bubble_outline,
                               color: IconColors[3],
@@ -333,153 +345,155 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
               ScreenIndex == 0
                   ? SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          String guardStatus = "";
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    String guardStatus = "";
 
-                          if (index < _guardsInfo.length) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                left: width / width30,
-                                right: width / width30,
-                              ),
-                              child: HomeScreenUserCard(
-                                guardsInfo: _guardsInfo[index],
-                                CompanyId: _CompanyId,
+                    if (index < _guardsInfo.length) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: width / width30,
+                          right: width / width30,
+                        ),
+                        child: HomeScreenUserCard(
+                          guardsInfo: _guardsInfo[index],
+                          CompanyId: _CompanyId,
+                        ),
+                      );
+                    } else {
+                      return SizedBox(); // Return an empty SizedBox for index out of bounds
+                    }
+                  },
+                  childCount: _guardsInfo.length,
+                ),
+              )
+                  : ScreenIndex == 1
+                  ? SliverGrid(
+                gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Number of columns
+                  // mainAxisSpacing: 10.0, // Spacing between rows
+                  // crossAxisSpacing: 14.0,
+                  // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
+                ),
+                delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    return Bounce(
+                      onTap: () {
+                        switch (index) {
+                          case 0:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SPanicScreen(
+                                          empId: _employeeId,
+                                        )));
+                          case 1:
+                            Get.to(() =>
+                                SupervisorTrackingScreen(
+                                  companyId: _CompanyId,
+                                  guardsInfo: _guardsInfo,
+                                ));
+                        //   break;
+                        // case 2:
+                        //   Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) =>
+                        //               DarDisplayScreen(
+                        //                 EmpEmail: _employeeId,
+                        //               )));
+                        //   break;
+                          case 2:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectDARGuardsScreen(
+                                      companyId: _CompanyId,
+                                    ),
                               ),
                             );
-                          } else {
-                            return SizedBox(); // Return an empty SizedBox for index out of bounds
-                          }
-                        },
-                        childCount: _guardsInfo.length,
+                            break;
+                          case 4:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SPostOrder(
+                                      locationId: 'DrD1H6YXEui4G72EHTEZ',
+                                    ),
+                              ),
+                            );
+                            break;
+                        // case 5:
+                        //   // TODO Task Screen
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) =>
+                        //           PatrollLogsScreen(),
+                        //     ),
+                        //   );
+                        //   break;
+                          case 6:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectLoogBookGuardsScreen(
+                                      companyId: _CompanyId,
+                                    ),
+                              ),
+                            );
+                            break;
+                          case 7:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectVisitorsGuardsScreen(
+                                      companyId: _CompanyId,
+                                    ),
+                              ),
+                            );
+                            break;
+                          case 8:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectAssetsGuardsScreen(
+                                      companyId: _CompanyId,
+                                    ),
+                              ),
+                            );
+                            break;
+                          case 9:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectKeysGuardsScreen(
+                                      companyId: _CompanyId,
+                                    ),
+                              ),
+                            );
+                            break;
+                          default:
+                        }
+                      },
+                      child: gridWidget(
+                        img: data[index][0],
+                        tittle: data[index][1],
                       ),
-                    )
-                  : ScreenIndex == 1
-                      ? SliverGrid(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, // Number of columns
-                            // mainAxisSpacing: 10.0, // Spacing between rows
-                            // crossAxisSpacing: 14.0,
-                            // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
-                          ),
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return Bounce(
-                                onTap: () {
-                                  switch (index) {
-                                    case 0:
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SPanicScreen(
-                                                    empId: _employeeId,
-                                                  )));
-                                    case 1:
-                                      Get.to(() => SupervisorTrackingScreen(
-                                            companyId: _CompanyId,
-                                            guardsInfo: _guardsInfo,
-                                          ));
-                                    //   break;
-                                    // case 2:
-                                    //   Navigator.push(
-                                    //       context,
-                                    //       MaterialPageRoute(
-                                    //           builder: (context) =>
-                                    //               DarDisplayScreen(
-                                    //                 EmpEmail: _employeeId,
-                                    //               )));
-                                    //   break;
-                                    case 2:
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectDARGuardsScreen(
-                                            companyId: _CompanyId,
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    case 4:
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SPostOrder(
-                                            locationId: 'DrD1H6YXEui4G72EHTEZ',
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    // case 5:
-                                    //   // TODO Task Screen
-                                    //   Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //       builder: (context) =>
-                                    //           PatrollLogsScreen(),
-                                    //     ),
-                                    //   );
-                                    //   break;
-                                    case 6:
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectLoogBookGuardsScreen(
-                                            companyId: _CompanyId,
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    case 7:
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectVisitorsGuardsScreen(
-                                            companyId: _CompanyId,
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    case 8:
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectAssetsGuardsScreen(
-                                            companyId: _CompanyId,
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    case 9:
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectKeysGuardsScreen(
-                                            companyId: _CompanyId,
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    default:
-                                  }
-                                },
-                                child: gridWidget(
-                                  img: data[index][0],
-                                  tittle: data[index][1],
-                                ),
-                              );
-                            },
-                            childCount: data.length,
-                          ),
-                        )
-                      : SliverToBoxAdapter(),
+                    );
+                  },
+                  childCount: data.length,
+                ),
+              )
+                  : SliverToBoxAdapter(),
             ],
           ),
         ),
@@ -507,8 +521,14 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    final double width = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return GestureDetector(
       onTap: () {
@@ -540,11 +560,24 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       Container(
                         height: height / height50,
                         width: width / width50,
-                        decoration: BoxDecoration(
+                        decoration: widget.guardsInfo['EmployeeImg'] != null
+                            ? BoxDecoration(
                           shape: BoxShape.circle,
+                          // color: Primarycolor,
                           image: DecorationImage(
                             image: NetworkImage(
-                                widget.guardsInfo['EmployeeImg'] ?? ""),
+                                widget.guardsInfo['EmployeeImg'] ?? "") ,
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                            : BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Primarycolor,
+                          image: DecorationImage(
+                            image: /*widget.guardsInfo['EmployeeImg'] != null ? NetworkImage(
+                                widget.guardsInfo['EmployeeImg'] ?? "") :*/ AssetImage(
+                                'assets/images/default.png'),
                             filterQuality: FilterQuality.high,
                             fit: BoxFit.cover,
                           ),
@@ -564,12 +597,12 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: widget.guardsInfo['EmployeeIsAvailable'] ==
-                              "available"
+                          "available"
                           ? Colors.green
                           : widget.guardsInfo['EmployeeIsAvailable'] ==
-                                  "on_shift"
-                              ? Colors.orange
-                              : Colors.red,
+                          "on_shift"
+                          ? Colors.orange
+                          : Colors.red,
                     ),
                   )
                 ],
@@ -590,16 +623,17 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateSheduleScreen(
+                                  builder: (context) =>
+                                      CreateSheduleScreen(
                                         GuardId:
-                                            widget.guardsInfo["EmployeeId"] ??
-                                                "",
+                                        widget.guardsInfo["EmployeeId"] ??
+                                            "",
                                         GuardName:
-                                            widget.guardsInfo["EmployeeName"] ??
-                                                "",
+                                        widget.guardsInfo["EmployeeName"] ??
+                                            "",
                                         GuardImg:
-                                            widget.guardsInfo["EmployeeImg"] ??
-                                                "",
+                                        widget.guardsInfo["EmployeeImg"] ??
+                                            "",
                                         CompanyId: widget.CompanyId ?? "",
                                       )),
                             );
@@ -616,11 +650,12 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SLogBookScreen(
+                                    builder: (context) =>
+                                        SLogBookScreen(
                                           empId:
-                                              widget.guardsInfo['EmployeeId'],
+                                          widget.guardsInfo['EmployeeId'],
                                           empName:
-                                              widget.guardsInfo['EmployeeName'],
+                                          widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
@@ -633,11 +668,12 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SHistoryScreen(
+                                    builder: (context) =>
+                                        SHistoryScreen(
                                           empID:
-                                              widget.guardsInfo['EmployeeId'],
+                                          widget.guardsInfo['EmployeeId'],
                                           empName:
-                                              widget.guardsInfo['EmployeeName'],
+                                          widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
