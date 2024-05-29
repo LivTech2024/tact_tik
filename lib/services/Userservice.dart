@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
-
 class UserService {
   FireStoreService fireStoreService = FireStoreService();
   String? shiftLocationId;
@@ -9,7 +8,6 @@ class UserService {
   String? shiftLocation;
   String? userName;
   String? ShiftId;
-
   String? shiftClientId;
   String? shiftCompanyId;
   String? shiftCompanyBranchId;
@@ -18,7 +16,6 @@ class UserService {
   Timestamp? shiftDate;
   // Timestamp? shiftDate; //shiftDate
   UserService({required FireStoreService firestoreService});
-
   Future<void> getShiftInfo() async {
     var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
     if (userInfo != null) {
@@ -28,9 +25,7 @@ class UserService {
       // String empImage = userInfo['EmployeeImg'] ?? "";
       var shiftInfo =
           await fireStoreService.getShiftByEmployeeIdFromUserInfo(employeeId);
-
       print('User Info: ${userInfo.data()}');
-
       if (shiftInfo != null) {
         shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
         shiftStartTime = shiftInfo['ShiftStartTime'] ?? " ";
@@ -42,9 +37,7 @@ class UserService {
         shiftCompanyBranchId = shiftInfo['ShiftCompanyBranchId'] ?? " ";
         shiftName = shiftInfo['ShiftName'] ?? " ";
         shiftDate = shiftInfo['ShiftDate'] ?? " ";
-
         //ShiftClientId  ShiftCompanyBranchId  // ShiftCompanyId //ShiftDate  //ShiftCompanyBranchId  //ShiftDate
-
         // String shiftName = shiftInfo['ShiftName'] ?? " ";
         String shiftId = shiftInfo['ShiftId'] ?? " ";
       } else {

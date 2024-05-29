@@ -20,11 +20,13 @@ class DarOpenAllScreen extends StatefulWidget {
   final String? DarId;
   final String Username;
   final String Empid;
+  bool editable;
 
-  const DarOpenAllScreen(
+  DarOpenAllScreen(
       {super.key,
       this.passdate,
       this.DarId,
+      this.editable = true,
       required this.Username,
       required this.Empid});
 
@@ -49,8 +51,12 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     // fetchDarTileData();
   }
 
+  void refresh() {
+    _fetchShiftDetails();
+  }
+
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
-    final employeeId = FirebaseAuth.instance.currentUser?.uid;
+    final employeeId = _userService.employeeId;
     print("testtfwdf:$employeeId");
 
     final reportsCollection =
@@ -60,7 +66,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         .get();
 
     final reports = querySnapshot.docs.map((doc) => doc.data()).toList();
-
+    print("Report ${reports}");
     Map<String, List<Map<String, dynamic>>> reportsByHour = {};
     for (var report in reports) {
       final timestampStr = report['PatrolLogStartedAt'] as Timestamp;
@@ -74,7 +80,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         reportsByHour[hourKey] = [report];
       }
     }
-
+    print("Report By HOur ${reportsByHour}");
     return reportsByHour;
   }
 
@@ -84,9 +90,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     final employeeId = FirebaseAuth.instance.currentUser?.uid;
 
     final patrolLogsCollection =
-        FirebaseFirestore.instance.collection('PatrolLogs');
+        FirebaseFirestore.instance.collection('Reports');
     final querySnapshot = await patrolLogsCollection
-        .where('PatrolLogGuardId', isEqualTo: employeeId)
+        .where('ReportEmployeeId', isEqualTo: employeeId)
         .get();
 
     final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -513,7 +519,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         child: SizedBox(
                           child: Center(
                             child: InterBold(
-                              text: 'Edit',
+                              text: widget.editable ? 'Edit' : 'Read',
                               color: colors[0],
                               fontsize: width / width18,
                             ),
@@ -653,9 +659,16 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   darTiles: data,
                                                   EmployeeId: widget.Empid,
                                                   EmployeeName: widget.Username,
+                                                  iseditable: widget.editable,
+                                                  onCallback: () {
+                                                    print("Callback Called");
+                                                    refresh();
+                                                  },
                                                 ),
                                               ),
                                             );
+                                            //refresh the screen
+                                            refresh();
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 
@@ -82,6 +83,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   ];
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
 
@@ -97,8 +99,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     });
   }
 
-  void NavigateScreen(Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  void NavigateScreen(Widget screen, BuildContext context) {
+    void NavigateScreen(Widget screen, BuildContext context) {
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+    }
   }
 
   void ChangeIconColor(int index) {
@@ -150,20 +156,31 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     // _getCurrentUserUid();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _getUserInfo();
+  }
+
   // 12 datani mall shift start id A local stoarage
   // 2 capital mall
   void _getUserInfo() async {
+    print("Fetching user info");
     var userInfo = await fireStoreService.getClientInfoByCurrentUserEmail();
     if (mounted) {
       if (userInfo != null) {
         String userName = userInfo['ClientName'];
         String EmployeeId = userInfo['ClientId'];
         String empEmail = userInfo['ClientEmail'];
-        String empImage = userInfo['EmployeeImg'] ?? "";
+        String empImage = userInfo['ClientHomePageBgImg'] ?? "";
+        print("Employee Id ${EmployeeId}");
         var shiftInfo =
             await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
-        var patrolInfo = await fireStoreService
-            .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
+        var patrolInfo =
+            await fireStoreService.getPatrolsByClientId(EmployeeId);
+        print("User Info ${userName}");
+        print("Patrol Info ${patrolInfo}");
+
         setState(() {
           _userName = userName;
           _employeeId = EmployeeId;
@@ -172,35 +189,38 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
-          String PatrolArea = patrolInfo['PatrolArea'];
-          String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
-          bool PatrolKeepGuardInRadiusOfLocation =
-              patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
-          String PatrolLocationName = patrolInfo['PatrolLocationName'];
-          String PatrolName = patrolInfo['PatrolName'];
-          int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
-          Timestamp PatrolTime = patrolInfo['PatrolTime'];
-          DateTime patrolDateTime = PatrolTime.toDate();
-
-          // Format DateTime as String
-          String patrolTimeString =
-              DateFormat('hh:mm a').format(patrolDateTime);
-          String patrolDateString =
-              DateFormat('yyyy-MM-dd').format(patrolDateTime);
-          print('Patrol Info: ${patrolInfo.data()}');
-
           setState(() {
-            _patrolArea = PatrolArea;
-            _patrolCompanyId = PatrolCompanyId;
-            _patrolKeepGuardInRadiusOfLocation =
-                PatrolKeepGuardInRadiusOfLocation;
-            _patrolLocationName = PatrolLocationName;
-            _patrolRestrictedRadius = PatrolRestrictedRadius;
-            // _patrolTime = patrolTimeString;
-            _patrolDate = patrolDateString;
-
-            // issShift = false;
+            patrolsList = patrolInfo;
           });
+          //   String PatrolArea = patrolInfo['PatrolArea'];
+          //   String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
+          //   bool PatrolKeepGuardInRadiusOfLocation =
+          //       patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+          //   String PatrolLocationName = patrolInfo['PatrolLocationName'];
+          //   String PatrolName = patrolInfo['PatrolName'];
+          //   int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
+          //   Timestamp PatrolTime = patrolInfo['PatrolTime'];
+          //   DateTime patrolDateTime = PatrolTime.toDate();
+
+          //   // Format DateTime as String
+          //   String patrolTimeString =
+          //       DateFormat('hh:mm a').format(patrolDateTime);
+          //   String patrolDateString =
+          //       DateFormat('yyyy-MM-dd').format(patrolDateTime);
+          //   print('Patrol Info: ${patrolInfo.data()}');
+
+          //   setState(() {
+          //     _patrolArea = PatrolArea;
+          //     _patrolCompanyId = PatrolCompanyId;
+          //     _patrolKeepGuardInRadiusOfLocation =
+          //         PatrolKeepGuardInRadiusOfLocation;
+          //     _patrolLocationName = PatrolLocationName;
+          //     _patrolRestrictedRadius = PatrolRestrictedRadius;
+          //     // _patrolTime = patrolTimeString;
+          //     _patrolDate = patrolDateString;
+
+          //     // issShift = false;
+          //   });
         }
 
         if (shiftInfo != null) {
@@ -506,41 +526,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       Icons.settings,
                       'Settings',
                       5,
-                      () async {
-                        // List<String> emails = [];
-                        // emails.add("sutarvaibhav37@gmail.com");
-                        // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");
-                        // // "security@lestonholdings.com"
-                        // List<String> patrolLogIds = [];
-                        // patrolLogIds.add("jz05XKEGNGazZQPl4KiV");
-                        // patrolLogIds.add("ygLQKPhSsc2Uc8Sfbw7O");
-                        // patrolLogIds.add("vRVAWBW25mSSG7SxA0JM");
-                        // //Sending Shift end report
-                        // var data =
-                        //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "Hijql0nkNjA1tOhSf8wW",
-                        //   "PjiJ0MqsUA9oUwlPsUnr",
-                        // );
-
-                        // await sendShiftTemplateEmail(
-                        //   "Leston holdings ",
-                        //   emails,
-                        //   'Tacttik Shift Report',
-                        //   "Tacttik Shift Report",
-                        //   data,
-                        //   "Shift",
-                        //   "25 April",
-                        //   "Dan Martin",
-                        //   "20:00",
-                        //   "6:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
-                      },
+                      () async {},
                     ),
                   ],
                 ),
@@ -675,7 +661,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
+                            var Patrol = patrolsList[index];
+                            String PatrolName = Patrol['PatrolName'];
+                            String PatrolId = Patrol['PatrolId'];
+                            String PatrolLocation =
+                                Patrol['PatrolLocationName'];
+                            List<dynamic> PatrolCheckpoint =
+                                Patrol['PatrolCheckPoints'];
+                            int CheckpointCount = PatrolCheckpoint.length;
                             String guardStatus = "";
+                            // String reqCount = Patrol['PatrolRequiredCount'];
 
                             return Padding(
                               padding: EdgeInsets.only(
@@ -684,7 +679,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  NavigateScreen(ClientOpenPatrolScreen());
+                                  NavigateScreen(
+                                      ClientCheckPatrolScreen(
+                                        PatrolIdl: '',
+                                      ),
+                                      context);
+                                  NavigateScreen(
+                                      ClientCheckPatrolScreen(
+                                        PatrolIdl: PatrolId,
+                                      ),
+                                      context);
                                 },
                                 child: Container(
                                   height: height / height160,
@@ -738,8 +742,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 SizedBox(
                                                     height: height / height5),
                                                 InterRegular(
-                                                  text:
-                                                      '2972 Westheimer Rd.  Anaa xyz road 123 building',
+                                                  text: PatrolLocation ?? "",
                                                   maxLines: 1,
                                                   fontsize: width / width14,
                                                 ),
@@ -841,7 +844,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           width:
                                                               width / width6),
                                                       InterMedium(
-                                                        text: '100',
+                                                        text: CheckpointCount
+                                                                .toString() ??
+                                                            "",
                                                         fontsize:
                                                             width / width14,
                                                       ),
@@ -865,15 +870,15 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       height: height / height5),
                                                   Row(
                                                     children: [
-                                                      SvgPicture.asset(
-                                                        'assets/images/avg_pace.svg',
-                                                        width: width / width24,
-                                                      ),
+                                                      // SvgPicture.asset(
+                                                      //   'assets/images/avg_pace.svg',
+                                                      //   width: width / width24,
+                                                      // ),
                                                       SizedBox(
                                                           width:
                                                               width / width6),
                                                       InterMedium(
-                                                        text: '2',
+                                                        text: "2",
                                                         fontsize:
                                                             width / width14,
                                                       ),
@@ -891,7 +896,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             );
                           },
-                          childCount: 4,
+                          childCount: patrolsList.length,
                         ),
                       )
                     : ScreenIndex == 1
@@ -907,7 +912,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      NavigateScreen(ClientOpenPatrolScreen());
+                                      NavigateScreen(
+                                          ClientCheckPatrolScreen(
+                                            PatrolIdl: '',
+                                          ),
+                                          context);
                                     },
                                     child: Column(
                                       crossAxisAlignment:
@@ -1140,11 +1149,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                   height5),
                                                           Row(
                                                             children: [
-                                                              SvgPicture.asset(
-                                                                'assets/images/avg_pace.svg',
-                                                                width: width /
-                                                                    width24,
-                                                              ),
+                                                              // SvgPicture.asset(
+                                                              //   'assets/images/avg_pace.svg',
+                                                              //   width: width /
+                                                              //       width24,
+                                                              // ),
                                                               SizedBox(
                                                                   width: width /
                                                                       width6),
@@ -1233,7 +1242,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  NavigateScreen(ClientOpenPatrolScreen());
+                                  NavigateScreen(
+                                      ClientOpenPatrolScreen(
+                                        guardName: '',
+                                        startDate: '',
+                                        startTime: '',
+                                        endTime: '',
+                                        patrolLogCount: 0,
+                                        status: '',
+                                        feedback: '',
+                                        checkpoints: [],
+                                      ),
+                                      context);
                                 },
                                 child: Container(
                                   height: height / height80,

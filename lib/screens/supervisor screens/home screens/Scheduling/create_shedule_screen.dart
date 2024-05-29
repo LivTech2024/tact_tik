@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-import 'package:number_editing_controller/parsed_number_format/text_controller.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:number_editing_controller/number_editing_controller.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -57,14 +58,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List<String> locationSuggestions = ['Location 1', 'Location 2', 'Location 3'];
   String dropdownValue = 'Other';
   List<String> tittles = [];
-  String? selectedClint;
-  String? selectedLocatin;
+  String? selectedClint = 'Client';
+  String? selectedLocatin = 'Select Location';
   String? selectedGuard = 'Guard 1';
   List<DateTime> _selectedDates = [];
   String? selectedPosition;
+
   // selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
-  List<String> ClintValues = [];
-  List<String> LocationValues = [];
+  List<String> ClintValues = ['Client'];
+  List<String> LocationValues = ['Select Location'];
   List<String> PatrolValues = [];
   List<String> selectedPatrols = [];
   String? selectedPatrol;
@@ -148,7 +150,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   TextEditingController _clientcontrller = TextEditingController();
 
   DateTime? selectedDate;
-  List<TimeOfDay>? selectedTime;
+
+  // List<TimeOfDay>? selectedTime;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   TextEditingController _locationController = TextEditingController();
@@ -162,11 +165,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final requiredEmpcontroller = NumberEditingTextController.integer();
   final requiredPhotocontroller = NumberEditingTextController.integer();
   final requiredRadius = NumberEditingTextController.integer();
-
+  List<ValueItem> _selectedOptions = [];
   bool _isRestrictedChecked = false;
   List<DateTime> selectedDates = []; // Define and initialize selectedDates list
 
   List<Map<String, dynamic>> tasks = [];
+  List<Map<int, String>> PatrolList = [];
+  final MultiSelectController _Patrollcontroller = MultiSelectController();
 
   void _showDatePicker(BuildContext context) {
     showDialog(
@@ -261,6 +266,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       });
       print('Start Time: $startTime');
       print('End Time: $endTime');
+      setState(() {});
     }
   }
 
@@ -331,6 +337,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   bool nextScreen = false;
   String CreatedshiftId = "";
+
   void _addNewTask() {
     setState(() {
       tasks.add(
@@ -757,16 +764,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           ),
                           // Seperate Time
                           SetDetailsWidget(
-                            hintText: selectedTime == null
-                                ? 'Start Time'
-                                : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
+                            hintText: startTime != null
+                                ? startTime.toString()
+                                : 'Start Time',
                             icon: Icons.access_time_rounded,
                             onTap: () => _selectTime(context, true),
                           ),
                           SetDetailsWidget(
-                            hintText: selectedTime == null
-                                ? 'End Time'
-                                : '${selectedTime![0].hour}:${selectedTime![0].minute} To ${selectedTime![1].hour}:${selectedTime![1].minute}',
+                            hintText: endTime != null
+                                ? endTime.toString()
+                                : 'End Time',
                             icon: Icons.access_time_rounded,
                             onTap: () => _selectTime(context, false),
                           ),
@@ -926,9 +933,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           SizedBox(height: height / height10),
                           // Select Guards
                           Container(
-                            height: height / height60,
+                            // height: ,
+                            constraints:
+                                BoxConstraints(minHeight: height / height60),
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width10),
+                              horizontal: width / width10,
+                            ),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
                               borderRadius:
@@ -941,72 +951,129 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 ),
                               ),
                             ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                  // Set decoration to null to remove the underline
-                                  border: InputBorder.none,
-                                  // Optionally, you can add other decoration properties here
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.checklist,
+                                  color: DarkColor.color1,
+                                  size: width / width24,
                                 ),
-                                isExpanded: true,
-                                iconSize: width / width24,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconEnabledColor:  isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                                // Set icon color for enabled state
-                                dropdownColor:  isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
-                                style: TextStyle(color:  isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3),
-                                value: selectedPatrol,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    if (selectedPatrols.contains(newValue)) {
-                                      selectedPatrols.remove(newValue);
-                                    } else {
-                                      selectedPatrols.add(newValue!);
-                                    }
-                                  });
-                                },
-                                items:
-                                    PatrolValues.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Row(
-                                      children: [
-                                        selectedPatrols.contains(value)
-                                            ? Icon(Icons.check_circle,
-                                                color:  isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3)
-                                            : Icon(Icons.radio_button_unchecked,
-                                                color:  isDark
-                                                    ? DarkColor.color3
-                                                    : LightColor.color2),
-                                        // Conditional icon color based on selection
-                                        SizedBox(width: width / width10),
-                                        InterRegular(
-                                          text: value,
-                                          color: selectedPatrols.contains(value)
-                                              ?  isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3
-                                              :  isDark
-                                                  ? DarkColor.color3
-                                                  : LightColor.color2,
-                                        ),
-                                        // Conditional text color based on selection
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
+                                Expanded(
+                                  child: MultiSelectDropDown(
+                                    selectedOptionBackgroundColor: DarkColor.Primarycolor,
+                                    dropdownBackgroundColor: DarkColor.WidgetColor,
+                                    // showClearIcon: true,
+                                    fieldBackgroundColor: Colors.transparent,
+                                    optionsBackgroundColor:
+                                        DarkColor. WidgetColor,
+                                    borderColor: Colors.transparent,
+                                    controller: _Patrollcontroller,
+                                    onOptionSelected: (options) {
+                                      _selectedOptions = options;
+                                      print(_selectedOptions);
+                                      print('length is');
+                                      print(_selectedOptions.length);
+                                      setState(() {
+
+                                      });
+                                      // debugPrint(options.toString());
+                                    },
+                                    options: const <ValueItem>[
+                                      ValueItem(label: 'Option 1', value: '1'),
+                                      ValueItem(label: 'Option 2', value: '2'),
+                                      ValueItem(label: 'Option 3', value: '3'),
+                                      ValueItem(label: 'Option 4', value: '4'),
+                                      ValueItem(label: 'Option 5', value: '5'),
+                                      ValueItem(label: 'Option 6', value: '6'),
+                                    ],
+                                    disabledOptions: const [
+                                      ValueItem(label: 'Option 1', value: '1')
+                                    ],
+                                    selectionType: SelectionType.multi,
+                                    chipConfig: const ChipConfig(
+                                        wrapType: WrapType.wrap),
+                                    dropdownHeight: 300,
+                                    optionTextStyle:
+                                        const TextStyle(fontSize: 16),
+                                    selectedOptionIcon:
+                                        const Icon(Icons.check_circle),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          // TODO ${_selectedOptions[index].label} Hit Count
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: _selectedOptions.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(top: height / height10),
+                                padding: EdgeInsets.only(
+                                    left: width / width10),
+                                decoration: BoxDecoration(
+                                  // color: Colors.redAccent,
+                                  borderRadius: BorderRadius.circular(width / width10),
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: DarkColor. color19,
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.checklist,
+                                      color: DarkColor. color1,
+                                      size: width / width24,
+                                    ),
+                                    SizedBox(
+                                      width: width / width10,
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        keyboardType: TextInputType.number,
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: width / width18,
+                                          color: Colors.white,
+                                        ),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(width / width10),
+                                            ),
+                                          ),
+                                          focusedBorder: InputBorder.none,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: width / width18,
+                                            color: DarkColor. color2,
+                                          ),
+
+                                          hintText: '${_selectedOptions[index].label} Hit Count',
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        cursorColor: DarkColor. Primarycolor,
+
+                                        onSubmitted: (value) {
+                                          setState(() {
+                                            PatrolList[index][0] = value;
+                                            PatrolList[index][1] = _selectedOptions[index].label;
+                                          });
+                                          print(PatrolList);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+
+                          /**/
 
                           SetDetailsWidget(
                             keyboardType: TextInputType.number,
@@ -1341,7 +1408,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Button1(
                             text: 'Done',
                             onPressed: () {
-                              print(tasks);
+                              if (nextScreen!) {
+                                // print(tasks);
+                                print('clicked on done');
+                                print(PatrolList);
+                              }
                             },
                             backgroundcolor: DarkColor.  Primarycolor,
                             color: DarkColor.color22,

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -201,19 +203,12 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                             ),
                                           ],
                                         ),
-                                        Container(
-                                          height: height / height16,
-                                          width: width / width16,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: guardInfo[
-                                                        'EmployeeIsAvailable'] ==
-                                                    "available"
-                                                ? Colors.green
-                                                : guardInfo['EmployeeIsAvailable'] ==
-                                                        "on_shift"
-                                                    ? Colors.orange
-                                                    : Colors.red,
+                                        SizedBox(
+                                          height: height / height14,
+                                          width: width / width24,
+                                          child: SvgPicture.asset(
+                                            'assets/images/arrow.svg',
+                                            fit: BoxFit.fitWidth,
                                           ),
                                         )
                                       ],

@@ -40,7 +40,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   late Map<String, bool> _expandCategoryMap;
   TextEditingController Controller = TextEditingController();
   bool _isLoading = false;
-  String selectedOption = 'Normal';
 
   @override
   void initState() {

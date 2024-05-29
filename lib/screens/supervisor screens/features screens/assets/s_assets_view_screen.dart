@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // for date formatting
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
@@ -6,19 +9,57 @@ import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 
-class SAssetsViewScreen extends StatelessWidget {
-  const SAssetsViewScreen({super.key});
+class SAssetsViewScreen extends StatefulWidget {
+  final String companyId;
+  const SAssetsViewScreen({super.key, required this.companyId});
+
+  @override
+  _SAssetsViewScreenState createState() => _SAssetsViewScreenState();
+}
+
+class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
+  Map<String, List<QueryDocumentSnapshot>> groupedEquipments = {};
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEquipments();
+  }
+
+  Future<void> fetchEquipments() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Equipments')
+        .where('EquipmentCompanyId', isEqualTo: widget.companyId)
+        .get();
+
+    groupEquipmentsByDate(querySnapshot.docs);
+  }
+
+  void groupEquipmentsByDate(List<QueryDocumentSnapshot> equipments) {
+    final Map<String, List<QueryDocumentSnapshot>> tempGroupedEquipments = {};
+
+    for (var equipment in equipments) {
+      final createdAt = equipment['EquipmentCreatedAt'].toDate();
+      final dateKey = DateFormat('yyyy-MM-dd').format(createdAt);
+
+      if (!tempGroupedEquipments.containsKey(dateKey)) {
+        tempGroupedEquipments[dateKey] = [];
+      }
+      tempGroupedEquipments[dateKey]!.add(equipment);
+    }
+
+    setState(() {
+      groupedEquipments = Map.fromEntries(
+        tempGroupedEquipments.entries.toList()
+          ..sort((a, b) => b.key.compareTo(a.key)),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -70,77 +111,106 @@ class SAssetsViewScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
-                    child: GestureDetector(
-                      onTap: (){
-                        /*Navigator.push(
+            ...groupedEquipments.entries.map((entry) {
+              final date = entry.key;
+              final equipmentsForDate = entry.value;
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height30),
+                        child: InterBold(
+                          text: getDateHeader(date),
+                          fontsize: width / width20,
+                          color: DarkColor. Primarycolor,
+                        ),
+                      );
+                    }
+                    final equipment = equipmentsForDate[index - 1];
+                    final createdAt = equipment['EquipmentCreatedAt'].toDate();
+                    final formattedTime = DateFormat('hh:mm a').format(createdAt);
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width / width30),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ViewAssetsScreen()));*/
-                      },
-                      child: Container(
-                        height: width / width60,
-                        width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: height / height10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width / width10),
-                          color: DarkColor.WidgetColor,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: height / height44,
-                                  width: width / width44,
-                                  padding: EdgeInsets.symmetric(horizontal: width / width10),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(width / width10),
-                                    color: DarkColor. Primarycolorlight,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.home_repair_service,
-                                      color: DarkColor.Primarycolor,
-                                      size: width / width24,
+                                    SCreateAssignAssetScreen(companyId: widget.companyId,)));
+                        },
+                        child: Container(
+                          height: width / width60,
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(bottom: height / height10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(width / width10),
+                            color: DarkColor. WidgetColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: height / height44,
+                                    width: width / width44,
+                                    padding: EdgeInsets.symmetric(horizontal: width / width10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(width / width10),
+                                      color: DarkColor. Primarycolorlight,
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.home_repair_service,
+                                        color: DarkColor. Primarycolor,
+                                        size: width / width24,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: width / width20),
-                                InterMedium(
-                                  text: 'Equipment Title',
-                                  fontsize: width / width16,
-                                  color: DarkColor.color1,
-                                ),
-                              ],
-                            ),
-                            InterMedium(
-                              text: '11 : 36 pm',
-                              color: DarkColor.color17,
-                              fontsize: width / width16,
-                            ),
-                            SizedBox(width: width / width20),
-                          ],
+                                  SizedBox(width: width / width20),
+                                  InterMedium(
+                                    text: equipment['EquipmentName'],
+                                    fontsize: width / width16,
+                                    color: DarkColor. color1,
+                                  ),
+                                ],
+                              ),
+                              InterMedium(
+                                text: formattedTime,
+                                color: DarkColor.color17,
+                                fontsize: width / width16,
+                              ),
+                              SizedBox(width: width / width20),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                childCount: 10,
-              ),
-            ),
+                    );
+                  },
+                  childCount: equipmentsForDate.length + 1,
+                ),
+              );
+            }).toList(),
           ],
         ),
       ),
     );
+  }
+
+  String getDateHeader(String date) {
+    final today = DateTime.now().toUtc().toLocal();
+    final dateTime = DateTime.parse(date);
+
+    if (dateTime.year == today.year && dateTime.month == today.month && dateTime.day == today.day) {
+      return 'Today';
+    } else {
+      return DateFormat('EEEE, MMMM d, yyyy').format(dateTime);
+    }
   }
 }

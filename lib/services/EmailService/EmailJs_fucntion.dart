@@ -445,6 +445,7 @@ Future<void> customEmail() async {
   }
 }
 
+//Handle important and normal note
 Future<void> sendapiEmail(
     List<String> toEmails,
     String Subject,
@@ -462,7 +463,8 @@ Future<void> sendapiEmail(
     String Status,
     String? patrolTimein,
     String patrolTimeout,
-    String feedback) async {
+    String feedback,
+    String messageType) async {
   final url = 'https://backend-sceurity-app.onrender.com/api/send_email';
 
   for (var toEmail in toEmails) {
@@ -480,13 +482,15 @@ Future<void> sendapiEmail(
       imagesHTML += '<p>Status: $status</p>';
       imagesHTML += '<p>StatusReportedTime: $statusReportedTime</p>';
       imagesHTML += '<p>StatusComment: $statusComment</p>';
-
       // Add image tags for each ImageUrl with a specific size
       for (var imageUrl in imageUrls) {
         imagesHTML +=
             '<img src="$imageUrl" alt="Image" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ccc; margin-right: 8px;">';
       }
     }
+    String importantNoteContent = messageType == "Emergency" ? feedback : "";
+    String feedbackNoteContent = messageType == "Emergency" ? "" : feedback;
+
     final htmlcontent2 = """
 <!DOCTYPE html>
 <html lang="en">
@@ -532,6 +536,9 @@ Future<void> sendapiEmail(
             display: block; /* Prevent inline images from affecting layout */
             margin-bottom: 0.5rem; /* Add some space between images */
         }
+        .important-note {
+            color: red; /* Set text color to red */
+        }
     </style>
 </head>
 <body>
@@ -572,10 +579,10 @@ Future<void> sendapiEmail(
         <div class="report-section">
             <h3>Important Note</h3>
             <p id="important-note"></p>
-
+            $importantNoteContent
             <h3>Feedback Note</h3>
             <p id="important-note"></p>
-            $feedback
+            $feedbackNoteContent
         </div>
     </div>
     <script src="script.js"></script>

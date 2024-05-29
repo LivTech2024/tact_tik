@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/assets/view_assets_screen.dart';
@@ -9,19 +11,54 @@ import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
-class KeysScreen extends StatelessWidget {
-  const KeysScreen({super.key});
+class KeysScreen extends StatefulWidget {
+  final String keyId;
+  const KeysScreen({super.key, required this.keyId});
+
+  @override
+  State<KeysScreen> createState() => _KeysScreenState();
+}
+
+class _KeysScreenState extends State<KeysScreen> {
+  late Stream<QuerySnapshot> _keyAllocationStream;
+
+  Map<DateTime, List<QueryDocumentSnapshot>> groupDocumentsByDate(
+      List<QueryDocumentSnapshot>? documents) {
+    documents?.sort((a, b) {
+      final timestampA = a['KeyAllocationDate'] as Timestamp;
+      final timestampB = b['KeyAllocationDate'] as Timestamp;
+      return timestampB.compareTo(timestampA);
+    });
+
+    final Map<DateTime, List<QueryDocumentSnapshot>> documentsByDate = {};
+
+    if (documents != null) {
+      for (final document in documents) {
+        final allocationDate =
+            (document['KeyAllocationDate'] as Timestamp).toDate();
+        final date = DateTime(
+            allocationDate.year, allocationDate.month, allocationDate.day);
+
+        documentsByDate.putIfAbsent(date, () => []).add(document);
+      }
+    }
+
+    return documentsByDate;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _keyAllocationStream = FirebaseFirestore.instance
+        .collection('KeyAllocations')
+        .where('KeyAllocationKeyId', isEqualTo: widget.keyId)
+        .snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -65,9 +102,7 @@ class KeysScreen extends StatelessWidget {
                     InterBold(
                       text: 'Today',
                       fontsize: width / width20,
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.color3,
+                      color: DarkColor. Primarycolor,
                     ),
                     SizedBox(
                       height: height / height30,
@@ -86,7 +121,7 @@ class KeysScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ViewKeysScreen()));
+                                builder: (context) => ViewKeysScreen(startDate: "", endDate: "", keyId: widget.keyId,time: "",keyAllocationId: "",)));
                       },
                       child: Container(
                         height: width / width60,
@@ -95,20 +130,8 @@ class KeysScreen extends StatelessWidget {
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: isDark
-                                  ? Colors.transparent
-                                  : LightColor.color3.withOpacity(.05),
-                              blurRadius: 5,
-                              spreadRadius: 2,
-                              offset: Offset(0, 3),
-                            )
-                          ],
                           borderRadius: BorderRadius.circular(width / width10),
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: DarkColor.WidgetColor,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,19 +144,14 @@ class KeysScreen extends StatelessWidget {
                                   height: height / height44,
                                   width: width / width44,
                                   decoration: BoxDecoration(
-
                                     borderRadius:
                                     BorderRadius.circular(width / width10),
-                                    color: isDark
-                                        ? DarkColor.Primarycolorlight
-                                        : LightColor.Primarycolorlight,
+                                    color: DarkColor. Primarycolorlight,
                                   ),
                                   child: Center(
                                     child: Icon(
                                       Icons.home_repair_service,
-                                      color: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.Primarycolor,
+                                      color: DarkColor. Primarycolor,
                                       size: width / width24,
                                     ),
                                   ),
@@ -142,17 +160,13 @@ class KeysScreen extends StatelessWidget {
                                 InterMedium(
                                   text: 'Equipment Title',
                                   fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor. color1
-                                      : LightColor.color3,
+                                  color: DarkColor. color1,
                                 ),
                               ],
                             ),
                             InterMedium(
                               text: '11 : 36 pm',
-                              color: isDark
-                                  ? DarkColor.color17
-                                  : LightColor.color2,
+                              color: DarkColor.color17,
                               fontsize: width / width16,
                             ),
                             // SizedBox(width: width / width10),

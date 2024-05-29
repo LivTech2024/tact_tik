@@ -12,3 +12,4 @@ Widget MyNetworkImage(String img ,  double? mwidth){
     errorWidget: (context, url, error) => Icon(Icons.error),
   );
 }
+

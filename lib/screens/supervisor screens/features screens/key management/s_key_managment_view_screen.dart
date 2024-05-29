@@ -1,39 +1,87 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_manag_create_screen.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 's_key_manag_create_screen.dart';
 
-class SKeyManagementViewScreen extends StatelessWidget {
-  const SKeyManagementViewScreen({super.key});
+class SKeyManagementViewScreen extends StatefulWidget {
+  final String companyId;
+
+  const SKeyManagementViewScreen({super.key, required this.companyId});
+
+  @override
+  _SKeyManagementViewScreenState createState() =>
+      _SKeyManagementViewScreenState();
+}
+
+class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
+  Map<String, List<QueryDocumentSnapshot>> groupedKeys = {};
+
+  @override
+  void initState() {
+    super.initState();
+    fetchKeys();
+  }
+
+  Future<void> fetchKeys() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Keys')
+        .where('KeyCompanyId', isEqualTo: widget.companyId)
+        .get();
+
+    groupKeysByDate(querySnapshot.docs);
+  }
+
+  void groupKeysByDate(List<QueryDocumentSnapshot> keys) {
+    final Map<String, List<QueryDocumentSnapshot>> tempGroupedKeys = {};
+
+    for (var key in keys) {
+      final createdAt = key['KeyCreatedAt'].toDate();
+      final dateKey = DateFormat('yyyy-MM-dd').format(createdAt);
+
+      if (!tempGroupedKeys.containsKey(dateKey)) {
+        tempGroupedKeys[dateKey] = [];
+      }
+      tempGroupedKeys[dateKey]!.add(key);
+    }
+
+    setState(() {
+      groupedKeys = Map.fromEntries(
+        tempGroupedKeys.entries.toList()
+          ..sort((a, b) => b.key.compareTo(a.key)),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: DarkColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => (),
-            //     ));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SCreateKeyManagScreen(keyId: '', companyId: widget.companyId,),
+              ),
+            );
           },
           backgroundColor: DarkColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add , size: width / width24,),
+          child: Icon(
+            Icons.add,
+            size: width / width24,
+          ),
         ),
         body: CustomScrollView(
           slivers: [
@@ -53,7 +101,7 @@ class SKeyManagementViewScreen extends StatelessWidget {
                 },
               ),
               title: InterRegular(
-                text: 'Assets',
+                text: 'Keys',
                 fontsize: width / width18,
                 color: Colors.white,
                 letterSpacing: -0.3,
@@ -71,7 +119,7 @@ class SKeyManagementViewScreen extends StatelessWidget {
                       height: height / height30,
                     ),
                     InterBold(
-                      text: 'Today',
+                      text: 'Keys',
                       fontsize: width / width20,
                       color: DarkColor. Primarycolor,
                     ),
@@ -82,77 +130,120 @@ class SKeyManagementViewScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
-                    child: GestureDetector(
-                      onTap: (){
-                        /*Navigator.push(
+            ...groupedKeys.entries.map((entry) {
+              final date = entry.key;
+              final keysForDate = entry.value;
+
+              return SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: width / width30,
+                            vertical: height / height30),
+                        child: InterBold(
+                          text: getDateHeader(date),
+                          fontsize: width / width20,
+                          color: DarkColor. Primarycolor,
+                        ),
+                      );
+                    }
+                    final key = keysForDate[index - 1];
+                    final createdAt = key['KeyCreatedAt'].toDate();
+                    final formattedTime =
+                    DateFormat('hh:mm a').format(createdAt);
+                    final keyId = key.id; // Get the document ID
+
+                    return Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: width / width30),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ViewAssetsScreen()));*/
-                      },
-                      child: Container(
-                        height: width / width60,
-                        width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: height / height10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width / width10),
-                          color: DarkColor. WidgetColor,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: height / height44,
-                                  width: width / width44,
-                                  padding: EdgeInsets.symmetric(horizontal: width / width10),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(width / width10),
-                                    color: DarkColor. Primarycolorlight,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.home_repair_service,
-                                      color: DarkColor. Primarycolor,
-                                      size: width / width24,
+                              builder: (context) => SCreateKeyManagScreen(
+                                keyId: keyId,
+                                companyId: widget.companyId,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: width / width60,
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(bottom: height / height10),
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(width / width10),
+                            color: DarkColor. WidgetColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: height / height44,
+                                    width: width / width44,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width / width10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          width / width10),
+                                      color: DarkColor.Primarycolorlight,
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.vpn_key,
+                                        color: DarkColor. Primarycolor,
+                                        size: width / width24,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: width / width20),
-                                InterMedium(
-                                  text: 'Equipment Title',
-                                  fontsize: width / width16,
-                                  color: DarkColor.color1,
-                                ),
-                              ],
-                            ),
-                            InterMedium(
-                              text: '11 : 36 pm',
-                              color: DarkColor. color17,
-                              fontsize: width / width16,
-                            ),
-                            SizedBox(width: width / width20),
-                          ],
+                                  SizedBox(width: width / width20),
+                                  InterMedium(
+                                    text: key['KeyName'],
+                                    fontsize: width / width16,
+                                    color: DarkColor.color1,
+                                  ),
+                                ],
+                              ),
+                              InterMedium(
+                                text: formattedTime,
+                                color: DarkColor. color17,
+                                fontsize: width / width16,
+                              ),
+                              SizedBox(width: width / width20),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                childCount: 10,
-              ),
-            ),
+                    );
+                  },
+                  childCount: keysForDate.length + 1,
+                ),
+              );
+            }).toList(),
           ],
         ),
       ),
     );
+  }
+
+  String getDateHeader(String date) {
+    final today = DateTime.now().toUtc().toLocal();
+    final dateTime = DateTime.parse(date);
+
+    if (dateTime.year == today.year &&
+        dateTime.month == today.month &&
+        dateTime.day == today.day) {
+      return 'Today';
+    } else {
+      return DateFormat('EEEE, MMMM d, yyyy').format(dateTime);
+    }
   }
 }

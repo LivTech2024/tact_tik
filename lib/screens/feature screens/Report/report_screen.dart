@@ -11,6 +11,7 @@ import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
+import 'create_report_screen.dart';
 
 class ReportScreen extends StatefulWidget {
   final String locationId;
@@ -151,6 +152,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           empName: widget.empName,
                           ClientId: widget.clientId,
                           reportId: "",
+                          buttonEnable: true,
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -274,6 +276,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                       // clientId: widget.clientId,
                                       ClientId: widget.clientId,
                                       reportId: report['ReportId'],
+                                      buttonEnable: false,
                                     ),
                                   ),
                                 );

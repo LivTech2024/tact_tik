@@ -15,8 +15,6 @@ class MobileChatScreen extends StatelessWidget {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
-
-
     return Scaffold(
       backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       appBar: AppBar(
@@ -52,30 +50,32 @@ class MobileChatScreen extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                      hintText: 'Type a message!',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(
-                          width: 0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.all(width/width10),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(left: width / width8),
+                    child: TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: DarkColor. WidgetColor,
+                    hintText: 'Type a message!',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
                       ),
                     ),
-                  )
-                ),
+                    contentPadding: EdgeInsets.all(width / width10),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.only(left: width / width8),
+                    ),
+                  ),
+                )),
                 IconButton(
                   onPressed: () {
                     // Send message logic here
                   },
-                  icon: Icon(Icons.send , size: width / width24,),
+                  icon: Icon(
+                    Icons.send,
+                    size: width / width24,
+                  ),
                 ),
               ],
             ),

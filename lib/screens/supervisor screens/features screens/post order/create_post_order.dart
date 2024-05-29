@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,95 +11,103 @@ import 'package:tact_tik/main.dart';
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
 import '../../../../fonts/inter_regular.dart';
+import '../../../../fonts/inter_semibold.dart';
 import '../../../../fonts/poppins_medium.dart';
 import '../../../../fonts/poppins_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
 
-
 class CreateSPostOrder extends StatefulWidget {
-  CreateSPostOrder({super.key, this.isDisplay = true});
-
   final bool isDisplay;
+  final String locationId;
+  final String title;
+  final String date;
+  CreateSPostOrder(
+      {super.key,
+        this.isDisplay = true,
+        required this.locationId,
+        required this.title,
+        required this.date});
 
   @override
   State<CreateSPostOrder> createState() => _CreatePostOrderState();
 }
 
 class _CreatePostOrderState extends State<CreateSPostOrder> {
-  final TextEditingController _tittleController = TextEditingController();
-
   final TextEditingController _explainController = TextEditingController();
-
   List<Map<String, dynamic>> uploads = [];
-
   List<String> selectedFilePaths = [];
+  List<dynamic> postOrderOtherData = [];
+  String postOrderPdfUrl = '';
+  String postOrderPdfFileName = 'Loading...';
+  String postOrderPdfFileSize = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchExistingData();
+  }
+
+  Future<void> _fetchExistingData() async {
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection('Locations')
+        .doc(widget.locationId)
+        .get();
+
+    if (docSnapshot.exists) {
+      var postOrder = docSnapshot.data()!['LocationPostOrder'];
+      setState(() {
+        postOrderOtherData = List<dynamic>.from(postOrder['PostOrderOtherData'] ?? []);
+        postOrderPdfUrl = postOrder['PostOrderPdf'] ?? '';
+      });
+
+      if (postOrderPdfUrl.isNotEmpty) {
+        final metadata = await _fetchFileMetadata(postOrderPdfUrl);
+        setState(() {
+          postOrderPdfFileName = metadata['name'] ?? 'Unknown';
+          postOrderPdfFileSize = metadata['size'] ?? 'Unknown size';
+        });
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> _fetchFileMetadata(String url) async {
+    try {
+      final ref = FirebaseStorage.instance.refFromURL(url);
+      final metadata = await ref.getMetadata();
+      final fileSize = (metadata.size ?? 0) / 1024; // size in KB
+      return {
+        'name': metadata.name,
+        'size': '${fileSize.toStringAsFixed(2)} KB',
+      };
+    } catch (e) {
+      print('Error fetching file metadata: $e');
+      return {
+        'name': 'Unknown',
+        'size': 'Unknown size',
+      };
+    }
+  }
 
   Future<void> _addImage() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
     }
-    // print("Statis ${widget.taskStatus}");
   }
 
   Future<void> _addGallery() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
       });
     }
-    // print("Statis ${widget.taskStatus}");
   }
-
-/*  void _uploadfromGallery() async {
-    if (uploads.isNotEmpty ||
-        widget.ShiftId.isNotEmpty ||
-        widget.taskId.isNotEmpty ||
-        widget.EmpID.isNotEmpty) {
-      setState(() {
-        _isLoading = true;
-      });
-      print("Uploads Images  ${uploads}");
-      try {
-        print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
-          uploads,
-          widget.taskId ?? "",
-          widget.ShiftId ?? "",
-          widget.EmpID ?? "",
-          widget.EmpName,
-          widget.shiftReturnTask,
-        );
-        uploads.clear();
-        showSuccessToast(context, "Uploaded Successfully");
-        widget.refreshDataCallback();
-        // widget.refreshDataCallback();
-
-        // Navigator.pop(context);
-      } catch (e) {
-        showErrorToast(context, "${e}");
-        print('Error uploading images: $e');
-      }
-      setState(() {
-        _isLoading = false;
-      });
-      widget.refreshDataCallback();
-    } else {
-      widget.refreshDataCallback();
-      showErrorToast(context, "No Images found");
-      print('No images to upload.');
-    }
-  }*/
 
   Future<void> _addVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -112,13 +121,6 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
     }
   }
 
-  void _deleteItem(int index) {
-    setState(() {
-      uploads.removeAt(index);
-    });
-    // widget.refreshDataCallback();
-  }
-
   Future<void> _openFileExplorer() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -127,29 +129,50 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
     );
 
     if (result != null) {
-      // Extract the selected file paths
-      List<String> filePaths =
-          result.paths.map((path) => path! as String).toList();
-
-      // Do something with the selected file paths
+      List<String> filePaths = result.paths.map((path) => path!).toList();
       for (String filePath in filePaths) {
-        print('Selected file path: $filePath');
-        // Add the file path to the list
-        selectedFilePaths.add(filePath);
+        setState(() {
+          uploads.add({'type': 'pdf', 'file': File(filePath)});
+        });
       }
-
-      // Optionally, you can perform additional operations with the list of file paths
-      // For example, display them in a list, upload them to a server, etc.
-    } else {
-      // User canceled the file picker
-      print('User canceled file picker');
     }
-    setState(() {});
+  }
+
+  void _deleteItem(int index) {
+    setState(() {
+      uploads.removeAt(index);
+    });
   }
 
   void removeButton(int index) {
     setState(() {
       selectedFilePaths.removeAt(index);
+    });
+  }
+
+  Future<void> _uploadFiles() async {
+    List<String> urls = [];
+    for (var upload in uploads) {
+      String filePath = upload['file'].path;
+      String fileName = filePath.split('/').last;
+      File file = upload['file'];
+      String destination = upload['type'] == 'image'
+          ? 'companies/locations/images/$fileName'
+          : 'companies/locations/documents/$fileName';
+      try {
+        final ref = FirebaseStorage.instance.ref(destination);
+        await ref.putFile(file);
+        String url = await ref.getDownloadURL();
+        urls.add(url);
+      } catch (e) {
+        print('Error uploading file: $e');
+      }
+    }
+
+    // Update Firestore with the new URLs
+    final docRef = FirebaseFirestore.instance.collection('Locations').doc(widget.locationId);
+    docRef.update({
+      'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
     });
   }
 
@@ -191,15 +214,15 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
             children: [
               SizedBox(height: height / height30),
               InterSemibold(
-                text: '11/02/2024',
+                text: widget.date,
                 fontsize: width / width20,
                 color: isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
               SizedBox(height: height / height30),
               CustomeTextField(
-                isEnabled: !widget.isDisplay,
-                hint: 'Title',
-                // controller: _titleController,
+                isEnabled: widget.isDisplay,
+                hint: widget.title,
+                showIcon: false,
               ),
               SizedBox(height: height / height20),
               CustomeTextField(
@@ -209,9 +232,19 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                 controller: _explainController,
               ),
               SizedBox(height: height / height30),
-              SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+              if (postOrderPdfUrl.isNotEmpty)
+                Container(
+                  margin: EdgeInsets.only(bottom: height / height10),
+                  width: width / width200,
+                  height: height / height46,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(width / width10),
+                    color: DarkColor. color1,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
                           // This List will be for displaying and editing the DB uploaded images
                           // Display In this list
@@ -296,179 +329,186 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               );
                             }).toList(),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              // _addImage();
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) => Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(Icons.camera),
-                                      title: Text('Add Image'),
-                                      onTap: () {
-                                        _addImage();
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.image),
-                                      title: Text('Add from Gallery'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _addGallery();
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.picture_as_pdf),
-                                      title: Text('Add PDF'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _openFileExplorer();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            child: Container(
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Row(
+                      children: uploads.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final upload = entry.value;
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                                  borderRadius:
-                                      BorderRadius.circular(width / width8)),
-                              child: Center(
-                                child: Icon(Icons.add, color: isDark ? DarkColor.color1 : LightColor.color3, size: width / width20),
+                                  color: DarkColor. WidgetColor,
+                                  borderRadius: BorderRadius.circular(
+                                    width / width10,
+                                  )),
+                              margin: EdgeInsets.all(width / width8),
+                              child: upload['type'] == 'image'
+                                  ? Image.file(
+                                upload['file'],
+                                fit: BoxFit.cover,
+                              )
+                                  : SvgPicture.asset(
+                                'assets/images/pdf.svg',
+                                width: width / width32,
                               ),
                             ),
+                            Positioned(
+                              top: -5,
+                              right: -5,
+                              child: IconButton(
+                                onPressed: () => _deleteItem(index),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.black,
+                                ),
+                                padding: EdgeInsets.zero,
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.camera),
+                                title: Text('Add Image'),
+                                onTap: () {
+                                  _addImage();
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.image),
+                                title: Text('Add from Gallery'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _addGallery();
+                                },
+                              ),
+                              ListTile(
+                                leading: Icon(Icons.picture_as_pdf),
+                                title: Text('Add PDF'),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  _openFileExplorer();
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        );
+                      },
+                      child: Container(
+                        height: height / height66,
+                        width: width / width66,
+                        decoration: BoxDecoration(
+                            color: DarkColor.WidgetColor,
+                            borderRadius:
+                            BorderRadius.circular(width / width8)),
+                        child: Center(
+                          child: Icon(Icons.add),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+              ),
               SizedBox(height: height / height30),
-              // this list will be for displaying DB PDFS , modify according to you're preference
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: selectedFilePaths.length,
+                itemCount: postOrderOtherData.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: height / height10),
-                    width: width / width200,
-                    height: height / height46,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
-                      color: DarkColor.  color1,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: width / width6,
-                              ),
-                              child: SvgPicture.asset('assets/images/pdf.svg',
-                                  width: width / width32),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                PoppinsMedium(
-                                  text: 'PDFNAME.pdf',
-                                  color: DarkColor.color15,
-                                ),
-                                PoppinsRegular(
-                                  text: '329 KB',
-                                  color: DarkColor.  color16,
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            removeButton(index);
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: DarkColor.color19,
-                            size: width / width30,
+                  String url = postOrderOtherData[index];
+                  if (url.contains('.pdf')) {
+                    return FutureBuilder<Map<String, dynamic>>(
+                      future: _fetchFileMetadata(url),
+                      builder: (context, snapshot) {
+                        String otherFileName = 'Loading...';
+                        String otherFileSize = 'Loading...';
+
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData) {
+                          otherFileName = snapshot.data!['name'];
+                          otherFileSize = snapshot.data!['size'];
+                        }
+
+                        return Container(
+                          margin: EdgeInsets.only(bottom: height / height10),
+                          width: width / width200,
+                          height: height / height46,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(width / width10),
+                            color: DarkColor.color1,
                           ),
-                        )
-                      ],
-                    ),
-                  );
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: width / width6,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      'assets/images/pdf.svg',
+                                      width: width / width32,
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      PoppinsMedium(
+                                        text: otherFileName,
+                                        color: DarkColor.color15,
+                                      ),
+                                      PoppinsRegular(
+                                        text: otherFileSize,
+                                        color: DarkColor. color16,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return SizedBox(
+                      height: height / height20,
+                      width: width / width20,
+                      child: Image.network(url),
+                    );
+                  }
                 },
               ),
-              // This will be newly added ones
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: selectedFilePaths.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(bottom: height / height10),
-                    width: width / width200,
-                    height: height / height46,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
-                      color: DarkColor.  color1,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: width / width6,
-                              ),
-                              child: SvgPicture.asset('assets/images/pdf.svg',
-                                  width: width / width32),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                PoppinsMedium(
-                                  text: 'PDFNAME.pdf',
-                                  color: DarkColor.  color15,
-                                ),
-                                PoppinsRegular(
-                                  text: '329 KB',
-                                  color: DarkColor.color16,
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            removeButton(index);
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: DarkColor.color19,
-                            size: width / width30,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
-              widget.isDisplay?SizedBox() :Button1(
+              Button1(
                 text: 'Done',
-                color: isDark ? DarkColor.color15 : LightColor.color1,
-                onPressed: () {},
-                backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                onPressed: _uploadFiles,
+                backgroundcolor: DarkColor.Primarycolor,
                 borderRadius: width / width10,
-              )
+              ),
             ],
           ),
         ),

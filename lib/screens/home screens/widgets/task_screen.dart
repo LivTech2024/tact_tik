@@ -48,6 +48,7 @@ class TaskScreen extends StatefulWidget {
   final Function() onRefreshHomeScreen;
   final Function() onEndTask;
   final VoidCallback onRefreshStartTaskScreen;
+  final String ShiftStatus;
 
   TaskScreen({
     required this.ShiftDate,
@@ -78,6 +79,7 @@ class TaskScreen extends StatefulWidget {
     required this.onRefreshHomeScreen,
     required this.onEndTask,
     required this.onRefreshStartTaskScreen,
+    required this.ShiftStatus,
   });
 
   @override
@@ -172,8 +174,16 @@ class _TaskScreenState extends State<TaskScreen> {
 
   void _loadShiftStartedState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("Shift Start Status ${widget.ShiftStatus}");
+    // if (widget.ShiftStatus == 'started') {
+    //   setState(() {
+    //     ShiftStarted = true;
+    //   });
+    // }
+
+    bool? ShiftStus = prefs.getBool('ShiftStarted') ?? false;
     setState(() {
-      ShiftStarted = prefs.getBool('ShiftStarted') ?? false;
+      ShiftStarted = ShiftStus;
     });
     bool? savedClickedIn = prefs.getBool('clickedIn') ?? false;
     setState(() {
@@ -237,6 +247,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           ShiftIN: ShiftIn,
                           onRefresh: refreshStartTaskScreen,
                           ShiftName: widget.ShiftName,
+                          ShiftStatus: widget.ShiftStatus,
                           // onRefreshStartTaskScreen: widget.onRefreshStartTaskScreen,
                         )
                       : Center(
@@ -535,15 +546,6 @@ class _TaskScreenState extends State<TaskScreen> {
                                       widget.shiftId, widget.EmpName);
                                 });
                               } else {
-                                // await fireStoreService.addToLog(
-                                //     'ShiftStarted',
-                                //     widget.ShiftLocation,
-                                //     "",
-                                //     widget.empId,
-                                //     widget.EmpName,
-                                //     widget.ShiftCompanyId,
-                                //     widget.ShiftBranchId,
-                                //     widget.ShiftClientId);
                                 bool? taskStatus =
                                     await fireStoreService.checkShiftTaskStatus(
                                         widget.empId, widget.shiftId);
@@ -578,25 +580,11 @@ class _TaskScreenState extends State<TaskScreen> {
                                       'Your Shift has been Started ${widget.ShiftLocation}',
                                   'message': 'Your Message',
                                 };
-                                // await sendEmail(emailParams);
-                                // print('Email sent: $result');s
-                                // setState(() {
-                                //   ShiftStarted = true;
-                                // });
-                                // SharedPreferences prefs =
-                                //     await SharedPreferences.getInstance();
-                                // // Your existing logic
-                                // prefs.setBool('ShiftStarted', ShiftStarted);
                               }
 
                               //if the check user radius is off we can start the shift
                             }
                           }
-
-                          // bool isWithInRaius = locationChecker.checkLocation();
-                          // } else {
-                          //   showErrorToast(context, "Start at Shift Time");
-                          // }
                         },
                       )
                     else

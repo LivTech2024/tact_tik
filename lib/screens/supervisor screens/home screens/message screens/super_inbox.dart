@@ -291,7 +291,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                           ),
                                         ],
                                       ),
-                                      Row(
+                                      Stack(
+                                        clipBehavior: Clip.none,
                                         children: [
                                           Stack(
                                             clipBehavior: Clip.none,
@@ -330,26 +331,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ],
+                                            ]
                                           ),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                left: width / width20),
-                                            height: height / height16,
-                                            width: width / width16,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: /*guardInfo[
-                                          'EmployeeIsAvailable'] ==
-                                              "available"
-                                              ? Colors.green
-                                              : guardInfo['EmployeeIsAvailable'] ==
-                                              "on_shift"
-                                              ? Colors.orange
-                                              : */
-                                                  Colors.red,
-                                            ),
-                                          )
                                         ],
                                       )
                                     ],

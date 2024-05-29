@@ -13,7 +13,9 @@ import '../../../../fonts/inter_regular.dart';
 
 class SHistoryScreen extends StatefulWidget {
   final String empID;
-  const SHistoryScreen({super.key, required this.empID});
+  final String empName;
+
+  const SHistoryScreen({super.key, required this.empID, required this.empName});
 
   @override
   State<SHistoryScreen> createState() => _HistoryScreenState();
@@ -65,6 +67,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: DarkColor. Secondarycolor,
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [
@@ -84,7 +87,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                 },
               ),
               title: InterRegular(
-                text: 'My History',
+                text: '${widget.empName} History',
                 fontsize: width / width18,
                 color: Colors.white,
                 letterSpacing: -.3,
@@ -143,14 +146,14 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                     InterSemibold(
                                       text: 'Shift Name',
                                       fontsize: width / width16,
-                                      color: DarkColor.color1,
+                                      color: DarkColor. color1,
                                     ),
                                     SizedBox(width: width / width40),
                                     Flexible(
                                       child: InterSemibold(
                                         text: shift['ShiftName'],
                                         fontsize: width / width16,
-                                        color: DarkColor.color1,
+                                        color: DarkColor. color1,
                                       ),
                                     ),
                                   ],
@@ -161,7 +164,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                               ),
                               Container(
                                 height: height / height100,
-                                color: DarkColor.colorRed,
+                                color: DarkColor. colorRed,
                                 padding: EdgeInsets.symmetric(
                                     horizontal: width / width20),
                                 child: Row(
@@ -208,7 +211,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                           text:
                                               '${shift['ShiftStartTime']} to ${shift['ShiftEndTime']}',
                                           fontsize: width / width16,
-                                          color: DarkColor.color1,
+                                          color: DarkColor. color1,
                                         ),
                                       ],
                                     ),
@@ -229,7 +232,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                           InterSemibold(
                                             text: '02hr 36min',
                                             fontsize: width / width16,
-                                            color: DarkColor.color1,
+                                            color: DarkColor. color1,
                                           ),
                                         ],
                                       ),
@@ -248,7 +251,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                   children: [
                                     Icon(
                                       Icons.download_for_offline,
-                                      color: DarkColor.color1,
+                                      color: DarkColor. color1,
                                       size: width / width24,
                                     ),
                                     SizedBox(
@@ -262,7 +265,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                   ],
                                 ),
                                 onPressed: () {},
-                                backgroundcolor: DarkColor.Primarycolorlight,
+                                backgroundcolor: DarkColor. Primarycolorlight,
                                 useBorderRadius: true,
                                 MyBorderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(width / width12),

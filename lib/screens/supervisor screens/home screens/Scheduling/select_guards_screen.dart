@@ -138,7 +138,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                 SizedBox(height: height / height20),
                 _guardsInfo.length != 0
                     ? ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: _guardsInfo.length,
                         itemBuilder: (context, index) {
@@ -211,7 +211,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                       "available"
                                                   ? Colors.green
                                                   : guardInfo['EmployeeIsAvailable'] ==
-                                                          "on_shift"
+                                                          "on_shift" //need to update this logic
                                                       ? Colors.orange
                                                       : Colors.red,
                                             ),

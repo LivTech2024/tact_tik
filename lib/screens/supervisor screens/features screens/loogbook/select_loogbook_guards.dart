@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -7,6 +8,7 @@ import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
+import 's_loogbook_screen.dart';
 
 class SelectLoogBookGuardsScreen extends StatefulWidget {
   final String companyId;
@@ -146,92 +148,90 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                           String id = guardInfo['EmployeeId'] ?? "";
                           String url = guardInfo['EmployeeImg'] ?? "";
 
-                          print(guardInfo);
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.pop(
-                                  context,
-                                  {
-                                    'name': name,
-                                    'id': id,
-                                    'url': url,
-                                  },
-                                );
-                              },
-                              child: Container(
-                                height: height / height60,
-                                decoration: BoxDecoration(
-                                  color: DarkColor.color19,
-                                  borderRadius:
-                                      BorderRadius.circular(width / width12),
-                                ),
-                                margin:
-                                    EdgeInsets.only(bottom: height / height10),
-                                width: double.maxFinite,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                    print(guardInfo);
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.pop(
+                            context,
+                            {
+                              'name': name,
+                              'id': id,
+                              'url': url,
+                            },
+                          );
+                        },
+                        child: Container(
+                          height: height / height60,
+                          decoration: BoxDecoration(
+                            color: DarkColor.color19,
+                            borderRadius: BorderRadius.circular(width / width12),
+                          ),
+                          margin: EdgeInsets.only(bottom: height / height10),
+                          width: double.maxFinite,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: height / height48,
+                                padding:
+                                EdgeInsets.symmetric(horizontal: width / width20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Container(
-                                      height: height / height48,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: width / width20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: height / height50,
-                                                width: width / width50,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(url),
-                                                    filterQuality:
-                                                        FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: width / width20),
-                                              InterBold(
-                                                text: name,
-                                                letterSpacing: -.3,
-                                                color: DarkColor.color1,
-                                              ),
-                                            ],
-                                          ),
-                                          Container(
-                                            height: height / height16,
-                                            width: width / width16,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: guardInfo[
-                                                          'EmployeeIsAvailable'] ==
-                                                      "available"
-                                                  ? Colors.green
-                                                  : guardInfo['EmployeeIsAvailable'] ==
-                                                          "on_shift"
-                                                      ? Colors.orange
-                                                      : Colors.red,
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: height / height50,
+                                          width: width / width50,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: NetworkImage(url),
+                                              filterQuality:
+                                              FilterQuality.high,
+                                              fit: BoxFit.cover,
                                             ),
-                                          )
-                                        ],
-                                      ),
+                                          ),
+                                        ),
+                                        SizedBox(width: width / width20),
+                                        InterBold(
+                                          text: name,
+                                          letterSpacing: -.3,
+                                          color: DarkColor. color1,
+                                        ),
+                                      ],
                                     ),
+                                    Container(
+                                      height: height / height16,
+                                      width: width / width16,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: guardInfo[
+                                        'EmployeeIsAvailable'] ==
+                                            "available"
+                                            ? Colors.green
+                                            : guardInfo['EmployeeIsAvailable'] ==
+                                            "on_shift"
+                                            ? Colors.orange
+                                            : Colors.red,
+                                      ),
+                                    )
                                   ],
                                 ),
-                              ));
-                        },
-                      )
+                              ),
+                            ],
+                          ),
+                        ));
+                  },
+                )
                     : Center(
-                        child: PoppinsBold(
-                          text: 'No Guards Found',
-                          color: DarkColor.color2,
-                          fontsize: width / width16,
-                        ),
-                      )
+                  child: PoppinsBold(
+                    text: 'No Guards Found',
+                    color: DarkColor.color2,
+                    fontsize: width / width16,
+                  ),
+                )
               ],
             ),
           ),
