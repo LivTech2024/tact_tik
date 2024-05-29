@@ -9,14 +9,20 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/select_assets_guards.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/select_dar_guards.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_managment_view_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/select_loogbook_guards.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/all_schedules_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -47,7 +53,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: AuthChecker(),
+        home: AllSchedulesScreen(BranchId: '9tgQzYBJTL3QqJKe34eJ'),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,

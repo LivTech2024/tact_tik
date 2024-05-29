@@ -31,6 +31,7 @@ class CreateSheduleScreen extends StatefulWidget {
   final String GuardName;
   final String GuardImg;
   final String CompanyId;
+  final String BranchId;
 
   CreateSheduleScreen({
     super.key,
@@ -38,6 +39,7 @@ class CreateSheduleScreen extends StatefulWidget {
     required this.GuardName,
     required this.GuardImg,
     required this.CompanyId,
+    required this.BranchId,
   });
 
   @override
@@ -66,6 +68,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   List<String> LocationValues = ['Select Location'];
   List<String> PatrolValues = [];
   List<String> selectedPatrols = [];
+  final TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
 
   @override
@@ -332,6 +336,49 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       tasks.add(
           {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false});
     });
+  }
+
+  Future<void> searchGuards(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        guards.clear();
+      });
+      return;
+    }
+
+    final result = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeRole', isEqualTo: 'GUARD')
+        .where('EmployeeCompanyBranchId', isEqualTo: widget.BranchId)
+        .where('EmployeeNameSearchIndex', arrayContains: query)
+        .get();
+
+    setState(() {
+      guards = result.docs.map((doc) => doc.data()).toList();
+    });
+  }
+
+  void showGuardsList() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Select Guard'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: guards.map((guard) {
+              return ListTile(
+                title: Text(guard['EmployeeName']),
+                onTap: () {
+                  _searchController.text = guard['EmployeeName'];
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
   }
 
   void _saveQrCode(String id) async {
@@ -1061,7 +1108,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Button1(
                             text: 'Done',
                             onPressed: () async {
-                              String address = "";
+
+                              // Todo check weather values are not null then only move to the next screen.......
+                              setState(() {
+                                nextScreen = !nextScreen;
+                              });
+                              // TODO Commented the backend code hear
+                              /*String address = "";
                               GeoPoint coordinates = GeoPoint(0, 0);
                               String name = "";
                               String locationId = "";
@@ -1134,7 +1187,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               print("Shift ID : ${id}");
                               setState(() {
                                 CreatedshiftId = id;
-                              });
+                              });*/
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
