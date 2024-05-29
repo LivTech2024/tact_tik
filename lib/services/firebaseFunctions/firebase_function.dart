@@ -901,9 +901,9 @@ class FireStoreService {
     }
 
     // Use today's date if it's the earliest date
-    if (earliestDate.toDate().isBefore(todayTimestamp.toDate())) {
-      shiftTimestamp = todayTimestamp;
-    }
+    // if (earliestDate.toDate().isBefore(todayTimestamp.toDate())) {
+    //   shiftTimestamp = todayTimestamp;
+    // }
 
     // Save relevant checkpoint status information to Firestore in the PatrolLogs collection
     var patrolLogsCollection =
