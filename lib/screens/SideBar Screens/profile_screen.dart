@@ -349,7 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(height: height / height60),
-              if (_employeeImageUrl == null || _employeeRole == null || _employeeEmail == null || _employeePhone == null || _employeeName == null)
+              if (_employeeImageUrl == null && _employeeRole == null && _employeeEmail == null && _employeePhone == null && _employeeName == null)
               Center(
                 child: PoppinsRegular(
                   text: 'complete your profile !',

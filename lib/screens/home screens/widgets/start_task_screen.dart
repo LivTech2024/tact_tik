@@ -1116,6 +1116,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 },
               )
             : const SizedBox(),
+        SizedBox(height: height / height10),
         IgnorePointer(
           ignoring: !clickedIn,
           child: Button1(

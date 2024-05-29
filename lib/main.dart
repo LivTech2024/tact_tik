@@ -23,6 +23,7 @@ import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/all_schedules_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
+import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: AllSchedulesScreen(BranchId: '9tgQzYBJTL3QqJKe34eJ'),
+        home: AuthChecker(),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,
