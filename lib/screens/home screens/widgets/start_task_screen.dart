@@ -358,7 +358,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  updateLateTimeAndStartTimer() {
+  void updateLateTimeAndStartTimer() {
     print('update late time and start timer function');
 
     /// -- update late time
@@ -375,16 +375,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
     DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
 
-    if (shiftEndTime.isBefore(shiftStartTime)) {
-      shiftEndTime = shiftEndTime.add(Duration(days: 1));
-    }
-
     Duration remainingTimeToStart = deadline.difference(now);
 
     if (remainingTimeToStart.isNegative) {
       print("The user is already late.");
       Duration lateDuration = now.difference(deadline);
-      if (clickedIn == false) {
+      if (!clickedIn) {
         setState(() {
           isLate = true;
           lateTime =
@@ -414,7 +410,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           remainingTime = remainingTime - Duration(seconds: 1);
           remainingTimeFormatted =
               "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
-          print("Timer ${remainingTimeFormatted}");
+          print("Timer $remainingTimeFormatted");
         } else {
           _timer!.cancel();
         }
