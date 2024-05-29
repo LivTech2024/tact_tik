@@ -256,6 +256,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
                       ]),
                 ),
               ),
+
+              /*CircleAvatar(
+                                            backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
+                                            radius: width / width20,
+                                            backgroundColor: Primarycolor,
+                                          )*/
               Expanded(
                 child: Column(
                   children: [
@@ -403,7 +409,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        String guardStatus = "";
+                    String guardStatus = "";
 
                         if (index < _guardsInfo.length) {
                           return Padding(
@@ -671,16 +677,19 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateSheduleScreen(
+                                  builder: (context) =>
+                                      CreateSheduleScreen(
+                                        BranchId:
+                                        widget.guardsInfo["EmployeeCompanyBranchId"] ?? "",
                                         GuardId:
-                                            widget.guardsInfo["EmployeeId"] ??
-                                                "",
+                                        widget.guardsInfo["EmployeeId"] ??
+                                            "",
                                         GuardName:
-                                            widget.guardsInfo["EmployeeName"] ??
-                                                "",
+                                        widget.guardsInfo["EmployeeName"] ??
+                                            "",
                                         GuardImg:
-                                            widget.guardsInfo["EmployeeImg"] ??
-                                                "",
+                                        widget.guardsInfo["EmployeeImg"] ??
+                                            "",
                                         CompanyId: widget.CompanyId ?? "",
                                       )),
                             );
@@ -697,11 +706,12 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SLogBookScreen(
+                                    builder: (context) =>
+                                        SLogBookScreen(
                                           empId:
-                                              widget.guardsInfo['EmployeeId'],
+                                          widget.guardsInfo['EmployeeId'],
                                           empName:
-                                              widget.guardsInfo['EmployeeName'],
+                                          widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
@@ -714,11 +724,12 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SHistoryScreen(
+                                    builder: (context) =>
+                                        SHistoryScreen(
                                           empID:
-                                              widget.guardsInfo['EmployeeId'],
+                                          widget.guardsInfo['EmployeeId'],
                                           empName:
-                                              widget.guardsInfo['EmployeeName'],
+                                          widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(

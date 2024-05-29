@@ -72,7 +72,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: true),
+                      SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: false, equipemtAllocId: '',),
                 ));
           },
           backgroundColor: Primarycolor,
@@ -141,6 +141,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     final createdAt = equipment['EquipmentAllocationCreatedAt'].toDate();
                     final formattedTime =
                         DateFormat('hh:mm a').format(createdAt);
+                    final equipmentAllocationId = equipment['EquipmentAllocationId'];
 
                     return Padding(
                       padding:
@@ -152,8 +153,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       SCreateAssignAssetScreen(
+                                        equipemtAllocId: equipmentAllocationId,
                                         companyId: widget.companyId,
                                         empId: widget.empId,
+                                        OnlyView: true,
                                       )));
                         },
                         child: Container(

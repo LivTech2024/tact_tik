@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_regular.dart';
@@ -149,6 +148,15 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     });
   }
 
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   Future<void> _uploadFiles() async {
     List<String> urls = [];
     for (var upload in uploads) {
@@ -179,6 +187,13 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
+
+    // Combine postOrderPdfUrl and postOrderOtherData for display
+    List<String> allUrls = [];
+    if (postOrderPdfUrl.isNotEmpty) {
+      allUrls.add(postOrderPdfUrl);
+    }
+    allUrls.addAll(postOrderOtherData.map((data) => data.toString()));
 
     return SafeArea(
       child: Scaffold(
@@ -230,46 +245,6 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                 controller: _explainController,
               ),
               SizedBox(height: height / height30),
-              if (postOrderPdfUrl.isNotEmpty)
-                Container(
-                  margin: EdgeInsets.only(bottom: height / height10),
-                  width: width / width200,
-                  height: height / height46,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(width / width10),
-                    color: color1,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: width / width6,
-                            ),
-                            child: SvgPicture.asset('assets/images/pdf.svg',
-                                width: width / width32),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              PoppinsMedium(
-                                text: postOrderPdfFileName,
-                                color: color15,
-                              ),
-                              PoppinsRegular(
-                                text: postOrderPdfFileSize,
-                                color: color16,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -369,9 +344,9 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: postOrderOtherData.length,
+                itemCount: allUrls.length,
                 itemBuilder: (context, index) {
-                  String url = postOrderOtherData[index];
+                  String url = allUrls[index];
                   if (url.contains('.pdf')) {
                     return FutureBuilder<Map<String, dynamic>>(
                       future: _fetchFileMetadata(url),
@@ -385,46 +360,51 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                           otherFileSize = snapshot.data!['size'];
                         }
 
-                        return Container(
-                          margin: EdgeInsets.only(bottom: height / height10),
-                          width: width / width200,
-                          height: height / height46,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width / width10),
-                            color: color1,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: width / width6,
-                                    ),
-                                    child: SvgPicture.asset(
-                                      'assets/images/pdf.svg',
-                                      width: width / width32,
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      PoppinsMedium(
-                                        text: otherFileName,
-                                        color: color15,
+                        return GestureDetector(
+                          onTap: () {
+                            _launchURL(url);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: height / height10),
+                            width: width / width200,
+                            height: height / height46,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(width / width10),
+                              color: color1,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: width / width6,
                                       ),
-                                      PoppinsRegular(
-                                        text: otherFileSize,
-                                        color: color16,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                                      child: SvgPicture.asset(
+                                        'assets/images/pdf.svg',
+                                        width: width / width32,
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        PoppinsMedium(
+                                          text: otherFileName,
+                                          color: color15,
+                                        ),
+                                        PoppinsRegular(
+                                          text: otherFileSize,
+                                          color: color16,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -433,7 +413,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                     return SizedBox(
                       height: height / height100,
                       width: width / width20,
-                      child: Image.network(url),
+                      child: Image.network(url, fit: BoxFit.contain),
                     );
                   }
                 },
