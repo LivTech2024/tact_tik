@@ -45,8 +45,6 @@ class HomeScreenController extends GetxController {
     if (locationDto != null) {
       await _updateNotificationText(locationDto);
       lastLocation = locationDto;
-    } else {
-      print('Received null location data');
     }
   }
 
