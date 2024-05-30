@@ -2,9 +2,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -22,10 +25,10 @@ class CreatePostOrder extends StatefulWidget {
   final String date;
   CreatePostOrder(
       {super.key,
-        this.isDisplay = true,
-        required this.locationId,
-        required this.title,
-        required this.date});
+      this.isDisplay = true,
+      required this.locationId,
+      required this.title,
+      required this.date});
 
   @override
   State<CreatePostOrder> createState() => _CreatePostOrderState();
@@ -55,7 +58,8 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     if (docSnapshot.exists) {
       var postOrder = docSnapshot.data()!['LocationPostOrder'];
       setState(() {
-        postOrderOtherData = List<dynamic>.from(postOrder['PostOrderOtherData'] ?? []);
+        postOrderOtherData =
+            List<dynamic>.from(postOrder['PostOrderOtherData'] ?? []);
         postOrderPdfUrl = postOrder['PostOrderPdf'] ?? '';
       });
 
@@ -89,7 +93,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
 
   Future<void> _addImage() async {
     final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.camera);
+        await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
@@ -99,7 +103,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
 
   Future<void> _addGallery() async {
     final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         uploads.add({'type': 'image', 'file': File(pickedFile.path)});
@@ -148,15 +152,6 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     });
   }
 
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Future<void> _uploadFiles() async {
     List<String> urls = [];
     for (var upload in uploads) {
@@ -177,10 +172,40 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     }
 
     // Update Firestore with the new URLs
-    final docRef = FirebaseFirestore.instance.collection('Locations').doc(widget.locationId);
+    final docRef = FirebaseFirestore.instance
+        .collection('Locations')
+        .doc(widget.locationId);
     docRef.update({
       'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
     });
+  }
+
+  Future<void> _downloadAndOpenPdf(BuildContext context, String url) async {
+    final String pdfFileName = url.split('/').last;
+
+    try {
+      final firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.refFromURL(url);
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final File file = File('${tempDir.path}/$pdfFileName');
+
+      await ref.writeToFile(file);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      print('Error downloading PDF: $e');
+    }
   }
 
   @override
@@ -267,13 +292,13 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                               margin: EdgeInsets.all(width / width8),
                               child: upload['type'] == 'image'
                                   ? Image.file(
-                                upload['file'],
-                                fit: BoxFit.cover,
-                              )
+                                      upload['file'],
+                                      fit: BoxFit.cover,
+                                    )
                                   : SvgPicture.asset(
-                                'assets/images/pdf.svg',
-                                width: width / width32,
-                              ),
+                                      'assets/images/pdf.svg',
+                                      width: width / width32,
+                                    ),
                             ),
                             Positioned(
                               top: -5,
@@ -331,7 +356,8 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                         width: width / width66,
                         decoration: BoxDecoration(
                             color: WidgetColor,
-                            borderRadius: BorderRadius.circular(width / width8)),
+                            borderRadius:
+                                BorderRadius.circular(width / width8)),
                         child: Center(
                           child: Icon(Icons.add),
                         ),
@@ -362,14 +388,15 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
 
                         return GestureDetector(
                           onTap: () {
-                            _launchURL(url);
+                            _downloadAndOpenPdf(context, url);
                           },
                           child: Container(
                             margin: EdgeInsets.only(bottom: height / height10),
                             width: width / width200,
                             height: height / height46,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(width / width10),
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                               color: color1,
                             ),
                             child: Row(
@@ -388,8 +415,9 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                     ),
                                     Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         PoppinsMedium(
                                           text: otherFileName,
@@ -421,13 +449,13 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
               widget.isDisplay
                   ? SizedBox()
                   : Button1(
-                text: 'Done',
-                onPressed: () {
-                  _uploadFiles();
-                },
-                backgroundcolor: Primarycolor,
-                borderRadius: width / width10,
-              )
+                      text: 'Done',
+                      onPressed: () {
+                        _uploadFiles();
+                      },
+                      backgroundcolor: Primarycolor,
+                      borderRadius: width / width10,
+                    )
             ],
           ),
         ),

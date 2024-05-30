@@ -1558,6 +1558,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             LocationId: widget.p.LocationId,
                                             ShiftName: widget.p.ShiftName,
                                             description: widget.p.description,
+                                            ShiftDate: widget.p.ShiftDate,
                                           )));
                               // showDialog(
                               //   context: context,

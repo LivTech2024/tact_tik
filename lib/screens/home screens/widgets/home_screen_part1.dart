@@ -211,7 +211,7 @@ class HomeScreenPart1 extends StatelessWidget {
                       builder: (context, _controller, focusNode) => TextField(
                           controller: _controller,
                           focusNode: focusNode,
-                          autofocus: true,
+                          autofocus: false,
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: width / width18,
