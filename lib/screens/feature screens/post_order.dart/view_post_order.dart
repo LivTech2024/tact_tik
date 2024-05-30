@@ -2,9 +2,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -148,15 +151,6 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     });
   }
 
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Future<void> _uploadFiles() async {
     List<String> urls = [];
     for (var upload in uploads) {
@@ -181,6 +175,34 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     docRef.update({
       'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
     });
+  }
+
+  Future<void> _downloadAndOpenPdf(BuildContext context, String url) async {
+    final String pdfFileName = url.split('/').last;
+
+    try {
+      final firebase_storage.Reference ref =
+      firebase_storage.FirebaseStorage.instance.refFromURL(url);
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final File file = File('${tempDir.path}/$pdfFileName');
+
+      await ref.writeToFile(file);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      print('Error downloading PDF: $e');
+    }
   }
 
   @override
@@ -362,7 +384,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
 
                         return GestureDetector(
                           onTap: () {
-                            _launchURL(url);
+                            _downloadAndOpenPdf(context, url);
                           },
                           child: Container(
                             margin: EdgeInsets.only(bottom: height / height10),

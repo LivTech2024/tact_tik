@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
 import '../../../../fonts/inter_regular.dart';
@@ -148,32 +150,6 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
     });
   }
 
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  void _showPdfViewer(String url) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: PDFView(
-              filePath: url,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> _uploadFiles() async {
     List<String> urls = [];
     for (var upload in uploads) {
@@ -198,6 +174,34 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
     docRef.update({
       'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
     });
+  }
+
+  Future<void> _downloadAndOpenPdf(BuildContext context, String url) async {
+    final String pdfFileName = url.split('/').last;
+
+    try {
+      final firebase_storage.Reference ref =
+      firebase_storage.FirebaseStorage.instance.refFromURL(url);
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final File file = File('${tempDir.path}/$pdfFileName');
+
+      await ref.writeToFile(file);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(title: Text('PDF Viewer')),
+            body: PDFView(
+              filePath: file.path,
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      print('Error downloading PDF: $e');
+    }
   }
 
   @override
@@ -386,7 +390,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
                         return GestureDetector(
                           onTap: () {
-                            _launchURL(url);
+                            _downloadAndOpenPdf(context, url);
                           },
                           child: Container(
                             margin: EdgeInsets.only(bottom: height / height10),
