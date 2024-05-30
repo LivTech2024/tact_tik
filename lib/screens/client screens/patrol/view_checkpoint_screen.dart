@@ -5,9 +5,17 @@ import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
 
-class ViewCheckpointScreen extends StatelessWidget {
-  const ViewCheckpointScreen({super.key});
+class ViewCheckpointScreen extends StatefulWidget {
+  final String reportedAt;
+  final String comment;
+  final List<String> images;
+  const ViewCheckpointScreen({super.key, required this.comment, required this.images, required this.reportedAt});
 
+  @override
+  State<ViewCheckpointScreen> createState() => _ViewCheckpointScreenState();
+}
+
+class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -29,7 +37,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                 ),
                 SizedBox(height: height / height20),
                 InterMedium(
-                  text: 'Time: 10.30 pm  ',
+                  text: 'Time: ' + widget.reportedAt,
                   fontsize: width / width14,
                   color: color21,
                 ),
@@ -41,8 +49,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                 ),
                 SizedBox(height: height / height10),
                 InterMedium(
-                  text:
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Lorem ipsum dolor sit amet',
+                  text: widget.comment,
                   fontsize: width / width14,
                   color: color21,
                   maxLines: 3,
@@ -61,8 +68,9 @@ class ViewCheckpointScreen extends StatelessWidget {
                     mainAxisSpacing: height / height10,
                     crossAxisCount: 3,
                   ),
-                  itemCount: 5,
+                  itemCount: widget.images.length,
                   itemBuilder: (context, index) {
+                    final imageUrl = widget.images[index];
                     return Container(
                       height: height / height66,
                       width: width / width66,
@@ -70,8 +78,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(width / width10),
                         image: DecorationImage(
-                          image: NetworkImage(
-                              'https://quotefancy.com/media/wallpaper/3840x2160/8151357-Hello-World-Wallpaper.jpg'),
+                          image: NetworkImage(imageUrl),
                           fit: BoxFit.cover,
                         ),
                       ),
