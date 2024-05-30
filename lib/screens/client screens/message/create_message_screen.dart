@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 
 import '../../../common/sizes.dart';
@@ -28,13 +29,16 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
          appBar: AppBar(
-              backgroundColor: DarkColor. AppBarcolor,
-              elevation: 0,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color:
+                  isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -45,7 +49,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
               title: InterRegular(
                 text: 'Write Message',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -62,7 +66,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                     InterBold(
                       text: 'Employee',
                       fontsize: width / width18,
-                      color: DarkColor. color1,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
                     ),
                     SizedBox(height: height / height20),
                     // TODO : Comment out this
@@ -97,7 +101,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                       height: height / height60,
                       padding: EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: DarkColor.WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -107,15 +111,17 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                             children: [
                               InterMedium(
                                 text: 'Send To Admin',
-                                color: DarkColor.color8,
+                                color: isDark
+                                    ? DarkColor.color8
+                                    : LightColor.color3,
                                 fontsize: width / width16,
                                 letterSpacing: -.3,
                               )
                             ],
                           ),
                           Checkbox(
-                            activeColor: DarkColor. Primarycolor,
-                            checkColor: DarkColor. color1,
+                            activeColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            checkColor: isDark ? DarkColor.color1 : LightColor.color3,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -144,7 +150,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                   children: [
                     Button1(
                       height: height / height60,
-                      backgroundcolor: DarkColor. Primarycolor,
+                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                       borderRadius: width / width10,
                       fontsize: width / width18,
                       color: DarkColor. color1,

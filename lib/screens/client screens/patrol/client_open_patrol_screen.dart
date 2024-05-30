@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 
@@ -77,9 +78,10 @@ class ClientOpenPatrolScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -95,7 +97,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
           title: InterRegular(
             text: guardName,
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -118,7 +120,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         icon: Icons.calendar_today,
                         text: '23 / 04 / 2024',
                         fontsize: width / width14,
-                        color: DarkColor. Primarycolor,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                       ),
                     ),
                     SizedBox(
@@ -130,8 +132,8 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: width / width14,
-                        color: DarkColor. Primarycolor,
-                        Iconcolor: DarkColor. color1,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        Iconcolor: isDark ? DarkColor.color1 : LightColor.color3,
                       ),
                     ),
                   ],
@@ -148,7 +150,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                     margin: EdgeInsets.only(top: height / height10),
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                      color: DarkColor. WidgetColor,
+                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       borderRadius: BorderRadius.circular(width / width14),
                     ),
                     padding: EdgeInsets.symmetric(vertical: height / height20),
@@ -171,7 +173,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                       bottomRight:
                                           Radius.circular(width / width10),
                                     ),
-                                    color: DarkColor. Primarycolor,
+                                    color: isDark
+                                        ? DarkColor.Primarycolor
+                                        : LightColor.Primarycolor,
                                   ),
                                 ),
                               ],
@@ -185,7 +189,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                 children: [
                                   InterSemibold(
                                     text: 'Guard Name',
-                                    color: DarkColor.color1,
+                                    color: isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
                                     fontsize: width / width18,
                                   ),
                                   // SizedBox(height: height / height5),
@@ -212,13 +218,17 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     InterRegular(
                                       text: 'Started at',
                                       fontsize: width / width14,
-                                      color: DarkColor. color21,
+                                      color: isDark
+                                          ? DarkColor.color21
+                                          : LightColor.color2,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
                                       text: '11:36',
                                       fontsize: width / width14,
-                                      color: DarkColor. color1,
+                                      color: isDark
+                                          ? DarkColor.color1
+                                          : LightColor.color3,
                                     ),
                                   ],
                                 ),
@@ -231,13 +241,17 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     InterRegular(
                                       text: 'Ended at',
                                       fontsize: width / width14,
-                                      color: DarkColor.color21,
+                                      color: isDark
+                                          ? DarkColor.color21
+                                          : LightColor.color2,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
                                       text: '16:56',
                                       fontsize: width / width14,
-                                      color: DarkColor. color1,
+                                      color: isDark
+                                          ? DarkColor.color1
+                                          : LightColor.color3,
                                     ),
                                   ],
                                 ),
@@ -250,13 +264,17 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     InterRegular(
                                       text: 'Count',
                                       fontsize: width / width14,
-                                      color: DarkColor.color21,
+                                      color: isDark
+                                          ? DarkColor.color21
+                                          : LightColor.color2,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
                                       text: '100',
                                       fontsize: width / width14,
-                                      color: DarkColor. color1,
+                                      color: isDark
+                                          ? DarkColor.color1
+                                          : LightColor.color3,
                                     ),
                                   ],
                                 ),
@@ -269,7 +287,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     InterRegular(
                                       text: 'Status',
                                       fontsize: width / width14,
-                                      color: DarkColor.color21,
+                                      color: isDark
+                                          ? DarkColor.color21
+                                          : LightColor.color2,
                                     ),
                                     SizedBox(height: height / height12),
                                     InterBold(
@@ -292,7 +312,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                             children: [
                               InterRegular(
                                 text: 'Feedback :',
-                                color: DarkColor.color21,
+                                color: isDark
+                                    ? DarkColor.color21
+                                    : LightColor.color2,
                                 fontsize: width / width14,
                               ),
                               SizedBox(width: width / width4),
@@ -300,7 +322,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   child: InterRegular(
                                 text:
                                     ' If you have already purchased the premium, please wait a few minutes for the system to update your status and dont forget to run /premium to activate your premium status!',
-                                color: DarkColor. color10,
+                                color: isDark
+                                    ? DarkColor.color10
+                                    : LightColor.color3,
                                 fontsize: width / width14,
                                 maxLines: 3,
                               )),
@@ -315,7 +339,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                 InterBold(
                   text: 'Checkpoints',
                   fontsize: width / width18,
-                  color: DarkColor.color21,
+                  color: isDark ? DarkColor.color21 : LightColor.color3,
                 ),
                 SizedBox(height: height / height20),
                 ListView.builder(
@@ -332,7 +356,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: height / height10),
                         decoration: BoxDecoration(
-                          color: DarkColor. WidgetColor,
+                          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                           borderRadius: BorderRadius.circular(width / width10),
                         ),
                         padding:
@@ -355,7 +379,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   width: width / width120,
                                   child: InterMedium(
                                     text: 'Checkpoint name Checkpoint name..',
-                                    color: DarkColor. color21,
+                                    color: isDark
+                                        ? DarkColor.color21
+                                        : LightColor.color2,
                                     fontsize: width / width16,
                                   ),
                                 )
@@ -364,7 +390,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                             Icon(
                               Icons.arrow_forward_ios_outlined,
                               size: width / width24,
-                              color: DarkColor. color17,
+                              color:  DarkColor.color17 ,
                             )
                           ],
                         ),

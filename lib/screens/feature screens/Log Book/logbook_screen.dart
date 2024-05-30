@@ -58,16 +58,17 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: DarkColor.AppBarcolor,
+              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -79,7 +80,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
               title: InterRegular(
                 text: 'LogBook',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -33,8 +34,8 @@ class _HomeScreenCustomNavigationState extends State<HomeScreenCustomNavigation>
     final double width = MediaQuery.of(context).size.width;
 
     return Container(
-      height: height / height74,
-      width: width / width74,
+      height: (width / width70),
+      width: (width / width70),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -47,7 +48,7 @@ class _HomeScreenCustomNavigationState extends State<HomeScreenCustomNavigation>
           )
         ],
         color: isDark? DarkColor. WidgetColor:LightColor.WidgetColor,
-        borderRadius: BorderRadius.circular(width / width13),
+        borderRadius: BorderRadius.circular((width / width13)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,13 +60,13 @@ class _HomeScreenCustomNavigationState extends State<HomeScreenCustomNavigation>
                 )
               : Icon(
                   widget.icon,
-                  size: width / width24,
+                  size: (width / width24),
                   color: widget.color,
                 ),
           SizedBox(height: height / height8),
           InterMedium(
             text: widget.text,
-            fontsize: width / width12,
+            fontsize: (width / width12),
             color: widget.textcolor,
           )
         ],

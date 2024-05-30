@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -75,14 +76,15 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
+          shadowColor: isDark ? Colors.transparent: LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -93,7 +95,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
           title: InterRegular(
             text: 'Guards',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -115,7 +117,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         icon: Icons.calendar_today,
                         text: '23 / 04 / 2024',
                         fontsize: width / width14,
-                        color: DarkColor.Primarycolor,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        Iconcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                       ),
                     ),
                     SizedBox(
@@ -127,7 +130,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: width / width14,
-                        color: DarkColor.Primarycolor,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                         Iconcolor: DarkColor. color1,
                       ),
                     ),
@@ -157,7 +160,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       margin: EdgeInsets.only(top: height / height10),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
-                        color: DarkColor.WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor: LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width14),
                       ),
                       padding:
@@ -181,7 +184,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                         bottomRight:
                                             Radius.circular(width / width10),
                                       ),
-                                      color: DarkColor. Primarycolor,
+                                      color: isDark
+                                          ? DarkColor.Primarycolor
+                                          : LightColor.Primarycolor,
                                     ),
                                   ),
                                 ],
@@ -195,7 +200,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                   children: [
                                     InterSemibold(
                                       text: patrol['PatrolLogGuardName'] ?? "",
-                                      color: DarkColor. color21,
+                                      color: isDark
+                                          ? DarkColor.color21
+                                          : LightColor.color2,
                                       fontsize: width / width18,
                                     ),
                                     // SizedBox(height: height / height5),
@@ -223,7 +230,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       InterRegular(
                                         text: 'Started at',
                                         fontsize: width / width12,
-                                        color: DarkColor. color21,
+                                        color: isDark
+                                            ? DarkColor.color21
+                                            : LightColor.color2,
                                       ),
                                       SizedBox(height: height / height12),
                                       InterMedium(
@@ -249,7 +258,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       InterRegular(
                                         text: 'Ended at',
                                         fontsize: width / width12,
-                                        color: DarkColor.color21,
+                                        color: isDark
+                                            ? DarkColor.color21
+                                            : LightColor.color2,
                                       ),
                                       SizedBox(height: height / height12),
                                       InterMedium(
@@ -274,14 +285,18 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       InterRegular(
                                         text: 'Count',
                                         fontsize: width / width12,
-                                        color: DarkColor.color21,
+                                        color: isDark
+                                            ? DarkColor.color21
+                                            : LightColor.color2,
                                       ),
                                       SizedBox(height: height / height12),
                                       Row(
                                         children: [
                                           Icon(
                                             Icons.check_circle_outline,
-                                            color: DarkColor. Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.color3,
                                             size: width / width16,
                                           ),
                                           SizedBox(
@@ -292,7 +307,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     .toString() ??
                                                 "",
                                             fontsize: width / width12,
-                                            color: DarkColor.color1,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
                                           ),
                                         ],
                                       ),

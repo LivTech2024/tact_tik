@@ -135,8 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width / width30,
-                vertical: height / height20,
+                horizontal: (width / width30),
+                vertical: (height / height20),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -157,11 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: height / height10),
+                  SizedBox(height: (height / height10)),
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: width / width18,
+                      fontSize: (width / width18),
                       color:  isDark
                           ? DarkColor.color1
                           : LightColor.color3, // Change text color to white
@@ -179,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _obscureText
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          size: width / width24,
+                          size: (width / width24),
                           color: DarkColor. color6, 
                         ),
                       ),
@@ -187,13 +187,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Enter your password',
                     ),
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height:( height / height20)),
                   if (_errorMessage != null)
                     Text(
                       _errorMessage!,
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: width / width24,
+                        fontSize:( width / width24),
                       ),
                     ),
                   Button1(
@@ -202,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? DarkColor.Primarycolor
                         : LightColor.Primarycolor,
                     text: 'Login',
-                    fontsize: width / width16,
+                    fontsize: (width / width16),
                     color: isDark
                         ? DarkColor.Secondarycolor
                         : LightColor.Secondarycolor,

@@ -11,6 +11,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
@@ -345,14 +346,15 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -363,7 +365,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           title: InterRegular(
             text: 'DAR',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -380,7 +382,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: width / width20,
-                      color: DarkColor. Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     SizedBox(height: height / height30),
                     CustomeTextField(
@@ -472,6 +474,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                     title: InterRegular(
                                       text: 'Add from Gallery',
                                       fontsize: width / width14,
+                                      
                                     ),
                                     onTap: () {
                                       Navigator.pop(context);
@@ -486,7 +489,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                              color: DarkColor. WidgetColor,
+                              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                               borderRadius:
                                   BorderRadius.circular(width / width8),
                             ),
@@ -527,9 +530,11 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       onPressed: () {
                                         _removeImage(index);
                                       },
-                                      icon: const Icon(
+                                      icon:  Icon(
                                         Icons.delete,
-                                        color: Colors.white,
+                                        color: isDark
+                                            ? DarkColor.color1
+                                            : LightColor.color3,
                                       ),
                                     ),
                                   ],
@@ -543,7 +548,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     Button1(
                       text: _isSubmitting ? 'Submitting...' : 'Submit',
                       onPressed: submitDarTileData,
-                      backgroundcolor: DarkColor. Primarycolor,
+                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                       borderRadius: 20,
                     ),
                   ],

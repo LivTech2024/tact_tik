@@ -519,10 +519,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                height: height / height180,
+                height: (height / height180),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
+                  borderRadius: BorderRadius.circular((width / width15)),
                   color: isDark
                       ? DarkColor.Primarycolor
                       : LightColor
@@ -671,8 +671,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: width / width30,
-                      right: width / width30,
+                      left: (width / width30),
+                      right: (width / width30),
                     ),
                     child: Column(
                       children: [
@@ -684,7 +684,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Shifts',
                                 icon: Icons.add_task,
-                                color: IconColors[0],
+                                color: isDark
+                                    ? (ScreenIndex == 0
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 0
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                                 textcolor: isDark
                                     ? (ScreenIndex == 0
                                         ? DarkColor.color1
@@ -699,7 +705,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Explore',
                                 icon: Icons.grid_view_rounded,
-                                color: IconColors[1],
+                                color: isDark
+                                    ? (ScreenIndex == 1
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 1
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                                 textcolor: isDark
                                     ? (ScreenIndex == 1
                                         ? DarkColor.color1
@@ -714,7 +726,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Calendar',
                                 icon: Icons.calendar_today,
-                                color: IconColors[2],
+                                color: isDark
+                                    ? (ScreenIndex == 2
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 2
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                                 textcolor: isDark
                                     ? (ScreenIndex == 2
                                         ? DarkColor.color1
@@ -737,7 +755,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : 'assets/images/no_message.svg',
                                 text: 'Message',
                                 icon: Icons.chat_bubble_outline,
-                                color: IconColors[3],
+                                color: isDark
+                                    ? (ScreenIndex == 3
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 3
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                                 textcolor: isDark
                                     ? (ScreenIndex == 3
                                         ? DarkColor.color1
@@ -749,7 +773,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: height / height30)
+                        SizedBox(height: (height / height30))
                       ],
                     ),
                   ),

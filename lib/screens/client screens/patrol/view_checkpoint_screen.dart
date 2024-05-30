@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
@@ -25,33 +26,33 @@ class ViewCheckpointScreen extends StatelessWidget {
                 InterBold(
                   text: 'Details',
                   fontsize: width / width18,
-                  color: DarkColor.color1,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
                 SizedBox(height: height / height20),
                 InterMedium(
                   text: 'Time: 10.30 pm  ',
                   fontsize: width / width14,
-                  color: DarkColor. color21,
+                  color: isDark ? DarkColor.color21 : LightColor.color3,
                 ),
                 SizedBox(height: height / height50),
                 InterBold(
                   text: 'Comments',
                   fontsize: width / width18,
-                  color: DarkColor. color1,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
                 SizedBox(height: height / height10),
                 InterMedium(
                   text:
                       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Lorem ipsum dolor sit amet',
                   fontsize: width / width14,
-                  color: DarkColor. color21,
+                  color: isDark ? DarkColor.color21 : LightColor.color3,
                   maxLines: 3,
                 ),
                 SizedBox(height: height / height50),
                 InterBold(
                   text: 'Images',
                   fontsize: width / width18,
-                  color: DarkColor.color1,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
                 GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
@@ -82,7 +83,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                 InterBold(
                   text: 'Reports',
                   fontsize: width / width18,
-                  color: DarkColor.color1,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
                 ListView.builder(
                   shrinkWrap: true,
@@ -92,7 +93,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                     return Container(
                       margin: EdgeInsets.only(bottom: height / height30),
                       height: height / height25,
-                      color: DarkColor. WidgetColor,
+                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       child: Row(
                         children: [
                           Container(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/new%20guard/new_guard_screen.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
@@ -101,13 +102,18 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     children: [
                       Stack(
                         children: [
-                          Icon(
-                            Icons.notifications,
-                            // Use the notifications_active icon
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3, // Change color if unread
-                            size: width / width28,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,MaterialPageRoute(builder:  (context) => NewGuardScreen()));
+                            },
+                            child: Icon(
+                              Icons.notifications,
+                              // Use the notifications_active icon
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3, // Change color if unread
+                              size: width / width28,
+                            ),
                           ),
                           if (isUnread)
                             Positioned(
