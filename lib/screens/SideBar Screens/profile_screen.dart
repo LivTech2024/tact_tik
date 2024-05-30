@@ -169,7 +169,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Container(
                           padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: _employeeImageUrl != null ? Color(0xFFAC7310) : Primarycolor,
+                            color: _employeeImageUrl != null
+                                ? Color(0xFFAC7310)
+                                : Primarycolor,
                             shape: BoxShape.circle,
                           ),
                           child: ClipOval(
@@ -185,7 +187,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           _employeeImageUrl!,
                                           fit: BoxFit.cover,
                                         )
-                                      : Image.asset('assets/images/default.png'),
+                                      : Image.asset(
+                                          'assets/images/default.png'),
                             ),
                           ),
                         ),
@@ -284,6 +287,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   Expanded(
                                     child: SetTextfieldWidget(
+                                      maxlength: 11,
+                                      keyboardType: TextInputType.number,
                                       hintText: '',
                                       controller: _phoneNoController,
                                       enabled: true,
@@ -349,14 +354,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(height: height / height60),
-              if (_employeeImageUrl == null && _employeeRole == null && _employeeEmail == null && _employeePhone == null && _employeeName == null)
-              Center(
-                child: PoppinsRegular(
-                  text: 'complete your profile !',
-                  fontsize: width / width20,
-                  color: color3,
-                ),
-              )
+              if (_employeeImageUrl == null &&
+                  _employeeRole == null &&
+                  _employeeEmail == null &&
+                  _employeePhone == null &&
+                  _employeeName == null)
+                Center(
+                  child: PoppinsRegular(
+                    text: 'complete your profile !',
+                    fontsize: width / width20,
+                    color: color3,
+                  ),
+                )
             ],
           ),
         ),

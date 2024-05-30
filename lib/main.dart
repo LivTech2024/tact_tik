@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
               Theme.of(context).textTheme,
             ),
           ),
-          home: AllSchedulesScreen(CompanyId: 'aSvLtwII6Cjs7uCISBRR', BranchId: '9tgQzYBJTL3QqJKe34eJ'),
+          home: AuthChecker(),
           // OfflineBuilder(
           //   connectivityBuilder: (
           //     BuildContext context,
