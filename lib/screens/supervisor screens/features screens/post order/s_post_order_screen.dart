@@ -136,7 +136,7 @@ class _SPostOrderState extends State<SPostOrder> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height40),
+                            padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height30),
                             child: InterSemibold(
                               text: date,
                               fontsize: width / width20,

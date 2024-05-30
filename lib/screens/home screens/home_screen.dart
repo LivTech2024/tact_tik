@@ -39,6 +39,7 @@ import 'package:tact_tik/utils/colors.dart';
 import '../../common/sizes.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
+import '../../login_screen.dart';
 import '../../utils/utils.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
@@ -59,6 +60,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 final LocalStorage storage = LocalStorage('ShiftDetails');
+final LocalStorage userStorage = LocalStorage('currentUserEmail');
 
 class _HomeScreenState extends State<HomeScreen> {
   //Get the current User
@@ -561,9 +563,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     buildListTile(
                       Icons.add_card,
-                      'Payment',
+                      'Wages',
                       2,
-                      () {},
+                      () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) =>
+                        //             EmploymentLetterScreen()));
+                      },
                     ),
                     buildListTile(
                       Icons.article,
@@ -594,11 +602,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     buildListTile(
-                      Icons.settings,
-                      'Settings',
+                      Icons.switch_left,
+                      'Theme',
                       5,
                       () async {
-                        List<String> emails = [];
+                        // List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");ƒ
@@ -651,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontsize: width / width14,
                 ),
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens(), _employeeId);
+                  auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
               SizedBox(height: height / height10)
@@ -741,44 +749,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 ScreenIndex == 0
                     ? SliverToBoxAdapter(
                         child: Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: ShiftExist
-                                ? FutureBuilder(
-                                    future:
-                                        Future.delayed(Duration(seconds: 2)),
-                                    builder: (c, s) => s.connectionState ==
-                                            ConnectionState.done
-                                        ? StartTaskScreen(
-                                            ShiftDate: _ShiftDate,
-                                            ShiftClientID: _shiftCLientId,
-                                            ShiftEndTime: _ShiftEndTime,
-                                            ShiftStartTime: _ShiftStartTime,
-                                            EmployeId: _employeeId,
-                                            ShiftId: _shiftId,
-                                            ShiftAddressName:
-                                                _ShiftLocationName,
-                                            ShiftCompanyId:
-                                                _ShiftCompanyId ?? "",
-                                            ShiftBranchId: _ShiftBranchId,
-                                            EmployeeName: _userName ?? "",
-                                            ShiftLocationId: _shiftLocationId,
-                                            resetShiftStarted: () {},
-                                            ShiftIN: true,
-                                            onRefresh: refreshHomeScreen,
-                                            ShiftName: _ShiftName,
-                                            ShiftStatus: _ShiftStatus)
-                                        : Center(
-                                            child: InterMedium(
-                                              text: 'Loading...',
-                                              color: Primarycolor,
-                                              fontsize: width / width14,
-                                            ),
+                          padding: EdgeInsets.only(
+                            left: width / width30,
+                            right: width / width30,
+                          ),
+                          child: ShiftExist
+                              ? FutureBuilder(
+                                  future: Future.delayed(Duration(seconds: 2)),
+                                  builder: (c, s) => s.connectionState ==
+                                          ConnectionState.done
+                                      ? StartTaskScreen(
+                                          ShiftDate: _ShiftDate,
+                                          ShiftClientID: _shiftCLientId,
+                                          ShiftEndTime: _ShiftEndTime,
+                                          ShiftStartTime: _ShiftStartTime,
+                                          EmployeId: _employeeId,
+                                          ShiftId: _shiftId,
+                                          ShiftAddressName: _ShiftLocationName,
+                                          ShiftCompanyId: _ShiftCompanyId ?? "",
+                                          ShiftBranchId: _ShiftBranchId,
+                                          EmployeeName: _userName ?? "",
+                                          ShiftLocationId: _shiftLocationId,
+                                          resetShiftStarted: () {},
+                                          ShiftIN: true,
+                                          onRefresh: refreshHomeScreen,
+                                          ShiftName: _ShiftName,
+                                          ShiftStatus: _ShiftStatus)
+                                      : Center(
+                                          child: InterMedium(
+                                            text: 'Loading...',
+                                            color: Primarycolor,
+                                            fontsize: width / width14,
                                           ),
-                                  )
-                                : SizedBox()),
+                                        ),
+                                )
+                              : SizedBox(),
+                        ),
                       )
                     : ScreenIndex == 1
                         ? SliverGrid(

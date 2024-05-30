@@ -155,7 +155,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: height / height30),
+                        SizedBox(height: height / height20),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             iconSize: width / width24,
@@ -233,14 +233,15 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                             width: width / width50,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  'url',
-                                                ),
-                                                filterQuality:
-                                                    FilterQuality.high,
-                                                fit: BoxFit.cover,
-                                              ),
+                                              color: Primarycolor,
+                                              // image: DecorationImage(
+                                              //   image: NetworkImage(
+                                              //     'url',
+                                              //   ),
+                                              //   filterQuality:
+                                              //       FilterQuality.high,
+                                              //   fit: BoxFit.cover,
+                                              // ),
                                             ),
                                           ),
                                           SizedBox(

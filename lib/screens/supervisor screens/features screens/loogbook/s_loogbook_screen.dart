@@ -53,9 +53,9 @@ class _LogBookScreenState extends State<SLogBookScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
         body: CustomScrollView(
           slivers: [
-
             SliverAppBar(
               backgroundColor: AppBarcolor,
               elevation: 0,
@@ -103,30 +103,40 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                 final documents = snapshot.data!.docs;
                 final groups = _groupLogsByDate(documents);
 
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final entry = groups.entries.toList()[index];
-                      final shiftName = entry.key;
-                      final logsByDate = entry.value;
+                if (snapshot.data != null) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final entry = groups.entries.toList()[index];
+                        final shiftName = entry.key;
+                        final logsByDate = entry.value;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: logsByDate.entries.map((dateEntry) {
+                            final date = dateEntry.key;
+                            final logs = dateEntry.value;
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: logsByDate.entries.map((dateEntry) {
-                          final date = dateEntry.key;
-                          final logs = dateEntry.value;
-
-                          return LogBookWidget(
-                            date: date,
-                            shiftName: shiftName,
-                            logs: logs,
-                          );
-                        }).toList(),
-                      );
-                    },
-                    childCount: groups.length,
-                  ),
-                );
+                            return LogBookWidget(
+                              date: date,
+                              shiftName: shiftName,
+                              logs: logs,
+                            );
+                          }).toList(),
+                        );
+                      },
+                      childCount: groups.length,
+                    ),
+                  );
+                }
+                else {
+                  return Center(
+                    child: InterMedium(
+                      text: 'No Logs Generated For\n${widget.empName}',
+                      textAlign: TextAlign.center,
+                      color: color1,
+                    ),
+                  );
+                }
               },
             ),
           ],

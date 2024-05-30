@@ -89,33 +89,6 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height / height30),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      iconSize: width / width24,
-                      dropdownColor: WidgetColor,
-                      style:
-                          TextStyle(color: color2, fontSize: width / width14),
-                      borderRadius: BorderRadius.circular(width / width10),
-                      value: dropdownValue,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'All Guards',
-                        'available',
-                        'unavailable'
-                      ] // Add your options here
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: height / height20),
                   _guardsInfo.length != 0
                       ? ListView.builder(
                           shrinkWrap: true,
@@ -152,7 +125,8 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                     Container(
                                       height: height / height48,
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: width / width20),
+                                        horizontal: width / width20,
+                                      ),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
