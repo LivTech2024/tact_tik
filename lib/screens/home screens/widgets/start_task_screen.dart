@@ -667,6 +667,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                   // start stop watch
                                   // await controller.startStopWatch();
+                                  _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
                                   await homeScreenController
@@ -704,7 +705,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   setState(() {
                                     // if (!clickedIn) {
                                     clickedIn = true;
-                                    // prefs.setBool('clickedIn', clickedIn);
+                                    prefs.setBool('clickedIn', clickedIn);
                                     DateTime currentTime = DateTime.now();
                                     inTime = currentTime;
                                     prefs.setInt('InTime',

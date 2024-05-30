@@ -883,6 +883,15 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                   var data = reportsByHour;
                                   return GestureDetector(
                                     onTap: () {
+                                      print("data ${reportsForHour}");
+                                      print("time ${reportsByHour[hourKey]}");
+                                      var ReportSId = reportsForHour[0];
+                                      print("ReportSId ${ReportSId}");
+                                      print(
+                                          "ReportSearchId ${ReportSId['ReportSearchId']}");
+                                      String ReportSerachID =
+                                          ReportSId['ReportSearchId'];
+                                      // String ReportSearchId = ReportSId[''];
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -896,8 +905,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                               ClientId: '',
                                               reportId: '',
                                               buttonEnable: false,
-                                              ShiftId: widget.shifID,
-                                              SearchId: '', //Need to Work Here
+                                              ShiftId: "",
+                                              SearchId:
+                                                  ReportSerachID, //Need to Work Here
                                             ),
                                           ));
                                     },

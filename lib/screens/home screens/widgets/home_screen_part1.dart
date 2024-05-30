@@ -209,32 +209,31 @@ class HomeScreenPart1 extends StatelessWidget {
                       controller: _controller,
                       direction: VerticalDirection.down,
                       builder: (context, _controller, focusNode) => TextField(
-                        controller: _controller,
-                        focusNode: focusNode,
-                        autofocus: true,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w300,
-                          fontSize: width / width18,
-                          color: Colors.white,
-                        ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(width / width10),
-                            ),
-                          ),
-                          focusedBorder: InputBorder.none,
-                          hintStyle: GoogleFonts.poppins(
+                          controller: _controller,
+                          focusNode: focusNode,
+                          autofocus: false,
+                          style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: width / width18,
-                            color: color2,
+                            color: Colors.white,
                           ),
-                          hintText: 'Search screen',
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                        cursorColor: Primarycolor
-                      ),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(width / width10),
+                              ),
+                            ),
+                            focusedBorder: InputBorder.none,
+                            hintStyle: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w300,
+                              fontSize: width / width18,
+                              color: color2,
+                            ),
+                            hintText: 'Search screen',
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          cursorColor: Primarycolor),
                       suggestionsCallback: suggestionsCallback,
                       itemBuilder: (context, Screens screen) {
                         return ListTile(
@@ -246,8 +245,9 @@ class HomeScreenPart1 extends StatelessWidget {
                         );
                       },
                       emptyBuilder: (context) => Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: height / height10 , horizontal: width / width10),
+                        padding: EdgeInsets.symmetric(
+                            vertical: height / height10,
+                            horizontal: width / width10),
                         child: InterRegular(
                           text: 'No Such Screen found',
                           color: color2,
@@ -263,7 +263,8 @@ class HomeScreenPart1 extends StatelessWidget {
                       debounceDuration: const Duration(milliseconds: 300),
                       onSelected: (Screens value) {
                         // _controller.text = value.name;
-                        print('home screen search bar############################################');
+                        print(
+                            'home screen search bar############################################');
                         print(value.name);
                       },
                       listBuilder: gridLayoutBuilder,
