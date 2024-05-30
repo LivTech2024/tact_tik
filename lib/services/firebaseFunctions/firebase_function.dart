@@ -3576,17 +3576,17 @@ class FireStoreService {
   }
 
   //fetch all the patrols
-  Future<List<String>> getAllPatrolName(String companyid) async {
+  Future<List<String>> getAllPatrolName(String companyId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('Patrols').get();
+      await FirebaseFirestore.instance.collection('Patrols').get();
 
       final List<String> roles = snapshot.docs
-          .where((doc) => doc.data()['PatrolCompanyId'] == companyid)
+          .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
           .map((doc) => doc.data()['PatrolName'] as String)
           .toSet()
           .toList();
-      print("Clientname ${roles}");
+      print("Clientname $roles");
       return roles;
     } catch (e) {
       print("Error fetching report titles: $e");
