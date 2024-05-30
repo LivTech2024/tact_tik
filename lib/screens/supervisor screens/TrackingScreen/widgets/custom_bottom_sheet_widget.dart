@@ -177,9 +177,11 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                     }).toList();
 
                                     // Draw the polyline on the map
-                                    await controller.drawRouteLowLevel(
-                                      polyline,
-                                    );
+                                    if (shiftDetails.role != 'GUARD') {
+                                      await controller.drawRouteLowLevel(
+                                        polyline,
+                                      );
+                                    }
                                     controller.flyToLocation(polyline);
                                   }
                                 }

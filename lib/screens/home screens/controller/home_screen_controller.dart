@@ -40,25 +40,14 @@ class HomeScreenController extends GetxController {
   }
 
   Future<void> updateUI(dynamic data) async {
-    LocationDto? locationDto =
-        (data != null) ? LocationDto.fromJson(data) : null;
-    await _updateNotificationText(locationDto!);
-    if (data != null) {
-      lastLocation = locationDto;
-    }
+    await _updateNotificationText();
   }
 
-  Future<void> _updateNotificationText(LocationDto data) async {
-    if (data == null) {
-      return;
-    }
-
+  Future<void> _updateNotificationText() async {
     await BackgroundLocator.updateNotificationText(
         title: "Background location",
         msg: "${DateTime.now()}",
-        bigMsg: "${data.latitude}, ${data.longitude}");
-
-    print('Location updated flutter: ${data.latitude}, ${data.longitude},');
+        bigMsg: "Background location service is running");
   }
 
   Future<void> initPlatformState() async {

@@ -232,8 +232,9 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                VisiTorsScreen(), // Replace with your visitor screen widget
+            builder: (context) => VisiTorsScreen(
+              locationId: '',
+            ), // Replace with your visitor screen widget
           ),
         );
         return true;
@@ -277,28 +278,6 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
-            ),
-            padding: EdgeInsets.only(left: width / width20),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: InterRegular(
-            text: 'Visitors',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
-          ),
-          centerTitle: true,
-        ),
         body: Stack(
           children: [
             CustomScrollView(

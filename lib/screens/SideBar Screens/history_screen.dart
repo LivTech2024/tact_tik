@@ -66,6 +66,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [

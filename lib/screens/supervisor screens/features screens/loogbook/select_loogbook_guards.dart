@@ -111,33 +111,6 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height / height30),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      iconSize: width / width24,
-                      dropdownColor: WidgetColor,
-                      style:
-                          TextStyle(color: color2, fontSize: width / width14),
-                      borderRadius: BorderRadius.circular(width / width10),
-                      value: dropdownValue,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'All Guards',
-                        'available',
-                        'unavailable'
-                      ] // Add your options here
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(height: height / height20),
                   _guardsInfo.length != 0
                       ? ListView.builder(
                           shrinkWrap: true,
@@ -148,6 +121,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                             String name = guardInfo['EmployeeName'] ?? "";
                             String id = guardInfo['EmployeeId'] ?? "";
                             String url = guardInfo['EmployeeImg'] ?? "";
+
 
                             print(guardInfo);
                             return GestureDetector(
@@ -186,12 +160,24 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                               Container(
                                                 height: height / height50,
                                                 width: width / width50,
-                                                decoration: BoxDecoration(
+                                                decoration: guardInfo['EmployeeImg'] != null
+                                                    ? BoxDecoration(
                                                   shape: BoxShape.circle,
+                                                  // color: Primarycolor,
                                                   image: DecorationImage(
-                                                    image: NetworkImage(url),
-                                                    filterQuality:
-                                                        FilterQuality.high,
+                                                    image: NetworkImage(
+                                                        url) ,
+                                                    filterQuality: FilterQuality.high,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )
+                                                    : BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Primarycolor,
+                                                  image: DecorationImage(
+                                                    image:  AssetImage(
+                                                        'assets/images/default.png'),
+                                                    filterQuality: FilterQuality.high,
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),

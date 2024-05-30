@@ -457,27 +457,27 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                             widget.LocationId,
                             widget.ShiftName);
                         num newCount = widget.CompletedCount;
-                        sendapiEmail(
-                            emails,
-                            selectedOption == "Emergency"
-                                ? "Urgent Update for ${widget.description} Date:- ${formattedStartDate} "
-                                : "Patrol update for ${widget.description} Date:- ${formattedStartDate}",
-                            widget.EmpName,
-                            "",
-                            'Shift ',
-                            formattedStartDate,
-                            formattedImageUrls,
-                            widget.EmpName,
-                            InTime,
-                            formattedEndTime,
-                            widget.CompletedCount + 1,
-                            widget.PatrolRequiredCount.toString(),
-                            widget.description,
-                            "Completed",
-                            InTime,
-                            formattedPatrolOutTime,
-                            Controller.text,
-                            selectedOption);
+                        // sendapiEmail(
+                        //     emails,
+                        //     selectedOption == "Emergency"
+                        //         ? "Urgent Update for ${widget.description} Date:- ${formattedStartDate} "
+                        //         : "Patrol update for ${widget.description} Date:- ${formattedStartDate}",
+                        //     widget.EmpName,
+                        //     "",
+                        //     'Shift ',
+                        //     formattedStartDate,
+                        //     formattedImageUrls,
+                        //     widget.EmpName,
+                        //     InTime,
+                        //     formattedEndTime,
+                        //     widget.CompletedCount + 1,
+                        //     widget.PatrolRequiredCount.toString(),
+                        //     widget.description,
+                        //     "Completed",
+                        //     InTime,
+                        //     formattedPatrolOutTime,
+                        //     Controller.text,
+                        //     selectedOption);
                         setState(() {
                           _isLoading = false;
                         });

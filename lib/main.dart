@@ -20,6 +20,8 @@ import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogboo
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/all_schedules_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 
@@ -29,7 +31,7 @@ Future<void> main() async {
   await FirebaseAppCheck.instance.activate(
     // webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     androidProvider: AndroidProvider.debug,
-    // appleProvider: AppleProvider.appAttest,
+    appleProvider: AppleProvider.appAttest,
   );
   MapboxOptions.setAccessToken(appConstants.mapBoxPublicKey);
   runApp(const MyApp());
@@ -42,44 +44,44 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: GetMaterialApp(
-        title: 'Tact Tik',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          textTheme: GoogleFonts.poppinsTextTheme(
-            Theme.of(context).textTheme,
+          title: 'Tact Tik',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            textTheme: GoogleFonts.poppinsTextTheme(
+              Theme.of(context).textTheme,
+            ),
           ),
-        ),
-        home: AuthChecker(),
-        // OfflineBuilder(
-        //   connectivityBuilder: (
-        //     BuildContext context,
-        //     ConnectivityResult connectivity,
-        //     Widget child,
-        //   ) {
-        //     final bool isConnected = connectivity != ConnectivityResult.none;
-        //     if (isConnected) {
-        //       return child;
-        //     } else {
-        //       return const Scaffold(
-        //         body: Center(
-        //           child: Text(
-        //             'No internet connection. Connect to Internet or Restart the app',
-        //             style: TextStyle(
-        //               fontSize: 20, // Adjust the font size as needed
-        //               fontWeight: FontWeight.bold, // Add bold font weight
-        //               color: Colors.white, // Change text color to red
-        //             ),
-        //           ),
-        //         ),
-        //       );
-        //       // return OfflineScreen();
-        //     }
-        //   },
-        //   child: AuthChecker(),
-        // ),
-      ),
+          home: AuthChecker()
+          // OfflineBuilder(
+          //   connectivityBuilder: (
+          //     BuildContext context,
+          //     ConnectivityResult connectivity,
+          //     Widget child,
+          //   ) {
+          //     final bool isConnected = connectivity != ConnectivityResult.none;
+          //     if (isConnected) {
+          //       return child;
+          //     } else {
+          //       return const Scaffold(
+          //         body: Center(
+          //           child: Text(
+          //             'No internet connection. Connect to Internet or Restart the app',
+          //             style: TextStyle(
+          //               fontSize: 20, // Adjust the font size as needed
+          //               fontWeight: FontWeight.bold, // Add bold font weight
+          //               color: Colors.white, // Change text color to red
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //       // return OfflineScreen();
+          //     }
+          //   },
+          //   child: AuthChecker(),
+          // ),
+          ),
     );
   }
 }

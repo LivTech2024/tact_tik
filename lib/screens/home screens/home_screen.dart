@@ -19,6 +19,7 @@ import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/dar_screen.dart';
@@ -50,6 +51,7 @@ import '../feature screens/pani button/panic_button.dart';
 import '../feature screens/post_order.dart/post_order_screen.dart';
 import '../feature screens/task/task_feature_screen.dart';
 import '../feature screens/visitors/visitors.dart';
+import 'calendar_screen.dart';
 import 'controller/home_screen_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -60,6 +62,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 final LocalStorage storage = LocalStorage('ShiftDetails');
+final LocalStorage userStorage = LocalStorage('currentUserEmail');
 
 class _HomeScreenState extends State<HomeScreen> {
   //Get the current User
@@ -206,10 +209,15 @@ class _HomeScreenState extends State<HomeScreen> {
           IconColors[3] = color4;
           break;
         case 2:
-          IconColors[0] = color4;
+          IconColors[0] = Primarycolor;
           IconColors[1] = color4;
-          IconColors[2] = Primarycolor;
+          IconColors[2] = color4;
           IconColors[3] = color4;
+          ScreenIndex = 0;
+          // CalendarScreen
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CalendarScreen()));
+
           break;
         case 3:
           IconColors[0] = color4;
@@ -341,6 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //                     Branchid: _branchId,
           //                     cmpId: _cmpId,
           // String employeeImg = shiftInfo['EmployeeImg'];
+          print("Shift Id at the HomeScreen ${shiftId}");
           setState(() {
             _ShiftDate = shiftDateStr;
             _ShiftEndTime = shiftEndTimeStr;
@@ -457,8 +466,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/task.png', 'Task'],
       ['assets/images/log_book.png', 'Log Book'],
       ['assets/images/visitors.png', 'Visitors'],
-      ['assets/images/key&assets.png', 'Key & Assets'],
-      ['assets/images/key&assets.png', 'Key'],
+      ['assets/images/assets.png', 'Assets'],
+      ['assets/images/keys.png', 'Key'],
     ];
 
     final double height = MediaQuery.of(context).size.height;
@@ -513,18 +522,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                          ), //
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                                size: Size.fromRadius(width / width50),
-                                child: Image.network(
-                                  employeeImg!,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/default.png'),
+                          foregroundImage: NetworkImage(employeeImg!),
+                          radius: width / width50,
+                          backgroundColor: Primarycolor,
+                          // maxRadius: width / width50,
+                          // minRadius: width / width50,
                         ),
                         SizedBox(height: height / height10),
                         PoppinsSemibold(
@@ -565,9 +570,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     buildListTile(
                       Icons.add_card,
-                      'Payment',
+                      'Wages',
                       2,
-                      () {},
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EmploymentLetterScreen()));
+                      },
                     ),
                     buildListTile(
                       Icons.article,
@@ -598,11 +609,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     buildListTile(
-                      Icons.settings,
-                      'Settings',
+                      Icons.switch_left,
+                      'Theme',
                       5,
                       () async {
-                        List<String> emails = [];
+                        // List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
                         // emails.add("alerts.tactik@gmail.com");
@@ -706,7 +717,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontsize: width / width14,
                 ),
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens(), _employeeId);
+                  auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
               SizedBox(height: height / height10)
@@ -912,6 +923,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       empId: _employeeId,
                                                       empName: _userName,
                                                       clientId: _shiftCLientId,
+                                                      ShiftId: _shiftId,
                                                     )));
                                         break;
                                       case 4:
@@ -945,7 +957,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    VisiTorsScreen()));
+                                                    VisiTorsScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));
                                         break;
                                       case 8:
                                         // AssetsScreen
@@ -982,10 +997,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              childCount: 10,
+                              childCount: data.length,
                             ),
                           )
-                        : ScreenIndex == 2
+                        : /*ScreenIndex == 2
                             ? SliverToBoxAdapter(
                                 child: Padding(
                                   padding: EdgeInsets.only(
@@ -997,45 +1012,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                               )
-                            : ScreenIndex == 3
-                                ? SliverToBoxAdapter(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width / width30,
+                            :*/
+                        ScreenIndex == 3
+                            ? SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: width / width30,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InterBold(
+                                        text: 'Received Message ',
+                                        color: Primarycolor,
+                                        fontsize: width / width14,
                                       ),
-                                      child: Row(
+                                      Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.start,
                                         children: [
-                                          InterBold(
-                                            text: 'Received Message ',
+                                          Icon(
+                                            Icons.add,
                                             color: Primarycolor,
+                                            size: width / width20,
+                                          ),
+                                          SizedBox(width: width / width4),
+                                          InterBold(
+                                            text: 'Create Message',
                                             fontsize: width / width14,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                Icons.add,
-                                                color: Primarycolor,
-                                                size: width / width20,
-                                              ),
-                                              SizedBox(width: width / width4),
-                                              InterBold(
-                                                text: 'Create Message',
-                                                fontsize: width / width14,
-                                                color: Primarycolor,
-                                                maxLine: 2,
-                                              )
-                                            ],
-                                          ),
+                                            color: Primarycolor,
+                                            maxLine: 2,
+                                          )
                                         ],
                                       ),
-                                    ),
-                                  )
-                                : const SizedBox(),
-                ScreenIndex == 2
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
+                /*ScreenIndex == 2
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
@@ -1158,127 +1174,126 @@ class _HomeScreenState extends State<HomeScreen> {
                           childCount: schedules_list.length,
                         ),
                       )
-                    : ScreenIndex == 3
-                        ? SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    left: width / width30,
-                                    right: width / width30,
+                    :*/
+                ScreenIndex == 3
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: width / width30,
+                                right: width / width30,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  height: height / height120,
+                                  margin: EdgeInsets.only(
+                                    top: height / height10,
                                   ),
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      height: height / height120,
-                                      margin: EdgeInsets.only(
-                                        top: height / height10,
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        width: 1,
+                                        color: Primarycolor,
                                       ),
-                                      width: double.maxFinite,
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
-                                            width: 1,
-                                            color: Primarycolor,
+                                    ),
+                                    // color: WidgetColor,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: height / height20,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    // mainAxisAlignment:
+                                    //     MainAxisAlignment
+                                    //         .spaceBetween,
+                                    children: [
+                                      NewMessage
+                                          ? Container(
+                                              height: height / height10,
+                                              width: width / width10,
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left: width / width6),
+                                        height: height / height40,
+                                        width: width / width40,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                            ),
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                        // color: WidgetColor,
                                       ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: height / height20,
+                                      SizedBox(
+                                        width: width / width6,
                                       ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        // mainAxisAlignment:
-                                        //     MainAxisAlignment
-                                        //         .spaceBetween,
-                                        children: [
-                                          NewMessage
-                                              ? Container(
-                                                  height: height / height10,
-                                                  width: width / width10,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.green,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                )
-                                              : SizedBox(),
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                left: width / width6),
-                                            height: height / height40,
-                                            width: width / width40,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-                                                ),
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / width6,
-                                          ),
-                                          SizedBox(
-                                            width: width / width300,
-                                            child: Column(
+                                      SizedBox(
+                                        width: width / width300,
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
+                                                InterRegular(
+                                                  text: 'Supervisor',
+                                                  fontsize: width / width16,
+                                                  color: color1,
+                                                ),
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  // mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
-                                                    InterRegular(
-                                                      text: 'Supervisor',
-                                                      fontsize: width / width16,
+                                                    PoppinsRegular(
+                                                      text: '9:36 AM',
+                                                      color: color3,
+                                                      fontsize: width / width14,
+                                                    ),
+                                                    Icon(
+                                                      Icons.arrow_forward_ios,
                                                       color: color1,
-                                                    ),
-                                                    Row(
-                                                      // mainAxisAlignment: MainAxisAlignment.end,
-                                                      children: [
-                                                        PoppinsRegular(
-                                                          text: '9:36 AM',
-                                                          color: color3,
-                                                          fontsize:
-                                                              width / width14,
-                                                        ),
-                                                        Icon(
-                                                          Icons
-                                                              .arrow_forward_ios,
-                                                          color: color1,
-                                                          size: width / width18,
-                                                        )
-                                                      ],
-                                                    ),
+                                                      size: width / width18,
+                                                    )
                                                   ],
-                                                ),
-                                                SizedBox(
-                                                  height: height / height5,
-                                                ),
-                                                Flexible(
-                                                  child: InterRegular(
-                                                    text:
-                                                        'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                                    fontsize: width / width14,
-                                                    color: color3,
-                                                  ),
                                                 ),
                                               ],
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                            SizedBox(
+                                              height: height / height5,
+                                            ),
+                                            Flexible(
+                                              child: InterRegular(
+                                                text:
+                                                    'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                fontsize: width / width14,
+                                                color: color3,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                );
-                              },
-                              childCount: 8,
-                            ),
-                          )
-                        : SliverToBoxAdapter()
+                                ),
+                              ),
+                            );
+                          },
+                          childCount: 8,
+                        ),
+                      )
+                    : SliverToBoxAdapter()
               ],
             ),
           ),

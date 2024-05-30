@@ -24,21 +24,25 @@ class CreateReportScreen extends StatefulWidget {
   final String companyID;
   final String empId;
   final String ClientId;
-
+  final String ShiftId;
   final String empName;
   final String reportId;
   bool buttonEnable;
+  final String SearchId;
 
-  CreateReportScreen(
-      {super.key,
-      required this.locationId,
-      required this.locationName,
-      required this.companyID,
-      required this.empId,
-      required this.empName,
-      required this.ClientId,
-      required this.reportId,
-      required this.buttonEnable});
+  CreateReportScreen({
+    Key? key,
+    required this.locationId,
+    required this.locationName,
+    required this.companyID,
+    required this.empId,
+    required this.empName,
+    required this.ClientId,
+    required this.reportId,
+    required this.buttonEnable,
+    required this.ShiftId,
+    required this.SearchId,
+  }) : super(key: key);
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
@@ -67,6 +71,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     getAllReports();
     super.initState();
     shouldShowButton = widget.buttonEnable;
+    print("Shift Id at Create Report ${widget.ShiftId}");
   }
 
   void getAllTitles() async {
@@ -170,7 +175,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       file.absolute.path + '_compressed.jpg',
-      quality: 30,
+      quality: 10,
     );
     return File(result!.path);
   }
@@ -562,7 +567,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 clientId: widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: widget.ShiftId);
                             if (isChecked == false) {
                               await fireStoreService
                                   .updateFollowUp(reportData['ReportId']);
@@ -606,7 +612,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 status: "pending",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: widget.ShiftId);
                             Navigator.pop(context, true);
                             setState(() {
                               _isLoading = false; // Set loading state
@@ -672,7 +679,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 status: "pending",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: widget.ShiftId);
                             // }
                             Navigator.pop(context, true);
                             setState(() {

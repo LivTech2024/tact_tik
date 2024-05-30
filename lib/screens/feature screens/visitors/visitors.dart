@@ -14,7 +14,8 @@ import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
 class VisiTorsScreen extends StatefulWidget {
-  const VisiTorsScreen({Key? key});
+  final String locationId;
+  const VisiTorsScreen({Key? key, required this.locationId});
 
   @override
   State<VisiTorsScreen> createState() => _VisiTorsScreenState();
@@ -63,8 +64,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
         body: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
               .collection('Visitors')
-              .where('VisitorLocationId',
-                  isEqualTo: _userService.shiftLocationId)
+              .where('VisitorLocationId', isEqualTo: widget.locationId)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -106,7 +106,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    padding: EdgeInsets.symmetric(horizontal: width / width20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -167,12 +167,12 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                 },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width30),
+                                horizontal: width / width20),
                             child: Container(
                               height: width / width120,
                               width: double.maxFinite,
                               margin:
-                                  EdgeInsets.only(bottom: height / height10),
+                                  EdgeInsets.only(bottom: height / height16),
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(width / width10),
@@ -193,30 +193,35 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Container(
-                                            width: width / width40,
-                                            height: height / height40,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: width / width40,
+                                                height: height / height40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
                                                   BorderRadius.circular(
                                                       width / width10),
-                                              color: Primarycolorlight,
-                                            ),
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                'assets/images/man.svg',
-                                                height: height / height20,
+                                                  color: Primarycolorlight,
+                                                ),
+                                                child: Center(
+                                                  child: SvgPicture.asset(
+                                                    'assets/images/man.svg',
+                                                    height: height / height20,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / width120,
-                                            child: InterMedium(
-                                              text: visitorName,
-                                              color: color1,
-                                              fontsize: width / width16,
-                                              maxLines: 1,
-                                            ),
+                                              SizedBox(width: width / width20,),
+                                              SizedBox(
+                                                width: width / width120,
+                                                child: InterMedium(
+                                                  text: visitorName,
+                                                  color: color1,
+                                                  fontsize: width / width16,
+                                                  maxLines: 1,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                           Column(
                                             mainAxisAlignment:
