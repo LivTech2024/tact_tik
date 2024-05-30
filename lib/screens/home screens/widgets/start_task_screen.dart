@@ -768,39 +768,39 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                     onTap: () async {
                       // if (controller.stopWatchRunning.value) {
                       /// TODO paste this code to end shift
-                      Get.to(() => MapScreen(onDone: (File file) async {
-                            // Fetch the employee's current route document
-                            QuerySnapshot routeSnapshot =
-                                await FirebaseFirestore.instance
-                                    .collection('EmployeeRoutes')
-                                    .where('EmpRouteEmpId',
-                                        isEqualTo: widget.EmployeId)
-                                    .where('EmpRouteShiftStatus',
-                                        isEqualTo: 'started')
-                                    .get();
+                      // Get.to(() => MapScreen(onDone: (File file) async {
+                      //       // Fetch the employee's current route document
+                      //       QuerySnapshot routeSnapshot =
+                      //           await FirebaseFirestore.instance
+                      //               .collection('EmployeeRoutes')
+                      //               .where('EmpRouteEmpId',
+                      //                   isEqualTo: widget.EmployeId)
+                      //               .where('EmpRouteShiftStatus',
+                      //                   isEqualTo: 'started')
+                      //               .get();
 
-                            if (routeSnapshot.docs.isNotEmpty) {
-                              // Assuming you only get one active route document per employee
-                              DocumentReference routeDocRef =
-                                  routeSnapshot.docs.first.reference;
+                      //       if (routeSnapshot.docs.isNotEmpty) {
+                      //         // Assuming you only get one active route document per employee
+                      //         DocumentReference routeDocRef =
+                      //             routeSnapshot.docs.first.reference;
 
-                              // Update the EmpRouteShiftStatus to "completed"
-                              await routeDocRef.update({
-                                'EmpRouteShiftStatus': 'completed',
-                                'EmpRouteCompletedAt': Timestamp.now(),
-                              });
+                      //         // Update the EmpRouteShiftStatus to "completed"
+                      //         await routeDocRef.update({
+                      //           'EmpRouteShiftStatus': 'completed',
+                      //           'EmpRouteCompletedAt': Timestamp.now(),
+                      //         });
 
-                              print(
-                                  'Shift ended for employee: ${widget.EmployeId}');
-                            } else {
-                              print(
-                                  'No active route found for employee:  ${widget.EmployeId}');
-                            }
+                      //         print(
+                      //             'Shift ended for employee: ${widget.EmployeId}');
+                      //       } else {
+                      //         print(
+                      //             'No active route found for employee:  ${widget.EmployeId}');
+                      //       }
 
-                            // await _sendEmailWithScreenshot(file.path);
+                      //       // await _sendEmailWithScreenshot(file.path);
 
-                            await homeScreenController.stopBgLocationService();
-                          }));
+                      //       await homeScreenController.stopBgLocationService();
+                      //     }));
 
                       // setState(() {
                       //   _isLoading = true;
@@ -910,8 +910,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                   widget.EmployeeName,
                                                   widget.ShiftClientID,
                                                   CommentController.text);
+                                          await homeScreenController
+                                              .stopBgLocationService();
                                           print("Reached Here");
-                                          Navigator.pop(context);
+                                          // Navigator.pop(context);
+
                                           // if (mounted) {
                                           Navigator.pushReplacement(
                                             context,
