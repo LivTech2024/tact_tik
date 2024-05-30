@@ -914,7 +914,10 @@ Future<String> generateShiftReportPdf(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<p>$image</p>'; // Set max-width to ensure responsiveness
+              '<a><p>$image</p></a>'; // Set max-width to ensure responsiveness
+
+          // checkpointImages +=
+          //     '<a href="$image"><img src="$image"></a>';
         }
       }
       checkpointImagesHTML += '''
