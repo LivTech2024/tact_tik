@@ -923,6 +923,128 @@ class FireStoreService {
       'PatrolLogCreatedAt': Timestamp.now(),
     });
     await docRef.update({'PatrolLogId': docRef.id});
+
+    final CollectionReference employeesDARRef =
+        FirebaseFirestore.instance.collection('EmployeesDAR');
+
+    // Query to find the document with the matching employeeId and shiftId
+    QuerySnapshot querySnapshot = await employeesDARRef
+        .where('EmpDarEmpId', isEqualTo: empId)
+        .where('EmpDarShiftId', isEqualTo: ShiftId)
+        .get();
+    print("Shift Id ${ShiftId}");
+    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+      // Get the first matching document
+      DocumentReference employeeDARDoc = documentSnapshot.reference;
+      DocumentSnapshot employeeDARSnapshot = await employeeDARDoc.get();
+      Map<String, dynamic> employeeDARData =
+          employeeDARSnapshot.data() as Map<String, dynamic>;
+
+      // Debugging: Print EmpDarTile
+      print('EmpDarTile: ${employeeDARData['EmpDarTile']}');
+
+      // Check if EmpDarTile is a list
+      if (employeeDARData['EmpDarTile'] is List) {
+        List<dynamic> empDarTiles = employeeDARData['EmpDarTile'];
+
+        // Filter out non-map tiles
+        empDarTiles =
+            empDarTiles.where((tile) => tile is Map<String, dynamic>).toList();
+
+        // Ensure each tile is a Map
+        DateTime currentDate = DateTime.now();
+        for (int i = 0; i < empDarTiles.length; i++) {
+          Map<String, dynamic> tile = empDarTiles[i] as Map<String, dynamic>;
+          Timestamp tileDate = tile['TileDate'];
+          String tileTime = tile['TileTime'];
+
+          // Check if the tileDate is the current date
+          if (currentDate.year == Timestamp.now().toDate().year &&
+              currentDate.month == Timestamp.now().toDate().month &&
+              currentDate.day == Timestamp.now().toDate().day) {
+            // Parse the tileTime to get the start and end times
+            List<String> timeRange = tileTime.split(' - ');
+            List<int> startTimeParts =
+                timeRange[0].split(':').map(int.parse).toList();
+            List<int> endTimeParts =
+                timeRange[1].split(':').map(int.parse).toList();
+
+            // Create DateTime objects for start and end times
+            DateTime startTime = DateTime(
+              currentDate.year,
+              currentDate.month,
+              currentDate.day,
+              startTimeParts[0],
+              startTimeParts[1],
+            );
+            DateTime endTime = DateTime(
+              currentDate.year,
+              currentDate.month,
+              currentDate.day,
+              endTimeParts[0],
+              endTimeParts[1],
+            );
+
+            // Adjust the end time if it's before the start time due to crossing midnight
+            if (endTime.isBefore(startTime)) {
+              endTime = endTime.add(Duration(days: 1));
+            }
+
+            // Check if the current time is within the range
+            if (Timestamp.now().toDate().isAfter(startTime) &&
+                Timestamp.now().toDate().isBefore(endTime)) {
+              // Get a random image URL from the patrol
+              print("PatrolData ${patrolData}");
+              String PatrolName = patrolData['PatrolName'];
+              List<dynamic> checkpoints = patrolData['PatrolCheckPoints'];
+
+              List<String> imageUrls = [];
+
+              if (checkpoints != null) {
+                for (var checkpoint in checkpoints) {
+                  List<dynamic>? statuses = checkpoint['CheckPointStatus'];
+
+                  if (statuses != null) {
+                    for (var status in statuses) {
+                      if (status['StatusReportedById'] == empId) {
+                        List<dynamic>? statusImages = status['StatusImage'];
+
+                        if (statusImages != null) {
+                          for (var imageUrl in statusImages) {
+                            if (imageUrl is String) {
+                              imageUrls.add(imageUrl);
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              print(imageUrls);
+              // List<dynamic> patrolImages = patrolData['PatrolImages'];
+              // Include patrol's StartedAt and EndedAt times in TileContent
+              String updateString =
+                  "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('hh:mm a').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('hh:mm a').format(EndTime.toDate())},Image: ${imageUrls.toString()}";
+              tile['TileContent'] = updateString;
+
+              // tile['ReportSearchId'] = uniqueid;
+              empDarTiles[i] = tile;
+              print('Updated Tile at index $i: $tile');
+            } else {
+              print("Current Timestamp ${Timestamp.now().toDate()}");
+              print("startTime At $startTime");
+              print("endTime At $endTime");
+              print("unsuccessful in updating the tile");
+            }
+          }
+        }
+
+        // Update the document
+        print("Updating the Dar ${employeeDARDoc.id}");
+        await employeeDARDoc.update({'EmpDarTile': empDarTiles});
+      }
+    }
   }
 
   Future<void> updatePatrolsReport(
@@ -3159,7 +3281,6 @@ class FireStoreService {
 //   ReportClientId: string;
 //   ReportCreatedAt: Timestamp | FieldValue;
 // }
-
   Future<void> createReport({
     required String locationId,
     required String locationName,
@@ -3173,7 +3294,7 @@ class FireStoreService {
     required String categoryName,
     required String categoryId,
     required String data,
-    String? shiftId,
+    required String shiftId,
     String? patrolId,
     List<String>? image,
     List<String>? video,
@@ -3221,53 +3342,129 @@ class FireStoreService {
       // Update ReportSearchId
       await reportDoc.update({"ReportSearchId": uniqueid});
 
-      // Push the unique ID to EmployeesDAR collection
-      // final CollectionReference employeesDarRef =
-      //     FirebaseFirestore.instance.collection('EmployeesDAR');
-      // final QuerySnapshot darSnapshot = await employeesDarRef
-      //     .where('EmpDarEmpId', isEqualTo: employeeId)
-      //     .where('EmpDarShiftId', isEqualTo: shiftId)
-      //     .get();
+      // Reference to EmployeesDAR collection
+      final CollectionReference employeesDARRef =
+          FirebaseFirestore.instance.collection('EmployeesDAR');
 
-      // if (darSnapshot.docs.isNotEmpty) {
-      //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
-      //     if (darDoc.exists) {
-      //       // Check if the EmpDarTile field exists
-      //       List<Map<String, dynamic>> tiles = [];
-      //       final data = darDoc.data() as Map<String, dynamic>?;
+      // Query to find the document with the matching employeeId and shiftId
+      QuerySnapshot querySnapshot = await employeesDARRef
+          .where('EmpDarEmpId', isEqualTo: employeeId)
+          .where('EmpDarShiftId', isEqualTo: shiftId)
+          .get();
+      print("Shift Id ${shiftId}");
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        // Get the first matching document
+        DocumentReference employeeDARDoc = documentSnapshot.reference;
+        DocumentSnapshot employeeDARSnapshot = await employeeDARDoc.get();
+        Map<String, dynamic> employeeDARData =
+            employeeDARSnapshot.data() as Map<String, dynamic>;
 
-      //       if (data != null && data.containsKey('EmpDarTile')) {
-      //         tiles = List<Map<String, dynamic>>.from(data['EmpDarTile']);
+        // Debugging: Print EmpDarTile
+        print('EmpDarTile: ${employeeDARData['EmpDarTile']}');
+
+        // Check if EmpDarTile is a list
+        if (employeeDARData['EmpDarTile'] is List) {
+          List<dynamic> empDarTiles = employeeDARData['EmpDarTile'];
+
+          // Filter out non-map tiles
+// Filter out non-map tiles
+          empDarTiles = empDarTiles
+              .where((tile) => tile is Map<String, dynamic>)
+              .toList();
+
+// Ensure each tile is a Map
+          DateTime currentDate = DateTime.now();
+          for (int i = 0; i < empDarTiles.length; i++) {
+            Map<String, dynamic> tile = empDarTiles[i] as Map<String, dynamic>;
+            Timestamp tileDate = tile['TileDate'];
+            String tileTime = tile['TileTime'];
+
+            // Check if the tileDate is the current date
+            if (currentDate.year == createdAt.toDate().year &&
+                currentDate.month == createdAt.toDate().month &&
+                currentDate.day == createdAt.toDate().day) {
+              // Parse the tileTime to get the start and end times
+              List<String> timeRange = tileTime.split(' - ');
+              List<int> startTimeParts =
+                  timeRange[0].split(':').map(int.parse).toList();
+              List<int> endTimeParts =
+                  timeRange[1].split(':').map(int.parse).toList();
+
+              // Create DateTime objects for start and end times
+              DateTime startTime = DateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                startTimeParts[0],
+                startTimeParts[1],
+              );
+              DateTime endTime = DateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                endTimeParts[0],
+                endTimeParts[1],
+              );
+
+              // Adjust the end time if it's before the start time due to crossing midnight
+              if (endTime.isBefore(startTime)) {
+                endTime = endTime.add(Duration(days: 1));
+              }
+
+              // Check if the current time is within the range
+              if (createdAt.toDate().isAfter(startTime) &&
+                  createdAt.toDate().isBefore(endTime)) {
+                print("Created At $createdAt");
+                print("startTime At $startTime");
+                print("endTime At $endTime");
+                String updateString = "${reportName} : ${uniqueid}";
+                tile['TileContent'] = updateString;
+                tile['TileReportId'] = updateString;
+
+                // tile['ReportSearchId'] = uniqueid;
+                empDarTiles[i] = tile;
+                print('Updated Tile at index $i: $tile');
+              } else {
+                print("Created At ${createdAt.toDate()}");
+                print("startTime At $startTime");
+                print("endTime At $endTime");
+                print("unsuccessful in updating the tile");
+              }
+            }
+          }
+
+// Update the document
+          print("Updating the Dar ${employeeDARDoc.id}");
+          await employeeDARDoc.update({'EmpDarTile': empDarTiles});
+        } else {
+          print('EmpDarTile is not a List');
+        }
+      }
+      //  else {
+      //   // If no matching document is found, create a new one
+      //   await employeesDARRef.add({
+      //     'EmpDarEmpId': employeeId,
+      //     'EmpDarShiftId': shiftId,
+      //     'EmpDarClientId': clientId,
+      //     'EmpDarCompanyBranchId': companyBranchId,
+      //     'EmpDarCompanyId': companyId,
+      //     'EmpDarCreatedAt': createdAt,
+      //     'EmpDarDate': createdAt,
+      //     'EmpDarLocationId': locationId,
+      //     'EmpDarLocationName': locationName,
+      //     'EmpDarEmpName': employeeName,
+      //     'EmpDarShiftName': 'Your Shift Name', // Adjust accordingly
+      //     'EmpDarTile': [
+      //       {
+      //         'TileContent': reportName,
+      //         'TileDate': createdAt,
+      //         'TileImages': [],
+      //         'TileLocation': '',
+      //         'TileTime': 'Your Tile Time', // Adjust accordingly
+      //         'ReportSearchId': uniqueid,
       //       }
-
-      //       // Update TileContent based on ReportCreateTime
-      //       for (var tile in tiles) {
-      //         if (tile['TileDate'] != null) {
-      //           Timestamp tileDate = tile['TileDate'];
-      //           DateTime tileDateTime = tileDate.toDate();
-      //           if (tileDateTime.year == dateTime.year &&
-      //               tileDateTime.month == dateTime.month &&
-      //               tileDateTime.day == dateTime.day) {
-      //             String reportTimeSlot =
-      //                 "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
-      //             if (tile['TileTime'] == reportTimeSlot) {
-      //               tile['TileContent'] = data;
-      //             }
-      //           }
-      //         }
-      //       }
-
-      //       // Update the document with the modified tiles array
-      //       await darDoc.reference.update({'EmpDarTile': tiles});
-
-      //       // Add the unique ID to the EmpDarTile field
-      //       await darDoc.reference.update({
-      //         'EmpDarTile': FieldValue.arrayUnion([uniqueid])
-      //       });
-
-      //       print("Added to DAR");
-      //     }
-      // }
+      //     ],
+      //   });
       // }
 
       print('Report created successfully');

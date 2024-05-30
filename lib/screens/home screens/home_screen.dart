@@ -340,6 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //                     Branchid: _branchId,
           //                     cmpId: _cmpId,
           // String employeeImg = shiftInfo['EmployeeImg'];
+          print("Shift Id at the HomeScreen ${shiftId}");
           setState(() {
             _ShiftDate = shiftDateStr;
             _ShiftEndTime = shiftEndTimeStr;
@@ -856,6 +857,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       empId: _employeeId,
                                                       empName: _userName,
                                                       clientId: _shiftCLientId,
+                                                      ShiftId: _shiftId,
                                                     )));
                                         break;
                                       case 4:
@@ -889,7 +891,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    VisiTorsScreen()));
+                                                    VisiTorsScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));
                                         break;
                                       case 8:
                                         // AssetsScreen

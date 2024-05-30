@@ -545,11 +545,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                       child: Button1(
                         text: 'Done',
                         onPressed: () {
-                          if (widget.OnlyView) {
-                            updateEquipmentAllocation();
-                          } else {
-                            createEquipmentAllocation();
-                          }
+                          createEquipmentAllocation();
                         },
                         backgroundcolor: widget.OnlyView ? isChecked == false ? Primarycolorlight : Primarycolor : Primarycolorlight,
                         borderRadius: width / width10,
