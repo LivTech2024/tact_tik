@@ -53,7 +53,9 @@ class MobileChatScreen extends StatelessWidget {
                     child: TextField(
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: DarkColor. WidgetColor,
+                    fillColor: isDark
+                        ? DarkColor.WidgetColor
+                        : LightColor.WidgetColor,
                     hintText: 'Type a message!',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),

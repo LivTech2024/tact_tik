@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/widgets/custom_bottom_sheet_widget.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/widgets/filter_all_widget.dart';
+import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -24,22 +26,27 @@ class SupervisorTrackingScreen extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     final controller = Get.put(SupervisorTrackingScreenController(guardsInfo));
     return Scaffold(
+      backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       appBar: AppBar(
+        elevation: 5,
+        shadowColor:  isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
         leading: IconButton(
-          icon: const Icon(
+          icon:  Icon(
             Icons.arrow_back_ios,
             size: 20,
+            color:
+                isDark ? DarkColor.color1 : LightColor.color3,
           ),
           onPressed: () {
             Get.back();
           },
         ),
-        backgroundColor: const Color(0xff252525),
+        backgroundColor: isDark? Color(0xff252525):LightColor.AppBarcolor,
         centerTitle: true,
         title: InterRegular(
           text: 'Live Tracking',
           fontsize: width / width18,
-          color: Colors.white,
+          color:  isDark ? DarkColor.color1 : LightColor.color3,
           letterSpacing: -.3,
         ),
       ),

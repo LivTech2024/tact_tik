@@ -140,7 +140,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             shape: const CircleBorder(),
-            backgroundColor:DarkColor. Primarycolor,
+            backgroundColor:isDark?DarkColor. Primarycolor:LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,
@@ -153,7 +153,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         CompanyId: '',
                       )));
             },
-            child: Icon(Icons.add),
+            child: Icon(Icons.add,color: isDark ? DarkColor.color15 : LightColor.color1,),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

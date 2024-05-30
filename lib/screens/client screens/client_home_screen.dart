@@ -75,7 +75,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
- List IconColors = [
+  List IconColors = [
     isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
     isDark ? DarkColor.color4 : LightColor.color3,
     isDark ? DarkColor.color4 : LightColor.color3,
@@ -130,7 +130,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           IconColors[2] =
               isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-         
+
           break;
         case 3:
           IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
@@ -138,7 +138,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[3] =
               isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          
+
           break;
       }
     });
@@ -390,7 +390,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color:  isDark
+          color: isDark
               ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
               : (isSelected
                   ? LightColor.Primarycolor
@@ -399,7 +399,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         ),
         title: PoppinsBold(
           text: title,
-          color:  isDark
+          color: isDark
               ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
               : (isSelected ? LightColor.Primarycolor : LightColor.color3),
           fontsize: width / width14,
@@ -410,10 +410,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          backgroundColor:
+              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           child: Column(
             children: [
               Container(
@@ -528,6 +530,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       5,
                       () async {},
                     ),
+                    buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
+                      setState(() {
+                        isDark = !isDark;
+                      });
+                    }),
                   ],
                 ),
               ),
@@ -600,7 +607,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 text: 'Shifts',
                                 icon: Icons.add_task,
                                 color: IconColors[1],
-                                
                                 textcolor: isDark
                                     ? (ScreenIndex == 1
                                         ? DarkColor.color1
@@ -736,7 +742,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               children: [
                                                 InterSemibold(
                                                   text: 'Marvin McKinney',
-                                                  color: DarkColor. color22,
+                                                  color: DarkColor.color22,
                                                   fontsize: width / width14,
                                                 ),
                                                 SizedBox(
@@ -802,8 +808,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         CircleAvatar(
                                                           radius:
                                                               width / width12,
-                                                          backgroundColor:
-                                                            DarkColor.  color23,
+                                                          backgroundColor: isDark
+                                                              ? DarkColor
+                                                                  .color23
+                                                              : LightColor
+                                                                  .Primarycolorlight,
                                                           child: InterMedium(
                                                             text:
                                                                 '+${members.length - 3}',
@@ -826,7 +835,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 children: [
                                                   InterRegular(
                                                     text: 'CheckPoints',
-                                                    color: DarkColor. color22,
+                                                    color: DarkColor.color22,
                                                     fontsize: width / width14,
                                                   ),
                                                   SizedBox(
@@ -838,7 +847,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             .check_circle_outlined,
                                                         size: width / width24,
                                                         color:
-                                                            DarkColor. color22,
+                                                            DarkColor.color22,
                                                       ),
                                                       SizedBox(
                                                           width:
@@ -863,7 +872,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 children: [
                                                   InterRegular(
                                                     text: 'Required Times',
-                                                    color: DarkColor. color22,
+                                                    color: DarkColor.color22,
                                                     fontsize: width / width14,
                                                   ),
                                                   SizedBox(
@@ -968,8 +977,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     width10),
                                                       ),
                                                       color: isDark
-                                                          ? DarkColor
-                                                              .color22
+                                                          ? DarkColor.color22
                                                           : LightColor
                                                               .Primarycolorlight,
                                                     ),
@@ -989,7 +997,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         InterSemibold(
                                                           text:
                                                               'Marvin McKinney',
-                                                          color: DarkColor.color22,
+                                                          color:
+                                                              DarkColor.color22,
                                                           fontsize:
                                                               width / width14,
                                                         ),
@@ -1066,8 +1075,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 CircleAvatar(
                                                                   radius: width /
                                                                       width12,
-                                                                  backgroundColor:
-                                                                     isDark
+                                                                  backgroundColor: isDark
                                                                       ? DarkColor
                                                                           .color23
                                                                       : LightColor
@@ -1113,7 +1121,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 size: width /
                                                                     width24,
                                                                 color: DarkColor
-                                                                    . color22,
+                                                                    .color22,
                                                               ),
                                                               SizedBox(
                                                                   width: width /
@@ -1331,14 +1339,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                   children: [
                                                     PoppinsRegular(
                                                       text: '9:36 AM',
-                                                      color:  isDark
+                                                      color: isDark
                                                           ? DarkColor.color3
                                                           : LightColor.color3,
                                                       fontsize: width / width14,
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,
-                                                      color:  isDark
+                                                      color: isDark
                                                           ? DarkColor.color1
                                                           : LightColor.color3,
                                                       size: width / width18,
@@ -1353,7 +1361,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 text:
                                                     'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                 fontsize: width / width14,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color3
                                                     : LightColor.color3,
                                               ),

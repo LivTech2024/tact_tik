@@ -83,7 +83,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
           future: _locationDataFuture,
           builder: (context, snapshot) {
@@ -104,12 +104,19 @@ class _SPostOrderState extends State<SPostOrder> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  backgroundColor: DarkColor. AppBarcolor,
-                  elevation: 0,
+                  shadowColor:  isDark
+                      ? Colors.transparent
+                      : LightColor.color3.withOpacity(.1),
+                  backgroundColor:  isDark
+                      ? DarkColor.AppBarcolor
+                      : LightColor.AppBarcolor,
+                  elevation: 5,
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Colors.white,
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor.color3,
                       size: width / width24,
                     ),
                     padding: EdgeInsets.only(left: width / width20),
@@ -121,7 +128,7 @@ class _SPostOrderState extends State<SPostOrder> {
                   title: InterRegular(
                     text: 'Post Orders',
                     fontsize: width / width18,
-                    color: Colors.white,
+                    color: isDark ? DarkColor.color1 : LightColor.color3,
                     letterSpacing: -.3,
                   ),
                   centerTitle: true,
@@ -190,14 +197,18 @@ class _SPostOrderState extends State<SPostOrder> {
                                       margin: EdgeInsets.only(bottom: height / height10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(width / width10),
-                                        color: DarkColor. WidgetColor,
+                                        color: isDark
+                                            ? DarkColor.WidgetColor
+                                            : LightColor.WidgetColor,
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: DarkColor. color2,
+                                            color: isDark
+                                                ? DarkColor.color2
+                                                : LightColor.color2,
                                             fontsize: width / width14,
                                           ),
                                           SizedBox(
@@ -208,7 +219,9 @@ class _SPostOrderState extends State<SPostOrder> {
                                             height: height / height46,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(width / width10),
-                                              color: DarkColor.color1,
+                                              color: isDark
+                                                  ? DarkColor.color1
+                                                  : LightColor.color1,
                                             ),
                                             child: Row(
                                               children: [
@@ -224,11 +237,19 @@ class _SPostOrderState extends State<SPostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: DarkColor. color15,
+                                                      color: isDark
+                                                          ? DarkColor
+                                                              .color15
+                                                          : LightColor
+                                                              .color3,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: DarkColor. color16,
+                                                      color: isDark
+                                                          ? DarkColor
+                                                              .color16
+                                                          : LightColor
+                                                              .color2,
                                                     )
                                                   ],
                                                 )

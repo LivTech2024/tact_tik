@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/s_dar_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -53,14 +54,15 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+          backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
+          shadowColor:  isDark ? Colors.transparent: LightColor.color3.withOpacity(.1),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color:  isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -71,7 +73,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
           title: InterRegular(
             text: 'Guards',
             fontsize: width / width18,
-            color: Colors.white,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -177,8 +179,11 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: DarkColor
-                                                            . Primarycolor,
+                                            color:  isDark
+                                                            ? DarkColor
+                                                                .Primarycolor
+                                                            : LightColor
+                                                                .Primarycolor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -215,7 +220,9 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                       : Center(
                     child: PoppinsBold(
                       text: 'No Guards Found',
-                      color: DarkColor.color2,
+                      color:  isDark
+                                ? DarkColor.color2
+                                : LightColor.color2,
                       fontsize: width / width16,
                     ),
                   )

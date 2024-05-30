@@ -280,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InterSemibold(
                                 text: 'Contact No',
                                 fontsize: width / width20,
-                                color: DarkColor.  color1,
+                                color: isDark?DarkColor.  color1:LightColor.color3,
                               ),
                               SizedBox(height: height / height5),
                               Row(

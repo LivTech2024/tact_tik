@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // for date formatting
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
 
 import '../../../../common/sizes.dart';
@@ -65,7 +66,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -75,15 +76,16 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: false, equipemtAllocId: '',),
                 ));
           },
-          backgroundColor:DarkColor. Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: DarkColor.AppBarcolor,
-              elevation: 0,
+              shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -99,7 +101,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
               title: InterRegular(
                 text: 'Assets',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -117,7 +119,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     InterBold(
                       text: 'Today',
                       fontsize: width / width20,
-                      color: DarkColor.Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     SizedBox(
                       height: height / height30,
@@ -141,7 +143,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: width / width20,
-                          color: DarkColor. Primarycolor,
+                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         ),
                       );
                     }
@@ -174,7 +176,8 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(width / width10),
-                            color:DarkColor. WidgetColor,
+                            color:
+                                isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,12 +194,16 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                           width / width10),
-                                      color: DarkColor.Primarycolorlight,
+                                      color: isDark
+                                          ? DarkColor.Primarycolorlight
+                                          : LightColor.Primarycolorlight,
                                     ),
                                     child: Center(
                                       child: Icon(
                                         Icons.home_repair_service,
-                                        color: DarkColor. Primarycolor,
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
                                         size: width / width24,
                                       ),
                                     ),
@@ -215,13 +222,17 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                         return InterMedium(
                                           text: 'Error: ${snapshot.error}',
                                           fontsize: width / width16,
-                                          color: DarkColor.color1,
+                                          color: isDark
+                                              ? DarkColor.color1
+                                              : LightColor.color3,
                                         );
                                       } else {
                                         return InterMedium(
                                           text: snapshot.data ?? 'Unknown Equipment',
                                           fontsize: width / width16,
-                                          color: DarkColor. color1,
+                                          color: isDark
+                                              ? DarkColor.color1
+                                              : LightColor.color3,
                                         );
                                       }
                                     },
@@ -230,7 +241,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color: DarkColor.color17,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                                 fontsize: width / width16,
                               ),
                               SizedBox(width: width / width20),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
@@ -79,14 +80,18 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark
+              ? Colors.transparent
+              : LightColor.WidgetColor.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -97,7 +102,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
           title: InterRegular(
             text: 'LogBook Guards',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -173,7 +178,11 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                                 )
                                                     : BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  color:DarkColor. Primarycolor,
+                                                  color: isDark
+                                                            ? DarkColor
+                                                                .Primarycolor
+                                                            : LightColor
+                                                                .Primarycolor,
                                                   image: DecorationImage(
                                                     image:  AssetImage(
                                                         'assets/images/default.png'),
@@ -186,7 +195,9 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                               InterBold(
                                                 text: name,
                                                 letterSpacing: -.3,
-                                                color: DarkColor. color1,
+                                                color: isDark
+                                                    ? DarkColor.color1
+                                                    : LightColor.color3,
                                               ),
                                             ],
                                           ),
@@ -210,7 +221,9 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: DarkColor.color2,
+                            color: isDark
+                                ? DarkColor.color2
+                                : LightColor.color3,
                             fontsize: width / width16,
                           ),
                         )

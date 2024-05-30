@@ -101,8 +101,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 2:
-          IconColors[0] =DarkColor. Primarycolor;
-          IconColors[1] =DarkColor. color4;
+          IconColors[0] = DarkColor.Primarycolor;
+          IconColors[1] = DarkColor.color4;
           IconColors[2] = DarkColor.color4;
           IconColors[3] = DarkColor.color4;
           ScreenIndex = 0;
@@ -129,10 +129,18 @@ class _SHomeScreenState extends State<SHomeScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
-    IconColors[0] = isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-    IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-    IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-    IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
+    if (isDark) {
+      IconColors[0] = DarkColor.Primarycolor;
+      IconColors[1] = DarkColor.color4;
+      IconColors[2] = DarkColor.color4;
+      IconColors[3] = DarkColor.color4;
+    } else {
+      IconColors[0] = LightColor.Primarycolor;
+      IconColors[1] = LightColor.color3;
+      IconColors[2] = LightColor.color3;
+      IconColors[3] = LightColor.color3;
+    }
+
     ScreenIndex = 0;
     _getUserInfo();
     // checkLocation();
@@ -188,6 +196,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
       ['assets/images/assets.png', 'Assets'],
       ['assets/images/keys.png', 'Key'],
     ];
+
+    
 
     int _selectedIndex = 0; // Index of the selected screen
 
@@ -319,7 +329,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             ),
                           ));
                     }),
-                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {}),
+                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {
+                      setState(() {
+                        isDark = !isDark;
+                      });
+                    }),
                   ],
                 ),
               ),
@@ -374,8 +388,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Guards',
                             icon: Icons.add_task,
-                            color: IconColors[0],
-                            textcolor: ScreenIndex == 0 ? DarkColor. color1 : DarkColor. color4,
+                            color: isDark
+                                ? (ScreenIndex == 0
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 0
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 0
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 0
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                         Bounce(
@@ -383,8 +409,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Explore',
                             icon: Icons.grid_view_rounded,
-                            color: IconColors[1],
-                            textcolor: ScreenIndex == 1 ? DarkColor.color1 : DarkColor. color4,
+                            color: isDark
+                                ? (ScreenIndex == 1
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 1
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 1
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 1
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                         Bounce(
@@ -395,8 +433,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             SVG: 'assets/images/calendar_clock.svg',
                             text: 'Calendar',
                             icon: Icons.calendar_today,
-                            color: IconColors[2],
-                            textcolor: ScreenIndex == 2 ? DarkColor.color1 : DarkColor.color4,
+                            color: isDark
+                                ? (ScreenIndex == 2
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 2
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 2
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 2
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                         Bounce(
@@ -412,8 +462,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     : 'assets/images/no_message.svg',
                             text: 'Message',
                             icon: Icons.chat_bubble_outline,
-                            color: IconColors[3],
-                            textcolor: ScreenIndex == 3 ? DarkColor. color1 : DarkColor. color4,
+                            color: isDark
+                                ? (ScreenIndex == 3
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 3
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 3
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 3
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                       ],
@@ -427,7 +489,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                    String guardStatus = "";
+                        String guardStatus = "";
 
                         if (index < _guardsInfo.length) {
                           return Padding(
@@ -623,7 +685,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
               offset: Offset(0, 3),
             )
           ],
-          color: isDark ? DarkColor.color19 : LightColor.WidgetColor,
+          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           borderRadius: BorderRadius.circular(width / width12),
         ),
         margin: EdgeInsets.only(bottom: height / height10),
@@ -705,19 +767,19 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateSheduleScreen(
-                                        BranchId:
-                                        widget.guardsInfo["EmployeeCompanyBranchId"] ?? "",
+                                  builder: (context) => CreateSheduleScreen(
+                                        BranchId: widget.guardsInfo[
+                                                "EmployeeCompanyBranchId"] ??
+                                            "",
                                         GuardId:
-                                        widget.guardsInfo["EmployeeId"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeId"] ??
+                                                "",
                                         GuardName:
-                                        widget.guardsInfo["EmployeeName"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeName"] ??
+                                                "",
                                         GuardImg:
-                                        widget.guardsInfo["EmployeeImg"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeImg"] ??
+                                                "",
                                         CompanyId: widget.CompanyId ?? "",
                                       )),
                             );
@@ -734,12 +796,11 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SLogBookScreen(
+                                    builder: (context) => SLogBookScreen(
                                           empId:
-                                          widget.guardsInfo['EmployeeId'],
+                                              widget.guardsInfo['EmployeeId'],
                                           empName:
-                                          widget.guardsInfo['EmployeeName'],
+                                              widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
@@ -752,12 +813,11 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SHistoryScreen(
+                                    builder: (context) => SHistoryScreen(
                                           empID:
-                                          widget.guardsInfo['EmployeeId'],
+                                              widget.guardsInfo['EmployeeId'],
                                           empName:
-                                          widget.guardsInfo['EmployeeName'],
+                                              widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(

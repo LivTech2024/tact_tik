@@ -6,7 +6,7 @@ import 'package:tact_tik/main.dart';
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
-class HomeScreenCustomNavigation extends StatelessWidget {
+class HomeScreenCustomNavigation extends StatefulWidget {
   const HomeScreenCustomNavigation(
       {super.key,
       required this.icon,
@@ -22,6 +22,11 @@ class HomeScreenCustomNavigation extends StatelessWidget {
   final String? SVG;
   final String text;
 
+  @override
+  State<HomeScreenCustomNavigation> createState() => _HomeScreenCustomNavigationState();
+}
+
+class _HomeScreenCustomNavigationState extends State<HomeScreenCustomNavigation> {
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -47,21 +52,21 @@ class HomeScreenCustomNavigation extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          useSVG
+          widget.useSVG
               ? SvgPicture.asset(
-                  SVG!,
-                  color: color,
+                  widget.SVG!,
+                  color: widget.color,
                 )
               : Icon(
-                  icon,
+                  widget.icon,
                   size: width / width24,
-                  color: color,
+                  color: widget.color,
                 ),
           SizedBox(height: height / height8),
           InterMedium(
-            text: text,
+            text: widget.text,
             fontsize: width / width12,
-            color: textcolor,
+            color: widget.textcolor,
           )
         ],
       ),
