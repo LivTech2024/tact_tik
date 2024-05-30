@@ -25,6 +25,7 @@ class CreateDarScreen extends StatefulWidget {
   final String EmployeeName;
   bool iseditable;
   final VoidCallback? onCallback;
+
   CreateDarScreen({
     required this.darTiles,
     required this.index,
@@ -51,6 +52,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   String _empEmail = 'ys146228@gmail.com';
   String _employeeImg = '';
   List<dynamic> localdarTiles = [];
+
   @override
   void initState() {
     super.initState();
@@ -539,6 +541,66 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                           );
                         },
                       ),
+                    SizedBox(height: height / height20),
+                    InterBold(
+                      text: 'Reports',
+                      fontsize: width / width20,
+                      color: Primarycolor,
+                    ),
+                    SizedBox(height: height / height10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        // final hourKey = reportsByHour.keys.toList()[index];
+                        // final reportsForHour = reportsByHour[hourKey] ?? [];
+                        // var data = reportsByHour;
+                        return GestureDetector(
+                          onTap: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => CreateReportScreen(
+                            //         locationId: '',
+                            //         locationName: '',
+                            //         companyID: '',
+                            //         empId: widget.Empid,
+                            //         empName: widget.Username,
+                            //         ClientId: '',
+                            //         reportId: '',
+                            //         buttonEnable: false,
+                            //         ShiftId: 'widget.shifID',
+                            //         SearchId: '', //Need to Work Here
+                            //       ),
+                            //     ));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                bottom: height / height30),
+                            height: height / height25,
+                            color: WidgetColor,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: width / width20,
+                                  height: double.infinity,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(width: width / width2),
+                                Expanded(
+                                  child: InterBold(
+                                    text:
+                                    '# sdgfdgdgds ',
+                                    fontsize: width / width12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: height / height30),
                     widget.iseditable
                         ? Button1(
