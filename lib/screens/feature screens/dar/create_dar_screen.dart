@@ -576,8 +576,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             //     ));
                           },
                           child: Container(
-                            margin: EdgeInsets.only(
-                                bottom: height / height30),
+                            margin: EdgeInsets.only(bottom: height / height30),
                             height: height / height25,
                             color: WidgetColor,
                             child: Row(
@@ -590,8 +589,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 SizedBox(width: width / width2),
                                 Expanded(
                                   child: InterBold(
-                                    text:
-                                    '# sdgfdgdgds ',
+                                    text: '# sdgfdgdgds ',
                                     fontsize: width / width12,
                                   ),
                                 ),
