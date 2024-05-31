@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,9 +18,11 @@ import 'create_shedule_screen.dart';
 
 class AllSchedulesScreen extends StatefulWidget {
   final String BranchId;
+  final String CompanyId;
 
   AllSchedulesScreen({
     Key? key,
+    required this.CompanyId,
     required this.BranchId,
   }) : super(key: key);
 
@@ -150,7 +153,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         GuardId: '',
                         GuardName: '',
                         GuardImg: '',
-                        CompanyId: '',
+                        CompanyId: widget.CompanyId,
+                        supervisorEmail: '',
                       )));
             },
             child: Icon(Icons.add,color: isDark ? DarkColor.color15 : LightColor.color1,),
@@ -158,7 +162,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
-          padding: EdgeInsets.only(left: width / width30, right: width / width30),
+          padding:
+              EdgeInsets.only(left: width / width30, right: width / width30),
           child: CustomScrollView(
             physics: PageScrollPhysics(),
             slivers: [
@@ -175,7 +180,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     SizedBox(height: height / height24),
                     Container(
                       height: height / height64,
-                      padding: EdgeInsets.symmetric(horizontal: width / width10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width10),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -251,7 +257,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     DateTime date = groupedSchedules.keys.elementAt(index);
                     List<DocumentSnapshot> schedulesForDate = groupedSchedules[date]!;
 
@@ -331,13 +337,16 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                     right: width / width24,
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
                                         width: width / width100,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterRegular(
                                               text: 'Guards',
@@ -387,7 +396,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     SizedBox(
                                                       height: height / height14,
                                                       width: width / width14,
-                                                      child: SvgPicture.asset('assets/images/calendar_line.svg'),
+                                                      child: SvgPicture.asset(
+                                                          'assets/images/calendar_line.svg'),
                                                     ),
                                                     SizedBox(width: width / width6),
                                                     InterMedium(

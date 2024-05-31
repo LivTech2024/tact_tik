@@ -106,7 +106,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[2] = DarkColor.color4;
           IconColors[3] = DarkColor.color4;
           ScreenIndex = 0;
-          NavigateScreen(AllSchedulesScreen(BranchId: _CompanyId));
+          NavigateScreen(AllSchedulesScreen(BranchId: '9tgQzYBJTL3QqJKe34eJ', CompanyId: 'aSvLtwII6Cjs7uCISBRR',));
           break;
         case 3:
           IconColors[0] = DarkColor.Primarycolor;
@@ -767,10 +767,12 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateSheduleScreen(
-                                        BranchId: widget.guardsInfo[
-                                                "EmployeeCompanyBranchId"] ??
-                                            "",
+                                  builder: (context) =>
+                                      CreateSheduleScreen(
+                                        supervisorEmail:
+                                        '',
+                                        BranchId:
+                                        widget.guardsInfo["EmployeeCompanyBranchId"] ?? "",
                                         GuardId:
                                             widget.guardsInfo["EmployeeId"] ??
                                                 "",

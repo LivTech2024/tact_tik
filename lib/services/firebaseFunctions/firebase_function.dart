@@ -862,67 +862,164 @@ class FireStoreService {
       Timestamp EndTime,
       String FeedbackComment,
       String ShiftId) async {
-    // Assuming Firestore is initialized
-    var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
-    var patrolDoc = await patrolsCollection.doc(patrolId).get();
-    var patrolData = patrolDoc.data() as Map<String, dynamic>;
-    print("Patrol Data from Fetch = ${patrolData}");
-    final dateFormat = DateFormat('yyyy-MM-dd');
-    DateTime shiftDateTime = dateFormat.parse(ShiftDate);
+    try {
+      var patrolsCollection = FirebaseFirestore.instance.collection('Patrols');
+      var patrolDoc = await patrolsCollection.doc(patrolId).get();
+      var patrolData = patrolDoc.data() as Map<String, dynamic>?;
 
-    // Convert DateTime to Timestamp
-    Timestamp shiftTimestamp = Timestamp.fromDate(shiftDateTime);
+      if (patrolData == null) {
+        print("No patrol data found for the given patrolId.");
+        return;
+      }
 
-    // Get today's date
-    DateTime now = DateTime.now();
-    Timestamp todayTimestamp =
-        Timestamp.fromDate(DateTime(now.year, now.month, now.day));
+      print("Patrol Data from Fetch = ${patrolData}");
+      DateTime dateTime = DateFormat("MMMM d, yyyy").parse(ShiftDate);
+      Timestamp ShiftTimeStamp = Timestamp.fromDate(dateTime);
 
-    // Filter and extract relevant checkpoint status information
-    List<Map<String, dynamic>> relevantCheckpoints = [];
-    Timestamp earliestDate = Timestamp.now();
-    for (var checkpoint in patrolData['PatrolCheckPoints']) {
-      for (var status in checkpoint['CheckPointStatus']) {
-        if (status['StatusReportedById'] == empId) {
-          Timestamp statusReportedTime = status['StatusReportedTime'];
-          if (statusReportedTime.toDate().isBefore(earliestDate.toDate())) {
-            earliestDate = statusReportedTime;
+      // Filter and extract relevant checkpoint status information
+      List<Map<String, dynamic>> relevantCheckpoints = [];
+      Timestamp earliestDate = Timestamp.now();
+      for (var checkpoint in patrolData['PatrolCheckPoints']) {
+        for (var status in checkpoint['CheckPointStatus']) {
+          if (status['StatusReportedById'] == empId) {
+            Timestamp statusReportedTime =
+                status['StatusReportedTime'] ?? Timestamp.now();
+            if (statusReportedTime.toDate().isBefore(earliestDate.toDate())) {
+              earliestDate = statusReportedTime;
+            }
+            relevantCheckpoints.add({
+              'CheckPointName': checkpoint['CheckPointName'],
+              'CheckPointStatus': status['Status'],
+              'CheckPointComment': status['StatusComment'],
+              'CheckPointImage': status['StatusImage'],
+              'CheckPointReportedAt': statusReportedTime,
+            });
+            break; // Stop iterating through CheckPointStatus once a match is found
           }
-          relevantCheckpoints.add({
-            'CheckPointName': checkpoint['CheckPointName'],
-            'CheckPointStatus': status['Status'],
-            'CheckPointComment': status['StatusComment'],
-            'CheckPointImage': status['StatusImage'],
-            'CheckPointReportedAt': statusReportedTime,
-          });
-          break; // Stop iterating through CheckPointStatus once a match is found
         }
       }
-    }
 
-    // Use today's date if it's the earliest date
-    if (earliestDate.toDate().isBefore(todayTimestamp.toDate())) {
-      shiftTimestamp = todayTimestamp;
-    }
+      var patrolLogsCollection =
+          FirebaseFirestore.instance.collection('PatrolLogs');
+      var docRef = await patrolLogsCollection.add({
+        'PatrolId': patrolData['PatrolId'],
+        'PatrolDate': ShiftTimeStamp,
+        'PatrolLogGuardId': empId,
+        'PatrolLogGuardName': EmpName,
+        'PatrolLogPatrolCount': PatrolCount,
+        'PatrolLogFeedbackComment': FeedbackComment,
+        'PatrolLogCheckPoints': relevantCheckpoints,
+        'PatrolLogStatus': "completed",
+        'PatrolLogStartedAt': StartTime,
+        'PatrolLogEndedAt': EndTime,
+        'PatrolShiftId': ShiftId,
+        'PatrolLogCreatedAt': Timestamp.now(),
+      });
+      await docRef.update({'PatrolLogId': docRef.id});
 
-    // Save relevant checkpoint status information to Firestore in the PatrolLogs collection
-    var patrolLogsCollection =
-        FirebaseFirestore.instance.collection('PatrolLogs');
-    var docRef = await patrolLogsCollection.add({
-      'PatrolId': patrolData['PatrolId'],
-      'PatrolDate': shiftTimestamp,
-      'PatrolLogGuardId': empId,
-      'PatrolLogGuardName': EmpName,
-      'PatrolLogPatrolCount': PatrolCount,
-      'PatrolLogFeedbackComment': FeedbackComment,
-      'PatrolLogCheckPoints': relevantCheckpoints,
-      'PatrolLogStatus': "completed",
-      'PatrolLogStartedAt': StartTime,
-      'PatrolLogEndedAt': EndTime,
-      'PatrolShiftId': ShiftId,
-      'PatrolLogCreatedAt': Timestamp.now(),
-    });
-    await docRef.update({'PatrolLogId': docRef.id});
+      final CollectionReference employeesDARRef =
+          FirebaseFirestore.instance.collection('EmployeesDAR');
+      QuerySnapshot querySnapshot = await employeesDARRef
+          .where('EmpDarEmpId', isEqualTo: empId)
+          .where('EmpDarShiftId', isEqualTo: ShiftId)
+          .get();
+
+      print("Shift Id ${ShiftId}");
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        DocumentReference employeeDARDoc = documentSnapshot.reference;
+        DocumentSnapshot employeeDARSnapshot = await employeeDARDoc.get();
+        Map<String, dynamic> employeeDARData =
+            employeeDARSnapshot.data() as Map<String, dynamic>;
+
+        print('EmpDarTile: ${employeeDARData['EmpDarTile']}');
+        if (employeeDARData['EmpDarTile'] is List) {
+          List<dynamic> empDarTiles = employeeDARData['EmpDarTile'];
+          empDarTiles = empDarTiles
+              .where((tile) => tile is Map<String, dynamic>)
+              .toList();
+
+          DateTime currentDate = DateTime.now();
+          for (int i = 0; i < empDarTiles.length; i++) {
+            Map<String, dynamic> tile = empDarTiles[i] as Map<String, dynamic>;
+            Timestamp tileDate = tile['TileDate'] ?? Timestamp.now();
+            String tileTime = tile['TileTime'] ?? "";
+
+            if (currentDate.year == tileDate.toDate().year &&
+                currentDate.month == tileDate.toDate().month &&
+                currentDate.day == tileDate.toDate().day) {
+              List<String> timeRange = tileTime.split(' - ');
+              List<int> startTimeParts =
+                  timeRange[0].split(':').map(int.parse).toList();
+              List<int> endTimeParts =
+                  timeRange[1].split(':').map(int.parse).toList();
+
+              DateTime startTime = DateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                startTimeParts[0],
+                startTimeParts[1],
+              );
+              DateTime endTime = DateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                endTimeParts[0],
+                endTimeParts[1],
+              );
+
+              if (endTime.isBefore(startTime)) {
+                endTime = endTime.add(Duration(days: 1));
+              }
+
+              if (Timestamp.now().toDate().isAfter(startTime) &&
+                  Timestamp.now().toDate().isBefore(endTime)) {
+                print("PatrolData ${patrolData}");
+                String PatrolName = patrolData['PatrolName'];
+                List<dynamic> checkpoints = patrolData['PatrolCheckPoints'];
+                List<String> imageUrls = [];
+
+                if (checkpoints != null) {
+                  for (var checkpoint in checkpoints) {
+                    List<dynamic>? statuses = checkpoint['CheckPointStatus'];
+                    if (statuses != null) {
+                      for (var status in statuses) {
+                        if (status['StatusReportedById'] == empId) {
+                          List<dynamic>? statusImages = status['StatusImage'];
+                          if (statusImages != null) {
+                            for (var imageUrl in statusImages) {
+                              if (imageUrl is String) {
+                                imageUrls.add(imageUrl);
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                print(imageUrls);
+                String updateString =
+                    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('hh:mm a').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('hh:mm a').format(EndTime.toDate())}";
+                tile['TileContent'] = updateString;
+                empDarTiles[i] = tile;
+                print('Updated Tile at index $i: $tile');
+              } else {
+                print("Current Timestamp ${Timestamp.now().toDate()}");
+                print("startTime At $startTime");
+                print("endTime At $endTime");
+                print("unsuccessful in updating the tile");
+              }
+            }
+          }
+          print("Updating the Dar ${employeeDARDoc.id}");
+          await employeeDARDoc
+              .set({'EmpDarTile': empDarTiles}, SetOptions(merge: true));
+        }
+      }
+    } catch (e) {
+      print('Error fetching and creating patrol logs: $e');
+    }
   }
 
   Future<void> updatePatrolsReport(
@@ -3136,6 +3233,33 @@ class FireStoreService {
     }
   }
 
+  Future<Map<String, dynamic>?> getReportWithSearchId(String reportId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('Reports')
+              .where('ReportSearchId', isEqualTo: reportId)
+              .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Assuming there's only one document with the given ReportSearchId
+        final data = querySnapshot.docs.first.data();
+        if (data != null && data['ReportSearchId'] == reportId) {
+          return data;
+        } else {
+          print("Document with ID $reportId does not match the ReportSearchId");
+          return null;
+        }
+      } else {
+        print("No document with ReportSearchId $reportId found");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching report data: $e");
+      return null; // Return null in case of error
+    }
+  }
+
   //Create Report
 //   export interface IReportsCollection {
 //   ReportId: string;
@@ -3159,7 +3283,6 @@ class FireStoreService {
 //   ReportClientId: string;
 //   ReportCreatedAt: Timestamp | FieldValue;
 // }
-
   Future<void> createReport({
     required String locationId,
     required String locationName,
@@ -3173,7 +3296,7 @@ class FireStoreService {
     required String categoryName,
     required String categoryId,
     required String data,
-    String? shiftId,
+    required String shiftId,
     String? patrolId,
     List<String>? image,
     List<String>? video,
@@ -3197,7 +3320,7 @@ class FireStoreService {
         'ReportCategoryName': categoryName,
         'ReportCategoryId': categoryId,
         'ReportData': data,
-        if (shiftId != null) 'ReportShiftId': shiftId,
+        'ReportShiftId': shiftId,
         if (patrolId != null) 'ReportPatrolId': patrolId,
         if (image != null) 'ReportImage': image,
         if (video != null) 'ReportVideo': video,
@@ -3221,54 +3344,110 @@ class FireStoreService {
       // Update ReportSearchId
       await reportDoc.update({"ReportSearchId": uniqueid});
 
-      // Push the unique ID to EmployeesDAR collection
-      // final CollectionReference employeesDarRef =
-      //     FirebaseFirestore.instance.collection('EmployeesDAR');
-      // final QuerySnapshot darSnapshot = await employeesDarRef
-      //     .where('EmpDarEmpId', isEqualTo: employeeId)
-      //     .where('EmpDarShiftId', isEqualTo: shiftId)
-      //     .get();
+      // Reference to EmployeesDAR collection
+      final CollectionReference employeesDARRef =
+          FirebaseFirestore.instance.collection('EmployeesDAR');
 
-      // if (darSnapshot.docs.isNotEmpty) {
-      //   for (final DocumentSnapshot darDoc in darSnapshot.docs) {
-      //     if (darDoc.exists) {
-      //       // Check if the EmpDarTile field exists
-      //       List<Map<String, dynamic>> tiles = [];
-      //       final data = darDoc.data() as Map<String, dynamic>?;
+      // Query to find the document with the matching employeeId and shiftId
+      QuerySnapshot querySnapshot = await employeesDARRef
+          .where('EmpDarEmpId', isEqualTo: employeeId)
+          .where('EmpDarShiftId', isEqualTo: shiftId)
+          .get();
+      print("Shift Id ${shiftId}");
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        // Get the first matching document
+        DocumentReference employeeDARDoc = documentSnapshot.reference;
+        DocumentSnapshot employeeDARSnapshot = await employeeDARDoc.get();
+        Map<String, dynamic> employeeDARData =
+            employeeDARSnapshot.data() as Map<String, dynamic>;
 
-      //       if (data != null && data.containsKey('EmpDarTile')) {
-      //         tiles = List<Map<String, dynamic>>.from(data['EmpDarTile']);
-      //       }
+        // Debugging: Print EmpDarTile
+        print('EmpDarTile: ${employeeDARData['EmpDarTile']}');
 
-      //       // Update TileContent based on ReportCreateTime
-      //       for (var tile in tiles) {
-      //         if (tile['TileDate'] != null) {
-      //           Timestamp tileDate = tile['TileDate'];
-      //           DateTime tileDateTime = tileDate.toDate();
-      //           if (tileDateTime.year == dateTime.year &&
-      //               tileDateTime.month == dateTime.month &&
-      //               tileDateTime.day == dateTime.day) {
-      //             String reportTimeSlot =
-      //                 "${dateTime.hour}:00 - ${dateTime.hour + 1}:00";
-      //             if (tile['TileTime'] == reportTimeSlot) {
-      //               tile['TileContent'] = data;
-      //             }
-      //           }
-      //         }
-      //       }
+        // Check if EmpDarTile is a list
+        if (employeeDARData['EmpDarTile'] is List) {
+          List<dynamic> empDarTiles = employeeDARData['EmpDarTile'];
 
-      //       // Update the document with the modified tiles array
-      //       await darDoc.reference.update({'EmpDarTile': tiles});
+          // Filter out non-map tiles
+          empDarTiles = empDarTiles
+              .where((tile) => tile is Map<String, dynamic>)
+              .toList();
 
-      //       // Add the unique ID to the EmpDarTile field
-      //       await darDoc.reference.update({
-      //         'EmpDarTile': FieldValue.arrayUnion([uniqueid])
-      //       });
+          // Ensure each tile is a Map
+          DateTime currentDate = DateTime.now();
+          for (int i = 0; i < empDarTiles.length; i++) {
+            Map<String, dynamic>? tile =
+                empDarTiles[i] as Map<String, dynamic>?;
+            if (tile == null) continue;
 
-      //       print("Added to DAR");
-      //     }
-      // }
-      // }
+            Timestamp? tileDate = tile['TileDate'] as Timestamp?;
+            String? tileTime = tile['TileTime'] as String?;
+
+            // Ensure tileDate and tileTime are not null
+            if (tileDate == null || tileTime == null) continue;
+
+            // Check if the tileDate is the current date
+            if (currentDate.year == createdAt.toDate().year &&
+                currentDate.month == createdAt.toDate().month &&
+                currentDate.day == createdAt.toDate().day) {
+              // Parse the tileTime to get the start and end times
+              List<String> timeRange = tileTime.split(' - ');
+              List<int> startTimeParts =
+                  timeRange[0].split(':').map(int.parse).toList();
+              List<int> endTimeParts =
+                  timeRange[1].split(':').map(int.parse).toList();
+
+              // Create DateTime objects for start and end times
+              DateTime startTime = DateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                startTimeParts[0],
+                startTimeParts[1],
+              );
+              DateTime endTime = DateTime(
+                currentDate.year,
+                currentDate.month,
+                currentDate.day,
+                endTimeParts[0],
+                endTimeParts[1],
+              );
+
+              // Adjust the end time if it's before the start time due to crossing midnight
+              if (endTime.isBefore(startTime)) {
+                endTime = endTime.add(Duration(days: 1));
+              }
+
+              // Check if the current time is within the range
+              if (createdAt.toDate().isAfter(startTime) &&
+                  createdAt.toDate().isBefore(endTime)) {
+                print("Created At $createdAt");
+                print("startTime At $startTime");
+                print("endTime At $endTime");
+                // String updateString = "${reportName} : ${uniqueid}";
+                // tile['TileContent'] = updateString;
+                tile['TileReportSearchId'] = uniqueid;
+                tile['TileReportName'] = reportName;
+
+                // tile['ReportSearchId'] = uniqueid;
+                empDarTiles[i] = tile;
+                print('Updated Tile at index $i: $tile');
+              } else {
+                print("Created At ${createdAt.toDate()}");
+                print("startTime At $startTime");
+                print("endTime At $endTime");
+                print("unsuccessful in updating the tile");
+              }
+            }
+          }
+
+          // Update the document
+          print("Updating the Dar ${employeeDARDoc.id}");
+          await employeeDARDoc.update({'EmpDarTile': empDarTiles});
+        } else {
+          print('EmpDarTile is not a List');
+        }
+      }
 
       print('Report created successfully');
     } catch (e) {
@@ -3379,17 +3558,17 @@ class FireStoreService {
   }
 
   //fetch all the patrols
-  Future<List<String>> getAllPatrolName(String companyid) async {
+  Future<List<String>> getAllPatrolName(String companyId) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance.collection('Patrols').get();
 
       final List<String> roles = snapshot.docs
-          .where((doc) => doc.data()['PatrolCompanyId'] == companyid)
+          .where((doc) => doc.data()['PatrolCompanyId'] == companyId)
           .map((doc) => doc.data()['PatrolName'] as String)
           .toSet()
           .toList();
-      print("Clientname ${roles}");
+      print("Clientname $roles");
       return roles;
     } catch (e) {
       print("Error fetching report titles: $e");

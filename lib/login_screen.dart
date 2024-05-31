@@ -59,6 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
         errorMessage = 'Incorrect password';
       } else if (e.code == 'invalid-email') {
         errorMessage = 'Invalid email address';
+      } else if (e.code == 'invalid-email') {
+        errorMessage =
+            'The supplied auth credential is malformed or has expired.';
       }
       setState(() {
         _errorMessage = errorMessage;
@@ -121,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
   bool _obscureText = true;
 
   @override

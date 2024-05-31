@@ -232,8 +232,9 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                VisiTorsScreen(), // Replace with your visitor screen widget
+            builder: (context) => VisiTorsScreen(
+              locationId: '',
+            ), // Replace with your visitor screen widget
           ),
         );
         return true;

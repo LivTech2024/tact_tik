@@ -234,8 +234,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                VisiTorsScreen(), // Replace with your visitor screen widget
+            builder: (context) => VisiTorsScreen(
+              locationId: '',
+            ), // Replace with your visitor screen widget
           ),
         );
         return true;
@@ -296,7 +297,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                     padding: EdgeInsets.only(left: width / width20),
                     onPressed: () {
                       Navigator.pop(context);
-                      print("Navigtor debug: ${Navigator.of(context).toString()}");
+                      print(
+                          "Navigtor debug: ${Navigator.of(context).toString()}");
                     },
                   ),
                   title: InterRegular(

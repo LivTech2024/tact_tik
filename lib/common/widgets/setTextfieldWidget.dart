@@ -15,9 +15,11 @@ class SetTextfieldWidget extends StatefulWidget {
     required this.enabled, // Add 'enabled' parameter
     required this.isEditMode, // Add 'isEditMode' parameter
     this.inputFormatters,
+    this.maxlength,
   }) : super(key: key);
 
   final String hintText;
+  final int? maxlength;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final bool isEnabled;
@@ -62,9 +64,10 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
       margin: EdgeInsets.only(top: height / height10),
       child: Center(
         child: TextField(
+          maxLength: widget.maxlength,
           keyboardType: widget.keyboardType,
-          enabled:
-              !shouldDisable, // Enable or disable TextField based on shouldDisable
+          enabled: !shouldDisable,
+          // Enable or disable TextField based on shouldDisable
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
             fontSize: width / width18,

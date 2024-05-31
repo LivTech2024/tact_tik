@@ -116,7 +116,10 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                       iconSize: width / width24,
                       dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       style: TextStyle(color:  isDark ? DarkColor.color2 : LightColor.color3),
-                      borderRadius: BorderRadius.circular(10),
+                      // borderRadius: BorderRadius.circular(10),
+                      // dropdownColor: WidgetColor,
+                      // style: TextStyle(color: color2),
+                      borderRadius: BorderRadius.circular(width / width10),
                       value: dropdownValue,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -147,7 +150,6 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                             String name = guardInfo['EmployeeName'] ?? "";
                             String id = guardInfo['EmployeeId'] ?? "";
                             String url = guardInfo['EmployeeImg'] ?? "";
-            
                             print(guardInfo);
                             return GestureDetector(
                                 onTap: () {
@@ -161,22 +163,33 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: 60,
+                                  // height: 60,
                                   decoration: BoxDecoration(
                                     color: isDark
                                         ? DarkColor.color19
                                         : LightColor.WidgetColor,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(width / width12),
                                   ),
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  // margin: EdgeInsets.only(bottom: 10),
+                                  height: height / height60,
+                                  // decoration: BoxDecoration(
+                                  //   color: color19,
+                                  //   borderRadius:
+                                  //       BorderRadius.circular(width / width12),
+                                  // ),
+                                  margin: EdgeInsets.only(
+                                      bottom: height / height10),
                                   width: double.maxFinite,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        height: 48,
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 20),
+                                        // height: 48,
+                                        // padding:
+                                        //     EdgeInsets.symmetric(horizontal: 20),
+                                        height: height / height48,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width / width20),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -184,31 +197,56 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                             Row(
                                               children: [
                                                 Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(url),
-                                                      filterQuality:
-                                                          FilterQuality.high,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                                  height: height / height50,
+                                                  width: width / width50,
+                                                  decoration: url != ""
+                                                      ? BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                url ?? ""),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: isDark
+                                                              ? DarkColor
+                                                                  .Primarycolor
+                                                              : LightColor
+                                                                  .Primarycolor,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                                'assets/images/default.png'),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
                                                 ),
-                                                SizedBox(width: 20),
+                                                SizedBox(
+                                                    width: width / width20),
                                                 InterBold(
                                                   text: name,
                                                   letterSpacing: -.3,
                                                   color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
+                                                  fontsize: width / width12,
                                                 ),
                                               ],
                                             ),
                                             Container(
-                                              height: 16,
-                                              width: 16,
+                                              height: height / height16,
+                                              width: width / width16,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: guardInfo[

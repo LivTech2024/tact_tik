@@ -15,7 +15,8 @@ import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
 class VisiTorsScreen extends StatefulWidget {
-  const VisiTorsScreen({Key? key});
+  final String locationId;
+  const VisiTorsScreen({Key? key, required this.locationId});
 
   @override
   State<VisiTorsScreen> createState() => _VisiTorsScreenState();
@@ -64,8 +65,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
         body: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
               .collection('Visitors')
-              .where('VisitorLocationId',
-                  isEqualTo: _userService.shiftLocationId)
+              .where('VisitorLocationId', isEqualTo: widget.locationId)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

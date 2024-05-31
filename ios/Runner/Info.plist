@@ -2,28 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app requires location access when in use</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires location access when in use</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app does not require access to the microphone.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
-    <array>
-        <string>dev.flutter.background.refresh</string>
-    </array>
-	<key>UIBackgroundModes</key>
-<array>
-    <string>location</string>
-</array>
-	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to scan QR codes</string>
+	<array>
+		<string>dev.flutter.background.refresh</string>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -46,12 +30,30 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MGLMapboxAccessToken</key>
+	<string>pk.eyJ1IjoidGFjdHRpazMyMSIsImEiOiJjbHcxMDZlajkwMG93MmlvMGRreWhyN3FiIn0._iByDFnmPCMQy3Lxgj1kxQ</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan QR codes</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires location access when in use</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires location access when in use</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need access to your location data to provide you with accurate navigation. while using our app.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app does not require access to the microphone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-    <string>This app needs access to the photo library to save screenshots.</string>
-    <key>MGLMapboxAccessToken</key>
-    <string>pk.eyJ1IjoidGFjdHRpazMyMSIsImEiOiJjbHcxMDZlajkwMG93MmlvMGRreWhyN3FiIn0._iByDFnmPCMQy3Lxgj1kxQ</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need access to your location data to provide you with accurate navigation. while using our app.</string>
+	<string>This app needs access to the photo library to save screenshots.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -69,9 +71,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
 </plist>

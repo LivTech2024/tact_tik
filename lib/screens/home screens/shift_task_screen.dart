@@ -97,7 +97,8 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
             },
           ),
           title: InterRegular(

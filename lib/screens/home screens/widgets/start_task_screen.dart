@@ -350,12 +350,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     }
   }
 
-  updateLateTimeAndStartTimer() {
+  void updateLateTimeAndStartTimer() {
     print('update late time and start timer function');
+    DateTime now = DateTime.now();
 
     /// -- update late time
     DateFormat dateFormat = DateFormat("HH:mm");
-    DateTime now = DateTime.now();
 
     DateTime shiftStartTime = dateFormat.parse(widget.ShiftStartTime);
     shiftStartTime = DateTime(now.year, now.month, now.day, shiftStartTime.hour,
@@ -367,16 +367,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
     DateTime deadline = shiftStartTime.add(const Duration(minutes: 10));
 
-    if (shiftEndTime.isBefore(shiftStartTime)) {
-      shiftEndTime = shiftEndTime.add(Duration(days: 1));
-    }
-
     Duration remainingTimeToStart = deadline.difference(now);
 
     if (remainingTimeToStart.isNegative) {
       print("The user is already late.");
       Duration lateDuration = now.difference(deadline);
-      if (clickedIn == false) {
+      if (!clickedIn) {
         setState(() {
           isLate = true;
           lateTime =
@@ -406,7 +402,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           remainingTime = remainingTime - Duration(seconds: 1);
           remainingTimeFormatted =
               "${remainingTime.inHours}h : ${remainingTime.inMinutes % 60}m : ${remainingTime.inSeconds % 60}s";
-          print("Timer ${remainingTimeFormatted}");
+          print("Timer $remainingTimeFormatted");
         } else {
           _timer!.cancel();
         }
@@ -634,117 +630,123 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         currentTime.month, currentTime.day));
                                 showErrorToast(context, "Not On SHift Date");
                               } else {
-                                showSuccessToast(context, "On current Date");
-                              }
-                              if (currentTime.isAfter(bufferStart)) {
-                                showErrorToast(context, "Started Late");
-                              }
-                              if (currentTime.isBefore(bufferStart)) {
-                                showErrorToast(context, "Start shift on Time");
-                              } else {
-                                updateLateTimeAndStartTimer();
-
-                                ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
-                                FirebaseFirestore firestore =
-                                    FirebaseFirestore.instance;
-                                // Create a new document reference
-
-                                DocumentReference docRef = firestore
-                                    .collection('EmployeeRoutes')
-                                    .doc();
-
-                                // Data to be added
-                                Map<String, dynamic> empRouteData = {
-                                  'EmpRouteCreatedAt': Timestamp.now(),
-                                  'EmpRouteDate': Timestamp.now(),
-                                  'EmpRouteEmpId': widget.EmployeId,
-                                  'EmployeeName': widget.EmployeeName,
-                                  'EmpRouteId': docRef.id,
-                                  'EmpRouteLocations': [],
-                                  'EmpRouteShiftId': widget.ShiftId,
-                                  'EmpRouteShiftStatus': 'started',
-                                  'EmployeeShiftStartTime':
-                                      widget.ShiftStartTime,
-                                  'EmployeeShiftEndTime': widget.ShiftEndTime,
-                                  'EmployeeShiftShiftName': widget.ShiftName
-                                };
-                                try {
-                                  // Add the document to the collection
-                                  await docRef.set(empRouteData);
-                                  print(
-                                      'Employee route created with ID: ${docRef.id}');
-                                } catch (e) {
-                                  print('Error creating employee route: $e');
+                                if (currentTime.isAfter(bufferStart)) {
+                                  showErrorToast(context, "Started Late");
                                 }
+                                if (currentTime.isBefore(bufferStart)) {
+                                  showErrorToast(
+                                      context, "Start shift on Time");
+                                } else {
+                                  updateLateTimeAndStartTimer();
 
-                                // start stop watch
-                                // await controller.startStopWatch();
-                                //
-                                // // start bg service that get locations and send it to the firebase
-                                await homeScreenController
-                                    .startBgLocationService();
+                                  ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
+                                  FirebaseFirestore firestore =
+                                      FirebaseFirestore.instance;
+                                  // Create a new document reference
 
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                await darFunctions
-                                    .fetchShiftDetailsAndSubmitDAR();
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                await fireStoreService.changePatrolStatus(
-                                    widget.ShiftId, widget.EmployeId);
-                                bool? status = await fireStoreService
-                                    .checkShiftReturnTaskStatus(
-                                        widget.EmployeId, widget.ShiftId);
-                                var clientName = await fireStoreService
-                                    .getClientName(widget.ShiftClientID);
-                                await fireStoreService.addToLog(
-                                    'shift_start',
-                                    widget.ShiftAddressName,
-                                    clientName ?? "",
-                                    widget.EmployeId,
-                                    widget.EmployeeName,
-                                    widget.ShiftCompanyId,
-                                    widget.ShiftBranchId,
-                                    widget.ShiftClientID,
-                                    widget.ShiftLocationId,
-                                    widget.ShiftName);
-                                fireStoreService.startShiftLog(widget.EmployeId,
-                                    widget.ShiftId, widget.EmployeeName);
-                                setState(() {
-                                  // if (!clickedIn) {
-                                  clickedIn = true;
-                                  // prefs.setBool('clickedIn', clickedIn);
-                                  DateTime currentTime = DateTime.now();
-                                  inTime = currentTime;
-                                  prefs.setInt('InTime',
-                                      currentTime.millisecondsSinceEpoch);
-                                  prefs.setInt('savedInTime',
-                                      currentTime.millisecondsSinceEpoch);
-                                  Timestamp.now();
-                                  if (status == false) {
-                                    print("Staus is false");
-                                  } else {
-                                    print("Staus is true");
+                                  DocumentReference docRef = firestore
+                                      .collection('EmployeeRoutes')
+                                      .doc();
+
+                                  // Data to be added
+                                  Map<String, dynamic> empRouteData = {
+                                    'EmpRouteCreatedAt': Timestamp.now(),
+                                    'EmpRouteDate': Timestamp.now(),
+                                    'EmpRouteEmpId': widget.EmployeId,
+                                    'EmployeeName': widget.EmployeeName,
+                                    'EmpRouteId': docRef.id,
+                                    'EmpRouteLocations': [],
+                                    'EmpRouteShiftId': widget.ShiftId,
+                                    'EmpRouteShiftStatus': 'started',
+                                    'EmployeeShiftStartTime':
+                                        widget.ShiftStartTime,
+                                    'EmployeeShiftEndTime': widget.ShiftEndTime,
+                                    'EmployeeShiftShiftName': widget.ShiftName,
+                                    'EmpRouteEmpRole':
+                                        userStorage.getItem("Role"),
+                                  };
+                                  try {
+                                    // Add the document to the collection
+                                    await docRef.set(empRouteData);
+                                    print(
+                                        'Employee route created with ID: ${docRef.id}');
+                                  } catch (e) {
+                                    print('Error creating employee route: $e');
                                   }
-                                  fireStoreService
-                                      .fetchreturnShiftTasks(widget.ShiftId);
-                                  startStopwatch();
-                                  // } else {
-                                  print('already clicked');
-                                  // }
-                                });
+
+                                  // start stop watch
+                                  // await controller.startStopWatch();
+                                  _startTimer();
+                                  //
+                                  // // start bg service that get locations and send it to the firebase
+                                  await homeScreenController
+                                      .startBgLocationService();
+
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await darFunctions
+                                      .fetchShiftDetailsAndSubmitDAR();
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await fireStoreService.changePatrolStatus(
+                                      widget.ShiftId, widget.EmployeId);
+                                  bool? status = await fireStoreService
+                                      .checkShiftReturnTaskStatus(
+                                          widget.EmployeId, widget.ShiftId);
+                                  var clientName = await fireStoreService
+                                      .getClientName(widget.ShiftClientID);
+                                  await fireStoreService.addToLog(
+                                      'shift_start',
+                                      widget.ShiftAddressName,
+                                      clientName ?? "",
+                                      widget.EmployeId,
+                                      widget.EmployeeName,
+                                      widget.ShiftCompanyId,
+                                      widget.ShiftBranchId,
+                                      widget.ShiftClientID,
+                                      widget.ShiftLocationId,
+                                      widget.ShiftName);
+                                  fireStoreService.startShiftLog(
+                                      widget.EmployeId,
+                                      widget.ShiftId,
+                                      widget.EmployeeName);
+                                  setState(() {
+                                    // if (!clickedIn) {
+                                    clickedIn = true;
+                                    prefs.setBool('clickedIn', clickedIn);
+                                    DateTime currentTime = DateTime.now();
+                                    inTime = currentTime;
+                                    prefs.setInt('InTime',
+                                        currentTime.millisecondsSinceEpoch);
+                                    prefs.setInt('savedInTime',
+                                        currentTime.millisecondsSinceEpoch);
+                                    Timestamp.now();
+                                    if (status == false) {
+                                      print("Staus is false");
+                                    } else {
+                                      print("Staus is true");
+                                    }
+                                    fireStoreService
+                                        .fetchreturnShiftTasks(widget.ShiftId);
+                                    startStopwatch();
+                                    // } else {
+                                    print('already clicked');
+                                    // }
+                                  });
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
                                 setState(() {
                                   _isLoading = false;
                                 });
+                                showSuccessToast(context, "On current Date");
                               }
-                              setState(() {
-                                _isLoading = false;
-                              });
+                              // setState(() {
+                              //   buttonClicked = true;
+                              // });
                             }
-                            setState(() {
-                              buttonClicked = true;
-                            });
                           }
                         : () {
                             showErrorToast(
@@ -1134,6 +1136,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 },
               )
             : const SizedBox(),
+        SizedBox(height: height / height10),
         IgnorePointer(
           ignoring: !clickedIn,
           child: Button1(

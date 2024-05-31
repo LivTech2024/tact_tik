@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -20,6 +21,7 @@ class DarOpenAllScreen extends StatefulWidget {
   final String? DarId;
   final String Username;
   final String Empid;
+  final String shifID;
   bool editable;
 
   DarOpenAllScreen(
@@ -28,7 +30,8 @@ class DarOpenAllScreen extends StatefulWidget {
       this.DarId,
       this.editable = true,
       required this.Username,
-      required this.Empid});
+      required this.Empid,
+      required this.shifID});
 
   @override
   State<DarOpenAllScreen> createState() => _DarOpenAllScreenState();
@@ -93,6 +96,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
         FirebaseFirestore.instance.collection('Reports');
     final querySnapshot = await patrolLogsCollection
         .where('ReportEmployeeId', isEqualTo: employeeId)
+        .where('ReportShiftId', isEqualTo: widget.shifID)
         .get();
 
     final patrolLogs = querySnapshot.docs.map((doc) => doc.data()).toList();
@@ -763,7 +767,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                                       index][
                                                                   'startTime'] !=
                                                               null
-                                                          ? '${hourlyShiftDetails[index]['startTime']!.substring(0, 2)}:00'
+                                                          ? '${data[index]['startTime']!.substring(0, 2)}:00'
                                                           : '';
                                                       final reportsForHour =
                                                           reportsByHour[
@@ -892,66 +896,96 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                       reportsByHour.keys.toList()[index];
                                   final reportsForHour =
                                       reportsByHour[hourKey] ?? [];
-
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Reports for $hourKey',
-                                        style:  TextStyle(
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
+                                  var data = reportsByHour;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print("data ${reportsForHour}");
+                                      print("time ${reportsByHour[hourKey]}");
+                                      var ReportSId = reportsForHour[0];
+                                      print("ReportSId ${ReportSId}");
+                                      print(
+                                          "ReportSearchId ${ReportSId['ReportSearchId']}");
+                                      String ReportSerachID =
+                                          ReportSId['ReportSearchId'];
+                                      // String ReportSearchId = ReportSId[''];
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CreateReportScreen(
+                                              locationId: '',
+                                              locationName: '',
+                                              companyID: '',
+                                              empId: widget.Empid,
+                                              empName: widget.Username,
+                                              ClientId: '',
+                                              reportId: '',
+                                              buttonEnable: false,
+                                              ShiftId: "",
+                                              SearchId:
+                                                  ReportSerachID, //Need to Work Here
+                                            ),
+                                          ));
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Reports for $hourKey',
+                                          style:  TextStyle(
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.color3,
+                                          ),
                                         ),
-                                      ),
-                                      ...reportsForHour.map((report) {
-                                        final timestampStr =
-                                            report['ReportCreatedAt']
-                                                as Timestamp;
-                                        final formattedTime = timestampStr !=
-                                                null
-                                            ? DateFormat.jm()
-                                                .format(timestampStr.toDate())
-                                            : '';
-                                        return Container(
-                                          margin: EdgeInsets.only(
-                                              bottom: height / height30),
-                                          height: height / height25,
-                                          color: const Color(0xFF7C7C7C),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: width / width20,
-                                                height: double.infinity,
-                                                color: isDark
-                                                    ? Colors.red
-                                                    : LightColor.Primarycolor,
-                                              ),
-                                              SizedBox(width: width / width2),
-                                              Expanded(
-                                                child: Text(
-                                                  '# ${report['ReportSearchId'] ?? ''}',
+                                        ...reportsForHour.map((report) {
+                                          final timestampStr =
+                                              report['ReportCreatedAt']
+                                                  as Timestamp;
+                                          final formattedTime = timestampStr !=
+                                                  null
+                                              ? DateFormat.jm()
+                                                  .format(timestampStr.toDate())
+                                              : '';
+                                          return Container(
+                                            margin: EdgeInsets.only(
+                                                bottom: height / height30),
+                                            height: height / height25,
+                                            color: const Color(0xFF7C7C7C),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: width / width20,
+                                                  height: double.infinity,
+                                                  color: Colors.red,
+                                                ),
+                                                SizedBox(width: width / width2),
+                                                Expanded(
+                                                  child: Text(
+                                                    '# ${report['ReportSearchId'] ?? ''}',
+                                                    style: const TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 48, 48, 48),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(width: width / width2),
+                                                Text(
+                                                  formattedTime,
                                                   style: const TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 48, 48, 48),
-                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(width: width / width2),
-                                              Text(
-                                                formattedTime,
-                                                style: const TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 48, 48, 48),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ],
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ],
+                                    ),
                                   );
                                 },
                               );

@@ -550,7 +550,8 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                 clientId: widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: '');
                             if (isChecked == false) {
                               await fireStoreService
                                   .updateFollowUp(reportData['ReportId']);
@@ -594,7 +595,8 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                 status: "started",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: '');
                             Navigator.pop(context, true);
                             setState(() {
                               _isLoading = false; // Set loading state
@@ -660,7 +662,8 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                 status: "started",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: '');
                             // }
                             Navigator.pop(context, true);
                             setState(() {

@@ -20,6 +20,7 @@ class ReportScreen extends StatefulWidget {
   final String empId;
   final String empName;
   final String clientId;
+  final String ShiftId;
   const ReportScreen(
       {super.key,
       required this.locationId,
@@ -27,7 +28,8 @@ class ReportScreen extends StatefulWidget {
       required this.companyId,
       required this.empId,
       required this.empName,
-      required this.clientId});
+      required this.clientId,
+      required this.ShiftId});
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
@@ -44,6 +46,7 @@ class _ReportScreenState extends State<ReportScreen> {
     super.initState();
     getAllTitles();
     getAllReports();
+    print("Shift Id ${widget.ShiftId}");
   }
 
   void getAllTitles() async {
@@ -153,6 +156,8 @@ class _ReportScreenState extends State<ReportScreen> {
                           ClientId: widget.clientId,
                           reportId: "",
                           buttonEnable: true,
+                          ShiftId: widget.ShiftId,
+                          SearchId: '',
                         ))).then((value) {
               if (value == true) {
                 getAllReports();
@@ -277,6 +282,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                       ClientId: widget.clientId,
                                       reportId: report['ReportId'],
                                       buttonEnable: false,
+                                      ShiftId: widget.ShiftId, SearchId: '',
                                     ),
                                   ),
                                 );

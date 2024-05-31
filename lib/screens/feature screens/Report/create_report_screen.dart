@@ -25,21 +25,25 @@ class CreateReportScreen extends StatefulWidget {
   final String companyID;
   final String empId;
   final String ClientId;
-
+  final String ShiftId;
   final String empName;
   final String reportId;
   bool buttonEnable;
+  final String SearchId;
 
-  CreateReportScreen(
-      {super.key,
-      required this.locationId,
-      required this.locationName,
-      required this.companyID,
-      required this.empId,
-      required this.empName,
-      required this.ClientId,
-      required this.reportId,
-      required this.buttonEnable});
+  CreateReportScreen({
+    Key? key,
+    required this.locationId,
+    required this.locationName,
+    required this.companyID,
+    required this.empId,
+    required this.empName,
+    required this.ClientId,
+    required this.reportId,
+    required this.buttonEnable,
+    required this.ShiftId,
+    required this.SearchId,
+  }) : super(key: key);
 
   @override
   State<CreateReportScreen> createState() => _CreateReportScreenState();
@@ -68,6 +72,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     getAllReports();
     super.initState();
     shouldShowButton = widget.buttonEnable;
+    print("Shift Id at Create Report ${widget.ShiftId}");
   }
 
   void getAllTitles() async {
@@ -82,39 +87,72 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   void getAllReports() async {
-    Map<String, dynamic>? data =
-        (await fireStoreService.getReportWithId(widget.reportId))!;
-    if (data != null) {
-      setState(() {
-        reportData = data;
-        isChecked = reportData['ReportIsFollowUpRequired'];
-        titleController.text = reportData['ReportName'];
-        explainController.text = reportData['ReportData'];
-        dropdownValue = reportData['ReportCategoryName'];
-        // uploads.add(reportData['ReportImage']);
-      });
-      if (reportData['ReportIsFollowUpRequired'] == false) {
+    if (widget.SearchId.isNotEmpty) {
+      Map<String, dynamic>? data =
+          (await fireStoreService.getReportWithSearchId(widget.SearchId));
+      if (data != null) {
         setState(() {
-          shouldShowButton = false;
+          reportData = data;
+          isChecked = reportData['ReportIsFollowUpRequired'];
+          titleController.text = reportData['ReportName'];
+          explainController.text = reportData['ReportData'];
+          dropdownValue = reportData['ReportCategoryName'];
+          // uploads.add(reportData['ReportImage']);
         });
+        if (reportData['ReportIsFollowUpRequired'] == false) {
+          setState(() {
+            shouldShowButton = false;
+          });
+        } else {
+          setState(() {
+            shouldShowButton = true;
+          });
+        }
+        if (reportData['ReportImage'] != null) {
+          // Add existing report images URLs to uploads list
+          for (var imageUrl in reportData['ReportImage']) {
+            setState(() {
+              DisplayIMage.add({'type': 'image', 'url': imageUrl});
+            });
+          }
+        }
+        print(reportData['ReportIsFollowUpRequired']);
+      }
+    } else {
+      Map<String, dynamic>? data =
+          (await fireStoreService.getReportWithId(widget.reportId));
+      if (data != null) {
+        setState(() {
+          reportData = data;
+          isChecked = reportData['ReportIsFollowUpRequired'];
+          titleController.text = reportData['ReportName'];
+          explainController.text = reportData['ReportData'];
+          dropdownValue = reportData['ReportCategoryName'];
+          // uploads.add(reportData['ReportImage']);
+        });
+        if (reportData['ReportIsFollowUpRequired'] == false) {
+          setState(() {
+            shouldShowButton = false;
+          });
+        } else {
+          setState(() {
+            shouldShowButton = true;
+          });
+        }
+        if (reportData['ReportImage'] != null) {
+          // Add existing report images URLs to uploads list
+          for (var imageUrl in reportData['ReportImage']) {
+            setState(() {
+              DisplayIMage.add({'type': 'image', 'url': imageUrl});
+            });
+          }
+        }
+        print(reportData['ReportIsFollowUpRequired']);
       } else {
         setState(() {
           shouldShowButton = true;
         });
       }
-      if (reportData['ReportImage'] != null) {
-        // Add existing report images URLs to uploads list
-        for (var imageUrl in reportData['ReportImage']) {
-          setState(() {
-            DisplayIMage.add({'type': 'image', 'url': imageUrl});
-          });
-        }
-      }
-      print(reportData['ReportIsFollowUpRequired']);
-    } else {
-      setState(() {
-        shouldShowButton = true;
-      });
     }
     print("Report Data for ${widget.reportId} $reportData");
   }
@@ -171,7 +209,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       file.absolute.path + '_compressed.jpg',
-      quality: 30,
+      quality: 10,
     );
     return File(result!.path);
   }
@@ -622,7 +660,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 clientId: widget.ClientId,
                                 followedUpId: widget.reportId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: widget.ShiftId);
                             if (isChecked == false) {
                               await fireStoreService
                                   .updateFollowUp(reportData['ReportId']);
@@ -666,7 +705,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 status: "pending",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: widget.ShiftId);
                             Navigator.pop(context, true);
                             setState(() {
                               _isLoading = false; // Set loading state
@@ -732,7 +772,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 status: "pending",
                                 clientId: widget.ClientId,
                                 image: imageUrls,
-                                createdAt: Timestamp.now());
+                                createdAt: Timestamp.now(),
+                                shiftId: widget.ShiftId);
                             // }
                             Navigator.pop(context, true);
                             setState(() {

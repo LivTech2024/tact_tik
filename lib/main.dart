@@ -11,6 +11,24 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/select_assets_guards.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/select_dar_guards.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_managment_view_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/select_loogbook_guards.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
+import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/all_schedules_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -18,7 +36,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     // webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    // androidProvider: AndroidProvider.debug,
+    androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.appAttest,
   );
   MapboxOptions.setAccessToken(appConstants.mapBoxPublicKey);
@@ -51,33 +69,61 @@ class MyApp extends StatelessWidget {
               Theme.of(context).textTheme,
             ),
           ),
-          home: OfflineBuilder(
-            connectivityBuilder: (
-              BuildContext context,
-              ConnectivityResult connectivity,
-              Widget child,
-            ) {
-              final bool isConnected = connectivity != ConnectivityResult.none;
-              if (isConnected) {
-                return child;
-              } else {
-                return Scaffold(
-                  body: Center(
-                    child: Text(
-                      'No internet connection. Connect to Internet or Restart the app',
-                      style: TextStyle(
-                        fontSize: 20, // Adjust the font size as needed
-                        fontWeight: FontWeight.bold, // Add bold font weight
-                        color: Colors.white, // Change text color to red
-                      ),
-                    ),
-                  ),
-                );
-                // return OfflineScreen();
-              }
-            },
-            child: AuthChecker(),
-          ),
+        //   home: OfflineBuilder(
+        //     connectivityBuilder: (
+        //       BuildContext context,
+        //       ConnectivityResult connectivity,
+        //       Widget child,
+        //     ) {
+        //       final bool isConnected = connectivity != ConnectivityResult.none;
+        //       if (isConnected) {
+        //         return child;
+        //       } else {
+        //         return Scaffold(
+        //           body: Center(
+        //             child: Text(
+        //               'No internet connection. Connect to Internet or Restart the app',
+        //               style: TextStyle(
+        //                 fontSize: 20, // Adjust the font size as needed
+        //                 fontWeight: FontWeight.bold, // Add bold font weight
+        //                 color: Colors.white, // Change text color to red
+        //               ),
+        //             ),
+        //           ),
+        //         );
+        //         // return OfflineScreen();
+        //       }
+        //     },
+        //     child: AuthChecker(),
+        //   ),
+        // ),
+        home: AuthChecker(),
+        // OfflineBuilder(
+        //   connectivityBuilder: (
+        //     BuildContext context,
+        //     ConnectivityResult connectivity,
+        //     Widget child,
+        //   ) {
+        //     final bool isConnected = connectivity != ConnectivityResult.none;
+        //     if (isConnected) {
+        //       return child;
+        //     } else {
+        //       return const Scaffold(
+        //         body: Center(
+        //           child: Text(
+        //             'No internet connection. Connect to Internet or Restart the app',
+        //             style: TextStyle(
+        //               fontSize: 20, // Adjust the font size as needed
+        //               fontWeight: FontWeight.bold, // Add bold font weight
+        //               color: Colors.white, // Change text color to red
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //       // return OfflineScreen();
+        //     }
+        //   },
+        //   child: AuthChecker(),
         ),
       ),
     );

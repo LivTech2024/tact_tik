@@ -31,6 +31,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   bool isChecked = false;
   bool showCreate = true;
 
+  DateTime? StartDate;
+  DateTime? EndDate;
+
   TextEditingController _tittleController = TextEditingController();
   TextEditingController _RecipientNameController = TextEditingController();
   TextEditingController _ContactController = TextEditingController();
@@ -60,7 +63,23 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       keys = querySnapshot.docs;
     });
   }
+  Future<void> _selectDate(BuildContext context , bool isStart) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    setState(() {
+      if (picked != null){
+        if (isStart) {
+          StartDate = picked;
+        }  else{
+          EndDate = picked;
+        }
+      }
+    });
 
+  }
   Future<void> _saveData() async {
     CollectionReference keyAllocations =
         FirebaseFirestore.instance.collection('KeyAllocations');
@@ -213,7 +232,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               ),
                               SizedBox(height: height / height10),
                               CustomeTextField(
-                                hint: '9876543210',
+                                maxlength: 11,
+                                hint: '12345678901',
                                 controller: _ContactController,
                                 showIcon: false,
                                 textInputType: TextInputType.number,
@@ -297,61 +317,67 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
-                                      height: height / height60,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          InterMedium(
-                                            text: 'Start date',
-                                            fontsize: width / width16,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color3,
-                                          ),
-                                          SvgPicture.asset(
-                                            'assets/images/calendar_clock.svg',
-                                            width: width / width20,
-                                          )
-                                        ],
+                                    child: GestureDetector(
+                                      onTap:(){
+                                        _selectDate(context , true);
+                                      },
+                                      child: Container(
+                                        height: height / height60,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(width / width10),
+                                          color: isDark
+                                              ? DarkColor.WidgetColor
+                                              : LightColor.WidgetColor,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            InterMedium(
+                                              text: StartDate != null ? '${StartDate!.toLocal()}'.split(' ')[0] :'Start Time',
+                                              fontsize: width / width16,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color2,
+                                            ),
+                                            SvgPicture.asset(
+                                              'assets/images/calendar_clock.svg',
+                                              width: width / width20,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(width: width / width6),
                                   Expanded(
-                                    child: Container(
-                                      height: height / height60,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          InterMedium(
-                                            text: 'End date',
-                                            fontsize: width / width16,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color3,
-                                          ),
-                                          SvgPicture.asset(
-                                            'assets/images/calendar_clock.svg',
-                                            width: width / width20,
-                                          )
-                                        ],
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        _selectDate(context , false);
+                                      },
+                                      child: Container(
+                                        height: height / height60,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(width / width10),
+                                          color: isDark
+                                              ? DarkColor.WidgetColor
+                                              : LightColor.WidgetColor,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            InterMedium(
+                                              text: EndDate!= null ? '${EndDate!.toLocal()}'.split(' ')[0] : 'End Time',
+                                              fontsize: width / width16,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color2,
+                                            ),
+                                            SvgPicture.asset(
+                                              'assets/images/calendar_clock.svg',
+                                              width: width / width20,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -455,7 +481,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 showIcon: true,
                                 isExpanded: true,
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: height / height100),
                             ],
                           ),
                         ),
@@ -464,21 +490,24 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Button1(
-                    text: 'Save',
-                    onPressed: () {
-                      _saveData();
-                    },
-                    borderRadius: width / width10,
-                    backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                  ),
-                  SizedBox(
-                    height: height / height20,
-                  )
-                ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Button1(
+                      text: 'Save',
+                      onPressed: () {
+                        _saveData();
+                      },
+                      borderRadius: width / width10,
+                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                    ),
+                    SizedBox(
+                      height: height / height20,
+                    )
+                  ],
+                ),
               ),
             )
           ],

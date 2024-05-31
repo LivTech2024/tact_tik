@@ -138,6 +138,8 @@ PODS:
     - Mantle
     - SDWebImage
     - SDWebImageWebPCoder
+  - flutter_keyboard_visibility (0.0.1):
+    - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_native_html_to_pdf (0.0.1):
@@ -227,6 +229,8 @@ PODS:
     - Flutter
   - permission_handler_apple (9.1.1):
     - Flutter
+  - pointer_interceptor_ios (0.0.1):
+    - Flutter
   - PromisesObjC (2.4.0)
   - ReachabilitySwift (5.2.2)
   - RecaptchaInterop (100.0.0)
@@ -263,6 +267,7 @@ DEPENDENCIES:
   - flutter_barcode_scanner (from `.symlinks/plugins/flutter_barcode_scanner/ios`)
   - flutter_email_sender (from `.symlinks/plugins/flutter_email_sender/ios`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_html_to_pdf (from `.symlinks/plugins/flutter_native_html_to_pdf/ios`)
   - flutter_native_screenshot (from `.symlinks/plugins/flutter_native_screenshot/ios`)
@@ -277,6 +282,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pdf_compressor (from `.symlinks/plugins/pdf_compressor/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - pointer_interceptor_ios (from `.symlinks/plugins/pointer_interceptor_ios/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -354,6 +360,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_email_sender/ios"
   flutter_image_compress_common:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_html_to_pdf:
@@ -380,6 +388,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/pdf_compressor/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  pointer_interceptor_ios:
+    :path: ".symlinks/plugins/pointer_interceptor_ios/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
@@ -427,6 +437,7 @@ SPEC CHECKSUMS:
   flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
   flutter_email_sender: 10a22605f92809a11ef52b2f412db806c6082d40
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
+  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_native_html_to_pdf: 666ed6a6dd339890b0c436a20a8eb848d208701e
   flutter_native_screenshot: 9f85755d0bcc31a774aaa45c0bc3fada210f001a
@@ -452,6 +463,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   pdf_compressor: a4cb785c836578ceed17e6d4d538498b0fb1365b
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
+  pointer_interceptor_ios: 508241697ff0947f853c061945a8b822463947c1
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   ReachabilitySwift: 2128f3a8c9107e1ad33574c6e58e8285d460b149
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21

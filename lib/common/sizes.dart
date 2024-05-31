@@ -32,6 +32,7 @@ const double height80 = 11.724;
 const double height90 = 10.4222222222;
 const double height96 = 9.7708333333;
 const double height242 = 3.8760330579;
+const double height300 = 3.1266666667;
 const double height340 = 2.7588235294;
 const double height200 = 4.69;
 const double height11 = 85.2727272727;

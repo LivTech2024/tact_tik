@@ -6,9 +6,21 @@ import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
 
-class ViewCheckpointScreen extends StatelessWidget {
-  const ViewCheckpointScreen({super.key});
+class ViewCheckpointScreen extends StatefulWidget {
+  final String reportedAt;
+  final String comment;
+  final List<dynamic> images;
+  const ViewCheckpointScreen(
+      {super.key,
+      required this.comment,
+      required this.images,
+      required this.reportedAt});
 
+  @override
+  State<ViewCheckpointScreen> createState() => _ViewCheckpointScreenState();
+}
+
+class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -30,7 +42,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                 ),
                 SizedBox(height: height / height20),
                 InterMedium(
-                  text: 'Time: 10.30 pm  ',
+                  text: 'Time: ' + widget.reportedAt,
                   fontsize: width / width14,
                   color: isDark ? DarkColor.color21 : LightColor.color3,
                 ),
@@ -42,8 +54,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                 ),
                 SizedBox(height: height / height10),
                 InterMedium(
-                  text:
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique. Lorem ipsum dolor sit amet',
+                  text: widget.comment,
                   fontsize: width / width14,
                   color: isDark ? DarkColor.color21 : LightColor.color3,
                   maxLines: 3,
@@ -62,8 +73,9 @@ class ViewCheckpointScreen extends StatelessWidget {
                     mainAxisSpacing: height / height10,
                     crossAxisCount: 3,
                   ),
-                  itemCount: 5,
+                  itemCount: widget.images.length,
                   itemBuilder: (context, index) {
+                    final imageUrl = widget.images[index];
                     return Container(
                       height: height / height66,
                       width: width / width66,
@@ -71,8 +83,7 @@ class ViewCheckpointScreen extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(width / width10),
                         image: DecorationImage(
-                          image: NetworkImage(
-                              'https://quotefancy.com/media/wallpaper/3840x2160/8151357-Hello-World-Wallpaper.jpg'),
+                          image: NetworkImage(imageUrl),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -93,7 +104,9 @@ class ViewCheckpointScreen extends StatelessWidget {
                     return Container(
                       margin: EdgeInsets.only(bottom: height / height30),
                       height: height / height25,
-                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      color: isDark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor,
                       child: Row(
                         children: [
                           Container(
@@ -106,12 +119,16 @@ class ViewCheckpointScreen extends StatelessWidget {
                             width: width / width230,
                             child: InterMedium(
                               text: '#334AH6 Qr Missing',
-                              color: DarkColor. color6,
+                              color: DarkColor.color6,
                               fontsize: width / width16,
                             ),
                           ),
                           SizedBox(width: width / width2),
-                          InterBold(text: '11.36pm' , color: DarkColor.color6,fontsize: width / width16,)
+                          InterBold(
+                            text: '11.36pm',
+                            color: DarkColor.color6,
+                            fontsize: width / width16,
+                          )
                         ],
                       ),
                     );
