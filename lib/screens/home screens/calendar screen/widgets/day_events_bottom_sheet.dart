@@ -41,6 +41,7 @@ class DayEventsBottomSheet extends StatelessWidget {
               ))
             : SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ListView.builder(
@@ -71,10 +72,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ShiftInformation()));
+                                          const ShiftInformation()));
                             },
                             child: SizedBox(
-                              height: height / height100,
+                              height: height / height120,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: width / width16,
@@ -98,7 +99,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       Container(
                                         height: height / height50,
                                         width: width / width50,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Primarycolor,
                                           image: DecorationImage(
@@ -112,7 +113,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       Expanded(
                                         child: Padding(
                                           padding: EdgeInsets.only(
-                                              left: width / width16),
+                                              left: width / width14),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Column(
@@ -122,10 +123,11 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 InterSemibold(
-                                                  text: 'Shift name....',
+                                                  text: event.name,
                                                   fontsize: width / width16,
                                                   color: color1,
                                                 ),
+
                                                 SizedBox(
                                                     height: height / height8),
                                                 IntrinsicHeight(
@@ -144,27 +146,29 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                                   width4),
                                                           InterMedium(
                                                             text:
-                                                                'Bangalore south',
+                                                                event.location,
                                                             fontsize:
                                                                 width / width14,
                                                             color: color2,
                                                           ),
                                                         ],
                                                       ),
-                                                      VerticalDivider(
+                                                      const VerticalDivider(
                                                         color: color1,
                                                         thickness: 1,
                                                       ),
-                                                      InterMedium(
-                                                        text: '9:30am - '
-                                                            '11:30am',
-                                                        fontsize:
-                                                            width / width14,
-                                                        color: color2,
+                                                      Expanded(
+                                                        child: InterMedium(
+                                                          text: '9:30am - '
+                                                              '11:30am',
+                                                          fontsize:
+                                                              width / width14,
+                                                          color: color2,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -178,7 +182,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                           size: width / width20,
                                           color: color1,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -188,27 +192,25 @@ class DayEventsBottomSheet extends StatelessWidget {
                         }
                       },
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: width / width18,
+                        top: height / height16,
+                        bottom: height / height16,
+                      ),
+                      child: InterMedium(
+                        text: 'Others',
+                        color: color1,
+                        fontsize: width / width20,
+                      ),
+                    ),
                     ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      controller: controller,
-                      itemCount: events.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width18,
-                              top: height / height16,
-                              bottom: height / height16,
-                            ),
-                            child: InterMedium(
-                              text: 'Others',
-                              color: color1,
-                              fontsize: width / width20,
-                            ),
-                          );
-                        } else {
-                          final event = events[index - 1];
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        controller: controller,
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          final event = events[index];
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -219,7 +221,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                           )));
                             },
                             child: SizedBox(
-                              height: height / height100,
+                              height: height / height140,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: width / width16,
@@ -243,7 +245,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       Container(
                                         height: height / height50,
                                         width: width / width50,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Primarycolor,
                                           image: DecorationImage(
@@ -257,7 +259,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       Expanded(
                                         child: Padding(
                                           padding: EdgeInsets.only(
-                                              left: width / width16),
+                                              left: width / width12),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Column(
@@ -267,7 +269,8 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 InterSemibold(
-                                                  text: 'Shift name....',
+                                                  text: event
+                                                      .others.othersShiftName,
                                                   fontsize: width / width16,
                                                   color: color1,
                                                 ),
@@ -288,28 +291,45 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                               width: width /
                                                                   width4),
                                                           InterMedium(
-                                                            text:
-                                                                'Bangalore south',
+                                                            text: event.others
+                                                                .othersShiftLocation,
                                                             fontsize:
                                                                 width / width14,
                                                             color: color2,
                                                           ),
                                                         ],
                                                       ),
-                                                      VerticalDivider(
+                                                      const VerticalDivider(
                                                         color: color1,
                                                         thickness: 1,
                                                       ),
-                                                      InterMedium(
-                                                        text: '9:30am - '
-                                                            '11:30am',
-                                                        fontsize:
-                                                            width / width14,
-                                                        color: color2,
+                                                      Expanded(
+                                                        child: InterMedium(
+                                                          text:
+                                                              '${event.others.startTime!.format('h:mm a')} - ${event.others.endTime!.format('h:mm a')}',
+                                                          fontsize:
+                                                              width / width14,
+                                                          color: color2,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
-                                                )
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: event.others.ids
+                                                      .map((id) {
+                                                    return Text(
+                                                      id,
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            width / width14,
+                                                        color: color2,
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -330,9 +350,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                               ),
                             ),
                           );
-                        }
-                      },
-                    ),
+                        }),
                     SizedBox(
                       height: height / height100,
                     )
