@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../common/sizes.dart';
@@ -16,6 +17,13 @@ import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
 import '../../home screens/widgets/set_details_widget.dart';
+
+class Guards {
+  final String image;
+  final String name;
+
+  Guards(this.name, this.image);
+}
 
 class SCreateAssignAssetScreen extends StatefulWidget {
   final String companyId;
@@ -171,8 +179,55 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
         }
       }
     });
-
   }
+
+  final TextEditingController _controller = TextEditingController();
+
+  final List<Guards> _screens = [
+    Guards('Site Tours', 'Image URL'),
+    Guards('DAR Screen', 'Image URL'),
+    Guards('Reports Screen', 'Image URL'),
+    Guards('Post Screen', 'Image URL'),
+    Guards('Task Screen', 'Image URL'),
+    Guards('LogBook Screen', 'Image URL'),
+    Guards('Visitors Screen', 'Image URL'),
+    Guards('Assets Screen', 'Image URL'),
+    Guards('Key Screen', 'Image URL'),
+  ];
+
+  Future<List<Guards>> suggestionsCallback(String pattern) async =>
+      Future<List<Guards>>.delayed(
+        Duration(milliseconds: 300),
+            () => _screens.where((product) {
+          // print(product.name);
+          final nameLower = product.name.toLowerCase().split(' ').join('');
+          final patternLower = pattern.toLowerCase().split(' ').join('');
+          return nameLower.contains(patternLower);
+        }).toList(),
+      );
+
+  Widget gridLayoutBuilder(
+      BuildContext context,
+      List<Widget> items,
+      ) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: items.length,
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 400,
+        mainAxisExtent: 58,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      reverse: SuggestionsController.of<Guards>(context).effectiveDirection ==
+          VerticalDirection.up,
+      itemBuilder: (context, index) => items[index],
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -314,34 +369,85 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: TextField(
-                              enabled: !widget.OnlyView,
-                              controller: _searchController,
-                              onChanged: (query) {
-                                searchGuards(query);
-                              },
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w300,
-                                fontSize: width / width18,
-                                color: Colors.white,
-                              ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(width / width10),
+                            child: TypeAheadField<Guards>(
+                              autoFlipDirection: true,
+                              controller: _controller,
+                              direction: VerticalDirection.down,
+                              builder:
+                                  (context, _controller, focusNode) =>
+                                  TextField(
+                                    controller: _controller,
+                                    focusNode: focusNode,
+                                    autofocus: false,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: width / width18,
+                                      color: Colors.white,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(width / width10),
+                                        ),
+                                      ),
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: width / width18,
+                                        color: color2,
+                                      ),
+                                      hintText: 'Search Guards',
+                                      contentPadding: EdgeInsets.zero,
+                                    ),
+                                    cursorColor: Primarycolor,
                                   ),
+                              suggestionsCallback: suggestionsCallback,
+                              itemBuilder: (context, Guards guards) {
+                                return ListTile(
+                                  leading: Container(
+                                    height: height / height30,
+                                    width: width / width30,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Primarycolor,
+                                    ),
+                                  ),
+                                  title: InterRegular(
+                                    text: guards.name,
+                                    color: color2,
+                                  ),
+                                );
+                              },
+                              emptyBuilder: (context) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: height / height10,
+                                  horizontal: width / width10,
                                 ),
-                                focusedBorder: InputBorder.none,
-                                hintStyle: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: width / width18,
+                                child: InterRegular(
+                                  text: 'No Such Screen found',
                                   color: color2,
+                                  fontsize: width / width18,
                                 ),
-                                hintText: 'Search Guard',
-                                contentPadding: EdgeInsets.zero,
                               ),
-                              cursorColor: Primarycolor,
+                              decorationBuilder: (context, child) =>
+                                  Material(
+                                    type: MaterialType.card,
+                                    elevation: 4,
+                                    borderRadius: BorderRadius.circular(
+                                      width / width10,
+                                    ),
+                                    child: child,
+                                  ),
+                              debounceDuration:
+                              const Duration(milliseconds: 300),
+                              onSelected: (Guards guard) {
+                                print(
+                                    'home screen search bar############################################');
+
+                                print(guard.name);
+                              },
+                              listBuilder: gridLayoutBuilder,
                             ),
                           ),
                           Container(
@@ -543,7 +649,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                     IgnorePointer(
                       ignoring: widget.OnlyView ? isChecked == false ? true : false : true,
                       child: Button1(
-                        text: 'Done',
+                        text: 'Save',
                         onPressed: () {
                           createEquipmentAllocation();
                         },
@@ -596,7 +702,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                     ),
                     SizedBox(height: height / height40),
                     Button1(
-                      text: 'Done',
+                      text: 'Save',
                       onPressed: () {
                         createEquipmentAllocation();
                       },

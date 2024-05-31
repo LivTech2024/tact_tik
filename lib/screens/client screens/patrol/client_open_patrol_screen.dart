@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +21,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
   final int patrolLogCount;
   final String status;
   final String feedback;
-  final List<Map<String, dynamic>> checkpoints;
+  final List<dynamic> checkpoints;
   ClientOpenPatrolScreen(
       {super.key,
       required this.guardName,
@@ -184,7 +185,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InterSemibold(
-                                    text: 'Guard Name',
+                                    text: guardName,
                                     color: color1,
                                     fontsize: width / width18,
                                   ),
@@ -216,7 +217,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
-                                      text: '11:36',
+                                      text: startTime,
                                       fontsize: width / width14,
                                       color: color1,
                                     ),
@@ -235,7 +236,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
-                                      text: '16:56',
+                                      text: endTime,
                                       fontsize: width / width14,
                                       color: color1,
                                     ),
@@ -254,7 +255,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: height / height12),
                                     InterMedium(
-                                      text: '100',
+                                      text: '$patrolLogCount',
                                       fontsize: width / width14,
                                       color: color1,
                                     ),
@@ -273,7 +274,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: height / height12),
                                     InterBold(
-                                      text: '1/3',
+                                      text: status,
                                       fontsize: width / width14,
                                       color: Colors.green,
                                     ),
@@ -298,8 +299,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                               SizedBox(width: width / width4),
                               Flexible(
                                   child: InterRegular(
-                                text:
-                                    ' If you have already purchased the premium, please wait a few minutes for the system to update your status and dont forget to run /premium to activate your premium status!',
+                                text: feedback,
                                 color: color10,
                                 fontsize: width / width14,
                                 maxLines: 3,
@@ -320,12 +320,36 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                 SizedBox(height: height / height20),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 4,
+                  itemCount: checkpoints.length,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                    final checkpointData = checkpoints[index];
+                    final checkpointName =
+                        checkpointData['CheckPointName'] ?? '';
+                    final checkpointStatus =
+                        checkpointData['CheckPointStatus'] ?? '';
+                    final checkpointReportedAt =
+                        checkpointData['CheckPointReportedAt'];
+                    final checkpointComment =
+                        checkpointData['CheckPointComment'] ?? '';
+                    final checkpointImages =
+                        checkpointData['CheckPointImage'] ?? [];
+
+                    final reportedAtTime = checkpointReportedAt != null
+                        ? DateFormat('hh:mm a').format(
+                            (checkpointReportedAt as Timestamp).toDate())
+                        : '';
+
                     return GestureDetector(
                       onTap: () {
-                        NavigateScreen(ViewCheckpointScreen(), context);
+                        NavigateScreen(
+                          ViewCheckpointScreen(
+                            reportedAt: reportedAtTime,
+                            comment: checkpointComment,
+                            images: checkpointImages,
+                          ),
+                          context,
+                        );
                       },
                       child: Container(
                         height: height / height50,
@@ -346,7 +370,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   height: height / height12,
                                   width: width / width12,
                                   decoration: BoxDecoration(
-                                    color: Colors.green,
+                                    color: checkpointStatus == 'unchecked'
+                                        ? Colors.green
+                                        : Colors.red,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -354,7 +380,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                 SizedBox(
                                   width: width / width120,
                                   child: InterMedium(
-                                    text: 'Checkpoint name Checkpoint name..',
+                                    text: checkpointName,
                                     color: color21,
                                     fontsize: width / width16,
                                   ),

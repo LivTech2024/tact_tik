@@ -139,18 +139,28 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                 for (var patrol in patrolsList)
                   GestureDetector(
                     onTap: () {
+                      final DateTime startTime =
+                          DateTime.fromMillisecondsSinceEpoch(
+                              patrol['PatrolLogStartedAt']
+                                  .millisecondsSinceEpoch);
+                      final DateTime endTime =
+                          DateTime.fromMillisecondsSinceEpoch(
+                              patrol['PatrolLogEndedAt']
+                                  .millisecondsSinceEpoch);
+
                       NavigateScreen(
-                          ClientOpenPatrolScreen(
-                            guardName: patrol[''],
-                            startDate: '',
-                            startTime: '',
-                            endTime: '',
-                            patrolLogCount: 0,
-                            status: '',
-                            feedback: '',
-                            checkpoints: [],
-                          ),
-                          context);
+                        ClientOpenPatrolScreen(
+                          guardName: patrol['PatrolLogGuardName'] ?? '',
+                          startDate: DateFormat('dd/MM/yyyy').format(startTime),
+                          startTime: DateFormat('hh:mm a').format(startTime),
+                          endTime: DateFormat('hh:mm a').format(endTime),
+                          patrolLogCount: patrol['PatrolLogPatrolCount'] ?? 0,
+                          status: patrol['PatrolLogStatus'] ?? '',
+                          feedback: patrol['PatrolLogFeedbackComment'] ?? '',
+                          checkpoints: patrol['PatrolLogCheckPoints'] ?? [],
+                        ),
+                        context,
+                      );
                     },
                     child: Container(
                       height: height / height140,
