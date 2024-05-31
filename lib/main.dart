@@ -13,6 +13,7 @@ import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: AuthChecker(),
+        home: LogBookScreen(EmpId: 'tiDGAADcSl64Aq4bwg0E'),
         // OfflineBuilder(
         //   connectivityBuilder: (
         //     BuildContext context,
