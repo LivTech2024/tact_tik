@@ -9,6 +9,8 @@ import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../../feature screens/site_tours/site_tour_screen.dart';
+
 class Screens {
   final String name;
   final IconData icon;
@@ -75,6 +77,7 @@ class HomeScreenPart1 extends StatelessWidget {
       Future<List<Screens>>.delayed(
         Duration(milliseconds: 300),
         () => _screens.where((product) {
+          // print(product.name);
           final nameLower = product.name.toLowerCase().split(' ').join('');
           final patternLower = pattern.toLowerCase().split(' ').join('');
           return nameLower.contains(patternLower);
@@ -206,6 +209,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TypeAheadField<Screens>(
+                      autoFlipDirection: true,
                       controller: _controller,
                       direction: VerticalDirection.down,
                       builder: (context, _controller, focusNode) => TextField(
@@ -266,6 +270,116 @@ class HomeScreenPart1 extends StatelessWidget {
                         print(
                             'home screen search bar############################################');
                         print(value.name);
+                        switch (value) {
+                          case 'Site Tours':
+                            // showDialog(
+                            //   context: context,
+                            //   builder: (BuildContext context) {
+                            //     return SiteTourScreen(
+                            //       height: height,
+                            //       width: width,
+                            //       schedulesList: schedules_list,
+                            //     );
+                            //   },
+                            // );
+                            break;
+                          case 'DAR Screen':
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //
+                            //         DarDisplayScreen(
+                            //           EmpEmail: _empEmail,
+                            //           EmpID: _employeeId,
+                            //           EmpDarCompanyId:
+                            //           _ShiftCompanyId ?? "",
+                            //           EmpDarCompanyBranchId:
+                            //           _branchId,
+                            //           EmpDarShiftID: _shiftId,
+                            //           EmpDarClientID:
+                            //           _shiftCLientId,
+                            //           Username: _userName,
+                            //         )));
+                            break;
+                          case 'Reports Screen':
+                            /*Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ReportScreen(
+                                          locationId:
+                                          _shiftLocationId,
+                                          locationName:
+                                          _ShiftLocationName,
+                                          companyId:
+                                          _ShiftCompanyId ?? "",
+                                          empId: _employeeId,
+                                          empName: _userName,
+                                          clientId: _shiftCLientId,
+                                          ShiftId: _shiftId,
+                                        )));*/
+                            break;
+                          case 'Post Screen':
+                            /*Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PostOrder(
+                                      locationId:
+                                      _shiftLocationId,
+                                    )));*/
+                            break;
+                          case 'Task Screen':
+                            /*Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        TaskFeatureScreen()));*/
+                            break;
+                          case 'LogBook Screen':
+                            /*Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        LogBookScreen(
+                                          EmpId: _employeeId,
+                                        )));*/
+                            break;
+                          case 'Visitors Screen':
+                            /*  Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VisiTorsScreen(
+                                                      locationId:
+                                                          _shiftLocationId,
+                                                    )));*/
+                            break;
+                          case 'Assets Screen':
+                            /*Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    // KeysScreen(
+                                                    //     keyId: _employeeId)
+                                                    AssetsScreen(
+                                                        assetEmpId:
+                                                            _employeeId)));*/
+                            break;
+                          case 'Key Screen':
+                            /*   Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    KeysScreen(
+                                                        keyId: _employeeId)
+                                                // AssetsScreen(
+                                                //     assetEmpId:
+                                                //         _employeeId)
+
+                                                ));*/
+                            break;
+                        }
                       },
                       listBuilder: gridLayoutBuilder,
                     ),

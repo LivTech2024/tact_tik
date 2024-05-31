@@ -234,7 +234,7 @@ class _PostOrderState extends State<PostOrder> {
                                             height: height / height16,
                                           ),
                                           Container(
-                                            width: width / width200,
+                                            constraints: BoxConstraints(minWidth: width / width200),
                                             height: height / height46,
                                             decoration: BoxDecoration(
                                               borderRadius:

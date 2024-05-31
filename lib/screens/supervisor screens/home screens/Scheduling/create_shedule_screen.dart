@@ -6,9 +6,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emailjs/emailjs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:number_editing_controller/number_editing_controller.dart';
 import 'package:open_file/open_file.dart';
@@ -27,6 +30,13 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:http/http.dart' as http;
 import '../widgets/set_details_widget.dart';
 import 'select_guards_screen.dart';
+
+class Guards {
+  final String image;
+  final String name;
+
+  Guards(this.name, this.image);
+}
 
 class CreateSheduleScreen extends StatefulWidget {
   final String GuardId;
@@ -141,7 +151,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   void getAllPatrolNames() async {
     List<String> patrolNames =
-    await fireStoreService.getAllPatrolName(widget.CompanyId);
+        await fireStoreService.getAllPatrolName(widget.CompanyId);
     if (patrolNames.isNotEmpty) {
       setState(() {
         patrolItems = patrolNames
@@ -155,7 +165,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
       });
     }
   }
-
 
   @override
   void dispose() {
@@ -234,6 +243,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
+                    print(_selectedDates);
                     Navigator.of(context).pop();
                   },
                   child: Text('Done'),
@@ -389,7 +399,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     final body = jsonEncode({
       'source': {
         'html':
-        '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><h1>Hello World!</h1><img src="data:image/png;base64,$base64Image"/></body></html>'
+            '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><h1>Hello World!</h1><img src="data:image/png;base64,$base64Image"/></body></html>'
       },
       'pdf': {'format': 'A4', 'scale': 1, 'printBackground': true},
       'wait': {'for': 'navigation', 'waitUntil': 'load', 'timeout': 2500}
@@ -409,7 +419,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         'message': pdfBase64,
       });
     } else {
-      print('Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+      print(
+          'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
     }
   }
 
@@ -464,9 +475,58 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   Future<Uint8List?> _generateQrImage(String data) async {
     final qr = QrCode(4, QrErrorCorrectLevel.L);
     qr.addData(data);
-    final painter = QrPainter(data: data, version: QrVersions.auto, color: Colors.black, emptyColor: Colors.white);
+    final painter = QrPainter(
+        data: data,
+        version: QrVersions.auto,
+        color: Colors.black,
+        emptyColor: Colors.white);
     final img = await painter.toImageData(2048, format: ImageByteFormat.png);
     return img?.buffer.asUint8List();
+  }
+
+  final TextEditingController _controller = TextEditingController();
+
+  final List<Guards> _screens = [
+    Guards('Site Tours', 'Image URL'),
+    Guards('DAR Screen', 'Image URL'),
+    Guards('Reports Screen', 'Image URL'),
+    Guards('Post Screen', 'Image URL'),
+    Guards('Task Screen', 'Image URL'),
+    Guards('LogBook Screen', 'Image URL'),
+    Guards('Visitors Screen', 'Image URL'),
+    Guards('Assets Screen', 'Image URL'),
+    Guards('Key Screen', 'Image URL'),
+  ];
+
+  Future<List<Guards>> suggestionsCallback(String pattern) async =>
+      Future<List<Guards>>.delayed(
+        Duration(milliseconds: 300),
+        () => _screens.where((product) {
+          // print(product.name);
+          final nameLower = product.name.toLowerCase().split(' ').join('');
+          final patternLower = pattern.toLowerCase().split(' ').join('');
+          return nameLower.contains(patternLower);
+        }).toList(),
+      );
+
+  Widget gridLayoutBuilder(
+    BuildContext context,
+    List<Widget> items,
+  ) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: items.length,
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 400,
+        mainAxisExtent: 58,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      reverse: SuggestionsController.of<Guards>(context).effectiveDirection ==
+          VerticalDirection.up,
+      itemBuilder: (context, index) => items[index],
+    );
   }
 
   @override
@@ -603,35 +663,85 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: TextField(
-                                    controller: _searchController,
-                                    onChanged: (query) {
-                                      searchGuards(query);
-                                    },
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: width / width18,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(width / width10),
-                                        ),
-                                      ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
+                                  child: TypeAheadField<Guards>(
+                                    autoFlipDirection: true,
+                                    controller: _controller,
+                                    direction: VerticalDirection.down,
+                                    builder:
+                                        (context, _controller, focusNode) =>
+                                            TextField(
+                                      controller: _controller,
+                                      focusNode: focusNode,
+                                      autofocus: false,
+                                      style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w300,
                                         fontSize: width / width18,
-                                        color:
-                                            color2, // Change text color to white
+                                        color: Colors.white,
                                       ),
-                                      hintText: 'Search Guard',
-                                      contentPadding:
-                                          EdgeInsets.zero, // Remove padding
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(width / width10),
+                                          ),
+                                        ),
+                                        focusedBorder: InputBorder.none,
+                                        hintStyle: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: width / width18,
+                                          color: color2,
+                                        ),
+                                        hintText: 'Search Guards',
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                      cursorColor: Primarycolor,
                                     ),
-                                    cursorColor: Primarycolor,
+                                    suggestionsCallback: suggestionsCallback,
+                                    itemBuilder: (context, Guards guards) {
+                                      return ListTile(
+                                        leading: Container(
+                                          height: height / height30,
+                                          width: width / width30,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Primarycolor,
+                                          ),
+                                        ),
+                                        title: InterRegular(
+                                          text: guards.name,
+                                          color: color2,
+                                        ),
+                                      );
+                                    },
+                                    emptyBuilder: (context) => Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: height / height10,
+                                        horizontal: width / width10,
+                                      ),
+                                      child: InterRegular(
+                                        text: 'No Such Screen found',
+                                        color: color2,
+                                        fontsize: width / width18,
+                                      ),
+                                    ),
+                                    decorationBuilder: (context, child) =>
+                                        Material(
+                                      type: MaterialType.card,
+                                      elevation: 4,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      ),
+                                      child: child,
+                                    ),
+                                    debounceDuration:
+                                        const Duration(milliseconds: 300),
+                                    onSelected: (Guards guard) {
+                                      print(
+                                          'home screen search bar############################################');
+
+                                      print(guard.name);
+                                    },
+                                    listBuilder: gridLayoutBuilder,
                                   ),
                                 ),
                                 Container(
@@ -662,7 +772,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 title: Text(guard['EmployeeName']),
                                 onTap: () {
                                   setState(() {
-                                    _searchController.text = guard['EmployeeName'];
+                                    _searchController.text =
+                                        guard['EmployeeName'];
                                     selectedGuardId = guard['EmployeeId'];
                                     selectedGuardName = guard['EmployeeName'];
                                     selectedGuardImage = guard['EmployeeImg'];
@@ -704,12 +815,28 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           Container(
                                             height: height / height50,
                                             width: width / width50,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  image: NetworkImage(guardImg),
-                                                  fit: BoxFit.fitWidth),
-                                            ),
+                                            decoration: guardImg != ""
+                                                ? BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          guardImg ?? ""),
+                                                      filterQuality:
+                                                          FilterQuality.high,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Primarycolor,
+                                                    image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/images/default.png'),
+                                                      filterQuality:
+                                                          FilterQuality.high,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                           ),
                                           Positioned(
                                             top: -4,
@@ -834,12 +961,26 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           ),
                           // Multiple Date To Do
                           SetDetailsWidget(
-                            hintText: selectedDate == null
-                                ? 'Date'
-                                : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
+                            hintText: 'Date',
                             icon: Icons.date_range,
                             onTap: () => _showDatePicker(context),
                           ),
+                          SizedBox(height: height / height5),
+                          Row(
+                            children: [
+                              InterMedium(text: 'Selected dates: ' , color: Primarycolor,fontsize: width / width14,),
+                              if (_selectedDates != null)
+                                for (var date in _selectedDates)
+                                  Flexible(
+                                    child: InterMedium(
+                                      text: '${DateFormat('d').format(date)},',
+                                      color: color2,
+                                      fontsize: width / width14,
+                                    ),
+                                  ),
+                            ],
+                          ),
+
                           // Seperate Time
                           SetDetailsWidget(
                             hintText: startTime != null
@@ -1001,32 +1142,39 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   color: color1,
                                   size: width / width24,
                                 ),
-                            Expanded(
-                              child: isLoading
-                                  ? Center(child: CircularProgressIndicator())
-                                  : MultiSelectDropDown(
-                                  selectedOptionBackgroundColor: Primarycolor,
-                                  dropdownBackgroundColor: WidgetColor,
-                                  fieldBackgroundColor: Colors.transparent,
-                                  optionsBackgroundColor: WidgetColor,
-                                  borderColor: Colors.transparent,
-                                  controller: _Patrollcontroller,
-                                  onOptionSelected: (options) {
-                                  setState(() {
-                                    _selectedOptions = options;
-                                  });
-                                  print(_selectedOptions);
-                                  print('length is');
-                                  print(_selectedOptions.length);
-                                },
-                                  options: patrolItems,
-                                  selectionType: SelectionType.multi,
-                                  chipConfig: const ChipConfig(wrapType: WrapType.wrap),
-                                  dropdownHeight: 300,
-                                  optionTextStyle: const TextStyle(fontSize: 16),
-                                  selectedOptionIcon: const Icon(Icons.check_circle),
-                              ),
-                            ),
+                                Expanded(
+                                  child: isLoading
+                                      ? Center(
+                                          child: CircularProgressIndicator())
+                                      : MultiSelectDropDown(
+                                          selectedOptionBackgroundColor:
+                                              Primarycolor,
+                                          dropdownBackgroundColor: WidgetColor,
+                                          fieldBackgroundColor:
+                                              Colors.transparent,
+                                          optionsBackgroundColor: WidgetColor,
+                                          borderColor: Colors.transparent,
+                                          controller: _Patrollcontroller,
+                                          onOptionSelected: (options) {
+                                            setState(() {
+                                              _selectedOptions = options;
+                                            });
+                                            print(_selectedOptions);
+                                            print('length is');
+                                            print(_selectedOptions.length);
+                                          },
+                                          options: patrolItems,
+                                          selectionType: SelectionType.multi,
+                                          chipConfig: const ChipConfig(
+                                            wrapType: WrapType.wrap,
+                                          ),
+                                          dropdownHeight: height / height300,
+                                          optionTextStyle: TextStyle(
+                                              fontSize: width / width16),
+                                          selectedOptionIcon:
+                                              const Icon(Icons.check_circle),
+                                        ),
+                                ),
                               ],
                             ),
                           ),
@@ -1038,11 +1186,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             itemBuilder: (context, index) {
                               return Container(
                                 margin: EdgeInsets.only(top: height / height10),
-                                padding: EdgeInsets.only(
-                                    left: width / width10),
+                                padding: EdgeInsets.only(left: width / width10),
                                 decoration: BoxDecoration(
                                   // color: Colors.redAccent,
-                                  borderRadius: BorderRadius.circular(width / width10),
+                                  borderRadius:
+                                      BorderRadius.circular(width / width10),
                                   border: Border(
                                     bottom: BorderSide(
                                       color: color19,
@@ -1080,16 +1228,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                             fontSize: width / width18,
                                             color: color2,
                                           ),
-
-                                          hintText: '${_selectedOptions[index].label} Hit Count',
+                                          hintText:
+                                              '${_selectedOptions[index].label} Hit Count',
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         cursorColor: Primarycolor,
-
                                         onSubmitted: (value) {
                                           setState(() {
                                             PatrolList[index][0] = value;
-                                            PatrolList[index][1] = _selectedOptions[index].label;
+                                            PatrolList[index][1] =
+                                                _selectedOptions[index].label;
                                           });
                                           print(PatrolList);
                                         },
@@ -1121,6 +1269,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           //       // });
                           //     }),
                           SetDetailsWidget(
+                            keyboardType: TextInputType.number,
                             useTextField: true,
                             hintText: 'Restricted Radius(in meter)',
                             icon: Icons.attribution,
@@ -1189,9 +1338,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           ),
                           // placesAutoCompleteTextField(),
 
-                          SizedBox(height: height / height90),
+                          SizedBox(height: height / height40),
                           Button1(
-                            text: 'Done',
+                            text: 'Next',
+                            height: height / height50,
                             onPressed: () async {
                               // Todo check weather values are not null then only move to the next screen.......
                               setState(() {
@@ -1276,8 +1426,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             backgroundcolor: Primarycolor,
                             color: color22,
                             borderRadius: width / width10,
-                            fontsize: width / width18,
+                            fontsize: width / width14,
                           ),
+                          SizedBox(height: height / height40),
                         ],
                       ),
                     )
@@ -1287,125 +1438,138 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                        ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: tasks.length,
-                        itemBuilder: (context, index) {
-                          String taskName = tasks[index]['name'];
-                          bool isChecked = tasks[index]['isQrRequired'] ?? false;
-                          bool isReturnChecked = tasks[index]['isReturnQrRequired'] ?? false;
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: tasks.length,
+                            itemBuilder: (context, index) {
+                              String taskName = tasks[index]['name'];
+                              bool isChecked =
+                                  tasks[index]['isQrRequired'] ?? false;
+                              bool isReturnChecked =
+                                  tasks[index]['isReturnQrRequired'] ?? false;
 
-                          return Column(
-                            children: [
-                              ListTile(
-                                title: Container(
-                                  padding: EdgeInsets.only(left: width / width10),
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor, // WidgetColor,
-                                    borderRadius: BorderRadius.circular(width / width10),
-                                  ),
-                                  child: TextField(
-                                    controller: taskControllers[index],
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: width / width18,
-                                      color: Colors.white,
+                              return Column(
+                                children: [
+                                  ListTile(
+                                    title: Container(
+                                      padding: EdgeInsets.only(
+                                          left: width / width10),
+                                      decoration: BoxDecoration(
+                                        color: WidgetColor, // WidgetColor,
+                                        borderRadius: BorderRadius.circular(
+                                            width / width10),
+                                      ),
+                                      child: TextField(
+                                        controller: taskControllers[index],
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: width / width18,
+                                          color: Colors.white,
+                                        ),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(width / width10),
+                                            ),
+                                          ),
+                                          focusedBorder: InputBorder.none,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: width / width18,
+                                            color: Colors.grey, // color2,
+                                          ),
+                                          hintText: 'Task ${index + 1}',
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        cursorColor: Colors.red,
+                                        // Primarycolor,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            tasks[index]['name'] = value;
+                                          });
+                                          print("textfield value $value");
+                                        },
+                                      ),
                                     ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(width / width10),
+                                    trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                        size: width / width24,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          tasks.removeAt(index);
+                                          taskControllers.removeAt(index);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: height / height10),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        activeColor:
+                                            Colors.red, // Primarycolor,
+                                        checkColor: Colors.black, // color1,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tasks[index]['isQrRequired'] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        'QR Code Required',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: width / width16,
+                                          color: Colors.grey, // color2,
                                         ),
                                       ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: width / width18,
-                                        color: Colors.grey, // color2,
+                                    ],
+                                  ),
+                                  SizedBox(height: height / height10),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        activeColor:
+                                            Colors.red, // Primarycolor,
+                                        checkColor: Colors.black, // color1,
+                                        value: isReturnChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tasks[index]['isReturnQrRequired'] =
+                                                value ?? false;
+                                          });
+                                        },
                                       ),
-                                      hintText: 'Task ${index + 1}',
-                                      contentPadding: EdgeInsets.zero,
-                                    ),
-                                    cursorColor: Colors.red, // Primarycolor,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        tasks[index]['name'] = value;
-                                      });
-                                      print("textfield value $value");
+                                      Text(
+                                        'Return QR Code Required',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: width / width16,
+                                          color: Colors.grey, // color2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Button1(
+                                    height: height / height50,
+                                    borderRadius: width / width10,
+                                    backgroundcolor: color33,
+                                    color: color1,
+                                    text: "Generate Qr",
+                                    onPressed: () async {
+                                      final name = taskControllers[index].text;
+                                      _saveQrCode(name);
+                                      print('Generate QR Button Pressed');
                                     },
-                                  ),
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.redAccent,
-                                    size: width / width24,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      tasks.removeAt(index);
-                                      taskControllers.removeAt(index);
-                                    });
-                                  },
-                                ),
-                              ),
-                              SizedBox(height: height / height10),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    activeColor: Colors.red, // Primarycolor,
-                                    checkColor: Colors.black, // color1,
-                                    value: isChecked,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        tasks[index]['isQrRequired'] = value ?? false;
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    'QR Code Required',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: width / width16,
-                                      color: Colors.grey, // color2,
-                                    ),
                                   ),
                                 ],
-                              ),
-                              SizedBox(height: height / height10),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    activeColor: Colors.red, // Primarycolor,
-                                    checkColor: Colors.black, // color1,
-                                    value: isReturnChecked,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        tasks[index]['isReturnQrRequired'] = value ?? false;
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    'Return QR Code Required',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: width / width16,
-                                      color: Colors.grey, // color2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Button1(
-                                backgroundcolor: Primarycolor,
-                                  text: "Generate Qr",
-                                  onPressed: () async {
-                                    final name = taskControllers[index].text;
-                                    _saveQrCode(name);
-                                    print('Generate QR Button Pressed');
-                                    }),
-                            ],
-                          );
-                        },
-                      ),
+                              );
+                            },
+                          ),
                           SizedBox(height: height / height20),
                           SizedBox(
                             width: width / width120,
@@ -1429,19 +1593,45 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             ),
                           ),
                           SizedBox(height: height / height90),
-                          Button1(
-                            text: 'Done',
-                            onPressed: () {
-                              if (nextScreen!) {
-                                // print(tasks);
-                                print('clicked on done');
-                                print(PatrolList);
-                              }
-                            },
-                            backgroundcolor: Primarycolor,
-                            color: color22,
-                            borderRadius: width / width10,
-                            fontsize: width / width18,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Button1(
+                                  height: height / height50,
+                                  text: 'Previous',
+                                  onPressed: () {
+                                    setState(() {
+                                      nextScreen = false;
+                                    });
+                                  },
+                                  backgroundcolor: color33,
+                                  color: color1,
+                                  borderRadius: width / width10,
+                                  fontsize: width / width14,
+                                ),
+                              ),
+                              SizedBox(
+                                width: width / width10,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Button1(
+                                  height: height / height50,
+                                  text: 'Done',
+                                  onPressed: () {
+                                    if (nextScreen!) {
+                                      // print(tasks);
+                                      print('clicked on done');
+                                      print(PatrolList);
+                                    }
+                                  },
+                                  backgroundcolor: Primarycolor,
+                                  color: color22,
+                                  borderRadius: width / width10,
+                                  fontsize: width / width14,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

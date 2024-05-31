@@ -166,13 +166,14 @@ class _LogBookScreenState extends State<LogBookScreen> {
         final date = DateFormat('MMM d, yyyy').format(logTimestamp.toDate());
 
         final logType = logMapData['LogType'];
+        final logReportTime = logMapData['LogReportedAt'];
 
         if (logsByDate.containsKey(date)) {
           logsByDate[date]!.add({
             'CLIENTNAME': clientName,
             'LOCATION': logLocation,
             'LOGTYPE': logType,
-            'LOGTIMESTAMP': logTimestamp,
+            'LOGREPORTTIME': logReportTime,
           });
         } else {
           logsByDate[date] = [
@@ -180,7 +181,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
               'CLIENTNAME': clientName,
               'LOCATION': logLocation,
               'LOGTYPE': logType,
-              'LOGTIMESTAMP': logTimestamp,
+              'LOGREPORTTIME': logReportTime,
             }
           ];
         }
@@ -273,8 +274,8 @@ class _LogBookWidgetState extends State<LogBookWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: widget.logs.map((log) {
-                final logTimestamp = log['LOGTIMESTAMP'] as Timestamp;
-                final dateTime = logTimestamp.toDate();
+                final logReportTime = log['LOGREPORTTIME'] as Timestamp;
+                final dateTime = logReportTime.toDate();
                 final formattedDateTime =
                     DateFormat('hh:mm:ss a').format(dateTime);
                 return LogTypeWidget(
