@@ -18,7 +18,7 @@ import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 import '../widgets/custome_textfield.dart';
 
-class CreateReportScreen extends StatefulWidget {
+class displayReport extends StatefulWidget {
   final String locationId;
   final String locationName;
   final String companyID;
@@ -30,7 +30,7 @@ class CreateReportScreen extends StatefulWidget {
   bool buttonEnable;
   final String SearchId;
 
-  CreateReportScreen({
+  displayReport({
     Key? key,
     required this.locationId,
     required this.locationName,
@@ -45,10 +45,10 @@ class CreateReportScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CreateReportScreen> createState() => _CreateReportScreenState();
+  State<displayReport> createState() => _CreateReportScreenState();
 }
 
-class _CreateReportScreenState extends State<CreateReportScreen> {
+class _CreateReportScreenState extends State<displayReport> {
   bool shouldShowButton = false;
   List<String> imageUrls = [];
   List<Map<String, dynamic>> DisplayIMage = [];
@@ -86,72 +86,39 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   void getAllReports() async {
-    if (widget.SearchId.isNotEmpty) {
-      Map<String, dynamic>? data =
-          (await fireStoreService.getReportWithSearchId(widget.SearchId));
-      if (data != null) {
+    Map<String, dynamic>? data =
+        (await fireStoreService.getReportWithId(widget.reportId))!;
+    if (data != null) {
+      setState(() {
+        reportData = data;
+        isChecked = reportData['ReportIsFollowUpRequired'];
+        titleController.text = reportData['ReportName'];
+        explainController.text = reportData['ReportData'];
+        dropdownValue = reportData['ReportCategoryName'];
+        // uploads.add(reportData['ReportImage']);
+      });
+      if (reportData['ReportIsFollowUpRequired'] == false) {
         setState(() {
-          reportData = data;
-          isChecked = reportData['ReportIsFollowUpRequired'];
-          titleController.text = reportData['ReportName'];
-          explainController.text = reportData['ReportData'];
-          dropdownValue = reportData['ReportCategoryName'];
-          // uploads.add(reportData['ReportImage']);
+          shouldShowButton = false;
         });
-        if (reportData['ReportIsFollowUpRequired'] == false) {
-          setState(() {
-            shouldShowButton = false;
-          });
-        } else {
-          setState(() {
-            shouldShowButton = true;
-          });
-        }
-        if (reportData['ReportImage'] != null) {
-          // Add existing report images URLs to uploads list
-          for (var imageUrl in reportData['ReportImage']) {
-            setState(() {
-              DisplayIMage.add({'type': 'image', 'url': imageUrl});
-            });
-          }
-        }
-        print(reportData['ReportIsFollowUpRequired']);
-      }
-    } else {
-      Map<String, dynamic>? data =
-          (await fireStoreService.getReportWithId(widget.reportId));
-      if (data != null) {
-        setState(() {
-          reportData = data;
-          isChecked = reportData['ReportIsFollowUpRequired'];
-          titleController.text = reportData['ReportName'];
-          explainController.text = reportData['ReportData'];
-          dropdownValue = reportData['ReportCategoryName'];
-          // uploads.add(reportData['ReportImage']);
-        });
-        if (reportData['ReportIsFollowUpRequired'] == false) {
-          setState(() {
-            shouldShowButton = false;
-          });
-        } else {
-          setState(() {
-            shouldShowButton = true;
-          });
-        }
-        if (reportData['ReportImage'] != null) {
-          // Add existing report images URLs to uploads list
-          for (var imageUrl in reportData['ReportImage']) {
-            setState(() {
-              DisplayIMage.add({'type': 'image', 'url': imageUrl});
-            });
-          }
-        }
-        print(reportData['ReportIsFollowUpRequired']);
       } else {
         setState(() {
           shouldShowButton = true;
         });
       }
+      if (reportData['ReportImage'] != null) {
+        // Add existing report images URLs to uploads list
+        for (var imageUrl in reportData['ReportImage']) {
+          setState(() {
+            DisplayIMage.add({'type': 'image', 'url': imageUrl});
+          });
+        }
+      }
+      print(reportData['ReportIsFollowUpRequired']);
+    } else {
+      setState(() {
+        shouldShowButton = true;
+      });
     }
     print("Report Data for ${widget.reportId} $reportData");
   }

@@ -143,7 +143,7 @@ class _CalendarPageState extends State<CalendarPage> {
               eventBuilder: (drawer) => EventWidget(drawer: drawer),
               onDayClicked: _showDayEventsInModalSheet,
               minDate: DateTime.now().subtract(const Duration(days: 1000)),
-              maxDate: DateTime.now().add(const Duration(days: 180)),
+              maxDate: DateTime(DateTime.now().year + 1, DateTime.now().month + 2, DateTime.now().day),
             ),
           ),
         ],

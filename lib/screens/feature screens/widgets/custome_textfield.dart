@@ -12,10 +12,11 @@ class CustomeTextField extends StatelessWidget {
     this.showIcon = true,
     this.isEnabled = true,
     this.controller,
-    this.textInputType,
+    this.textInputType, this.maxlength,
   });
 
   final String hint;
+  final int? maxlength;
   final bool isExpanded;
   final bool showIcon;
   final bool isEnabled;
@@ -48,6 +49,7 @@ class CustomeTextField extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              maxLength: maxlength,
               controller: controller,
               maxLines: isExpanded ? null : 1,
               // keyboardType: Key,

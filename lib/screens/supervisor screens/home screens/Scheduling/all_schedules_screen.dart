@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -155,12 +156,16 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         supervisorEmail: '',
                       )));
             },
-            child: Icon(Icons.add),
+            child: Icon(
+              Icons.add,
+              size: width / width20,
+            ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
-          padding: EdgeInsets.only(left: width / width30, right: width / width30),
+          padding:
+              EdgeInsets.only(left: width / width30, right: width / width30),
           child: CustomScrollView(
             physics: PageScrollPhysics(),
             slivers: [
@@ -177,7 +182,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     SizedBox(height: height / height24),
                     Container(
                       height: height / height64,
-                      padding: EdgeInsets.symmetric(horizontal: width / width10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: width / width10),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(width / width13),
@@ -235,7 +241,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     DateTime date = groupedSchedules.keys.elementAt(index);
                     List<DocumentSnapshot> schedulesForDate = groupedSchedules[date]!;
 
@@ -315,13 +321,16 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                     right: width / width24,
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
                                         width: width / width100,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterRegular(
                                               text: 'Guards',
@@ -370,7 +379,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     SizedBox(
                                                       height: height / height14,
                                                       width: width / width14,
-                                                      child: SvgPicture.asset('assets/images/calendar_line.svg'),
+                                                      child: SvgPicture.asset(
+                                                          'assets/images/calendar_line.svg'),
                                                     ),
                                                     SizedBox(width: width / width6),
                                                     InterMedium(

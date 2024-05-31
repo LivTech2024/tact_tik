@@ -9,6 +9,10 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
+import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
@@ -53,7 +57,6 @@ class MyApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        // home: AllSchedulesScreen(CompanyId: 'aSvLtwII6Cjs7uCISBRR', BranchId: '9tgQzYBJTL3QqJKe34eJ'),
         home: AuthChecker(),
         // OfflineBuilder(
         //   connectivityBuilder: (

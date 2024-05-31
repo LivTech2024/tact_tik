@@ -630,16 +630,23 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                               child: GestureDetector(
                                 onTap: () {
-                                  NavigateScreen(
-                                      ClientCheckPatrolScreen(
-                                        PatrolIdl: '',
-                                      ),
-                                      context);
-                                  NavigateScreen(
-                                      ClientCheckPatrolScreen(
-                                        PatrolIdl: PatrolId,
-                                      ),
-                                      context);
+                                  // NavigateScreen(
+                                  //     ClientCheckPatrolScreen(
+                                  //       PatrolIdl: '',
+                                  //     ),
+                                  //     context);
+                                  print("Clicked");
+                                  // NavigateScreen(
+                                  //     ClientCheckPatrolScreen(
+                                  //       PatrolIdl: PatrolId,
+                                  //     ),
+                                  //     context);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClientCheckPatrolScreen(
+                                                  PatrolIdl: PatrolId)));
                                 },
                                 child: Container(
                                   height: height / height160,
