@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -15,6 +16,7 @@ import '../../../utils/colors.dart';
 
 class VisiTorsScreen extends StatefulWidget {
   final String locationId;
+
   const VisiTorsScreen({Key? key, required this.locationId});
 
   @override
@@ -41,9 +43,6 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -59,7 +58,10 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
           },
           backgroundColor: Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add),
+          child: Icon(
+            Icons.add,
+            size: 24.sp,
+          ),
         ),
         body: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
@@ -86,9 +88,9 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                     icon: Icon(
                       Icons.arrow_back_ios,
                       color: Colors.white,
-                      size: width / width24,
+                      size: 24.sp,
                     ),
-                    padding: EdgeInsets.only(left: width / width20),
+                    padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
                       Navigator.pop(context);
                       print(
@@ -97,7 +99,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                   ),
                   title: InterRegular(
                     text: 'Visitors',
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                     color: Colors.white,
                     letterSpacing: -0.3,
                   ),
@@ -106,20 +108,20 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width20),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: height / height30,
+                          height: 30.h,
                         ),
                         InterBold(
                           text: 'Today',
-                          fontsize: width / width20,
+                          fontsize: 20.sp,
                           color: Primarycolor,
                         ),
                         SizedBox(
-                          height: height / height30,
+                          height: 30.h,
                         ),
                       ],
                     ),
@@ -166,16 +168,13 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                   );
                                 },
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / width20),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Container(
-                              height: width / width120,
+                              height: 120.h,
                               width: double.maxFinite,
-                              margin:
-                                  EdgeInsets.only(bottom: height / height16),
+                              margin: EdgeInsets.only(bottom: 16.h),
                               decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(width / width10),
+                                borderRadius: BorderRadius.circular(10.r),
                                 color: WidgetColor,
                               ),
                               child: Column(
@@ -184,8 +183,8 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                     flex: 2,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width / width10,
-                                        vertical: height / height10,
+                                        horizontal: 10.w,
+                                        vertical: 10.h,
                                       ),
                                       child: Row(
                                         crossAxisAlignment:
@@ -196,28 +195,30 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                           Row(
                                             children: [
                                               Container(
-                                                width: width / width40,
-                                                height: height / height40,
+                                                width: 40.w,
+                                                height: 40.h,
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
+                                                      BorderRadius.circular(
+                                                          10.r),
                                                   color: Primarycolorlight,
                                                 ),
                                                 child: Center(
                                                   child: SvgPicture.asset(
                                                     'assets/images/man.svg',
-                                                    height: height / height20,
+                                                    height: 20.h,
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(width: width / width20,),
                                               SizedBox(
-                                                width: width / width120,
+                                                width: 20.w,
+                                              ),
+                                              SizedBox(
+                                                width: 120.w,
                                                 child: InterMedium(
                                                   text: visitorName,
                                                   color: color1,
-                                                  fontsize: width / width16,
+                                                  fontsize: 16.sp,
                                                   maxLines: 1,
                                                 ),
                                               ),
@@ -233,14 +234,14 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                 children: [
                                                   InterBold(
                                                     text: 'in time',
-                                                    fontsize: width / width10,
+                                                    fontsize: 10.sp,
                                                     color: color4,
                                                   ),
                                                   SizedBox(
-                                                      width: width / width6),
+                                                      width: 6.w),
                                                   InterMedium(
                                                     text: inTime,
-                                                    fontsize: width / width12,
+                                                    fontsize: 12.sp,
                                                     color: color3,
                                                   )
                                                 ],
@@ -249,14 +250,14 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                 children: [
                                                   InterBold(
                                                     text: 'out time',
-                                                    fontsize: width / width10,
+                                                    fontsize: 10.sp,
                                                     color: color4,
                                                   ),
                                                   SizedBox(
-                                                      width: width / width6),
+                                                      width: 6.w),
                                                   InterMedium(
                                                     text: outTime,
-                                                    fontsize: width / width12,
+                                                    fontsize: 12.sp,
                                                     color: color3,
                                                   )
                                                 ],
@@ -271,14 +272,14 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                     flex: 2,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: width / width10),
+                                          horizontal: 10.w),
                                       decoration: BoxDecoration(
                                         color: colorRed,
                                         borderRadius: BorderRadius.only(
                                           bottomLeft:
-                                              Radius.circular(width / width10),
+                                              Radius.circular(10.r),
                                           bottomRight:
-                                              Radius.circular(width / width10),
+                                              Radius.circular(10.r),
                                         ),
                                       ),
                                       child: Row(
@@ -290,13 +291,13 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                           InterSemibold(
                                             text: 'Location',
                                             color: color1,
-                                            fontsize: width / width14,
+                                            fontsize: 14.sp,
                                           ),
                                           SizedBox(
-                                            width: width / width200,
+                                            width: 200.w,
                                             child: InterRegular(
                                               text: location,
-                                              fontsize: width / width12,
+                                              fontsize: 12.sp,
                                               color: color2,
                                             ),
                                           )

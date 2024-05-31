@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
@@ -1180,9 +1181,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       context);
                                 },
                                 child: Container(
-                                  height: height / height80,
+                                  height: 76.h,
                                   margin: EdgeInsets.only(
-                                    top: height / height10,
+                                    bottom: 23.h,
                                   ),
                                   width: double.maxFinite,
                                   decoration: BoxDecoration(
@@ -1195,30 +1196,28 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     // color: WidgetColor,
                                   ),
                                   padding: EdgeInsets.symmetric(
-                                    vertical: height / height20,
+                                    vertical: 7.h,
                                   ),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     // mainAxisAlignment:
                                     //     MainAxisAlignment
                                     //         .spaceBetween,
                                     children: [
                                       NewMessage
                                           ? Container(
-                                              height: height / height10,
-                                              width: width / width10,
-                                              decoration: BoxDecoration(
-                                                color: Colors.green,
-                                                shape: BoxShape.circle,
-                                              ),
-                                            )
+                                        height: 11.h,
+                                        width: 11.w,
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      )
                                           : SizedBox(),
                                       Container(
-                                        margin: EdgeInsets.only(
-                                            left: width / width6),
-                                        height: height / height40,
-                                        width: width / width40,
+                                        margin: EdgeInsets.only(left: 9.w),
+                                        height: 45.h,
+                                        width: 45.w,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
@@ -1230,20 +1229,21 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: width / width10,
+                                        width: 12.w,
                                       ),
                                       SizedBox(
-                                        width: width / width300,
+                                        width: 300.w,
                                         child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                               children: [
                                                 InterRegular(
                                                   text: 'Supervisor',
-                                                  fontsize: width / width16,
+                                                  fontsize: 17.sp,
                                                   color: color1,
                                                 ),
                                                 Row(
@@ -1252,23 +1252,25 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     PoppinsRegular(
                                                       text: '9:36 AM',
                                                       color: color3,
-                                                      fontsize: width / width14,
+                                                      fontsize: 15.sp,
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,
                                                       color: color1,
-                                                      size: width / width18,
+                                                      size: 15.sp,
                                                     )
                                                   ],
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: height / height5),
+                                            SizedBox(
+                                              height: 4.h,
+                                            ),
                                             Flexible(
                                               child: InterRegular(
                                                 text:
-                                                    'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                                fontsize: width / width14,
+                                                'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                fontsize: 15.sp,
                                                 color: color3,
                                               ),
                                             ),

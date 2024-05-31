@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -52,8 +53,6 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -67,9 +66,9 @@ class _LogBookScreenState extends State<LogBookScreen> {
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.white,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
@@ -77,7 +76,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
               ),
               title: InterRegular(
                 text: 'LogBook',
-                fontsize: width / width18,
+                fontsize: 18.sp,
                 color: Colors.white,
                 letterSpacing: -.3,
               ),
@@ -86,7 +85,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
             ),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: height / height30,
+                height: 30.h,
               ),
             ),
             StreamBuilder<QuerySnapshot>(
@@ -100,7 +99,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
                 if (!snapshot.hasData) {
                   return SliverToBoxAdapter(
-                    child: Center(child: InterMedium(text: 'Loading...' , color: Primarycolor,fontsize: width / width18,)),
+                    child: Center(child: InterMedium(text: 'Loading...' , color: Primarycolor,fontsize: 18.sp,)),
                   );
                 }
 
@@ -213,11 +212,9 @@ class _LogBookWidgetState extends State<LogBookWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width / width30),
+      padding: EdgeInsets.symmetric(horizontal: 30.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,12 +226,12 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               });
             },
             child: Container(
-              margin: EdgeInsets.only(top: height / height10),
-              padding: EdgeInsets.symmetric(horizontal: width / width20),
-              height: height / height70,
+              margin: EdgeInsets.only(top: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              height: 70.h,
               width: double.maxFinite,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(width / width10),
+                borderRadius: BorderRadius.circular(10.r),
                 color: WidgetColor,
               ),
               child: Row(
@@ -243,13 +240,13 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                   InterBold(
                     text: widget.date,
                     color: Primarycolor,
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                   ),
                   Icon(
                     expand
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
-                    size: width / width24,
+                    size: 24.sp,
                     color: Primarycolor,
                   )
                 ],
@@ -258,11 +255,11 @@ class _LogBookWidgetState extends State<LogBookWidget> {
           ),
           if (expand)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: height / height10),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               // child: Flexible(
               child: InterBold(
                 text: widget.shiftName,
-                fontsize: width / width18,
+                fontsize: 18.sp,
                 color: Primarycolor,
               ),
             ),

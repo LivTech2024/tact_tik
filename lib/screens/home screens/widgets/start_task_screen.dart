@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
@@ -442,32 +443,30 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: height / height200,
+          height: 170.h,
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
-          padding: EdgeInsets.only(
-              left: width / width26,
-              top: height / height10,
-              right: width / width12),
+          padding: EdgeInsets.only(left: 26.w,  right: 12.47.w , bottom: 10.h),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [
                   InterBold(
                     text: widget.ShiftDate,
                     color: color1,
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                   ),
                   SizedBox(
-                    width: width / width12,
+                    width: 12.w,
                   ),
                   Bounce(
                     child: IconButton(
                       onPressed: () {},
                       icon: Icon(
                         Icons.contact_support_outlined,
-                        size: width / width20,
+                        size: 20.sp,
                       ),
                       padding: EdgeInsets.zero,
                     ),
@@ -476,69 +475,70 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               ),
               // SizedBox(height: height / height10),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: width / width100,
+                    width: 97.67.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'In time',
-                          fontsize: width / width14,
+                          fontsize: 28.sp,
                           color: color1,
                         ),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 12.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
-                          fontsize: width / width16,
+                          fontsize: 18.99.sp,
                           color: color7,
                         ),
                         SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
-                                text: isLate ? "Late $lateTime" : "",
+                                text: isLate ? "Late $lateTime" : '',
                                 color: Colors.redAccent,
-                                fontsize: width / width12,
+                                fontsize: 14.sp,
                               )
                             : const SizedBox(),
                       ],
                     ),
                   ),
                   SizedBox(
-                    width: width / width100,
+                    width: 119.47.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'Out time',
-                          fontsize: width / width14,
+                          fontsize: 28.sp,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftEndTime,
-                          fontsize: width / width16,
+                          fontsize: 18.99.sp,
                           color: color7,
                         ),
                         SizedBox(height: height / height20),
                         InterSemibold(
                           text: remainingTimeFormatted,
                           color: color8,
-                          fontsize: width / width12,
+                          fontsize: 14.sp,
                         )
                       ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(right: width / width12),
-                    height: height / height74,
-                    width: width / width70,
+                    margin: EdgeInsets.only(right: 17.66.w),
+                    height: 74.81.h,
+                    width: 71.68.w,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/log_book.png'),
-                        fit: BoxFit.fitHeight,
+                        // fit: BoxFit.fitWidth,
                         filterQuality: FilterQuality.high,
                       ),
                     ),
@@ -1040,7 +1040,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
-        SizedBox(height: height / height10),
+        SizedBox(height: 10.h),
         clickedIn
             ? Button1(
                 height: height / height65,
@@ -1117,7 +1117,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 },
               )
             : const SizedBox(),
-        SizedBox(height: height / height10),
+        SizedBox(height: 10.h),
+        // SizedBox(height: height / height10),
         IgnorePointer(
           ignoring: !clickedIn,
           child: Button1(
