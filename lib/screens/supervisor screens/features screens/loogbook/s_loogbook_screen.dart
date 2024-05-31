@@ -127,8 +127,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                       childCount: groups.length,
                     ),
                   );
-                }
-                else {
+                } else {
                   return Center(
                     child: InterMedium(
                       text: 'No Logs Generated For\n${widget.empName}',
