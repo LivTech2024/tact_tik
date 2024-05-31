@@ -972,8 +972,14 @@ class FireStoreService {
                 endTime = endTime.add(Duration(days: 1));
               }
 
-              if (Timestamp.now().toDate().isAfter(startTime) &&
-                  Timestamp.now().toDate().isBefore(endTime)) {
+              // if (Timestamp.now().toDate().isAfter(startTime) &&
+              //     Timestamp.now().toDate().isBefore(endTime)) {
+              if ((StartTime.toDate().isBefore(endTime) &&
+                      StartTime.toDate().isAfter(startTime)) ||
+                  (EndTime.toDate().isBefore(endTime) &&
+                      EndTime.toDate().isAfter(startTime)) ||
+                  (StartTime.toDate().isBefore(startTime) &&
+                      EndTime.toDate().isAfter(endTime))) {
                 print("PatrolData ${patrolData}");
                 String PatrolName = patrolData['PatrolName'];
                 List<dynamic> checkpoints = patrolData['PatrolCheckPoints'];
@@ -999,8 +1005,8 @@ class FireStoreService {
                   }
                 }
                 print(imageUrls);
-                String updateString =
-                    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('hh:mm a').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('hh:mm a').format(EndTime.toDate())}";
+            String updateString = 
+    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('HH:mm').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('HH:mm').format(EndTime.toDate())}";
                 tile['TileContent'] = updateString;
                 empDarTiles[i] = tile;
                 print('Updated Tile at index $i: $tile');

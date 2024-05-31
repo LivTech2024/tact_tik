@@ -270,7 +270,7 @@ class HomeScreenPart1 extends StatelessWidget {
                         print(
                             'home screen search bar############################################');
                         print(value.name);
-                        switch(value){
+                        switch (value) {
                           case 'Site Tours':
                             // showDialog(
                             //   context: context,

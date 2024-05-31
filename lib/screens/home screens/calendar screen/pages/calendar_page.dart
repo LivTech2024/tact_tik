@@ -258,8 +258,8 @@ class _CalendarPageState extends State<CalendarPage> {
     final events = snapshot.docs.map((doc) {
       final data = doc.data();
       final name = data['ShiftName'] as String;
-      final begin = (data['ShiftCreatedAt'] as Timestamp).toDate();
-      final end = (data['ShiftCreatedAt'] as Timestamp).toDate();
+      final begin = (data['ShiftDate'] as Timestamp).toDate();
+      final end = (data['ShiftDate'] as Timestamp).toDate();
       final shiftStartTime = data['ShiftStartTime'];
       final shiftEndTime = data['ShiftEndTime'];
       final shiftLocationName = data['ShiftLocationName'] ?? "location";
@@ -290,7 +290,7 @@ class _CalendarPageState extends State<CalendarPage> {
           shiftId: shiftId,
           isAssignedToCurrentUser: isAssignedToCurrentUser,
           isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
-          eventColor: isAssignedToCurrentUser ? Colors.green : Colors.red,
+          eventColor: isShiftAcknowledgedByEmployee ? Colors.green : Colors.red,
           location: shiftLocationName);
     }).toList();
 
