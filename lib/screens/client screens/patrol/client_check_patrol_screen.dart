@@ -140,9 +140,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                   GestureDetector(
                     onTap: () {
                       final DateTime startTime =
-                      DateTime.fromMillisecondsSinceEpoch(patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
+                          DateTime.fromMillisecondsSinceEpoch(
+                              patrol['PatrolLogStartedAt']
+                                  .millisecondsSinceEpoch);
                       final DateTime endTime =
-                      DateTime.fromMillisecondsSinceEpoch(patrol['PatrolLogEndedAt'].millisecondsSinceEpoch);
+                          DateTime.fromMillisecondsSinceEpoch(
+                              patrol['PatrolLogEndedAt']
+                                  .millisecondsSinceEpoch);
 
                       NavigateScreen(
                         ClientOpenPatrolScreen(

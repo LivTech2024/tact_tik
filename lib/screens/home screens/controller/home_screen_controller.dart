@@ -8,6 +8,7 @@ import 'package:background_locator_2/settings/locator_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import '../../../services/BackgroundLocationService/location_callback_handler.dart';
 import '../../../services/BackgroundLocationService/location_service_repo.dart';
 
@@ -74,6 +75,7 @@ class HomeScreenController extends GetxController {
       // isRunning = _isRunning;
       // lastLocation = null;
     } else {
+      print("Location permission Error");
       // show error
     }
     // } catch (e) {
@@ -83,6 +85,7 @@ class HomeScreenController extends GetxController {
 
   Future<bool> _checkLocationPermission() async {
     var status = await Permission.locationWhenInUse.request();
+    await Permission.notification.request();
     if (status.isGranted) {
       var statusAlways = await Permission.locationAlways.request();
       if (statusAlways.isGranted) {
@@ -103,7 +106,7 @@ class HomeScreenController extends GetxController {
         iosSettings: const IOSSettings(
             accuracy: LocationAccuracy.NAVIGATION,
             distanceFilter: 0,
-            stopWithTerminate: true),
+            stopWithTerminate: false),
         autoStop: false,
         androidSettings: const AndroidSettings(
             accuracy: LocationAccuracy.NAVIGATION,

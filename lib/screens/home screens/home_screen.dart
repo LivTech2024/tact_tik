@@ -215,8 +215,11 @@ class _HomeScreenState extends State<HomeScreen> {
           IconColors[3] = color21;
           ScreenIndex = 0;
           // CalendarScreen
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CalendarScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CalendarScreen(
+                      companyId: _employeeCompanyID, employeeId: _employeeId)));
 
           break;
         case 3:

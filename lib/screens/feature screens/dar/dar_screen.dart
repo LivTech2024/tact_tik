@@ -113,7 +113,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               final documents = snapshot.data?.docs;
               if (documents == null || documents.isEmpty) {
                 return Center(
-                  child: Text('No DAR entries found.'),
+                  child: Text('No DAR entries found.',
+                      style: TextStyle(color: Colors.white)),
                 );
               }
 
@@ -337,7 +338,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               );
             } else if (snapshot.hasError) {
               return Center(
-                child: Text('Error loading DAR entries.'),
+                child: Text(
+                  'Error loading DAR entries.',
+                  style: TextStyle(color: Colors.white),
+                ),
               );
             } else {
               return Center(

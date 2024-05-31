@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +21,7 @@ class ClientOpenPatrolScreen extends StatelessWidget {
   final int patrolLogCount;
   final String status;
   final String feedback;
-  final List<Map<String, dynamic>> checkpoints;
+  final List<dynamic> checkpoints;
   ClientOpenPatrolScreen(
       {super.key,
       required this.guardName,
@@ -323,15 +324,20 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     final checkpointData = checkpoints[index];
-                    final checkpointName = checkpointData['CheckPointName'] ?? '';
-                    final checkpointStatus = checkpointData['CheckPointStatus'] ?? '';
-                    final checkpointReportedAt = checkpointData['CheckPointReportedAt'];
-                    final checkpointComment = checkpointData['CheckPointComment'] ?? '';
-                    final checkpointImages = checkpointData['CheckPointImage'] ?? [];
+                    final checkpointName =
+                        checkpointData['CheckPointName'] ?? '';
+                    final checkpointStatus =
+                        checkpointData['CheckPointStatus'] ?? '';
+                    final checkpointReportedAt =
+                        checkpointData['CheckPointReportedAt'];
+                    final checkpointComment =
+                        checkpointData['CheckPointComment'] ?? '';
+                    final checkpointImages =
+                        checkpointData['CheckPointImage'] ?? [];
 
                     final reportedAtTime = checkpointReportedAt != null
                         ? DateFormat('hh:mm a').format(
-                        DateTime.fromMillisecondsSinceEpoch(checkpointReportedAt))
+                            (checkpointReportedAt as Timestamp).toDate())
                         : '';
 
                     return GestureDetector(
@@ -353,7 +359,8 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                           color: WidgetColor,
                           borderRadius: BorderRadius.circular(width / width10),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: width / width20),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: width / width20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -363,7 +370,9 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                   height: height / height12,
                                   width: width / width12,
                                   decoration: BoxDecoration(
-                                    color: checkpointStatus == 'unchecked' ? Colors.green : Colors.red,
+                                    color: checkpointStatus == 'unchecked'
+                                        ? Colors.green
+                                        : Colors.red,
                                     shape: BoxShape.circle,
                                   ),
                                 ),

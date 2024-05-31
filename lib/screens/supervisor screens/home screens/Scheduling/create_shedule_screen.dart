@@ -388,21 +388,29 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   Future<void> callPdfApi(String base64Image) async {
-    final url = Uri.parse('https://yakpdf.p.rapidapi.com/pdf');
+    final url = Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf');
 
     final headers = {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': '08788b2125msh872c59eba317b7fp15e98ajsnb0a96ec9fb5d',
-      'X-RapidAPI-Host': 'yakpdf.p.rapidapi.com',
+      'Content-Type': 'application/json',
     };
 
+    final htmlContent = '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+      <h1>TASK QR CODE!</h1>
+      <img src="data:image/png;base64,$base64Image"/>
+    </body>
+    </html>
+  ''';
+
     final body = jsonEncode({
-      'source': {
-        'html':
-            '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><h1>Hello World!</h1><img src="data:image/png;base64,$base64Image"/></body></html>'
-      },
-      'pdf': {'format': 'A4', 'scale': 1, 'printBackground': true},
-      'wait': {'for': 'navigation', 'waitUntil': 'load', 'timeout': 2500}
+      'html': htmlContent,
+      'file_name': 'TaskQR.pdf',
     });
 
     final response = await http.post(
@@ -412,45 +420,61 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
 
     if (response.statusCode == 200) {
-      final pdfPath = await _savePdfFile(response.bodyBytes);
       final pdfBase64 = base64Encode(response.bodyBytes);
       await sendEmail({
-        'user_email': widget.supervisorEmail,
-        'message': pdfBase64,
+        'to_email': widget.supervisorEmail,
+        'subject': 'Task QR Code',
+        'from_name': 'Company',
+        'html': '',
+        'pdfFile': pdfBase64,
       });
     } else {
-      print(
-          'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+      print('Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
     }
   }
 
   Future<String> _savePdfFile(Uint8List pdfBytes) async {
-    final directory = await getExternalStorageDirectory();
-    final path = '${directory!.path}/generated_pdf.pdf';
+    final directory = await getApplicationDocumentsDirectory();
+    final path = '${directory.path}/security_report.pdf';
     final file = File(path);
     await file.writeAsBytes(pdfBytes);
-    print("PDF saved at: $path");
-    OpenFile.open(path);
     return path;
   }
 
   Future<bool> sendEmail(dynamic templateParams) async {
     try {
-      await EmailJS.send(
-        'service_6mmak1z',
-        'template_lm9ftk9',
-        templateParams,
-        Options(
-          publicKey: 'DAtUR9kGOvEyWhbq-',
-          privateKey: 'RLNEcycnFNHoR4oPXIXUN',
-        ),
+      final toEmail = templateParams['to_email'];
+      final subject = templateParams['subject'];
+      final fromName = templateParams['from_name'];
+      final htmlContent = templateParams['html'];
+      final pdfFile = templateParams['pdfFile'];
+
+      final response = await http.post(
+        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'to_email': toEmail,
+          'subject': subject,
+          'from_name': fromName,
+          'html': htmlContent,
+          'attachments': [
+            {
+              'filename': 'taskQR.pdf',
+              'content': pdfFile,
+              'contentType': 'application/pdf',
+            }
+          ],
+        }),
       );
-      print('SUCCESS!');
-      return true;
-    } catch (error) {
-      if (error is EmailJSResponseStatus) {
-        print('ERROR... ${error.status}: ${error.text}');
+
+      if (response.statusCode == 200) {
+        print('SUCCESS!');
+        return true;
+      } else {
+        print('ERROR... ${response.statusCode}: ${response.body}');
+        return false;
       }
+    } catch (error) {
       print(error.toString());
       return false;
     }

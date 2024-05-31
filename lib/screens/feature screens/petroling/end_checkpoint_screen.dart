@@ -32,6 +32,7 @@ class EndCheckpointScreen extends StatefulWidget {
   final String LocationId;
   final String ShiftName;
   final String description;
+  final String ShiftDate;
 
 //  widget.PatrolCompanyID,
 //                               "",
@@ -55,6 +56,7 @@ class EndCheckpointScreen extends StatefulWidget {
     required this.LocationId,
     required this.ShiftName,
     required this.description,
+    required this.ShiftDate,
   });
 
   @override
@@ -391,7 +393,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                             widget.EmpId,
                             widget.EmpName,
                             widget.CompletedCount + 1,
-                            formattedStartDate,
+                            widget.ShiftDate,
                             patrolInTimestamp,
                             patrolOutTimestamp,
                             Controller.text,
@@ -457,27 +459,27 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                             widget.LocationId,
                             widget.ShiftName);
                         num newCount = widget.CompletedCount;
-                        // sendapiEmail(
-                        //     emails,
-                        //     selectedOption == "Emergency"
-                        //         ? "Urgent Update for ${widget.description} Date:- ${formattedStartDate} "
-                        //         : "Patrol update for ${widget.description} Date:- ${formattedStartDate}",
-                        //     widget.EmpName,
-                        //     "",
-                        //     'Shift ',
-                        //     formattedStartDate,
-                        //     formattedImageUrls,
-                        //     widget.EmpName,
-                        //     InTime,
-                        //     formattedEndTime,
-                        //     widget.CompletedCount + 1,
-                        //     widget.PatrolRequiredCount.toString(),
-                        //     widget.description,
-                        //     "Completed",
-                        //     InTime,
-                        //     formattedPatrolOutTime,
-                        //     Controller.text,
-                        //     selectedOption);
+                        sendapiEmail(
+                            emails,
+                            selectedOption == "Emergency"
+                                ? "Urgent Update for ${widget.description} Date:- ${formattedStartDate} "
+                                : "Patrol update for ${widget.description} Date:- ${formattedStartDate}",
+                            widget.EmpName,
+                            "",
+                            'Shift ',
+                            formattedStartDate,
+                            formattedImageUrls,
+                            widget.EmpName,
+                            InTime,
+                            formattedEndTime,
+                            widget.CompletedCount + 1,
+                            widget.PatrolRequiredCount.toString(),
+                            widget.description,
+                            "Completed",
+                            InTime,
+                            formattedPatrolOutTime,
+                            Controller.text,
+                            selectedOption);
                         setState(() {
                           _isLoading = false;
                         });

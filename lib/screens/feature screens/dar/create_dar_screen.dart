@@ -11,6 +11,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
@@ -52,6 +53,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   String _empEmail = 'ys146228@gmail.com';
   String _employeeImg = '';
   List<dynamic> localdarTiles = [];
+  String ReportId = "";
+  String ReportName = "";
 
   @override
   void initState() {
@@ -72,7 +75,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       imageUrls =
           List<String>.from(widget.darTiles[widget.index]['TileImages']);
     }
-    // _getUserInfo();
+    // _getUserInfo();  TileReporSearchtId
+
+    if (widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TileReportSearchId'] != null) {
+      setState(() {
+        ReportId = widget.darTiles[widget.index]['TileReportSearchId'];
+      });
+    }
+    if (widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TileReportName'] != null) {
+      setState(() {
+        ReportName = widget.darTiles[widget.index]['TileReportName'];
+      });
+    }
   }
 
   FireStoreService fireStoreService = FireStoreService();
@@ -194,68 +210,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     });
   }
 
-  // void submitDarTileData() async {
-  //   final date = widget.darTiles[widget.index]['TileTime'];
-  //   await _uploadImages();
-  //   final data = {
-  //     'TileTime': date,
-  //     'TileContent': _darController.text,
-  //     'TileImages': imageUrls,
-  //     'TileLocation': _titleController.text,
-  //   };
-  //   print("data ${data}");
-  //   widget.darTiles.removeAt(widget.index);
-  //   widget.darTiles.insert(widget.index, data);
-  //   localdarTiles.add(data);
-  //   print("Updated ${widget.darTiles}");
-  //   try {
-  //     final user = FirebaseAuth.instance.currentUser;
-  //     // if (user != null) {
-  //     // await _getUserInfo();
-  //     final String employeeId = _employeeId;
-  //     print("employeeId: $employeeId");
-
-  //     final CollectionReference employeesDARCollection =
-  //         FirebaseFirestore.instance.collection('EmployeesDAR');
-
-  //     final QuerySnapshot querySnapshot = await employeesDARCollection
-  //         .where('EmpDarEmpId', isEqualTo: widget.EmployeeId)
-  //         .get();
-  //     print(querySnapshot.docs);
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       DocumentReference? docRef;
-  //       final date = DateTime.now();
-  //       bool isDarlistPresent = false;
-
-  //       for (var dar in querySnapshot.docs) {
-  //         final data = dar.data() as Map<String, dynamic>;
-  //         print("data ${data}");
-  //         final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
-  //         if (date2[0] == date.day &&
-  //             date2[1] == date.month &&
-  //             date2[2] == date.year) {
-  //           if (data['EmpDarTile'] != null) {
-  //             isDarlistPresent = true;
-  //           }
-  //         }
-  //         docRef = dar.reference;
-  //       }
-
-  //       if (docRef != null) {
-  //         await docRef
-  //             .set({'EmpDarTile': widget.darTiles}, SetOptions(merge: true));
-  //       }
-  //     } else {
-  //       print('No document found with the matching _employeeId.');
-  //     }
-  //     // } else {
-  //     //   print('User is not logged in.');
-  //     // }
-  //   } catch (e) {
-  //     print('Error creating blank DAR cards: $e');
-  //   }
-  // }
-
   void submitDarTileData() async {
     setState(() {
       _isSubmitting = true;
@@ -268,16 +222,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       'TileContent': _darController.text,
       'TileImages': imageUrls,
       'TileLocation': _titleController.text,
+      'TileReportSearchId': ReportId.isNotEmpty
+          ? ReportId
+          : widget.darTiles[widget.index]['TileReportSearchId'] ?? "",
+      'TileReportName': ReportName.isNotEmpty
+          ? ReportName
+          : widget.darTiles[widget.index]['TileReportName'] ?? "",
     };
-    print("data ${data}");
+    print("data $data");
     widget.darTiles.removeAt(widget.index);
     widget.darTiles.insert(widget.index, data);
     localdarTiles.add(data);
     print("Updated ${widget.darTiles}");
     try {
       final user = FirebaseAuth.instance.currentUser;
-      // if (user != null) {
-      // await _getUserInfo();
       final String employeeId = _employeeId;
       print("employeeId: $employeeId");
 
@@ -298,13 +256,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           final data = dar.data() as Map<String, dynamic>;
           print("data ${data}");
           final date2 = UtilsFuctions.convertDate(data['EmpDarCreatedAt']);
-          // if (date2[0] == date.day &&
-          //     date2[1] == date.month &&
-          //     date2[2] == date.year) {
           if (data['EmpDarTile'] != null) {
             isDarlistPresent = true;
           }
-          // }
           docRef = dar.reference;
         }
 
@@ -317,9 +271,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       } else {
         print('No document found with the matching _employeeId.');
       }
-      // } else {
-      //   print('User is not logged in.');
-      // }
       setState(() {
         _isLoading = false;
         _isSubmitting = true;
@@ -542,66 +493,72 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         },
                       ),
                     SizedBox(height: height / height20),
-                    InterBold(
-                      text: 'Reports',
-                      fontsize: width / width20,
-                      color: Primarycolor,
-                    ),
-                    SizedBox(height: height / height10),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 2,
-                      itemBuilder: (context, index) {
-                        // final hourKey = reportsByHour.keys.toList()[index];
-                        // final reportsForHour = reportsByHour[hourKey] ?? [];
-                        // var data = reportsByHour;
-                        return GestureDetector(
-                          onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => CreateReportScreen(
-                            //         locationId: '',
-                            //         locationName: '',
-                            //         companyID: '',
-                            //         empId: widget.Empid,
-                            //         empName: widget.Username,
-                            //         ClientId: '',
-                            //         reportId: '',
-                            //         buttonEnable: false,
-                            //         ShiftId: 'widget.shifID',
-                            //         SearchId: '', //Need to Work Here
-                            //       ),
-                            //     ));
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(
-                                bottom: height / height30),
-                            height: height / height25,
-                            color: WidgetColor,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: width / width20,
-                                  height: double.infinity,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(width: width / width2),
-                                Expanded(
-                                  child: InterBold(
-                                    text:
-                                    '# sdgfdgdgds ',
-                                    fontsize: width / width12,
+                    ReportId.isNotEmpty
+                        ? InterBold(
+                            text: 'Reports',
+                            fontsize: width / width20,
+                            color: Primarycolor,
+                          )
+                        : SizedBox(height: height / height10),
+                    ReportId.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 1,
+                            itemBuilder: (context, index) {
+                              // final hourKey = reportsByHour.keys.toList()[index];
+                              // final reportsForHour = reportsByHour[hourKey] ?? [];
+                              // var data = reportsByHour;
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateReportScreen(
+                                          locationId: '',
+                                          locationName: '',
+                                          companyID: '',
+                                          empId: '',
+                                          empName: '',
+                                          ClientId: '',
+                                          reportId: '',
+                                          buttonEnable: false,
+                                          ShiftId: 'widget.shifID',
+                                          SearchId:
+                                              ReportId, //Need to Work Here
+                                        ),
+                                      ));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      bottom: height / height30),
+                                  height: height / height25,
+                                  color: WidgetColor,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: width / width20,
+                                        height: double.infinity,
+                                        color: Colors.red,
+                                      ),
+                                      SizedBox(width: width / width2),
+                                      Expanded(
+                                        child: InterBold(
+                                          text: ReportId.isNotEmpty
+                                              ? "# $ReportId  ${ReportName}"
+                                              : "",
+                                          fontsize: width / width12,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: height / height30),
+                              );
+                            },
+                          )
+                        : SizedBox(height: height / height30),
                     widget.iseditable
                         ? Button1(
                             text: _isSubmitting ? 'Submitting...' : 'Submit',

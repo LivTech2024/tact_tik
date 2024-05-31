@@ -8,8 +8,12 @@ import '../../../common/sizes.dart';
 class ViewCheckpointScreen extends StatefulWidget {
   final String reportedAt;
   final String comment;
-  final List<String> images;
-  const ViewCheckpointScreen({super.key, required this.comment, required this.images, required this.reportedAt});
+  final List<dynamic> images;
+  const ViewCheckpointScreen(
+      {super.key,
+      required this.comment,
+      required this.images,
+      required this.reportedAt});
 
   @override
   State<ViewCheckpointScreen> createState() => _ViewCheckpointScreenState();
@@ -117,7 +121,11 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                             ),
                           ),
                           SizedBox(width: width / width2),
-                          InterBold(text: '11.36pm' , color: color6,fontsize: width / width16,)
+                          InterBold(
+                            text: '11.36pm',
+                            color: color6,
+                            fontsize: width / width16,
+                          )
                         ],
                       ),
                     );

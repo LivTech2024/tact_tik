@@ -122,7 +122,7 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
 
                 /// Date selection button.
                 TextButton(
-                  onPressed: (){},
+                  onPressed: () {},
                   child: Row(
                     children: [
                       const Icon(
@@ -183,8 +183,6 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
 
   /// Set range picker button text.
 
-
-
   /// Validate event info for enabling "OK" button.
   bool _validateEventData() {
     return _eventNameController.text.isNotEmpty &&
@@ -208,6 +206,4 @@ class _CreateEventDialogState extends State<CreateEventDialog> {
       ),
     );
   }
-
-
 }

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
@@ -249,16 +250,9 @@ class Auth {
               context, MaterialPageRoute(builder: (context) => HomeScreen()));
         }
       }
-    } on FirebaseAuthException catch (e) {
-      print('FirebaseAuthException: ${e.message}');
-      // Handle specific FirebaseAuthException errors
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
     } catch (e) {
-      print('Error signing in: $e');
+      print('FirebaseAuthException Firestore: ${e}');
+      showErrorToast(context, "Invalid Credentials");
     }
   }
 
