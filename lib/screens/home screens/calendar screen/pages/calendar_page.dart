@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/screens/home%20screens/calendar%20screen/utills/extensions.dart';
+import 'package:tact_tik/screens/home%20screens/calendar%20screen/widgets/calendar_shimmer_widget.dart';
 
 import '../../../../common/sizes.dart';
 import '../controller/calender_page_controller.dart';
@@ -41,17 +42,17 @@ class _CalendarPageState extends State<CalendarPage> {
   late String currentUserId;
   DateTime? _beginDate;
   DateTime? _endDate;
-
+  bool _isCalenderLoading = true;
   String _rangeButtonText = 'Select date';
 
   late CrCalendarController _calendarController;
 
   @override
   void initState() {
+    super.initState();
     _setTexts(_currentDate.year, _currentDate.month);
     currentUserId = widget.employeeId;
     _fetchAndCreateEventsFromFirestore();
-    super.initState();
   }
 
   @override
@@ -95,59 +96,61 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _addEvent,
-      //   child: const Icon(Icons.add),
-      // ),
-      body: Column(
-        children: [
-          /// Calendar control row.
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  _changeCalendarPage(showNext: false);
-                },
-              ),
-              ValueListenableBuilder(
-                valueListenable: _monthNameNotifier,
-                builder: (ctx, value, child) => Text(
-                  value,
-                  style: const TextStyle(
-                      fontSize: 16, color: violet, fontWeight: FontWeight.w600),
+      body: _isCalenderLoading
+          ? const ShimmerCalendar()
+          : Column(
+              children: [
+                /// Calendar control row.
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        _changeCalendarPage(showNext: false);
+                      },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: _monthNameNotifier,
+                      builder: (ctx, value, child) => Text(
+                        value,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            color: violet,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      onPressed: () {
+                        _changeCalendarPage(showNext: true);
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.arrow_forward_ios),
-                onPressed: () {
-                  _changeCalendarPage(showNext: true);
-                },
-              ),
-            ],
-          ),
 
-          /// Calendar view.
-          Expanded(
-            child: CrCalendar(
-              firstDayOfWeek: WeekDay.monday,
-              eventsTopPadding: height / height30,
-              initialDate: _currentDate,
-              maxEventLines: 3,
-              controller: _calendarController,
-              forceSixWeek: true,
-              dayItemBuilder: (builderArgument) =>
-                  DayItemWidget(properties: builderArgument),
-              weekDaysBuilder: (day) => WeekDaysWidget(day: day),
-              eventBuilder: (drawer) => EventWidget(drawer: drawer),
-              onDayClicked: _showDayEventsInModalSheet,
-              minDate: DateTime.now().subtract(const Duration(days: 1000)),
-              maxDate: DateTime(DateTime.now().year + 1, DateTime.now().month + 2, DateTime.now().day),
+                /// Calendar view.
+                Expanded(
+                  child: CrCalendar(
+                    firstDayOfWeek: WeekDay.monday,
+                    eventsTopPadding: height / height30,
+                    initialDate: _currentDate,
+                    maxEventLines: 3,
+                    controller: _calendarController,
+                    forceSixWeek: true,
+                    dayItemBuilder: (builderArgument) =>
+                        DayItemWidget(properties: builderArgument),
+                    weekDaysBuilder: (day) => WeekDaysWidget(day: day),
+                    eventBuilder: (drawer) => EventWidget(drawer: drawer),
+                    onDayClicked: _showDayEventsInModalSheet,
+                    minDate:
+                        DateTime.now().subtract(const Duration(days: 1000)),
+                    maxDate: DateTime(DateTime.now().year + 1,
+                        DateTime.now().month + 2, DateTime.now().day),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -257,6 +260,8 @@ class _CalendarPageState extends State<CalendarPage> {
       final name = data['ShiftName'] as String;
       final begin = (data['ShiftCreatedAt'] as Timestamp).toDate();
       final end = (data['ShiftCreatedAt'] as Timestamp).toDate();
+      final shiftStartTime = data['ShiftStartTime'];
+      final shiftEndTime = data['ShiftEndTime'];
       final shiftLocationName = data['ShiftLocationName'] ?? "location";
       final assignedUserIds = List<String>.from(data['ShiftAssignedUserId']);
       final isAssignedToCurrentUser = assignedUserIds.contains(currentUserId);
@@ -264,22 +269,34 @@ class _CalendarPageState extends State<CalendarPage> {
           List<String>.from(data['ShiftAcknowledgedByEmpId']);
       final isShiftAcknowledgedByEmployee =
           shiftAcknowledgedUserIds.contains(currentUserId);
+      final shiftId = data['ShiftId'];
+
+      final otherUserIds =
+          assignedUserIds.where((id) => id != currentUserId).toList();
 
       return CalendarEventModel(
           others: OtherUsersModel(
               othersShiftName: name,
+              othersShiftId: shiftId,
               othersShiftLocation: shiftLocationName,
-              ids: assignedUserIds,
-              startTime: begin,
-              endTime: end),
+              ids: otherUserIds,
+              startTime: shiftStartTime,
+              endTime: shiftEndTime),
           name: name,
           begin: begin,
           end: end,
+          startTime: shiftStartTime,
+          endTime: shiftEndTime,
+          shiftId: shiftId,
+          isAssignedToCurrentUser: isAssignedToCurrentUser,
+          isShiftAcknowledgedByEmployee: isShiftAcknowledgedByEmployee,
           eventColor: isAssignedToCurrentUser ? Colors.green : Colors.red,
           location: shiftLocationName);
     }).toList();
 
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
+      _isCalenderLoading = false;
       _calendarController = CrCalendarController(
         onSwipe: _onCalendarPageChanged,
         events: events,
@@ -305,6 +322,7 @@ class _CalendarPageState extends State<CalendarPage> {
         isScrollControlled: true,
         context: context,
         builder: (context) => DayEventsBottomSheet(
+              empId: widget.employeeId,
               events: events,
               day: day,
               screenHeight: MediaQuery.of(context).size.height,
