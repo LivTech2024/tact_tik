@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
@@ -31,6 +32,7 @@ import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/all_schedules_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
+import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 
 Future<void> main() async {
@@ -50,43 +52,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: GetMaterialApp(
-        title: 'Tact Tik',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          textTheme: GoogleFonts.poppinsTextTheme(
-            Theme.of(context).textTheme,
+    return ScreenUtilInit(
+      designSize: const ui.Size(430, 932),
+      builder: (context, child) {
+        return ProviderScope(
+          child: GetMaterialApp(
+            title: 'Tact Tik',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              textTheme: GoogleFonts.poppinsTextTheme(
+                Theme.of(context).textTheme,
+              ),
+            ),
+            home: child,
           ),
-        ),
-        home: OfflineBuilder(
-          connectivityBuilder: (
-            BuildContext context,
-            ConnectivityResult connectivity,
-            Widget child,
-          ) {
-            final bool isConnected = connectivity != ConnectivityResult.none;
-            if (isConnected) {
-              return child;
-            } else {
-              return const Scaffold(
-                body: Center(
-                  child: Text(
-                    'No internet connection. Connect to Internet or Restart the app',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+        );
+      },
+      child: OfflineBuilder(
+        connectivityBuilder: (
+          BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,
+        ) {
+          final bool isConnected = connectivity != ConnectivityResult.none;
+          if (isConnected) {
+            return child;
+          } else {
+            return Scaffold(
+              backgroundColor: Secondarycolor,
+              body: Center(
+                child: InterSemibold(
+                  text:
+                      'No internet connection.\nConnect to Internet or Restart the app',
+                  fontsize: 20.sp,
+                  color: color1,
                 ),
-              );
-            }
-          },
-          child: AuthChecker(),
-        ),
+              ),
+            );
+          }
+        },
+        child: AuthChecker(),
       ),
     );
   }
