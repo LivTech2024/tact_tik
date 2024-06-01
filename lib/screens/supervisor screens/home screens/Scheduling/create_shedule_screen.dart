@@ -7,6 +7,7 @@ import 'package:emailjs/emailjs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -1198,7 +1199,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           optionTextStyle: TextStyle(
                                               fontSize: width / width16),
                                           selectedOptionIcon:
-                                              const Icon(Icons.check_circle),
+                                          Icon(Icons.check_circle , size: 24.sp,),
                                         ),
                                 ),
                               ],

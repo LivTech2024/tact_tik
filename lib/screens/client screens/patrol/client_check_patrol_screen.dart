@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -28,7 +30,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
-
+  DateTime? selectedDate;
   List<Map<String, dynamic>> patrolsList = [];
   final List<String> members = [
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
@@ -55,6 +57,20 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
     get_PatrolInfo();
   }
 
+  Future<void> _selectDate(
+      BuildContext context,) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    setState(() {
+      if (picked != null) {
+        selectedDate = picked;
+
+      }
+    });
+  }
   void get_PatrolInfo() async {
     var PatrologsData = await fireStoreService.getPatrolsLogs(widget.PatrolIdl);
     if (PatrologsData != null || PatrologsData.isNotEmpty) {
@@ -70,9 +86,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -83,50 +96,53 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: InterRegular(
             text: 'Guards',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: SingleChildScrollView(
             child: Column(
               children: [
                 SizedBox(
-                  height: height / height30,
+                  height: 30.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: width / width190,
-                      child: IconTextWidget(
-                        icon: Icons.calendar_today,
-                        text: '23 / 04 / 2024',
-                        fontsize: width / width14,
-                        color: Primarycolor,
+                    GestureDetector(
+                      onTap: ()=> _selectDate(context),
+                      child: SizedBox(
+                        width: 190.w,
+                        child: IconTextWidget(
+                          icon: Icons.calendar_today,
+                          text: selectedDate != null ? "${selectedDate!.toLocal()}".split(' ')[0]:'display shift date',
+                          fontsize: 14.sp,
+                          color: Primarycolor,
+                        ),
                       ),
                     ),
                     SizedBox(
-                      width: width / width140,
+                      width: 140.w,
                       child: IconTextWidget(
-                        space: width / width6,
+                        space: 6.w,
                         icon: Icons.add,
-                        iconSize: width / width20,
+                        iconSize: 20.sp,
                         text: 'Select Guard',
                         useBold: true,
-                        fontsize: width / width14,
+                        fontsize: 14.sp,
                         color: Primarycolor,
                         Iconcolor: color1,
                       ),
@@ -134,7 +150,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: height / height20,
+                  height: 20.h,
                 ),
                 for (var patrol in patrolsList)
                   GestureDetector(
@@ -163,15 +179,15 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       );
                     },
                     child: Container(
-                      height: height / height140,
-                      margin: EdgeInsets.only(top: height / height10),
+                      height: 140.h,
+                      margin: EdgeInsets.only(top: 10.h),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
                         color: WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width14),
+                        borderRadius: BorderRadius.circular(14.r),
                       ),
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height20),
+                          EdgeInsets.symmetric(vertical: 20.h),
                       child: Column(
                         children: [
                           Row(
@@ -180,25 +196,25 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                             children: [
                               Column(
                                 children: [
-                                  SizedBox(height: height / height5),
+                                  SizedBox(height: 5.h),
                                   Container(
-                                    height: height / height30,
-                                    width: width / width4,
+                                    height: 30.h,
+                                    width: 4.w,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
                                         topRight:
-                                            Radius.circular(width / width10),
+                                            Radius.circular(10.r),
                                         bottomRight:
-                                            Radius.circular(width / width10),
+                                            Radius.circular(10.r),
                                       ),
                                       color: Primarycolor,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(width: width / width14),
+                              SizedBox(width: 14.w),
                               SizedBox(
-                                width: width / width190,
+                                width: 190.w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +222,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                     InterSemibold(
                                       text: patrol['PatrolLogGuardName'] ?? "",
                                       color: color21,
-                                      fontsize: width / width18,
+                                      fontsize: 18.sp,
                                     ),
                                     // SizedBox(height: height / height5),
                                   ],
@@ -217,25 +233,25 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                           // SizedBox(height: height / height10),
                           Padding(
                             padding: EdgeInsets.only(
-                              left: width / width18,
-                              right: width / width24,
+                              left: 18.w,
+                              right: 24.w,
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: width / width80,
+                                  width: 80.w,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Started at',
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: color21,
                                       ),
-                                      SizedBox(height: height / height12),
+                                      SizedBox(height: 12.h),
                                       InterMedium(
                                         text: patrol['PatrolLogStartedAt'] !=
                                                 null
@@ -244,24 +260,24 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     patrol['PatrolLogStartedAt']
                                                         .millisecondsSinceEpoch))
                                             : "",
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: color1,
                                       ),
                                     ],
                                   ),
                                 ),
                                 SizedBox(
-                                  width: width / width80,
+                                  width: 80.w,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Ended at',
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: color21,
                                       ),
-                                      SizedBox(height: height / height12),
+                                      SizedBox(height: 12.h),
                                       InterMedium(
                                         text: patrol['PatrolLogEndedAt'] != null
                                             ? DateFormat('hh:mm a').format(DateTime
@@ -269,39 +285,39 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     patrol['PatrolLogEndedAt']
                                                         .millisecondsSinceEpoch))
                                             : "",
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: color1,
                                       ),
                                     ],
                                   ),
                                 ),
                                 SizedBox(
-                                  width: width / width60,
+                                  width: 60.w,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Count',
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: color21,
                                       ),
-                                      SizedBox(height: height / height12),
+                                      SizedBox(height: 12.h),
                                       Row(
                                         children: [
                                           Icon(
                                             Icons.check_circle_outline,
                                             color: Primarycolor,
-                                            size: width / width16,
+                                            size: 16.sp,
                                           ),
                                           SizedBox(
-                                            width: width / width2,
+                                            width: 2.w,
                                           ),
                                           InterMedium(
                                             text: patrol['PatrolLogPatrolCount']
                                                     .toString() ??
                                                 "",
-                                            fontsize: width / width12,
+                                            fontsize: 12.sp,
                                             color: color1,
                                           ),
                                         ],
@@ -310,20 +326,20 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: width / width80,
+                                  width: 80.w,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       InterRegular(
                                         text: 'Status',
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: color21,
                                       ),
-                                      SizedBox(height: height / height12),
+                                      SizedBox(height: 12.h),
                                       InterBold(
                                         text: 'Completed',
-                                        fontsize: width / width12,
+                                        fontsize: 12.sp,
                                         color: Colors.green,
                                       ),
                                     ],

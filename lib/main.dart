@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
@@ -78,7 +79,17 @@ class MyApp extends StatelessWidget {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return child;
+            return Scaffold(
+              backgroundColor: Secondarycolor,
+              body: Center(
+                child: InterSemibold(
+                  text:
+                      'No internet connection.\nConnect to Internet or Restart the app',
+                  fontsize: 20.sp,
+                  color: color1,
+                ),
+              ),
+            );
           } else {
             return Scaffold(
               backgroundColor: Secondarycolor,
