@@ -66,7 +66,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
         body: FutureBuilder<QuerySnapshot>(
           future: FirebaseFirestore.instance
               .collection('Visitors')
-              .where('VisitorLocationId', isEqualTo: widget.locationId)
+              .where('VisitorLocationId', isEqualTo: _userService.shiftLocationId)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -78,6 +78,23 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
             }
 
             final documents = snapshot.data!.docs;
+
+            documents.sort((a, b) {
+              final timestampA = a['VisitorCreatedAt'] as Timestamp;
+              final timestampB = b['VisitorCreatedAt'] as Timestamp;
+              return timestampB.compareTo(timestampA);
+            });
+
+            final groupedDocuments = <String, List<QueryDocumentSnapshot>>{};
+
+            for (var doc in documents) {
+              final timestamp = doc['VisitorCreatedAt'] as Timestamp;
+              final date = DateFormat('yyyy-MM-dd').format(timestamp.toDate());
+              if (groupedDocuments[date] == null) {
+                groupedDocuments[date] = [];
+              }
+              groupedDocuments[date]!.add(doc);
+            }
 
             return CustomScrollView(
               slivers: [
@@ -93,8 +110,6 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
                       Navigator.pop(context);
-                      print(
-                          "Navigator debug: ${Navigator.of(context).toString()}");
                     },
                   ),
                   title: InterRegular(
@@ -106,215 +121,227 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                   centerTitle: true,
                   floating: true,
                 ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 30.h,
-                        ),
-                        InterBold(
-                          text: 'Today',
-                          fontsize: 20.sp,
-                          color: Primarycolor,
-                        ),
-                        SizedBox(
-                          height: 30.h,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final document = documents[index];
-                      final documentData =
-                          document.data() as Map<String, dynamic>?;
+                        (context, index) {
+                      final date = groupedDocuments.keys.elementAt(index);
+                      final documentsForDate = groupedDocuments[date]!;
 
-                      print("document_data:$documentData");
+                      final isToday = date ==
+                          DateFormat('yyyy-MM-dd')
+                              .format(DateTime.now());
 
-                      if (documentData != null) {
-                        final visitorCompleted =
-                            isVisitorCompleted(documentData);
-                        final visitorName = documentData['VisitorName'] ?? '';
-                        final inTimeTimestamp =
-                            documentData['VisitorInTime'] as Timestamp?;
-                        final outTimeTimestamp =
-                            documentData['VisitorOutTime'] as Timestamp?;
-                        final location =
-                            documentData['VisitorLocationName'] ?? '';
-
-                        final inTime = inTimeTimestamp != null
-                            ? DateFormat.jm().format(inTimeTimestamp.toDate())
-                            : '';
-                        final outTime = outTimeTimestamp != null
-                            ? DateFormat.jm().format(outTimeTimestamp.toDate())
-                            : '';
-
-                        return GestureDetector(
-                          onTap: visitorCompleted
-                              ? null // Do nothing if visitor is completed
-                              : () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateVisitors(
-                                        visitorData: documentData,
-                                      ),
-                                    ),
-                                  );
-                                },
-                          child: Padding(
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            child: Container(
-                              height: 120.h,
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(bottom: 16.h),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r),
-                                color: WidgetColor,
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w,
-                                        vertical: 10.h,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                width: 40.w,
-                                                height: 40.h,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.r),
-                                                  color: Primarycolorlight,
-                                                ),
-                                                child: Center(
-                                                  child: SvgPicture.asset(
-                                                    'assets/images/man.svg',
-                                                    height: 20.h,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 20.w,
-                                              ),
-                                              SizedBox(
-                                                width: 120.w,
-                                                child: InterMedium(
-                                                  text: visitorName,
-                                                  color: color1,
-                                                  fontsize: 16.sp,
-                                                  maxLines: 1,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  InterBold(
-                                                    text: 'in time',
-                                                    fontsize: 10.sp,
-                                                    color: color4,
-                                                  ),
-                                                  SizedBox(
-                                                      width: 6.w),
-                                                  InterMedium(
-                                                    text: inTime,
-                                                    fontsize: 12.sp,
-                                                    color: color3,
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  InterBold(
-                                                    text: 'out time',
-                                                    fontsize: 10.sp,
-                                                    color: color4,
-                                                  ),
-                                                  SizedBox(
-                                                      width: 6.w),
-                                                  InterMedium(
-                                                    text: outTime,
-                                                    fontsize: 12.sp,
-                                                    color: color3,
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.w),
-                                      decoration: BoxDecoration(
-                                        color: colorRed,
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft:
-                                              Radius.circular(10.r),
-                                          bottomRight:
-                                              Radius.circular(10.r),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          InterSemibold(
-                                            text: 'Location',
-                                            color: color1,
-                                            fontsize: 14.sp,
-                                          ),
-                                          SizedBox(
-                                            width: 200.w,
-                                            child: InterRegular(
-                                              text: location,
-                                              fontsize: 12.sp,
-                                              color: color2,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 30.h,
+                                ),
+                                InterBold(
+                                  text: isToday ? 'Today' : date,
+                                  fontsize: 20.sp,
+                                  color: Primarycolor,
+                                ),
+                                SizedBox(
+                                  height: 30.h,
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
+                          ...documentsForDate.map((document) {
+                            final documentData =
+                            document.data() as Map<String, dynamic>;
+
+                            final visitorCompleted =
+                            isVisitorCompleted(documentData);
+                            final visitorName = documentData['VisitorName'] ?? '';
+                            final inTimeTimestamp =
+                            documentData['VisitorInTime'] as Timestamp?;
+                            final outTimeTimestamp =
+                            documentData['VisitorOutTime'] as Timestamp?;
+                            final location =
+                                documentData['VisitorLocationName'] ?? '';
+
+                            final inTime = inTimeTimestamp != null
+                                ? DateFormat.jm()
+                                .format(inTimeTimestamp.toDate())
+                                : '';
+                            final outTime = outTimeTimestamp != null
+                                ? DateFormat.jm()
+                                .format(outTimeTimestamp.toDate())
+                                : '';
+
+                            return GestureDetector(
+                              onTap: visitorCompleted
+                                  ? null // Do nothing if visitor is completed
+                                  : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateVisitors(
+                                          visitorData: documentData,
+                                        ),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: 20.w),
+                                child: Container(
+                                  height: 120.h,
+                                  width: double.maxFinite,
+                                  margin: EdgeInsets.only(bottom: 16.h),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    color: WidgetColor,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w,
+                                            vertical: 10.h,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: 40.w,
+                                                    height: 40.h,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          10.r),
+                                                      color:
+                                                      Primarycolorlight,
+                                                    ),
+                                                    child: Center(
+                                                      child: SvgPicture.asset(
+                                                        'assets/images/man.svg',
+                                                        height: 20.h,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20.w,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 120.w,
+                                                    child: InterMedium(
+                                                      text: visitorName,
+                                                      color: color1,
+                                                      fontsize: 16.sp,
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      InterBold(
+                                                        text: 'in time',
+                                                        fontsize: 10.sp,
+                                                        color: color4,
+                                                      ),
+                                                      SizedBox(width: 6.w),
+                                                      InterMedium(
+                                                        text: inTime,
+                                                        fontsize: 12.sp,
+                                                        color: color3,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      InterBold(
+                                                        text: 'out time',
+                                                        fontsize: 10.sp,
+                                                        color: color4,
+                                                      ),
+                                                      SizedBox(width: 6.w),
+                                                      InterMedium(
+                                                        text: outTime,
+                                                        fontsize: 12.sp,
+                                                        color: color3,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w),
+                                          decoration: BoxDecoration(
+                                            color: colorRed,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft:
+                                              Radius.circular(10.r),
+                                              bottomRight:
+                                              Radius.circular(10.r),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            children: [
+                                              InterSemibold(
+                                                text: 'Location',
+                                                color: color1,
+                                                fontsize: 14.sp,
+                                              ),
+                                              SizedBox(
+                                                width: 200.w,
+                                                child: InterRegular(
+                                                  text: location,
+                                                  fontsize: 12.sp,
+                                                  color: color2,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      );
                     },
-                    childCount: documents.length,
+                    childCount: groupedDocuments.keys.length,
                   ),
                 ),
               ],
