@@ -1005,8 +1005,8 @@ class FireStoreService {
                   }
                 }
                 print(imageUrls);
-            String updateString = 
-    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('HH:mm').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('HH:mm').format(EndTime.toDate())}";
+                String updateString =
+                    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('HH:mm').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('HH:mm').format(EndTime.toDate())}";
                 tile['TileContent'] = updateString;
                 empDarTiles[i] = tile;
                 print('Updated Tile at index $i: $tile');

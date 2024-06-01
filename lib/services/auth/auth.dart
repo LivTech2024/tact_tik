@@ -256,7 +256,6 @@ class Auth {
     }
   }
 
-  //Add the userCred to the employee collection
   Future<void> signOut(context, screen, String EmployeId) async {
     await _firebaseAuth.signOut();
     // await _firestore.collection('Employees').doc(EmployeId).set({

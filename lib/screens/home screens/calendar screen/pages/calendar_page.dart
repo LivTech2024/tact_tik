@@ -318,7 +318,8 @@ class _CalendarPageState extends State<CalendarPage> {
       List<CalendarEventModel> events, DateTime day) {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(8))
+            ),
         isScrollControlled: true,
         context: context,
         builder: (context) => DayEventsBottomSheet(
