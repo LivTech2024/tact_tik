@@ -43,6 +43,11 @@ class _LogBookScreenState extends State<LogBookScreen> {
         .where('LogBookEmpId', isEqualTo: widget.EmpId)
         // .where('LogBookEmpId', isEqualTo: widget.EmpId)
         .snapshots();
+
+    _logBookStream.listen((QuerySnapshot snapshot) {
+      print(
+          'Snapshot data: ${snapshot.docs.map((doc) => doc.data()).toList()}');
+    });
     // getempID().then((empID) {
     //   _logBookStream = FirebaseFirestore.instance
     //       .collection('LogBook')
@@ -101,7 +106,12 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
                 if (!snapshot.hasData) {
                   return SliverToBoxAdapter(
-                    child: Center(child: InterMedium(text: 'Loading...' , color: Primarycolor,fontsize: width / width18,)),
+                    child: Center(
+                        child: InterMedium(
+                      text: 'Loading...',
+                      color: Primarycolor,
+                      fontsize: width / width18,
+                    )),
                   );
                 }
 
