@@ -336,11 +336,11 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               ShiftStarted = true;
             });
-            // prefs.setBool('clickedIn', true);
+            prefs.setBool('clickedIn', true);
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
-            // prefs.setBool('clickedIn', false);
+            prefs.setBool('clickedIn', false);
             setState(() {
               ShiftStarted = false;
             });
@@ -798,7 +798,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisCount: 3, // Number of columns
                             // mainAxisSpacing: 12, // Spacing between rows
                             // crossAxisSpacing: 25,
-                            childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
+                            childAspectRatio:
+                                1.0, // Aspect ratio of each grid item (width / height)
                           ),
                           delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
@@ -957,118 +958,126 @@ class _HomeScreenState extends State<HomeScreen> {
                           :*/
                       ScreenIndex == 3
                           ? SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.w),
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  height: 76.h,
-                                  margin: EdgeInsets.only(
-                                    bottom: 23.h,
-                                  ),
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        width: 1,
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                    // color: WidgetColor,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 7.h,
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    // mainAxisAlignment:
-                                    //     MainAxisAlignment
-                                    //         .spaceBetween,
-                                    children: [
-                                      NewMessage
-                                          ? Container(
-                                        height: 11.h,
-                                        width: 11.w,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          shape: BoxShape.circle,
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.w),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 76.h,
+                                        margin: EdgeInsets.only(
+                                          bottom: 23.h,
                                         ),
-                                      )
-                                          : SizedBox(),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 9.w),
-                                        height: 45.h,
-                                        width: 45.w,
+                                        width: double.maxFinite,
                                         decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              width: 1,
+                                              color: Primarycolor,
                                             ),
-                                            fit: BoxFit.cover,
                                           ),
+                                          // color: WidgetColor,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 12.w,
-                                      ),
-                                      SizedBox(
-                                        width: 300.w,
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 7.h,
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment
+                                          //         .spaceBetween,
                                           children: [
-                                            Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Supervisor',
-                                                  fontsize: 17.sp,
-                                                  color: color1,
-                                                ),
-                                                Row(
-                                                  // mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    PoppinsRegular(
-                                                      text: '9:36 AM',
-                                                      color: color3,
-                                                      fontsize: 15.sp,
+                                            NewMessage
+                                                ? Container(
+                                                    height: 11.h,
+                                                    width: 11.w,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      shape: BoxShape.circle,
                                                     ),
-                                                    Icon(
-                                                      Icons.arrow_forward_ios,
-                                                      color: color1,
-                                                      size: 15.sp,
-                                                    )
-                                                  ],
+                                                  )
+                                                : SizedBox(),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 9.w),
+                                              height: 45.h,
+                                              width: 45.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                  ),
+                                                  fit: BoxFit.cover,
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 4.h,
-                                            ),
-                                            Flexible(
-                                              child: InterRegular(
-                                                text:
-                                                'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                                fontsize: 15.sp,
-                                                color: color3,
                                               ),
                                             ),
+                                            SizedBox(
+                                              width: 12.w,
+                                            ),
+                                            SizedBox(
+                                              width: 300.w,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Supervisor',
+                                                        fontsize: 17.sp,
+                                                        color: color1,
+                                                      ),
+                                                      Row(
+                                                        // mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          PoppinsRegular(
+                                                            text: '9:36 AM',
+                                                            color: color3,
+                                                            fontsize: 15.sp,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .arrow_forward_ios,
+                                                            color: color1,
+                                                            size: 15.sp,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 4.h,
+                                                  ),
+                                                  Flexible(
+                                                    child: InterRegular(
+                                                      text:
+                                                          'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                      fontsize: 15.sp,
+                                                      color: color3,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                childCount: 8,
                               ),
-                            );
-                          },
-                          childCount: 8,
-                        ),
-                      )
+                            )
                           : const SizedBox(),
               /*ScreenIndex == 2
                   ? SliverList(
