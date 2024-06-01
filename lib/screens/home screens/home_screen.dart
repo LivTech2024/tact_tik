@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -110,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-  List IconColors = [Primarycolor, color4, color4, color4];
+  List IconColors = [Primarycolor, color21, color21, color21];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
   List<DocumentSnapshot> schedules_list = [];
@@ -198,21 +199,21 @@ class _HomeScreenState extends State<HomeScreen> {
       switch (index) {
         case 0:
           IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[1] = color21;
+          IconColors[2] = color21;
+          IconColors[3] = color21;
           break;
         case 1:
-          IconColors[0] = color4;
+          IconColors[0] = color21;
           IconColors[1] = Primarycolor;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[2] = color21;
+          IconColors[3] = color21;
           break;
         case 2:
           IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[1] = color21;
+          IconColors[2] = color21;
+          IconColors[3] = color21;
           ScreenIndex = 0;
           // CalendarScreen
           Navigator.push(
@@ -223,9 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
           break;
         case 3:
-          IconColors[0] = color4;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
+          IconColors[0] = color21;
+          IconColors[1] = color21;
+          IconColors[2] = color21;
           IconColors[3] = Primarycolor;
           break;
       }
@@ -336,11 +337,11 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               ShiftStarted = true;
             });
-            // prefs.setBool('clickedIn', true);
+            prefs.setBool('clickedIn', true);
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
-            // prefs.setBool('clickedIn', false);
+            prefs.setBool('clickedIn', false);
             setState(() {
               ShiftStarted = false;
             });
@@ -473,8 +474,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/keys.png', 'Key'],
     ];
 
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
 
     int _selectedIndex = 0; // Index of the selected screen
 
@@ -495,12 +496,12 @@ class _HomeScreenState extends State<HomeScreen> {
           color: isSelected
               ? Primarycolor
               : color3, // Change color based on selection
-          size: width / width24,
+          size: 24.sp,
         ),
         title: PoppinsBold(
           text: title,
           color: isSelected ? Primarycolor : color3,
-          fontsize: width / width14,
+          fontsize: 16.sp,
         ),
         onTap: onPressed,
       );
@@ -514,10 +515,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                height: height / height180,
+                height: 172.h,
                 width: double.maxFinite,
+                padding: EdgeInsets.only(top: 32.h, left: 24.w, right: 34.w),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
+                  borderRadius: BorderRadius.circular(15.r),
                   color: Primarycolor, // Background color for the drawer header
                 ),
                 child: Center(
@@ -529,23 +531,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundImage:
                               AssetImage('assets/images/default.png'),
                           foregroundImage: NetworkImage(employeeImg!),
-                          radius: width / width50,
+                          radius: 50.r,
                           backgroundColor: Primarycolor,
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
                         ),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 20.h),
                         PoppinsSemibold(
                           text: _userName,
                           color: WidgetColor,
-                          fontsize: width / width16,
+                          fontsize: 20.sp,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: height / height5),
+                        SizedBox(height: 13.sp),
                         PoppinsRegular(
                           text: _empEmail,
                           color: WidgetColor,
-                          fontsize: width / width16,
+                          fontsize: 12.sp,
                           letterSpacing: -.3,
                         )
                       ]),
@@ -712,593 +714,551 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(
                   Icons.logout,
                   color: Colors.red,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
                 title: PoppinsBold(
                   text: 'Logout',
                   color: Colors.red,
-                  fontsize: width / width14,
+                  fontsize: 16.sp,
                 ),
                 onTap: () {
                   auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height10)
+              SizedBox(height: 10.h)
             ],
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.only(
-            top: height / height30,
-          ),
-          child: RefreshIndicator(
-            onRefresh: _refreshData,
-            child: CustomScrollView(
-              physics: PageScrollPhysics(),
-              slivers: [
-                HomeScreenPart1(
-                  userName: _userName,
-                  employeeImg: employeeImg,
-                  // employeeImg: _employeeImg,
-                  showWish: _showWish,
-                  drawerOnClicked: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  },
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: width / width30,
-                      right: width / width30,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Bounce(
-                              onTap: () => ChangeScreenIndex(0),
-                              child: HomeScreenCustomNavigation(
-                                text: 'Shifts',
-                                icon: Icons.add_task,
-                                color: IconColors[0],
-                                textcolor: ScreenIndex == 0 ? color1 : color4,
-                              ),
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: CustomScrollView(
+            physics: PageScrollPhysics(),
+            slivers: [
+              HomeScreenPart1(
+                userName: _userName,
+                employeeImg: employeeImg,
+                // employeeImg: _employeeImg,
+                showWish: _showWish,
+                drawerOnClicked: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 30.w),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Bounce(
+                            onTap: () => ChangeScreenIndex(0),
+                            child: HomeScreenCustomNavigation(
+                              text: 'Shifts',
+                              icon: Icons.add_task,
+                              color: IconColors[0],
+                              textcolor:
+                                  ScreenIndex == 0 ? Primarycolor : color21,
                             ),
-                            Bounce(
-                              onTap: () => ChangeScreenIndex(1),
-                              child: HomeScreenCustomNavigation(
-                                text: 'Explore',
-                                icon: Icons.grid_view_rounded,
-                                color: IconColors[1],
-                                textcolor: ScreenIndex == 1 ? color1 : color4,
-                              ),
+                          ),
+                          Bounce(
+                            onTap: () => ChangeScreenIndex(1),
+                            child: HomeScreenCustomNavigation(
+                              text: 'Explore',
+                              icon: Icons.grid_view_rounded,
+                              color: IconColors[1],
+                              textcolor:
+                                  ScreenIndex == 1 ? Primarycolor : color21,
                             ),
-                            Bounce(
-                              onTap: () => ChangeScreenIndex(2),
-                              child: HomeScreenCustomNavigation(
-                                text: 'Calendar',
-                                icon: Icons.calendar_today,
-                                color: IconColors[2],
-                                textcolor: ScreenIndex == 2 ? color1 : color4,
-                              ),
+                          ),
+                          Bounce(
+                            onTap: () => ChangeScreenIndex(2),
+                            child: HomeScreenCustomNavigation(
+                              text: 'Calendar',
+                              icon: Icons.calendar_today,
+                              color: IconColors[2],
+                              textcolor:
+                                  ScreenIndex == 2 ? Primarycolor : color21,
                             ),
-                            Bounce(
-                              onTap: () => ChangeScreenIndex(3),
-                              child: HomeScreenCustomNavigation(
-                                useSVG: true,
-                                SVG: NewMessage
-                                    ? ScreenIndex == 3
-                                        ? 'assets/images/message_dot.svg'
-                                        : 'assets/images/no_message_dot.svg'
-                                    : ScreenIndex == 3
-                                        ? 'assets/images/message.svg'
-                                        : 'assets/images/no_message.svg',
-                                text: 'Message',
-                                icon: Icons.chat_bubble_outline,
-                                color: IconColors[3],
-                                textcolor: ScreenIndex == 3 ? color1 : color4,
-                              ),
+                          ),
+                          Bounce(
+                            onTap: () => ChangeScreenIndex(3),
+                            child: HomeScreenCustomNavigation(
+                              useSVG: true,
+                              SVG: NewMessage
+                                  ? ScreenIndex == 3
+                                      ? 'assets/images/message_dot.svg'
+                                      : 'assets/images/no_message_dot.svg'
+                                  : ScreenIndex == 3
+                                      ? 'assets/images/message.svg'
+                                      : 'assets/images/no_message.svg',
+                              text: 'Message',
+                              icon: Icons.chat_bubble_outline,
+                              color: IconColors[3],
+                              textcolor:
+                                  ScreenIndex == 3 ? Primarycolor : color21,
                             ),
-                          ],
-                        ),
-                        SizedBox(height: height / height30)
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30.h)
+                    ],
                   ),
                 ),
-                ScreenIndex == 0
-                    ? SliverToBoxAdapter(
-                        child: Padding(
-                            padding: EdgeInsets.only(
+              ),
+              ScreenIndex == 0
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
+                          child: ShiftExist
+                              ? FutureBuilder(
+                                  future: Future.delayed(Duration(seconds: 2)),
+                                  builder: (c, s) => s.connectionState ==
+                                          ConnectionState.done
+                                      ? StartTaskScreen(
+                                          ShiftDate: _ShiftDate,
+                                          ShiftClientID: _shiftCLientId,
+                                          ShiftEndTime: _ShiftEndTime,
+                                          ShiftStartTime: _ShiftStartTime,
+                                          EmployeId: _employeeId,
+                                          ShiftId: _shiftId,
+                                          ShiftAddressName: _ShiftLocationName,
+                                          ShiftCompanyId: _ShiftCompanyId ?? "",
+                                          ShiftBranchId: _ShiftBranchId,
+                                          EmployeeName: _userName ?? "",
+                                          ShiftLocationId: _shiftLocationId,
+                                          resetShiftStarted: () {},
+                                          ShiftIN: true,
+                                          onRefresh: refreshHomeScreen,
+                                          ShiftName: _ShiftName,
+                                          ShiftStatus: _ShiftStatus,
+                                        )
+                                      : Center(
+                                          child: InterMedium(
+                                            text: 'Loading...',
+                                            color: Primarycolor,
+                                            fontsize: 14.sp,
+                                          ),
+                                        ),
+                                )
+                              : SizedBox()),
+                    )
+                  : ScreenIndex == 1
+                      ? SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, // Number of columns
+                            // mainAxisSpacing: 12, // Spacing between rows
+                            // crossAxisSpacing: 25,
+                            childAspectRatio:
+                                1.0, // Aspect ratio of each grid item (width / height)
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return Bounce(
+                                onTap: () {
+                                  switch (index) {
+                                    case 0:
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return PanicAlertDialog(
+                                            EmpId: _employeeId,
+                                            CompanyId: _employeeCompanyID,
+                                            Username: _userName,
+                                          );
+                                        },
+                                      );
+                                      break;
+                                    case 1:
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return SiteTourScreen(
+                                            schedulesList: schedules_list,
+                                          );
+                                        },
+                                      );
+                                      break;
+                                    case 2:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+
+                                                  // CreateDarScreen(
+                                                  //   EmpEmail: _empEmail,
+                                                  //   Username: _userName,
+                                                  //   EmpId: _employeeId,
+                                                  // )
+                                                  DarDisplayScreen(
+                                                    EmpEmail: _empEmail,
+                                                    EmpID: _employeeId,
+                                                    EmpDarCompanyId:
+                                                        _ShiftCompanyId ?? "",
+                                                    EmpDarCompanyBranchId:
+                                                        _branchId,
+                                                    EmpDarShiftID: _shiftId,
+                                                    EmpDarClientID:
+                                                        _shiftCLientId,
+                                                    Username: _userName,
+                                                  )));
+                                      break;
+                                    case 3:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReportScreen(
+                                                    locationId:
+                                                        _shiftLocationId,
+                                                    locationName:
+                                                        _ShiftLocationName,
+                                                    companyId:
+                                                        _ShiftCompanyId ?? "",
+                                                    empId: _employeeId,
+                                                    empName: _userName,
+                                                    clientId: _shiftCLientId,
+                                                    ShiftId: _shiftId,
+                                                  )));
+                                      break;
+                                    case 4:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => PostOrder(
+                                                    locationId:
+                                                        _shiftLocationId,
+                                                  )));
+                                      break;
+                                    case 5:
+                                      /*TaskScreen*/
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TaskFeatureScreen()));
+                                      break;
+                                    case 6:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LogBookScreen(
+                                                    EmpId: _employeeId,
+                                                  )));
+                                      break;
+                                    case 7:
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VisiTorsScreen(
+                                                    locationId:
+                                                        _shiftLocationId,
+                                                  )));
+                                      break;
+                                    case 8:
+                                      // AssetsScreen
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  // KeysScreen(
+                                                  //     keyId: _employeeId)
+                                                  AssetsScreen(
+                                                      assetEmpId:
+                                                          _employeeId)));
+                                      break;
+                                    case 9:
+                                      // AssetsScreen
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  KeysScreen(keyId: _employeeId)
+                                              // AssetsScreen(
+                                              //     assetEmpId:
+                                              //         _employeeId)
+
+                                              ));
+                                      break;
+                                    default:
+                                  }
+                                },
+                                child: gridWidget(
+                                  img: data[index][0],
+                                  tittle: data[index][1],
+                                ),
+                              );
+                            },
+                            childCount: data.length,
+                          ),
+                        )
+                      : /*ScreenIndex == 2
+                          ? SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  left: width / width30,
+                                  right: width / width30,
+                                ),
+                                child: CustomCalendar(
+                                  selectedDates: selectedDates,
+                                ),
+                              ),
+                            )
+                          :*/
+                      ScreenIndex == 3
+                          ? SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.w),
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        height: 76.h,
+                                        margin: EdgeInsets.only(
+                                          bottom: 23.h,
+                                        ),
+                                        width: double.maxFinite,
+                                        decoration: BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              width: 1,
+                                              color: Primarycolor,
+                                            ),
+                                          ),
+                                          // color: WidgetColor,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 7.h,
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment
+                                          //         .spaceBetween,
+                                          children: [
+                                            NewMessage
+                                                ? Container(
+                                                    height: 11.h,
+                                                    width: 11.w,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.green,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  )
+                                                : SizedBox(),
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 9.w),
+                                              height: 45.h,
+                                              width: 45.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 12.w,
+                                            ),
+                                            SizedBox(
+                                              width: 300.w,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Supervisor',
+                                                        fontsize: 17.sp,
+                                                        color: color1,
+                                                      ),
+                                                      Row(
+                                                        // mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          PoppinsRegular(
+                                                            text: '9:36 AM',
+                                                            color: color3,
+                                                            fontsize: 15.sp,
+                                                          ),
+                                                          Icon(
+                                                            Icons
+                                                                .arrow_forward_ios,
+                                                            color: color1,
+                                                            size: 15.sp,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 4.h,
+                                                  ),
+                                                  Flexible(
+                                                    child: InterRegular(
+                                                      text:
+                                                          'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                      fontsize: 15.sp,
+                                                      color: color3,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                childCount: 8,
+                              ),
+                            )
+                          : const SizedBox(),
+              /*ScreenIndex == 2
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          var schedules = schedules_list[index];
+                          Timestamp shifttimestamp = schedules['ShiftDate'];
+                          DateTime dateTime = shifttimestamp.toDate();
+                          String shiftDate =
+                              DateFormat('dd-MM-yyy').format(dateTime);
+
+                          print('Shift Date: $shiftDate');
+                          print("Schedule COunt ${schedules_list.length}");
+                          String dayOfWeek =
+                              DateFormat('EEEE').format(dateTime);
+                          // if (dateTime.year == DateTime.now().year &&
+                          //     dateTime.month == DateTime.now().month &&
+                          //     dateTime.day == DateTime.now().day) {
+                          //   if (!shiftDate.endsWith('*')) {
+                          //     shiftDate = '$shiftDate*';
+                          //     print(shiftDate);
+                          //   }
+                          // }
+                          return Container(
+                            margin: EdgeInsets.only(
+                              top: height / height20,
                               left: width / width30,
                               right: width / width30,
                             ),
-                            child: ShiftExist
-                                ? FutureBuilder(
-                                    future:
-                                        Future.delayed(Duration(seconds: 2)),
-                                    builder: (c, s) => s.connectionState ==
-                                            ConnectionState.done
-                                        ? StartTaskScreen(
-                                            ShiftDate: _ShiftDate,
-                                            ShiftClientID: _shiftCLientId,
-                                            ShiftEndTime: _ShiftEndTime,
-                                            ShiftStartTime: _ShiftStartTime,
-                                            EmployeId: _employeeId,
-                                            ShiftId: _shiftId,
-                                            ShiftAddressName:
-                                                _ShiftLocationName,
-                                            ShiftCompanyId:
-                                                _ShiftCompanyId ?? "",
-                                            ShiftBranchId: _ShiftBranchId,
-                                            EmployeeName: _userName ?? "",
-                                            ShiftLocationId: _shiftLocationId,
-                                            resetShiftStarted: () {},
-                                            ShiftIN: true,
-                                            onRefresh: refreshHomeScreen,
-                                            ShiftName: _ShiftName,
-                                            ShiftStatus: _ShiftStatus)
-                                        : Center(
-                                            child: InterMedium(
-                                              text: 'Loading...',
-                                              color: Primarycolor,
-                                              fontsize: width / width14,
-                                            ),
-                                          ),
-                                  )
-                                : SizedBox()),
-                      )
-                    : ScreenIndex == 1
-                        ? SliverGrid(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, // Number of columns
-                              // mainAxisSpacing: 10.0, // Spacing between rows
-                              // crossAxisSpacing: 14.0,
-                              // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
-                            ),
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return Bounce(
-                                  onTap: () {
-                                    switch (index) {
-                                      case 0:
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return PanicAlertDialog(
-                                              EmpId: _employeeId,
-                                              CompanyId: _employeeCompanyID,
-                                              Username: _userName,
-                                            );
-                                          },
-                                        );
-                                        break;
-                                      case 1:
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return SiteTourScreen(
-                                              height: height,
-                                              width: width,
-                                              schedulesList: schedules_list,
-                                            );
-                                          },
-                                        );
-                                        break;
-                                      case 2:
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-
-                                                    // CreateDarScreen(
-                                                    //   EmpEmail: _empEmail,
-                                                    //   Username: _userName,
-                                                    //   EmpId: _employeeId,
-                                                    // )
-                                                    DarDisplayScreen(
-                                                      EmpEmail: _empEmail,
-                                                      EmpID: _employeeId,
-                                                      EmpDarCompanyId:
-                                                          _ShiftCompanyId ?? "",
-                                                      EmpDarCompanyBranchId:
-                                                          _branchId,
-                                                      EmpDarShiftID: _shiftId,
-                                                      EmpDarClientID:
-                                                          _shiftCLientId,
-                                                      Username: _userName,
-                                                    )));
-                                        break;
-                                      case 3:
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReportScreen(
-                                                      locationId:
-                                                          _shiftLocationId,
-                                                      locationName:
-                                                          _ShiftLocationName,
-                                                      companyId:
-                                                          _ShiftCompanyId ?? "",
-                                                      empId: _employeeId,
-                                                      empName: _userName,
-                                                      clientId: _shiftCLientId,
-                                                      ShiftId: _shiftId,
-                                                    )));
-                                        break;
-                                      case 4:
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => PostOrder(
-                                                      locationId:
-                                                          _shiftLocationId,
-                                                    )));
-                                        break;
-                                      case 5:
-                                        /*TaskScreen*/
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TaskFeatureScreen()));
-                                        break;
-                                      case 6:
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LogBookScreen(
-                                                      EmpId: _employeeId,
-                                                    )));
-                                        break;
-                                      case 7:
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VisiTorsScreen(
-                                                      locationId:
-                                                          _shiftLocationId,
-                                                    )));
-                                        break;
-                                      case 8:
-                                        // AssetsScreen
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    // KeysScreen(
-                                                    //     keyId: _employeeId)
-                                                    AssetsScreen(
-                                                        assetEmpId:
-                                                            _employeeId)));
-                                        break;
-                                      case 9:
-                                        // AssetsScreen
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    KeysScreen(
-                                                        keyId: _employeeId)
-                                                // AssetsScreen(
-                                                //     assetEmpId:
-                                                //         _employeeId)
-
-                                                ));
-                                        break;
-                                      default:
-                                    }
-                                  },
-                                  child: gridWidget(
-                                    img: data[index][0],
-                                    tittle: data[index][1],
-                                  ),
-                                );
-                              },
-                              childCount: data.length,
-                            ),
-                          )
-                        : /*ScreenIndex == 2
-                            ? SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: width / width30,
-                                    right: width / width30,
-                                  ),
-                                  child: CustomCalendar(
-                                    selectedDates: selectedDates,
+                            height: height / height180,
+                            width: double.maxFinite,
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Container(
+                                    width: width / width200,
+                                    height: height / height50,
+                                    padding: EdgeInsets.only(
+                                        top: height / height3,
+                                        left: width / width10,
+                                        right: width / width10,
+                                        bottom: height / height20),
+                                    decoration: BoxDecoration(
+                                      color: color31,
+                                      borderRadius: BorderRadius.circular(
+                                        width / width10,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        InterBold(
+                                          text: shiftDate,
+                                          color: color30,
+                                          fontsize: width / width16,
+                                        ),
+                                        InterBold(
+                                          text: dayOfWeek,
+                                          color: color30,
+                                          fontsize: width / width12,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              )
-                            :*/
-                        ScreenIndex == 3
-                            ? SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: width / width30,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      InterBold(
-                                        text: 'Received Message ',
-                                        color: Primarycolor,
-                                        fontsize: width / width14,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.add,
-                                            color: Primarycolor,
-                                            size: width / width20,
-                                          ),
-                                          SizedBox(width: width / width4),
-                                          InterBold(
-                                            text: 'Create Message',
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    width: double.maxFinite,
+                                    height: height / height150,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: height / height30,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: color27,
+                                      borderRadius: BorderRadius.circular(
+                                          width / width10),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: width / width278,
+                                          child: IconTextWidget(
+                                            icon: Icons.location_on,
+                                            iconSize: width / width24,
+                                            text: schedules[
+                                                    'ShiftLocationAddress'] ??
+                                                "",
+                                            color: color30,
+                                            Iconcolor: Colors.redAccent,
+                                            space: width / width8,
                                             fontsize: width / width14,
-                                            color: Primarycolor,
-                                            maxLine: 2,
-                                          )
-                                        ],
-                                      ),
-                                    ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width / width278,
+                                          child: IconTextWidget(
+                                            iconSize: width / width24,
+                                            icon: Icons.access_time,
+                                            text:
+                                                '${schedules['ShiftStartTime'] ?? ""} - ${schedules['ShiftEndTime'] ?? ""}',
+                                            color: color30,
+                                            Iconcolor: Primarycolor,
+                                            space: width / width8,
+                                            fontsize: width / width14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              )
-                            : const SizedBox(),
-                /*ScreenIndex == 2
-                    ? SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            var schedules = schedules_list[index];
-                            Timestamp shifttimestamp = schedules['ShiftDate'];
-                            DateTime dateTime = shifttimestamp.toDate();
-                            String shiftDate =
-                                DateFormat('dd-MM-yyy').format(dateTime);
-
-                            print('Shift Date: $shiftDate');
-                            print("Schedule COunt ${schedules_list.length}");
-                            String dayOfWeek =
-                                DateFormat('EEEE').format(dateTime);
-                            // if (dateTime.year == DateTime.now().year &&
-                            //     dateTime.month == DateTime.now().month &&
-                            //     dateTime.day == DateTime.now().day) {
-                            //   if (!shiftDate.endsWith('*')) {
-                            //     shiftDate = '$shiftDate*';
-                            //     print(shiftDate);
-                            //   }
-                            // }
-                            return Container(
-                              margin: EdgeInsets.only(
-                                top: height / height20,
-                                left: width / width30,
-                                right: width / width30,
-                              ),
-                              height: height / height180,
-                              width: double.maxFinite,
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Container(
-                                      width: width / width200,
-                                      height: height / height50,
-                                      padding: EdgeInsets.only(
-                                          top: height / height3,
-                                          left: width / width10,
-                                          right: width / width10,
-                                          bottom: height / height20),
-                                      decoration: BoxDecoration(
-                                        color: color31,
-                                        borderRadius: BorderRadius.circular(
-                                          width / width10,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          InterBold(
-                                            text: shiftDate,
-                                            color: color30,
-                                            fontsize: width / width16,
-                                          ),
-                                          InterBold(
-                                            text: dayOfWeek,
-                                            color: color30,
-                                            fontsize: width / width12,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Container(
-                                      width: double.maxFinite,
-                                      height: height / height150,
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: height / height30,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: color27,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: width / width278,
-                                            child: IconTextWidget(
-                                              icon: Icons.location_on,
-                                              iconSize: width / width24,
-                                              text: schedules[
-                                                      'ShiftLocationAddress'] ??
-                                                  "",
-                                              color: color30,
-                                              Iconcolor: Colors.redAccent,
-                                              space: width / width8,
-                                              fontsize: width / width14,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / width278,
-                                            child: IconTextWidget(
-                                              iconSize: width / width24,
-                                              icon: Icons.access_time,
-                                              text:
-                                                  '${schedules['ShiftStartTime'] ?? ""} - ${schedules['ShiftEndTime'] ?? ""}',
-                                              color: color30,
-                                              Iconcolor: Primarycolor,
-                                              space: width / width8,
-                                              fontsize: width / width14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          childCount: schedules_list.length,
-                        ),
-                      )
-                    :*/
-                ScreenIndex == 3
-                    ? SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                left: width / width30,
-                                right: width / width30,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  height: height / height120,
-                                  margin: EdgeInsets.only(
-                                    top: height / height10,
-                                  ),
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        width: 1,
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                    // color: WidgetColor,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: height / height20,
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    // mainAxisAlignment:
-                                    //     MainAxisAlignment
-                                    //         .spaceBetween,
-                                    children: [
-                                      NewMessage
-                                          ? Container(
-                                              height: height / height10,
-                                              width: width / width10,
-                                              decoration: BoxDecoration(
-                                                color: Colors.green,
-                                                shape: BoxShape.circle,
-                                              ),
-                                            )
-                                          : SizedBox(),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left: width / width6),
-                                        height: height / height40,
-                                        width: width / width40,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-                                            ),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: width / width6,
-                                      ),
-                                      SizedBox(
-                                        width: width / width300,
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                InterRegular(
-                                                  text: 'Supervisor',
-                                                  fontsize: width / width16,
-                                                  color: color1,
-                                                ),
-                                                Row(
-                                                  // mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    PoppinsRegular(
-                                                      text: '9:36 AM',
-                                                      color: color3,
-                                                      fontsize: width / width14,
-                                                    ),
-                                                    Icon(
-                                                      Icons.arrow_forward_ios,
-                                                      color: color1,
-                                                      size: width / width18,
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: height / height5,
-                                            ),
-                                            Flexible(
-                                              child: InterRegular(
-                                                text:
-                                                    'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
-                                                fontsize: width / width14,
-                                                color: color3,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          childCount: 8,
-                        ),
-                      )
-                    : SliverToBoxAdapter()
-              ],
-            ),
+                              ],
+                            ),
+                          );
+                        },
+                        childCount: schedules_list.length,
+                      ),
+                    )
+                  :*/
+              // ScreenIndex == 3
+              //     ?
+              //     : SliverToBoxAdapter()
+            ],
           ),
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
@@ -134,8 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -144,8 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: width / width30,
-                vertical: height / height20,
+                horizontal: 30.w,
+                vertical: 20.h,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: width / width18,
+                      fontSize: 15.sp,
                       color: Colors.white, // Change text color to white
                     ),
                     controller: _emailcontrller,
@@ -163,11 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: height / height10),
+                  SizedBox(height: 30.h),
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: width / width18,
+                      fontSize: 15.sp,
                       color: Colors.white, // Change text color to white
                     ),
                     controller: _passwordcontrller,
@@ -183,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _obscureText
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          size: width / width24,
+                          size: 24.sp,
                           color: color6,
                         ),
                       ),
@@ -191,22 +191,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Enter your password',
                     ),
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   if (_errorMessage != null)
                     Text(
                       _errorMessage!,
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: width / width24,
+                        fontSize: 24.sp,
                       ),
                     ),
                   Button1(
-                    height: height / height50,
+                    height: 50.57.h,
                     backgroundcolor: Primarycolor,
                     text: 'Login',
-                    fontsize: width / width16,
+                    fontsize: 18.sp,
                     color: Colors.black,
-                    borderRadius: width / width10,
+                    borderRadius: 5.r,
                     onPressed: () {
                       Auth().signInWithEmailAndPassword(_emailcontrller.text,
                           _passwordcontrller.text, context);

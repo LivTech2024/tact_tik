@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -143,7 +144,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       children: [
                         InterBold(
                           text: date,
-                          fontsize: width / width20,
+                          fontsize: 20.sp,
                           color: Primarycolor,
                           letterSpacing: -.3,
                         ),
@@ -173,15 +174,14 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             },
                             child: Container(
                               width: double.maxFinite,
-                              height: height / height200,
+                              height: 200.h,
                               decoration: BoxDecoration(
                                 color: WidgetColor,
-                                borderRadius:
-                                    BorderRadius.circular(width / width20),
+                                borderRadius: BorderRadius.circular(20.r),
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: width / width20,
-                                vertical: height / height10,
+                                horizontal: 20.w,
+                                vertical: 10.h,
                               ),
                               child: Column(
                                 mainAxisAlignment:
@@ -200,7 +200,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   isNew
                                       ? InterBold(
                                           text: "New",
-                                          fontsize: width / width18,
+                                          fontsize: 18.sp,
                                           color: Colors.green,
                                         )
                                       : SizedBox(),
@@ -208,7 +208,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
-                                      fontsize: width / width16,
+                                      fontsize: 16.sp,
                                       color: color26,
                                       maxLines: 4,
                                     ),
@@ -221,7 +221,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                         onPressed: () {},
                                         icon: Icon(
                                           Icons.image,
-                                          size: width / width18,
+                                          size: 18.sp,
                                           color: color2,
                                         ),
                                       ),
@@ -229,7 +229,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                         onPressed: () {},
                                         icon: Icon(
                                           Icons.video_collection,
-                                          size: width / width18,
+                                          size: 18.sp,
                                           color: color2,
                                         ),
                                       )
@@ -240,7 +240,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             ),
                           );
                         }).toList(),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 10.h),
                       ],
                     ));
                   }
@@ -257,9 +257,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       icon: Icon(
                         Icons.arrow_back_ios,
                         color: Colors.white,
-                        size: width / width24,
+                        size: 24.sp,
                       ),
-                      padding: EdgeInsets.only(left: width / width20),
+                      padding: EdgeInsets.only(left: 20.w),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -275,11 +275,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                      height: height / height65,
+                      height: 65.h,
                       width: double.maxFinite,
                       color: color24,
-                      padding:
-                          EdgeInsets.symmetric(vertical: height / height16),
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -297,7 +296,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   child: InterBold(
                                     text: 'Today',
                                     color: colors[1],
-                                    fontsize: width / width18,
+                                    fontsize: 18.sp,
                                   ),
                                 ),
                               ),
@@ -317,7 +316,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   child: InterBold(
                                     text: 'History',
                                     color: colors[0],
-                                    fontsize: width / width18,
+                                    fontsize: 18.sp,
                                   ),
                                 ),
                               ),
@@ -329,8 +328,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                   ),
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: width / width16,
-                      vertical: height / height20,
+                      horizontal: 16.w,
+                      vertical: 20.h,
                     ),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate(

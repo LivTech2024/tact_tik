@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +33,7 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
   bool showCreate = true;
 
   DateTime? StartDate;
+  DateTime? SelectedDate;
   DateTime? EndDate;
 
   TextEditingController _tittleController = TextEditingController();
@@ -62,23 +65,27 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
       keys = querySnapshot.docs;
     });
   }
-  Future<void> _selectDate(BuildContext context , bool isStart) async {
+
+  Future<void> _selectDate(
+      BuildContext context, bool isStart, bool isDate) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     setState(() {
-      if (picked != null){
+      if (picked != null) {
         if (isStart) {
           StartDate = picked;
-        }  else{
+        } else if (isDate) {
+          SelectedDate = picked;
+        } else {
           EndDate = picked;
         }
       }
     });
-
   }
+
   Future<void> _saveData() async {
     CollectionReference keyAllocations =
         FirebaseFirestore.instance.collection('KeyAllocations');
@@ -257,29 +264,38 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 fontsize: width / width16,
                               ),
                               SizedBox(height: height / height10),
-                              Container(
-                                height: height / height60,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: width / width20),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(width / width10),
-                                  color: WidgetColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InterMedium(
-                                      text: 'Select Date',
-                                      fontsize: width / width16,
-                                      color: color2,
-                                    ),
-                                    SvgPicture.asset(
-                                      'assets/images/calendar_clock.svg',
-                                      width: width / width20,
-                                    )
-                                  ],
+                              GestureDetector(
+                                onTap: () {
+                                  _selectDate(context, true, true);
+                                },
+                                child: Container(
+                                  height: height / height60,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(10.r),
+                                    color: WidgetColor,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InterMedium(
+                                        text: SelectedDate != null
+                                            ? '${SelectedDate!.toLocal()}'
+                                                .split(' ')[0]
+                                            : 'Start Time',
+                                        fontsize: width / width16,
+                                        color: color2,
+                                      ),
+                                      SvgPicture.asset(
+                                        'assets/images/calendar_clock.svg',
+                                        width: width / width20,
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: height / height20),
@@ -293,20 +309,25 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 children: [
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap:(){
-                                        _selectDate(context , true);
+                                      onTap: () {
+                                        _selectDate(context, true, false);
                                       },
                                       child: Container(
                                         height: height / height60,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(width / width10),
+                                          borderRadius: BorderRadius.circular(
+                                              width / width10),
                                           color: WidgetColor,
                                         ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             InterMedium(
-                                              text: StartDate != null ? '${StartDate!.toLocal()}'.split(' ')[0] :'Start Time',
+                                              text: StartDate != null
+                                                  ? '${StartDate!.toLocal()}'
+                                                      .split(' ')[0]
+                                                  : 'Start Time',
                                               fontsize: width / width16,
                                               color: color2,
                                             ),
@@ -322,20 +343,25 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                   SizedBox(width: width / width6),
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: (){
-                                        _selectDate(context , false);
+                                      onTap: () {
+                                        _selectDate(context, false, false);
                                       },
                                       child: Container(
                                         height: height / height60,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(width / width10),
+                                          borderRadius: BorderRadius.circular(
+                                              width / width10),
                                           color: WidgetColor,
                                         ),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             InterMedium(
-                                              text: EndDate!= null ? '${EndDate!.toLocal()}'.split(' ')[0] : 'End Time',
+                                              text: EndDate != null
+                                                  ? '${EndDate!.toLocal()}'
+                                                      .split(' ')[0]
+                                                  : 'End Time',
                                               fontsize: width / width16,
                                               color: color2,
                                             ),

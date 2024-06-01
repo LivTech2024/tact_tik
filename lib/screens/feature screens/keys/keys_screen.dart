@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
@@ -55,8 +56,6 @@ class _KeysScreenState extends State<KeysScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -70,9 +69,9 @@ class _KeysScreenState extends State<KeysScreen> {
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.white,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                   print("Navigator debug: ${Navigator.of(context).toString()}");
@@ -80,7 +79,7 @@ class _KeysScreenState extends State<KeysScreen> {
               ),
               title: InterRegular(
                 text: 'Keys',
-                fontsize: width / width18,
+                fontsize: 18.sp,
                 color: Colors.white,
                 letterSpacing: -0.3,
               ),
@@ -125,17 +124,17 @@ class _KeysScreenState extends State<KeysScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width30),
+                                horizontal: 30.w),
                             child: InterBold(
                               text: isToday
                                   ? 'Today'
                                   : DateFormat.yMMMd().format(date),
-                              fontsize: width / width20,
+                              fontsize: 20.sp,
                               color: Primarycolor,
                             ),
                           ),
                           SizedBox(
-                            height: height / height30,
+                            height: 30.h,
                           ),
                           ...groupedDocuments[date]!.map(
                             (doc) {
@@ -158,7 +157,7 @@ class _KeysScreenState extends State<KeysScreen> {
 
                               return Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: width / width30),
+                                    horizontal: 30.w),
                                 child: GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -178,15 +177,15 @@ class _KeysScreenState extends State<KeysScreen> {
                                                 )));
                                   },
                                   child: Container(
-                                    height: width / width60,
+                                    height: 60.h,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: width / width10),
+                                        horizontal: 10.w,),
                                     width: double.maxFinite,
                                     margin: EdgeInsets.only(
-                                        bottom: height / height10),
+                                        bottom: 10.h,),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
-                                          width / width10),
+                                          10.r),
                                       color: WidgetColor,
                                     ),
                                     child: Row(
@@ -200,23 +199,22 @@ class _KeysScreenState extends State<KeysScreen> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Container(
-                                              height: height / height44,
-                                              width: width / width44,
+                                              height: 44.h,
+                                              width: 44.w,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        width / width10),
+                                                    BorderRadius.circular(10.r),
                                                 color: Primarycolorlight,
                                               ),
                                               child: Center(
                                                 child: Icon(
                                                   Icons.home_repair_service,
                                                   color: Primarycolor,
-                                                  size: width / width24,
+                                                  size: 24.sp,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(width: width / width20),
+                                            SizedBox(width: 20.w),
                                             StreamBuilder<QuerySnapshot>(
                                               stream: FirebaseFirestore.instance
                                                   .collection('Keys')
@@ -239,7 +237,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                                 }
                                                 return InterMedium(
                                                   text: keyName,
-                                                  fontsize: width / width16,
+                                                  fontsize: 16.sp,
                                                   color: color1,
                                                 );
                                               },
@@ -249,9 +247,9 @@ class _KeysScreenState extends State<KeysScreen> {
                                         InterMedium(
                                           text: time,
                                           color: color17,
-                                          fontsize: width / width16,
+                                          fontsize: 16.sp,
                                         ),
-                                        SizedBox(width: width / width20),
+                                        SizedBox(width: 20.w),
                                       ],
                                     ),
                                   ),

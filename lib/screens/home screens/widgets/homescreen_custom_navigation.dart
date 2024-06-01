@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 
@@ -14,6 +15,7 @@ class HomeScreenCustomNavigation extends StatelessWidget {
       required this.text,
       required this.textcolor,
       this.SVG});
+
   final IconData icon;
   final Color color;
   final Color textcolor;
@@ -23,15 +25,13 @@ class HomeScreenCustomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return Container(
-      height: height / height74,
-      width: width / width74,
+      height: 74.h,
+      width: 74.w,
       decoration: BoxDecoration(
         color: WidgetColor,
-        borderRadius: BorderRadius.circular(width / width13),
+        borderRadius: BorderRadius.circular(13.r),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -40,16 +40,18 @@ class HomeScreenCustomNavigation extends StatelessWidget {
               ? SvgPicture.asset(
                   SVG!,
                   color: color,
+                  height: 24.h,
+                  width: 24.w,
                 )
               : Icon(
                   icon,
-                  size: width / width24,
+                  size: 24.sp,
                   color: color,
                 ),
-          SizedBox(height: height / height8),
+          SizedBox(height: 10.h),
           InterMedium(
             text: text,
-            fontsize: width / width12,
+            fontsize: 12.sp,
             color: textcolor,
           )
         ],

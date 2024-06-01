@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
@@ -133,7 +134,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     var defaultEmail = "tacttikofficial@gmail.com";
     var ClientName = await fireStoreService.getClientName(widget.ShiftClientID);
     // emails.add(ClientEmail!);
-    // emails.add("sutarvaibhav37@student.sfit.ac.in");
     emails.add("sutarvaibhav37@gmail.com");
     var testEmail3 = "sales@tpssolution.com";
     // var testEmail5 = "pankaj.kumar1312@yahoo.com";
@@ -201,19 +201,19 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
     print("Clicked Saved PRef ${clickedIn}");
 
-    if (widget.ShiftStatus == 'started') {
-      setState(() {
-        clickedIn = true;
-        prefs.setBool('clickedIn', clickedIn);
-      });
-      await homeScreenController.startBgLocationService();
-      updateLateTimeAndStartTimer();
-    } else {
-      setState(() {
-        prefs.setBool('clickedIn', clickedIn);
-        clickedIn = false;
-      });
-    }
+    // if (widget.ShiftStatus == 'started') {
+    //   setState(() {
+    //     clickedIn = true;
+    //     prefs.setBool('clickedIn', clickedIn);
+    //   });
+    await homeScreenController.startBgLocationService();
+    updateLateTimeAndStartTimer();
+    // } else {
+    //   setState(() {
+    //     prefs.setBool('clickedIn', clickedIn);
+    //     clickedIn = false;
+    //   });
+    // }
     bool? savedClickedIn = prefs.getBool('clickedIn');
     print("saved Clicked in values: ${savedClickedIn}");
     bool? pauseState = prefs.getBool('paused');
@@ -442,32 +442,30 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: height / height200,
+          height: 170.h,
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
-          padding: EdgeInsets.only(
-              left: width / width26,
-              top: height / height10,
-              right: width / width12),
+          padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [
                   InterBold(
                     text: widget.ShiftDate,
                     color: color1,
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                   ),
                   SizedBox(
-                    width: width / width12,
+                    width: 12.w,
                   ),
                   Bounce(
                     child: IconButton(
                       onPressed: () {},
                       icon: Icon(
                         Icons.contact_support_outlined,
-                        size: width / width20,
+                        size: 20.sp,
                       ),
                       padding: EdgeInsets.zero,
                     ),
@@ -476,69 +474,70 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               ),
               // SizedBox(height: height / height10),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: width / width100,
+                    width: 97.67.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'In time',
-                          fontsize: width / width14,
+                          fontsize: 28.sp,
                           color: color1,
                         ),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 12.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
-                          fontsize: width / width16,
+                          fontsize: 18.99.sp,
                           color: color7,
                         ),
                         SizedBox(height: height / height20),
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
-                                text: isLate ? "Late $lateTime" : "",
+                                text: isLate ? "Late $lateTime" : '',
                                 color: Colors.redAccent,
-                                fontsize: width / width12,
+                                fontsize: 14.sp,
                               )
                             : const SizedBox(),
                       ],
                     ),
                   ),
                   SizedBox(
-                    width: width / width100,
+                    width: 119.47.w,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
                           text: 'Out time',
-                          fontsize: width / width14,
+                          fontsize: 28.sp,
                           color: color1,
                         ),
                         SizedBox(height: height / height10),
                         InterRegular(
                           text: widget.ShiftEndTime,
-                          fontsize: width / width16,
+                          fontsize: 18.99.sp,
                           color: color7,
                         ),
                         SizedBox(height: height / height20),
                         InterSemibold(
                           text: remainingTimeFormatted,
                           color: color8,
-                          fontsize: width / width12,
+                          fontsize: 14.sp,
                         )
                       ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(right: width / width12),
-                    height: height / height74,
-                    width: width / width70,
+                    margin: EdgeInsets.only(right: 17.66.w),
+                    height: 74.81.h,
+                    width: 71.68.w,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/log_book.png'),
-                        fit: BoxFit.fitHeight,
+                        // fit: BoxFit.fitWidth,
                         filterQuality: FilterQuality.high,
                       ),
                     ),
@@ -830,126 +829,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       if (currentTime.isBefore(bufferStart) ||
                           currentTime.isAfter(bufferEnd)) {
-                        // Current time is before shift end time
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                  title: InterRegular(
-                                    text: 'Add Reason',
-                                    color: color2,
-                                    fontsize: width / width12,
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomeTextField(
-                                        hint: 'Add Reason',
-                                        showIcon: false,
-                                        controller: CommentController,
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const InterRegular(
-                                        text: 'Cancel',
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-
-                                        if (CommentController.text.isNotEmpty) {
-                                          await homeScreenController
-                                              .stopBgLocationService();
-                                          widget.onRefresh();
-                                          var data = await fireStoreService
-                                              .fetchDataForPdf(widget.EmployeId,
-                                                  widget.ShiftId);
-
-                                          // send_mail_onOut(data); //Need to uncomment this
-                                          setState(() {
-                                            // isPaused = !isPaused;
-                                            // prefs.setBool("pauseState", isPaused);
-                                            clickedIn = false;
-                                            resetStopwatch();
-                                            resetClickedState();
-                                            widget.resetShiftStarted();
-                                            prefs.setBool(
-                                                'ShiftStarted', false);
-                                          });
-
-                                          var clientName =
-                                              await fireStoreService
-                                                  .getClientName(
-                                                      widget.ShiftClientID);
-                                          await fireStoreService.addToLog(
-                                              'shift_end',
-                                              widget.ShiftAddressName,
-                                              clientName ?? "",
-                                              widget.EmployeId,
-                                              widget.EmployeeName,
-                                              widget.ShiftCompanyId,
-                                              widget.ShiftBranchId,
-                                              widget.ShiftClientID,
-                                              widget.ShiftLocationId,
-                                              widget.ShiftName);
-                                          await fireStoreService
-                                              .EndShiftLogComment(
-                                                  widget.EmployeId,
-                                                  formattedStopwatchTime,
-                                                  widget.ShiftId,
-                                                  widget.ShiftAddressName,
-                                                  widget.ShiftBranchId,
-                                                  widget.ShiftCompanyId,
-                                                  widget.EmployeeName,
-                                                  widget.ShiftClientID,
-                                                  CommentController.text);
-                                          await homeScreenController
-                                              .stopBgLocationService();
-                                          print("Reached Here");
-                                          // Navigator.pop(context);
-
-                                          // if (mounted) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomeScreen(),
-                                            ),
-                                          );
-                                          // }
-                                        } else {
-                                          showErrorToast(context,
-                                              "Reason cannot be empty");
-                                        }
-                                      },
-                                      child: const InterRegular(
-                                        text: 'Submit',
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                  ]);
-                            });
-                        print('Current time is before shift end time');
-                      } else {
-                        // Current time i
-                        //s after or equal to shift end time
-
-                        print(
-                            'Current time is after or equal to shift end time');
-
-                        //Check for the Current time if it is early then the shiftEndTime or more thant the shift endtime return alterbox or else not
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-
                         bool? status =
                             await fireStoreService.checkShiftReturnTaskStatus(
                                 widget.EmployeId, widget.ShiftId);
@@ -965,67 +844,203 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     )),
                           );
                         } else {
-                          widget.onRefresh();
-                          var data = await fireStoreService.fetchDataForPdf(
-                              widget.EmployeId, widget.ShiftId);
+                          // Current time is before shift end time
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                    title: InterRegular(
+                                      text: 'Add Reason',
+                                      color: color2,
+                                      fontsize: width / width12,
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CustomeTextField(
+                                          hint: 'Add Reason',
+                                          showIcon: false,
+                                          controller: CommentController,
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const InterRegular(
+                                          text: 'Cancel',
+                                          color: Primarycolor,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
 
-                          // send_mail_onOut(data); //Need to uncomment this too
+                                          if (CommentController
+                                              .text.isNotEmpty) {
+                                            await homeScreenController
+                                                .stopBgLocationService();
+                                            widget.onRefresh();
+                                            var data = await fireStoreService
+                                                .fetchDataForPdf(
+                                                    widget.EmployeId,
+                                                    widget.ShiftId);
 
-                          var clientName = await fireStoreService
-                              .getClientName(widget.ShiftClientID);
-                          await fireStoreService.addToLog(
-                              'shift_end',
-                              widget.ShiftAddressName,
-                              clientName ?? "",
-                              widget.EmployeId,
-                              widget.EmployeeName,
-                              widget.ShiftCompanyId,
-                              widget.ShiftBranchId,
-                              widget.ShiftClientID,
-                              widget.ShiftLocationId,
-                              widget.ShiftName);
-                          await fireStoreService.EndShiftLog(
-                              widget.EmployeId,
-                              formattedStopwatchTime,
-                              widget.ShiftId,
-                              widget.ShiftAddressName,
-                              widget.ShiftBranchId,
-                              widget.ShiftCompanyId,
-                              widget.EmployeeName,
-                              widget.ShiftClientID);
+                                            // send_mail_onOut(data); //Need to uncomment this
+                                            setState(() {
+                                              // isPaused = !isPaused;
+                                              // prefs.setBool("pauseState", isPaused);
+                                              clickedIn = false;
+                                              resetStopwatch();
+                                              resetClickedState();
+                                              widget.resetShiftStarted();
+                                              prefs.setBool(
+                                                  'ShiftStarted', false);
+                                            });
 
-                          String? ClientName = await fireStoreService
-                              .getClientName(widget.ShiftClientID);
-                          print("Client Name ${ClientName}");
-                          var ClientEmail = fireStoreService
-                              .getClientEmail(widget.ShiftClientID);
-                          print("Client Name ${ClientEmail}");
+                                            var clientName =
+                                                await fireStoreService
+                                                    .getClientName(
+                                                        widget.ShiftClientID);
+                                            await fireStoreService.addToLog(
+                                                'shift_end',
+                                                widget.ShiftAddressName,
+                                                clientName ?? "",
+                                                widget.EmployeId,
+                                                widget.EmployeeName,
+                                                widget.ShiftCompanyId,
+                                                widget.ShiftBranchId,
+                                                widget.ShiftClientID,
+                                                widget.ShiftLocationId,
+                                                widget.ShiftName);
+                                            await fireStoreService
+                                                .EndShiftLogComment(
+                                                    widget.EmployeId,
+                                                    formattedStopwatchTime,
+                                                    widget.ShiftId,
+                                                    widget.ShiftAddressName,
+                                                    widget.ShiftBranchId,
+                                                    widget.ShiftCompanyId,
+                                                    widget.EmployeeName,
+                                                    widget.ShiftClientID,
+                                                    CommentController.text);
+                                            await homeScreenController
+                                                .stopBgLocationService();
+                                            print("Reached Here");
+                                            // Navigator.pop(context);
 
-                          var AdminEmal = fireStoreService
-                              .getAdminEmail(widget.ShiftCompanyId);
-                          print("Client Name ${AdminEmal}");
-                          widget.onRefresh();
-                          setState(() {
-                            // isPaused = !isPaused;
-                            // prefs.setBool("pauseState", isPaused);
-                            clickedIn = false;
-                            // resetStopwatch();
-                            resetClickedState();
-                            widget.resetShiftStarted();
-                            prefs.setBool('ShiftStarted', false);
-                          });
-                          // if (mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
-                            ),
-                          );
-                          // }
+                                            // if (mounted) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const HomeScreen(),
+                                              ),
+                                            );
+                                            // }
+                                          } else {
+                                            showErrorToast(context,
+                                                "Reason cannot be empty");
+                                          }
+                                        },
+                                        child: const InterRegular(
+                                          text: 'Submit',
+                                          color: Primarycolor,
+                                        ),
+                                      ),
+                                    ]);
+                              });
+                          print('Current time is before shift end time');
+                          // } else {
+                          // Current time i
+                          //s after or equal to shift end time
+
+                          print(
+                              'Current time is after or equal to shift end time');
+
+                          //Check for the Current time if it is early then the shiftEndTime or more thant the shift endtime return alterbox or else not
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+
+                          bool? status =
+                              await fireStoreService.checkShiftReturnTaskStatus(
+                                  widget.EmployeId, widget.ShiftId);
+                          if (status == true) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ShiftReturnTaskScreen(
+                                        shiftId: widget.ShiftId,
+                                        Empid: widget.EmployeId,
+                                        ShiftName: widget.ShiftAddressName,
+                                        EmpName: widget.EmployeeName,
+                                      )),
+                            );
+                          } else {
+                            widget.onRefresh();
+                            var data = await fireStoreService.fetchDataForPdf(
+                                widget.EmployeId, widget.ShiftId);
+
+                            // send_mail_onOut(data); //Need to uncomment this too
+
+                            var clientName = await fireStoreService
+                                .getClientName(widget.ShiftClientID);
+                            await fireStoreService.addToLog(
+                                'shift_end',
+                                widget.ShiftAddressName,
+                                clientName ?? "",
+                                widget.EmployeId,
+                                widget.EmployeeName,
+                                widget.ShiftCompanyId,
+                                widget.ShiftBranchId,
+                                widget.ShiftClientID,
+                                widget.ShiftLocationId,
+                                widget.ShiftName);
+                            await fireStoreService.EndShiftLog(
+                                widget.EmployeId,
+                                formattedStopwatchTime,
+                                widget.ShiftId,
+                                widget.ShiftAddressName,
+                                widget.ShiftBranchId,
+                                widget.ShiftCompanyId,
+                                widget.EmployeeName,
+                                widget.ShiftClientID);
+
+                            String? ClientName = await fireStoreService
+                                .getClientName(widget.ShiftClientID);
+                            print("Client Name ${ClientName}");
+                            var ClientEmail = fireStoreService
+                                .getClientEmail(widget.ShiftClientID);
+                            print("Client Name ${ClientEmail}");
+
+                            var AdminEmal = fireStoreService
+                                .getAdminEmail(widget.ShiftCompanyId);
+                            print("Client Name ${AdminEmal}");
+                            widget.onRefresh();
+                            setState(() {
+                              // isPaused = !isPaused;
+                              // prefs.setBool("pauseState", isPaused);
+                              clickedIn = false;
+                              // resetStopwatch();
+                              resetClickedState();
+                              widget.resetShiftStarted();
+                              prefs.setBool('ShiftStarted', false);
+                            });
+                            // if (mounted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
+                              ),
+                            );
+                            // }
+                          }
                         }
                       }
-
-                      // }
                     },
                     child: Container(
                       color: WidgetColor,
@@ -1044,7 +1059,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
-        SizedBox(height: height / height10),
+        SizedBox(height: 10.h),
         clickedIn
             ? Button1(
                 height: height / height65,
@@ -1056,15 +1071,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
-
-                  /// TODO : Made changes here
-                  // if (controller.isPaused.value) {
-                  //   print('resume clicked');
-                  //   await controller.resumeStopWatch();
-                  // } else {
-                  //   print('break clicked');
-                  //   await controller.pauseStopWatch();
-                  // }
                   var data = await fireStoreService.fetchDataForPdf(
                       widget.EmployeId, widget.ShiftId);
                   print("Fetched Data for generating pdf: ${data}");
@@ -1121,7 +1127,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 },
               )
             : const SizedBox(),
-        SizedBox(height: height / height10),
+        SizedBox(height: 10.h),
+        // SizedBox(height: height / height10),
         IgnorePointer(
           ignoring: !clickedIn,
           child: Button1(

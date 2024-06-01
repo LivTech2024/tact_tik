@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -72,8 +73,6 @@ class ViewAssetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -84,16 +83,16 @@ class ViewAssetsScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterRegular(
             text: 'View Assets',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
@@ -102,20 +101,20 @@ class ViewAssetsScreen extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: height / height30),
+            SizedBox(height: 30.h),
             InterBold(
               text: 'Allocation Date',
               color: Primarycolor,
-              fontsize: width / width20,
+              fontsize: 20.sp,
             ),
-            SizedBox(height: height / height30),
+            SizedBox(height: 30.h),
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: height / height60,
+                    height: 60.h,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
+                      borderRadius: BorderRadius.circular(10.r),
                       color: WidgetColor,
                     ),
                     child: Row(
@@ -123,23 +122,23 @@ class ViewAssetsScreen extends StatelessWidget {
                       children: [
                         InterMedium(
                           text: startDate,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: color2,
                         ),
                         SvgPicture.asset(
                           'assets/images/calendar_clock.svg',
-                          width: width / width20,
+                          width: 20.w,
                         )
                       ],
                     ),
                   ),
                 ),
-                SizedBox(width: width / width6),
+                SizedBox(width: 6.w),
                 Expanded(
                   child: Container(
-                    height: height / height60,
+                    height: 60.h,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
+                      borderRadius: BorderRadius.circular(10.r),
                       color: WidgetColor,
                     ),
                     child: Row(
@@ -147,12 +146,12 @@ class ViewAssetsScreen extends StatelessWidget {
                       children: [
                         InterMedium(
                           text: endDate,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: color2,
                         ),
                         SvgPicture.asset(
                           'assets/images/calendar_clock.svg',
-                          width: width / width20,
+                          width: 20.w,
                         )
                       ],
                     ),
@@ -160,13 +159,13 @@ class ViewAssetsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: height / height30),
+            SizedBox(height: 30.h),
             InterBold(
               text: 'Equipment',
               color: color1,
-              fontsize: width / width16,
+              fontsize: 16.sp,
             ),
-            SizedBox(height: height / height20),
+            SizedBox(height: 20.h),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection('Equipments')
@@ -183,23 +182,23 @@ class ViewAssetsScreen extends StatelessWidget {
                   return Container(
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
+                      borderRadius: BorderRadius.circular(10.r),
                       color: WidgetColor,
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(width: width / width10),
+                        SizedBox(width: 10.w),
                         InterMedium(
                           text: equipmentName,
                           color: color2,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                         ),
-                        SizedBox(width: width / width200),
+                        SizedBox(width: 200.w),
                         InterMedium(
                           text: "Quantity: $equipmentQty",
                           color: color2,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                         ),
                       ],
                     ),

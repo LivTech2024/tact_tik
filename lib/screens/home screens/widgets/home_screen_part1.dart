@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import '../../../common/sizes.dart';
@@ -86,8 +87,8 @@ class HomeScreenPart1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
     if (hour < 12) {
       greeting = 'Good Morning,';
     } else if (hour < 18) {
@@ -99,20 +100,21 @@ class HomeScreenPart1 extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.only(
-          left: width / width30,
-          right: width / width30,
+          left: 30.w,
+          right: 30.w,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 30.h),
             SizedBox(
-              height: height / height55,
+              height: 55.h,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: height / height50,
-                    width: width / width50,
+                    height: 55.h,
+                    width: 55.w,
                     decoration: employeeImg != ""
                         ? BoxDecoration(
                             shape: BoxShape.circle,
@@ -140,14 +142,14 @@ class HomeScreenPart1 extends StatelessWidget {
                             Icons.notifications,
                             // Use the notifications_active icon
                             color: Primarycolor, // Change color if unread
-                            size: width / width28,
+                            size: 28.sp,
                           ),
                           if (isUnread)
                             Positioned(
                               top: 0,
                               right: 0,
                               child: Container(
-                                padding: EdgeInsets.all(width / width4 / 2),
+                                padding: EdgeInsets.all(2.sp),
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color:
@@ -158,7 +160,7 @@ class HomeScreenPart1 extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        width: width / width30,
+                        width: 26.w,
                       ),
                       GestureDetector(
                         onTap: drawerOnClicked,
@@ -167,7 +169,7 @@ class HomeScreenPart1 extends StatelessWidget {
                           child: Icon(
                             Icons.short_text_rounded,
                             color: Primarycolor,
-                            size: width / width40,
+                            size: 40.sp,
                           ),
                         ),
                       ),
@@ -176,7 +178,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height / height30),
+            SizedBox(height: showWish!? 40.h :57.h),
             showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,24 +187,24 @@ class HomeScreenPart1 extends StatelessWidget {
                         text: '${greeting}',
                         color: Primarycolor,
                         letterSpacing: -.5,
-                        fontsize: width / width35,
+                        fontsize: 35.sp,
                       ),
-                      SizedBox(height: height / height10),
+                      SizedBox(height: 2.h),
                       PoppinsLight(
                         text: userName != '' ? userName : 'User not found',
                         color: Primarycolor,
-                        fontsize: width / width30,
+                        fontsize: 30.sp,
                       ),
-                      SizedBox(height: height / height16),
+                      SizedBox(height: 46.h),
                     ],
                   )
                 : const SizedBox(),
             Container(
-              height: height / height64,
-              padding: EdgeInsets.symmetric(horizontal: width / width10),
+              height: 64.h,
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
                 color: WidgetColor,
-                borderRadius: BorderRadius.circular(width / width13),
+                borderRadius: BorderRadius.circular(13.r),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -213,31 +215,32 @@ class HomeScreenPart1 extends StatelessWidget {
                       controller: _controller,
                       direction: VerticalDirection.down,
                       builder: (context, _controller, focusNode) => TextField(
-                          controller: _controller,
-                          focusNode: focusNode,
-                          autofocus: false,
-                          style: GoogleFonts.poppins(
+                        controller: _controller,
+                        focusNode: focusNode,
+                        autofocus: false,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 18.sp,
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.r),
+                            ),
+                          ),
+                          focusedBorder: InputBorder.none,
+                          hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
-                            fontSize: width / width18,
-                            color: Colors.white,
+                            fontSize: 18.sp,
+                            color: color2,
                           ),
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(width / width10),
-                              ),
-                            ),
-                            focusedBorder: InputBorder.none,
-                            hintStyle: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w300,
-                              fontSize: width / width18,
-                              color: color2,
-                            ),
-                            hintText: 'Search screen',
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          cursorColor: Primarycolor),
+                          hintText: 'Search screen',
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        cursorColor: Primarycolor,
+                      ),
                       suggestionsCallback: suggestionsCallback,
                       itemBuilder: (context, Screens screen) {
                         return ListTile(
@@ -250,25 +253,26 @@ class HomeScreenPart1 extends StatelessWidget {
                       },
                       emptyBuilder: (context) => Padding(
                         padding: EdgeInsets.symmetric(
-                            vertical: height / height10,
-                            horizontal: width / width10),
+                          vertical: 10.h,
+                          horizontal: 10.w,
+                        ),
                         child: InterRegular(
                           text: 'No Such Screen found',
                           color: color2,
-                          fontsize: width / width18,
+                          fontsize: 18.sp,
                         ),
                       ),
                       decorationBuilder: (context, child) => Material(
                         type: MaterialType.card,
                         elevation: 4,
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                         child: child,
                       ),
                       debounceDuration: const Duration(milliseconds: 300),
                       onSelected: (Screens value) {
-                        // _controller.text = value.name;
                         print(
                             'home screen search bar############################################');
+
                         print(value.name);
                         switch (value) {
                           case 'Site Tours':
@@ -412,16 +416,16 @@ class HomeScreenPart1 extends StatelessWidget {
                   ),*/
 
                   Container(
-                    height: height / height44,
-                    width: width / width44,
+                    height: 43.h,
+                    width: 43.w,
                     decoration: BoxDecoration(
                       color: Primarycolor,
-                      borderRadius: BorderRadius.circular(width / width10),
+                      borderRadius: BorderRadius.circular(9.r),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.search,
-                        size: width / width20,
+                        size: 19.sp,
                         color: Colors.black,
                       ),
                     ),
@@ -429,7 +433,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: height / height10),
+            SizedBox(height: 30.h),
           ],
         ),
       ),
