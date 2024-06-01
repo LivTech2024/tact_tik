@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -442,7 +443,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: 170.h,
+          constraints:  BoxConstraints(minHeight: 170.h),
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
@@ -462,7 +463,31 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                   Bounce(
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: InterSemibold(
+                                text: 'Shift Location',
+                                  color: Colors.white,
+                                fontsize: 18.sp,
+                              ),
+                              content:  InterRegular(
+                                text: widget.ShiftAddressName,
+                                  color: Colors.white,
+                                fontsize: 12.sp,
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Close'),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       icon: Icon(
                         Icons.contact_support_outlined,
                         size: 20.sp,
@@ -497,8 +522,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
-                                text: isLate ? "Late $lateTime" : '',
-                                color: Colors.redAccent,
+                                text: isLate ? "Late $lateTime" : 'on time',
+                                color: isLate ? Colors.redAccent : color8,
                                 fontsize: 14.sp,
                               )
                             : const SizedBox(),
@@ -552,7 +577,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           height: height / height65,
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: height / height5),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: WidgetColor,
           ),
           child: Row(

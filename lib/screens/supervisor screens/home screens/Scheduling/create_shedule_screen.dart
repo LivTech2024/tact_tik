@@ -88,7 +88,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
-  List<ValueItem<dynamic>> patrolItems = [];
+  List<ValueItem<String>> patrolItems = [];
   bool isLoading = false;
 
   @override
@@ -155,15 +155,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     if (patrolNames.isNotEmpty) {
       setState(() {
         patrolItems = patrolNames
-            .map((name) => ValueItem<dynamic>(label: name, value: name))
+            .map((name) => ValueItem<String>(label: name, value: name))
             .toList();
         isLoading = false;
       });
+
     } else {
       setState(() {
         isLoading = false;
       });
     }
+    print(patrolItems);
   }
 
   @override
@@ -1108,7 +1110,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     selectedClint = newValue!;
-                                    // print('$selectedValue selected');
+                                    print('$selectedClint selected');
                                   });
                                 },
                                 items:
@@ -1367,58 +1369,241 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             text: 'Next',
                             height: height / height50,
                             onPressed: () async {
-                              // Todo check weather values are not null then only move to the next screen.......
-                              setState(() {
-                                nextScreen = !nextScreen;
-                              });
-                              // TODO Commented the backend code hear
-                              String address = "";
-                              GeoPoint coordinates = GeoPoint(0, 0);
-                              String name = "";
-                              String locationId = "";
-                              //fetching the patrols ids using patrol name
-                              List<String> patrolids = await fireStoreService
-                                  .getPatrolIdsFromNames(selectedPatrols);
-                              // fetching clientid
-
-                              String clientId = await fireStoreService
-                                  .getClientIdfromName(selectedClint!);
-                              print('CLientName: $selectedClint');
-                              print('clientId: $clientId');
-
-                              // //fetching location details from locationame
-                              var locationData =
-                                  await fireStoreService.getLocationByName(
-                                      selectedLocatin!, widget.CompanyId);
-                              if (locationData.exists) {
-                                var data = locationData.data()
-                                    as Map<String, dynamic>?;
-                                ;
-                                if (data != null) {
-                                  address = data['LocationAddress'];
-                                  coordinates =
-                                      data['LocationCoordinates'] as GeoPoint;
-                                  name = data['LocationName'];
-                                  locationId = data['LocationId'];
-
-                                  print("Address ${address}");
-                                  print("coordinates ${coordinates}");
-                                  print("Latitude: ${coordinates.latitude}");
-                                  print("Longitude: ${coordinates.longitude}");
+                              if (selectedClint != null &&
+                                  selectedLocatin != null &&
+                                  requiredEmpcontroller.text.isNotEmpty &&
+                                  _ShiftName.text.isNotEmpty) {
+                                setState(() {
+                                  nextScreen = !nextScreen;
+                                });
+                              } else {
+                                String errorMessage = "Please fill in the following required fields:";
+                                if (selectedClint == null) {
+                                  errorMessage += "\n- Client";
                                 }
+                                if (selectedLocatin == null) {
+                                  errorMessage += "\n- Location";
+                                }
+                                if (requiredEmpcontroller.text.isEmpty) {
+                                  errorMessage += "\n- Required Number of Employees";
+                                }
+                                if (_ShiftName.text.isEmpty) {
+                                  errorMessage += "\n- Shift Name";
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+                                print(errorMessage);
                               }
-                              print("locationData  ids ${locationData}");
-                              var requiredEmp = _RequirednoofEmployees.text;
-                              // int? requiredEmpNUmber = int.parse(requiredEmp);
-                              print(
-                                  "Number Editing Controller ${requiredEmpcontroller.number}");
-                              print("ShiftName ${_ShiftName.text}");
-                              print("ShiftDesc ${_Description.text}");
+                            },
+                            backgroundcolor: Primarycolor,
+                            color: color22,
+                            borderRadius: width / width10,
+                            fontsize: width / width14,
+                          ),
+                          SizedBox(height: height / height40),
+                        ],
+                      ),
+              )
+                  : Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        String taskName = tasks[index]['name'];
+                        bool isChecked = tasks[index]['isQrRequired'] ?? false;
+                        bool isReturnChecked = tasks[index]['isReturnQrRequired'] ?? false;
 
-                              String id = await fireStoreService.ScheduleShift(
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Container(
+                                padding: EdgeInsets.only(left: width / width10),
+                                decoration: BoxDecoration(
+                                  color: WidgetColor, // WidgetColor,
+                                  borderRadius: BorderRadius.circular(width / width10),
+                                ),
+                                child: TextField(
+                                  controller: taskControllers[index],
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: width / width18,
+                                    color: Colors.white,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(width / width10),
+                                      ),
+                                    ),
+                                    focusedBorder: InputBorder.none,
+                                    hintStyle: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: width / width18,
+                                      color: Colors.grey, // color2,
+                                    ),
+                                    hintText: 'Task ${index + 1}',
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  cursorColor: Colors.red,
+                                  // Primarycolor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      tasks[index]['name'] = value;
+                                    });
+                                    print("textfield value $value");
+                                  },
+                                ),
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                  size: width / width24,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    tasks.removeAt(index);
+                                    taskControllers.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(height: height / height10),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: Colors.red, // Primarycolor,
+                                  checkColor: Colors.black, // color1,
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      tasks[index]['isQrRequired'] = value ?? false;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  'QR Code Required',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: width / width16,
+                                    color: Colors.grey, // color2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: height / height10),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: Colors.red, // Primarycolor,
+                                  checkColor: Colors.black, // color1,
+                                  value: isReturnChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      tasks[index]['isReturnQrRequired'] = value ?? false;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  'Return QR Code Required',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: width / width16,
+                                    color: Colors.grey, // color2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Button1(
+                              height: height / height50,
+                              borderRadius: width / width10,
+                              backgroundcolor: color33,
+                              color: color1,
+                              text: "Generate Qr",
+                              onPressed: () async {
+                                final name = taskControllers[index].text;
+                                _saveQrCode(name);
+                                print('Generate QR Button Pressed');
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(height: height / height20),
+                    SizedBox(
+                      width: width / width120,
+                      child: Button1(
+                        borderRadius: width / width10,
+                        onPressed: () {
+                          // if (nextScreen == false) {
+                          //   setState(() {
+                          //     nextScreen = true;
+                          //   });
+                          // }  else
+                          print(tasks);
+                          _addNewTask();
+                        },
+                        height: height / height50,
+                        backgroundcolor: Primarycolor,
+                        text: nextScreen == false ? 'Create Shift Task' : 'Create Task',
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: height / height90),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Button1(
+                            height: height / height50,
+                            text: 'Done',
+                            onPressed: () async {
+                              if (nextScreen!) {
+                                // TODO Commented the backend code here
+                                String address = "";
+                                GeoPoint coordinates = GeoPoint(0, 0);
+                                String name = "";
+                                String locationId = "";
+
+                                // Fetching the patrols ids using patrol name
+                                List<String> patrolids = await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
+
+                                // Fetching client id
+                                String clientId = await fireStoreService.getClientIdfromName(selectedClint!);
+                                print('ClientName: $selectedClint');
+                                print('ClientId: $clientId');
+
+                                // Fetching location details from location name
+                                var locationData = await fireStoreService.getLocationByName(selectedLocatin!, widget.CompanyId);
+                                if (locationData.exists) {
+                                  var data = locationData.data() as Map<String, dynamic>?;
+                                  if (data != null) {
+                                    address = data['LocationAddress'];
+                                    coordinates = data['LocationCoordinates'] as GeoPoint;
+                                    name = data['LocationName'];
+                                    locationId = data['LocationId'];
+
+                                    print("Address ${address}");
+                                    print("Coordinates ${coordinates}");
+                                    print("Latitude: ${coordinates.latitude}");
+                                    print("Longitude: ${coordinates.longitude}");
+                                  }
+                                }
+
+                                print("LocationData ids ${locationData}");
+                                var requiredEmp = _RequirednoofEmployees.text;
+                                print("Number Editing Controller ${requiredEmpcontroller.number}");
+                                print("ShiftName ${_ShiftName.text}");
+                                print("ShiftDesc ${_Description.text}");
+
+                                // Pass the tasks to the ScheduleShift function
+                                String id = await fireStoreService.ScheduleShift(
                                   selectedGuards,
                                   selectedPosition,
-                                  "Address",
+                                  address,
                                   "CompanyBranchId",
                                   widget.CompanyId,
                                   _selectedDates,
@@ -1436,230 +1621,31 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   address,
                                   _Branch.text,
                                   _Description.text,
-                                  _ShiftName.text);
-                              setState(() {
-                                nextScreen = !nextScreen;
-                                _addNewTask();
-                              });
-                              print("Shift Created");
-                              print("Shift ID : ${id}");
-                              setState(() {
-                                CreatedshiftId = id;
-                              });
+                                  _ShiftName.text,
+                                  tasks, // Pass the tasks list
+                                );
+                                setState(() {
+                                  Navigator.pop(context);
+                                  _addNewTask();
+                                });
+                                print("Shift Created");
+                                print("Shift ID : ${id}");
+                                setState(() {
+                                  CreatedshiftId = id;
+                                });
+                              }
                             },
                             backgroundcolor: Primarycolor,
                             color: color22,
                             borderRadius: width / width10,
                             fontsize: width / width14,
                           ),
-                          SizedBox(height: height / height40),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: tasks.length,
-                            itemBuilder: (context, index) {
-                              String taskName = tasks[index]['name'];
-                              bool isChecked =
-                                  tasks[index]['isQrRequired'] ?? false;
-                              bool isReturnChecked =
-                                  tasks[index]['isReturnQrRequired'] ?? false;
-
-                              return Column(
-                                children: [
-                                  ListTile(
-                                    title: Container(
-                                      padding: EdgeInsets.only(
-                                          left: width / width10),
-                                      decoration: BoxDecoration(
-                                        color: WidgetColor, // WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                      ),
-                                      child: TextField(
-                                        controller: taskControllers[index],
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: width / width18,
-                                          color: Colors.white,
-                                        ),
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(width / width10),
-                                            ),
-                                          ),
-                                          focusedBorder: InputBorder.none,
-                                          hintStyle: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: width / width18,
-                                            color: Colors.grey, // color2,
-                                          ),
-                                          hintText: 'Task ${index + 1}',
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                        cursorColor: Colors.red,
-                                        // Primarycolor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            tasks[index]['name'] = value;
-                                          });
-                                          print("textfield value $value");
-                                        },
-                                      ),
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.redAccent,
-                                        size: width / width24,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          tasks.removeAt(index);
-                                          taskControllers.removeAt(index);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: height / height10),
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        activeColor:
-                                            Colors.red, // Primarycolor,
-                                        checkColor: Colors.black, // color1,
-                                        value: isChecked,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            tasks[index]['isQrRequired'] =
-                                                value ?? false;
-                                          });
-                                        },
-                                      ),
-                                      Text(
-                                        'QR Code Required',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: width / width16,
-                                          color: Colors.grey, // color2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: height / height10),
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        activeColor:
-                                            Colors.red, // Primarycolor,
-                                        checkColor: Colors.black, // color1,
-                                        value: isReturnChecked,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            tasks[index]['isReturnQrRequired'] =
-                                                value ?? false;
-                                          });
-                                        },
-                                      ),
-                                      Text(
-                                        'Return QR Code Required',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: width / width16,
-                                          color: Colors.grey, // color2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Button1(
-                                    height: height / height50,
-                                    borderRadius: width / width10,
-                                    backgroundcolor: color33,
-                                    color: color1,
-                                    text: "Generate Qr",
-                                    onPressed: () async {
-                                      final name = taskControllers[index].text;
-                                      _saveQrCode(name);
-                                      print('Generate QR Button Pressed');
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                          SizedBox(height: height / height20),
-                          SizedBox(
-                            width: width / width120,
-                            child: Button1(
-                              borderRadius: width / width10,
-                              onPressed: () {
-                                // if (nextScreen == false) {
-                                //   setState(() {
-                                //     nextScreen = true;
-                                //   });
-                                // }  else
-                                print(tasks);
-                                _addNewTask();
-                              },
-                              height: height / height50,
-                              backgroundcolor: Primarycolor,
-                              text: nextScreen == false
-                                  ? 'Create Shift Task'
-                                  : 'Create Task',
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: height / height90),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Button1(
-                                  height: height / height50,
-                                  text: 'Previous',
-                                  onPressed: () {
-                                    setState(() {
-                                      nextScreen = false;
-                                    });
-                                  },
-                                  backgroundcolor: color33,
-                                  color: color1,
-                                  borderRadius: width / width10,
-                                  fontsize: width / width14,
-                                ),
-                              ),
-                              SizedBox(
-                                width: width / width10,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Button1(
-                                  height: height / height50,
-                                  text: 'Done',
-                                  onPressed: () {
-                                    if (nextScreen!) {
-                                      // print(tasks);
-                                      print('clicked on done');
-                                      print(PatrolList);
-                                    }
-                                  },
-                                  backgroundcolor: Primarycolor,
-                                  color: color22,
-                                  borderRadius: width / width10,
-                                  fontsize: width / width14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

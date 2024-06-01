@@ -514,9 +514,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                height: 172.h,
+                padding: EdgeInsets.all(10.sp),
+                height: 178.h,
                 width: double.maxFinite,
-                padding: EdgeInsets.only(top: 32.h, left: 24.w, right: 34.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
                   color: Primarycolor, // Background color for the drawer header
@@ -535,18 +535,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
                         ),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
                           color: WidgetColor,
-                          fontsize: 20.sp,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: 13.sp),
+                        SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
                           color: WidgetColor,
-                          fontsize: 12.sp,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
                       ]),

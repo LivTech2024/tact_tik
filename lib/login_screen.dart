@@ -8,8 +8,6 @@ import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/colors.dart';
-
-import 'common/sizes.dart';
 import 'common/widgets/button1.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -212,19 +210,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           _passwordcontrller.text, context);
                     },
                   ),
-                  if (_isLoading)
-                    Align(
-                      alignment: Alignment.center,
-                      child: Visibility(
-                        visible: _isLoading,
-                        child: const CircularProgressIndicator(
-                          color: Primarycolor,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
+            if (_isLoading)
+              Align(
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: _isLoading,
+                  child: const CircularProgressIndicator(
+                    color: Primarycolor,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

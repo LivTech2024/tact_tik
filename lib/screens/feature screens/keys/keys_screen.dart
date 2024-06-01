@@ -9,6 +9,7 @@ import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
+import '../../supervisor screens/features screens/key management/s_key_manag_create_screen.dart';
 
 class KeysScreen extends StatefulWidget {
   final String keyId;
@@ -60,6 +61,20 @@ class _KeysScreenState extends State<KeysScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+
+            // TODO Pass Values
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SCreateKeyManagScreen(keyId: '', companyId: '',),
+                ));
+          },
+          backgroundColor: Primarycolor,
+          shape: CircleBorder(),
+          child: Icon(Icons.add , size: 24.sp,),
+        ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(

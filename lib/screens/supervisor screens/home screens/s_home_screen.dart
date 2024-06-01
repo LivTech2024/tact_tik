@@ -1,11 +1,13 @@
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
@@ -98,7 +100,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[2] = color4;
           IconColors[3] = color4;
           ScreenIndex = 0;
-          NavigateScreen(AllSchedulesScreen(BranchId: '9tgQzYBJTL3QqJKe34eJ', CompanyId: 'aSvLtwII6Cjs7uCISBRR',));
+          NavigateScreen(AllSchedulesScreen(
+            BranchId: '9tgQzYBJTL3QqJKe34eJ',
+            CompanyId: 'aSvLtwII6Cjs7uCISBRR',
+          ));
           break;
         case 3:
           IconColors[0] = Primarycolor;
@@ -219,10 +224,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
           child: Column(
             children: [
               Container(
-                height: height / height180,
+                padding: EdgeInsets.all(10.sp),
+                height: 50.h,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
+                  borderRadius: BorderRadius.circular(15.r),
                   color: Primarycolor, // Background color for the drawer header
                 ),
                 child: Center(
@@ -243,14 +249,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         PoppinsSemibold(
                           text: _userName,
                           color: WidgetColor,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: height / height5),
                         PoppinsRegular(
                           text: _empEmail,
                           color: WidgetColor,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
                       ]),
@@ -406,30 +412,22 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
             ),
             ScreenIndex == 0
-                ? SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    String guardStatus = "";
-
-                        if (index < _guardsInfo.length) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: HomeScreenUserCard(
-                              guardsInfo: _guardsInfo[index],
-                              CompanyId: _CompanyId,
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: InterMedium(text: 'No Guards Available'),
-                          ); // Return an empty SizedBox for index out of bounds
-                        }
-                      },
-                      childCount: _guardsInfo.length,
-                    ),
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InterBold(
+                        text: 'All Guards',
+                        color: color1,
+                        fontsize: 18.sp,
+                      ),
+                      IconTextWidget(
+                        icon: Icons.add,
+                        text: 'Add',
+                        color: color1,
+                        iconSize: 14.sp,
+                        fontsize: 14.sp,
+                      )
+                    ],
                   )
                 : ScreenIndex == 1
                     ? SliverGrid(
@@ -555,6 +553,33 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         ),
                       )
                     : SliverToBoxAdapter(),
+            ScreenIndex == 0
+                ? SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        String guardStatus = "";
+
+                        if (index < _guardsInfo.length) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: width / width30,
+                              right: width / width30,
+                            ),
+                            child: HomeScreenUserCard(
+                              guardsInfo: _guardsInfo[index],
+                              CompanyId: _CompanyId,
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: InterMedium(text: 'No Guards Available'),
+                          ); // Return an empty SizedBox for index out of bounds
+                        }
+                      },
+                      childCount: _guardsInfo.length,
+                    ),
+                  )
+                : SliverToBoxAdapter()
           ],
         ),
       ),
@@ -677,21 +702,20 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateSheduleScreen(
-                                        supervisorEmail:
-                                        '',
-                                        BranchId:
-                                        widget.guardsInfo["EmployeeCompanyBranchId"] ?? "",
+                                  builder: (context) => CreateSheduleScreen(
+                                        supervisorEmail: '',
+                                        BranchId: widget.guardsInfo[
+                                                "EmployeeCompanyBranchId"] ??
+                                            "",
                                         GuardId:
-                                        widget.guardsInfo["EmployeeId"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeId"] ??
+                                                "",
                                         GuardName:
-                                        widget.guardsInfo["EmployeeName"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeName"] ??
+                                                "",
                                         GuardImg:
-                                        widget.guardsInfo["EmployeeImg"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeImg"] ??
+                                                "",
                                         CompanyId: widget.CompanyId ?? "",
                                       )),
                             );
@@ -708,12 +732,11 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SLogBookScreen(
+                                    builder: (context) => SLogBookScreen(
                                           empId:
-                                          widget.guardsInfo['EmployeeId'],
+                                              widget.guardsInfo['EmployeeId'],
                                           empName:
-                                          widget.guardsInfo['EmployeeName'],
+                                              widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
@@ -726,12 +749,11 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SHistoryScreen(
+                                    builder: (context) => SHistoryScreen(
                                           empID:
-                                          widget.guardsInfo['EmployeeId'],
+                                              widget.guardsInfo['EmployeeId'],
                                           empName:
-                                          widget.guardsInfo['EmployeeName'],
+                                              widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
