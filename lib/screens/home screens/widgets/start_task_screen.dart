@@ -806,7 +806,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       //       await homeScreenController.stopBgLocationService();
                       //     }));
-
                       // setState(() {
                       //   _isLoading = true;
                       // });
