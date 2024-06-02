@@ -638,8 +638,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         var data =
                             await fireStoreService.fetchTemplateDataForPdf(
-                          "UDb6jyQBz2RzRp4b42XL",
-                          "M3gluJfhigosyUEa4itk",
+                          "paHVXXC99uNtXamURMBc",
+                          "dQ7o8oBxS0gwq7TIH2Et",
                         );
                         await sendShiftTemplateEmail(
                           "Leston holdings",
@@ -648,10 +648,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           "Tacttik Shift Report",
                           data,
                           "Shift",
-                          "1 June",
+                          "2 June",
                           // "Dan Martin",
-                          // "Pankaj Kumar",
-                          "livjeet kaur",
+                          // "Dan Martin",
+                          // "sukhman kooner",
+                          "Pankaj Kumar",
+                          // "livjeet kaur",
                           "01:20:27",
                           "06:00:00",
                           "High level place",
@@ -683,7 +685,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Tacttik DAR',
                           "Tacttik DAR",
                           "Shift",
-                          "1 JUN",
+                          "2 JUN",
                           "livjeet kaur",
                           "01:20:27",
                           "06:00:00",

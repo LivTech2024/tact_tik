@@ -940,6 +940,14 @@ Future<String> generateShiftReportPdf(
     ''';
   }
 
+  // img {
+  //     max-width: 2%;
+  //     height: auto;
+  //     display: block;
+  //     margin-bottom: 10px;
+  //     max-height: 2px; /* Define a max-height for the images */
+  // }
+
   final htmlcontent = """
     <!DOCTYPE html>
 <html lang="en">
@@ -1003,14 +1011,6 @@ Future<String> generateShiftReportPdf(
 
         th {
             background-color: #f2f2f2;
-        }
-
-        img {
-            max-width: 2%;
-            height: auto;
-            display: block;
-            margin-bottom: 10px;
-            max-height: 2px; /* Define a max-height for the images */
         }
 
         footer {

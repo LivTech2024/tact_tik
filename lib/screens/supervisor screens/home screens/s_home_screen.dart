@@ -98,7 +98,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
           IconColors[2] = color4;
           IconColors[3] = color4;
           ScreenIndex = 0;
-          NavigateScreen(AllSchedulesScreen(BranchId: '9tgQzYBJTL3QqJKe34eJ', CompanyId: 'aSvLtwII6Cjs7uCISBRR',));
+          NavigateScreen(AllSchedulesScreen(
+            BranchId: '9tgQzYBJTL3QqJKe34eJ',
+            CompanyId: 'aSvLtwII6Cjs7uCISBRR',
+          ));
           break;
         case 3:
           IconColors[0] = Primarycolor;
@@ -409,7 +412,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                    String guardStatus = "";
+                        String guardStatus = "";
 
                         if (index < _guardsInfo.length) {
                           return Padding(
@@ -677,21 +680,20 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateSheduleScreen(
-                                        supervisorEmail:
-                                        '',
-                                        BranchId:
-                                        widget.guardsInfo["EmployeeCompanyBranchId"] ?? "",
+                                  builder: (context) => CreateSheduleScreen(
+                                        supervisorEmail: '',
+                                        BranchId: widget.guardsInfo[
+                                                "EmployeeCompanyBranchId"] ??
+                                            "",
                                         GuardId:
-                                        widget.guardsInfo["EmployeeId"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeId"] ??
+                                                "",
                                         GuardName:
-                                        widget.guardsInfo["EmployeeName"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeName"] ??
+                                                "",
                                         GuardImg:
-                                        widget.guardsInfo["EmployeeImg"] ??
-                                            "",
+                                            widget.guardsInfo["EmployeeImg"] ??
+                                                "",
                                         CompanyId: widget.CompanyId ?? "",
                                       )),
                             );
@@ -708,12 +710,11 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SLogBookScreen(
+                                    builder: (context) => SLogBookScreen(
                                           empId:
-                                          widget.guardsInfo['EmployeeId'],
+                                              widget.guardsInfo['EmployeeId'],
                                           empName:
-                                          widget.guardsInfo['EmployeeName'],
+                                              widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
@@ -726,12 +727,11 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        SHistoryScreen(
+                                    builder: (context) => SHistoryScreen(
                                           empID:
-                                          widget.guardsInfo['EmployeeId'],
+                                              widget.guardsInfo['EmployeeId'],
                                           empName:
-                                          widget.guardsInfo['EmployeeName'],
+                                              widget.guardsInfo['EmployeeName'],
                                         )));
                           },
                           child: RoundedButton(
