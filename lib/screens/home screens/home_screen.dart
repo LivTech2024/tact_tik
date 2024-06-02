@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final LatLng _center =
       const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKeyGuard = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
 
@@ -509,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKeyGuard, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           child: Column(
             children: [
@@ -688,7 +688,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // employeeImg: _employeeImg,
                 showWish: _showWish,
                 drawerOnClicked: () {
-                  _scaffoldKey.currentState?.openEndDrawer();
+                  _scaffoldKeyGuard.currentState?.openEndDrawer();
                 },
               ),
               SliverToBoxAdapter(

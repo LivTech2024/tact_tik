@@ -78,7 +78,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   int scheduleCount = 0;
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
@@ -438,7 +438,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           child: Column(
             children: [
@@ -584,7 +584,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   // employeeImg: _employeeImg,
                   showWish: _showWish,
                   drawerOnClicked: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
+                    _scaffoldKeyClient.currentState?.openEndDrawer();
                   },
                 ),
                 SliverToBoxAdapter(

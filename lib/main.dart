@@ -64,7 +64,9 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
               brightness: Brightness.dark,
               textTheme: GoogleFonts.poppinsTextTheme(
-                Theme.of(context).textTheme,
+                Theme
+                    .of(context)
+                    .textTheme,
               ),
             ),
             home: child,
@@ -72,11 +74,9 @@ class MyApp extends StatelessWidget {
         );
       },
       child: OfflineBuilder(
-        connectivityBuilder: (
-          BuildContext context,
-          ConnectivityResult connectivity,
-          Widget child,
-        ) {
+        connectivityBuilder: (BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
             return Scaffold(
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
               body: Center(
                 child: InterSemibold(
                   text:
-                      'No internet connection.\nConnect to Internet or Restart the app',
+                  'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
                   color: color1,
                 ),
@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
               body: Center(
                 child: InterSemibold(
                   text:
-                      'No internet connection.\nConnect to Internet or Restart the app',
+                  'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
                   color: color1,
                 ),
