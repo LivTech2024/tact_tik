@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/new%20guard/new_guard_screen.dart';
@@ -95,8 +96,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
     if (hour < 12) {
       greeting = 'Good Morning,';
     } else if (hour < 18) {
@@ -108,20 +109,21 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.only(
-          left: width / width30,
-          right: width / width30,
+          left: 30.w,
+          right: 30.w,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 30.h),
             SizedBox(
-              height: height / height55,
+              height: 55.h,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: height / height50,
-                    width: width / width50,
+                    height: 55.h,
+                    width: 55.w,
                     decoration:widget. employeeImg != ""
                         ? BoxDecoration(
                             shape: BoxShape.circle,
@@ -145,26 +147,21 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     children: [
                       Stack(
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,MaterialPageRoute(builder:  (context) => NewGuardScreen()));
-                            },
-                            child: Icon(
-                              Icons.notifications,
-                              // Use the notifications_active icon
-                              color: isDark
+                          Icon(
+                            Icons.notifications,
+                            // Use the notifications_active icon
+                            color: isDark
                                   ? DarkColor.Primarycolor
                                   : LightColor.color3, // Change color if unread
-                              size: width / width28,
-                            ),
+                            size: 28.sp,
                           ),
                           if (isUnread)
                             Positioned(
                               top: 0,
                               right: 0,
                               child: Container(
-                                padding: EdgeInsets.all(width / width4 / 2),
-                                decoration: BoxDecoration(
+                                padding: EdgeInsets.all(2.sp),
+                                decoration:  BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: isDark
                                       ? DarkColor.Primarycolor
@@ -176,7 +173,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         ],
                       ),
                       SizedBox(
-                        width: width / width30,
+                        width: 26.w,
                       ),
                       GestureDetector(
                         onTap: widget.drawerOnClicked,
@@ -187,7 +184,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             color: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.color3,
-                            size: width / width40,
+                            size: 40.sp,
                           ),
                         ),
                       ),
@@ -196,8 +193,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 ],
               ),
             ),
-            SizedBox(height: height / height30),
-            widget.showWish!
+            SizedBox(height:widget. showWish!? 40.h :57.h),
+           widget. showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -206,21 +203,21 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         color:
                             isDark ? DarkColor.Primarycolor : LightColor.color3,
                         letterSpacing: -.5,
-                        fontsize: width / width35,
+                        fontsize: 35.sp,
                       ),
-                      SizedBox(height: height / height10),
+                      SizedBox(height: 2.h),
                       PoppinsLight(
                         text: widget.userName != '' ? widget.userName : 'User not found',
                         color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                        fontsize: width / width30,
+                        fontsize: 30.sp,
                       ),
-                      SizedBox(height: height / height16),
+                      SizedBox(height: 46.h),
                     ],
                   )
                 : const SizedBox(),
             Container(
-              height: height / height64,
-              padding: EdgeInsets.symmetric(horizontal: width / width10),
+              height: 64.h,
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -233,7 +230,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                   )
                 ],
                 color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                borderRadius: BorderRadius.circular(width / width13),
+                borderRadius: BorderRadius.circular(13.r),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -244,31 +241,32 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       controller: _controller,
                       direction: VerticalDirection.down,
                       builder: (context, _controller, focusNode) => TextField(
-                          controller: _controller,
-                          focusNode: focusNode,
-                          autofocus: false,
-                          style: GoogleFonts.poppins(
+                        controller: _controller,
+                        focusNode: focusNode,
+                        autofocus: false,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 18.sp,
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.r),
+                            ),
+                          ),
+                          focusedBorder: InputBorder.none,
+                          hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
-                            fontSize: width / width18,
-                            color: Colors.white,
+                            fontSize: 18.sp,
+                            color:  isDark ? DarkColor.color2 : LightColor.color2,
                           ),
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(width / width10),
-                              ),
-                            ),
-                            focusedBorder: InputBorder.none,
-                            hintStyle: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w300,
-                              fontSize: width / width18,
-                              color: isDark ? DarkColor.color2 : LightColor.color2,
-                            ),
-                            hintText: 'Search screen',
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor),
+                          hintText: 'Search screen',
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        cursorColor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      ),
                       suggestionsCallback: suggestionsCallback,
                       itemBuilder: (context, Screens screen) {
                         return ListTile(
@@ -281,27 +279,28 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       },
                       emptyBuilder: (context) => Padding(
                         padding: EdgeInsets.symmetric(
-                            vertical: height / height10,
-                            horizontal: width / width10),
+                          vertical: 10.h,
+                          horizontal: 10.w,
+                        ),
                         child: InterRegular(
                           text: 'No Such Screen found',
                           color: isDark ? DarkColor.color2 : LightColor.color2,
-                          fontsize: width / width18,
+                          fontsize: 18.sp,
                         ),
                       ),
                       decorationBuilder: (context, child) => Material(
                         type: MaterialType.card,
                         elevation: 4,
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                         child: child,
                       ),
                       debounceDuration: const Duration(milliseconds: 300),
                       onSelected: (Screens value) {
-                        // _controller.text = value.name;
                         print(
                             'home screen search bar############################################');
+
                         print(value.name);
-                        switch(value){
+                        switch (value) {
                           case 'Site Tours':
                             // showDialog(
                             //   context: context,
@@ -447,18 +446,18 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                   ),*/
 
                   Container(
-                    height: height / height44,
-                    width: width / width44,
+                    height: 43.h,
+                    width: 43.w,
                     decoration: BoxDecoration(
                       color: isDark
                           ? DarkColor.Primarycolor
                           : LightColor.Primarycolor,
-                      borderRadius: BorderRadius.circular(width / width10),
+                      borderRadius: BorderRadius.circular(9.r),
                     ),
                     child: Center(
                       child: Icon(
                         Icons.search,
-                        size: width / width20,
+                        size: 19.sp,
                         color: isDark ? Colors.black : Colors.white,
                       ),
                     ),
@@ -466,7 +465,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 ],
               ),
             ),
-            SizedBox(height: height / height10),
+            SizedBox(height: 30.h),
           ],
         ),
       ),

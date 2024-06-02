@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/get%20started/page_type1.dart';
 import 'package:tact_tik/screens/get%20started/page_type2.dart';
-import '../../common/sizes.dart';
 import '../../fonts/poppins_bold.dart';
-import '../../fonts/poppins_medium.dart';
-import '../../fonts/poppins_regular.dart';
-import '../../fonts/poppis_semibold.dart';
 import '../../utils/colors.dart';
 
 class GetStartedScreens extends StatefulWidget {
@@ -34,17 +31,15 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         bottomSheet: LastPage
             ? const SizedBox()
             : Container(
-                height: height / height66,
+                height: 66.h,
                 color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: width / width40),
+                  padding: EdgeInsets.symmetric(horizontal: 40.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +50,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         },
                         child: PoppinsBold(
                           text: 'Skip',
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: isDark
                               ? DarkColor.Primarycolor
                               : LightColor.Primarycolor,
@@ -69,8 +64,8 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                           activeDotColor: isDark
                               ? DarkColor.Primarycolor
                               : LightColor.Primarycolor,
-                          dotHeight: height / height13,
-                          dotWidth: width / width13,
+                          dotHeight: 13.h,
+                          dotWidth: 13.w,
                           type: WormType.thinUnderground,
                         ),
                         onDotClicked: (index) => _pagecontroller.animateToPage(
@@ -86,7 +81,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         ),
                         icon: Icon(
                           Icons.arrow_forward_ios,
-                          size: width / width24,
+                       size: 24.sp,
                           color: isDark
                               ? DarkColor.Primarycolor
                               : LightColor.Primarycolor,

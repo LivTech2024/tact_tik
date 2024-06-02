@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/main.dart';
@@ -9,8 +9,6 @@ import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/utils/colors.dart';
-
-import 'common/sizes.dart';
 import 'common/widgets/button1.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -33,13 +31,14 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
     try {
-      var data = await Auth().signInWithEmailAndPassword(
+      await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text, context);
 
       await storage.ready;
       final String? role = storage.getItem("Role");
-      print('hear is the role of emp');
+      print('Here is the role of emp:');
       print(role);
+
       if (role == "SUPERVISOR") {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SHomeScreen()));
@@ -59,7 +58,12 @@ class _LoginScreenState extends State<LoginScreen> {
         errorMessage = 'Incorrect password';
       } else if (e.code == 'invalid-email') {
         errorMessage = 'Invalid email address';
-      } else if (e.code == 'invalid-email') {
+      } else if (e.code == 'invalid-credential' ||
+          e.code == 'credential-already-in-use' ||
+          e.code == 'credential-not-found' ||
+          e.code == 'wrong-creds') {
+        errorMessage = 'Invalid credentials.';
+      } else if (e.code == 'invalid-credential') {
         errorMessage =
             'The supplied auth credential is malformed or has expired.';
       }
@@ -129,8 +133,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -139,8 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: (width / width30),
-                vertical: (height / height20),
+                horizontal: 30.w,
+                vertical: 20.h,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: width / width18,
+                      fontSize: 15.sp,
                       color: isDark
                           ? DarkColor.color1
                           : LightColor
@@ -161,11 +165,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: (height / height10)),
+                  SizedBox(height: 30.h),
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: (width / width18),
+                      fontSize: (15.sp),
                       color:  isDark
                           ? DarkColor.color1
                           : LightColor.color3, // Change text color to white
@@ -183,54 +187,57 @@ class _LoginScreenState extends State<LoginScreen> {
                           _obscureText
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          size: (width / width24),
-                          color: DarkColor. color6, 
+                          size: 24.sp,
+                          color:  isDark
+                          ? DarkColor.color6
+                          : LightColor
+                              .color2,
                         ),
                       ),
                       labelText: 'Password',
                       hintText: 'Enter your password',
                     ),
                   ),
-                  SizedBox(height:( height / height20)),
+                  SizedBox(height: 20.h),
                   if (_errorMessage != null)
                     Text(
                       _errorMessage!,
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize:( width / width24),
+                        fontSize: 24.sp,
                       ),
                     ),
                   Button1(
-                    height: height / height50,
+                    height:50.57.h,
                     backgroundcolor: isDark
                         ? DarkColor.Primarycolor
                         : LightColor.Primarycolor,
                     text: 'Login',
-                    fontsize: (width / width16),
+                    fontsize: 18.sp,
                     color: isDark
                         ? DarkColor.Secondarycolor
                         : LightColor.Secondarycolor,
-                    borderRadius: width / width10,
+                    borderRadius: 5.r,
                     onPressed: () {
                       Auth().signInWithEmailAndPassword(_emailcontrller.text,
                           _passwordcontrller.text, context);
                     },
                   ),
-                  if (_isLoading)
-                    Align(
-                      alignment: Alignment.center,
-                      child: Visibility(
-                        visible: _isLoading,
-                        child:  CircularProgressIndicator(
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
+            if (_isLoading)
+              Align(
+                alignment: Alignment.center,
+                child: Visibility(
+                  visible: _isLoading,
+                  child:  CircularProgressIndicator(
+                    color: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.Primarycolor,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

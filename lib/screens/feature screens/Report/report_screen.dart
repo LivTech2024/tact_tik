@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -109,9 +110,6 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -124,16 +122,16 @@ class _ReportScreenState extends State<ReportScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterRegular(
             text: 'Report',
-            fontsize: width / width18,
+             fontsize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -168,15 +166,15 @@ class _ReportScreenState extends State<ReportScreen> {
           backgroundColor:
               isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add),
+          child: Icon(Icons.add , size: 24.sp,),
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: Column(
             children: [
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               SizedBox(
-                height: height / height40,
+                height: 40.h,
                 child: ListView.builder(
                   itemCount: tittles.length,
                   // shrinkWrap: true,
@@ -190,11 +188,11 @@ class _ReportScreenState extends State<ReportScreen> {
                         });
                       },
                       child: AnimatedContainer(
-                        margin: EdgeInsets.only(right: width / width10),
+                        margin: EdgeInsets.only(right: 10.w),
                         padding:
-                            EdgeInsets.symmetric(horizontal: width / width20),
+                            EdgeInsets.symmetric(horizontal: 20.w),
                         constraints: BoxConstraints(
-                          minWidth: width / width70,
+                          minWidth: 70.w,
                         ),
                         decoration: BoxDecoration(
                           boxShadow: [
@@ -207,7 +205,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               offset: Offset(0, 3),
                             )
                           ],
-                          borderRadius: BorderRadius.circular(width / width20),
+                        borderRadius: BorderRadius.circular(20.r),
                           color: isDark
                               ? (currentIndex == index
                                   ? DarkColor.Primarycolor
@@ -220,7 +218,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         child: Center(
                           child: InterRegular(
                             text: tittles[index],
-                            fontsize: width / width16,
+                            fontsize: 16.sp,
                             color: isDark
                                 ? (DarkColor.color1)
                                 : (currentIndex == index
@@ -233,7 +231,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   },
                 ),
               ),
-              SizedBox(height: height / height20),
+              SizedBox(height: 20.h),
               Expanded(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -252,9 +250,9 @@ class _ReportScreenState extends State<ReportScreen> {
                             color: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor,
-                            fontsize: width / width20,
+                       fontsize: 20.sp,
                           ),
-                        SizedBox(height: height / height30),
+                        SizedBox(height: 30.h),
                         ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -292,12 +290,12 @@ class _ReportScreenState extends State<ReportScreen> {
                                 children: [
                                   Container(
                                     margin: EdgeInsets.only(
-                                      bottom: height / height10,
+                                      bottom: 10.h,
                                     ),
                                     padding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
+                                      horizontal: 20.w,
                                     ),
-                                    height: height / height100,
+                                    height: 100.h,
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
@@ -313,18 +311,17 @@ class _ReportScreenState extends State<ReportScreen> {
                                       color: isDark
                                           ? DarkColor.WidgetColor
                                           : LightColor.WidgetColor,
-                                      borderRadius: BorderRadius.circular(
-                                          width / width10),
+                                        borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     child: Row(
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
-                                            right: width / width20,
+                                            right: 20.w,
                                           ),
                                           child: SvgPicture.asset(
                                             'assets/images/report_icon.svg',
-                                            height: height / height24,
+                                            height: 24.h,
                                             fit: BoxFit.fitHeight,
                                           ),
                                         ),
@@ -338,7 +335,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                               Text(
                                                 report['ReportName'],
                                                 style: TextStyle(
-                                                  fontSize: width / width20,
+                                                  fontSize: 20.sp,
                                                   color: isDark
                                                       ? DarkColor.color2
                                                       : LightColor.color3,
@@ -346,7 +343,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                  height: height / height10),
+                                                  height: 10.h),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -357,7 +354,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       InterMedium(
                                                         text: 'CATEGORY: ',
                                                         fontsize:
-                                                            width / width14,
+                                                          14.sp,
                                                         color: isDark
                                                             ? DarkColor.color32
                                                             : LightColor.color3,
@@ -366,7 +363,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         text: report[
                                                             'ReportCategoryName'],
                                                         fontsize:
-                                                            width / width14,
+                                                             14.sp,
                                                         color: isDark
                                                             ? DarkColor.color26
                                                             : LightColor.color3,
@@ -378,7 +375,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                     color: isDark
                                                         ? DarkColor.color26
                                                         : LightColor.color3,
-                                                    fontsize: width / width14,
+                                                   fontsize: 14.sp,
                                                   )
                                                 ],
                                               ),
@@ -389,7 +386,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: height / height20,
+                                    height: 20.h,
                                   )
                                 ],
                               ),

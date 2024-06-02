@@ -66,7 +66,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
           future: FirebaseFirestore.instance
               .collection('Visitors')
               .where('VisitorLocationId',
-                  isEqualTo: _userService.shiftLocationId)
+              isEqualTo: _userService.shiftLocationId)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -77,7 +77,34 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
 
-            final documents = snapshot.data!.docs;
+            var documents = snapshot.data!.docs;
+
+            // Sort documents by a specific date field
+            documents.sort((a, b) {
+              final timestampA = a['VisitorCreatedAt'] as Timestamp;
+              final timestampB = b['VisitorCreatedAt'] as Timestamp;
+              return timestampB.compareTo(timestampA);
+            });
+
+            // Group documents by date
+            final Map<String, List<QueryDocumentSnapshot>> groupedDocuments = {};
+            final todayDate = DateTime.now();
+            final todayKey = DateFormat.yMd().format(todayDate);
+
+            for (var doc in documents) {
+              final documentData = doc.data() as Map<String, dynamic>?;
+              if (documentData != null) {
+                final createdAtTimestamp = documentData['VisitorCreatedAt'] as Timestamp?;
+                final createdAtDate = createdAtTimestamp?.toDate();
+                final formattedDate = createdAtDate != null ? DateFormat.yMd().format(createdAtDate) : '';
+
+                if (groupedDocuments.containsKey(formattedDate)) {
+                  groupedDocuments[formattedDate]!.add(doc);
+                } else {
+                  groupedDocuments[formattedDate] = [doc];
+                }
+              }
+            }
 
             return CustomScrollView(
               slivers: [
@@ -111,237 +138,210 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                   centerTitle: true,
                   floating: true,
                 ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: height / height30,
-                        ),
-                        InterBold(
-                          text: 'Today',
-                          fontsize: width / width20,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
-                        ),
-                        SizedBox(
-                          height: height / height30,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final document = documents[index];
-                      final documentData =
-                          document.data() as Map<String, dynamic>?;
+                        (context, index) {
+                      final dateKey = groupedDocuments.keys.elementAt(index);
+                      final isToday = dateKey == todayKey;
+                      final dateHeading = isToday ? 'Today' : dateKey;
+                      final visitorDocuments = groupedDocuments[dateKey]!;
 
-                      print("document_data:$documentData");
-
-                      if (documentData != null) {
-                        final visitorCompleted =
-                            isVisitorCompleted(documentData);
-                        final visitorName = documentData['VisitorName'] ?? '';
-                        final inTimeTimestamp =
-                            documentData['VisitorInTime'] as Timestamp?;
-                        final outTimeTimestamp =
-                            documentData['VisitorOutTime'] as Timestamp?;
-                        final location =
-                            documentData['VisitorLocationName'] ?? '';
-
-                        final inTime = inTimeTimestamp != null
-                            ? DateFormat.jm().format(inTimeTimestamp.toDate())
-                            : '';
-                        final outTime = outTimeTimestamp != null
-                            ? DateFormat.jm().format(outTimeTimestamp.toDate())
-                            : '';
-
-                        return GestureDetector(
-                          onTap: visitorCompleted
-                              ? null // Do nothing if visitor is completed
-                              : () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SCreateVisitors(
-                                        visitorData: documentData,
-                                      ),
-                                    ),
-                                  );
-                                },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: width / width30),
-                            child: Container(
-                              height: width / width120,
-                              width: double.maxFinite,
-                              margin:
-                                  EdgeInsets.only(bottom: height / height10),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(width / width10),
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width / width10,
-                                        vertical: height / height10,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: width / width40,
-                                            height: height / height40,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
-                                              color: isDark
-                                                  ? DarkColor.Primarycolorlight
-                                                  : LightColor.Primarycolorlight,
-                                            ),
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                'assets/images/man.svg',
-                                                height: height / height20,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / width120,
-                                            child: InterMedium(
-                                              text: visitorName,
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3,
-                                              fontsize: width / width16,
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  InterBold(
-                                                    text: 'in time',
-                                                    fontsize: width / width10,
-                                                    color: isDark
-                                                        ? DarkColor.color4
-                                                        : LightColor
-                                                            .color3,
-                                                  ),
-                                                  SizedBox(
-                                                      width: width / width6),
-                                                  InterMedium(
-                                                    text: inTime,
-                                                    fontsize: width / width12,
-                                                    color: isDark
-                                                        ? DarkColor.color3
-                                                        : LightColor
-                                                            .color3,
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  InterBold(
-                                                    text: 'out time',
-                                                    fontsize: width / width10,
-                                                    color: isDark
-                                                        ? DarkColor.color2
-                                                        : LightColor
-                                                            .color3,
-                                                  ),
-                                                  SizedBox(
-                                                      width: width / width6),
-                                                  InterMedium(
-                                                    text: outTime,
-                                                    fontsize: width / width12,
-                                                    color: isDark
-                                                        ? DarkColor.color3
-                                                        : LightColor
-                                                            .color3,
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: width / width10),
-                                      decoration: BoxDecoration(
-                                        color: isDark
-                                            ? DarkColor.colorRed
-                                            : LightColor.colorRed,
-                                        borderRadius: BorderRadius.only(
-                                          bottomLeft:
-                                              Radius.circular(width / width10),
-                                          bottomRight:
-                                              Radius.circular(width / width10),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          InterSemibold(
-                                            text: 'Location',
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
-                                            fontsize: width / width14,
-                                          ),
-                                          SizedBox(
-                                            width: width / width200,
-                                            child: InterRegular(
-                                              text: location,
-                                              fontsize: width / width12,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color3,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: width / width30),
+                            child: InterBold(
+                              text: dateHeading,
+                              fontsize: width / width20,
+                              color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                             ),
                           ),
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
+                          SizedBox(height: height / height30),
+                          ...visitorDocuments.map((doc) {
+                            final documentData = doc.data() as Map<String, dynamic>;
+                            final visitorCompleted = isVisitorCompleted(documentData);
+                            final visitorName = documentData['VisitorName'] ?? '';
+                            final inTimeTimestamp = documentData['VisitorInTime'] as Timestamp?;
+                            final outTimeTimestamp = documentData['VisitorOutTime'] as Timestamp?;
+                            final location = documentData['VisitorLocationName'] ?? '';
+
+                            final inTime = inTimeTimestamp != null
+                                ? DateFormat.jm().format(inTimeTimestamp.toDate())
+                                : '';
+                            final outTime = outTimeTimestamp != null
+                                ? DateFormat.jm().format(outTimeTimestamp.toDate())
+                                : '';
+
+                            return GestureDetector(
+                              onTap: visitorCompleted
+                                  ? null // Do nothing if visitor is completed
+                                  : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SCreateVisitors(
+                                      visitorData: documentData,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                                child: Container(
+                                  height: width / width120,
+                                  width: double.maxFinite,
+                                  margin: EdgeInsets.only(bottom: height / height10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(width / width10),
+                                    color:  isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: width / width10,
+                                            vertical: height / height10,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: width / width40,
+                                                height: height / height40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(width / width10),
+                                                  color:  isDark
+                                                      ? DarkColor.Primarycolorlight
+                                                      : LightColor.Primarycolorlight,
+                                                ),
+                                                child: Center(
+                                                  child: SvgPicture.asset(
+                                                    'assets/images/man.svg',
+                                                    height: height / height20,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / width120,
+                                                child: InterMedium(
+                                                  text: visitorName,
+                                                  color: isDark
+                                                      ? DarkColor.color1
+                                                      : LightColor.color3,
+                                                  fontsize: width / width16,
+                                                  maxLines: 1,
+                                                ),
+                                              ),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      InterBold(
+                                                        text: 'in time',
+                                                        fontsize: width / width10,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .color4
+                                                            : LightColor
+                                                                .color3,
+                                                      ),
+                                                      SizedBox(width: width / width6),
+                                                      InterMedium(
+                                                        text: inTime,
+                                                        fontsize: width / width12,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .color3
+                                                            : LightColor
+                                                                .color2,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      InterBold(
+                                                        text: 'out time',
+                                                        fontsize: width / width10,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .color4
+                                                            : LightColor
+                                                                .color3,
+                                                      ),
+                                                      SizedBox(width: width / width6),
+                                                      InterMedium(
+                                                        text: outTime,
+                                                        fontsize: width / width12,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .color3
+                                                            : LightColor
+                                                                .color2,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: width / width10),
+                                          decoration: BoxDecoration(
+                                            color: isDark
+                                                ? DarkColor.colorRed
+                                                : LightColor.colorRed,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(width / width10),
+                                              bottomRight: Radius.circular(width / width10),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              InterSemibold(
+                                                text: 'Location',
+                                                color: isDark
+                                                    ? DarkColor.color1
+                                                    : LightColor.color3,
+                                                fontsize: width / width14,
+                                              ),
+                                              SizedBox(
+                                                width: width / width200,
+                                                child: InterRegular(
+                                                  text: location,
+                                                  fontsize: width / width12,
+                                                  color: isDark
+                                                      ? DarkColor.color2
+                                                      : LightColor.color2,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      );
                     },
-                    childCount: documents.length,
+                    childCount: groupedDocuments.keys.length,
                   ),
                 ),
               ],

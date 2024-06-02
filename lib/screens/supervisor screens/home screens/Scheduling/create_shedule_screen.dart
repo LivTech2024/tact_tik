@@ -7,6 +7,7 @@ import 'package:emailjs/emailjs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -91,7 +92,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
-  List<ValueItem<dynamic>> patrolItems = [];
+  List<ValueItem<String>> patrolItems = [];
   bool isLoading = false;
 
   @override
@@ -158,15 +159,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     if (patrolNames.isNotEmpty) {
       setState(() {
         patrolItems = patrolNames
-            .map((name) => ValueItem<dynamic>(label: name, value: name))
+            .map((name) => ValueItem<String>(label: name, value: name))
             .toList();
         isLoading = false;
       });
+
     } else {
       setState(() {
         isLoading = false;
       });
     }
+    print(patrolItems);
   }
 
   @override
@@ -399,21 +402,29 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   Future<void> callPdfApi(String base64Image) async {
-    final url = Uri.parse('https://yakpdf.p.rapidapi.com/pdf');
+    final url = Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf');
 
     final headers = {
-      'content-type': 'application/json',
-      'X-RapidAPI-Key': '08788b2125msh872c59eba317b7fp15e98ajsnb0a96ec9fb5d',
-      'X-RapidAPI-Host': 'yakpdf.p.rapidapi.com',
+      'Content-Type': 'application/json',
     };
 
+    final htmlContent = '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+      <h1>TASK QR CODE!</h1>
+      <img src="data:image/png;base64,$base64Image"/>
+    </body>
+    </html>
+  ''';
+
     final body = jsonEncode({
-      'source': {
-        'html':
-            '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body><h1>Hello World!</h1><img src="data:image/png;base64,$base64Image"/></body></html>'
-      },
-      'pdf': {'format': 'A4', 'scale': 1, 'printBackground': true},
-      'wait': {'for': 'navigation', 'waitUntil': 'load', 'timeout': 2500}
+      'html': htmlContent,
+      'file_name': 'TaskQR.pdf',
     });
 
     final response = await http.post(
@@ -423,45 +434,61 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
 
     if (response.statusCode == 200) {
-      final pdfPath = await _savePdfFile(response.bodyBytes);
       final pdfBase64 = base64Encode(response.bodyBytes);
       await sendEmail({
-        'user_email': widget.supervisorEmail,
-        'message': pdfBase64,
+        'to_email': widget.supervisorEmail,
+        'subject': 'Task QR Code',
+        'from_name': 'Company',
+        'html': '',
+        'pdfFile': pdfBase64,
       });
     } else {
-      print(
-          'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+      print('Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
     }
   }
 
   Future<String> _savePdfFile(Uint8List pdfBytes) async {
-    final directory = await getExternalStorageDirectory();
-    final path = '${directory!.path}/generated_pdf.pdf';
+    final directory = await getApplicationDocumentsDirectory();
+    final path = '${directory.path}/security_report.pdf';
     final file = File(path);
     await file.writeAsBytes(pdfBytes);
-    print("PDF saved at: $path");
-    OpenFile.open(path);
     return path;
   }
 
   Future<bool> sendEmail(dynamic templateParams) async {
     try {
-      await EmailJS.send(
-        'service_6mmak1z',
-        'template_lm9ftk9',
-        templateParams,
-        Options(
-          publicKey: 'DAtUR9kGOvEyWhbq-',
-          privateKey: 'RLNEcycnFNHoR4oPXIXUN',
-        ),
+      final toEmail = templateParams['to_email'];
+      final subject = templateParams['subject'];
+      final fromName = templateParams['from_name'];
+      final htmlContent = templateParams['html'];
+      final pdfFile = templateParams['pdfFile'];
+
+      final response = await http.post(
+        Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'to_email': toEmail,
+          'subject': subject,
+          'from_name': fromName,
+          'html': htmlContent,
+          'attachments': [
+            {
+              'filename': 'taskQR.pdf',
+              'content': pdfFile,
+              'contentType': 'application/pdf',
+            }
+          ],
+        }),
       );
-      print('SUCCESS!');
-      return true;
-    } catch (error) {
-      if (error is EmailJSResponseStatus) {
-        print('ERROR... ${error.status}: ${error.text}');
+
+      if (response.statusCode == 200) {
+        print('SUCCESS!');
+        return true;
+      } else {
+        print('ERROR... ${response.statusCode}: ${response.body}');
+        return false;
       }
+    } catch (error) {
       print(error.toString());
       return false;
     }
@@ -1186,7 +1213,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     selectedClint = newValue!;
-                                    // print('$selectedValue selected');
+                                    print('$selectedClint selected');
                                   });
                                 },
                                 items:
@@ -1290,7 +1317,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           optionTextStyle: TextStyle(
                                               fontSize: width / width16),
                                           selectedOptionIcon:
-                                              const Icon(Icons.check_circle),
+                                          Icon(Icons.check_circle , size: 24.sp,),
                                         ),
                                 ),
                               ],
@@ -1468,58 +1495,247 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             text: 'Next',
                             height: height / height50,
                             onPressed: () async {
-                              // Todo check weather values are not null then only move to the next screen.......
-                              setState(() {
-                                nextScreen = !nextScreen;
-                              });
-                              // TODO Commented the backend code hear
-                              String address = "";
-                              GeoPoint coordinates = GeoPoint(0, 0);
-                              String name = "";
-                              String locationId = "";
-                              //fetching the patrols ids using patrol name
-                              List<String> patrolids = await fireStoreService
-                                  .getPatrolIdsFromNames(selectedPatrols);
-                              // fetching clientid
-
-                              String clientId = await fireStoreService
-                                  .getClientIdfromName(selectedClint!);
-                              print('CLientName: $selectedClint');
-                              print('clientId: $clientId');
-
-                              // //fetching location details from locationame
-                              var locationData =
-                                  await fireStoreService.getLocationByName(
-                                      selectedLocatin!, widget.CompanyId);
-                              if (locationData.exists) {
-                                var data = locationData.data()
-                                    as Map<String, dynamic>?;
-                                ;
-                                if (data != null) {
-                                  address = data['LocationAddress'];
-                                  coordinates =
-                                      data['LocationCoordinates'] as GeoPoint;
-                                  name = data['LocationName'];
-                                  locationId = data['LocationId'];
-
-                                  print("Address ${address}");
-                                  print("coordinates ${coordinates}");
-                                  print("Latitude: ${coordinates.latitude}");
-                                  print("Longitude: ${coordinates.longitude}");
+                              if (selectedClint != null &&
+                                  selectedLocatin != null &&
+                                  requiredEmpcontroller.text.isNotEmpty &&
+                                  _ShiftName.text.isNotEmpty) {
+                                setState(() {
+                                  nextScreen = !nextScreen;
+                                });
+                              } else {
+                                String errorMessage = "Please fill in the following required fields:";
+                                if (selectedClint == null) {
+                                  errorMessage += "\n- Client";
                                 }
+                                if (selectedLocatin == null) {
+                                  errorMessage += "\n- Location";
+                                }
+                                if (requiredEmpcontroller.text.isEmpty) {
+                                  errorMessage += "\n- Required Number of Employees";
+                                }
+                                if (_ShiftName.text.isEmpty) {
+                                  errorMessage += "\n- Shift Name";
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+                                print(errorMessage);
                               }
-                              print("locationData  ids ${locationData}");
-                              var requiredEmp = _RequirednoofEmployees.text;
-                              // int? requiredEmpNUmber = int.parse(requiredEmp);
-                              print(
-                                  "Number Editing Controller ${requiredEmpcontroller.number}");
-                              print("ShiftName ${_ShiftName.text}");
-                              print("ShiftDesc ${_Description.text}");
+                            },
+                            backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            color:  isDark ? DarkColor.color22 : LightColor.color1,
+                            borderRadius: width / width10,
+                            fontsize: width / width14,
+                          ),
+                          SizedBox(height: height / height40),
+                        ],
+                      ),
+              )
+                  : Padding(
+                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        String taskName = tasks[index]['name'];
+                        bool isChecked = tasks[index]['isQrRequired'] ?? false;
+                        bool isReturnChecked = tasks[index]['isReturnQrRequired'] ?? false;
 
-                              String id = await fireStoreService.ScheduleShift(
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Container(
+                                padding: EdgeInsets.only(left: width / width10),
+                                decoration: BoxDecoration(
+                                  color:  isDark
+                                            ? DarkColor.WidgetColor
+                                            : LightColor.WidgetColor, // WidgetColor,
+                                  borderRadius: BorderRadius.circular(width / width10),
+                                ),
+                                child: TextField(
+                                  controller: taskControllers[index],
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: width / width18,
+                                    color: Colors.white,
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(width / width10),
+                                      ),
+                                    ),
+                                    focusedBorder: InputBorder.none,
+                                    hintStyle: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: width / width18,
+                                      color: Colors.grey, // color2,
+                                    ),
+                                    hintText: 'Task ${index + 1}',
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                  cursorColor: Colors.red,
+                                  // Primarycolor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      tasks[index]['name'] = value;
+                                    });
+                                    print("textfield value $value");
+                                  },
+                                ),
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                  size: width / width24,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    tasks.removeAt(index);
+                                    taskControllers.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ),
+                            SizedBox(height: height / height10),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: Colors.red, // Primarycolor,
+                                  checkColor: Colors.black, // color1,
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      tasks[index]['isQrRequired'] = value ?? false;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  'QR Code Required',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: width / width16,
+                                    color: Colors.grey, // color2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: height / height10),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: Colors.red, // Primarycolor,
+                                  checkColor: Colors.black, // color1,
+                                  value: isReturnChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      tasks[index]['isReturnQrRequired'] = value ?? false;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  'Return QR Code Required',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: width / width16,
+                                    color: Colors.grey, // color2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Button1(
+                              height: height / height50,
+                              borderRadius: width / width10,
+                              backgroundcolor:  isDark
+                                        ? DarkColor.color33
+                                        : LightColor.WidgetColor,
+                              color:  isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
+                              text: "Generate Qr",
+                              onPressed: () async {
+                                final name = taskControllers[index].text;
+                                _saveQrCode(name);
+                                print('Generate QR Button Pressed');
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(height: height / height20),
+                    SizedBox(
+                      width: width / width120,
+                      child: Button1(
+                        borderRadius: width / width10,
+                        onPressed: () {
+                          // if (nextScreen == false) {
+                          //   setState(() {
+                          //     nextScreen = true;
+                          //   });
+                          // }  else
+                          print(tasks);
+                          _addNewTask();
+                        },
+                        height: height / height50,
+                        backgroundcolor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        text: nextScreen == false ? 'Create Shift Task' : 'Create Task',
+                        color:  isDark ? DarkColor.color1 : LightColor.color3,
+                      ),
+                    ),
+                    SizedBox(height: height / height90),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Button1(
+                            height: height / height50,
+                            text: 'Done',
+                            onPressed: () async {
+                              if (nextScreen!) {
+                                // TODO Commented the backend code here
+                                String address = "";
+                                GeoPoint coordinates = GeoPoint(0, 0);
+                                String name = "";
+                                String locationId = "";
+
+                                // Fetching the patrols ids using patrol name
+                                List<String> patrolids = await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
+
+                                // Fetching client id
+                                String clientId = await fireStoreService.getClientIdfromName(selectedClint!);
+                                print('ClientName: $selectedClint');
+                                print('ClientId: $clientId');
+
+                                // Fetching location details from location name
+                                var locationData = await fireStoreService.getLocationByName(selectedLocatin!, widget.CompanyId);
+                                if (locationData.exists) {
+                                  var data = locationData.data() as Map<String, dynamic>?;
+                                  if (data != null) {
+                                    address = data['LocationAddress'];
+                                    coordinates = data['LocationCoordinates'] as GeoPoint;
+                                    name = data['LocationName'];
+                                    locationId = data['LocationId'];
+
+                                    print("Address ${address}");
+                                    print("Coordinates ${coordinates}");
+                                    print("Latitude: ${coordinates.latitude}");
+                                    print("Longitude: ${coordinates.longitude}");
+                                  }
+                                }
+
+                                print("LocationData ids ${locationData}");
+                                var requiredEmp = _RequirednoofEmployees.text;
+                                print("Number Editing Controller ${requiredEmpcontroller.number}");
+                                print("ShiftName ${_ShiftName.text}");
+                                print("ShiftDesc ${_Description.text}");
+
+                                // Pass the tasks to the ScheduleShift function
+                                String id = await fireStoreService.ScheduleShift(
                                   selectedGuards,
                                   selectedPosition,
-                                  "Address",
+                                  address,
                                   "CompanyBranchId",
                                   widget.CompanyId,
                                   _selectedDates,
@@ -1537,235 +1753,31 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   address,
                                   _Branch.text,
                                   _Description.text,
-                                  _ShiftName.text);
-                              setState(() {
-                                nextScreen = !nextScreen;
-                                _addNewTask();
-                              });
-                              print("Shift Created");
-                              print("Shift ID : ${id}");
-                              setState(() {
-                                CreatedshiftId = id;
-                              });
+                                  _ShiftName.text,
+                                  tasks, // Pass the tasks list
+                                );
+                                setState(() {
+                                  Navigator.pop(context);
+                                  _addNewTask();
+                                });
+                                print("Shift Created");
+                                print("Shift ID : ${id}");
+                                setState(() {
+                                  CreatedshiftId = id;
+                                });
+                              }
                             },
                             backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                             color:  isDark ? DarkColor.color1 : LightColor.color3,
                             borderRadius: width / width10,
                             fontsize: width / width14,
                           ),
-                          SizedBox(height: height / height40),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: tasks.length,
-                            itemBuilder: (context, index) {
-                              String taskName = tasks[index]['name'];
-                              bool isChecked =
-                                  tasks[index]['isQrRequired'] ?? false;
-                              bool isReturnChecked =
-                                  tasks[index]['isReturnQrRequired'] ?? false;
-
-                              return Column(
-                                children: [
-                                  ListTile(
-                                    title: Container(
-                                      padding: EdgeInsets.only(
-                                          left: width / width10),
-                                      decoration: BoxDecoration(
-                                        color: DarkColor.  WidgetColor,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
-                                      ),
-                                      child: TextField(
-                                        controller: taskControllers[index],
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: width / width18,
-                                          color: Colors.white,
-                                        ),
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(width / width10),
-                                            ),
-                                          ),
-                                          focusedBorder: InputBorder.none,
-                                          hintStyle: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: width / width18,
-                                            color: DarkColor.  color2,
-                                          ),
-                                          hintText: 'Task ${index + 1}',
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                        cursorColor: DarkColor.Primarycolor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            tasks[index]['name'] = value;
-                                          });
-                                          print("textfield value $value");
-                                        },
-                                      ),
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.redAccent,
-                                        size: width / width24,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          tasks.removeAt(index);
-                                          taskControllers.removeAt(index);
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: height / height10),
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        activeColor: DarkColor.  Primarycolor,
-                                        checkColor: DarkColor.  color1,
-                                        value: isChecked,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            tasks[index]['isQrRequired'] =
-                                                value ?? false;
-                                          });
-                                        },
-                                      ),
-                                      InterMedium(
-                                        text: 'QR Code Required',
-                                        fontsize: width / width16,
-                                        color: DarkColor.color2,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: height / height10),
-                                  Row(
-                                    children: [
-                                      Checkbox(
-                                        activeColor: DarkColor.  Primarycolor,
-                                        checkColor: DarkColor.color1,
-                                        value: isReturnChecked,
-                                        onChanged: (bool? value) {
-                                          setState(() {
-                                            tasks[index]['isReturnQrRequired'] =
-                                                value ?? false;
-                                          });
-                                        },
-                                      ),
-                                      InterMedium(
-                                        text: 'Return QR Code Required',
-                                        fontsize: width / width16,
-                                        color: DarkColor.  color2,
-                                      ),
-                                    ],
-                                  ),
-                                  Button1(
-                                    height: height / height50,
-                                    borderRadius: width / width10,
-                                    backgroundcolor: isDark
-                                        ? DarkColor.color33
-                                        : LightColor.color2,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
-                                    text: "Generate Qr",
-                                    onPressed: () async {
-                                      final name = taskControllers[index].text;
-                                      _saveQrCode(name);
-                                      print('Generate QR Button Pressed');
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                          SizedBox(height: height / height20),
-                          SizedBox(
-                            width: width / width120,
-                            child: Button1(
-                              borderRadius: width / width10,
-                              onPressed: () {
-                                // if (nextScreen == false) {
-                                //   setState(() {
-                                //     nextScreen = true;
-                                //   });
-                                // }  else
-                                print(tasks);
-                                _addNewTask();
-                              },
-                              height: height / height50,
-                              backgroundcolor: DarkColor.Primarycolor,
-                              text: nextScreen == false
-                                  ? 'Create Shift Task'
-                                  : 'Create Task',
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: height / height90),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Button1(
-                                  height: height / height50,
-                                  text: 'Previous',
-                                  onPressed: () {
-                                    setState(() {
-                                      nextScreen = false;
-                                    });
-                                  },
-                                  backgroundcolor: isDark
-                                      ? DarkColor.color33
-                                      : LightColor.color2,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
-                                  borderRadius: width / width10,
-                                  fontsize: width / width14,
-                                ),
-                              ),
-                              SizedBox(
-                                width: width / width10,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Button1(
-                                  height: height / height50,
-                                  text: 'Done',
-                                  onPressed: () {
-                                    if (nextScreen!) {
-                                      // print(tasks);
-                                      print('clicked on done');
-                                      print(PatrolList);
-                                    }
-                                  },
-                                  backgroundcolor: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor,
-                                  color: isDark
-                                      ? DarkColor.color22
-                                      : LightColor.WidgetColor,
-                                  borderRadius: width / width10,
-                                  fontsize: width / width14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

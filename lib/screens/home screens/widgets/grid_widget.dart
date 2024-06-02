@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/main.dart';
 
@@ -13,16 +14,16 @@ class gridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      // mainAxisAlignment:
-      //     MainAxisAlignment.spaceBetween,
+      mainAxisAlignment:
+          MainAxisAlignment.start,
       children: [
         Container(
-          height: height / height100,
-          width: width / width100,
+          height: 100.h,
+          width: 100.w,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -35,21 +36,21 @@ class gridWidget extends StatelessWidget {
               )
             ],
             color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-            borderRadius: BorderRadius.circular(width / width18),
+            borderRadius: BorderRadius.circular(18.r),
           ),
           child: Center(
             child: SizedBox(
-              height: height/ height60,
-              width: width / width60,
+              height: 50.h,
+              width: 60.h,
               child: Image.asset(img),
             ),
           ),
         ),
-        SizedBox(height: height / height10),
+        SizedBox(height: 10.h),
         InterBold(
           text: tittle,
           color: isDark? DarkColor.color25:LightColor.color3,
-          fontsize: width / width16,
+          fontsize: 16.sp,
           letterSpacing: -0.3,
         ),
       ],

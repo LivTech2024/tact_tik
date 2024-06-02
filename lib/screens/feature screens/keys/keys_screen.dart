@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
-import 'package:tact_tik/screens/feature%20screens/assets/view_assets_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/keys/view_keys_screen.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
+import '../../supervisor screens/features screens/key management/s_key_manag_create_screen.dart';
 
 class KeysScreen extends StatefulWidget {
   final String keyId;
@@ -57,25 +58,40 @@ class _KeysScreenState extends State<KeysScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // TODO Pass Values
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SCreateKeyManagScreen(
+                    keyId: '',
+                    companyId: '',
+                  ),
+                ));
+          },
+          backgroundColor:isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
+          shape: CircleBorder(),
+          child: Icon(
+            Icons.add,
+            size: 24.sp,
+          ),
+        ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
               backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 5,
-              shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
+              elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: width / width24,
+                  color: Colors.white,
+                  size: 24.sp,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                   print("Navigator debug: ${Navigator.of(context).toString()}");
@@ -83,113 +99,202 @@ class _KeysScreenState extends State<KeysScreen> {
               ),
               title: InterRegular(
                 text: 'Keys',
-                fontsize: width / width18,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                fontsize: 18.sp,
+                color: Colors.white,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
               floating: true,
             ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: height / height30,
+            StreamBuilder<QuerySnapshot>(
+              stream: _keyAllocationStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+
+                if (!snapshot.hasData) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                    InterBold(
-                      text: 'Today',
-                      fontsize: width / width20,
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.color3,
-                    ),
-                    SizedBox(
-                      height: height / height30,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
+                  );
+                }
+
+                final documents = snapshot.data?.docs;
+                final groupedDocuments = groupDocumentsByDate(documents);
+
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ViewKeysScreen(startDate: "", endDate: "", keyId: widget.keyId,time: "",keyAllocationId: "",)));
-                      },
-                      child: Container(
-                        height: width / width60,
-                        padding:
-                        EdgeInsets.symmetric(horizontal: width / width10),
-                        width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: height / height10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width / width10),
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: height / height44,
-                                  width: width / width44,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(width / width10),
-                                    color: isDark
-                                        ? DarkColor.Primarycolorlight
-                                        : LightColor.Primarycolorlight,
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.home_repair_service,
+                      final dateKeys = groupedDocuments.keys.toList();
+                      if (index >= dateKeys.length) {
+                        return SizedBox.shrink();
+                      }
+
+                      final date = dateKeys[index];
+                      final isToday = date.day == DateTime.now().day &&
+                          date.month == DateTime.now().month &&
+                          date.year == DateTime.now().year;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
+                            child: InterBold(
+                              text: isToday
+                                  ? 'Today'
+                                  : DateFormat.yMMMd().format(date),
+                              fontsize: 20.sp,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30.h,
+                          ),
+                          ...groupedDocuments[date]!.map(
+                            (doc) {
+                              final allocationDate =
+                                  (doc['KeyAllocationDate'] as Timestamp)
+                                      .toDate();
+                              final time =
+                                  '${allocationDate.hour.toString().padLeft(2, '0')} : ${allocationDate.minute.toString().padLeft(2, '0')}';
+
+                              final startDate =
+                                  (doc['KeyAllocationStartTime'] as Timestamp)
+                                      .toDate();
+                              final endDate =
+                                  (doc['KeyAllocationEndTime'] as Timestamp)
+                                      .toDate();
+                              final viewTime =
+                                  (doc['KeyAllocationDate'] as Timestamp)
+                                      .toDate();
+                              final keyAllocationId = doc['KeyAllocationId'];
+
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewKeysScreen(
+                                                  startDate: DateFormat.yMd()
+                                                      .format(startDate),
+                                                  endDate: DateFormat.yMd()
+                                                      .format(endDate),
+                                                  keyAllocationId:
+                                                      keyAllocationId,
+                                                  time: DateFormat('hh:mm:ss a')
+                                                      .format(viewTime),
+                                                  keyId: widget.keyId,
+                                                )));
+                                  },
+                                  child: Container(
+                                    height: 60.h,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w,
+                                    ),
+                                    width: double.maxFinite,
+                                    margin: EdgeInsets.only(
+                                      bottom: 10.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
                                       color: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.Primarycolor,
-                                      size: width / width24,
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 44.h,
+                                              width: 44.w,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                                color: isDark
+                                                    ? DarkColor.Primarycolorlight
+                                                    : LightColor.Primarycolorlight,
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.home_repair_service,
+                                                  color: isDark
+                                                      ? DarkColor.Primarycolor
+                                                      : LightColor.Primarycolor,
+                                                  size: 24.sp,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 20.w),
+                                            StreamBuilder<QuerySnapshot>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('Keys')
+                                                  .where('KeyId',
+                                                      isEqualTo: widget.keyId)
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                String keyName =
+                                                    'Key Not Available';
+                                                if (snapshot.hasData) {
+                                                  final documents =
+                                                      snapshot.data!.docs;
+                                                  keyName = documents.isNotEmpty
+                                                      ? (documents.first.data()
+                                                                  as Map<String,
+                                                                      dynamic>)[
+                                                              'KeyName'] ??
+                                                          'Equipment Not Available'
+                                                      : 'Equipment Not Available';
+                                                }
+                                                return InterMedium(
+                                                  text: keyName,
+                                                  fontsize: 16.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color1
+                                                      : LightColor.color3,
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        InterMedium(
+                                          text: time,
+                                          color: isDark
+                                              ? DarkColor.color17
+                                              : LightColor.color2,
+                                          fontsize: 16.sp,
+                                        ),
+                                        SizedBox(width: 20.w),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: width / width20),
-                                InterMedium(
-                                  text: 'Equipment Title',
-                                  fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
-                                ),
-                              ],
-                            ),
-                            InterMedium(
-                              text: '11 : 36 pm',
-                              color: isDark
-                                  ? DarkColor.color17
-                                  : LightColor.color2,
-                              fontsize: width / width16,
-                            ),
-                            // SizedBox(width: width / width10),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                childCount: 10,
-              ),
+                              );
+                            },
+                          ).toList(),
+                        ],
+                      );
+                    },
+                    childCount: groupedDocuments.keys.length,
+                  ),
+                );
+              },
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
@@ -15,11 +16,13 @@ class PanicAlertDialog extends StatefulWidget {
   final String EmpId;
   final String CompanyId;
   final String Username;
+
   const PanicAlertDialog(
       {super.key,
       required this.EmpId,
       required this.CompanyId,
       required this.Username});
+
   @override
   State<PanicAlertDialog> createState() => _PanicAlertDialogState();
 }
@@ -34,8 +37,6 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
     bool _isLoading = false;
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -46,11 +47,11 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
           height: double.infinity,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: width / width30),
-          padding: EdgeInsets.all(width / width16),
+          margin: EdgeInsets.only(bottom: 30.w),
+          padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(width / width16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -59,23 +60,23 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               ),
             ],
           ),
-          width: MediaQuery.of(context).size.width * 0.8,
+          width: 344.w,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               PoppinsMedium(
                 text: 'Are you in panic?',
-                fontsize: width / width18,
+              fontsize: 18.sp,
                 color: DarkColor. colorRed3,
               ),
-              SizedBox(height: height / height8),
+              SizedBox(height: 8.h),
               PoppinsRegular(
                 text:
                     'If yes, then your supervisor and admin will get notified!',
                 textAlign: TextAlign.center,
-                color: DarkColor. color16,
+                color: DarkColor. color16, fontsize: 18.sp,
               ),
-              SizedBox(height: height / height16),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -86,10 +87,10 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     child: RobotoMedium(
                       text: 'No',
                       color: DarkColor.color27,
-                      fontsize: width / width18,
+                     fontsize: 18.sp,
                     ),
                   ),
-                  SizedBox(width: width / width16),
+                  SizedBox(width: 16.w),
                   TextButton(
                     onPressed: () async {
                       //fetch supervisor admins
@@ -128,7 +129,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     child: RobotoMedium(
                       text: 'Yes',
                       color: DarkColor. color27,
-                      fontsize: width / width18,
+                      fontsize: 18.sp,
                     ),
                   ),
                 ],

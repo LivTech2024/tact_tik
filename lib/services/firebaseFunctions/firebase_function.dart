@@ -972,8 +972,14 @@ class FireStoreService {
                 endTime = endTime.add(Duration(days: 1));
               }
 
-              if (Timestamp.now().toDate().isAfter(startTime) &&
-                  Timestamp.now().toDate().isBefore(endTime)) {
+              // if (Timestamp.now().toDate().isAfter(startTime) &&
+              //     Timestamp.now().toDate().isBefore(endTime)) {
+              if ((StartTime.toDate().isBefore(endTime) &&
+                      StartTime.toDate().isAfter(startTime)) ||
+                  (EndTime.toDate().isBefore(endTime) &&
+                      EndTime.toDate().isAfter(startTime)) ||
+                  (StartTime.toDate().isBefore(startTime) &&
+                      EndTime.toDate().isAfter(endTime))) {
                 print("PatrolData ${patrolData}");
                 String PatrolName = patrolData['PatrolName'];
                 List<dynamic> checkpoints = patrolData['PatrolCheckPoints'];
@@ -999,8 +1005,8 @@ class FireStoreService {
                   }
                 }
                 print(imageUrls);
-                String updateString =
-                    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('hh:mm a').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('hh:mm a').format(EndTime.toDate())}";
+            String updateString = 
+    "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('HH:mm').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('HH:mm').format(EndTime.toDate())}";
                 tile['TileContent'] = updateString;
                 empDarTiles[i] = tile;
                 print('Updated Tile at index $i: $tile');
@@ -1579,7 +1585,9 @@ class FireStoreService {
       String locationAddress,
       String branchId,
       String shiftDesc,
-      String ShiftName) async {
+      String ShiftName,
+      List<Map<String, dynamic>> tasks,
+      ) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1590,13 +1598,13 @@ class FireStoreService {
       }
 
       List<String> guardUserIds = convertToStringArray(guards);
-      List<String> selectedGuardIds =
-          guards.map((guard) => guard['GuardId'] as String).toList();
+      List<String> selectedGuardIds = guards.map((guard) => guard['GuardId'] as String).toList();
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
-      String docId;
+
       for (DateTime date in Date) {
+        // Create the shift document without tasks first
         final newDocRef = await shifts.add({
           'ShiftName': ShiftName,
           'ShiftPosition': role,
@@ -1615,7 +1623,6 @@ class FireStoreService {
             EndTime!.hour,
             EndTime.minute,
           )),
-          // 'ShiftLocation': GeoPoint(Latitude, Longitude),
           'ShiftCompanyBranchId': branchId,
           'ShiftDescription': shiftDesc,
           'ShiftLocationName': locationName,
@@ -1624,10 +1631,8 @@ class FireStoreService {
           'ShiftLocation': coordinates,
           'ShiftAcknowledgedByEmpId': [],
           'ShiftGuardWellnessReport': [],
-          'ShiftIsSpecialShift': "false", //check the condition
-          // 'ShiftAddress': Address,
-          'ShiftDescription': shiftDesc,
-          'ShiftAssignedUserId': selectedGuardIds, // array
+          'ShiftIsSpecialShift': "false",
+          'ShiftAssignedUserId': selectedGuardIds,
           'ShiftClientId': clientID,
           'ShiftCompanyId': CompanyId,
           'ShiftRequiredEmp': int.parse(requiredEmp),
@@ -1640,7 +1645,23 @@ class FireStoreService {
           'ShiftRestrictedRadius': int.parse(restrictedRadius),
           'ShiftEnableRestrictedRadius': shiftenablerestriction,
         });
-        await newDocRef.update({"ShiftId": newDocRef.id});
+
+        // Prepare the shift tasks array with the document id
+        List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
+          return {
+            'ShiftTask': task['name'],
+            'ShiftTaskId': newDocRef.id, // Assign the document id to each task
+            'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
+            'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+            'ShiftTaskStatus': [],
+          };
+        }).toList();
+
+        // Update the document with the tasks
+        await newDocRef.update({
+          'ShiftTasks': FieldValue.arrayUnion(shiftTasks),
+        });
+
         return newDocRef.id;
       }
       return '';
@@ -1652,6 +1673,8 @@ class FireStoreService {
       // Handle the error as needed
     }
   }
+
+
 
   //Get all the Schedules for Guards
 

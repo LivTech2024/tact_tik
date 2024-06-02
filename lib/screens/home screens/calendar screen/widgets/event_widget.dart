@@ -21,7 +21,7 @@ class EventWidget extends StatelessWidget {
         color: drawer.backgroundColor,
       ),
       child: FittedBox(
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.fitWidth,
         alignment: Alignment.centerLeft,
         child: InterRegular(
           text: drawer.name,

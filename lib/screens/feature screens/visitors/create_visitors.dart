@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
@@ -14,6 +15,7 @@ import '../../../fonts/inter_regular.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../supervisor screens/home screens/widgets/set_details_widget.dart';
+import '../widgets/custome_textfield.dart';
 
 class CreateVisitors extends StatefulWidget {
   final Map<String, dynamic>? visitorData;
@@ -36,10 +38,19 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   late TextEditingController CommentsController;
   late TextEditingController NoOfPersonController;
   late TextEditingController CompanyNameController;
+  TextEditingController _AllocateQtController2 = TextEditingController();
+  TextEditingController _DescriptionController = TextEditingController();
 
   TimeOfDay? InTime;
   TimeOfDay? OutTime;
   bool _isLoading = false;
+  bool showCreate = true;
+  List colors = [
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,  isDark ? DarkColor.color25 : LightColor.color2
+  ];
+  String? selectedKeyName;
+  String? selectedKeyId;
+  List<DocumentSnapshot> keys = [];
 
   late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -312,7 +323,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -444,7 +455,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           fontsize: width / width18,
                         ),
                       ],
-                    ),
+                    )
                   ),
                 )
               ],

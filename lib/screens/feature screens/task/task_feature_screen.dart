@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
@@ -15,9 +16,6 @@ class TaskFeatureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
@@ -31,7 +29,7 @@ class TaskFeatureScreen extends StatelessWidget {
           },
           backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add),
+          child: Icon(Icons.add , size: 24.sp,),
         ),
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
@@ -44,9 +42,9 @@ class TaskFeatureScreen extends StatelessWidget {
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
@@ -54,7 +52,7 @@ class TaskFeatureScreen extends StatelessWidget {
               ),
               title: InterRegular(
                 text: 'Task',
-                fontsize: width / width18,
+               fontsize: 18.sp,
                 color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -.3,
               ),
@@ -63,7 +61,7 @@ class TaskFeatureScreen extends StatelessWidget {
             ),
             SliverToBoxAdapter(
               child: SizedBox(
-                height: height / height30,
+                height: 30.h,
               ),
             ),
             SliverList(
@@ -71,17 +69,19 @@ class TaskFeatureScreen extends StatelessWidget {
                 (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(
-                        left: width / width30,
-                        right: width / width30,
-                        bottom: height / height40),
+                      left: 30.w,
+                      right: 30.w,
+                      bottom: 40.h,
+                    ),
                     child: Container(
                       width: double.maxFinite,
                       constraints: BoxConstraints(
-                        minHeight: height / height140,
+                        minHeight: 140.h,
                       ),
                       padding: EdgeInsets.symmetric(
-                          horizontal: width / width14,
-                          vertical: height / height10),
+                        horizontal: 14.w,
+                        vertical: 10.h,
+                      ),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -96,32 +96,32 @@ class TaskFeatureScreen extends StatelessWidget {
                         color: isDark
                             ? DarkColor.WidgetColor
                             : LightColor.WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width10),
+                       borderRadius: BorderRadius.circular(10.h),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterSemibold(
                             text: 'Guard Name',
-                            fontsize: width / width20,
+                              fontsize: 20.sp,
                             color: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.color3,
                           ),
-                          SizedBox(height: height / height10),
+                          SizedBox(height: 10.h),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
-                            fontsize: width / width20,
+                             fontsize: 20.sp,
                             color: isDark
                                 ? DarkColor.color1
                                 : LightColor.color3,
                             maxLines: 5,
                           ),
-                          SizedBox(height: height / height5),
+                          SizedBox(height: 5.h),
                           InterMedium(
                             text:
                                 'Take care of all the computers Make sure they are properly turned off',
-                            fontsize: width / width14,
+                           fontsize: 14.sp,
                             color: isDark
                                 ? DarkColor.color3
                                 : LightColor.color3,

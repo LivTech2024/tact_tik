@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,13 +27,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 
 class SiteTourScreen extends StatelessWidget {
-  final double height;
-  final double width;
   final List<DocumentSnapshot> schedulesList;
 
   SiteTourScreen({
-    required this.height,
-    required this.width,
     required this.schedulesList,
   });
 
@@ -71,28 +68,27 @@ class SiteTourScreen extends StatelessWidget {
       () => controller.isLoading.value
 
           /// loading widget
-          ? SiteTourLoadingWidget(width: width, height: height)
+          ? SiteTourLoadingWidget()
           : Padding(
-              padding: EdgeInsets.symmetric(horizontal: width / width30),
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    height: height / height470,
+                    height: 470.h,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width40),
-                      color:DarkColor. Secondarycolor,
+                      borderRadius: BorderRadius.circular(40.r),
+                      color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor
                     ),
                     child: Stack(
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(width / width40),
+                            borderRadius: BorderRadius.circular(40.r),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
-                              width / width40,
+                              40.r,
                             ),
                             child: GoogleMap(
                               initialCameraPosition: CameraPosition(
@@ -114,13 +110,13 @@ class SiteTourScreen extends StatelessWidget {
                           alignment: Alignment.topCenter,
                           child: IgnorePointer(
                             child: Container(
-                              height: height / height470,
+                              height: 470.h,
                               width: double.maxFinite,
                               decoration:  BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment(0, -1.5),
                                   end: Alignment.bottomCenter,
-                                  colors:isDark? [Colors.black, Colors.transparent]:[Colors.transparent, Colors.transparent],
+                                  colors:isDark? [Colors.black, Colors.transparent]:[ Colors.transparent],
                                 ),
                               ),
                             ),
@@ -129,18 +125,18 @@ class SiteTourScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.topCenter,
                           child: Container(
-                            height: height / height40,
+                            height: 40.h,
                             margin: EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: height / height25,
+                              horizontal: 18.w,
+                              vertical: 25.w,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                  height: height / height60,
-                                  width: width / width60,
+                                  height: 60.h,
+                                  width: 60.w,
                                   child: Image.asset(
                                     'assets/images/site_tour.png',
                                     fit: BoxFit.fitWidth,
@@ -149,10 +145,8 @@ class SiteTourScreen extends StatelessWidget {
                                 ),
                                 InterBold(
                                   text: 'Site Tours',
-                                  fontsize: width / width18,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  fontsize: 18.sp,
+                                  color: isDark?DarkColor.color1:LightColor.color3,
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -160,7 +154,7 @@ class SiteTourScreen extends StatelessWidget {
                                   },
                                   icon: Icon(
                                     Icons.cancel_outlined,
-                                    size: width / width30,
+                                    size: 30.sp,
                                     color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3,
@@ -174,7 +168,7 @@ class SiteTourScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: SizedBox(
-                            height: height / height180,
+                            height: 180.h,
                             child: PageView.builder(
                               controller: controller.pageController,
                               onPageChanged: (index) {
@@ -189,19 +183,22 @@ class SiteTourScreen extends StatelessWidget {
 
                                 return Container(
                                   margin: EdgeInsets.only(
-                                      bottom: height / height24,
-                                      left: width / width40,
-                                      right: width / width30),
-                                  width: width / width300,
-                                  height: height / height160,
+                                    bottom: 24.h,
+                                    left: 40.w,
+                                    right: 30.w,
+                                  ),
+                                  width: 300.w,
+                                  height: 160.h,
                                   padding: EdgeInsets.symmetric(
-                                    vertical: height / height14,
-                                    horizontal: width / width15,
+                                    vertical: 14.h,
+                                    horizontal: 15.w,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: DarkColor. Secondarycolor,
+                                    color: isDark
+                                        ? DarkColor.Secondarycolor
+                                        : LightColor.Secondarycolor,
                                     borderRadius: BorderRadius.circular(
-                                      width / width20,
+                                      20.r,
                                     ),
                                   ),
                                   child: Column(
@@ -209,44 +206,48 @@ class SiteTourScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
-                                        height: height / height55,
+                                        height: 55.h,
                                         child: Row(
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(
-                                                  width / width12,
+                                                  12.r,
                                                 ),
-                                                color: DarkColor.color9,
+                                                color: isDark
+                                                    ? DarkColor.color9
+                                                    : LightColor.color3,
                                               ),
-                                              height: height / height55,
-                                              width: width / width55,
+                                              height: 55.h,
+                                              width: 55.w,
                                               child: Center(
                                                 child: Container(
                                                   alignment: Alignment.center,
-                                                  height: height / height40,
-                                                  width: width / width45,
+                                                  height: 40.h,
+                                                  width: 45.w,
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            width / width4),
-                                                    color: DarkColor.color9,
+                                                            4.r),
+                                                    color: isDark
+                                                        ? DarkColor.color1
+                                                        : LightColor.color3,
                                                     border: Border.all(
-                                                      color: DarkColor
-                                                          .Primarycolor,
+                                                      color: isDark
+                                                          ? DarkColor.Primarycolor
+                                                          : LightColor.color3,
                                                       width: 1,
                                                     ),
                                                   ),
                                                   child: MyNetworkImage(
                                                     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
-                                                    width / width40,
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             SizedBox(
-                                              width: width / width15,
+                                              width: 15.w,
                                             ),
                                             Column(
                                               mainAxisAlignment:
@@ -259,17 +260,21 @@ class SiteTourScreen extends StatelessWidget {
                                                       'No Name',
                                                   // Example name, replace with your data
 
-                                                  color: Colors.white,
-                                                  fontsize: width / width16,
+                                                  color: isDark
+                                                      ? DarkColor.color1
+                                                      : LightColor.color3,
+                                                  fontsize: 16.sp,
                                                 ),
                                                 SizedBox(
-                                                  width: width / width180,
+                                                  width: 180.w,
                                                   child: RobotoMedium(
                                                     text: schedule[
                                                             'ShiftLocationAddress'] ??
                                                         'No Address',
-                                                    color: DarkColor. color10,
-                                                    fontsize: width / width16,
+                                                    color: isDark
+                                                        ? DarkColor.color10
+                                                        : LightColor.color2,
+                                                    fontsize: 16.sp,
                                                     maxLines: 1,
                                                   ),
                                                 )
@@ -295,29 +300,33 @@ class SiteTourScreen extends StatelessWidget {
                                           }
                                         },
                                         child: Container(
-                                          height: height / height55,
+                                          height: 55.h,
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: width / width16,
+                                            horizontal: 16.w,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: DarkColor. Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                             borderRadius: BorderRadius.circular(
-                                              width / width16,
+                                              16.r,
                                             ),
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const RobotoBold(
+                                              RobotoBold(
                                                 text: 'Get Direction',
-                                                color: DarkColor. color1,
-                                                fontsize: 16,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
+                                                fontsize: 16.sp,
                                               ),
                                               Icon(
                                                 Icons.arrow_forward_sharp,
-                                                color: DarkColor. color1,
-                                                size: width / width24,
+                                                color: isDark
+                                                    ? DarkColor.color1
+                                                    : LightColor.color3,
+                                                size: 24.sp,
                                               )
                                             ],
                                           ),
@@ -334,21 +343,19 @@ class SiteTourScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: height / height30,
+                    height: 30.h,
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      bottom: height / height20,
-                      left: width / width20,
-                      right: width / width20,
+                      bottom: 20.h,
+                      left: 20.w,
+                      right: 20.w,
                     ),
-                    height: height / height60,
+                    height: 60.h,
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? DarkColor.WidgetColor
-                          : LightColor.WidgetColor,
+                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       borderRadius: BorderRadius.circular(
-                        width / width16,
+                        16.r,
                       ),
                     ),
                     child: Row(
@@ -365,10 +372,8 @@ class SiteTourScreen extends StatelessWidget {
                           },
                           icon: Icon(
                             Icons.keyboard_arrow_left,
-                            size: width / width24,
-                            color: isDark
-                                ? DarkColor.color1
-                                : LightColor.color3,
+                            size: 24.sp,
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
                           ),
                         ),
                         Bounce(
@@ -378,10 +383,8 @@ class SiteTourScreen extends StatelessWidget {
                           },
                           child: InterBold(
                             text: 'Go to shift',
-                            color: isDark
-                                ? DarkColor.color1
-                                : LightColor.color3,
-                            fontsize: width / width18,
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 18.sp,
                           ),
                         ),
                         IconButton(
@@ -393,10 +396,8 @@ class SiteTourScreen extends StatelessWidget {
                           },
                           icon: Icon(
                             Icons.keyboard_arrow_right,
-                            size: width / width24,
-                            color: isDark
-                                ? DarkColor.color1
-                                : LightColor.color3,
+                            size: 24.sp,
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
                           ),
                         ),
                       ],

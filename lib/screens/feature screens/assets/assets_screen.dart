@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -12,6 +13,7 @@ import '../../../utils/colors.dart';
 
 class AssetsScreen extends StatefulWidget {
   final String assetEmpId;
+
   const AssetsScreen({super.key, required this.assetEmpId});
 
   @override
@@ -56,86 +58,73 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: StreamBuilder(
-          stream: _assetAllocationStream,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            else {
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+            stream: _assetAllocationStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
               } else {
-                final documents = snapshot.data?.docs;
-                return CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      shadowColor: isDark
-                            ? DarkColor.color3
-                            : LightColor.color3.withOpacity(.1),
-                      backgroundColor: isDark
-                            ? DarkColor.AppBarcolor
-                            : LightColor.AppBarcolor,
-                      elevation: 5,
-                      leading: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: isDark
-                                ? DarkColor.color1
-                                : LightColor.color3,
-                          size: width / width24,
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final documents = snapshot.data?.docs;
+                  return CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                        elevation: 0,
+                        leading: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                            size: 24.sp,
+                          ),
+                          padding: EdgeInsets.only(left: 20.w),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            print(
+                                "Navigator debug: ${Navigator.of(context).toString()}");
+                          },
                         ),
-                        padding: EdgeInsets.only(left: width / width20),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          print("Navigator debug: ${Navigator.of(context)
-                              .toString()}");
-                        },
+                        title: InterRegular(
+                          text: 'Assets',
+                          fontsize: 18.sp,
+                          color: Colors.white,
+                          letterSpacing: -0.3,
+                        ),
+                        centerTitle: true,
+                        floating: true,
                       ),
-                      title: InterRegular(
-                        text: 'Assets',
-                        fontsize: width / width18,
-                        color: isDark
-                              ? DarkColor.color1
-                              : LightColor.color3,
-                        letterSpacing: -0.3,
-                      ),
-                      centerTitle: true,
-                      floating: true,
-                    ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: width / width30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: height / height30,
-                            ),
-                            // InterBold(
-                            //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
-                            //   fontsize: width / width20,
-                            //   color: Primarycolor,
-                            // ),
-                            // SizedBox(
-                            //   height: height / height30,
-                            // ),
-                          ],
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 30.h,
+                              ),
+                              // InterBold(
+                              //   text: 'Today', //CHANGE HERE MATCH WITH CURRENT DATE (EquipmentAllocationCreatedAt)
+                              //   fontsize: width / width20,
+                              //   color: Primarycolor,
+                              // ),
+                              // SizedBox(
+                              //   height: height / height30,
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                          final documentsByDate = groupDocumentsByDate(documents);
-                          final dates = documentsByDate.keys.toList();
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final documentsByDate =
+                                groupDocumentsByDate(documents);
+                            final dates = documentsByDate.keys.toList();
 
                             if (index < dates.length) {
                               final date = dates[index];
@@ -149,19 +138,19 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.symmetric(
-                                      horizontal: width / width30,
+                                      horizontal: 30.w,
                                     ),
                                     child: InterBold(
                                       text: isToday
                                           ? 'Today'
                                           : DateFormat.yMMMd().format(date),
-                                      fontsize: width / width20,
+                                   fontsize: 20.sp,
                                       color: isDark
                                           ? DarkColor.Primarycolor
                                           : LightColor.color3,
                                     ),
                                   ),
-                                  SizedBox(height: height / height30),
+                                  SizedBox(height: 30.h),
                                   ...documentsByDate[date]!.map(
                                     (document) {
                                       final allocationDate = (document[
@@ -185,7 +174,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
 
                                       return Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: width / width30),
+                                            horizontal: 30.w),
                                         child: GestureDetector(
                                           onTap: () {
                                             Navigator.push(
@@ -204,14 +193,14 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                             );
                                           },
                                           child: Container(
-                                            height: width / width60,
+                                            height: 60.h,
                                             width: double.maxFinite,
-                                            margin: EdgeInsets.only(
-                                                bottom: height / height10),
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                            margin:
+                                                EdgeInsets.only(bottom: 10.h),
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
+                                                     BorderRadius.circular(10.r),
                                               color: isDark
                                                   ? DarkColor.WidgetColor
                                                   : LightColor.WidgetColor,
@@ -228,18 +217,16 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                       CrossAxisAlignment.center,
                                                   children: [
                                                     Container(
-                                                      height: height / height44,
-                                                      width: width / width44,
+                                                      height: 44.h,
+                                                      width: 44.w,
                                                       padding:
                                                           EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  width /
-                                                                      width10),
+                                                        horizontal: 10.w,
+                                                      ),
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(width /
-                                                                    width10),
+                                                                .circular(10.r),
                                                         color:
                                                          isDark
                                                             ? DarkColor
@@ -256,12 +243,11 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                                   .Primarycolor
                                                               : LightColor
                                                                   .Primarycolor,
-                                                          size: width / width24,
+                                                          size: 24.sp,
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                        width: width / width20),
+                                                    SizedBox(width: 20.w),
                                                     StreamBuilder<
                                                         QuerySnapshot>(
                                                       stream: FirebaseFirestore
@@ -292,8 +278,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                         }
                                                         return InterMedium(
                                                           text: equipmentName,
-                                                          fontsize:
-                                                              width / width16,
+                                                             fontsize: 16.sp,
                                                           color: isDark
                                                               ? DarkColor
                                                                   .color1
@@ -309,10 +294,8 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                   color: isDark
                                                       ? DarkColor.color17
                                                       : LightColor.color2,
-                                                  fontsize: width / width16,
+                                                fontsize: 16.sp,
                                                 ),
-                                                SizedBox(
-                                                    width: width / width20),
                                               ],
                                             ),
                                           ),
@@ -334,7 +317,6 @@ class _AssetsScreenState extends State<AssetsScreen> {
                   );
                 }
               }
-              ;
             }),
       ),
     );

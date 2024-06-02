@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,6 +20,7 @@ import 'view_post_order.dart';
 
 class PostOrder extends StatefulWidget {
   final String locationId;
+
   const PostOrder({super.key, required this.locationId});
 
   @override
@@ -79,8 +81,8 @@ class _PostOrderState extends State<PostOrder> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -92,16 +94,16 @@ class _PostOrderState extends State<PostOrder> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterRegular(
             text: 'Post Orders',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
@@ -163,11 +165,10 @@ class _PostOrderState extends State<PostOrder> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: width / width30,
-                                vertical: height / height40),
+                                horizontal: 30.w, vertical: 40.h),
                             child: InterSemibold(
                               text: date,
-                              fontsize: width / width20,
+                              fontsize: 20.sp,
                               color: isDark
                                   ? DarkColor.Primarycolor
                                   : LightColor.color3,
@@ -207,22 +208,21 @@ class _PostOrderState extends State<PostOrder> {
                                     );
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width / width30),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.w),
                                     child: Container(
                                       constraints: BoxConstraints(
-                                        minHeight: height / height250,
+                                        minHeight: 250.h,
                                       ),
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width / width20,
-                                        vertical: height / height10,
+                                        horizontal: 20.w,
+                                        vertical: 10.h,
                                       ),
                                       width: double.maxFinite,
-                                      margin: EdgeInsets.only(
-                                          bottom: height / height10),
+                                      margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
+                                         borderRadius:
+                                            BorderRadius.circular(10.r),
                                         color: DarkColor.WidgetColor,
                                       ),
                                       child: Column(
@@ -232,29 +232,28 @@ class _PostOrderState extends State<PostOrder> {
                                           InterBold(
                                             text: postOrderTitle,
                                             color: DarkColor. color2,
-                                            fontsize: width / width14,
+                                            fontsize: 14.sp,
                                           ),
                                           SizedBox(
-                                            height: height / height16,
+                                            height: 16.h,
                                           ),
                                           Container(
-                                            constraints: BoxConstraints(minWidth: width / width200),
-                                            height: height / height46,
+                                            constraints:
+                                                BoxConstraints(minWidth: 200.w),
+                                            height: 46.h,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
+                                                  BorderRadius.circular(10.r),
                                               color: DarkColor.color1,
                                             ),
                                             child: Row(
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal:
-                                                          width / width6),
+                                                      horizontal: 6.w),
                                                   child: SvgPicture.asset(
                                                       'assets/images/pdf.svg',
-                                                      width: width / width32),
+                                                      width: 32.w),
                                                 ),
                                                 Column(
                                                   crossAxisAlignment:
@@ -264,11 +263,11 @@ class _PostOrderState extends State<PostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: DarkColor. color15,
+                                                      color: DarkColor. color15,fontsize: 12.sp,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: DarkColor.color16,
+                                                      color: DarkColor.color16,fontsize: 12.sp,
                                                     )
                                                   ],
                                                 )
@@ -276,7 +275,7 @@ class _PostOrderState extends State<PostOrder> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: height / height20,
+                                            height: 20.h,
                                           ),
                                           GridView.builder(
                                             shrinkWrap: true,
@@ -315,13 +314,12 @@ class _PostOrderState extends State<PostOrder> {
                                                     }
 
                                                     return Container(
-                                                      width: width / width200,
-                                                      height: height / height46,
+                                                      width: 200.w,
+                                                      height: 46.h,
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(width /
-                                                                    width10),
+                                                                  .circular(10.r),
                                                         color: DarkColor.color1,
                                                       ),
                                                       child: Row(
@@ -330,12 +328,12 @@ class _PostOrderState extends State<PostOrder> {
                                                             padding: EdgeInsets
                                                                 .symmetric(
                                                                     horizontal:
-                                                                        width /
-                                                                            width6),
-                                                            child: SvgPicture.asset(
-                                                                'assets/images/pdf.svg',
-                                                                width: width /
-                                                                    width32),
+                                                                        6.w),
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              'assets/images/pdf.svg',
+                                                              width: 32.sp,
+                                                            ),
                                                           ),
                                                           Column(
                                                             crossAxisAlignment:
@@ -349,13 +347,13 @@ class _PostOrderState extends State<PostOrder> {
                                                                 text:
                                                                     otherFileName,
                                                                 color: DarkColor
-                                                                    . color15,
+                                                                    . color15, fontsize: 12.sp,
                                                               ),
                                                               PoppinsRegular(
                                                                 text:
                                                                     otherFileSize,
                                                                 color: DarkColor
-                                                                    . color16,
+                                                                    . color16, fontsize: 10.sp,
                                                               )
                                                             ],
                                                           )
@@ -366,8 +364,8 @@ class _PostOrderState extends State<PostOrder> {
                                                 );
                                               } else {
                                                 return SizedBox(
-                                                  height: height / height20,
-                                                  width: width / width20,
+                                                  height: 20.h,
+                                                  width: 20.w,
                                                   child: Image.network(url),
                                                 );
                                               }

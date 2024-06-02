@@ -5,12 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/dialogList.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
@@ -319,19 +321,19 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
             // physics: const PageScrollPhysics(),
             slivers: [
               SliverAppBar(
-                backgroundColor: DarkColor.AppBarcolor,
+                backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                 elevation: 0,
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: Colors.white,
+                    color: isDark ? DarkColor.color1 : LightColor.color3,
                     size: width / width24,
                   ),
                   padding: EdgeInsets.only(left: width / width20),
@@ -344,7 +346,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 title: InterRegular(
                   text: 'Patrolling',
                   fontsize: width / width18,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   letterSpacing: -.3,
                 ),
                 centerTitle: true,
@@ -500,8 +502,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   Widget build(BuildContext context) {
     AudioPlayer player = new AudioPlayer();
     bool buttonEnabled = true;
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
     bool startTimeUpdated = false;
     bool _isLoading = false;
     double completionPercentage =
@@ -596,11 +596,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     Widget ReportCheckpoint(String chkid) {
       print("Checkpoint id in widget ${chkid}");
       return Container(
-        constraints: BoxConstraints(minHeight: height / height90),
+        constraints: BoxConstraints(minHeight: 90.h),
         decoration: BoxDecoration(
-          color: DarkColor.WidgetColor,
+          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
         ),
-        padding: EdgeInsets.all(width / width16),
+        padding: EdgeInsets.all(16.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -608,19 +608,19 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             Text(
               'Add Image/Comment',
               style: TextStyle(
-                fontSize: width / width14,
-                color: DarkColor.Primarycolor,
+                fontSize: 14.sp,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: height / height10),
+            SizedBox(height: 10.h),
             TextField(
               controller: Controller,
               decoration: InputDecoration(
                 hintText: 'Add Comment',
               ),
             ),
-            SizedBox(height: height / height10),
+            SizedBox(height: 10.h),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -631,14 +631,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       clipBehavior: Clip.none,
                       children: [
                         Container(
-                          height: height / height66,
-                          width: width / width66,
+                          height: 66.h,
+                          width: 66.w,
                           decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.5),
-                            borderRadius:
-                                BorderRadius.circular(width / width10),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
-                          margin: EdgeInsets.all(width / width8),
+                          margin: EdgeInsets.all(8.sp),
                           child: Image.file(
                             uploads[i]['file'],
                             fit: BoxFit.cover,
@@ -654,7 +653,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             icon: Icon(
                               Icons.delete,
                               color: Colors.black,
-                              size: width / width20,
+                              size: 20.sp,
                             ),
                             padding: EdgeInsets.zero,
                           ),
@@ -670,8 +669,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ListTile(
-                              leading: Icon(Icons.camera),
-                              title: Text('Add Image'),
+                              leading: Icon(
+                                Icons.camera,
+                                size: 24.sp,
+                              ),
+                              title: InterRegular(
+                                text: 'Add Image',
+                                fontsize: 20.sp,
+                              ),
                               onTap: () {
                                 _addImage();
                                 Navigator.pop(context);
@@ -680,8 +685,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               },
                             ),
                             ListTile(
-                              leading: Icon(Icons.image),
-                              title: Text('Add from Gallery'),
+                              leading: Icon(
+                                Icons.image,
+                                size: 24.sp,
+                              ),
+                              title: InterRegular(
+                                text: 'Add from Gallery',
+                                fontsize: 20.sp,
+                              ),
                               onTap: () {
                                 _addGallery();
                                 Navigator.pop(context);
@@ -694,16 +705,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       );
                     },
                     child: Container(
-                      height: height / height66,
-                      width: width / width66,
+                      height: 66.h,
+                      width: 66.w,
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.add,
-                          size: width / width20,
+                          size: 20.sp,
                         ),
                       ),
                     ),
@@ -711,7 +722,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 ],
               ),
             ),
-            SizedBox(height: height / height10),
+            SizedBox(height: 10.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -721,20 +732,19 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       isPopupVisible = false;
                     });
                   },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
+                  child: InterRegular(
+                    text: 'Cancel',
+                    color: Colors.red,
+                    fontsize: 20.sp,
                   ),
                 ),
                 uploadingLoading
                     ? CircularProgressIndicator(
-                        color: DarkColor.Primarycolor,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                       )
                     : Button1(
-                        height: height / height30,
-                        borderRadius: width / width10,
+                        height: 30.h,
+                        borderRadius: 10.r,
                         onPressed: () async {
                           _refresh();
                           // Logic to submit the report
@@ -773,9 +783,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           });
                         },
                         text: 'Submit',
-                        fontsize: width / width14,
-                        backgroundcolor: DarkColor.Primarycolor,
-                        color: DarkColor.color1,
+                        fontsize: 14.sp,
+                        backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                        color: isDark ? DarkColor.color1 : LightColor.color3,
                       ),
               ],
             ),
@@ -784,170 +794,106 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       );
     }
 
-    return Stack(children: [
-      RefreshIndicator(
-        onRefresh: _refresh,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InterBold(
-              text: "Today",
-              fontsize: width / width18,
-              color: DarkColor.color1,
-            ),
-            SizedBox(height: height / height30),
-            AnimatedContainer(
-              margin: EdgeInsets.only(bottom: height / height30),
-              duration: const Duration(milliseconds: 300),
-              decoration: BoxDecoration(
-                color: DarkColor.WidgetColor,
-                borderRadius: BorderRadius.circular(width / width10),
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: _refresh,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InterBold(
+                text: "Today",
+                fontsize: 18.sp,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
               ),
-              constraints: _expand
-                  ? BoxConstraints(minHeight: height / height200)
-                  : const BoxConstraints(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width / width10,
-                      vertical: height / height20,
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(height: height / height5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: width / width120,
-                              child: InterBold(
-                                text: 'Patrol   ${widget.p.title}',
-                                color: DarkColor.Primarycolor,
-                                fontsize: width / width14,
-                                maxLine: 1,
-                              ),
-                            ),
-                            CircularPercentIndicator(
-                              radius: width / width10,
-                              lineWidth: 3,
-                              percent: completionPercentage.clamp(0.0, 1.0),
-                              progressColor: DarkColor.Primarycolor,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height / height10),
-                        IconTextWidget(
-                          iconSize: width / width24,
-                          icon: Icons.location_on,
-                          text: widget.p.title,
-                          useBold: false,
-                          color: DarkColor.color13,
-                        ),
-                        SizedBox(height: height / height16),
-                        Divider(
-                          color: DarkColor.color14,
-                        ),
-                        SizedBox(height: height / height5),
-                        IconTextWidget(
-                          iconSize: width / width24,
-                          icon: Icons.description,
-                          text: widget.p.description,
-                          useBold: false,
-                          color: DarkColor.color13,
-                        ),
-                        SizedBox(height: height / height16),
-                        Divider(
-                          color: DarkColor.color14,
-                        ),
-                        SizedBox(height: height / height5),
-                        IconTextWidget(
-                          iconSize: width / width24,
-                          icon: Icons.qr_code_scanner,
-                          text:
-                              'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
-                          useBold: false,
-                          color: DarkColor.color13,
-                        ),
-                        SizedBox(height: height / height20),
-                      ],
-                    ),
-                  ),
-                  Button1(
-                    text: 'START',
-                    backgroundcolor: DarkColor.colorGreen,
-                    color: Colors.green,
-                    borderRadius: width / width10,
-                    onPressed: buttonClicked ? handleStartButton : () {},
-                  ),
-                  Visibility(
-                      visible: _expand,
+              SizedBox(height: 30.h),
+              AnimatedContainer(
+                margin: EdgeInsets.only(bottom: 30.h),
+                duration: const Duration(milliseconds: 300),
+                decoration: BoxDecoration(
+                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                constraints: _expand
+                    ? BoxConstraints(minHeight: 200.h)
+                    : const BoxConstraints(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 20.h,
+                      ),
                       child: Column(
                         children: [
-                          SizedBox(height: height / height5),
+                          SizedBox(height: 5.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: width / width120,
+                                width: 120.w,
                                 child: InterBold(
                                   text: 'Patrol   ${widget.p.title}',
-                                  color: DarkColor. Primarycolor,
-                                  fontsize: width / width14,
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.color3,
+                                  fontsize: 14.sp,
                                   maxLine: 1,
                                 ),
                               ),
                               CircularPercentIndicator(
-                                radius: width / width10,
+                                radius: 10.r,
                                 lineWidth: 3,
                                 percent: completionPercentage.clamp(0.0, 1.0),
-                                progressColor: DarkColor. Primarycolor,
+                                progressColor: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.color3,
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height10),
+                          SizedBox(height: 10.h),
                           IconTextWidget(
-                            iconSize: width / width24,
+                            iconSize: 24.sp,
                             icon: Icons.location_on,
                             text: widget.p.title,
                             useBold: false,
-                            color: DarkColor. color13,
+                            color: isDark ? DarkColor.color13 : LightColor.color3,
                           ),
-                          SizedBox(height: height / height16),
+                          SizedBox(height: 16.h),
                           Divider(
-                            color: DarkColor.color14,
+                            color: isDark ? DarkColor.color14 : LightColor.color3,
                           ),
-                          SizedBox(height: height / height5),
+                          SizedBox(height: 5.h),
                           IconTextWidget(
-                            iconSize: width / width24,
+                            iconSize: 24.sp,
                             icon: Icons.description,
                             text: widget.p.description,
                             useBold: false,
-                            color: DarkColor.color13,
+                            color: isDark ? DarkColor.color13 : LightColor.color3,
                           ),
-                          SizedBox(height: height / height16),
+                          SizedBox(height: 16.h),
                           Divider(
-                            color: DarkColor. color14,
+                            color: isDark ? DarkColor.color14 : LightColor.color3,
                           ),
-                          SizedBox(height: height / height5),
+                          SizedBox(height: 5.h),
                           IconTextWidget(
-                            iconSize: width / width24,
+                            iconSize: 24.sp,
                             icon: Icons.qr_code_scanner,
                             text:
                                 'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
                             useBold: false,
-                            color: DarkColor. color13,
+                            color: isDark ? DarkColor.color13 : LightColor.color3,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
                         ],
                       ),
                     ),
                     Button1(
                       text: 'START',
-                      backgroundcolor: DarkColor. colorGreen,
+                      backgroundcolor: isDark ? DarkColor.colorgreen : LightColor.WidgetColor,
                       color: Colors.green,
-                      borderRadius: width / width10,
+                      borderRadius: 10.r,
                       onPressed: buttonClicked
                           ? handleStartButton
                           : () {
@@ -966,269 +912,316 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     ? _expandCategoryMap[category.title]!
                                     : false;
 
-                          return Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  // Handle tap action to expand checkpoints
-                                  // Toggle visibility of checkpoints associated with this category
-                                  setState(() {
-                                    if (_expandCategoryMap[category.title] !=
-                                        null) {
-                                      _expandCategoryMap[category.title] =
-                                          !_expandCategoryMap[category.title]!;
-                                    }
-                                    // _expand2 = !_expand2;
-                                  });
-                                },
-                                child: Container(
-                                  height: height / height70,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
-                                      vertical: height / height11),
-                                  margin:
-                                      EdgeInsets.only(top: height / height10),
-                                  decoration: BoxDecoration(
-                                    color: DarkColor. color15,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            height: height / height48,
-                                            width: width / width48,
-                                            decoration: BoxDecoration(
-                                              color: DarkColor.color16,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    // Handle tap action to expand checkpoints
+                                    // Toggle visibility of checkpoints associated with this category
+                                    setState(() {
+                                      if (_expandCategoryMap[category.title] !=
+                                          null) {
+                                        _expandCategoryMap[category.title] =
+                                            !_expandCategoryMap[
+                                                category.title]!;
+                                      }
+                                      // _expand2 = !_expand2;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 70.h,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20.w,
+                                      vertical: 11.h,
+                                    ),
+                                    margin: EdgeInsets.only(top: 10.h),
+                                    decoration: BoxDecoration(
+                                      color: isDark
+                                          ? DarkColor.color15
+                                          : LightColor.color3,
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 48.h,
+                                              width: 48.w,
+                                              decoration: BoxDecoration(
+                                                color: isDark
+                                                    ? DarkColor.color16
+                                                    : LightColor.color3,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+                                              child: Icon(
+                                                Icons.home_sharp,
+                                                size: 24.sp,
+                                                color: isDark
+                                                    ? DarkColor.Primarycolor
+                                                    : LightColor.color3,
+                                              ),
                                             ),
-                                            child: Icon(
-                                              Icons.home_sharp,
-                                              size: width / width24,
-                                              color: DarkColor. Primarycolor,
+                                            SizedBox(
+                                              width: 20.w,
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: width / width20,
-                                          ),
-                                          SizedBox(
-                                            width: width / width190,
-                                            child: InterRegular(
-                                              text: category.title,
-                                              color: DarkColor.color17,
-                                              fontsize: width / width18,
+                                            SizedBox(
+                                              width: 190.w,
+                                              child: InterRegular(
+                                                text: category.title,
+                                                color: isDark
+                                                    ? DarkColor.color17
+                                                    : LightColor.color2,
+                                                fontsize: 18.sp,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _expandCategoryMap[
-                                                    category.title] !=
-                                                _expandCategoryMap[
-                                                    category.title];
-                                          });
-                                        },
-                                        icon: Icon(
-                                          expand
-                                              ? Icons.arrow_circle_up_outlined
-                                              : Icons
-                                                  .arrow_circle_down_outlined,
-                                          size: width / width24,
-                                          color: DarkColor. Primarycolor,
+                                          ],
                                         ),
-                                      )
-                                    ],
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              if (_expandCategoryMap[
+                                                      category.title] !=
+                                                  null) {
+                                                _expandCategoryMap[
+                                                        category.title] =
+                                                    !_expandCategoryMap[
+                                                        category.title]!;
+                                              }
+                                              // _expand2 = !_expand2;
+                                            });
+                                          },
+                                          icon: Icon(
+                                            expand
+                                                ? Icons.arrow_circle_up_outlined
+                                                : Icons
+                                                    .arrow_circle_down_outlined,
+                                            size: 24.sp,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.color3,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Visibility(
-                                visible: expand,
-                                child: Column(
-                                  children:
-                                      category.checkpoints.map((checkpoint) {
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        if (checkpoint.getFirstStatus(
-                                                    widget.p.EmpId,"") ==
-                                                'unchecked' ||
-                                            checkpoint.getFirstStatus(
-                                                    widget.p.EmpId,"") ==
-                                                null) {
-                                          var res = await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SimpleBarcodeScannerPage(),
-                                              ));
-                                          setState(() {
-                                            Result = res;
-                                          });
-                                          // if (Result) {
-                                          // player.play(AssetSource(
-                                          //     "../../../../assets/SuccessSound.mpeg"));
-                                          print(res);
-                                          if (res == checkpoint.id) {
-                                            await fireStoreService
-                                                .updatePatrolsStatus(
-                                                    checkpoint.patrolId,
-                                                    checkpoint.id,
-                                                    widget.p.EmpId,"");
-                                            await fireStoreService.addToLog(
-                                                "check_point",
-                                                "",
-                                                "",
-                                                widget.p.EmpId,
-                                                widget.p.EmployeeName,
-                                                widget.p.PatrolCompanyID,
-                                                "",
-                                                widget.p.PatrolClientID,
-                                                widget.p.LocationId,"");
-                                            showSuccessToast(context,
-                                                "${checkpoint.description} scanned ");
-                                            _refresh();
+                                Visibility(
+                                  visible: expand,
+                                  child: Column(
+                                    children:
+                                        category.checkpoints.map((checkpoint) {
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          if (checkpoint.getFirstStatus(
+                                                    widget.p.EmpId,
+                                                    widget.p.ShiftId,
+                                                  ) ==
+                                                  'unchecked' ||
+                                              checkpoint.getFirstStatus(
+                                                    widget.p.EmpId,
+                                                    widget.p.ShiftId,
+                                                  ) ==
+                                                  null) {
+                                            var res = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const SimpleBarcodeScannerPage(),
+                                                ));
+                                            setState(() {
+                                              Result = res;
+                                            });
+                                            // if (Result) {
+                                            // player.play(AssetSource(
+                                            //     "../../../../assets/SuccessSound.mpeg"));
+                                            print(res);
+                                            if (res == checkpoint.id) {
+                                              await fireStoreService
+                                                  .updatePatrolsStatus(
+                                                      checkpoint.patrolId,
+                                                      checkpoint.id,
+                                                      widget.p.EmpId,
+                                                      widget.p.ShiftId);
+                                              await fireStoreService.addToLog(
+                                                  "check_point",
+                                                  "",
+                                                  "",
+                                                  widget.p.EmpId,
+                                                  widget.p.EmployeeName,
+                                                  widget.p.PatrolCompanyID,
+                                                  "",
+                                                  widget.p.PatrolClientID,
+                                                  widget.p.LocationId,
+                                                  widget.p.ShiftName);
+                                              showSuccessToast(context,
+                                                  "${checkpoint.description} scanned ");
+                                              _refresh();
+                                            } else {
+                                              _refresh();
+                                              // player.play(AssetSource(
+                                              //     "../../../../assets/ErrorSound.mp3"));
+                                              showErrorToast(context,
+                                                  "${checkpoint.description} scanned unsuccessfull");
+                                            }
                                           } else {
-                                            _refresh();
                                             // player.play(AssetSource(
                                             //     "../../../../assets/ErrorSound.mp3"));
-                                            showErrorToast(context,
-                                                "${checkpoint.description} scanned unsuccessfull");
+                                            showErrorToast(
+                                                context, "Already Scanned");
                                           }
-                                        } else {
-                                          // player.play(AssetSource(
-                                          //     "../../../../assets/ErrorSound.mp3"));
-                                          showErrorToast(
-                                              context, "Already Scanned");
-                                        }
-                                        // }
-                                      },
-                                      child: Container(
-                                        height: height / height70,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: width / width20,
-                                          vertical: height / height11,
-                                        ),
-                                        margin: EdgeInsets.only(
-                                            top: height / height10),
-                                        decoration: BoxDecoration(
-                                          color: DarkColor.color15,
-                                          borderRadius: BorderRadius.circular(
-                                              width / width10),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  height: height / height48,
-                                                  width: width / width48,
-                                                  decoration: BoxDecoration(
-                                                    color: DarkColor. color16,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            width / width10),
-                                                  ),
-                                                  child: Container(
-                                                    height: height / height30,
-                                                    width: width / width30,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: DarkColor. color2,
-                                                    ),
-                                                    child: Icon(
-                                                      checkpoint.getFirstStatus(
-                                                                  widget.p
-                                                                      .EmpId,"") ==
-                                                              'checked'
-                                                          ? Icons.done
-                                                          : Icons.qr_code,
-                                                      color: checkpoint
-                                                                  .getFirstStatus(
-                                                                      widget.p
-                                                                          .EmpId,"") ==
-                                                              'checked'
-                                                          ? Colors.green
-                                                          : DarkColor
-                                                              . Primarycolor,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: width / width20,
-                                                ),
-                                                SizedBox(
-                                                  width: width / width140,
-                                                  child: Column(
-                                                    children: [
-                                                      InterRegular(
-                                                        text: checkpoint.title,
-                                                        //Subcheckpoint
-                                                        color:
-                                                            DarkColor. color17,
-                                                        fontsize:
-                                                            width / width18,
+                                          // }
+                                        },
+                                        child: Container(
+                                          height: 70.h,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 20.w,
+                                            vertical: 11.h,
+                                          ),
+                                          margin: EdgeInsets.only(
+                                            top: 10.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: isDark
+                                                ? DarkColor.color15
+                                                : LightColor.color1,
+                                            borderRadius:
+                                                BorderRadius.circular(10.r),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    height: 48.h,
+                                                    width: 48.w,
+                                                    decoration: BoxDecoration(
+                                                      color: isDark
+                                                          ? DarkColor.color16
+                                                          : LightColor.color1,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        10.r,
                                                       ),
-                                                      SizedBox(
-                                                          height:
-                                                              height / height2),
-                                                      InterRegular(
-                                                        text: "",
-                                                        color: DarkColor
-                                                            .Primarycolor,
-                                                        fontsize:
-                                                            width / width12,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Container(
-                                                    height: height / height34,
-                                                    width: width / width34,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: DarkColor.color16,
                                                     ),
-                                                    child: Center(
-                                                      child: IconButton(
-                                                        onPressed: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return AlertDialog(
-                                                                title: Text(
-                                                                  'Report Qr',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                                content: Text(
-                                                                  'The scanned QR code does not work.',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                ),
-                                                                actions: [
-                                                                  TextButton(
+                                                    child: Container(
+                                                      height: 30.h,
+                                                      width: 30.w,
+                                                      decoration:
+                                                           BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: isDark
+                                                            ? DarkColor.color2
+                                                            : LightColor.color2,
+                                                      ),
+                                                      child: Icon(
+                                                        checkpoint.getFirstStatus(
+                                                                    widget.p
+                                                                        .EmpId,
+                                                                    widget.p
+                                                                        .ShiftId) ==
+                                                                'checked'
+                                                            ? Icons.done
+                                                            : Icons.qr_code,
+                                                        color: checkpoint.getFirstStatus(
+                                                                    widget.p
+                                                                        .EmpId,
+                                                                    widget.p
+                                                                        .ShiftId) ==
+                                                                'checked'
+                                                            ? Colors.green
+                                                            : (isDark
+                                                                ? DarkColor
+                                                                    .Primarycolor
+                                                                : LightColor
+                                                                    .color3),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20.w,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 140.w,
+                                                    child: Column(
+                                                      children: [
+                                                        InterRegular(
+                                                          text:
+                                                              checkpoint.title,
+                                                          //Subcheckpoint
+                                                          color: isDark
+                                                              ? DarkColor.color17
+                                                              : LightColor
+                                                                  .color3,
+                                                          fontsize: 18.sp,
+                                                        ),
+                                                        SizedBox(height: 2.h),
+                                                        InterRegular(
+                                                          text: checkpoint
+                                                              .timestamp,
+                                                          color: isDark
+                                                              ? DarkColor.Primarycolor
+                                                              : LightColor
+                                                                  .color3,
+                                                          fontsize: 12.sp,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Container(
+                                                      height: 34.h,
+                                                      width: 34.w,
+                                                      decoration:
+                                                           BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: isDark
+                                                            ? DarkColor.color16
+                                                            : LightColor.color1,
+                                                      ),
+                                                      child: Center(
+                                                        child: IconButton(
+                                                          onPressed: () {
+                                                            showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return AlertDialog(
+                                                                  title: Text(
+                                                                    'Report Qr',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                  content: Text(
+                                                                    'The scanned QR code does not work.',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                        child: Text(
+                                                                            "Cancel")),
+                                                                    TextButton(
                                                                       onPressed:
                                                                           () {
                                                                         // fireStoreService.updatePatrolsReport(
@@ -1260,288 +1253,315 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                     )));
                                                                         ;
                                                                       },
-                                                                      child: Text(
-                                                                          "Cancel")),
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      // fireStoreService.updatePatrolsReport(
-                                                                      //     movie
-                                                                      //         .PatrolAssignedGuardId,
-                                                                      //     movie
-                                                                      //         .patrolId,
-                                                                      //     checkpoint[
-                                                                      //         'CheckPointId']);
-                                                                      setState(
-                                                                          () {});
-                                                                      /*Navigator.of(
-                                                                              context)
-                                                                          .pop();*/
-                                                                    },
-                                                                    child: Text(
-                                                                        'Submit'),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            },
-                                                          );
-                                                          print(
-                                                              "Info Icon Pressed");
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.info,
-                                                          color: DarkColor.color18,
-                                                          size: width / width24,
-                                                        ),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(
-                                                    width / width8,
-                                                  ),
-                                                  child: Container(
-                                                    height: height / height34,
-                                                    width: width / width34,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: DarkColor.color16,
-                                                    ),
-                                                    child: Center(
-                                                      child: IconButton(
-                                                        onPressed: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return AlertDialog(
-                                                                title:
-                                                                    InterRegular(
-                                                                  text:
-                                                                      'Add Image/Comment',
-                                                                  color: DarkColor
-                                                                      . color2,
-                                                                  fontsize:
-                                                                      width /
-                                                                          width12,
-                                                                ),
-                                                                content: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
-                                                                  children: [
-                                                                    CustomeTextField(
-                                                                      hint:
-                                                                          'Add Comment',
-                                                                      showIcon:
-                                                                          false,
-                                                                      controller:
-                                                                          Controller,
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height: height /
-                                                                            height10),
-                                                                    SingleChildScrollView(
-                                                                      // Wrap the Row with SingleChildScrollView
-                                                                      scrollDirection:
-                                                                          Axis.horizontal,
-                                                                      // Set scroll direction to horizontal
                                                                       child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Row(
-                                                                            children:
-                                                                                uploads.asMap().entries.map((entry) {
-                                                                              final index = entry.key;
-                                                                              final upload = entry.value;
-                                                                              return Stack(
-                                                                                clipBehavior: Clip.none,
-                                                                                children: [
-                                                                                  Container(
-                                                                                    height: height / height66,
-                                                                                    width: width / width66,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: DarkColor. WidgetColor,
-                                                                                      borderRadius: BorderRadius.circular(
-                                                                                        width / width10,
-                                                                                      ),
-                                                                                    ),
-                                                                                    margin: EdgeInsets.all(width / width8),
-                                                                                    child: upload['type'] == 'image'
-                                                                                        ? Image.file(
-                                                                                            upload['file'],
-                                                                                            fit: BoxFit.cover,
-                                                                                          )
-                                                                                        : Icon(
-                                                                                            Icons.videocam,
-                                                                                            size: width / width20,
-                                                                                          ),
-                                                                                  ),
-                                                                                  Positioned(
-                                                                                    top: -5,
-                                                                                    right: -5,
-                                                                                    child: IconButton(
-                                                                                      onPressed: () {
-                                                                                        setState(() {
-                                                                                          _deleteItem(index);
-                                                                                        });
-                                                                                      },
-                                                                                      icon: Icon(
-                                                                                        Icons.delete,
-                                                                                        color: Colors.black,
-                                                                                        size: width / width20,
-                                                                                      ),
-                                                                                      padding: EdgeInsets.zero,
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              );
-                                                                            }).toList(),
-                                                                          ),
-                                                                          GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              print("Patrol Checkpoint Status ${widget.p.Allchecked}");
-                                                                              Navigator.pop(context);
-                                                                              showModalBottomSheet(
-                                                                                context: context,
-                                                                                builder: (context) => Column(
-                                                                                  mainAxisSize: MainAxisSize.min,
-                                                                                  children: [
-                                                                                    ListTile(
-                                                                                      leading: Icon(Icons.camera),
-                                                                                      title: Text('Add Image'),
-                                                                                      onTap: () {
-                                                                                        _addImage();
-                                                                                        Navigator.pop(context);
-                                                                                      },
-                                                                                    ),
-                                                                                    ListTile(
-                                                                                      leading: Icon(Icons.image),
-                                                                                      title: Text('Add from Gallery'),
-                                                                                      onTap: () {
-                                                                                        Navigator.pop(context);
-                                                                                        _addGallery();
-                                                                                      },
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              );
-                                                                            },
-                                                                            child:
-                                                                                Container(
-                                                                              height: height / height66,
-                                                                              width: width / width66,
-                                                                              decoration: BoxDecoration(
-                                                                                color: DarkColor. WidgetColor,
-                                                                                borderRadius: BorderRadius.circular(width / width8),
-                                                                              ),
-                                                                              child: Center(
-                                                                                child: Icon(
-                                                                                  Icons.add,
-                                                                                  size: width / width20,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        ],
+                                                                          Text(
+                                                                        'Submit',
                                                                       ),
                                                                     ),
                                                                   ],
-                                                                ),
-                                                                actions: [
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                    },
-                                                                    child:
-                                                                        InterRegular(
-                                                                      text:
-                                                                          'Cancel',
-                                                                      color:
-                                                                          DarkColor
-                                                                          .Primarycolor,
-                                                                    ),
-                                                                  ),
-                                                                  ElevatedButton(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      setState(
-                                                                          () {
-                                                                        _isLoading =
-                                                                            true;
-                                                                      });
-                                                                      // Logic to submit the report
-                                                                      if (uploads
-                                                                              .isNotEmpty ||
-                                                                          Controller
-                                                                              .text
-                                                                              .isNotEmpty) {
-                                                                        await fireStoreService.addImagesToPatrol(
-                                                                            uploads,
-                                                                            Controller.text,
-                                                                            widget.p.PatrolId,
-                                                                            widget.p.EmpId,
-                                                                            checkpoint.id,"");
-                                                                        toastification
-                                                                            .show(
-                                                                          context:
-                                                                              context,
-                                                                          type:
-                                                                              ToastificationType.success,
-                                                                          title:
-                                                                              Text("Submitted"),
-                                                                          autoCloseDuration:
-                                                                              const Duration(seconds: 2),
-                                                                        );
-                                                                        _refresh();
-                                                                        setState(
-                                                                            () {
-                                                                          _isLoading =
-                                                                              false;
-                                                                        });
-                                                                        uploads
-                                                                            .clear();
-                                                                        Controller
-                                                                            .clear();
-
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      } else {
-                                                                        showErrorToast(
-                                                                            context,
-                                                                            "Fields cannot be empty");
-                                                                      }
-                                                                    },
-                                                                    child: InterRegular(
-                                                                        text:
-                                                                            'Submit'),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.add_circle,
-                                                          color: DarkColor
-                                                              . Primarycolor,
-                                                          size: width / width24,
+                                                                );
+                                                              },
+                                                            );
+                                                            print(
+                                                                "Info Icon Pressed");
+                                                          },
+                                                          icon: Icon(
+                                                            Icons.info,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .color18
+                                                                : LightColor
+                                                                    .color3,
+                                                            size: 24.sp,
+                                                          ),
+                                                          padding:
+                                                              EdgeInsets.zero,
                                                         ),
-                                                        padding:
-                                                            EdgeInsets.zero,
                                                       ),
                                                     ),
                                                   ),
-                                            )],
+                                                  Padding(
+                                                    padding: EdgeInsets.all(
+                                                      8.sp,
+                                                    ),
+                                                    child: Container(
+                                                      height: 34.h,
+                                                      width: 34.w,
+                                                      decoration:
+                                                           BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: isDark
+                                                            ? DarkColor.color16
+                                                            : LightColor.color1,
+                                                      ),
+                                                      child: Center(
+                                                        child: IconButton(
+                                                          onPressed: () {
+                                                            // List<
+                                                            //         Map<String,
+                                                            //             dynamic>>
+                                                            //     uploads = [];
+                                                            // setState(() {
+                                                            //   isPopupVisible =
+                                                            //       true;
+                                                            //   CheckPointId =
+                                                            //       checkpoint     .id;
+                                                            // });
+                                                            setState(() {
+                                                              CheckPointId =
+                                                                  checkpoint.id;
+                                                            });
+                                                            // _showPopup(
+                                                            //     checkpoint.id);
+
+                                                            // ReportCheckpoint(
+                                                            //     checkpointId:
+                                                            //         checkpoint
+                                                            //             .id);
+                                                            // setState(() {
+                                                            //   isPopupVisible =
+                                                            //       false;
+                                                            //   CheckPointId =
+                                                            //       checkpoint.id;
+                                                            // });
+                                                            // ReportCheckpoint(
+                                                            //     checkpoint.id);
+                                                            // print(
+                                                            //     "Checkpoint id ${checkpoint.id}");
+                                                            _refresh();
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            ReportCheckpointScreen(
+                                                                              CheckpointID: checkpoint.id,
+                                                                              PatrolID: widget.p.PatrolId,
+                                                                              ShiftId: widget.p.ShiftId,
+                                                                              empId: widget.p.EmpId,
+                                                                            )));
+                                                            /* showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return StatefulBuilder(
+                                                                    builder:
+                                                                        (context,
+                                                                            setState) {
+                                                                  return AlertDialog(
+                                                                    title:
+                                                                        InterRegular(
+                                                                      text:
+                                                                          'Add Image/Comment',
+                                                                      color:
+                                                                          color2,
+                                                                      fontsize:
+                                                                          width /
+                                                                              width12,
+                                                                    ),
+                                                                    content:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: [
+                                                                        CustomeTextField(
+                                                                          hint:
+                                                                              'Add Comment',
+                                                                          showIcon:
+                                                                              false,
+                                                                          controller:
+                                                                              Controller,
+                                                                        ),
+                                                                        SizedBox(
+                                                                            height:
+                                                                                height / height10),
+                                                                        SingleChildScrollView(
+                                                                          // Wrap the Row with SingleChildScrollView
+                                                                          scrollDirection:
+                                                                              Axis.horizontal,
+                                                                          // Set scroll direction to horizontal
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Row(
+                                                                                children: uploads.asMap().entries.map((entry) {
+                                                                                  final index = entry.key;
+                                                                                  final upload = entry.value;
+                                                                                  return Stack(
+                                                                                    clipBehavior: Clip.none,
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        height: height / height66,
+                                                                                        width: width / width66,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: WidgetColor,
+                                                                                          borderRadius: BorderRadius.circular(
+                                                                                            width / width10,
+                                                                                          ),
+                                                                                        ),
+                                                                                        margin: EdgeInsets.all(width / width8),
+                                                                                        child: upload['type'] == 'image'
+                                                                                            ? Image.file(
+                                                                                                upload['file'],
+                                                                                                fit: BoxFit.cover,
+                                                                                              )
+                                                                                            : Icon(
+                                                                                                Icons.videocam,
+                                                                                                size: width / width20,
+                                                                                              ),
+                                                                                      ),
+                                                                                      Positioned(
+                                                                                        top: -5,
+                                                                                        right: -5,
+                                                                                        child: IconButton(
+                                                                                          onPressed: () {
+                                                                                            setState(() {
+                                                                                              _deleteItem(index);
+                                                                                            });
+                                                                                          },
+                                                                                          icon: Icon(
+                                                                                            Icons.delete,
+                                                                                            color: Colors.black,
+                                                                                            size: width / width20,
+                                                                                          ),
+                                                                                          padding: EdgeInsets.zero,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  );
+                                                                                }).toList(),
+                                                                              ),
+                                                                              GestureDetector(
+                                                                                onTap: () {
+                                                                                  print("Patrol Checkpoint Status ${widget.p.Allchecked}");
+                                                                                  // Navigator.pop(context);
+                                                                                  showModalBottomSheet(
+                                                                                    context: context,
+                                                                                    builder: (context) => Column(
+                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                      children: [
+                                                                                        ListTile(
+                                                                                          leading: Icon(Icons.camera),
+                                                                                          title: Text('Add Image'),
+                                                                                          onTap: () {
+                                                                                            _addImage();
+
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                        ),
+                                                                                        ListTile(
+                                                                                          leading: Icon(Icons.image),
+                                                                                          title: Text('Add from Gallery'),
+                                                                                          onTap: () {
+                                                                                            Navigator.pop(context);
+                                                                                            _addGallery();
+                                                                                          },
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                                child: Container(
+                                                                                  height: height / height66,
+                                                                                  width: width / width66,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: WidgetColor,
+                                                                                    borderRadius: BorderRadius.circular(width / width8),
+                                                                                  ),
+                                                                                  child: Center(
+                                                                                    child: Icon(
+                                                                                      Icons.add,
+                                                                                      size: width / width20,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        },
+                                                                        child:
+                                                                            InterRegular(
+                                                                          text:
+                                                                              'Cancel',
+                                                                          color:
+                                                                              Primarycolor,
+                                                                        ),
+                                                                      ),
+                                                                      ElevatedButton(
+                                                                        onPressed:
+                                                                            () async {
+                                                                          setState(
+                                                                              () {
+                                                                            _isLoading =
+                                                                                true;
+                                                                          });
+                                                                          // Logic to submit the report
+                                                                          if (uploads.isNotEmpty ||
+                                                                              Controller.text.isNotEmpty) {
+                                                                            await fireStoreService.addImagesToPatrol(
+                                                                                uploads,
+                                                                                Controller.text,
+                                                                                widget.p.PatrolId,
+                                                                                widget.p.EmpId,
+                                                                                checkpoint.id,
+                                                                                widget.p.ShiftId);
+                                                                            toastification.show(
+                                                                              context: context,
+                                                                              type: ToastificationType.success,
+                                                                              title: Text("Submitted"),
+                                                                              autoCloseDuration: const Duration(seconds: 2),
+                                                                            );
+                                                                            _refresh();
+                                                                            setState(() {
+                                                                              _isLoading = false;
+                                                                            });
+                                                                            uploads.clear();
+                                                                            Controller.clear();
+
+                                                                            // Navigator.pop(
+                                                                            //     context);
+                                                                          } else {
+                                                                            showErrorToast(context,
+                                                                                "Fields cannot be empty");
+                                                                          }
+                                                                        },
+                                                                        child: InterRegular(
+                                                                            text:
+                                                                                'Submit'),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                });
+                                                              },
+                                                            );*/
+                                                          },
+                                                          icon: Icon(
+                                                            Icons.add_circle,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .Primarycolor
+                                                                : LightColor
+                                                                    .Primarycolor,
+                                                            size: 24.sp,
+                                                          ),
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               )
                                             ],
                                           ),
@@ -1555,12 +1575,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           }).toList(),
                         )),
                     SizedBox(
-                      height: height / height10,
+                      height: 10.h,
                     ),
                     _expand
                         ? Button1(
                             text: 'END',
-                            backgroundcolor: DarkColor.colorRed2,
+                            backgroundcolor: isDark ? DarkColor.colorRed2 : LightColor.colorRed,
                             color: Colors.redAccent,
                             borderRadius: 10,
                             onPressed: () async {
@@ -2047,12 +2067,29 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         : const SizedBox(),
                   ],
                 ),
-                          ),
-    
-          ],
+              ),
+            ],
+          ),
         ),
-      )
-    ]);
+        Visibility(
+          visible: _isLoading,
+          child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: 10),
+            child: CircularProgressIndicator(
+              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment(0, 0),
+          child: Visibility(
+            visible: isPopupVisible,
+            child: ReportCheckpoint(CheckPointId),
+          ),
+        ),
+      ],
+    );
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -73,8 +74,6 @@ class ViewAssetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -86,16 +85,16 @@ class ViewAssetsScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterRegular(
             text: 'View Assets',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
@@ -104,20 +103,20 @@ class ViewAssetsScreen extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: height / height30),
+            SizedBox(height: 30.h),
             InterBold(
               text: 'Allocation Date',
               color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-              fontsize: width / width20,
+                fontsize: 20.sp,
             ),
-            SizedBox(height: height / height30),
+            SizedBox(height: 30.h),
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    height: height / height60,
+                    height: 60.h,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                       color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                     ),
                     child: Row(
@@ -125,22 +124,22 @@ class ViewAssetsScreen extends StatelessWidget {
                       children: [
                         InterMedium(
                           text: startDate,
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: isDark
                               ? DarkColor.color2
                               : LightColor.color3,),
                         SvgPicture.asset('assets/images/calendar_clock.svg',
-                          width: width / width20,)
+                         width: 20.w,)
                       ],
                     ),
                   ),
                 ),
-                SizedBox(width: width / width6),
+                SizedBox(width: 6.w),
                 Expanded(
                   child: Container(
-                    height: height / height60,
+                    height: 60.h,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(width / width10),
+                           borderRadius: BorderRadius.circular(10.r),
                       color: isDark
                           ? DarkColor.WidgetColor
                           : LightColor.WidgetColor,
@@ -150,54 +149,69 @@ class ViewAssetsScreen extends StatelessWidget {
                       children: [
                         InterMedium(
                           text: endDate,
-                          fontsize: width / width16,
+                            fontsize: 16.sp,
                           color: isDark
                               ? DarkColor.color2
                               : LightColor.color3,),
                         SvgPicture.asset('assets/images/calendar_clock.svg',
-                          width: width / width20,)
+                          width: 20.w,)
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: height / height30),
-            InterBold(text: 'Equipment' , color: isDark ? DarkColor.color1 : LightColor.color3,fontsize: width / width16,),
-            SizedBox(height: height / height20),
-            Container(
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width10),
-                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(width: width / width10),
-                  InterMedium(text: 'Suit' , color: isDark
-                        ? DarkColor.color2
-                        : LightColor.color3,fontsize: width / width16,),
-                ],
-              ),
+            SizedBox(height: 30.h),
+            InterBold(
+              text: 'Equipment',
+              color:  isDark ? DarkColor.color1 : LightColor.color3,
+              fontsize: 16.sp,
             ),
-            SizedBox(height: height / height12),
-            Container(
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(width / width10),
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(width: width / width10),
-                  InterMedium(text: 'Suit' , color: isDark
-                        ? DarkColor.color2
-                        : LightColor.color3,fontsize: width / width16,),
-                ],
-              ),
-            ),
+            SizedBox(height: 20.h),
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance
+                  .collection('Equipments')
+                  .where('EquipmentId', isEqualTo: equipmentId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final documents = snapshot.data!.docs;
+                  final equipmentName = documents.isNotEmpty
+                      ? (documents.first.data()['EquipmentName'] ??
+                          'Equipment Not Available')
+                      : 'Equipment Not Available';
+
+                  return Container(
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 10.w),
+                        InterMedium(
+                          text: equipmentName,
+                          color:  isDark ? DarkColor.color2 : LightColor.color3,
+                          fontsize: 16.sp,
+                        ),
+                        SizedBox(width: 200.w),
+                        InterMedium(
+                          text: "Quantity: $equipmentQty",
+                          color:  isDark ? DarkColor.color2 : LightColor.color3,
+                          fontsize: 16.sp,
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            )
           ],
         ),
       ),
