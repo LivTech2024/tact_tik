@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../common/sizes.dart';
+import '../../../fonts/inter_regular.dart';
 
 class ViewCheckpointScreen extends StatefulWidget {
   final String reportedAt;
@@ -27,6 +29,29 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Secondarycolor,
+        appBar: AppBar(
+          backgroundColor: AppBarcolor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 24.sp,
+            ),
+            padding: EdgeInsets.only(left: 20.w),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: InterRegular(
+            text: 'widget.guardName',
+            fontsize: 18.sp,
+            color: Colors.white,
+            letterSpacing: -.3,
+          ),
+          centerTitle: true,
+        ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / width30),
           child: SingleChildScrollView(
@@ -101,13 +126,18 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                   itemCount: 10,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.only(bottom: height / height30),
-                      height: height / height25,
-                      color: WidgetColor,
+                      margin: EdgeInsets.only(top: 14.h),
+                      height: 30.h,
+                      padding: EdgeInsets.only(right: 10.w),
+                      decoration: BoxDecoration(
+                        color: WidgetColor,
+                        borderRadius: BorderRadius.circular(10.r)
+                      ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: width / width20,
+                            width: 10.w,
                             height: double.infinity,
                             color: Colors.red,
                           ),

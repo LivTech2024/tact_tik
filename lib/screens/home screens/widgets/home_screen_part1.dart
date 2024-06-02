@@ -178,7 +178,7 @@ class HomeScreenPart1 extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: showWish!? 40.h :57.h),
+            SizedBox(height: showWish! ? 40.h : 57.h),
             showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,7 +295,7 @@ class HomeScreenPart1 extends StatelessWidget {
                             //
                             //         DarDisplayScreen(
                             //           EmpEmail: _empEmail,
-                            //           EmpID: _employeeId,
+                            //           EmpID: _em/ployeeId,
                             //           EmpDarCompanyId:
                             //           _ShiftCompanyId ?? "",
                             //           EmpDarCompanyBranchId:

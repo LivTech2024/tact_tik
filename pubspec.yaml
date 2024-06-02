@@ -43,6 +43,7 @@ dependencies:
   firebase_app_check: ^0.2.2+1
   firebase_auth: ^4.17.9
   firebase_core: ^2.27.1
+  firebase_messaging: ^14.9.4
   firebase_storage: ^11.7.0
   flutter:
     sdk: flutter
@@ -61,7 +62,7 @@ dependencies:
   geolocator: ^11.0.0
   get: ^4.6.6
   google_fonts: ^6.2.1
-  google_maps_flutter: ^2.6.0
+  google_maps_flutter: ^2.6.1
   google_places_flutter: ^2.0.8
   http: ^1.2.1
   flutter_native_html_to_pdf: ^1.0.1

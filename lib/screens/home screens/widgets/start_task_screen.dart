@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -442,44 +443,46 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          height: 170.h,
+          constraints: BoxConstraints(minHeight: 170.h),
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
           padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 10.h),
+              InterBold(
+                text: widget.ShiftDate,
+                color: color1,
+                fontsize: 18.sp,
+              ),
+              SizedBox(height: 10.h),
               Row(
                 children: [
-                  InterBold(
-                    text: widget.ShiftDate,
+                  InterMedium(
+                    text: 'location:',
+                    fontsize: 14.sp,
                     color: color1,
-                    fontsize: 18.sp,
                   ),
-                  SizedBox(
-                    width: 12.w,
-                  ),
-                  Bounce(
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.contact_support_outlined,
-                        size: 20.sp,
-                      ),
-                      padding: EdgeInsets.zero,
-                    ),
+                  SizedBox(width: 10.w),
+                  InterRegular(
+                    text: widget.ShiftAddressName,
+                    fontsize: 14.sp,
+                    color: color5,
                   )
                 ],
               ),
-              // SizedBox(height: height / height10),
+              SizedBox(height: 10.h),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     width: 97.67.w,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
@@ -487,18 +490,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           fontsize: 28.sp,
                           color: color1,
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
                           color: color7,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 10.h),
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
-                                text: isLate ? "Late $lateTime" : '',
-                                color: Colors.redAccent,
+                                text: isLate ? "Late $lateTime" : 'on time',
+                                color: isLate ? Colors.redAccent : color8,
                                 fontsize: 14.sp,
                               )
                             : const SizedBox(),
@@ -508,6 +511,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   SizedBox(
                     width: 119.47.w,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         InterMedium(
@@ -515,13 +519,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           fontsize: 28.sp,
                           color: color1,
                         ),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: 18.99.sp,
                           color: color7,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 10.h),
                         InterSemibold(
                           text: remainingTimeFormatted,
                           color: color8,
@@ -552,7 +556,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           height: height / height65,
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: height / height5),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: WidgetColor,
           ),
           child: Row(
@@ -802,7 +806,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       //       await homeScreenController.stopBgLocationService();
                       //     }));
-
                       // setState(() {
                       //   _isLoading = true;
                       // });
@@ -1059,7 +1062,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: clickedIn ? 10.h : 0.h),
         clickedIn
             ? Button1(
                 height: height / height65,

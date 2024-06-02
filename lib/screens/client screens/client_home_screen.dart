@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
@@ -77,7 +78,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   int scheduleCount = 0;
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
@@ -437,7 +438,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           child: Column(
             children: [
@@ -561,7 +562,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   fontsize: width / width14,
                 ),
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens(), _employeeId);
+                  auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
               SizedBox(height: height / height20)
@@ -583,7 +584,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   // employeeImg: _employeeImg,
                   showWish: _showWish,
                   drawerOnClicked: () {
-                    _scaffoldKey.currentState?.openEndDrawer();
+                    _scaffoldKeyClient.currentState?.openEndDrawer();
                   },
                 ),
                 SliverToBoxAdapter(
@@ -1242,20 +1243,21 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     vertical: 7.h,
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     // mainAxisAlignment:
                                     //     MainAxisAlignment
                                     //         .spaceBetween,
                                     children: [
                                       NewMessage
                                           ? Container(
-                                        height: 11.h,
-                                        width: 11.w,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      )
+                                              height: 11.h,
+                                              width: 11.w,
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            )
                                           : SizedBox(),
                                       Container(
                                         margin: EdgeInsets.only(left: 9.w),
@@ -1277,12 +1279,15 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       SizedBox(
                                         width: 300.w,
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 InterRegular(
                                                   text: 'Supervisor',
@@ -1312,7 +1317,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             Flexible(
                                               child: InterRegular(
                                                 text:
-                                                'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
+                                                    'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                 fontsize: 15.sp,
                                                 color: color3,
                                               ),

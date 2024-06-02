@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final LatLng _center =
       const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  GlobalKey<ScaffoldState> _scaffoldKey1 = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
 
@@ -510,14 +510,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           child: Column(
             children: [
               Container(
-                height: 172.h,
+                padding: EdgeInsets.all(10.sp),
+                height: 178.h,
                 width: double.maxFinite,
-                padding: EdgeInsets.only(top: 32.h, left: 24.w, right: 34.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
                   color: Primarycolor, // Background color for the drawer header
@@ -536,18 +536,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
                         ),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
                           color: WidgetColor,
-                          fontsize: 20.sp,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: 13.sp),
+                        SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
                           color: WidgetColor,
-                          fontsize: 12.sp,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
                       ]),
@@ -621,9 +621,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        emails.add("alerts.tactik@gmail.com");
-                        emails.add("security@lestonholdings.com");
-                        emails.add("dan@tpssolution.com");
+                        // emails.add("alerts.tactik@gmail.com");
+                        // emails.add("security@lestonholdings.com");
+                        // emails.add("dan@tpssolution.com");
 
                         // "security@lestonholdings.com"
                         // // List<String> patrolLogIds = [];
@@ -636,31 +636,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         // UDb6jyQBz2RzRp4b42XL
                         // 6Muezqhg8gc1TsaHX9nD
 
-                        var data =
-                            await fireStoreService.fetchTemplateDataForPdf(
-                          "paHVXXC99uNtXamURMBc",
-                          "dQ7o8oBxS0gwq7TIH2Et",
-                        );
-                        await sendShiftTemplateEmail(
-                          "Leston holdings",
-                          emails,
-                          'Tacttik Shift Report',
-                          "Tacttik Shift Report",
-                          data,
-                          "Shift",
-                          "2 June",
-                          // "Dan Martin",
-                          // "Dan Martin",
-                          // "sukhman kooner",
-                          "Pankaj Kumar",
-                          // "livjeet kaur",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // var data =
+                        //     await fireStoreService.fetchTemplateDataForPdf(
+                        //   "paHVXXC99uNtXamURMBc",
+                        //   "dQ7o8oBxS0gwq7TIH2Et",
+                        // );
+                        // await sendShiftTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik Shift Report',
+                        //   "Tacttik Shift Report",
+                        //   data,
+                        //   "Shift",
+                        //   "2 June",
+                        //   // "Dan Martin",
+                        //   // "Dan Martin",
+                        //   // "sukhman kooner",
+                        //   "Pankaj Kumar",
+                        //   // "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // await sendShiftMultiplePdfEmail(
                         //   "Leston holdings",
                         //   emails,
@@ -679,21 +679,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "lJSdL2t1J9coqa7PLj26",
                         // );
 
-                        await sendDARTemplateEmail(
-                          "Leston holdings",
-                          emails,
-                          'Tacttik DAR',
-                          "Tacttik DAR",
-                          "Shift",
-                          "2 JUN",
-                          "livjeet kaur",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "2 JUN",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // 12:37 - 1-10
                         //5:15 - 5-47
                         //5:15
@@ -742,7 +742,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // employeeImg: _employeeImg,
                 showWish: _showWish,
                 drawerOnClicked: () {
-                  _scaffoldKey.currentState?.openEndDrawer();
+                  _scaffoldKey1.currentState?.openEndDrawer();
                 },
               ),
               SliverToBoxAdapter(

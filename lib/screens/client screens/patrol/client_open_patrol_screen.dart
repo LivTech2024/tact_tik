@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
-
-import '../../../common/sizes.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
 
-class ClientOpenPatrolScreen extends StatelessWidget {
+class ClientOpenPatrolScreen extends StatefulWidget {
   final String guardName;
   final String startDate;
   final String startTime;
@@ -22,16 +21,25 @@ class ClientOpenPatrolScreen extends StatelessWidget {
   final String status;
   final String feedback;
   final List<dynamic> checkpoints;
-  ClientOpenPatrolScreen(
-      {super.key,
-      required this.guardName,
-      required this.startDate,
-      required this.startTime,
-      required this.endTime,
-      required this.patrolLogCount,
-      required this.status,
-      required this.feedback,
-      required this.checkpoints});
+
+  ClientOpenPatrolScreen({
+    super.key,
+    required this.guardName,
+    required this.startDate,
+    required this.startTime,
+    required this.endTime,
+    required this.patrolLogCount,
+    required this.status,
+    required this.feedback,
+    required this.checkpoints,
+  });
+
+  @override
+  State<ClientOpenPatrolScreen> createState() => _ClientOpenPatrolScreenState();
+}
+
+class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
+  DateTime? selectedDate;
 
   final List<String> members = [
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
@@ -55,10 +63,25 @@ class ClientOpenPatrolScreen extends StatelessWidget {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
+  Future<void> _selectDate(
+      BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    setState(() {
+      if (picked != null) {
+        selectedDate = picked;
+
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    // final double height = MediaQuery.of(context).size.height;
+    // final double width = MediaQuery.of(context).size.width;
     // final String guardName = Data['PatrolLogGuardName'] ?? '';
     // final String startDate = Data['PatrolDate'] ?? '';
     // final String startTime = Data['PatrolLogStartedAt'] != null
@@ -86,73 +109,81 @@ class ClientOpenPatrolScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: InterRegular(
-            text: guardName,
-            fontsize: width / width18,
+            text: widget.guardName,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: height / height30,
+                  height: 30.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: width / width190,
-                      child: IconTextWidget(
-                        icon: Icons.calendar_today,
-                        text: '23 / 04 / 2024',
-                        fontsize: width / width14,
-                        color: Primarycolor,
+                      width: 140.w,
+                      child: GestureDetector(
+                        // onTap: () => _selectDate(context),
+                        child: IconTextWidget(
+                          space: 6.w,
+                          icon: Icons.add,
+                          iconSize: 20.sp,
+                          text: 'Select Guard',
+                          useBold: true,
+                          fontsize: 14.sp,
+                          color: Primarycolor,
+                          Iconcolor: color1,
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      width: width / width140,
-                      child: IconTextWidget(
-                        space: width / width6,
-                        icon: Icons.add,
-                        iconSize: width / width20,
-                        text: 'Select Guard',
-                        useBold: true,
-                        fontsize: width / width14,
-                        color: Primarycolor,
-                        Iconcolor: color1,
+                    GestureDetector(
+                      onTap: () => _selectDate(context),
+                      child: SizedBox(
+                        width: 190.w,
+                        child: IconTextWidget(
+                          icon: Icons.calendar_today,
+                          text: selectedDate != null
+                              ? "${selectedDate!.toLocal()}".split(' ')[0]
+                              : 'Display shift Date',
+                          fontsize: 14.sp,
+                          color: Primarycolor,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: height / height20,
+                  height: 20.h,
                 ),
                 GestureDetector(
                   onTap: () {
                     // NavigateScreen();
                   },
                   child: Container(
-                    height: height / height200,
-                    margin: EdgeInsets.only(top: height / height10),
+                    height: 200.h,
+                    margin: EdgeInsets.only(top: 10.h),
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                       color: WidgetColor,
-                      borderRadius: BorderRadius.circular(width / width14),
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: height / height20),
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
                     child: Column(
                       children: [
                         Row(
@@ -161,33 +192,31 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                           children: [
                             Column(
                               children: [
-                                SizedBox(height: height / height5),
+                                SizedBox(height: 5.h),
                                 Container(
-                                  height: height / height30,
-                                  width: width / width4,
+                                  height: 30.h,
+                                  width: 4.w,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
-                                      topRight:
-                                          Radius.circular(width / width10),
-                                      bottomRight:
-                                          Radius.circular(width / width10),
+                                      topRight: Radius.circular(10.r),
+                                      bottomRight: Radius.circular(10.r),
                                     ),
                                     color: Primarycolor,
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(width: width / width14),
+                            SizedBox(width: 14.w),
                             SizedBox(
-                              width: width / width190,
+                              width: 190.w,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InterSemibold(
-                                    text: guardName,
+                                    text: widget.guardName,
                                     color: color1,
-                                    fontsize: width / width18,
+                                    fontsize: 18.sp,
                                   ),
                                   // SizedBox(height: height / height5),
                                 ],
@@ -198,84 +227,84 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         // SizedBox(height: height / height10),
                         Padding(
                           padding: EdgeInsets.only(
-                            left: width / width18,
-                            right: width / width24,
+                            left: 18.w,
+                            right: 24.w,
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: width / width100,
+                                width: 70.w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Started at',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                       color: color21,
                                     ),
-                                    SizedBox(height: height / height12),
+                                    SizedBox(height: 12.h),
                                     InterMedium(
-                                      text: startTime,
-                                      fontsize: width / width14,
+                                      text: widget.startTime,
+                                      fontsize: 14.sp,
                                       color: color1,
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                width: width / width100,
+                                width: 60.w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Ended at',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                       color: color21,
                                     ),
-                                    SizedBox(height: height / height12),
+                                    SizedBox(height: 12.h),
                                     InterMedium(
-                                      text: endTime,
-                                      fontsize: width / width14,
+                                      text: widget.endTime,
+                                      fontsize: 14.sp,
                                       color: color1,
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                width: width / width60,
+                                width: 40.w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Count',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                       color: color21,
                                     ),
-                                    SizedBox(height: height / height12),
+                                    SizedBox(height: 12.sp),
                                     InterMedium(
-                                      text: '$patrolLogCount',
-                                      fontsize: width / width14,
+                                      text: '${widget.patrolLogCount}',
+                                      fontsize: 14.sp,
                                       color: color1,
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(
-                                width: width / width60,
+                                width: 80.w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     InterRegular(
                                       text: 'Status',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                       color: color21,
                                     ),
-                                    SizedBox(height: height / height12),
+                                    SizedBox(height: 12.h),
                                     InterBold(
-                                      text: status,
-                                      fontsize: width / width14,
+                                      text: widget.status,
+                                      fontsize: 14.sp,
                                       color: Colors.green,
                                     ),
                                   ],
@@ -284,24 +313,23 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: height / height14),
+                        SizedBox(height: 14.h),
                         Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width / width18),
+                          padding: EdgeInsets.symmetric(horizontal: 18.w),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InterRegular(
                                 text: 'Feedback :',
                                 color: color21,
-                                fontsize: width / width14,
+                                fontsize: 14.sp,
                               ),
-                              SizedBox(width: width / width4),
+                              SizedBox(width: 4.w),
                               Flexible(
                                   child: InterRegular(
-                                text: feedback,
+                                text: widget.feedback,
                                 color: color10,
-                                fontsize: width / width14,
+                                fontsize: 14.sp,
                                 maxLines: 3,
                               )),
                             ],
@@ -311,19 +339,19 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: height / height30),
+                SizedBox(height: 30.h),
                 InterBold(
                   text: 'Checkpoints',
-                  fontsize: width / width18,
+                  fontsize: 18.sp,
                   color: color21,
                 ),
-                SizedBox(height: height / height20),
+                SizedBox(height: 20.h),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: checkpoints.length,
+                  itemCount: widget.checkpoints.length,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    final checkpointData = checkpoints[index];
+                    final checkpointData = widget.checkpoints[index];
                     final checkpointName =
                         checkpointData['CheckPointName'] ?? '';
                     final checkpointStatus =
@@ -352,23 +380,22 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                         );
                       },
                       child: Container(
-                        height: height / height50,
+                        height: 50.h,
                         width: double.maxFinite,
-                        margin: EdgeInsets.only(bottom: height / height10),
+                        margin: EdgeInsets.only(bottom: 10.h),
                         decoration: BoxDecoration(
                           color: WidgetColor,
-                          borderRadius: BorderRadius.circular(width / width10),
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: width / width20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                               children: [
                                 Container(
-                                  height: height / height12,
-                                  width: width / width12,
+                                  height: 12.h,
+                                  width: 12.w,
                                   decoration: BoxDecoration(
                                     color: checkpointStatus == 'unchecked'
                                         ? Colors.green
@@ -376,20 +403,20 @@ class ClientOpenPatrolScreen extends StatelessWidget {
                                     shape: BoxShape.circle,
                                   ),
                                 ),
-                                SizedBox(width: width / width10),
+                                SizedBox(width: 10.w),
                                 SizedBox(
-                                  width: width / width120,
+                                  width: 120.w,
                                   child: InterMedium(
                                     text: checkpointName,
                                     color: color21,
-                                    fontsize: width / width16,
+                                    fontsize: 16.sp,
                                   ),
                                 )
                               ],
                             ),
                             Icon(
                               Icons.arrow_forward_ios_outlined,
-                              size: width / width24,
+                              size: 24.sp,
                               color: color17,
                             )
                           ],

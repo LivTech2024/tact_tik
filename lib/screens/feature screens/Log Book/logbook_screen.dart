@@ -279,7 +279,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 final logReportTime = log['LOGREPORTTIME'] as Timestamp;
                 final dateTime = logReportTime.toDate();
                 final formattedDateTime =
-                    DateFormat('hh:mm:ss a').format(dateTime);
+                    DateFormat('hh:mm a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
                   clientname: log['CLIENTNAME'],

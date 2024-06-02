@@ -51,7 +51,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKeyS = GlobalKey();
   final Auth auth = Auth();
   String _userName = "";
   String _userImg = "";
@@ -216,7 +216,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        key: _scaffoldKey,
+        key: _scaffoldKeyS,
         backgroundColor: Secondarycolor,
         endDrawer: Drawer(
           child: Column(
@@ -340,7 +340,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
               // employeeImg: _userImg,
               employeeImg: _userImg ?? "",
               drawerOnClicked: () {
-                _scaffoldKey.currentState?.openEndDrawer();
+                _scaffoldKeyS.currentState?.openEndDrawer();
               },
             ),
             SliverToBoxAdapter(
