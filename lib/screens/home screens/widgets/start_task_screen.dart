@@ -443,7 +443,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     return Column(
       children: [
         Container(
-          constraints:  BoxConstraints(minHeight: 170.h),
+          constraints: BoxConstraints(minHeight: 170.h),
           decoration: const BoxDecoration(
             color: WidgetColor,
           ),
@@ -470,12 +470,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             return AlertDialog(
                               title: InterSemibold(
                                 text: 'Shift Location',
-                                  color: Colors.white,
+                                color: Colors.white,
                                 fontsize: 18.sp,
                               ),
-                              content:  InterRegular(
+                              content: InterRegular(
                                 text: widget.ShiftAddressName,
-                                  color: Colors.white,
+                                color: Colors.white,
                                 fontsize: 12.sp,
                               ),
                               actions: <Widget>[

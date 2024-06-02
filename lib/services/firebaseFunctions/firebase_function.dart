@@ -89,6 +89,47 @@ class FireStoreService {
     }
   }
 
+  //add to loggedinUsers
+// export interface ILoggedInUsersCollection {
+//   LoggedInId: string;
+//   LoggedInUserId: string;
+//   IsLoggedIn: boolean; //!Not required for user app
+//   LoggedInUserType: IUserType;
+//   LoggedInCreatedAt: Timestamp | FieldValue;
+//   LoggedInNotifyFcmToken: string;
+//   LoggedInPlatform: 'web' | 'android' | 'ios';
+// }
+// LoggedInUsers
+  Future<void> addLoggedInUser({
+    required String loggedInUserId,
+    required bool isLoggedIn,
+    required String loggedInUserType,
+    required Timestamp loggedInCreatedAt,
+    required String loggedInNotifyFcmToken,
+    required String loggedInPlatform,
+  }) async {
+    try {
+      CollectionReference loggedInCollection =
+          FirebaseFirestore.instance.collection('LoggedInUsers');
+      DocumentReference docRef = await loggedInCollection.add({
+        'LoggedInUserId': loggedInUserId,
+        'IsLoggedIn': isLoggedIn,
+        'LoggedInUserType': loggedInUserType,
+        'LoggedInCreatedAt': loggedInCreatedAt,
+        'LoggedInNotifyFcmToken': loggedInNotifyFcmToken,
+        'LoggedInPlatform': loggedInPlatform,
+      });
+
+      // Use the document ID as LoggedInId
+      String loggedInId = docRef.id;
+      await docRef.update({'LoggedInId': loggedInId});
+
+      print('Data added successfully with LoggedInId: $loggedInId');
+    } catch (e) {
+      print('Error adding data: $e');
+    }
+  }
+
   Future<DocumentSnapshot?> getShiftByEmployeeIdFromUserInfo(
     String empId,
   ) async {
@@ -1565,29 +1606,29 @@ class FireStoreService {
 
   //Patrol is Completed
   Future<String> ScheduleShift(
-      List guards,
-      String? role,
-      String Address,
-      String CompanyBranchId,
-      String CompanyId,
-      List<DateTime> Date,
-      TimeOfDay? startTime,
-      TimeOfDay? EndTime,
-      List patrol,
-      String clientID,
-      String requiredEmp,
-      String photoInterval,
-      String restrictedRadius,
-      bool shiftenablerestriction,
-      GeoPoint coordinates,
-      String locationName,
-      String locationId,
-      String locationAddress,
-      String branchId,
-      String shiftDesc,
-      String ShiftName,
-      List<Map<String, dynamic>> tasks,
-      ) async {
+    List guards,
+    String? role,
+    String Address,
+    String CompanyBranchId,
+    String CompanyId,
+    List<DateTime> Date,
+    TimeOfDay? startTime,
+    TimeOfDay? EndTime,
+    List patrol,
+    String clientID,
+    String requiredEmp,
+    String photoInterval,
+    String restrictedRadius,
+    bool shiftenablerestriction,
+    GeoPoint coordinates,
+    String locationName,
+    String locationId,
+    String locationAddress,
+    String branchId,
+    String shiftDesc,
+    String ShiftName,
+    List<Map<String, dynamic>> tasks,
+  ) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1598,7 +1639,8 @@ class FireStoreService {
       }
 
       List<String> guardUserIds = convertToStringArray(guards);
-      List<String> selectedGuardIds = guards.map((guard) => guard['GuardId'] as String).toList();
+      List<String> selectedGuardIds =
+          guards.map((guard) => guard['GuardId'] as String).toList();
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
@@ -1673,8 +1715,6 @@ class FireStoreService {
       // Handle the error as needed
     }
   }
-
-
 
   //Get all the Schedules for Guards
 
@@ -2133,15 +2173,15 @@ class FireStoreService {
       Reference uploadRef =
           storageRef.child("employees/shifttask/$uniqueName.jpg");
 
-      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-        file.absolute.path,
-        quality: 50, // Adjust the quality as needed
-      );
+      // Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+      //   file.absolute.path,
+      //   quality: 50, // Adjust the quality as needed
+      // );
 
       // Upload the compressed image to Firebase Storage
-      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+      // await uploadRef.putData(F));
       // Upload the image file and get the download URL
-      // await uploadRef.putFile(file);
+      await uploadRef.putFile(file);
 
       // Get the download URL of the uploaded image
       String downloadURL = await uploadRef.getDownloadURL();
