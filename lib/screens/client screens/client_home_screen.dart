@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
@@ -77,7 +78,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   int scheduleCount = 0;
   List IconColors = [Primarycolor, color4, color4, color4];
   int ScreenIndex = 0;
-  // final GlobalKey<ScaffoldState> _scaffoldKey2 = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
   bool _showWish = true;
   bool NewMessage = false;
@@ -437,7 +438,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        // key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           child: Column(
             children: [
@@ -561,7 +562,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   fontsize: width / width14,
                 ),
                 onTap: () {
-                  auth.signOut(context, GetStartedScreens(), _employeeId);
+                  auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
               SizedBox(height: height / height20)
@@ -583,7 +584,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   // employeeImg: _employeeImg,
                   showWish: _showWish,
                   drawerOnClicked: () {
-                    // _scaffoldKey2.currentState?.openEndDrawer();
+                    _scaffoldKeyClient.currentState?.openEndDrawer();
                   },
                 ),
                 SliverToBoxAdapter(

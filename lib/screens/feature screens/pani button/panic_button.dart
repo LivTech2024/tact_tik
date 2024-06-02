@@ -15,11 +15,13 @@ class PanicAlertDialog extends StatefulWidget {
   final String EmpId;
   final String CompanyId;
   final String Username;
+
   const PanicAlertDialog(
       {super.key,
       required this.EmpId,
       required this.CompanyId,
       required this.Username});
+
   @override
   State<PanicAlertDialog> createState() => _PanicAlertDialogState();
 }
@@ -34,8 +36,6 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
     bool _isLoading = false;
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -47,10 +47,10 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
         ),
         Container(
           margin: EdgeInsets.only(bottom: 30.w),
-          padding: EdgeInsets.all(width / width16),
+          padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(width / width16),
+            borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -76,7 +76,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                 color: color16,
                 fontsize: 18.sp,
               ),
-              SizedBox(height: height / height16),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

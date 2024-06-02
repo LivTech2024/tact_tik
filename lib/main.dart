@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/SideBar%20Screens/profile_screen.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';

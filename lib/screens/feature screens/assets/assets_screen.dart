@@ -192,6 +192,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                           child: Container(
                                             height: 60.h,
                                             width: double.maxFinite,
+                                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                                             margin:
                                                 EdgeInsets.only(bottom: 10.h),
                                             decoration: BoxDecoration(
@@ -276,8 +277,6 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                   color: color17,
                                                   fontsize: 16.sp,
                                                 ),
-                                                SizedBox(
-                                                    width: 20.w),
                                               ],
                                             ),
                                           ),
