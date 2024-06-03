@@ -638,7 +638,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         String guardStatus = "";
-
+        
                         if (index < _guardsInfo.length) {
                           return Padding(
                             padding: EdgeInsets.only(

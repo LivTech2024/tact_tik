@@ -159,7 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               .color3, // Change text color to white
                     ),
                     controller: _emailcontrller,
-                    decoration: const InputDecoration(
+                    decoration:  InputDecoration(
+                      focusColor: isDark?DarkColor.Primarycolor:LightColor.Primarycolor,
                       labelText: 'Email',
                       hintText: 'Enter your email',
                     ),
@@ -194,6 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               .color2,
                         ),
                       ),
+                      focusColor: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
                       labelText: 'Password',
                       hintText: 'Enter your password',
                     ),

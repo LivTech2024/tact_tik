@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DarkColor {
   static const Color Primarycolor = Color(0xFFCBA769);
-  static const Color AppBarcolor = Color(0x26CBA769);
+  static const Color AppBarcolor = Color(0xFF252525);
   static const Color Primarycolorlight = Color(0x80CBA769);
   static const Color Secondarycolor = Color(0xFF010101);
   static const Color WidgetColor = Color(0xFF151515);

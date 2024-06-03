@@ -439,12 +439,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         Container(
           constraints: BoxConstraints(minHeight: 170.h),
           decoration:  BoxDecoration(
-            boxShadow: [
+             boxShadow: [
               BoxShadow(
-                color:  isDark ? DarkColor.color1.withOpacity(.1) : LightColor.color3.withOpacity(.1),
-                blurRadius: 1,
+                color: isDark
+                    ? Colors.transparent
+                    : LightColor.color3.withOpacity(.05),
+                blurRadius: 5,
                 spreadRadius: 2,
-                offset: Offset(0, 0),
+                offset: Offset(0, 3),
               )
             ],
             color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
@@ -560,12 +562,14 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: height / height5),
           decoration: BoxDecoration(
-            boxShadow: [
+             boxShadow: [
               BoxShadow(
-                color:  isDark ? DarkColor.color1.withOpacity(.1) : LightColor.color3.withOpacity(.1),
-                blurRadius: 1,
+                color: isDark
+                    ? Colors.transparent
+                    : LightColor.color3.withOpacity(.05),
+                blurRadius: 5,
                 spreadRadius: 2,
-                offset: Offset(0, 0),
+                offset: Offset(0, 3),
               )
             ],
             color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
@@ -760,22 +764,26 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                     /// TODO changed here
                     child: Container(
-                      color: DarkColor. WidgetColor,
+                      color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
                           fontsize: width / width18,
-                          color:
-                              // controller.stopWatchRunning.value ||
-                              clickedIn ? DarkColor. Primarycolorlight : DarkColor. Primarycolor,
+                          color: clickedIn
+                              ? (isDark
+                                  ? DarkColor.Primarycolorlight
+                                  : LightColor.color2)
+                              : (isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const VerticalDivider(
-                color: Colors.white,
+               VerticalDivider(
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
               Expanded(
                 child: IgnorePointer(
@@ -1043,8 +1051,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           ? DarkColor.WidgetColor
                           : LightColor.WidgetColor,
                       child: Center(
-                        child: Obx(
-                          () => InterBold(
+                        child: 
+                           InterBold(
                             text: 'End Shift',
                             fontsize: width / width18,
                             color: clickedIn
@@ -1055,7 +1063,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                     ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor),
                           ),
-                        ),
+                        
                       ),
                     ),
                   ),

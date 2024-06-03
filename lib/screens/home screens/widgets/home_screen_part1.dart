@@ -247,7 +247,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w300,
                           fontSize: 18.sp,
-                          color: Colors.white,
+                          color: isDark
+                              ? Colors.white
+                              : LightColor.color3, // Change text color to white
                         ),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -270,10 +272,11 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       suggestionsCallback: suggestionsCallback,
                       itemBuilder: (context, Screens screen) {
                         return ListTile(
+                          
                           leading: Icon(screen.icon, color: Colors.blueAccent),
                           title: InterRegular(
                             text: screen.name,
-                            color: isDark ? DarkColor.color2 : LightColor.color2,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
                           ),
                         );
                       },
@@ -284,11 +287,15 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         ),
                         child: InterRegular(
                           text: 'No Such Screen found',
-                          color: isDark ? DarkColor.color2 : LightColor.color2,
+                          color: isDark ? DarkColor.color2 : LightColor.color3,
                           fontsize: 18.sp,
                         ),
                       ),
                       decorationBuilder: (context, child) => Material(
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
+                            shadowColor: isDark?Colors.transparent:LightColor.color3.withOpacity(.1),
                         type: MaterialType.card,
                         elevation: 4,
                         borderRadius: BorderRadius.circular(10.r),

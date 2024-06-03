@@ -50,7 +50,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
           margin: EdgeInsets.only(bottom: 30.w),
           padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -86,7 +86,9 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'No',
-                      color: DarkColor.color27,
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor.color3,
                      fontsize: 18.sp,
                     ),
                   ),
@@ -128,7 +130,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'Yes',
-                      color: DarkColor. color27,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
                       fontsize: 18.sp,
                     ),
                   ),
@@ -167,7 +169,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               margin: EdgeInsets.only(bottom: height / height30),
               padding: EdgeInsets.all(width / width16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(width / width16),
                 boxShadow: [
                   BoxShadow(
@@ -183,6 +185,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   PoppinsMedium(
+                    color: isDark ? DarkColor.color3 : LightColor.color3,
                     text: 'Supervisors & Admin Informed',
                     fontsize: width / width16,
                   ),
@@ -266,7 +269,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                             child: RobotoMedium(
                               text: 'OK',
                               fontsize: width / width18,
-                              color: isDark ? DarkColor.color27 : LightColor.color3,
+                              color: isDark ? DarkColor.color1 : LightColor.color3,
                             ),
                           ),
                         ],

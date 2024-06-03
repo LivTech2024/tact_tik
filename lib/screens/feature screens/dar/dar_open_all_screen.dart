@@ -39,7 +39,9 @@ class DarOpenAllScreen extends StatefulWidget {
 
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   List colors = [
-    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor, DarkColor.color25];
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+    DarkColor.color25
+  ];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -474,9 +476,11 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -492,7 +496,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           title: InterRegular(
             text: 'DAR',
             fontsize: width / width18,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -504,7 +508,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               Container(
                 height: height / height65,
                 width: double.maxFinite,
-                color:  isDark ? DarkColor.color24 : LightColor.color1,
+                color: isDark ? DarkColor.color24 : LightColor.color1,
                 padding: EdgeInsets.symmetric(vertical: height / height16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -517,7 +521,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                             colors[0] = isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor;
-                            colors[1] = DarkColor. color25;
+                            colors[1] = DarkColor.color25;
                           });
                         },
                         child: SizedBox(
@@ -532,14 +536,14 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                       ),
                     ),
                     VerticalDivider(
-                      color:DarkColor. Primarycolor,
+                      color: DarkColor.Primarycolor,
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] = DarkColor. color25;
+                            colors[0] = DarkColor.color25;
                             colors[1] = isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor;
@@ -571,7 +575,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                               InterRegular(
                                 text: 'Shift Name :',
                                 fontsize: width / width20,
-                                color:  isDark
+                                color: isDark
                                     ? DarkColor.color17
                                     : LightColor.color3,
                               ),
@@ -680,7 +684,20 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                             ),
                                             width: double.maxFinite,
                                             decoration: BoxDecoration(
-                                              color: DarkColor. WidgetColor,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? Colors.transparent
+                                                      : LightColor.color3
+                                                          .withOpacity(.05),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 2,
+                                                  offset: Offset(0, 3),
+                                                )
+                                              ],
+                                              color: isDark
+                                                  ? DarkColor.WidgetColor
+                                                  : LightColor.WidgetColor,
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       width / width10),
@@ -697,7 +714,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                     text:
                                                         "${data[index]['TileTime']}",
                                                     // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: DarkColor.color21,
+                                                    color: isDark
+                                                        ? DarkColor.color21
+                                                        : LightColor.color3,
                                                   ),
                                                   SizedBox(
                                                     height: height / height10,
@@ -706,38 +725,52 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                     text:
                                                         '${data[index]['TileContent']}',
                                                     fontsize: width / width16,
-                                                    color: DarkColor.color12,
+                                                    color: isDark
+                                                        ? DarkColor.color12
+                                                        : LightColor.color3,
                                                     maxLines: 5,
                                                   ),
                                                   SizedBox(
                                                       height:
                                                           height / height20),
-                                                  Row(
-                                                    children: List.generate(
-                                                      (data[index]['TileImages']
-                                                              as List)
-                                                          .length,
-                                                      (i) => Container(
-                                                        margin: EdgeInsets.only(
-                                                            right: height /
-                                                                height10),
-                                                        height:
-                                                            height / height50,
-                                                        width: width / width50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            width / width10,
-                                                          ),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                              data[index][
-                                                                  'TileImages'][i],
+                                                  SizedBox(
+                                                    width: double.maxFinite,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Row(
+                                                        children: List.generate(
+                                                          (data[index][
+                                                                      'TileImages']
+                                                                  as List)
+                                                              .length,
+                                                          (i) => Container(
+                                                            margin: EdgeInsets.only(
+                                                                right: height /
+                                                                    height10),
+                                                            height: height /
+                                                                height50,
+                                                            width:
+                                                                width / width50,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                width / width10,
+                                                              ),
+                                                              image:
+                                                                  DecorationImage(
+                                                                image:
+                                                                    NetworkImage(
+                                                                  data[index][
+                                                                      'TileImages'][i],
+                                                                ),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                             ),
-                                                            fit: BoxFit.cover,
                                                           ),
                                                         ),
                                                       ),
@@ -933,7 +966,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                       children: [
                                         Text(
                                           'Reports for $hourKey',
-                                          style:  TextStyle(
+                                          style: TextStyle(
                                             color: isDark
                                                 ? DarkColor.Primarycolor
                                                 : LightColor.color3,
