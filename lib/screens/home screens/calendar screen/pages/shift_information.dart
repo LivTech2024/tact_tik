@@ -16,12 +16,14 @@ class ShiftInformation extends StatefulWidget {
       required this.empId,
       required this.shiftId,
       required this.startTime,
-      required this.endTime});
+      required this.endTime,
+      this.otherEmpId});
   final bool toRequest;
   final String empId;
   final String shiftId;
   final String startTime;
   final String endTime;
+  final String? otherEmpId;
 
   @override
   State<ShiftInformation> createState() => _ShiftInformationState();
@@ -250,6 +252,12 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           text: widget.toRequest ? 'Exchange' : 'Accept',
                           onPressed: () {
                             if (widget.toRequest) {
+                              print("Exchange Shift");
+                              print("Employee Id: ${widget.empId}");
+                              print("Shift Id: ${widget.shiftId}");
+                              print("Other Employee Id: ${widget.otherEmpId}");
+                              onExchangeShift(widget.empId, widget.otherEmpId!,
+                                  widget.shiftId);
                             } else {
                               onAcceptShift(widget.empId, widget.shiftId);
                             }
@@ -296,6 +304,32 @@ class _ShiftInformationState extends State<ShiftInformation> {
       print("Shift acknowledged successfully by $empId");
     } catch (e) {
       print("Failed to acknowledge shift: $e");
+    }
+  }
+
+  Future<void> onExchangeShift(
+      String empId, String otherEmpId, String shiftId) async {
+    // Reference to the Firestore instance
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Creating a new document in the shiftExchange collection
+    try {
+      DocumentReference docRef =
+          await firestore.collection('shiftExchange').add({
+        'shiftExchangeReceiverId': otherEmpId,
+        'shiftExchangeSenderId': empId,
+        'shiftExchangeStatus': 'waiting',
+        'shiftId': shiftId,
+      });
+
+      // Update the document with the generated ID as shiftExchangeId
+      await docRef.update({
+        'shiftExchangeId': docRef.id,
+      });
+
+      print('Shift exchange request sent successfully');
+    } catch (e) {
+      print('Error sending shift exchange request: $e');
     }
   }
 }

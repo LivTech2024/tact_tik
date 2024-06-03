@@ -795,12 +795,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 'EmpRouteShiftStatus': 'completed',
                                 'EmpRouteCompletedAt': Timestamp.now(),
                               });
-
-                              print(
-                                  'Shift ended for employee: ${widget.EmployeId}');
+                              print('Shift ended for employee: ${widget.EmployeId}');
                             } else {
-                              print(
-                                  'No active route found for employee:  ${widget.EmployeId}');
+                              print('No active route found for employee:  ${widget.EmployeId}');
                             }
 
                             // await _sendEmailWithScreenshot(file.path);

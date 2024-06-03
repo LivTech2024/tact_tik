@@ -239,9 +239,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                     startTime: event.others.startTime!,
                                     endTime: event.others.endTime!,
                                     toRequest: true,
-                                    empId: event.others.ids.length > 1
+                                    empId: empId,
+                                    otherEmpId: event.others.ids.length > 1
                                         ? event.others.ids[index]
-                                        : event.others.ids[0],
+                                        : event.others.ids.first,
                                     shiftId: event.others.othersShiftId!,
                                   ),
                                 ),
@@ -386,18 +387,18 @@ class DayEventsBottomSheet extends StatelessWidget {
                         ),
 
                         /// TODO : get ID form here
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: event.others.ids.map((id) {
-                        //     return Text(
-                        //       id,
-                        //       style: TextStyle(
-                        //         fontSize: width / width14,
-                        //         color: color2,
-                        //       ),
-                        //     );
-                        //   }).toList(),
-                        // ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: event.others.ids.map((id) {
+                            return Text(
+                              id,
+                              style: TextStyle(
+                                fontSize: width / width14,
+                                color: color2,
+                              ),
+                            );
+                          }).toList(),
+                        ),
                       ],
                     ),
                   ),
@@ -520,13 +521,13 @@ class DayEventsBottomSheet extends StatelessWidget {
                         ),
 
                         /// TODO : get ID form here
-                        // Text(
-                        //   id,
-                        //   style: TextStyle(
-                        //     fontSize: width / width14,
-                        //     color: color2,
-                        //   ),
-                        // ),
+                        Text(
+                          id,
+                          style: TextStyle(
+                            fontSize: width / width14,
+                            color: color2,
+                          ),
+                        ),
                       ],
                     ),
                   ),
