@@ -581,6 +581,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 HomeScreenPart1(
                   userName: _userName,
                   employeeImg: employeeImg,
+                  empId: _employeeId,
+                  branchId: _branchId,
+                  empEmail: _employeeEmail,
+                  shiftClientId: _shiftCLientId,
+                  shiftCompanyId: '',
+                  shiftId: _shiftId,
+                  shiftLocationId: _shiftLocationId,
+                  shiftLocationName: '',
                   // employeeImg: _employeeImg,
                   showWish: _showWish,
                   drawerOnClicked: () {
