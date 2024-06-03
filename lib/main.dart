@@ -99,11 +99,7 @@ class MyApp extends StatelessWidget {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-<<<<<<< HEAD
             return AuthChecker();
-=======
-            return child;
->>>>>>> dev
           } else {
             return Scaffold(
               backgroundColor:

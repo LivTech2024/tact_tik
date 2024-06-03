@@ -851,37 +851,6 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                       if (currentTime.isBefore(bufferStart) ||
                           currentTime.isAfter(bufferEnd)) {
-<<<<<<< HEAD
-                        // Current time is before shift end time
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                  title: InterRegular(
-                                    text: 'Add Reason',
-                                    color: DarkColor.color2,
-                                    fontsize: width / width12,
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomeTextField(
-                                        hint: 'Add Reason',
-                                        showIcon: false,
-                                        controller: CommentController,
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const InterRegular(
-                                        text: 'Cancel',
-                                        color: DarkColor. Primarycolor,
-                                      ),
-=======
                         bool? status =
                             await fireStoreService.checkShiftReturnTaskStatus(
                                 widget.EmployeId, widget.ShiftId);
@@ -904,9 +873,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 return AlertDialog(
                                     title: InterRegular(
                                       text: 'Add Reason',
-                                      color: color2,
+                                      color: isDark?DarkColor.color22:LightColor.color3,
                                       fontsize: width / width12,
->>>>>>> dev
                                     ),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -922,31 +890,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                       TextButton(
                                         onPressed: () async {
                                           Navigator.pop(context);
-<<<<<<< HEAD
-                                          // if (mounted) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomeScreen(),
-                                            ),
-                                          );
-                                          // }
-                                        } else {
-                                          showErrorToast(context,
-                                              "Reason cannot be empty");
-                                        }
-                                      },
-                                      child: const InterRegular(
-                                        text: 'Submit',
-                                        color: DarkColor.Primarycolor,
-=======
                                         },
-                                        child: const InterRegular(
+                                        child:  InterRegular(
                                           text: 'Cancel',
-                                          color: Primarycolor,
+                                          color:  isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                         ),
->>>>>>> dev
                                       ),
                                       TextButton(
                                         onPressed: () async {
@@ -1018,9 +968,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                 "Reason cannot be empty");
                                           }
                                         },
-                                        child: const InterRegular(
+                                        child:  InterRegular(
                                           text: 'Submit',
-                                          color: Primarycolor,
+                                          color:  isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                         ),
                                       ),
                                     ]);

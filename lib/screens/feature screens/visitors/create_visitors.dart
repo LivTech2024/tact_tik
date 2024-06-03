@@ -323,142 +323,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-<<<<<<< HEAD
-                    padding: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: height / height30),
-                        InterBold(
-                          text: 'Add Visitor',
-                          color:  isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3 ,
-                          fontsize: width / width20,
-                        ),
-                        SizedBox(height: height / height30),
-                        Row(
-                          children: [
-                            SetTimeWidget(
-                              hintText: InTime == null
-                                  ? 'In Time'
-                                  : '${_formatTime(InTime!, true)}',
-                              onTap: () => _selectTime(context, true),
-                              flex: 2,
-                              isEnabled: true,
-                              enabled: !isEditMode,
-                              isEditMode: isEditMode,
-                            ),
-                            SizedBox(width: width / width6),
-                            SetTimeWidget(
-                              hintText: OutTime == null
-                                  ? 'Out Time'
-                                  : '${_formatTime(OutTime!, false)}',
-                              onTap: () => _selectTime(context, false),
-                              flex: 2,
-                              isEnabled: isEditMode,
-                              enabled: isEditMode,
-                              isEditMode: isEditMode,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Name',
-                          controller: nameController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Email',
-                          controller: EmailController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Contact Number',
-                          controller: ContactNoController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(10),
-                            FilteringTextInputFormatter
-                                .digitsOnly, // Allows only digits
-                          ],
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Asset Handover',
-                          controller: AssetHandoverController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Asset Return',
-                          controller: AssetReturnController,
-                          enabled: isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'License Plate Number ',
-                          controller: LicensePlateNumberController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Set Countdown',
-                          controller: SetCountdownController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Comments ',
-                          controller: CommentsController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'No. Of Person',
-                          controller: NoOfPersonController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(height: height / height20),
-                        SetTextfieldWidget(
-                          hintText: 'Company Name',
-                          controller: CompanyNameController,
-                          enabled: !isEditMode,
-                          isEditMode: isEditMode,
-                        ),
-                        SizedBox(
-                          height: height / height30,
-                        ),
-                        Button1(
-                          text: 'Save',
-                          onPressed: () async {
-                            bool isSuccessful = await _saveVisitorData();
-                            if (!isSuccessful) {
-                              // Handle the case when saving or updating visitor data fails
-                            }
-                          },
-                          backgroundcolor: isDark?DarkColor.Primarycolor:LightColor.Primarycolor,
-                          color: isDark
-                              ? DarkColor.color22
-                              : LightColor.color1,
-                          borderRadius: width / width10,
-                          fontsize: width / width18,
-                        ),
-                      ],
-                    )
-                  ),
-=======
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -466,7 +330,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Add Visitor',
-                            color: Primarycolor,
+                            color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                             fontsize: width / width20,
                           ),
                           SizedBox(height: height / height30),
@@ -581,14 +445,13 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 // Handle the case when saving or updating visitor data fails
                               }
                             },
-                            backgroundcolor: Primarycolor,
-                            color: color22,
+                            backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            color:  isDark ? DarkColor.color22 : LightColor.color3,
                             borderRadius: width / width10,
                             fontsize: width / width18,
                           ),
                         ],
                       )),
->>>>>>> dev
                 )
               ],
             ),

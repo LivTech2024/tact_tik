@@ -211,13 +211,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 ],
               ),
             ),
-<<<<<<< HEAD
             SizedBox(height:widget. showWish!? 40.h :57.h),
            widget. showWish!
-=======
-            SizedBox(height: showWish! ? 40.h : 57.h),
-            showWish!
->>>>>>> dev
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -349,16 +344,16 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                     DarDisplayScreen(
-                                      EmpEmail: empEmail,
-                                      EmpID: empId,
+                                      EmpEmail:widget. empEmail,
+                                      EmpID: widget.empId,
                                       EmpDarCompanyId:
-                                      shiftCompanyId ?? "",
+                                     widget. shiftCompanyId ?? "",
                                       EmpDarCompanyBranchId:
-                                      branchId,
-                                      EmpDarShiftID: shiftId,
+                                    widget.  branchId,
+                                      EmpDarShiftID: widget.shiftId,
                                       EmpDarClientID:
-                                      shiftClientId,
-                                      Username: userName,
+                                     widget. shiftClientId,
+                                      Username: widget.userName,
                                     )));
                             break;
                           case 'Reports Screen':
@@ -368,15 +363,15 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                     builder: (context) =>
                                         ReportScreen(
                                           locationId:
-                                          shiftLocationId,
+                                         widget. shiftLocationId,
                                           locationName:
-                                          shiftLocationId,
+                                         widget. shiftLocationId,
                                           companyId:
-                                          shiftCompanyId ?? "",
-                                          empId: empId,
-                                          empName: userName,
-                                          clientId: shiftClientId,
-                                          ShiftId: shiftId,
+                                         widget. shiftCompanyId ?? "",
+                                          empId: widget. empId,
+                                          empName: widget. userName,
+                                          clientId: widget. shiftClientId,
+                                          ShiftId: widget. shiftId,
                                         )));
                             break;
                           case 'Post Screen':
@@ -385,7 +380,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 MaterialPageRoute(
                                     builder: (context) => PostOrder(
                                       locationId:
-                                      shiftLocationId,
+                                     widget. shiftLocationId,
                                     )));
                             break;
                           case 'Task Screen':
@@ -401,7 +396,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         LogBookScreen(
-                                          EmpId: empId,
+                                          EmpId: widget. empId,
                                         )));
                             break;
                           case 'Visitors Screen':
@@ -411,7 +406,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                                 builder: (context) =>
                                                     VisiTorsScreen(
                                                       locationId:
-                                                          shiftLocationId,
+                                                         widget. shiftLocationId,
                                                     )));
                             break;
                           case 'Assets Screen':
@@ -423,7 +418,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                                     //     keyId: _employeeId)
                                                     AssetsScreen(
                                                         assetEmpId:
-                                                            empId)));
+                                                          widget.  empId)));
                             break;
                           case 'Key Screen':
                             Navigator.push(
@@ -431,7 +426,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     KeysScreen(
-                                                        keyId: empId)
+                                                        keyId: widget. empId)
                                                 // AssetsScreen(
                                                 //     assetEmpId:
                                                 //         _employeeId)

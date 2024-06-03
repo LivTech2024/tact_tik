@@ -223,20 +223,12 @@ class _HomeScreenState extends State<HomeScreen> {
               isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;ScreenIndex = 0;
           // CalendarScreen
-<<<<<<< HEAD
-         Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CalendarScreen(
-                      companyId: _employeeCompanyID, employeeId: _employeeId)));
-=======
           // Navigator.push(
           //     context,
           //     MaterialPageRoute(
           //         builder: (context) => CalendarScreen(
           //             companyId: _employeeCompanyID, employeeId: _employeeId)));
 
->>>>>>> dev
           break;
         case 3:
           IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
@@ -529,14 +521,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-<<<<<<< HEAD
         backgroundColor:
             isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
-        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
-=======
-        backgroundColor: Secondarycolor,
         key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
->>>>>>> dev
         endDrawer: Drawer(
           backgroundColor:
               isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,

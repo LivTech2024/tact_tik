@@ -222,19 +222,10 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-<<<<<<< HEAD
                           InterMedium(text: widget.startDate, fontsize: width / width16, color: isDark
                                   ? DarkColor.color2
                                   : LightColor.color2),
                           SvgPicture.asset('assets/images/calendar_clock.svg', width: width / width20)
-=======
-                          InterMedium(
-                              text: widget.startDate,
-                              fontsize: width / width16,
-                              color: color2),
-                          SvgPicture.asset('assets/images/calendar_clock.svg',
-                              width: width / width20)
->>>>>>> dev
                         ],
                       ),
                     ),
@@ -252,19 +243,10 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-<<<<<<< HEAD
                           InterMedium(text: widget.endDate, fontsize: width / width16, color: isDark
                                   ? DarkColor.color2
                                   : LightColor.color2),
                           SvgPicture.asset('assets/images/calendar_clock.svg', width: width / width20)
-=======
-                          InterMedium(
-                              text: widget.endDate,
-                              fontsize: width / width16,
-                              color: color2),
-                          SvgPicture.asset('assets/images/calendar_clock.svg',
-                              width: width / width20)
->>>>>>> dev
                         ],
                       ),
                     ),
@@ -292,16 +274,10 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           height: height / height44,
                           width: width / width44,
                           decoration: BoxDecoration(
-<<<<<<< HEAD
                             borderRadius: BorderRadius.circular(width / width10),
                             color: isDark
                                 ? DarkColor.Primarycolorlight
                                 : LightColor.Primarycolorlight,
-=======
-                            borderRadius:
-                                BorderRadius.circular(width / width10),
-                            color: Primarycolorlight,
->>>>>>> dev
                           ),
                           child: Center(
                             child: Icon(
