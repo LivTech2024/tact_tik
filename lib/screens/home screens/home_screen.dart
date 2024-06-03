@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final LatLng _center =
       const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  GlobalKey<ScaffoldState> _scaffoldKey1 = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
 
@@ -223,11 +223,20 @@ class _HomeScreenState extends State<HomeScreen> {
               isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;ScreenIndex = 0;
           // CalendarScreen
+<<<<<<< HEAD
          Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => CalendarScreen(
                       companyId: _employeeCompanyID, employeeId: _employeeId)));
+=======
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => CalendarScreen(
+          //             companyId: _employeeCompanyID, employeeId: _employeeId)));
+
+>>>>>>> dev
           break;
         case 3:
           IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
@@ -344,11 +353,11 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               ShiftStarted = true;
             });
-            // prefs.setBool('clickedIn', true);
+            prefs.setBool('clickedIn', true);
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
-            // prefs.setBool('clickedIn', false);
+            prefs.setBool('clickedIn', false);
             setState(() {
               ShiftStarted = false;
             });
@@ -520,9 +529,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+<<<<<<< HEAD
         backgroundColor:
             isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+=======
+        backgroundColor: Secondarycolor,
+        key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
+>>>>>>> dev
         endDrawer: Drawer(
           backgroundColor:
               isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
@@ -669,10 +683,18 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenPart1(
                 userName: _userName,
                 employeeImg: employeeImg,
+                shiftLocationName: '',
+                shiftLocationId: _shiftLocationId,
+                shiftId: _shiftId,
+                shiftCompanyId: '',
+                shiftClientId: _shiftCLientId,
+                empEmail: _employeeEmail,
+                branchId: _branchId,
+                empId: _employeeId,
                 // employeeImg: _employeeImg,
                 showWish: _showWish,
                 drawerOnClicked: () {
-                  _scaffoldKey.currentState?.openEndDrawer();
+                  _scaffoldKey1.currentState?.openEndDrawer();
                 },
               ),
               SliverToBoxAdapter(

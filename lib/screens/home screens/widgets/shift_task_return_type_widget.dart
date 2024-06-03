@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -51,29 +52,59 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
   List<Map<String, dynamic>> uploads = [];
   bool _isLoading = false;
   Future<void> _addImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 20);
     if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+      try {
+        File file = File(pickedFile.path);
+        if (file.existsSync()) {
+          File compressedFile = await _compressImage(file);
+          setState(() {
+            uploads.add({'type': 'image', 'file': file});
+          });
+        } else {
+          print('File does not exist: ${file.path}');
+        }
+      } catch (e) {
+        print('Error adding image: $e');
+      }
+    } else {
+      print('No images selected');
     }
-    print("Statis ${widget.taskStatus}");
+    print("Status ${uploads}");
   }
 
   Future<void> _addGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      // await fireStoreService
-      //     .addImageToStorageShiftTask(File(pickedFile.path));
-      setState(() {
-        uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-      });
+    List<XFile>? pickedFiles =
+        await ImagePicker().pickMultiImage(imageQuality: 20);
+    if (pickedFiles != null) {
+      for (var pickedFile in pickedFiles) {
+        try {
+          File file = File(pickedFile.path);
+          if (file.existsSync()) {
+            File compressedFile = await _compressImage(file);
+            setState(() {
+              uploads.add({'type': 'image', 'file': file});
+            });
+          } else {
+            print('File does not exist: ${file.path}');
+          }
+        } catch (e) {
+          print('Error adding image: $e');
+        }
+      }
+    } else {
+      print('No images selected');
     }
-    print("Statis ${widget.taskStatus}");
+  }
+
+  Future<File> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path + '_compressed.jpg',
+      quality: 30,
+    );
+    return File(result!.path);
   }
 
   void _uploadImages() async {

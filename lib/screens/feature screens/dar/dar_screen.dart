@@ -18,7 +18,7 @@ import '../../../common/sizes.dart';
 import 'dar_open_all_screen.dart';
 
 class DarDisplayScreen extends StatefulWidget {
-  final String EmpEmail;
+  final String? EmpEmail;
   final String EmpID;
   final String Username;
   final String EmpDarCompanyId;

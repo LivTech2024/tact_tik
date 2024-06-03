@@ -30,16 +30,16 @@ late SharedPreferences prefs;
 
 class AppView extends ConsumerWidget {
   const AppView({Key? key}) : super(key: key);
-  static final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
+  // static final GlobalKey<NavigatorState> navigatorKey =
+  //     GlobalKey<NavigatorState>();
   final String companyId = "1iFPbYfBB1F6ymMEvEAt";
 
   static void showPopup(String message) {
-    navigatorKey.currentState?.overlay?.insert(
-      OverlayEntry(
-        builder: (context) => CustomPopup(message: message),
-      ),
-    );
+    // navigatorKey.currentState?.overlay?.insert(
+    //   OverlayEntry(
+    //     builder: (context) => CustomPopup(message: message),
+    //   ),
+    // );
   }
 
   @override

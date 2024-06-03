@@ -224,18 +224,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             statusShiftId: status['StatusShiftId'],
           );
         }).toList();
-        // Assuming CheckPointStatus is not used in this context
-        //    Timestamp? checkpointtimestamp = checkPointStatuses
-        // .firstWhere(
-        //     (status) => status.reportedById == widget.EmployeeID,
-        //     orElse: () => CheckPointStatus(
-        //         status: '',
-        //         StatusCompletedCount: 0,
-        //         reportedTime: '',
-        //         reportedById: '',
-        //         reportedByName: '',
-        //         statusShiftId: ''))
-        // .reportedTime;
         Category category = categories.firstWhere(
             (element) => element.title == checkpointCategory, orElse: () {
           Category newCategory =
@@ -520,19 +508,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
     void handleStartButton() async {
       print("ButtonEnabled : ${buttonEnabled}");
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      // setState(() {
-      //   StartTime = DateTime.now();
-      //   _expand = true;
-      //   prefs.setBool("expand", _expand);
-      // });
       if (buttonEnabled &&
           !_expand &&
           widget.p.CompletedCount < widget.p.PatrolRequiredCount) {
         setState(() {
           buttonEnabled = false; // Disable the button
         });
-        // var clientID =
-        //     await fireStoreService.getShiftClientID(widget.p.patrolClientId);
         print(widget.p.patrolClientId);
         var clientName =
             await fireStoreService.getClientName(widget.p.patrolClientId);
@@ -1297,37 +1278,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       child: Center(
                                                         child: IconButton(
                                                           onPressed: () {
-                                                            // List<
-                                                            //         Map<String,
-                                                            //             dynamic>>
-                                                            //     uploads = [];
-                                                            // setState(() {
-                                                            //   isPopupVisible =
-                                                            //       true;
-                                                            //   CheckPointId =
-                                                            //       checkpoint     .id;
-                                                            // });
                                                             setState(() {
                                                               CheckPointId =
                                                                   checkpoint.id;
                                                             });
-                                                            // _showPopup(
-                                                            //     checkpoint.id);
 
-                                                            // ReportCheckpoint(
-                                                            //     checkpointId:
-                                                            //         checkpoint
-                                                            //             .id);
-                                                            // setState(() {
-                                                            //   isPopupVisible =
-                                                            //       false;
-                                                            //   CheckPointId =
-                                                            //       checkpoint.id;
-                                                            // });
-                                                            // ReportCheckpoint(
-                                                            //     checkpoint.id);
-                                                            // print(
-                                                            //     "Checkpoint id ${checkpoint.id}");
                                                             _refresh();
                                                             Navigator.push(
                                                                 context,
@@ -1340,211 +1295,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                               ShiftId: widget.p.ShiftId,
                                                                               empId: widget.p.EmpId,
                                                                             )));
-                                                            /* showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext
-                                                                      context) {
-                                                                return StatefulBuilder(
-                                                                    builder:
-                                                                        (context,
-                                                                            setState) {
-                                                                  return AlertDialog(
-                                                                    title:
-                                                                        InterRegular(
-                                                                      text:
-                                                                          'Add Image/Comment',
-                                                                      color:
-                                                                          color2,
-                                                                      fontsize:
-                                                                          width /
-                                                                              width12,
-                                                                    ),
-                                                                    content:
-                                                                        Column(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .min,
-                                                                      children: [
-                                                                        CustomeTextField(
-                                                                          hint:
-                                                                              'Add Comment',
-                                                                          showIcon:
-                                                                              false,
-                                                                          controller:
-                                                                              Controller,
-                                                                        ),
-                                                                        SizedBox(
-                                                                            height:
-                                                                                height / height10),
-                                                                        SingleChildScrollView(
-                                                                          // Wrap the Row with SingleChildScrollView
-                                                                          scrollDirection:
-                                                                              Axis.horizontal,
-                                                                          // Set scroll direction to horizontal
-                                                                          child:
-                                                                              Row(
-                                                                            children: [
-                                                                              Row(
-                                                                                children: uploads.asMap().entries.map((entry) {
-                                                                                  final index = entry.key;
-                                                                                  final upload = entry.value;
-                                                                                  return Stack(
-                                                                                    clipBehavior: Clip.none,
-                                                                                    children: [
-                                                                                      Container(
-                                                                                        height: height / height66,
-                                                                                        width: width / width66,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: WidgetColor,
-                                                                                          borderRadius: BorderRadius.circular(
-                                                                                            width / width10,
-                                                                                          ),
-                                                                                        ),
-                                                                                        margin: EdgeInsets.all(width / width8),
-                                                                                        child: upload['type'] == 'image'
-                                                                                            ? Image.file(
-                                                                                                upload['file'],
-                                                                                                fit: BoxFit.cover,
-                                                                                              )
-                                                                                            : Icon(
-                                                                                                Icons.videocam,
-                                                                                                size: width / width20,
-                                                                                              ),
-                                                                                      ),
-                                                                                      Positioned(
-                                                                                        top: -5,
-                                                                                        right: -5,
-                                                                                        child: IconButton(
-                                                                                          onPressed: () {
-                                                                                            setState(() {
-                                                                                              _deleteItem(index);
-                                                                                            });
-                                                                                          },
-                                                                                          icon: Icon(
-                                                                                            Icons.delete,
-                                                                                            color: Colors.black,
-                                                                                            size: width / width20,
-                                                                                          ),
-                                                                                          padding: EdgeInsets.zero,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  );
-                                                                                }).toList(),
-                                                                              ),
-                                                                              GestureDetector(
-                                                                                onTap: () {
-                                                                                  print("Patrol Checkpoint Status ${widget.p.Allchecked}");
-                                                                                  // Navigator.pop(context);
-                                                                                  showModalBottomSheet(
-                                                                                    context: context,
-                                                                                    builder: (context) => Column(
-                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                      children: [
-                                                                                        ListTile(
-                                                                                          leading: Icon(Icons.camera),
-                                                                                          title: Text('Add Image'),
-                                                                                          onTap: () {
-                                                                                            _addImage();
-
-                                                                                            Navigator.pop(context);
-                                                                                          },
-                                                                                        ),
-                                                                                        ListTile(
-                                                                                          leading: Icon(Icons.image),
-                                                                                          title: Text('Add from Gallery'),
-                                                                                          onTap: () {
-                                                                                            Navigator.pop(context);
-                                                                                            _addGallery();
-                                                                                          },
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                                child: Container(
-                                                                                  height: height / height66,
-                                                                                  width: width / width66,
-                                                                                  decoration: BoxDecoration(
-                                                                                    color: WidgetColor,
-                                                                                    borderRadius: BorderRadius.circular(width / width8),
-                                                                                  ),
-                                                                                  child: Center(
-                                                                                    child: Icon(
-                                                                                      Icons.add,
-                                                                                      size: width / width20,
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    actions: [
-                                                                      TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                        child:
-                                                                            InterRegular(
-                                                                          text:
-                                                                              'Cancel',
-                                                                          color:
-                                                                              Primarycolor,
-                                                                        ),
-                                                                      ),
-                                                                      ElevatedButton(
-                                                                        onPressed:
-                                                                            () async {
-                                                                          setState(
-                                                                              () {
-                                                                            _isLoading =
-                                                                                true;
-                                                                          });
-                                                                          // Logic to submit the report
-                                                                          if (uploads.isNotEmpty ||
-                                                                              Controller.text.isNotEmpty) {
-                                                                            await fireStoreService.addImagesToPatrol(
-                                                                                uploads,
-                                                                                Controller.text,
-                                                                                widget.p.PatrolId,
-                                                                                widget.p.EmpId,
-                                                                                checkpoint.id,
-                                                                                widget.p.ShiftId);
-                                                                            toastification.show(
-                                                                              context: context,
-                                                                              type: ToastificationType.success,
-                                                                              title: Text("Submitted"),
-                                                                              autoCloseDuration: const Duration(seconds: 2),
-                                                                            );
-                                                                            _refresh();
-                                                                            setState(() {
-                                                                              _isLoading = false;
-                                                                            });
-                                                                            uploads.clear();
-                                                                            Controller.clear();
-
-                                                                            // Navigator.pop(
-                                                                            //     context);
-                                                                          } else {
-                                                                            showErrorToast(context,
-                                                                                "Fields cannot be empty");
-                                                                          }
-                                                                        },
-                                                                        child: InterRegular(
-                                                                            text:
-                                                                                'Submit'),
-                                                                      ),
-                                                                    ],
-                                                                  );
-                                                                });
-                                                              },
-                                                            );*/
                                                           },
                                                           icon: Icon(
                                                             Icons.add_circle,

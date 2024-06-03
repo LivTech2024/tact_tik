@@ -39,8 +39,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
   TimeOfDay? OutTime;
   bool _isLoading = false;
 
-  late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
-      GlobalKey<ScaffoldMessengerState>();
+  // late final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
+  //     GlobalKey<ScaffoldMessengerState>();
 
   late UserService _userService;
 

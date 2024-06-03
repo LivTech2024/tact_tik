@@ -11,7 +11,15 @@ import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../../feature screens/Log Book/logbook_screen.dart';
+import '../../feature screens/Report/report_screen.dart';
+import '../../feature screens/assets/assets_screen.dart';
+import '../../feature screens/dar/dar_screen.dart';
+import '../../feature screens/keys/keys_screen.dart';
+import '../../feature screens/post_order.dart/post_order_screen.dart';
 import '../../feature screens/site_tours/site_tour_screen.dart';
+import '../../feature screens/task/task_feature_screen.dart';
+import '../../feature screens/visitors/visitors.dart';
 
 class Screens {
   final String name;
@@ -23,6 +31,16 @@ class Screens {
 class HomeScreenPart1 extends StatefulWidget {
   final String userName;
   final String employeeImg;
+  final String empId;
+  final String? empEmail;
+  final String shiftCompanyId;
+  final String branchId;
+  final String shiftId;
+  final String shiftClientId;
+  final String shiftLocationId;
+  final String shiftLocationName;
+
+
 
   // final String url;
   final VoidCallback drawerOnClicked;
@@ -34,7 +52,7 @@ class HomeScreenPart1 extends StatefulWidget {
     // required this.url,
     required this.employeeImg,
     required this.drawerOnClicked,
-    this.showWish = true,
+    this.showWish = true, required this.empId, required this.empEmail, required this.shiftCompanyId, required this.branchId, required this.shiftId, required this.shiftClientId, required this.shiftLocationId, required this.shiftLocationName,
   }) : super(key: key);
 
   @override
@@ -193,8 +211,13 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 ],
               ),
             ),
+<<<<<<< HEAD
             SizedBox(height:widget. showWish!? 40.h :57.h),
            widget. showWish!
+=======
+            SizedBox(height: showWish! ? 40.h : 57.h),
+            showWish!
+>>>>>>> dev
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -321,79 +344,78 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             // );
                             break;
                           case 'DAR Screen':
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //
-                            //         DarDisplayScreen(
-                            //           EmpEmail: _empEmail,
-                            //           EmpID: _employeeId,
-                            //           EmpDarCompanyId:
-                            //           _ShiftCompanyId ?? "",
-                            //           EmpDarCompanyBranchId:
-                            //           _branchId,
-                            //           EmpDarShiftID: _shiftId,
-                            //           EmpDarClientID:
-                            //           _shiftCLientId,
-                            //           Username: _userName,
-                            //         )));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    DarDisplayScreen(
+                                      EmpEmail: empEmail,
+                                      EmpID: empId,
+                                      EmpDarCompanyId:
+                                      shiftCompanyId ?? "",
+                                      EmpDarCompanyBranchId:
+                                      branchId,
+                                      EmpDarShiftID: shiftId,
+                                      EmpDarClientID:
+                                      shiftClientId,
+                                      Username: userName,
+                                    )));
                             break;
                           case 'Reports Screen':
-                            /*Navigator.push(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         ReportScreen(
                                           locationId:
-                                          _shiftLocationId,
+                                          shiftLocationId,
                                           locationName:
-                                          _ShiftLocationName,
+                                          shiftLocationId,
                                           companyId:
-                                          _ShiftCompanyId ?? "",
-                                          empId: _employeeId,
-                                          empName: _userName,
-                                          clientId: _shiftCLientId,
-                                          ShiftId: _shiftId,
-                                        )));*/
+                                          shiftCompanyId ?? "",
+                                          empId: empId,
+                                          empName: userName,
+                                          clientId: shiftClientId,
+                                          ShiftId: shiftId,
+                                        )));
                             break;
                           case 'Post Screen':
-                            /*Navigator.push(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => PostOrder(
                                       locationId:
-                                      _shiftLocationId,
-                                    )));*/
+                                      shiftLocationId,
+                                    )));
                             break;
                           case 'Task Screen':
-                            /*Navigator.push(
+                           Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        TaskFeatureScreen()));*/
+                                        TaskFeatureScreen()));
                             break;
                           case 'LogBook Screen':
-                            /*Navigator.push(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         LogBookScreen(
-                                          EmpId: _employeeId,
-                                        )));*/
+                                          EmpId: empId,
+                                        )));
                             break;
                           case 'Visitors Screen':
-                            /*  Navigator.push(
+                            Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     VisiTorsScreen(
                                                       locationId:
-                                                          _shiftLocationId,
-                                                    )));*/
+                                                          shiftLocationId,
+                                                    )));
                             break;
                           case 'Assets Screen':
-                            /*Navigator.push(
+                            Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
@@ -401,20 +423,20 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                                     //     keyId: _employeeId)
                                                     AssetsScreen(
                                                         assetEmpId:
-                                                            _employeeId)));*/
+                                                            empId)));
                             break;
                           case 'Key Screen':
-                            /*   Navigator.push(
+                            Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     KeysScreen(
-                                                        keyId: _employeeId)
+                                                        keyId: empId)
                                                 // AssetsScreen(
                                                 //     assetEmpId:
                                                 //         _employeeId)
 
-                                                ));*/
+                                                ));
                             break;
                         }
                       },

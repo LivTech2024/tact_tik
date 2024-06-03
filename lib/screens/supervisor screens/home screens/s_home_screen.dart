@@ -59,7 +59,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
   ];
   int ScreenIndex = 0;
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKeyS = GlobalKey();
   final Auth auth = Auth();
   String _userName = "";
   String _userImg = "";
@@ -240,7 +240,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        key: _scaffoldKey,
+        key: _scaffoldKeyS,
         backgroundColor:
             isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         endDrawer: Drawer(
@@ -249,11 +249,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.all(10.sp),
-                height: 50.h,
+                height: height / height180,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.r),
+                  borderRadius: BorderRadius.circular(width / width20),
                   color: isDark
                       ? DarkColor.Primarycolor
                       : LightColor
@@ -371,11 +370,19 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
             ),
             HomeScreenPart1(
+              empId: _employeeId,
+              branchId: '',
+              empEmail: _empEmail,
+              shiftClientId: '',
+              shiftCompanyId: '',
+              shiftId: '',
+              shiftLocationId: '',
+              shiftLocationName: '',
               userName: _userName ?? "",
               // employeeImg: _userImg,
               employeeImg: _userImg ?? "",
               drawerOnClicked: () {
-                _scaffoldKey.currentState?.openEndDrawer();
+                _scaffoldKeyS.currentState?.openEndDrawer();
               },
             ),
             SliverToBoxAdapter(
@@ -492,22 +499,30 @@ class _SHomeScreenState extends State<SHomeScreen> {
               ),
             ),
             ScreenIndex == 0
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InterBold(
-                        text: 'All Guards',
-                        color: isDark? DarkColor.color1: LightColor.color3,
-                        fontsize: 18.sp,
-                      ),
-                      IconTextWidget(
-                        icon: Icons.add,
-                        text: 'Add',
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
-                        iconSize: 14.sp,
-                        fontsize: 14.sp,
-                      )
-                    ],
+                ? SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        String guardStatus = "";
+
+                        if (index < _guardsInfo.length) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              left: width / width30,
+                              right: width / width30,
+                            ),
+                            child: HomeScreenUserCard(
+                              guardsInfo: _guardsInfo[index],
+                              CompanyId: _CompanyId,
+                            ),
+                          );
+                        } else {
+                          return Center(
+                            child: InterMedium(text: 'No Guards Available'),
+                          ); // Return an empty SizedBox for index out of bounds
+                        }
+                      },
+                      childCount: _guardsInfo.length,
+                    ),
                   )
                 : ScreenIndex == 1
                     ? SliverGrid(
@@ -633,33 +648,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         ),
                       )
                     : SliverToBoxAdapter(),
-            ScreenIndex == 0
-                ? SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        String guardStatus = "";
-        
-                        if (index < _guardsInfo.length) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: HomeScreenUserCard(
-                              guardsInfo: _guardsInfo[index],
-                              CompanyId: _CompanyId,
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: InterMedium(text: 'No Guards Available'),
-                          ); // Return an empty SizedBox for index out of bounds
-                        }
-                      },
-                      childCount: _guardsInfo.length,
-                    ),
-                  )
-                : SliverToBoxAdapter()
           ],
         ),
       ),
