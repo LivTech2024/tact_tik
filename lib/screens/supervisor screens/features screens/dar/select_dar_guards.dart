@@ -196,7 +196,9 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: DarkColor.color1,
+                                          color: isDark
+                                                    ? DarkColor.color1
+                                                    : LightColor.color3,
                                         ),
                                       ],
                                     ),
@@ -222,7 +224,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                       text: 'No Guards Found',
                       color:  isDark
                                 ? DarkColor.color2
-                                : LightColor.color2,
+                                : LightColor.color3,
                       fontsize: width / width16,
                     ),
                   )

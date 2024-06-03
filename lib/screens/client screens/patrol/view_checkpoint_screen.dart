@@ -34,14 +34,17 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                           ? DarkColor.Secondarycolor
                           : LightColor.Secondarycolor,
         appBar: AppBar(
+          shadowColor: isDark
+                          ? Colors.transparent
+                          : LightColor.color3.withOpacity(0.1),
           backgroundColor:   isDark
                           ? DarkColor.AppBarcolor
                           : LightColor.AppBarcolor,
-          elevation: 0,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color:  isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -52,7 +55,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
           title: InterRegular(
             text: 'widget.guardName',
             fontsize: 18.sp,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -153,14 +156,14 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                             width: width / width230,
                             child: InterMedium(
                               text: '#334AH6 Qr Missing',
-                              color: DarkColor.color6,
+                              color: isDark ? DarkColor.color6 : LightColor.color3,
                               fontsize: width / width16,
                             ),
                           ),
                           SizedBox(width: width / width2),
                           InterBold(
                             text: '11.36pm',
-                            color: DarkColor.color6,
+                            color: isDark ? DarkColor.color6 : LightColor.color3,
                             fontsize: width / width16,
                           )
                         ],

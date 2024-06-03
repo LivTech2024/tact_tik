@@ -760,6 +760,17 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       EdgeInsets.only(top: height / height10),
                                   width: double.maxFinite,
                                   decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: isDark
+                                            ? Colors.transparent
+                                            : LightColor.color3
+                                                .withOpacity(.05),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     color: isDark
                                         ? DarkColor.Primarycolor
                                         : LightColor.color1,

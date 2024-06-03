@@ -116,6 +116,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                 ),
                 Center(
                   child: SvgPicture.asset(
+                    isDark? 'assets/images/folder_dark.svg':
                     'assets/images/folder.svg',
                     width: width / width190,
                   ),

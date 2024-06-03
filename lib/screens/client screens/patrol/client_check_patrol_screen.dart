@@ -185,6 +185,16 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       margin: EdgeInsets.only(top: 10.h),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                         color: isDark ? DarkColor.WidgetColor: LightColor.WidgetColor,
                            borderRadius: BorderRadius.circular(14.r),
                       ),
@@ -227,7 +237,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       text: patrol['PatrolLogGuardName'] ?? "",
                                       color: isDark
                                           ? DarkColor.color21
-                                          : LightColor.color2,
+                                          : LightColor.color3,
                                        fontsize: 18.sp,
                                     ),
                                     // SizedBox(height: height / height5),
@@ -257,7 +267,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       fontsize: 12.sp,
                                         color: isDark
                                             ? DarkColor.color21
-                                            : LightColor.color2,
+                                            : LightColor.color3,
                                       ),
                                       SizedBox(height: 12.h),
                                       InterMedium(
@@ -269,7 +279,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                         .millisecondsSinceEpoch))
                                             : "",
                                          fontsize: 12.sp,
-                                        color: DarkColor. color1,
+                                        color: isDark
+                                            ? DarkColor.color1
+                                            : LightColor.color3,
                                       ),
                                     ],
                                   ),
@@ -285,7 +297,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       fontsize: 12.sp,
                                         color: isDark
                                             ? DarkColor.color21
-                                            : LightColor.color2,
+                                            : LightColor.color3,
                                       ),
                                       SizedBox(height: 12.h),
                                       InterMedium(
@@ -314,7 +326,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                           fontsize: 12.sp,
                                         color: isDark
                                             ? DarkColor.color21
-                                            : LightColor.color2,
+                                            : LightColor.color3,
                                       ),
                                       SizedBox(height: 12.h),
                                       Row(

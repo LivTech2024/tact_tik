@@ -106,11 +106,11 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
         appBar: AppBar(
           shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
           backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -182,6 +182,16 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     margin: EdgeInsets.only(top: 10.h),
                     width: double.maxFinite,
                     decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDark
+                              ? Colors.transparent
+                              : LightColor.color3.withOpacity(.05),
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: Offset(0, 3),
+                        )
+                      ],
                       color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       borderRadius: BorderRadius.circular(14.r),
                     ),
@@ -408,6 +418,16 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                         width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: 10.h),
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDark
+                                  ? Colors.transparent
+                                  : LightColor.color3.withOpacity(.05),
+                              blurRadius: 5,
+                              spreadRadius: 2,
+                              offset: Offset(0, 3),
+                            )
+                          ],
                           color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                             borderRadius: BorderRadius.circular(10.r),
                         ),
@@ -434,7 +454,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                     // text: 'Checkpoint name Checkpoint name..',
                                     color: isDark
                                         ? DarkColor.color21
-                                        : LightColor.color2,
+                                        : LightColor.color3,
                                     text: checkpointName,
                                     // color: color21,
                                     fontsize: 16.sp,
@@ -445,7 +465,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             Icon(
                               Icons.arrow_forward_ios_outlined,
                             size: 24.sp,
-                              color:  DarkColor.color17 ,
+                              color:  isDark ? DarkColor.color17 : LightColor.color3 ,
                             )
                           ],
                         ),
