@@ -189,7 +189,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InterBold(
-                                    text: document['EmpDarShiftName'] ?? "",
+                                    text: (document.data()
+                                                as Map<String, dynamic>)
+                                            .containsKey('EmpDarShiftName')
+                                        ? document['EmpDarShiftName']
+                                        : "",
                                     fontsize: 18.sp,
                                     color: Primarycolor,
                                   ),
@@ -274,8 +278,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       height: 65.h,
                       width: double.maxFinite,
                       color: color24,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16.h),
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
