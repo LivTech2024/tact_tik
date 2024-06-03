@@ -62,7 +62,11 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
         this.totalTaskCount = totalTaskCount;
       });
       if (completedTaskCount == totalTaskCount) {
-        Navigator.pop(context); // Pop the screen if all tasks are completed
+        // Navigator.pop(context); // Pop the screen if all tasks are completed
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       }
 
       print(fetchedData);

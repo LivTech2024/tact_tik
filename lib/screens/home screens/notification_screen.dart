@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -5,13 +6,26 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ListView.builder(
-          itemBuilder: (context, index) {
-            return Container();
-          },
-        ),
+    final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Notification Screen"),
+      ),
+      body: Column(
+        children: [
+          Text(
+            message.notification!.title.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+          Text(
+            message.notification!.body.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+          Text(
+            message.data.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
   }

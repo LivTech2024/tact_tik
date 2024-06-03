@@ -21,7 +21,14 @@ class ViewKeysScreen extends StatefulWidget {
   final String keyAllocationId;
   final String time;
 
-  ViewKeysScreen({super.key, required this.startDate, required this.endDate, required this.keyAllocationId, required this.time, required this.keyId, this.visitorData});
+  ViewKeysScreen(
+      {super.key,
+      required this.startDate,
+      required this.endDate,
+      required this.keyAllocationId,
+      required this.time,
+      required this.keyId,
+      this.visitorData});
   final Map<String, dynamic>? visitorData;
 
   @override
@@ -43,7 +50,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
   TimeOfDay? InTime;
   TimeOfDay? OutTime;
 
-  late final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+  // late final GlobalKey<ScaffoldMessengerState> _scaffoldKeyKey = GlobalKey<ScaffoldMessengerState>();
   late UserService _userService;
 
   @override
@@ -64,19 +71,32 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
     if (widget.visitorData != null) {
       nameController.text = widget.visitorData!['VisitorName'] ?? '';
       EmailController.text = widget.visitorData!['VisitorEmail'] ?? '';
-      ContactNoController.text = widget.visitorData!['VisitorContactNumber'] ?? '';
-      AssetHandoverController.text = widget.visitorData!['VisitorAssetHandover'] ?? '';
-      LicensePlateNumberController.text = widget.visitorData!['VisitorLicenseNumber'] ?? '';
-      SetCountdownController.text = (widget.visitorData!['VisitorAssetDurationInMinute'] ?? '').toString();
+      ContactNoController.text =
+          widget.visitorData!['VisitorContactNumber'] ?? '';
+      AssetHandoverController.text =
+          widget.visitorData!['VisitorAssetHandover'] ?? '';
+      LicensePlateNumberController.text =
+          widget.visitorData!['VisitorLicenseNumber'] ?? '';
+      SetCountdownController.text =
+          (widget.visitorData!['VisitorAssetDurationInMinute'] ?? '')
+              .toString();
       CommentsController.text = widget.visitorData!['VisitorComment'] ?? '';
-      NoOfPersonController.text = (widget.visitorData!['VisitorNoOfPerson'] ?? '').toString();
-      CompanyNameController.text = widget.visitorData!['VisitorCompanyName'] ?? '';
+      NoOfPersonController.text =
+          (widget.visitorData!['VisitorNoOfPerson'] ?? '').toString();
+      CompanyNameController.text =
+          widget.visitorData!['VisitorCompanyName'] ?? '';
 
-      final inTimeTimestamp = widget.visitorData!['VisitorInTime'] as Timestamp?;
-      final outTimeTimestamp = widget.visitorData!['VisitorOutTime'] as Timestamp?;
+      final inTimeTimestamp =
+          widget.visitorData!['VisitorInTime'] as Timestamp?;
+      final outTimeTimestamp =
+          widget.visitorData!['VisitorOutTime'] as Timestamp?;
 
-      InTime = inTimeTimestamp != null ? TimeOfDay.fromDateTime(inTimeTimestamp.toDate()) : null;
-      OutTime = outTimeTimestamp != null ? TimeOfDay.fromDateTime(outTimeTimestamp.toDate()) : null;
+      InTime = inTimeTimestamp != null
+          ? TimeOfDay.fromDateTime(inTimeTimestamp.toDate())
+          : null;
+      OutTime = outTimeTimestamp != null
+          ? TimeOfDay.fromDateTime(outTimeTimestamp.toDate())
+          : null;
     }
   }
 
@@ -132,14 +152,17 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
 
   Future<void> _saveVisitorData() async {
     final keyAllocationData = {
-      'KeyAllocationInTime': InTime != null ? '${InTime!.hour}:${InTime!.minute}' : '',
-      'KeyAllocationOutTime': OutTime != null ? '${OutTime!.hour}:${OutTime!.minute}' : '',
+      'KeyAllocationInTime':
+          InTime != null ? '${InTime!.hour}:${InTime!.minute}' : '',
+      'KeyAllocationOutTime':
+          OutTime != null ? '${OutTime!.hour}:${OutTime!.minute}' : '',
       'KeyAllocationName': nameController.text.trim(),
       'KeyAllocationEmail': EmailController.text.trim(),
       'KeyAllocationContactNumber': ContactNoController.text.trim(),
       'KeyAllocationAssetHandover': AssetHandoverController.text.trim(),
       'KeyAllocationAssetReturn': AssetReturnController.text.trim(),
-      'KeyAllocationLicensePlateNumber': LicensePlateNumberController.text.trim(),
+      'KeyAllocationLicensePlateNumber':
+          LicensePlateNumberController.text.trim(),
       'KeyAllocationSetCountdown': SetCountdownController.text.trim(),
       'KeyAllocationComments': CommentsController.text.trim(),
       'KeyAllocationNoOfPerson': NoOfPersonController.text.trim(),
@@ -195,8 +218,12 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.startDate, fontsize: width / width16, color: color2),
-                          SvgPicture.asset('assets/images/calendar_clock.svg', width: width / width20)
+                          InterMedium(
+                              text: widget.startDate,
+                              fontsize: width / width16,
+                              color: color2),
+                          SvgPicture.asset('assets/images/calendar_clock.svg',
+                              width: width / width20)
                         ],
                       ),
                     ),
@@ -212,8 +239,12 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.endDate, fontsize: width / width16, color: color2),
-                          SvgPicture.asset('assets/images/calendar_clock.svg', width: width / width20)
+                          InterMedium(
+                              text: widget.endDate,
+                              fontsize: width / width16,
+                              color: color2),
+                          SvgPicture.asset('assets/images/calendar_clock.svg',
+                              width: width / width20)
                         ],
                       ),
                     ),
@@ -241,7 +272,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           height: height / height44,
                           width: width / width44,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(width / width10),
+                            borderRadius:
+                                BorderRadius.circular(width / width10),
                             color: Primarycolorlight,
                           ),
                           child: Center(
@@ -263,7 +295,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                             if (snapshot.hasData) {
                               final documents = snapshot.data!.docs;
                               keyName = documents.isNotEmpty
-                                  ? (documents.first.data() as Map<String, dynamic>)['KeyName'] ?? 'Key Not Available'
+                                  ? (documents.first.data()
+                                          as Map<String, dynamic>)['KeyName'] ??
+                                      'Key Not Available'
                                   : 'Key Not Available';
                             }
                             return InterMedium(
@@ -298,7 +332,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                   Row(
                     children: [
                       SetTimeWidget(
-                        hintText: InTime == null ? 'In Time' : '${_formatTime(InTime!, true)}',
+                        hintText: InTime == null
+                            ? 'In Time'
+                            : '${_formatTime(InTime!, true)}',
                         onTap: () => _selectTime(context, true),
                         flex: 2,
                         isEnabled: true,
@@ -307,7 +343,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       ),
                       SizedBox(width: width / width6),
                       SetTimeWidget(
-                        hintText: OutTime == null ? 'Out Time' : '${_formatTime(OutTime!, false)}',
+                        hintText: OutTime == null
+                            ? 'Out Time'
+                            : '${_formatTime(OutTime!, false)}',
                         onTap: () => _selectTime(context, false),
                         flex: 2,
                         isEnabled: isEditMode,
@@ -338,7 +376,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     isEditMode: isEditMode,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(10),
-                      FilteringTextInputFormatter.digitsOnly, // Allows only digits
+                      FilteringTextInputFormatter
+                          .digitsOnly, // Allows only digits
                     ],
                   ),
                   SizedBox(height: height / height20),

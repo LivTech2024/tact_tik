@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final LatLng _center =
       const LatLng(19.3505737, 72.9158990); // San Francisco coordinates
   final double _zoom = 12.0;
-  final GlobalKey<ScaffoldState> _scaffoldKeyGuard = GlobalKey();
+  GlobalKey<ScaffoldState> _scaffoldKey1 = GlobalKey();
   bool _showWish = true;
   bool NewMessage = false;
 
@@ -215,11 +215,11 @@ class _HomeScreenState extends State<HomeScreen> {
           IconColors[3] = color21;
           ScreenIndex = 0;
           // CalendarScreen
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CalendarScreen(
-                      companyId: _employeeCompanyID, employeeId: _employeeId)));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => CalendarScreen(
+          //             companyId: _employeeCompanyID, employeeId: _employeeId)));
 
           break;
         case 3:
@@ -336,11 +336,11 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               ShiftStarted = true;
             });
-            // prefs.setBool('clickedIn', true);
+            prefs.setBool('clickedIn', true);
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('ShiftStarted', false);
-            // prefs.setBool('clickedIn', false);
+            prefs.setBool('clickedIn', false);
             setState(() {
               ShiftStarted = false;
             });
@@ -509,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
-        key: _scaffoldKeyGuard, // Assign the GlobalKey to the Scaffold
+        key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           child: Column(
             children: [
@@ -685,10 +685,18 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenPart1(
                 userName: _userName,
                 employeeImg: employeeImg,
+                shiftLocationName: '',
+                shiftLocationId: _shiftLocationId,
+                shiftId: _shiftId,
+                shiftCompanyId: '',
+                shiftClientId: _shiftCLientId,
+                empEmail: _employeeEmail,
+                branchId: _branchId,
+                empId: _employeeId,
                 // employeeImg: _employeeImg,
                 showWish: _showWish,
                 drawerOnClicked: () {
-                  _scaffoldKeyGuard.currentState?.openEndDrawer();
+                  _scaffoldKey1.currentState?.openEndDrawer();
                 },
               ),
               SliverToBoxAdapter(
