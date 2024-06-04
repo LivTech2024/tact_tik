@@ -393,7 +393,8 @@ class HomeScreenPart1 extends StatelessWidget {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     KeysScreen(
-                                                        keyId: empId)
+                                                        keyId: empId, companyId: shiftCompanyId,
+                                                    )
                                                 // AssetsScreen(
                                                 //     assetEmpId:
                                                 //         _employeeId)
