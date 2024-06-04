@@ -65,7 +65,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
           future: FirebaseFirestore.instance
               .collection('Visitors')
               .where('VisitorLocationId',
-              isEqualTo: _userService.shiftLocationId)
+                  isEqualTo: _userService.shiftLocationId)
               .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -86,16 +86,20 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
             });
 
             // Group documents by date
-            final Map<String, List<QueryDocumentSnapshot>> groupedDocuments = {};
+            final Map<String, List<QueryDocumentSnapshot>> groupedDocuments =
+                {};
             final todayDate = DateTime.now();
             final todayKey = DateFormat.yMd().format(todayDate);
 
             for (var doc in documents) {
               final documentData = doc.data() as Map<String, dynamic>?;
               if (documentData != null) {
-                final createdAtTimestamp = documentData['VisitorCreatedAt'] as Timestamp?;
+                final createdAtTimestamp =
+                    documentData['VisitorCreatedAt'] as Timestamp?;
                 final createdAtDate = createdAtTimestamp?.toDate();
-                final formattedDate = createdAtDate != null ? DateFormat.yMd().format(createdAtDate) : '';
+                final formattedDate = createdAtDate != null
+                    ? DateFormat.yMd().format(createdAtDate)
+                    : '';
 
                 if (groupedDocuments.containsKey(formattedDate)) {
                   groupedDocuments[formattedDate]!.add(doc);
@@ -134,7 +138,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                    (context, index) {
                       final dateKey = groupedDocuments.keys.elementAt(index);
                       final isToday = dateKey == todayKey;
                       final dateHeading = isToday ? 'Today' : dateKey;
@@ -144,7 +148,8 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: width / width30),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width30),
                             child: InterBold(
                               text: dateHeading,
                               fontsize: width / width20,
@@ -153,41 +158,52 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                           ),
                           SizedBox(height: height / height30),
                           ...visitorDocuments.map((doc) {
-                            final documentData = doc.data() as Map<String, dynamic>;
-                            final visitorCompleted = isVisitorCompleted(documentData);
-                            final visitorName = documentData['VisitorName'] ?? '';
-                            final inTimeTimestamp = documentData['VisitorInTime'] as Timestamp?;
-                            final outTimeTimestamp = documentData['VisitorOutTime'] as Timestamp?;
-                            final location = documentData['VisitorLocationName'] ?? '';
+                            final documentData =
+                                doc.data() as Map<String, dynamic>;
+                            final visitorCompleted =
+                                isVisitorCompleted(documentData);
+                            final visitorName =
+                                documentData['VisitorName'] ?? '';
+                            final inTimeTimestamp =
+                                documentData['VisitorInTime'] as Timestamp?;
+                            final outTimeTimestamp =
+                                documentData['VisitorOutTime'] as Timestamp?;
+                            final location =
+                                documentData['VisitorLocationName'] ?? '';
 
                             final inTime = inTimeTimestamp != null
-                                ? DateFormat.jm().format(inTimeTimestamp.toDate())
+                                ? DateFormat.jm()
+                                    .format(inTimeTimestamp.toDate())
                                 : '';
                             final outTime = outTimeTimestamp != null
-                                ? DateFormat.jm().format(outTimeTimestamp.toDate())
+                                ? DateFormat.jm()
+                                    .format(outTimeTimestamp.toDate())
                                 : '';
 
                             return GestureDetector(
                               onTap: visitorCompleted
                                   ? null // Do nothing if visitor is completed
                                   : () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SCreateVisitors(
-                                      visitorData: documentData,
-                                    ),
-                                  ),
-                                );
-                              },
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SCreateVisitors(
+                                            visitorData: documentData,
+                                          ),
+                                        ),
+                                      );
+                                    },
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width / width30),
                                 child: Container(
                                   height: width / width120,
                                   width: double.maxFinite,
-                                  margin: EdgeInsets.only(bottom: height / height10),
+                                  margin: EdgeInsets.only(
+                                      bottom: height / height10),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(width / width10),
+                                    borderRadius:
+                                        BorderRadius.circular(width / width10),
                                     color: WidgetColor,
                                   ),
                                   child: Column(
@@ -200,14 +216,18 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                             vertical: height / height10,
                                           ),
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
                                                 width: width / width40,
                                                 height: height / height40,
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(width / width10),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          width / width10),
                                                   color: Primarycolorlight,
                                                 ),
                                                 child: Center(
@@ -227,20 +247,27 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                                 ),
                                               ),
                                               Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
                                                 children: [
                                                   Row(
                                                     children: [
                                                       InterBold(
                                                         text: 'in time',
-                                                        fontsize: width / width10,
+                                                        fontsize:
+                                                            width / width10,
                                                         color: color4,
                                                       ),
-                                                      SizedBox(width: width / width6),
+                                                      SizedBox(
+                                                          width:
+                                                              width / width6),
                                                       InterMedium(
                                                         text: inTime,
-                                                        fontsize: width / width12,
+                                                        fontsize:
+                                                            width / width12,
                                                         color: color3,
                                                       )
                                                     ],
@@ -249,13 +276,17 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                                     children: [
                                                       InterBold(
                                                         text: 'out time',
-                                                        fontsize: width / width10,
+                                                        fontsize:
+                                                            width / width10,
                                                         color: color4,
                                                       ),
-                                                      SizedBox(width: width / width6),
+                                                      SizedBox(
+                                                          width:
+                                                              width / width6),
                                                       InterMedium(
                                                         text: outTime,
-                                                        fontsize: width / width12,
+                                                        fontsize:
+                                                            width / width12,
                                                         color: color3,
                                                       )
                                                     ],
@@ -269,17 +300,22 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                       Expanded(
                                         flex: 2,
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(horizontal: width / width10),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: width / width10),
                                           decoration: BoxDecoration(
                                             color: colorRed,
                                             borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(width / width10),
-                                              bottomRight: Radius.circular(width / width10),
+                                              bottomLeft: Radius.circular(
+                                                  width / width10),
+                                              bottomRight: Radius.circular(
+                                                  width / width10),
                                             ),
                                           ),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               InterSemibold(
                                                 text: 'Location',
