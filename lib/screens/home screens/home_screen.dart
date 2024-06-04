@@ -35,6 +35,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 
 // import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
+import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -617,10 +618,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Theme',
                       5,
                       () async {
-                        // List<String> emails = [];
+                        List<String> emails = [];
                         // emails.add("sutarvaibhav37@gmail.com");
                         // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("alerts.tactik@gmail.com");ƒ
+                        // emails.add("alerts.tactik@gmail.com");
                         // emails.add("security@lestonholdings.com");
                         // emails.add("dan@tpssolution.com");
                         // // "security@lestonholdings.com"
@@ -631,8 +632,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "Hijql0nkNjA1tOhSf8wW",
-                        //   "qRtZHPi8a4JOUUwmG1Wj",
+                        //   "paHVXXC99uNtXamURMBc",
+                        //   "7Hq6B8gQOQb63wVlqYv3",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -642,8 +643,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "10 May",
-                        //   "Dan Martin",
+                        //   "4 June",
+                        //   // "Sukhman Kooner",
+                        //   "Pankaj Kumar",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "2 JUN",
+                        //   "livjeet kaur",
                         //   "01:20:27",
                         //   "06:00:00",
                         //   "High level place",
@@ -652,7 +669,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "formattedEndTime",
                         // );
                         // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "htqtVzVzdb4ejCl7VvBf");
+                        //     "PatrolLogs", "B59icRSooCyJFJDIx5AF");
                       },
                     ),
                   ],

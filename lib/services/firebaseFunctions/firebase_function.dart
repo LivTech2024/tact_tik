@@ -2966,7 +2966,7 @@ class FireStoreService {
       // Query PatrolLogs for data
       var querySnapshot = await FirebaseFirestore.instance
           .collection('PatrolLogs')
-          .where('PatrolId', whereIn: shiftLinkedPatrolIds)
+          .where('PatrolShiftId', isEqualTo: ShiftId)
           .where('PatrolLogGuardId', isEqualTo: empId)
           // .where('changePatrolStatus', isEqualTo: ShiftId)
           .orderBy('PatrolLogPatrolCount')
@@ -2982,19 +2982,51 @@ class FireStoreService {
       querySnapshot.docs.forEach((doc) {
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
-        if (specificDocIds.contains(doc.id)) {
-          // Check if the document ID already exists in pdfDataList
-          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-            pdfDataList.add(doc.data());
-            print("Data for Pdf: ${doc.data()}");
-          }
+        // if (specificDocIds.contains(doc.id)) {
+
+        // Check if the document ID already exists in pdfDataList
+        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+          pdfDataList.add(doc.data());
+          print("Data for Pdf: ${doc.data()}");
         }
+        // }
       });
     } catch (e) {
       print(e);
     }
     return pdfDataList;
   }
+
+  Future<void> copyAndCreateDocument(
+      String collection, String sourceDocumentId) async {
+    final DocumentReference sourceDocRef =
+        FirebaseFirestore.instance.collection(collection).doc(sourceDocumentId);
+
+    DocumentSnapshot sourceDocSnapshot = await sourceDocRef.get();
+
+    if (!sourceDocSnapshot.exists) {
+      print('Document does not exist');
+      return;
+    }
+
+    final Map<String, dynamic> data =
+        sourceDocSnapshot.data() as Map<String, dynamic>;
+
+    // Copy the document to a new document with a different ID
+    final DocumentReference newDocRef =
+        FirebaseFirestore.instance.collection(collection).doc();
+
+    await newDocRef.set(data);
+
+    // Create another new document with a different ID in the same location
+    // final DocumentReference anotherNewDocRef =
+    //     FirebaseFirestore.instance.collection(collection).doc();
+
+    // await anotherNewDocRef.set({
+    //   'exampleField': 'exampleValue',
+    // });
+  }
+
   //Create log
   // Future<void> addToLog(
   //     String logType,

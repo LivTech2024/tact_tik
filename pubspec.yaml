@@ -117,6 +117,7 @@ flutter:
   assets:
     - assets/images/
     - assets/email.pdf
+    - assets/DAR.pdf
     - assets/email.png
     - assets/TPS RGB.png
     - assets/Tactik.jpeg
