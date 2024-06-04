@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/create_discrepancy_screen.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/pay_discrepancy_screen.dart';
 import 'package:tact_tik/screens/new%20guard/new_guard_screen.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/write_msg_screen.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
@@ -40,8 +44,6 @@ class HomeScreenPart1 extends StatefulWidget {
   final String shiftLocationId;
   final String shiftLocationName;
 
-
-
   // final String url;
   final VoidCallback drawerOnClicked;
   bool? showWish;
@@ -52,7 +54,15 @@ class HomeScreenPart1 extends StatefulWidget {
     // required this.url,
     required this.employeeImg,
     required this.drawerOnClicked,
-    this.showWish = true, required this.empId, required this.empEmail, required this.shiftCompanyId, required this.branchId, required this.shiftId, required this.shiftClientId, required this.shiftLocationId, required this.shiftLocationName,
+    this.showWish = true,
+    required this.empId,
+    required this.empEmail,
+    required this.shiftCompanyId,
+    required this.branchId,
+    required this.shiftId,
+    required this.shiftClientId,
+    required this.shiftLocationId,
+    required this.shiftLocationName,
   }) : super(key: key);
 
   @override
@@ -142,7 +152,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                   Container(
                     height: 55.h,
                     width: 55.w,
-                    decoration:widget. employeeImg != ""
+                    decoration: widget.employeeImg != ""
                         ? BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -153,7 +163,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           )
                         : BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
                             image: DecorationImage(
                               image: AssetImage('assets/images/default.png'),
                               filterQuality: FilterQuality.high,
@@ -165,13 +177,22 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     children: [
                       Stack(
                         children: [
-                          Icon(
-                            Icons.notifications,
-                            // Use the notifications_active icon
-                            color: isDark
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                              WriteMsgScreen()));
+                            },
+                            child: Icon(
+                              Icons.notifications,
+                              // Use the notifications_active icon
+                              color: isDark
                                   ? DarkColor.Primarycolor
                                   : LightColor.color3, // Change color if unread
-                            size: 28.sp,
+                              size: 28.sp,
+                            ),
                           ),
                           if (isUnread)
                             Positioned(
@@ -179,7 +200,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               right: 0,
                               child: Container(
                                 padding: EdgeInsets.all(2.sp),
-                                decoration:  BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: isDark
                                       ? DarkColor.Primarycolor
@@ -211,8 +232,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 ],
               ),
             ),
-            SizedBox(height:widget. showWish!? 40.h :57.h),
-           widget. showWish!
+            SizedBox(height: widget.showWish! ? 40.h : 57.h),
+            widget.showWish!
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -225,8 +246,11 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       ),
                       SizedBox(height: 2.h),
                       PoppinsLight(
-                        text: widget.userName != '' ? widget.userName : 'User not found',
-                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        text: widget.userName != ''
+                            ? widget.userName
+                            : 'User not found',
+                        color:
+                            isDark ? DarkColor.Primarycolor : LightColor.color3,
                         fontsize: 30.sp,
                       ),
                       SizedBox(height: 46.h),
@@ -280,21 +304,24 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w300,
                             fontSize: 18.sp,
-                            color:  isDark ? DarkColor.color2 : LightColor.color2,
+                            color:
+                                isDark ? DarkColor.color2 : LightColor.color2,
                           ),
                           hintText: 'Search screen',
                           contentPadding: EdgeInsets.zero,
                         ),
-                        cursorColor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                        cursorColor: isDark
+                            ? DarkColor.Primarycolor
+                            : LightColor.Primarycolor,
                       ),
                       suggestionsCallback: suggestionsCallback,
                       itemBuilder: (context, Screens screen) {
                         return ListTile(
-                          
                           leading: Icon(screen.icon, color: Colors.blueAccent),
                           title: InterRegular(
                             text: screen.name,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color:
+                                isDark ? DarkColor.color2 : LightColor.color3,
                           ),
                         );
                       },
@@ -313,7 +340,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         color: isDark
                             ? DarkColor.WidgetColor
                             : LightColor.WidgetColor,
-                            shadowColor: isDark?Colors.transparent:LightColor.color3.withOpacity(.1),
+                        shadowColor: isDark
+                            ? Colors.transparent
+                            : LightColor.color3.withOpacity(.1),
                         type: MaterialType.card,
                         elevation: 4,
                         borderRadius: BorderRadius.circular(10.r),
@@ -342,36 +371,31 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                    DarDisplayScreen(
-                                      EmpEmail:widget. empEmail,
-                                      EmpID: widget.empId,
-                                      EmpDarCompanyId:
-                                     widget. shiftCompanyId ?? "",
-                                      EmpDarCompanyBranchId:
-                                    widget.  branchId,
-                                      EmpDarShiftID: widget.shiftId,
-                                      EmpDarClientID:
-                                     widget. shiftClientId,
-                                      Username: widget.userName,
-                                    )));
+                                    builder: (context) => DarDisplayScreen(
+                                          EmpEmail: widget.empEmail,
+                                          EmpID: widget.empId,
+                                          EmpDarCompanyId:
+                                              widget.shiftCompanyId ?? "",
+                                          EmpDarCompanyBranchId:
+                                              widget.branchId,
+                                          EmpDarShiftID: widget.shiftId,
+                                          EmpDarClientID: widget.shiftClientId,
+                                          Username: widget.userName,
+                                        )));
                             break;
                           case 'Reports Screen':
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        ReportScreen(
-                                          locationId:
-                                         widget. shiftLocationId,
-                                          locationName:
-                                         widget. shiftLocationId,
+                                    builder: (context) => ReportScreen(
+                                          locationId: widget.shiftLocationId,
+                                          locationName: widget.shiftLocationId,
                                           companyId:
-                                         widget. shiftCompanyId ?? "",
-                                          empId: widget. empId,
-                                          empName: widget. userName,
-                                          clientId: widget. shiftClientId,
-                                          ShiftId: widget. shiftId,
+                                              widget.shiftCompanyId ?? "",
+                                          empId: widget.empId,
+                                          empName: widget.userName,
+                                          clientId: widget.shiftClientId,
+                                          ShiftId: widget.shiftId,
                                         )));
                             break;
                           case 'Post Screen':
@@ -379,59 +403,52 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => PostOrder(
-                                      locationId:
-                                     widget. shiftLocationId,
-                                    )));
+                                          locationId: widget.shiftLocationId,
+                                        )));
                             break;
                           case 'Task Screen':
-                           Navigator.push(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        TaskFeatureScreen()));
+                                    builder: (context) => TaskFeatureScreen()));
                             break;
                           case 'LogBook Screen':
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        LogBookScreen(
-                                          EmpId: widget. empId,
+                                    builder: (context) => LogBookScreen(
+                                          EmpId: widget.empId,
                                         )));
                             break;
                           case 'Visitors Screen':
                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VisiTorsScreen(
-                                                      locationId:
-                                                         widget. shiftLocationId,
-                                                    )));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VisiTorsScreen(
+                                          locationId: widget.shiftLocationId,
+                                        )));
                             break;
                           case 'Assets Screen':
                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    // KeysScreen(
-                                                    //     keyId: _employeeId)
-                                                    AssetsScreen(
-                                                        assetEmpId:
-                                                          widget.  empId)));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        // KeysScreen(
+                                        //     keyId: _employeeId)
+                                        AssetsScreen(
+                                            assetEmpId: widget.empId)));
                             break;
                           case 'Key Screen':
                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    KeysScreen(
-                                                        keyId: widget. empId)
-                                                // AssetsScreen(
-                                                //     assetEmpId:
-                                                //         _employeeId)
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        KeysScreen(keyId: widget.empId)
+                                    // AssetsScreen(
+                                    //     assetEmpId:
+                                    //         _employeeId)
 
-                                                ));
+                                    ));
                             break;
                         }
                       },
