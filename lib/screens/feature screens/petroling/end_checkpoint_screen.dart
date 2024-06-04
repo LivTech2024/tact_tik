@@ -33,6 +33,7 @@ class EndCheckpointScreen extends StatefulWidget {
   final String ShiftName;
   final String description;
   final String ShiftDate;
+  final Timestamp? PatrolStatusTime;
 
 //  widget.PatrolCompanyID,
 //                               "",
@@ -57,6 +58,7 @@ class EndCheckpointScreen extends StatefulWidget {
     required this.ShiftName,
     required this.description,
     required this.ShiftDate,
+    required this.PatrolStatusTime,
   });
 
   @override
@@ -367,7 +369,14 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         Timestamp patrolInTimestamp =
                             Timestamp.fromMillisecondsSinceEpoch(
                                 combinedDateTime.millisecondsSinceEpoch);
+                        String timestampToTimeString(Timestamp? timestamp) {
+                          DateTime dateTime = timestamp!.toDate();
+                          return DateFormat('HH:mm:ss').format(
+                              dateTime); // Adjust format as needed (e.g., 'hh:mm a')
+                        }
 
+                        String newInTIme =
+                            timestampToTimeString(widget.PatrolStatusTime);
                         print("patrolIn time: ${patrolInTimestamp}");
 
                         DateFormat dateFormat =
@@ -394,7 +403,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                             widget.EmpName,
                             widget.CompletedCount + 1,
                             widget.ShiftDate,
-                            patrolInTimestamp,
+                            widget.PatrolStatusTime,
                             patrolOutTimestamp,
                             Controller.text,
                             widget.ShiftId);
@@ -418,11 +427,6 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                             'CheckPointStatus': url['CheckPointStatus']
                           };
                         }).toList();
-                        await fireStoreService.EndPatrolupdatePatrolsStatus(
-                            widget.PatrolID,
-                            widget.EmpId,
-                            widget.EmpName,
-                            widget.ShiftId);
 
                         List<String> emails = [];
                         var ClientEmail = await fireStoreService
@@ -447,6 +451,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         //         widget.p.ShiftId);
                         var clientName = await fireStoreService
                             .getClientName(widget.PatrolClientID);
+
                         await fireStoreService.addToLog(
                             "patrol_end",
                             "",
@@ -480,6 +485,11 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                             formattedPatrolOutTime,
                             Controller.text,
                             selectedOption);
+                        await fireStoreService.EndPatrolupdatePatrolsStatus(
+                            widget.PatrolID,
+                            widget.EmpId,
+                            widget.EmpName,
+                            widget.ShiftId);
                         setState(() {
                           _isLoading = false;
                         });

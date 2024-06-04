@@ -215,11 +215,11 @@ class _HomeScreenState extends State<HomeScreen> {
           IconColors[3] = color21;
           ScreenIndex = 0;
           // CalendarScreen
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CalendarScreen(
-                      companyId: _employeeCompanyID, employeeId: _employeeId)));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => CalendarScreen(
+          //             companyId: _employeeCompanyID, employeeId: _employeeId)));
 
           break;
         case 3:
@@ -685,6 +685,14 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeScreenPart1(
                 userName: _userName,
                 employeeImg: employeeImg,
+                shiftLocationName: '',
+                shiftLocationId: _shiftLocationId,
+                shiftId: _shiftId,
+                shiftCompanyId: '',
+                shiftClientId: _shiftCLientId,
+                empEmail: _employeeEmail,
+                branchId: _branchId,
+                empId: _employeeId,
                 // employeeImg: _employeeImg,
                 showWish: _showWish,
                 drawerOnClicked: () {
@@ -924,7 +932,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  KeysScreen(keyId: _employeeId)
+                                                  KeysScreen(keyId: _employeeId, companyId: _employeeCompanyID,)
                                               // AssetsScreen(
                                               //     assetEmpId:
                                               //         _employeeId)

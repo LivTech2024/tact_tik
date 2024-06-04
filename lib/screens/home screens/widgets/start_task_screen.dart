@@ -207,8 +207,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     //     clickedIn = true;
     //     prefs.setBool('clickedIn', clickedIn);
     //   });
-    await homeScreenController.startBgLocationService();
-    updateLateTimeAndStartTimer();
+    // await homeScreenController.startBgLocationService();
+    // updateLateTimeAndStartTimer();
     // } else {
     //   setState(() {
     //     prefs.setBool('clickedIn', clickedIn);
@@ -237,8 +237,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         onBreak = breakState;
       });
       if (!onBreak) {
-        startStopwatch();
-        // updateLateTimeAndStartTimer();
+        // startStopwatch();
+        _startTimer();
+        updateLateTimeAndStartTimer();
       }
     }
     int? savedSeconds = prefs.getInt('stopwatchSeconds');
@@ -643,38 +644,38 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                       .doc();
 
                                   // Data to be added
-                                  Map<String, dynamic> empRouteData = {
-                                    'EmpRouteCreatedAt': Timestamp.now(),
-                                    'EmpRouteDate': Timestamp.now(),
-                                    'EmpRouteEmpId': widget.EmployeId,
-                                    'EmployeeName': widget.EmployeeName,
-                                    'EmpRouteId': docRef.id,
-                                    'EmpRouteLocations': [],
-                                    'EmpRouteShiftId': widget.ShiftId,
-                                    'EmpRouteShiftStatus': 'started',
-                                    'EmployeeShiftStartTime':
-                                        widget.ShiftStartTime,
-                                    'EmployeeShiftEndTime': widget.ShiftEndTime,
-                                    'EmployeeShiftShiftName': widget.ShiftName,
-                                    'EmpRouteEmpRole':
-                                        userStorage.getItem("Role"),
-                                  };
-                                  try {
-                                    // Add the document to the collection
-                                    await docRef.set(empRouteData);
-                                    print(
-                                        'Employee route created with ID: ${docRef.id}');
-                                  } catch (e) {
-                                    print('Error creating employee route: $e');
-                                  }
+                                  // Map<String, dynamic> empRouteData = {
+                                  //   'EmpRouteCreatedAt': Timestamp.now(),
+                                  //   'EmpRouteDate': Timestamp.now(),
+                                  //   'EmpRouteEmpId': widget.EmployeId,
+                                  //   'EmployeeName': widget.EmployeeName,
+                                  //   'EmpRouteId': docRef.id,
+                                  //   'EmpRouteLocations': [],
+                                  //   'EmpRouteShiftId': widget.ShiftId,
+                                  //   'EmpRouteShiftStatus': 'started',
+                                  //   'EmployeeShiftStartTime':
+                                  //       widget.ShiftStartTime,
+                                  //   'EmployeeShiftEndTime': widget.ShiftEndTime,
+                                  //   'EmployeeShiftShiftName': widget.ShiftName,
+                                  //   'EmpRouteEmpRole':
+                                  //       userStorage.getItem("Role"),
+                                  // };
+                                  // try {
+                                  //   // Add the document to the collection
+                                  //   await docRef.set(empRouteData);
+                                  //   print(
+                                  //       'Employee route created with ID: ${docRef.id}');
+                                  // } catch (e) {
+                                  //   print('Error creating employee route: $e');
+                                  // }
 
                                   // start stop watch
                                   // await controller.startStopWatch();
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  await homeScreenController
-                                      .startBgLocationService();
+                                  // await homeScreenController
+                                  //     .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -886,8 +887,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                           if (CommentController
                                               .text.isNotEmpty) {
-                                            await homeScreenController
-                                                .stopBgLocationService();
+                                            // await homeScreenController
+                                            //     .stopBgLocationService();
                                             widget.onRefresh();
                                             var data = await fireStoreService
                                                 .fetchDataForPdf(

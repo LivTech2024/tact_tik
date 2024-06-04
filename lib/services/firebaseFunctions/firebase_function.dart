@@ -263,14 +263,17 @@ class FireStoreService {
       // Group by ShiftId and order by PatrolLogCount
       Map<String, List<Map<String, dynamic>>> groupedByShiftId = {};
       for (var log in patrolLogs) {
-        String shiftId = log['PatrolShiftId'];
+        String? shiftId = log['PatrolShiftId']; // Use null check
+        if (shiftId == null) {
+          continue; // Skip logs without PatrolShiftId
+        }
         if (groupedByShiftId[shiftId] == null) {
           groupedByShiftId[shiftId] = [];
         }
         groupedByShiftId[shiftId]!.add(log);
       }
 
-      // Sort each group by PatrolLogCount
+      // Sort each group by PatrolLogPatrolCount
       for (var shiftId in groupedByShiftId.keys) {
         groupedByShiftId[shiftId]!.sort((a, b) {
           return b['PatrolLogPatrolCount'].compareTo(a['PatrolLogPatrolCount']);
@@ -899,7 +902,7 @@ class FireStoreService {
       String EmpName,
       int PatrolCount,
       String ShiftDate,
-      Timestamp StartTime,
+      Timestamp? StartTime,
       Timestamp EndTime,
       String FeedbackComment,
       String ShiftId) async {
@@ -1015,7 +1018,8 @@ class FireStoreService {
 
               // if (Timestamp.now().toDate().isAfter(startTime) &&
               //     Timestamp.now().toDate().isBefore(endTime)) {
-              if ((StartTime.toDate().isBefore(endTime) &&
+              if (StartTime != null) if ((StartTime.toDate()
+                          .isBefore(endTime) &&
                       StartTime.toDate().isAfter(startTime)) ||
                   (EndTime.toDate().isBefore(endTime) &&
                       EndTime.toDate().isAfter(startTime)) ||

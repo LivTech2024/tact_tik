@@ -160,10 +160,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   Future<void> fetchShifts() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('shifts')
+          .collection('Shifts')
           .where('ShiftClientId', isEqualTo: _employeeId)
           .get();
-
+      print('Snapshot ${querySnapshot}');
       List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return {
@@ -172,7 +172,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
-          'members': data['members'],
+          // 'members': data['members'],
         };
       }).toList();
 
@@ -582,6 +582,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 HomeScreenPart1(
                   userName: _userName,
                   employeeImg: employeeImg,
+                  empId: _employeeId,
+                  branchId: _branchId,
+                  empEmail: _employeeEmail,
+                  shiftClientId: _shiftCLientId,
+                  shiftCompanyId: '',
+                  shiftId: _shiftId,
+                  shiftLocationId: _shiftLocationId,
+                  shiftLocationName: '',
                   // employeeImg: _employeeImg,
                   showWish: _showWish,
                   drawerOnClicked: () {
