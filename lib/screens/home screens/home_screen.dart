@@ -526,14 +526,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/default.png'),
-                          foregroundImage: NetworkImage(employeeImg!),
-                          radius: 50.r,
-                          backgroundColor: Primarycolor,
-                          // maxRadius: width / width50,
-                          // minRadius: width / width50,
+                        GestureDetector(
+                          onTap:(){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfileScreen(),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            backgroundImage:
+                                AssetImage('assets/images/default.png'),
+                            foregroundImage: NetworkImage(employeeImg!),
+                            radius: 50.r,
+                            backgroundColor: Primarycolor,
+                            // maxRadius: width / width50,
+                            // minRadius: width / width50,
+                          ),
                         ),
                         SizedBox(height: 10.h),
                         PoppinsSemibold(

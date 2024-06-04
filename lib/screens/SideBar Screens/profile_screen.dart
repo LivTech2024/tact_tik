@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
@@ -100,8 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -114,16 +113,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: InterRegular(
             text: 'Your Profile',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
@@ -133,10 +132,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 setState(() {
                   isEdit = !isEdit;
                 });
+                if (isEdit) {
+                  final newName = _nameController.text.trim();
+                  final newPhoneNo = _phoneNoController.text.trim();
+
+                  if (newName.isNotEmpty && newPhoneNo.isNotEmpty) {
+                    _updateEmployeeData(newName, newPhoneNo);
+                    setState(() {
+                      isEdit = false;
+                      _nameController.clear();
+                      _phoneNoController.clear();
+                    });
+                    _getCurrentUserUid();
+                  } else if (_selectedImageFile != null && isEdit) {
+                    // TODO Upload image code
+
+                    _getCurrentUserUid();
+                  }
+                }
               },
               icon: Icon(
-                isEdit ? Icons.close : Icons.border_color,
-                size: width / width24,
+                isEdit ? Icons.check : Icons.border_color,
+                size: 24.sp,
                 color: color1,
               ),
             )
@@ -148,9 +165,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 340,
+                height: 340.h,
                 width: double.maxFinite,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
                       Colors.black,
@@ -167,16 +184,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       GestureDetector(
                         onTap: _selectImageFromGallery,
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: EdgeInsets.all(4.sp),
                           decoration: BoxDecoration(
                             color: _employeeImageUrl != null
-                                ? Color(0xFFAC7310)
+                                ? const Color(0xFFAC7310)
                                 : Primarycolor,
                             shape: BoxShape.circle,
                           ),
                           child: ClipOval(
                             child: SizedBox.fromSize(
-                              size: Size.fromRadius(50),
+                              size: Size.fromRadius(50.r),
                               child: _selectedImageFile != null
                                   ? Image.file(
                                       File(_selectedImageFile!.path),
@@ -187,16 +204,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           _employeeImageUrl!,
                                           fit: BoxFit.cover,
                                         )
-                                      : Image.asset(
-                                          'assets/images/default.png'),
+                                      : Image.asset('assets/images/default.png'),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: height / height20),
+                      SizedBox(height: 20.h),
                       PoppinsMedium(
                         text: _employeeName ?? '',
-                        fontsize: width / width18,
+                        fontsize: 18.sp,
                         color: color1,
                       )
                     ],
@@ -204,23 +220,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height40),
+                          EdgeInsets.symmetric(vertical: 40.h),
                       child: isEdit
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 InterSemibold(
                                   text: 'Name',
-                                  fontsize: width / width20,
+                                  fontsize: 20.sp,
                                   color: color1,
                                 ),
-                                SizedBox(height: height / height5),
+                                SizedBox(height: 5.h),
                                 Row(
                                   children: [
                                     Expanded(
@@ -231,8 +247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         isEditMode: false,
                                       ),
                                     ),
-                                    SizedBox(width: width / width6),
-                                    Bounce(
+                                    /*  Bounce(
                                       onTap: () {
                                         final newName =
                                             _nameController.text.trim();
@@ -257,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: color2,
                                         size: width / width30,
                                       ),
-                                    )
+                                    )*/
                                   ],
                                 ),
                               ],
@@ -279,10 +294,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InterSemibold(
                                 text: 'Contact No',
-                                fontsize: width / width20,
+                                fontsize: 20.sp,
                                 color: color1,
                               ),
-                              SizedBox(height: height / height5),
+                              SizedBox(height: 5.h),
                               Row(
                                 children: [
                                   Expanded(
@@ -295,8 +310,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isEditMode: false,
                                     ),
                                   ),
-                                  SizedBox(width: width / width6),
-                                  Bounce(
+                                  /*Bounce(
                                     onTap: () {
                                       final newName =
                                           _nameController.text.trim();
@@ -321,7 +335,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       color: color2,
                                       size: width / width30,
                                     ),
-                                  )
+                                  )*/
                                 ],
                               ),
                             ],
@@ -338,7 +352,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height40),
+                          EdgeInsets.symmetric(vertical: 40.h),
                       child: ProfileEditWidget(
                         tittle: 'Email',
                         content: _employeeEmail ?? '',
@@ -353,7 +367,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: height / height60),
+              SizedBox(height: 60.h),
               if (_employeeImageUrl == null &&
                   _employeeRole == null &&
                   _employeeEmail == null &&
@@ -362,7 +376,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: PoppinsRegular(
                     text: 'complete your profile !',
-                    fontsize: width / width20,
+                    fontsize: 20.sp,
                     color: color3,
                   ),
                 )

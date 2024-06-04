@@ -274,8 +274,7 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                     horizontal: 20.w,
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(10.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     color: WidgetColor,
                                   ),
                                   child: Row(
@@ -405,38 +404,10 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 color: color1,
                               ),
                               SizedBox(height: height / height10),
-                              DropdownButtonFormField<String>(
-                                value: selectedKeyName,
-                                items: keys.map((DocumentSnapshot document) {
-                                  Map<String, dynamic> data =
-                                      document.data() as Map<String, dynamic>;
-                                  return DropdownMenuItem<String>(
-                                    value: data['KeyName'],
-                                    child: Text(data['KeyName']),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedKeyName = newValue;
-                                    selectedKeyId = keys
-                                        .firstWhere((document) =>
-                                            (document.data() as Map<String,
-                                                dynamic>)['KeyName'] ==
-                                            newValue)
-                                        .id;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
-                                      vertical: height / height60),
-                                  hintText: 'Select Key Name',
-                                  hintStyle: TextStyle(color: color2),
-                                ),
+                              CustomeTextField(
+                                hint: 'Tittle',
+                                controller: _AllocateQtController2,
+                                showIcon: true,
                               ),
                               SizedBox(height: height / height10),
                               InterBold(

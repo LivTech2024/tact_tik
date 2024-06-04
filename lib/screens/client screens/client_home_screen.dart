@@ -443,46 +443,56 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         endDrawer: Drawer(
           child: Column(
             children: [
-              Container(
-                height: 180.h,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.r),
-                  color: Primarycolor, // Background color for the drawer header
-                ),
-                child: Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 180.h,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    color: Primarycolor, // Background color for the drawer header
+                  ),
+                  child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: ClipOval(
+                              child: SizedBox.fromSize(
+                                  size: Size.fromRadius(50.r),
+                                  child: Image.network(
+                                    employeeImg!,
+                                    fit: BoxFit.cover,
+                                  )),
+                            ),
                           ),
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                                size: Size.fromRadius(50.r),
-                                child: Image.network(
-                                  employeeImg!,
-                                  fit: BoxFit.cover,
-                                )),
+                          SizedBox(height: height / height10),
+                          PoppinsSemibold(
+                            text: _userName,
+                            color: WidgetColor,
+                            fontsize: width / width16,
+                            letterSpacing: -.3,
                           ),
-                        ),
-                        SizedBox(height: height / height10),
-                        PoppinsSemibold(
-                          text: _userName,
-                          color: WidgetColor,
-                          fontsize: width / width16,
-                          letterSpacing: -.3,
-                        ),
-                        SizedBox(height: height / height5),
-                        PoppinsRegular(
-                          text: _empEmail,
-                          color: WidgetColor,
-                          fontsize: width / width16,
-                          letterSpacing: -.3,
-                        )
-                      ]),
+                          SizedBox(height: height / height5),
+                          PoppinsRegular(
+                            text: _empEmail,
+                            color: WidgetColor,
+                            fontsize: width / width16,
+                            letterSpacing: -.3,
+                          )
+                        ]),
+                  ),
                 ),
               ),
               Expanded(
@@ -774,58 +784,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                SizedBox(
-                                                  width: 100.w,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      InterRegular(
-                                                        text: 'Guards',
-                                                        fontsize: 14.sp,
-                                                        color: color22,
-                                                      ),
-                                                      SizedBox(height: 12.h),
-                                                      Wrap(
-                                                        spacing: -5.0,
-                                                        // spacing between avatars
-                                                        // runSpacing: 8.0, // spacing between rows
-                                                        children: [
-                                                          for (int i = 0;
-                                                              i <
-                                                                  (members.length >
-                                                                          3
-                                                                      ? 3
-                                                                      : members
-                                                                          .length);
-                                                              i++)
-                                                            CircleAvatar(
-                                                              radius: 10.r,
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                members[i],
-                                                              ), // Assuming members list contains URLs of profile photos
-                                                            ),
-                                                          if (members.length >
-                                                              3)
-                                                            CircleAvatar(
-                                                              radius: 12.r,
-                                                              backgroundColor:
-                                                                  color23,
-                                                              child:
-                                                                  InterMedium(
-                                                                text:
-                                                                    '+${members.length - 3}',
-                                                                fontsize: 12.sp,
-                                                              ),
-                                                            ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-
                                                 // shift time and date
                                                 SizedBox(
                                                   width: 100.w,
