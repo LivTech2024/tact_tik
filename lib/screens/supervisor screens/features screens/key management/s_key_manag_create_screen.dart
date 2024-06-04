@@ -389,6 +389,15 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 isExpanded: true,
                               ),
                               SizedBox(height: height / height20),
+                              Button1(
+                                text: 'Save',
+                                onPressed: () {
+                                  _saveData();
+                                },
+                                borderRadius: width / width10,
+                                backgroundcolor: Primarycolor,
+                              ),
+                              SizedBox(height: 20.h,)
                             ],
                           ),
                         )
@@ -435,35 +444,23 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 showIcon: true,
                                 isExpanded: true,
                               ),
-                              SizedBox(height: height / height100),
+                              SizedBox(height: 40.h,)
+                              Button1(
+                                text: 'Save',
+                                onPressed: () {
+                                  _saveData();
+                                },
+                                borderRadius: width / width10,
+                                backgroundcolor: Primarycolor,
+                              ),
+                              SizedBox(height: 20.h,)
                             ],
                           ),
                         ),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Button1(
-                      text: 'Save',
-                      onPressed: () {
-                        _saveData();
-                      },
-                      borderRadius: width / width10,
-                      backgroundcolor: Primarycolor,
-                    ),
-                    SizedBox(
-                      height: height / height20,
-                    )
-                  ],
-                ),
-              ),
-            )
+
           ],
         ),
       ),
