@@ -28,6 +28,7 @@ import '../SideBar Screens/profile_screen.dart';
 import '../get started/getstarted_screen.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
+import 'Reports/client_oprn_report.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -443,10 +444,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           child: Column(
             children: [
               Container(
-                height: height / height180,
+                height: 180.h,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
+                  borderRadius: BorderRadius.circular(15.r),
                   color: Primarycolor, // Background color for the drawer header
                 ),
                 child: Center(
@@ -460,7 +461,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                           ),
                           child: ClipOval(
                             child: SizedBox.fromSize(
-                                size: Size.fromRadius(width / width50),
+                                size: Size.fromRadius(50.r),
                                 child: Image.network(
                                   employeeImg!,
                                   fit: BoxFit.cover,
@@ -554,24 +555,24 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 leading: Icon(
                   Icons.logout,
                   color: Colors.red,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
                 title: PoppinsBold(
                   text: 'Logout',
                   color: Colors.red,
-                  fontsize: width / width14,
+                  fontsize: 14.sp,
                 ),
                 onTap: () {
                   auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height20)
+              SizedBox(height: 20.h)
             ],
           ),
         ),
         body: Padding(
           padding: EdgeInsets.only(
-            top: height / height30,
+            top: 30.h,
           ),
           child: RefreshIndicator(
             onRefresh: _refreshData,
@@ -590,8 +591,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: width / width30,
-                      right: width / width30,
+                      left: 30.w,
+                      right: 30.w,
                     ),
                     child: Column(
                       children: [
@@ -608,7 +609,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             ),
                             Bounce(
-                              onTap: () => ChangeScreenIndex(1),
+                              // onTap: () => ChangeScreenIndex(1),
                               child: HomeScreenCustomNavigation(
                                 text: 'Shifts',
                                 icon: Icons.add_task,
@@ -617,7 +618,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             ),
                             Bounce(
-                              // onTap: () => ChangeScreenIndex(2),
+                              onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: 'assets/images/lab_profile.svg',
@@ -646,7 +647,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: height / height30)
+                        SizedBox(height: 30.h)
                       ],
                     ),
                   ),
@@ -668,227 +669,235 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
                             return Padding(
                               padding: EdgeInsets.only(
-                                left: width / width30,
-                                right: width / width30,
+                                left: 30.w,
+                                right: 30.w,
                               ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  // NavigateScreen(
-                                  //     ClientCheckPatrolScreen(
-                                  //       PatrolIdl: '',
-                                  //     ),
-                                  //     context);
-                                  print("Clicked");
-                                  // NavigateScreen(
-                                  //     ClientCheckPatrolScreen(
-                                  //       PatrolIdl: PatrolId,
-                                  //     ),
-                                  //     context);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ClientCheckPatrolScreen(
-                                                  PatrolIdl: PatrolId)));
-                                },
-                                child: Container(
-                                  height: height / height160,
-                                  margin:
-                                      EdgeInsets.only(top: height / height10),
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                    color: Primarycolor,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterBold(
+                                    text: '19/9/2004',
+                                    color: color1,
+                                    fontsize: 20.sp,
                                   ),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: height / height20),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                  SizedBox(
+                                    height: 10.sp,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      print("Clicked");
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ClientCheckPatrolScreen(
+                                                      PatrolIdl: PatrolId)));
+                                    },
+                                    child: Container(
+                                      height: 160.h,
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: Primarycolor,
+                                        borderRadius:
+                                            BorderRadius.circular(14.r),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20.h),
+                                      child: Column(
                                         children: [
-                                          Container(
-                                            height: height / height30,
-                                            width: width / width4,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(
-                                                    width / width10),
-                                                bottomRight: Radius.circular(
-                                                    width / width10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight: Radius.circular(
+                                                      10.r,
+                                                    ),
+                                                    bottomRight:
+                                                        Radius.circular(
+                                                      10.r,
+                                                    ),
+                                                  ),
+                                                  color: WidgetColor,
+                                                ),
                                               ),
-                                              color: WidgetColor,
-                                            ),
+                                              SizedBox(width: 14.w),
+                                              SizedBox(
+                                                width: 190.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InterSemibold(
+                                                      text: PatrolName ?? "",
+                                                      color: color22,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                    SizedBox(height: 5.h),
+                                                    InterRegular(
+                                                      text:
+                                                          PatrolLocation ?? "",
+                                                      maxLines: 1,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(width: width / width14),
-                                          SizedBox(
-                                            width: width / width190,
-                                            child: Column(
+                                          SizedBox(height: 10.h),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 18.w,
+                                              right: 24.w,
+                                            ),
+                                            child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                InterSemibold(
-                                                  text: PatrolName ?? "",
-                                                  color: color22,
-                                                  fontsize: width / width14,
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Guards',
+                                                        fontsize: 14.sp,
+                                                        color: color22,
+                                                      ),
+                                                      SizedBox(height: 12.h),
+                                                      Wrap(
+                                                        spacing: -5.0,
+                                                        // spacing between avatars
+                                                        // runSpacing: 8.0, // spacing between rows
+                                                        children: [
+                                                          for (int i = 0;
+                                                              i <
+                                                                  (members.length >
+                                                                          3
+                                                                      ? 3
+                                                                      : members
+                                                                          .length);
+                                                              i++)
+                                                            CircleAvatar(
+                                                              radius: 10.r,
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                members[i],
+                                                              ), // Assuming members list contains URLs of profile photos
+                                                            ),
+                                                          if (members.length >
+                                                              3)
+                                                            CircleAvatar(
+                                                              radius: 12.r,
+                                                              backgroundColor:
+                                                                  color23,
+                                                              child:
+                                                                  InterMedium(
+                                                                text:
+                                                                    '+${members.length - 3}',
+                                                                fontsize: 12.sp,
+                                                              ),
+                                                            ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                // shift time and date
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'CheckPoints',
+                                                        color: color22,
+                                                        fontsize: 14.w,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .check_circle_outlined,
+                                                            size: 24.sp,
+                                                            color: color22,
+                                                          ),
+                                                          SizedBox(width: 6.w),
+                                                          InterMedium(
+                                                            text: CheckpointCount
+                                                                    .toString() ??
+                                                                "",
+                                                            fontsize: 14.sp,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                                 SizedBox(
-                                                    height: height / height5),
-                                                InterRegular(
-                                                  text: PatrolLocation ?? "",
-                                                  maxLines: 1,
-                                                  fontsize: width / width14,
-                                                ),
+                                                  width: width / width100,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Required Times',
+                                                        color: color22,
+                                                        fontsize:
+                                                            width / width14,
+                                                      ),
+                                                      SizedBox(
+                                                          height:
+                                                              height / height5),
+                                                      Row(
+                                                        children: [
+                                                          // SvgPicture.asset(
+                                                          //   'assets/images/avg_pace.svg',
+                                                          //   width: width / width24,
+                                                          // ),
+                                                          SizedBox(
+                                                              width: width /
+                                                                  width6),
+                                                          InterMedium(
+                                                            text: "2",
+                                                            fontsize:
+                                                                width / width14,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: height / height10),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: width / width18,
-                                          right: width / width24,
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: width / width100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterRegular(
-                                                    text: 'Guards',
-                                                    fontsize: width / width14,
-                                                    color: color22,
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          height / height12),
-                                                  Wrap(
-                                                    spacing: -5.0,
-                                                    // spacing between avatars
-                                                    // runSpacing: 8.0, // spacing between rows
-                                                    children: [
-                                                      for (int i = 0;
-                                                          i <
-                                                              (members.length >
-                                                                      3
-                                                                  ? 3
-                                                                  : members
-                                                                      .length);
-                                                          i++)
-                                                        CircleAvatar(
-                                                          radius:
-                                                              width / width10,
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                            members[i],
-                                                          ), // Assuming members list contains URLs of profile photos
-                                                        ),
-                                                      if (members.length > 3)
-                                                        CircleAvatar(
-                                                          radius:
-                                                              width / width12,
-                                                          backgroundColor:
-                                                              color23,
-                                                          child: InterMedium(
-                                                            text:
-                                                                '+${members.length - 3}',
-                                                            fontsize:
-                                                                width / width12,
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-
-                                            // shift time and date
-                                            SizedBox(
-                                              width: width / width100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterRegular(
-                                                    text: 'CheckPoints',
-                                                    color: color22,
-                                                    fontsize: width / width14,
-                                                  ),
-                                                  SizedBox(
-                                                      height: height / height5),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons
-                                                            .check_circle_outlined,
-                                                        size: width / width24,
-                                                        color: color22,
-                                                      ),
-                                                      SizedBox(
-                                                          width:
-                                                              width / width6),
-                                                      InterMedium(
-                                                        text: CheckpointCount
-                                                                .toString() ??
-                                                            "",
-                                                        fontsize:
-                                                            width / width14,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: width / width100,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterRegular(
-                                                    text: 'Required Times',
-                                                    color: color22,
-                                                    fontsize: width / width14,
-                                                  ),
-                                                  SizedBox(
-                                                      height: height / height5),
-                                                  Row(
-                                                    children: [
-                                                      // SvgPicture.asset(
-                                                      //   'assets/images/avg_pace.svg',
-                                                      //   width: width / width24,
-                                                      // ),
-                                                      SizedBox(
-                                                          width:
-                                                              width / width6),
-                                                      InterMedium(
-                                                        text: "2",
-                                                        fontsize:
-                                                            width / width14,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 20.sp,
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -907,8 +916,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
                                 return Padding(
                                   padding: EdgeInsets.only(
-                                    left: width / 30,
-                                    right: width / 30,
+                                    left: 30.w,
+                                    right: 30.w,
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
@@ -926,23 +935,22 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         InterBold(
                                           text: dateString,
                                           color: Primarycolor,
-                                          fontsize: width / 14,
+                                          fontsize: 14.sp,
                                         ),
                                         SizedBox(
-                                          height: height / 10,
+                                          height: 10.sp,
                                         ),
                                         Container(
-                                          height: height / 160,
-                                          margin:
-                                              EdgeInsets.only(top: height / 10),
+                                          height: 160.h,
+                                          margin: EdgeInsets.only(top: 10.h),
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
                                             color: Primarycolor,
-                                            borderRadius: BorderRadius.circular(
-                                                width / 14),
+                                            borderRadius:
+                                                BorderRadius.circular(14.sp),
                                           ),
                                           padding: EdgeInsets.symmetric(
-                                              vertical: height / 20),
+                                              vertical: 20.h),
                                           child: Column(
                                             children: [
                                               Row(
@@ -950,24 +958,24 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     MainAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                    height: height / 30,
-                                                    width: width / 4,
+                                                    height: 30.h,
+                                                    width: 4.w,
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.only(
                                                         topRight:
                                                             Radius.circular(
-                                                                width / 10),
+                                                                10.r),
                                                         bottomRight:
                                                             Radius.circular(
-                                                                width / 10),
+                                                                10.r),
                                                       ),
                                                       color: color22,
                                                     ),
                                                   ),
-                                                  SizedBox(width: width / 14),
+                                                  SizedBox(width: 14.w),
                                                   SizedBox(
-                                                    width: width / 190,
+                                                    width: 190.w,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -980,26 +988,25 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           text: shifts[index]
                                                               ['ShiftName'],
                                                           color: color22,
-                                                          fontsize: width / 14,
+                                                          fontsize: 14.sp,
                                                         ),
-                                                        SizedBox(
-                                                            height: height / 5),
+                                                        SizedBox(height: 5.h),
                                                         InterRegular(
                                                           text: shifts[index][
                                                               'ShiftLocationAddress'],
                                                           maxLines: 1,
-                                                          fontsize: width / 14,
+                                                          fontsize: 14.sp,
                                                         ),
                                                       ],
                                                     ),
                                                   )
                                                 ],
                                               ),
-                                              SizedBox(height: height / 10),
+                                              SizedBox(height: 10.h),
                                               Padding(
                                                 padding: EdgeInsets.only(
-                                                  left: width / 18,
-                                                  right: width / 24,
+                                                  left: 18.w,
+                                                  right: 24.w,
                                                 ),
                                                 child: Row(
                                                   crossAxisAlignment:
@@ -1009,7 +1016,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                      width: width / 100,
+                                                      width: 100.w,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1017,13 +1024,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Guards',
-                                                            fontsize:
-                                                                width / 14,
+                                                            fontsize: 14.sp,
                                                             color: color22,
                                                           ),
                                                           SizedBox(
-                                                              height:
-                                                                  height / 12),
+                                                              height: 12.h),
                                                           Wrap(
                                                             spacing: -5.0,
                                                             children: [
@@ -1036,9 +1041,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                               .length);
                                                                   i++)
                                                                 CircleAvatar(
-                                                                  radius:
-                                                                      width /
-                                                                          10,
+                                                                  radius: 10.r,
                                                                   backgroundImage:
                                                                       NetworkImage(
                                                                     shifts[index]
@@ -1051,9 +1054,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       .length >
                                                                   3)
                                                                 CircleAvatar(
-                                                                  radius:
-                                                                      width /
-                                                                          12,
+                                                                  radius: 12.r,
                                                                   backgroundColor:
                                                                       color23,
                                                                   child:
@@ -1061,8 +1062,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     text:
                                                                         '+${shifts[index]['members'].length - 3}',
                                                                     fontsize:
-                                                                        width /
-                                                                            12,
+                                                                        12.sp,
                                                                   ),
                                                                 ),
                                                             ],
@@ -1071,7 +1071,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: width / 100,
+                                                      width: 100.w,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1080,30 +1080,24 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           InterRegular(
                                                             text: 'Started At',
                                                             color: color22,
-                                                            fontsize:
-                                                                width / 14,
+                                                            fontsize: 14.sp,
                                                           ),
-                                                          SizedBox(
-                                                              height:
-                                                                  height / 5),
+                                                          SizedBox(height: 5.h),
                                                           Row(
                                                             children: [
                                                               Icon(
                                                                 Icons
                                                                     .check_circle_outlined,
-                                                                size:
-                                                                    width / 24,
+                                                                size: 24.sp,
                                                                 color: color22,
                                                               ),
                                                               SizedBox(
-                                                                  width: width /
-                                                                      6),
+                                                                  width: 6.w),
                                                               InterMedium(
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftStartTime'],
-                                                                fontsize:
-                                                                    width / 14,
+                                                                fontsize: 14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1111,7 +1105,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: width / 100,
+                                                      width: 100.w,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1120,23 +1114,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           InterRegular(
                                                             text: 'Ended At',
                                                             color: color22,
-                                                            fontsize:
-                                                                width / 14,
+                                                            fontsize: 14.sp,
                                                           ),
-                                                          SizedBox(
-                                                              height:
-                                                                  height / 5),
+                                                          SizedBox(height: 5.h),
                                                           Row(
                                                             children: [
                                                               SizedBox(
-                                                                  width: width /
-                                                                      6),
+                                                                  width: 6.w),
                                                               InterMedium(
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftEndTime'],
-                                                                fontsize:
-                                                                    width / 14,
+                                                                fontsize: 14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1150,7 +1139,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           ),
                                         ),
                                         SizedBox(
-                                          height: height / 10,
+                                          height: 10.h,
                                         ),
                                       ],
                                     ),
@@ -1161,12 +1150,173 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             ),
                           )
                         : ScreenIndex == 2
-                            ? SliverToBoxAdapter()
+                            ? SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 30.w,
+                                        right: 30.w,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          InterBold(
+                                            text: '19/9/2004',
+                                            color: color1,
+                                            fontsize: 20.sp,
+                                          ),
+                                          SizedBox(
+                                            height: 10.sp,
+                                          ),
+                                          // ClientOpenReport
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ClientOpenReport()));
+                                            },
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  minHeight: 200.h),
+                                              width: double.maxFinite,
+                                              decoration: BoxDecoration(
+                                                color: WidgetColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(14.r),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 18.h,
+                                                horizontal: 18.w,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  InterSemibold(
+                                                    text: 'Guard Name',
+                                                    fontsize: 18.sp,
+                                                    color: Primarycolor,
+                                                  ),
+                                                  SizedBox(height: 19.h),
+                                                  SizedBox(
+                                                    width: 240.w,
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            InterMedium(
+                                                              text:
+                                                                  'Report Name:',
+                                                              fontsize: 16.sp,
+                                                              color: color1,
+                                                            ),
+                                                            InterMedium(
+                                                              text:
+                                                                  'Report Name',
+                                                              fontsize: 16.sp,
+                                                              color: color3,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10.h),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            InterMedium(
+                                                              text: 'Category:',
+                                                              fontsize: 16.sp,
+                                                              color: color1,
+                                                            ),
+                                                            InterMedium(
+                                                              text:
+                                                                  'Category Name',
+                                                              fontsize: 16.sp,
+                                                              color: color3,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10.h),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            InterMedium(
+                                                              text: 'Emp Name:',
+                                                              fontsize: 16.sp,
+                                                              color: color1,
+                                                            ),
+                                                            InterMedium(
+                                                              text:
+                                                                  'Employee Name',
+                                                              fontsize: 16.sp,
+                                                              color: color3,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 10.h),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            InterMedium(
+                                                              text: 'Status:',
+                                                              fontsize: 16.sp,
+                                                              color: color1,
+                                                            ),
+                                                            InterMedium(
+                                                              text: 'Status',
+                                                              fontsize: 16.sp,
+                                                              color: color3,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 20.sp,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  childCount: 3,
+                                ),
+                              )
                             : ScreenIndex == 3
                                 ? SliverToBoxAdapter(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width / width30,
+                                        horizontal: 30.w,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -1175,7 +1325,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           InterBold(
                                             text: 'Received Message ',
                                             color: Primarycolor,
-                                            fontsize: width / width14,
+                                            fontsize: 14.sp,
                                           ),
                                           Row(
                                             mainAxisAlignment:
@@ -1184,12 +1334,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               Icon(
                                                 Icons.add,
                                                 color: Primarycolor,
-                                                size: width / width20,
+                                                size: 20.sp,
                                               ),
-                                              SizedBox(width: width / width4),
+                                              SizedBox(width: 4.w),
                                               InterBold(
                                                 text: 'Create Message',
-                                                fontsize: width / width14,
+                                                fontsize: 14.sp,
                                                 color: Primarycolor,
                                                 maxLine: 2,
                                               )

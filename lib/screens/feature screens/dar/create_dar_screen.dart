@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
@@ -492,14 +493,82 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                           );
                         },
                       ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
+                    ReportId.isNotEmpty
+                        ? InterBold(
+                            text: 'Patrol Reports',
+                            fontsize: 20.sp,
+                            color: Primarycolor,
+                          )
+                        : SizedBox(height: 10.h),
+                    ReportId.isNotEmpty
+                        ? ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                        // final hourKey = reportsByHour.keys.toList()[index];
+                        // final reportsForHour = reportsByHour[hourKey] ?? [];
+                        // var data = reportsByHour;
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateReportScreen(
+                                        locationId: '',
+                                        locationName: '',
+                                        companyID: '',
+                                        empId: '',
+                                        empName: '',
+                                        ClientId: '',
+                                        reportId: '',
+                                        buttonEnable: false,
+                                        ShiftId: 'widget.shifID',
+                                        SearchId:
+                                        ReportId, //Need to Work Here
+                                      ),
+                                ));
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              bottom: 30.h,
+                            ),
+                            height: 25.h,
+                            color: WidgetColor,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 20.w,
+                                  height: double.infinity,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(width: 2.w),
+                                Expanded(
+                                  child: InterBold(
+                                    text: ReportId.isNotEmpty
+                                        ? "# $ReportId  ${ReportName}"
+                                        : "",
+                                    fontsize: 12.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                        : SizedBox(height: height / height30),
+
                     ReportId.isNotEmpty
                         ? InterBold(
                             text: 'Reports',
-                            fontsize: width / width20,
+                            fontsize: 20.sp,
                             color: Primarycolor,
                           )
-                        : SizedBox(height: height / height10),
+                        : SizedBox(height: 10.h),
                     ReportId.isNotEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
@@ -532,23 +601,24 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(
-                                      bottom: height / height30),
-                                  height: height / height25,
+                                    bottom: 30.h,
+                                  ),
+                                  height: 25.h,
                                   color: WidgetColor,
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: width / width20,
+                                        width: 20.w,
                                         height: double.infinity,
                                         color: Colors.red,
                                       ),
-                                      SizedBox(width: width / width2),
+                                      SizedBox(width: 2.w),
                                       Expanded(
                                         child: InterBold(
                                           text: ReportId.isNotEmpty
                                               ? "# $ReportId  ${ReportName}"
                                               : "",
-                                          fontsize: width / width12,
+                                          fontsize: 12.sp,
                                           color: Colors.white,
                                         ),
                                       ),

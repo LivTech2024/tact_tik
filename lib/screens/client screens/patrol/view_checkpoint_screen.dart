@@ -44,7 +44,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterBold(
             text: 'widget.guardName',
             fontsize: 18.sp,
             color: Colors.white,

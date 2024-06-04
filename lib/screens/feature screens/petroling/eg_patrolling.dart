@@ -615,8 +615,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           width: 66.w,
                           decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.5),
-                            borderRadius:
-                                BorderRadius.circular(10.r),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                           margin: EdgeInsets.all(8.sp),
                           child: Image.file(
@@ -650,8 +649,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             ListTile(
-                              leading: Icon(Icons.camera , size: 24.sp,),
-                              title: InterRegular(text: 'Add Image' , fontsize: 20.sp,),
+                              leading: Icon(
+                                Icons.camera,
+                                size: 24.sp,
+                              ),
+                              title: InterRegular(
+                                text: 'Add Image',
+                                fontsize: 20.sp,
+                              ),
                               onTap: () {
                                 _addImage();
                                 Navigator.pop(context);
@@ -660,8 +665,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               },
                             ),
                             ListTile(
-                              leading: Icon(Icons.image, size: 24.sp,),
-                              title: InterRegular(text: 'Add from Gallery', fontsize: 20.sp,),
+                              leading: Icon(
+                                Icons.image,
+                                size: 24.sp,
+                              ),
+                              title: InterRegular(
+                                text: 'Add from Gallery',
+                                fontsize: 20.sp,
+                              ),
                               onTap: () {
                                 _addGallery();
                                 Navigator.pop(context);
@@ -703,8 +714,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                   },
                   child: InterRegular(
                     text: 'Cancel',
-                      color: Colors.red,
-                      fontsize: 20.sp,
+                    color: Colors.red,
+                    fontsize: 20.sp,
                   ),
                 ),
                 uploadingLoading
@@ -896,14 +907,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                   child: Container(
                                     height: 70.h,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 20.w,
-                                        vertical: 11.h,),
-                                    margin:
-                                        EdgeInsets.only(top: 10.h),
+                                      horizontal: 20.w,
+                                      vertical: 11.h,
+                                    ),
+                                    margin: EdgeInsets.only(top: 10.h),
                                     decoration: BoxDecoration(
                                       color: color15,
-                                      borderRadius: BorderRadius.circular(
-                                          10.r),
+                                      borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
@@ -917,8 +927,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               decoration: BoxDecoration(
                                                 color: color16,
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.r),
+                                                    BorderRadius.circular(10.r),
                                               ),
                                               child: Icon(
                                                 Icons.home_sharp,
@@ -1043,8 +1052,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: color15,
-                                            borderRadius: BorderRadius.circular(
-                                                10.r),
+                                            borderRadius:
+                                                BorderRadius.circular(10.r),
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
@@ -1102,18 +1111,24 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                               checkpoint.title,
                                                           //Subcheckpoint
                                                           color: color17,
-                                                          fontsize:
-                                                              18.sp,
+                                                          fontsize: 18.sp,
                                                         ),
                                                         SizedBox(
-                                                            height: 2.h),
-                                                        InterRegular(
-                                                          text: checkpoint
-                                                              .timestamp,
-                                                          color: Primarycolor,
-                                                          fontsize:
-                                                              12.sp,
-                                                        )
+                                                            height: checkpoint
+                                                                        .timestamp !=
+                                                                    ''
+                                                                ? 2.h
+                                                                : 0.h),
+                                                        checkpoint.timestamp !=
+                                                                ''
+                                                            ? InterRegular(
+                                                                text: checkpoint
+                                                                    .timestamp,
+                                                                color:
+                                                                    Primarycolor,
+                                                                fontsize: 12.sp,
+                                                              )
+                                                            : SizedBox()
                                                       ],
                                                     ),
                                                   ),
@@ -1254,8 +1269,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           icon: Icon(
                                                             Icons.add_circle,
                                                             color: Primarycolor,
-                                                            size:
-                                                                24.sp,
+                                                            size: 24.sp,
                                                           ),
                                                           padding:
                                                               EdgeInsets.zero,

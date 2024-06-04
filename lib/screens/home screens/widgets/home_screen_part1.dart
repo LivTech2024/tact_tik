@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -106,7 +107,7 @@ class HomeScreenPart1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 30.h),
+            SizedBox(height: 10.h),
             SizedBox(
               height: 55.h,
               child: Row(
@@ -215,6 +216,8 @@ class HomeScreenPart1 extends StatelessWidget {
                       controller: _controller,
                       direction: VerticalDirection.down,
                       builder: (context, _controller, focusNode) => TextField(
+                        // maxLength: 20,
+                        // maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         controller: _controller,
                         focusNode: focusNode,
                         autofocus: false,
