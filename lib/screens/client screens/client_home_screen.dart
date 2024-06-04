@@ -642,14 +642,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Patrol',
                                 icon: Icons.map,
-                                color: IconColors[0],
+                                color: isDark
+                                    ? (ScreenIndex == 0
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 0
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                                 textcolor: isDark
                                     ? (ScreenIndex == 0
                                         ? DarkColor.color1
                                         : DarkColor.color4)
                                     : (ScreenIndex == 0
                                         ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                        : LightColor.color3),
                               ),
                             ),
                             Bounce(
@@ -657,14 +663,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Shifts',
                                 icon: Icons.add_task,
-                                color: IconColors[1],
+                                color: isDark
+                                    ? (ScreenIndex == 1
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 1
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                                 textcolor: isDark
                                     ? (ScreenIndex == 1
                                         ? DarkColor.color1
                                         : DarkColor.color4)
                                     : (ScreenIndex == 1
                                         ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                        : LightColor.color3),
                               ),
                             ),
                             Bounce(
@@ -674,14 +686,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 SVG: 'assets/images/lab_profile.svg',
                                 text: 'Reports',
                                 icon: Icons.celebration,
-                                color: IconColors[2],
+                                color: isDark
+                                    ? (ScreenIndex == 2
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 2
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                                 textcolor: isDark
                                     ? (ScreenIndex == 2
                                         ? DarkColor.color1
                                         : DarkColor.color4)
                                     : (ScreenIndex == 2
                                         ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                        : LightColor.color3),
                               ),
                             ),
                             Bounce(
@@ -697,14 +715,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         : 'assets/images/no_message.svg',
                                 text: 'Message',
                                 icon: Icons.chat_bubble_outline,
-                                color: IconColors[3],
+                                color: isDark
+                                    ? (ScreenIndex == 3
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 3
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                                 textcolor: isDark
                                     ? (ScreenIndex == 3
                                         ? DarkColor.color1
                                         : DarkColor.color4)
                                     : (ScreenIndex == 3
                                         ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                        : LightColor.color3),
                               ),
                             ),
                           ],

@@ -243,8 +243,8 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                           : LightColor.Primarycolorlight,
                                                     ),
                                                     child: Center(
-                                                      child: SvgPicture.asset(
-                                                        'assets/images/man.svg',
+                                                      child: SvgPicture.asset(isDark?
+                                                        'assets/images/man.svg': 'assets/images/man_light.svg',
                                                         height: 20.h,
                                                       ),
                                                     ),
@@ -298,7 +298,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                         fontsize: 10.sp,
                                                         color:  isDark
                                                             ? DarkColor.color4
-                                                            : LightColor.color2,
+                                                            : LightColor.color3,
                                                       ),
                                                       SizedBox(width: 6.w),
                                                       InterMedium(

@@ -247,6 +247,16 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               height: height / height70,
               width: double.maxFinite,
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.transparent
+                        : LightColor.color3.withOpacity(.05),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
                 borderRadius: BorderRadius.circular(width / width10),
                 color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
@@ -255,7 +265,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: DarkColor.Primarycolor,
+                    color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     fontsize: width / width18,
                   ),
                   Icon(

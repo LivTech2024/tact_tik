@@ -88,7 +88,7 @@ class _KeysScreenState extends State<KeysScreen> {
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: 24.sp,
                 ),
                 padding: EdgeInsets.only(left: 20.w),
@@ -100,7 +100,7 @@ class _KeysScreenState extends State<KeysScreen> {
               title: InterRegular(
                 text: 'Keys',
                 fontsize: 18.sp,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,

@@ -520,13 +520,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'Out time',
                           fontsize: 28.sp,
-                          color: DarkColor.color1,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: 18.99.sp,
-                          color: DarkColor. color7,
+                          color: isDark ? DarkColor.color7 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(

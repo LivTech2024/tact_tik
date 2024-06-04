@@ -318,14 +318,14 @@ class SiteTourScreen extends StatelessWidget {
                                             children: [
                                               RobotoBold(
                                                 text: 'Get Direction',
-                                                color: isDark ? DarkColor.color1 : LightColor.color3,
+                                                color: isDark ? DarkColor.color1 : LightColor.color1,
                                                 fontsize: 16.sp,
                                               ),
                                               Icon(
                                                 Icons.arrow_forward_sharp,
                                                 color: isDark
                                                     ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                    : LightColor.color1,
                                                 size: 24.sp,
                                               )
                                             ],

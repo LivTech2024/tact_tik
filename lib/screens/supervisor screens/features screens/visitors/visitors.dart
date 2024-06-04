@@ -221,8 +221,8 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                                       : LightColor.Primarycolorlight,
                                                 ),
                                                 child: Center(
-                                                  child: SvgPicture.asset(
-                                                    'assets/images/man.svg',
+                                                  child: SvgPicture.asset(isDark?
+                                                    'assets/images/man.svg': 'assets/images/man_light.svg',
                                                     height: height / height20,
                                                   ),
                                                 ),
