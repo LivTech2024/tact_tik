@@ -160,7 +160,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Shifts')
-          .where('ShiftClientId', isEqualTo: _employeeId)
+          .where('ShiftClientId', isEqualTo: "POt8iM9gm5RUCW8UkrSf")
           .get();
       print('Snapshot ${querySnapshot}');
       List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {

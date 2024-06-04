@@ -474,8 +474,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/keys.png', 'Key'],
     ];
 
-    // final double height = MediaQuery.of(context).size.height;
-    // final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
 
     int _selectedIndex = 0; // Index of the selected screen
 
@@ -948,8 +948,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  KeysScreen(keyId: _employeeId, companyId: _employeeCompanyID,)
+                                              builder: (context) => KeysScreen(
+                                                    keyId: _employeeId,
+                                                    companyId:
+                                                        _employeeCompanyID,
+                                                  )
                                               // AssetsScreen(
                                               //     assetEmpId:
                                               //         _employeeId)
@@ -971,7 +974,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : /*ScreenIndex == 2
                           ? SliverToBoxAdapter(
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding: EdgeInsets.only
                                   left: width / width30,
                                   right: width / width30,
                                 ),

@@ -1209,14 +1209,15 @@ class FireStoreService {
   }
 
   Future<void> EndShiftLog(
-      String employeeId,
-      String Stopwatch,
-      String? shiftId,
-      String LocationName,
-      String BrachId,
-      String CompyId,
-      String EmpNames,
-      String ClientId) async {
+    String employeeId,
+    String Stopwatch,
+    String? shiftId,
+    String LocationName,
+    String BrachId,
+    String CompyId,
+    String EmpNames,
+    String ClientId,
+  ) async {
     try {
       if (shiftId == null || shiftId.isEmpty) {
         throw ArgumentError('Invalid shiftId: $shiftId');
@@ -1227,36 +1228,41 @@ class FireStoreService {
       final int? savedInTime = prefs.getInt('savedInTime');
       DocumentReference documentReference =
           FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
-      DocumentSnapshot documentSnapshot = await documentReference.get();
-      List<dynamic> currentArray =
-          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
-      final statusData = {
-        'Status': 'completed',
-        'StatusReportedById': employeeId,
-        'StatusReportedByName': EmpNames,
-        'StatusReportedTime': Timestamp.now(),
-        'StatusStartedTime': savedInTime != null
-            ? DateTime.fromMillisecondsSinceEpoch(savedInTime)
-            : null
-      };
-      int index = currentArray.indexWhere((element) =>
-          element['StatusReportedById'] == employeeId &&
-          element['Status'] == 'started');
-      if (index != -1) {
-        // If the map already exists in the array, update it
-        currentArray[index] = statusData;
-      } else {
-        // If the map doesn't exist, add it to the array
-        currentArray.add(statusData);
-      }
-      await documentReference.update({'ShiftCurrentStatus': currentArray});
 
-      // Generate report
-      String Title = "ShiftEnded";
-      String Data = "Shift Ended ";
-      String type = "Shift";
-      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
-      //     CompyId, "completed", EmpNames, ClientId, type);
+      // Use a transaction to ensure data consistency
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot documentSnapshot =
+            await transaction.get(documentReference);
+        List<dynamic> currentArray =
+            List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+
+        final statusData = {
+          'Status': 'completed',
+          'StatusReportedById': employeeId,
+          'StatusReportedByName': EmpNames,
+          'StatusReportedTime': Timestamp.now(),
+        };
+
+        int index = currentArray.indexWhere((element) =>
+            element['StatusReportedById'] == employeeId &&
+            element['Status'] == 'started');
+
+        if (index != -1) {
+          // If the map already exists, update it excluding StatusStartedTime
+          currentArray[index]
+              .removeWhere((key) => key['StatusStartedTime'] != null);
+          currentArray[index].addAll(statusData);
+        } else {
+          // If the map doesn't exist, add it to the array
+          currentArray.add(statusData);
+        }
+
+        transaction
+            .update(documentReference, {'ShiftCurrentStatus': currentArray});
+      });
+
+      // Generate report (rest of the code remains the same)
+      // ...
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
@@ -1304,7 +1310,11 @@ class FireStoreService {
           element['Status'] == 'started');
       if (index != -1) {
         // If the map already exists in the array, update it
-        currentArray[index] = statusData;
+        currentArray[index]['Status'] = 'completed';
+        currentArray[index]['StatusReportedById'] = employeeId;
+        currentArray[index]['StatusReportedByName'] = EmpNames;
+        currentArray[index]['StatusReportedTime'] = Timestamp.now();
+        currentArray[index]['StatusEndReason'] = Reason ?? "";
       } else {
         // If the map doesn't exist, add it to the array
         currentArray.add(statusData);

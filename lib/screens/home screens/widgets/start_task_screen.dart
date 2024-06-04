@@ -635,13 +635,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   updateLateTimeAndStartTimer();
 
                                   ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
-                                  FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
-                                  // Create a new document reference
+                                  // FirebaseFirestore firestore =
+                                  //     FirebaseFirestore.instance;
+                                  // // Create a new document reference
 
-                                  DocumentReference docRef = firestore
-                                      .collection('EmployeeRoutes')
-                                      .doc();
+                                  // DocumentReference docRef = firestore
+                                  //     .collection('EmployeeRoutes')
+                                  //     .doc();
 
                                   // Data to be added
                                   // Map<String, dynamic> empRouteData = {

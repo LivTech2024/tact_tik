@@ -39,8 +39,6 @@ class HomeScreenPart1 extends StatelessWidget {
   final String shiftLocationId;
   final String shiftLocationName;
 
-
-
   // final String url;
   final VoidCallback drawerOnClicked;
   bool? showWish;
@@ -51,7 +49,15 @@ class HomeScreenPart1 extends StatelessWidget {
     // required this.url,
     required this.employeeImg,
     required this.drawerOnClicked,
-    this.showWish = true, required this.empId, required this.empEmail, required this.shiftCompanyId, required this.branchId, required this.shiftId, required this.shiftClientId, required this.shiftLocationId, required this.shiftLocationName,
+    this.showWish = true,
+    required this.empId,
+    required this.empEmail,
+    required this.shiftCompanyId,
+    required this.branchId,
+    required this.shiftId,
+    required this.shiftClientId,
+    required this.shiftLocationId,
+    required this.shiftLocationName,
   }) : super(key: key);
 
   bool isUnread = true;
@@ -309,32 +315,24 @@ class HomeScreenPart1 extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                    DarDisplayScreen(
-                                      EmpEmail: empEmail,
-                                      EmpID: empId,
-                                      EmpDarCompanyId:
-                                      shiftCompanyId ?? "",
-                                      EmpDarCompanyBranchId:
-                                      branchId,
-                                      EmpDarShiftID: shiftId,
-                                      EmpDarClientID:
-                                      shiftClientId,
-                                      Username: userName,
-                                    )));
+                                    builder: (context) => DarDisplayScreen(
+                                          EmpEmail: empEmail,
+                                          EmpID: empId,
+                                          EmpDarCompanyId: shiftCompanyId ?? "",
+                                          EmpDarCompanyBranchId: branchId,
+                                          EmpDarShiftID: shiftId,
+                                          EmpDarClientID: shiftClientId,
+                                          Username: userName,
+                                        )));
                             break;
                           case 'Reports Screen':
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        ReportScreen(
-                                          locationId:
-                                          shiftLocationId,
-                                          locationName:
-                                          shiftLocationId,
-                                          companyId:
-                                          shiftCompanyId ?? "",
+                                    builder: (context) => ReportScreen(
+                                          locationId: shiftLocationId,
+                                          locationName: shiftLocationId,
+                                          companyId: shiftCompanyId ?? "",
                                           empId: empId,
                                           empName: userName,
                                           clientId: shiftClientId,
@@ -346,60 +344,53 @@ class HomeScreenPart1 extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => PostOrder(
-                                      locationId:
-                                      shiftLocationId,
-                                    )));
+                                          locationId: shiftLocationId,
+                                        )));
                             break;
                           case 'Task Screen':
-                           Navigator.push(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        TaskFeatureScreen()));
+                                    builder: (context) => TaskFeatureScreen()));
                             break;
                           case 'LogBook Screen':
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        LogBookScreen(
+                                    builder: (context) => LogBookScreen(
                                           EmpId: empId,
                                         )));
                             break;
                           case 'Visitors Screen':
                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VisiTorsScreen(
-                                                      locationId:
-                                                          shiftLocationId,
-                                                    )));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VisiTorsScreen(
+                                          locationId: shiftLocationId,
+                                        )));
                             break;
                           case 'Assets Screen':
                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    // KeysScreen(
-                                                    //     keyId: _employeeId)
-                                                    AssetsScreen(
-                                                        assetEmpId:
-                                                            empId)));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        // KeysScreen(
+                                        //     keyId: _employeeId)
+                                        AssetsScreen(assetEmpId: empId)));
                             break;
                           case 'Key Screen':
                             Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    KeysScreen(
-                                                        keyId: empId, companyId: shiftCompanyId,
-                                                    )
-                                                // AssetsScreen(
-                                                //     assetEmpId:
-                                                //         _employeeId)
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => KeysScreen(
+                                          keyId: empId,
+                                          companyId: shiftCompanyId,
+                                        )
+                                    // AssetsScreen(
+                                    //     assetEmpId:
+                                    //         _employeeId)
 
-                                                ));
+                                    ));
                             break;
                         }
                       },
