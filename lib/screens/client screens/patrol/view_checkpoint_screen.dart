@@ -11,11 +11,13 @@ class ViewCheckpointScreen extends StatefulWidget {
   final String reportedAt;
   final String comment;
   final List<dynamic> images;
+  final String GuardName;
   const ViewCheckpointScreen(
       {super.key,
       required this.comment,
       required this.images,
-      required this.reportedAt});
+      required this.reportedAt,
+      required this.GuardName});
 
   @override
   State<ViewCheckpointScreen> createState() => _ViewCheckpointScreenState();
@@ -45,7 +47,8 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
             },
           ),
           title: InterRegular(
-            text: 'widget.guardName',
+            // text: '$widget.guardName}',
+            text: "${widget.GuardName}",
             fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
@@ -115,52 +118,51 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                   },
                 ),
                 SizedBox(height: height / height50),
-                InterBold(
-                  text: 'Reports',
-                  fontsize: width / width18,
-                  color: color1,
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(top: 14.h),
-                      height: 30.h,
-                      padding: EdgeInsets.only(right: 10.w),
-                      decoration: BoxDecoration(
-                        color: WidgetColor,
-                        borderRadius: BorderRadius.circular(10.r)
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 10.w,
-                            height: double.infinity,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: width / width2),
-                          SizedBox(
-                            width: width / width230,
-                            child: InterMedium(
-                              text: '#334AH6 Qr Missing',
-                              color: color6,
-                              fontsize: width / width16,
-                            ),
-                          ),
-                          SizedBox(width: width / width2),
-                          InterBold(
-                            text: '11.36pm',
-                            color: color6,
-                            fontsize: width / width16,
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                )
+                // InterBold(
+                //   text: 'Reports',
+                //   fontsize: width / width18,
+                //   color: color1,
+                // ),
+                // ListView.builder(
+                //   shrinkWrap: true,
+                //   physics: const NeverScrollableScrollPhysics(),
+                //   itemCount: 10,
+                //   itemBuilder: (context, index) {
+                //     return Container(
+                //       margin: EdgeInsets.only(top: 14.h),
+                //       height: 30.h,
+                //       padding: EdgeInsets.only(right: 10.w),
+                //       decoration: BoxDecoration(
+                //           color: WidgetColor,
+                //           borderRadius: BorderRadius.circular(10.r)),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           Container(
+                //             width: 10.w,
+                //             height: double.infinity,
+                //             color: Colors.red,
+                //           ),
+                //           SizedBox(width: width / width2),
+                //           SizedBox(
+                //             width: width / width230,
+                //             child: InterMedium(
+                //               text: '#334AH6 Qr Missing',
+                //               color: color6,
+                //               fontsize: width / width16,
+                //             ),
+                //           ),
+                //           SizedBox(width: width / width2),
+                //           InterBold(
+                //             text: '11.36pm',
+                //             color: color6,
+                //             fontsize: width / width16,
+                //           )
+                //         ],
+                //       ),
+                //     );
+                //   },
+                // )
               ],
             ),
           ),

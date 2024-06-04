@@ -30,6 +30,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
+
   DateTime? selectedDate;
   List<Map<String, dynamic>> patrolsList = [];
   final List<String> members = [
@@ -58,7 +59,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   }
 
   Future<void> _selectDate(
-      BuildContext context,) async {
+    BuildContext context,
+  ) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -67,10 +69,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
     setState(() {
       if (picked != null) {
         selectedDate = picked;
-
       }
     });
   }
+
   void get_PatrolInfo() async {
     var PatrologsData = await fireStoreService.getPatrolsLogs(widget.PatrolIdl);
     if (PatrologsData != null || PatrologsData.isNotEmpty) {
@@ -123,12 +125,14 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: ()=> _selectDate(context),
+                      onTap: () => _selectDate(context),
                       child: SizedBox(
                         width: 190.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
-                          text: selectedDate != null ? "${selectedDate!.toLocal()}".split(' ')[0]:'display shift date',
+                          text: selectedDate != null
+                              ? "${selectedDate!.toLocal()}".split(' ')[0]
+                              : 'display shift date',
                           fontsize: 14.sp,
                           color: Primarycolor,
                         ),
@@ -186,8 +190,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(14.r),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20.h),
+                      padding: EdgeInsets.symmetric(vertical: 20.h),
                       child: Column(
                         children: [
                           Row(
@@ -202,10 +205,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                     width: 4.w,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
-                                        topRight:
-                                            Radius.circular(10.r),
-                                        bottomRight:
-                                            Radius.circular(10.r),
+                                        topRight: Radius.circular(10.r),
+                                        bottomRight: Radius.circular(10.r),
                                       ),
                                       color: Primarycolor,
                                     ),
