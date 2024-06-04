@@ -899,7 +899,7 @@ class FireStoreService {
       String EmpName,
       int PatrolCount,
       String ShiftDate,
-      Timestamp StartTime,
+      Timestamp? StartTime,
       Timestamp EndTime,
       String FeedbackComment,
       String ShiftId) async {
@@ -1015,7 +1015,8 @@ class FireStoreService {
 
               // if (Timestamp.now().toDate().isAfter(startTime) &&
               //     Timestamp.now().toDate().isBefore(endTime)) {
-              if ((StartTime.toDate().isBefore(endTime) &&
+              if (StartTime != null) if ((StartTime.toDate()
+                          .isBefore(endTime) &&
                       StartTime.toDate().isAfter(startTime)) ||
                   (EndTime.toDate().isBefore(endTime) &&
                       EndTime.toDate().isAfter(startTime)) ||
