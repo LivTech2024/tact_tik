@@ -13,7 +13,8 @@ import '../../supervisor screens/features screens/key management/s_key_manag_cre
 
 class KeysScreen extends StatefulWidget {
   final String keyId;
-  const KeysScreen({super.key, required this.keyId});
+  final String companyId;
+  const KeysScreen({super.key, required this.keyId, required this.companyId});
 
   @override
   State<KeysScreen> createState() => _KeysScreenState();
@@ -68,7 +69,7 @@ class _KeysScreenState extends State<KeysScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SCreateKeyManagScreen(keyId: '', companyId: '',),
+                  builder: (context) => SCreateKeyManagScreen(keyId: widget.keyId, companyId: '',),
                 ));
           },
           backgroundColor: Primarycolor,

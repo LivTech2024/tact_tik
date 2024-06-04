@@ -932,7 +932,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  KeysScreen(keyId: _employeeId)
+                                                  KeysScreen(keyId: _employeeId, companyId: _employeeCompanyID,)
                                               // AssetsScreen(
                                               //     assetEmpId:
                                               //         _employeeId)
