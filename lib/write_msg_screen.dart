@@ -78,7 +78,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Write Message',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

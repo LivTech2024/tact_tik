@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_return_type_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -96,7 +97,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: "Return Shift Task",
             fontsize: width / width18,
             color: Colors.white,

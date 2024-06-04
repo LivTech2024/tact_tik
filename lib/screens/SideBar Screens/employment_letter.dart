@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/main.dart';
@@ -70,7 +71,7 @@ class EmploymentLetterScreen extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Employment Letter',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

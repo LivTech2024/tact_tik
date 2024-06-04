@@ -11,6 +11,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -315,7 +316,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'DAR',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

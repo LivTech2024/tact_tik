@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/widgets/custom_bottom_sheet_widget.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/widgets/filter_all_widget.dart';
@@ -43,7 +44,7 @@ class SupervisorTrackingScreen extends StatelessWidget {
         ),
         backgroundColor: isDark? Color(0xff252525):LightColor.AppBarcolor,
         centerTitle: true,
-        title: InterRegular(
+        title: InterMedium(
           text: 'Live Tracking',
           fontsize: width / width18,
           color:  isDark ? DarkColor.color1 : LightColor.color3,

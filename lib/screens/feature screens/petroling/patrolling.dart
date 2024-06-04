@@ -154,7 +154,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Patrolling',
             fontsize: width / width18,
             color: Colors.white,

@@ -44,7 +44,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
                   Navigator.pop(context);
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Panic',
                 fontsize: width / width18,
                 color: isDark

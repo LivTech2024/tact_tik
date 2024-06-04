@@ -132,7 +132,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Keys Guards',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

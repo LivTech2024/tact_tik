@@ -588,7 +588,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Create Schedule',
             fontsize: width / width18,
             color:  isDark ? DarkColor.color1 : LightColor.color3,

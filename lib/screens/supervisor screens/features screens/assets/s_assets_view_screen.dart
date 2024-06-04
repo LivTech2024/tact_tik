@@ -98,7 +98,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                   print("Navigator debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Assets',
                 fontsize: width / width18,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

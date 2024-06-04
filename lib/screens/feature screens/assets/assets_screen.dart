@@ -89,7 +89,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                 "Navigator debug: ${Navigator.of(context).toString()}");
                           },
                         ),
-                        title: InterRegular(
+                        title: InterMedium(
                           text: 'Assets',
                           fontsize: 18.sp,
                           color: isDark ? DarkColor.color1 : LightColor.color3,

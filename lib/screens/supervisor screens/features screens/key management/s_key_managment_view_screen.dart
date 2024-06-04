@@ -102,7 +102,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                   print("Navigator debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Keys',
                 fontsize: width / width18,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

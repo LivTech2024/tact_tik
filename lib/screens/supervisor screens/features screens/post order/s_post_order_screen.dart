@@ -12,6 +12,7 @@ import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20
 // import 'package:workmanager/workmanager.dart';
 
 import '../../../../common/sizes.dart';
+import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/post_order.dart/view_post_order.dart';
@@ -125,7 +126,7 @@ class _SPostOrderState extends State<SPostOrder> {
                       print("Navigator debug: ${Navigator.of(context).toString()}");
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Post Orders',
                     fontsize: width / width18,
                     color: isDark ? DarkColor.color1 : LightColor.color3,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/main.dart';
@@ -48,7 +49,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: InterRegular(
+        title: InterMedium(
           text: 'New Guard',
           fontsize: width / width18,
           color: isDark ? DarkColor.color1 : LightColor.color3,

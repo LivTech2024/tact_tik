@@ -387,7 +387,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                         "Navigtor debug: ${Navigator.of(context).toString()}");
                   },
                 ),
-                title: InterRegular(
+                title: InterMedium(
                   text: 'Patrolling',
                   fontsize: width / width18,
                   color: isDark ? DarkColor.color1 : LightColor.color3,

@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
 import '../../common/sizes.dart';
@@ -108,7 +109,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Wellness Check',
             fontsize: width / width18,
             color: Colors.white,

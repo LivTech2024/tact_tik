@@ -50,7 +50,7 @@ class TaskFeatureScreen extends StatelessWidget {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Task',
                fontsize: 18.sp,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

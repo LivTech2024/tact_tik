@@ -260,7 +260,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Assets',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

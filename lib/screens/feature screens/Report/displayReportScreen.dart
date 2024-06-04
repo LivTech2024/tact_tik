@@ -237,7 +237,7 @@ class _CreateReportScreenState extends State<displayReport> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: reportData.isNotEmpty &&
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '

@@ -112,7 +112,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'End Patrol',
             fontsize: width / width18,
             color: Colors.white,

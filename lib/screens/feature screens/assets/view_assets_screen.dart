@@ -92,7 +92,7 @@ class ViewAssetsScreen extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'View Assets',
             fontsize: 18.sp,
             color: Colors.white,

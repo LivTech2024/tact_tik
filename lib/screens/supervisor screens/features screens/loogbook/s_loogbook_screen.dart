@@ -78,7 +78,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'LogBook -  ${widget.empName}',
                 fontsize: width / width18,
                 color: isDark? DarkColor. color1:LightColor.color3,

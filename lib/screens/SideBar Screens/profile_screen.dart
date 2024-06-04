@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/main.dart';
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Your Profile',
             fontsize: width / width18,
             color:  DarkColor.color1,

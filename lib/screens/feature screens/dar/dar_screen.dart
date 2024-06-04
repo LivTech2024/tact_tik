@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
@@ -286,7 +287,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    title: InterRegular(
+                    title: InterMedium(
                       text: 'DAR',
                       fontsize: width / width18,
                       color: isDark ? DarkColor.color1 : LightColor.color3,

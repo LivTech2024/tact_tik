@@ -9,6 +9,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 import 'package:toastification/toastification.dart';
 
@@ -220,7 +221,7 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Patrolling',
                 fontsize: width / width18,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

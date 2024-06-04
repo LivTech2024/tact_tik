@@ -493,7 +493,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'DAR',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

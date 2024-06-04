@@ -46,7 +46,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                   Navigator.pop(context);
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Write Message',
                 fontsize: width / width18,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

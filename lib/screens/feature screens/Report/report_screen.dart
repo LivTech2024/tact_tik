@@ -129,7 +129,7 @@ class _ReportScreenState extends State<ReportScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Report',
             fontsize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,

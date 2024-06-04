@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
@@ -108,7 +109,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                   MaterialPageRoute(builder: (context) => HomeScreen()));
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: "${widget.Name}",
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

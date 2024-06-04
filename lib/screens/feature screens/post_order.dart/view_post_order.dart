@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -239,7 +240,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Post Order',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -298,7 +299,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                           "Navigtor debug: ${Navigator.of(context).toString()}");
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Create Visitors',
                     fontsize: width / width18,
                     color: Colors.white,

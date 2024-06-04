@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -119,7 +120,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                     Navigator.of(context).pop();
                   },
                 ),
-                title: InterRegular(
+                title: InterMedium(
                   text: widget.toRequest ? 'Shift' : 'Shift- $guardName',
                   fontsize: width / width18,
                   color: Colors.white,

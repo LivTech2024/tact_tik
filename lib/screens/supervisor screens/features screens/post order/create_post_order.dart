@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
 
@@ -236,7 +237,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Post Order',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -73,7 +74,7 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Visitors Guards',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

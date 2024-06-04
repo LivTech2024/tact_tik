@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import '../../utils/colors.dart';
 import '../../fonts/inter_bold.dart';
 import '../../fonts/inter_regular.dart';
@@ -58,7 +59,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                 },
               ),
 
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Paystub',
                 fontsize: width / width18,
                 color: Colors.white,

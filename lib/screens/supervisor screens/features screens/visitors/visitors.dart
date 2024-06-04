@@ -127,7 +127,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                           "Navigator debug: ${Navigator.of(context).toString()}");
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Visitors',
                     fontsize: width / width18,
                     color: isDark

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -69,7 +70,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Reports Guards',
             fontsize: width / width18,
             color: Colors.white,

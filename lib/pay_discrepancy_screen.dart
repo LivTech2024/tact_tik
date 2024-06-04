@@ -61,7 +61,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                         "Navigator debug: ${Navigator.of(context).toString()}");
                   },
                 ),
-                title: InterRegular(
+                title: InterMedium(
                   text: 'Pay Discrepancy',
                   fontsize: 18.sp,
                   color: isDark ? DarkColor.color1 : LightColor.color3,

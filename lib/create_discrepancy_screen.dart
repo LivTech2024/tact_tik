@@ -186,7 +186,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Create Discrepancy',
             fontsize: width / width18,
             color: isDark ? DarkColor.color1 : LightColor.color3,

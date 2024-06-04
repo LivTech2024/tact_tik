@@ -116,7 +116,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                       Navigator.pop(context);
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Visitors',
                        fontsize: 18.sp,
                     color: isDark

@@ -97,7 +97,7 @@ class _KeysScreenState extends State<KeysScreen> {
                   print("Navigator debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Keys',
                 fontsize: 18.sp,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

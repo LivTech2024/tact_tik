@@ -177,7 +177,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Report Checkpoint',
             fontsize: width / width18,
             color: Colors.white,

@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -87,7 +88,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: '${widget.empName} History',
                 fontsize: width / width18,
                 color: isDark ? DarkColor.color1 : LightColor.color3,

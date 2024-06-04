@@ -131,7 +131,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SHomeScreen()));
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'All Schedule',
             fontsize: width / width18,
             color: isDark ? Colors.white : LightColor.color3,
