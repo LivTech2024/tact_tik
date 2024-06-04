@@ -397,7 +397,9 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 borderRadius: width / width10,
                                 backgroundcolor: Primarycolor,
                               ),
-                              SizedBox(height: 20.h,)
+                              SizedBox(
+                                height: 20.h,
+                              )
                             ],
                           ),
                         )
@@ -444,7 +446,9 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 showIcon: true,
                                 isExpanded: true,
                               ),
-                              SizedBox(height: 40.h,)
+                              SizedBox(
+                                height: 40.h,
+                              ),
                               Button1(
                                 text: 'Save',
                                 onPressed: () {
@@ -453,14 +457,15 @@ class _SCreateKeyManagScreenState extends State<SCreateKeyManagScreen> {
                                 borderRadius: width / width10,
                                 backgroundcolor: Primarycolor,
                               ),
-                              SizedBox(height: 20.h,)
+                              SizedBox(
+                                height: 20.h,
+                              )
                             ],
                           ),
                         ),
                 ],
               ),
             ),
-
           ],
         ),
       ),

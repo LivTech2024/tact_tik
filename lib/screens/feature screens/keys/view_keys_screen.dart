@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -189,8 +190,6 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     bool isEditMode = widget.visitorData != null;
     return SafeArea(
@@ -199,20 +198,20 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
                 color: Primarycolor,
-                fontsize: width / width20,
+                fontsize: 20.sp,
               ),
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               Row(
                 children: [
                   Expanded(
                     child: Container(
-                      height: height / height60,
+                      height: 60.h,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                         color: WidgetColor,
                       ),
                       child: Row(
@@ -220,20 +219,20 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                         children: [
                           InterMedium(
                               text: widget.startDate,
-                              fontsize: width / width16,
+                              fontsize: 16.sp,
                               color: color2),
                           SvgPicture.asset('assets/images/calendar_clock.svg',
-                              width: width / width20)
+                              width: 20.w)
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(width: width / width6),
+                  SizedBox(width: 6.w),
                   Expanded(
                     child: Container(
-                      height: height / height60,
+                      height: 60.h,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                         color: WidgetColor,
                       ),
                       child: Row(
@@ -241,24 +240,24 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                         children: [
                           InterMedium(
                               text: widget.endDate,
-                              fontsize: width / width16,
+                              fontsize: 16.sp,
                               color: color2),
                           SvgPicture.asset('assets/images/calendar_clock.svg',
-                              width: width / width20)
+                              width: 20.w)
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: height / height30),
-              InterBold(text: 'Key', color: color1, fontsize: width / width16),
+              SizedBox(height: 30.h),
+              InterBold(text: 'Key', color: color1, fontsize: 16.sp),
               Container(
-                height: width / width60,
+                height: 60.h,
                 width: double.maxFinite,
-                margin: EdgeInsets.only(bottom: height / height10),
+                margin: EdgeInsets.only(bottom: 10.h),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width10),
+                  borderRadius: BorderRadius.circular(10.r),
                   color: WidgetColor,
                 ),
                 child: Row(
@@ -269,22 +268,22 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          height: height / height44,
-                          width: width / width44,
+                          height: 44.h,
+                          width: 44.w,
                           decoration: BoxDecoration(
                             borderRadius:
-                                BorderRadius.circular(width / width10),
+                                BorderRadius.circular(10.r),
                             color: Primarycolorlight,
                           ),
                           child: Center(
                             child: Icon(
                               Icons.home_repair_service,
                               color: Primarycolor,
-                              size: width / width24,
+                              size: 24.sp,
                             ),
                           ),
                         ),
-                        SizedBox(width: width / width20),
+                        SizedBox(width: 20.w),
                         StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
                               .collection('Keys')
@@ -302,7 +301,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                             }
                             return InterMedium(
                               text: keyName,
-                              fontsize: width / width16,
+                              fontsize: 16.sp,
                               color: color1,
                             );
                           },
@@ -312,23 +311,23 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     InterMedium(
                       text: widget.time,
                       color: color17,
-                      fontsize: width / width16,
+                      fontsize: 16.sp,
                     ),
-                    SizedBox(width: width / width20),
+                    SizedBox(width: 20.w),
                   ],
                 ),
               ),
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: height / height30),
+                  SizedBox(height: 30.h),
                   InterBold(
                     text: 'Add Visitor',
                     color: Primarycolor,
-                    fontsize: width / width20,
+                    fontsize: 20.sp,
                   ),
-                  SizedBox(height: height / height30),
+                  SizedBox(height: 30.h),
                   Row(
                     children: [
                       SetTimeWidget(
@@ -341,7 +340,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                         enabled: !isEditMode,
                         isEditMode: isEditMode,
                       ),
-                      SizedBox(width: width / width6),
+                      SizedBox(width: 6.w),
                       SetTimeWidget(
                         hintText: OutTime == null
                             ? 'Out Time'
@@ -354,21 +353,21 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Name',
                     controller: nameController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Email',
                     controller: EmailController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Contact Number',
                     controller: ContactNoController,
@@ -380,56 +379,56 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           .digitsOnly, // Allows only digits
                     ],
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Asset Handover',
                     controller: AssetHandoverController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Asset Return',
                     controller: AssetReturnController,
                     enabled: isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'License Plate Number ',
                     controller: LicensePlateNumberController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Set Countdown',
                     controller: SetCountdownController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Comments ',
                     controller: CommentsController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'No. Of Person',
                     controller: NoOfPersonController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   SetTextfieldWidget(
                     hintText: 'Company Name',
                     controller: CompanyNameController,
                     enabled: !isEditMode,
                     isEditMode: isEditMode,
                   ),
-                  SizedBox(height: height / height30),
+                  SizedBox(height: 30.h),
                   Button1(
                     text: 'Save',
                     onPressed: () async {
@@ -437,8 +436,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     },
                     backgroundcolor: Primarycolor,
                     color: color22,
-                    borderRadius: width / width10,
-                    fontsize: width / width18,
+                    borderRadius: 10.r,
+                    fontsize: 18.sp,
                   ),
                 ],
               ),

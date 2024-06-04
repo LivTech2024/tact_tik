@@ -454,6 +454,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
                     if (imageUrls.isNotEmpty)
                       GridView.builder(
                         shrinkWrap: true,
@@ -467,13 +470,18 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         itemBuilder: (context, index) {
                           return Stack(
                             children: [
-                              Image.network(
+                             /* Image.network(
                                 imageUrls[index],
                                 fit: BoxFit.cover,
+                              ),*/
+                              Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(image: NetworkImage(imageUrls[index]),fit: BoxFit.cover,)
+                                ),
                               ),
                               Positioned(
-                                top: 5,
-                                right: 5,
+                                top: - 5.h,
+                                right: - 5.w,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -495,78 +503,15 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                       ),
                     SizedBox(height: 20.h),
                     ReportId.isNotEmpty
-                        ? InterBold(
-                            text: 'Patrol Reports',
-                            fontsize: 20.sp,
-                            color: Primarycolor,
-                          )
-                        : SizedBox(height: 10.h),
-                    ReportId.isNotEmpty
-                        ? ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
-                        // final hourKey = reportsByHour.keys.toList()[index];
-                        // final reportsForHour = reportsByHour[hourKey] ?? [];
-                        // var data = reportsByHour;
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateReportScreen(
-                                        locationId: '',
-                                        locationName: '',
-                                        companyID: '',
-                                        empId: '',
-                                        empName: '',
-                                        ClientId: '',
-                                        reportId: '',
-                                        buttonEnable: false,
-                                        ShiftId: 'widget.shifID',
-                                        SearchId:
-                                        ReportId, //Need to Work Here
-                                      ),
-                                ));
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(
-                              bottom: 30.h,
-                            ),
-                            height: 25.h,
-                            color: WidgetColor,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 20.w,
-                                  height: double.infinity,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(width: 2.w),
-                                Expanded(
-                                  child: InterBold(
-                                    text: ReportId.isNotEmpty
-                                        ? "# $ReportId  ${ReportName}"
-                                        : "",
-                                    fontsize: 12.sp,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                        : SizedBox(height: height / height30),
-
-                    ReportId.isNotEmpty
-                        ? InterBold(
-                            text: 'Reports',
-                            fontsize: 20.sp,
-                            color: Primarycolor,
+                        ? Column(
+                            children: [
+                              InterBold(
+                                text: 'Patrol Reports',
+                                fontsize: 20.sp,
+                                color: Primarycolor,
+                              ),
+                              SizedBox(height: 20.h),
+                            ],
                           )
                         : SizedBox(height: 10.h),
                     ReportId.isNotEmpty
@@ -603,14 +548,21 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                   margin: EdgeInsets.only(
                                     bottom: 30.h,
                                   ),
-                                  height: 25.h,
-                                  color: WidgetColor,
+                                  height: 35.h,
+                                  decoration: BoxDecoration(
+                                    color: WidgetColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: 20.w,
+                                        width: 15.w,
                                         height: double.infinity,
-                                        color: Colors.red,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
                                       ),
                                       SizedBox(width: 2.w),
                                       Expanded(
@@ -628,15 +580,96 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               );
                             },
                           )
-                        : SizedBox(height: height / height30),
+                        : SizedBox(height: 30.h),
+                    ReportId.isNotEmpty
+                        ? Column(
+                            children: [
+                              InterBold(
+                                text: 'Reports',
+                                fontsize: 20.sp,
+                                color: Primarycolor,
+                              ),
+                              SizedBox(height: 20.h)
+                            ],
+                          )
+                        : SizedBox(height: 10.h),
+                    ReportId.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 1,
+                            itemBuilder: (context, index) {
+                              // final hourKey = reportsByHour.keys.toList()[index];
+                              // final reportsForHour = reportsByHour[hourKey] ?? [];
+                              // var data = reportsByHour;
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateReportScreen(
+                                          locationId: '',
+                                          locationName: '',
+                                          companyID: '',
+                                          empId: '',
+                                          empName: '',
+                                          ClientId: '',
+                                          reportId: '',
+                                          buttonEnable: false,
+                                          ShiftId: 'widget.shifID',
+                                          SearchId:
+                                              ReportId, //Need to Work Here
+                                        ),
+                                      ));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: 30.h,
+                                  ),
+                                  height: 35.h,
+                                  decoration: BoxDecoration(
+                                    color: WidgetColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 15.w,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                          BorderRadius.circular(10.r),
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Expanded(
+                                        child: InterBold(
+                                          text: ReportId.isNotEmpty
+                                              ? "# $ReportId  ${ReportName}"
+                                              : "",
+                                          fontsize: 12.sp,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : SizedBox(height: 30.h),
                     widget.iseditable
                         ? Button1(
+                      height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
                             onPressed: submitDarTileData,
                             backgroundcolor: Primarycolor,
-                            borderRadius: 20,
+                            borderRadius: 10.r,
                           )
                         : SizedBox(),
+                    SizedBox(height: 40.h),
                   ],
                 ),
               ),
