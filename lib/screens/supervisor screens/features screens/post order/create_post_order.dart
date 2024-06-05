@@ -369,84 +369,103 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                 ),
               ),
               SizedBox(height: height / height30),
-              ListView.builder(
+              ListView(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: allUrls.length,
-                itemBuilder: (context, index) {
-                  String url = allUrls[index];
-                  if (url.contains('.pdf')) {
-                    return FutureBuilder<Map<String, dynamic>>(
-                      future: _fetchFileMetadata(url),
-                      builder: (context, snapshot) {
-                        String otherFileName = 'Loading...';
-                        String otherFileSize = 'Loading...';
+                children: [
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: allUrls.length,
+                    itemBuilder: (context, index) {
+                      String url = allUrls[index];
+                      if (url.contains('.pdf')) {
+                        return FutureBuilder<Map<String, dynamic>>(
+                          future: _fetchFileMetadata(url),
+                          builder: (context, snapshot) {
+                            String otherFileName = 'Loading...';
+                            String otherFileSize = 'Loading...';
 
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData) {
-                          otherFileName = snapshot.data!['name'];
-                          otherFileSize = snapshot.data!['size'];
-                        }
+                            if (snapshot.connectionState == ConnectionState.done &&
+                                snapshot.hasData) {
+                              otherFileName = snapshot.data!['name'];
+                              otherFileSize = snapshot.data!['size'];
+                            }
 
-                        return GestureDetector(
-                          onTap: () {
-                            _downloadAndOpenPdf(context, url);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: height / height10),
-                            width: width / width200,
-                            height: height / height46,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(width / width10),
-                              color: color1,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                            return GestureDetector(
+                              onTap: () {
+                                _downloadAndOpenPdf(context, url);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: height / height10),
+                                width: width / width200,
+                                height: height / height46,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(width / width10),
+                                  color: color1,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width / width6,
-                                      ),
-                                      child: SvgPicture.asset(
-                                        'assets/images/pdf.svg',
-                                        width: width / width32,
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    Row(
                                       children: [
-                                        PoppinsMedium(
-                                          text: otherFileName,
-                                          color: color15,
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: width / width6,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            'assets/images/pdf.svg',
+                                            width: width / width32,
+                                          ),
                                         ),
-                                        PoppinsRegular(
-                                          text: otherFileSize,
-                                          color: color16,
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            PoppinsMedium(
+                                              text: otherFileName,
+                                              color: color15,
+                                            ),
+                                            PoppinsRegular(
+                                              text: otherFileSize,
+                                              color: color16,
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
+                            );
+                          },
                         );
-                      },
-                    );
-                  } else {
-                    return SizedBox(
-                      height: height / height80,
-                      width: width / width80,
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.contain,
-                      ),
-                    );
-                  }
-                },
+                      } else {
+                        return SizedBox.shrink(); // Skip non-PDF URLs in the ListView
+                      }
+                    },
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Number of columns in the grid
+                      childAspectRatio: 1.0, // Aspect ratio of the grid items
+                    ),
+                    itemCount: allUrls.where((url) => !url.contains('.pdf')).length, // Count of non-PDF URLs
+                    itemBuilder: (context, index) {
+                      String imageUrl = allUrls.where((url) => !url.contains('.pdf')).toList()[index];
+                      return SizedBox(
+                        height: height / height80,
+                        width: width / width80,
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.contain,
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
               SizedBox(
                 height: height / height40,
