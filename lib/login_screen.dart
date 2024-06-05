@@ -116,7 +116,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 300.h,
                     width: double.maxFinite,
-                    child: Image.asset('assets/images/logo.png' , fit: BoxFit.fitHeight,filterQuality: FilterQuality.high,),
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.fitHeight,
+                      filterQuality: FilterQuality.high,
+                    ),
                   ),
                   TextField(
                     style: GoogleFonts.poppins(

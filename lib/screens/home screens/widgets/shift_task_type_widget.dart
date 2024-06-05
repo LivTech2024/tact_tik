@@ -31,6 +31,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.refreshDataCallback,
     required this.EmpName,
     required this.ShiftTaskReturnStatus,
+    required this.taskPhotos,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -42,7 +43,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final String EmpID;
   final String EmpName;
   final bool shiftReturnTask;
-
+  final List<String> taskPhotos;
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
 }
@@ -50,31 +51,12 @@ class ShiftTaskTypeWidget extends StatefulWidget {
 class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   List<Map<String, dynamic>> uploads = [];
   bool _isLoading = false;
-  // Future<void> _addImage() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.camera);
-  //   if (pickedFile != null) {
-  //     // await fireStoreService
-  //     //     .addImageToStorageShiftTask(File(pickedFile.path));
-  //     setState(() {
-  //       uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-  //     });
-  //   }
-  //   print("Statis ${widget.taskStatus}");
-  // }
+  @override
+  void initState() {
+    super.initState();
+    print("Task Phots ${widget.taskPhotos}");
+  }
 
-  // Future<void> _addGallery() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     // await fireStoreService
-  //     //     .addImageToStorageShiftTask(File(pickedFile.path));
-  //     setState(() {
-  //       uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-  //     });
-  //   }
-  //   print("Statis ${widget.taskStatus}");
-  // }
   Future<void> _addImage() async {
     XFile? pickedFile = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 20);
@@ -607,6 +589,28 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ],
                     ),
                   ),
+                  if (widget.taskPhotos.isNotEmpty)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: widget.taskPhotos.map((photoUrl) {
+                          return Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: WidgetColor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                            ),
+                            margin: EdgeInsets.all(width / width8),
+                            child: Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   if (_isLoading)
                     Container(
                       alignment: Alignment.center,

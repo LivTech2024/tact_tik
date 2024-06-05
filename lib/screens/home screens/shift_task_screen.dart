@@ -34,6 +34,7 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
   int completedTaskCount = 0;
   int totalTaskCount = 0;
   List<Map<String, dynamic>>? fetchedTasks = [];
+
   void fetchData() async {
     List<Map<String, dynamic>>? fetchedData =
         await fireStoreService.fetchShiftTask(widget.shiftId);
@@ -181,20 +182,34 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
 
                         // print("Task Completion Status : - ${taskStatu}");
                       }
-
+                      print(fetchedTasks?[index]?['ShiftTaskStatus']);
+                      List<String> taskPhotos = [];
+                      if (fetchedTasks?[index]?['ShiftTaskStatus'] != null) {
+                        List taskStatusList =
+                            fetchedTasks?[index]?['ShiftTaskStatus'];
+                        if (taskStatusList.isNotEmpty) {
+                          Map taskStatusMap = taskStatusList[0];
+                          if (taskStatusMap.containsKey('TaskPhotos')) {
+                            taskPhotos =
+                                List<String>.from(taskStatusMap['TaskPhotos']);
+                          }
+                        }
+                      }
                       return ShiftTaskTypeWidget(
-                        type: taskType ?? ShiftTaskEnum.upload,
-                        taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
-                        taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
-                        ShiftId: widget.shiftId ?? "",
-                        taskStatus: taskStatu ?? "",
-                        EmpID: widget.EmpId,
-                        shiftReturnTask: false,
-                        refreshDataCallback: _refreshData,
-                        EmpName: widget.EmpName,
-                        ShiftTaskReturnStatus:
-                            ShiftTaskReturnStatus, // Default to upload if taskType is null
-                      );
+                          type: taskType ?? ShiftTaskEnum.upload,
+                          taskName: fetchedTasks?[index]['ShiftTask'] ?? "",
+                          taskId: fetchedTasks?[index]['ShiftTaskId'] ?? "",
+                          ShiftId: widget.shiftId ?? "",
+                          taskStatus: taskStatu ?? "",
+                          EmpID: widget.EmpId,
+                          shiftReturnTask: false,
+                          refreshDataCallback: _refreshData,
+                          EmpName: widget.EmpName,
+                          ShiftTaskReturnStatus: ShiftTaskReturnStatus,
+                          taskPhotos: taskPhotos
+
+                          // Default to upload if taskType is null
+                          );
                     },
                     childCount: fetchedTasks?.length ?? 0,
                   ),
