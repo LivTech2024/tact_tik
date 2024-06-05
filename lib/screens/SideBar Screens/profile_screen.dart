@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
@@ -116,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: DarkColor.color1 ,
-              size: width / width24,
+              size: 24.w,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -125,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           title: InterMedium(
             text: 'Your Profile',
-            fontsize: width / width18,
+            fontsize: 18.w,
             color:  DarkColor.color1,
             letterSpacing: -.3,
           ),
@@ -138,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               icon: Icon(
                 isEdit ? Icons.close : Icons.border_color,
-                size: width / width24,
+                size: 24.w,
                 color:  DarkColor.color1 ,
               ),
             )
@@ -150,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 340,
+                height: 340.h,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   gradient:  LinearGradient(
@@ -169,14 +170,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       GestureDetector(
                         onTap: _selectImageFromGallery,
                         child: Container(
-                          padding: EdgeInsets.all(4),
+                          padding: EdgeInsets.all(4.w),
                           decoration: BoxDecoration(
                             color: _employeeImageUrl != null ? Color(0xFFAC7310) : isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                             shape: BoxShape.circle,
                           ),
                           child: ClipOval(
                             child: SizedBox.fromSize(
-                              size: Size.fromRadius(50),
+                              size: Size.fromRadius(50.w),
                               child: _selectedImageFile != null
                                   ? Image.file(
                                       File(_selectedImageFile!.path),
@@ -193,10 +194,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: height / height20),
+                      SizedBox(height: 20.h),
                       PoppinsMedium(
                         text: _employeeName ?? '',
-                        fontsize: width / width18,
+                        fontsize: 18.sp,
                         color: DarkColor.color1,
                       )
                     ],
@@ -204,25 +205,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height40),
+                          EdgeInsets.symmetric(vertical: 40.h),
                       child: isEdit
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 InterSemibold(
                                   text: 'Name',
-                                  fontsize: width / width20,
+                                  fontsize: 20.sp,
                                   color: isDark
                                       ? DarkColor.color1
                                       : LightColor.color3,
                                 ),
-                                SizedBox(height: height / height5),
+                                SizedBox(height: 5.h),
                                 Row(
                                   children: [
                                     Expanded(
@@ -233,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         isEditMode: false,
                                       ),
                                     ),
-                                    SizedBox(width: width / width6),
+                                    SizedBox(width: 6.w),
                                     Bounce(
                                       onTap: () {
                                         final newName =
@@ -257,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Icon(
                                         Icons.check,
                                         color: DarkColor.color2,
-                                        size: width / width30,
+                                        size: 30.w,
                                       ),
                                     )
                                   ],
@@ -281,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InterSemibold(
                                 text: 'Contact No',
-                                fontsize: width / width20,
+                                fontsize: 20.sp,
                                 color: isDark?DarkColor.  color1:LightColor.color3,
                               ),
                               SizedBox(height: height / height5),
@@ -297,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isEditMode: false,
                                     ),
                                   ),
-                                  SizedBox(width: width / width6),
+                                  SizedBox(width: 6.w),
                                   Bounce(
                                     onTap: () {
                                       final newName =
@@ -321,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Icon(
                                       Icons.check,
                                       color: DarkColor.  color2,
-                                      size: width / width30,
+                                      size: 30.w,
                                     ),
                                   )
                                 ],
@@ -340,7 +341,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                     Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height40),
+                          EdgeInsets.symmetric(vertical: 40.h),
                       child: ProfileEditWidget(
                         tittle: 'Email',
                         content: _employeeEmail ?? '',
@@ -355,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: height / height60),
+              SizedBox(height: 60.h),
               if (_employeeImageUrl == null &&
                   _employeeRole == null &&
                   _employeeEmail == null &&
@@ -364,7 +365,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: PoppinsRegular(
                     text: 'complete your profile !',
-                    fontsize: width / width20,
+                    fontsize: 20.w,
                     color: isDark ? DarkColor.color3 : LightColor.color2,
                   ),
                 )

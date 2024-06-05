@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -64,7 +65,7 @@ class EmploymentLetterScreen extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back_ios,
               color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.w,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -73,7 +74,7 @@ class EmploymentLetterScreen extends StatelessWidget {
           ),
           title: InterMedium(
             text: 'Employment Letter',
-            fontsize: width / width18,
+            fontsize: 18.w,
             color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -81,7 +82,7 @@ class EmploymentLetterScreen extends StatelessWidget {
         ),
         body: Center(
           child: Container(
-            height: height / height500,
+            height: 500.h,
             width: double.maxFinite,
             margin: EdgeInsets.symmetric(horizontal: width / width30),
             decoration: BoxDecoration(
@@ -96,7 +97,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                 )
               ],
               color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-              borderRadius: BorderRadius.circular(width / width12),
+              borderRadius: BorderRadius.circular(12.w),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,12 +105,12 @@ class EmploymentLetterScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: height / height20,
-                    left: width / width10,
+                    top: 20.h,
+                    left: 10.w,
                   ),
                   child: InterBold(
                     text: '',
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                     color: isDark
                         ? DarkColor.Primarycolor
                         : LightColor.Primarycolor,
@@ -119,7 +120,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                   child: SvgPicture.asset(
                     isDark? 'assets/images/folder_dark.svg':
                     'assets/images/folder.svg',
-                    width: width / width190,
+                    width: 190.w,
                   ),
                 ),
                 Button1(
@@ -131,15 +132,15 @@ class EmploymentLetterScreen extends StatelessWidget {
                       Icon(
                         Icons.download_for_offline,
                         color: DarkColor.  color1,
-                        size: width / width24,
+                        size: 24.w,
                       ),
                       SizedBox(
-                        width: width / width10,
+                        width: 10.w,
                       ),
                       InterSemibold(
                         text: 'Download',
                         color: DarkColor.color1,
-                        fontsize: width / width16,
+                        fontsize: 16.w,
                       )
                     ],
                   ),
@@ -147,8 +148,8 @@ class EmploymentLetterScreen extends StatelessWidget {
                   backgroundcolor: isDark ? DarkColor.Primarycolorlight : LightColor.Primarycolorlight,
                   useBorderRadius: true,
                   MyBorderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(width / width12),
-                    bottomRight: Radius.circular(width / width12),
+                    bottomLeft: Radius.circular(12.w),
+                    bottomRight: Radius.circular(12.w),
                   ),
                 ),
               ],

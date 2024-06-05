@@ -225,14 +225,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
               : (isSelected
                   ? LightColor.Primarycolor
                   : LightColor.color3), // Change color based on selection
-          size: width / width24,
+          size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
           color: isDark
               ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
               : (isSelected ? LightColor.Primarycolor : LightColor.color3),
-          fontsize: width / width14,
+          fontsize: 14.w,
         ),
         onTap: onPressed,
       );
@@ -249,10 +249,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
           child: Column(
             children: [
               Container(
-                height: height / height180,
+                height: 180.h,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width20),
+                  borderRadius: BorderRadius.circular(20.w),
                   color: isDark
                       ? DarkColor.Primarycolor
                       : LightColor
@@ -272,14 +272,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
                         ),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
                           color: DarkColor.WidgetColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: height / height5),
+                        SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
                           color:isDark? DarkColor.WidgetColor:LightColor.WidgetColor,
@@ -357,7 +357,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                   auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height20)
+              SizedBox(height: 20.h)
             ],
           ),
         ),
@@ -366,7 +366,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           slivers: [
             SliverToBoxAdapter(
               child: SizedBox(
-                height: height / height30,
+                height: 30.h,
               ),
             ),
             HomeScreenPart1(
@@ -388,8 +388,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: width / width30,
-                  right: width / width30,
+                  left: 30.w,
+                  right: 30.w,
                 ),
                 child: Column(
                   children: [
@@ -493,7 +493,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: height / height30)
+                    SizedBox(height: 30.h)
                   ],
                 ),
               ),
@@ -507,8 +507,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         if (index < _guardsInfo.length) {
                           return Padding(
                             padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
+                              left: 30.w,
+                              right: 30.w,
                             ),
                             child: HomeScreenUserCard(
                               guardsInfo: _guardsInfo[index],
@@ -685,8 +685,8 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
       },
       child: Container(
         constraints: _expanded
-            ? BoxConstraints(minHeight: height / height140)
-            : BoxConstraints(minHeight: height / height60),
+            ? BoxConstraints(minHeight: 140.h)
+            : BoxConstraints(minHeight: 60.h),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -699,24 +699,24 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
             )
           ],
           color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-          borderRadius: BorderRadius.circular(width / width12),
+          borderRadius: BorderRadius.circular(12.w),
         ),
-        margin: EdgeInsets.only(bottom: height / height10),
+        margin: EdgeInsets.only(bottom: 10.h),
         width: double.maxFinite,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: height / height48,
-              padding: EdgeInsets.symmetric(horizontal: width / width20),
+              height: 48.h,
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
                       Container(
-                        height: height / height50,
-                        width: width / width50,
+                        height: 50.h,
+                        width: 50.w,
                         decoration: widget.guardsInfo['EmployeeImg'] != null
                             ? BoxDecoration(
                                 shape: BoxShape.circle,
@@ -740,7 +740,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                                 ),
                               ),
                       ),
-                      SizedBox(width: width / width20),
+                      SizedBox(width: 20.w),
                       InterBold(
                         text: widget.guardsInfo['EmployeeName'] ?? "",
                         letterSpacing: -.3,
@@ -749,8 +749,8 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                     ],
                   ),
                   Container(
-                    height: height / height16,
-                    width: width / width16,
+                    height: 16.h,
+                    width: 16.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: widget.guardsInfo['EmployeeIsAvailable'] ==
@@ -769,9 +769,9 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
               Column(
                 children: [
                   Divider(),
-                  SizedBox(height: height / height5),
+                  SizedBox(height: 5.h),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width20),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -804,7 +804,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         ),
                         RoundedButton(
                           icon: Icons.add_card,
-                        ),
+                        ), 
                         Bounce(
                           onTap: () {
                             Navigator.push(
