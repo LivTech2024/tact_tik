@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
@@ -112,6 +113,11 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 300.h,
+                    width: double.maxFinite,
+                    child: Image.asset('assets/images/logo.png' , fit: BoxFit.fitHeight,filterQuality: FilterQuality.high,),
+                  ),
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
