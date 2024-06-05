@@ -1277,13 +1277,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           color: color17,
                                                           fontsize: 18.sp,
                                                         ),
-                                                        SizedBox(height: 2.h),
-                                                        InterRegular(
-                                                          text: checkpoint
-                                                              .timestamp,
-                                                          color: Primarycolor,
-                                                          fontsize: 12.sp,
-                                                        )
+                                                        SizedBox(
+                                                            height: checkpoint
+                                                                        .timestamp !=
+                                                                    ''
+                                                                ? 2.h
+                                                                : 0.h),
+                                                        checkpoint.timestamp !=
+                                                                ''
+                                                            ? InterRegular(
+                                                                text: checkpoint
+                                                                    .timestamp,
+                                                                color:
+                                                                    Primarycolor,
+                                                                fontsize: 12.sp,
+                                                              )
+                                                            : SizedBox()
                                                       ],
                                                     ),
                                                   ),

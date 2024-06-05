@@ -173,6 +173,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               );
                             },
                             child: Container(
+                              margin: EdgeInsets.only(bottom: 20.h),
                               width: double.maxFinite,
                               height: 200.h,
                               decoration: BoxDecoration(
@@ -287,15 +288,15 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = color25;
-                                  colors[1] = Primarycolor;
+                                  colors[0] = Primarycolor;
+                                  colors[1] = color25;
                                 });
                               },
                               child: SizedBox(
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
-                                    color: colors[1],
+                                    color: colors[0],
                                     fontsize: 18.sp,
                                   ),
                                 ),
@@ -307,15 +308,15 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                                  colors[0] = Primarycolor;
-                                  colors[1] = color25;
+                                  colors[0] = color25 ;
+                                  colors[1] = Primarycolor;
                                 });
                               },
                               child: SizedBox(
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',
-                                    color: colors[0],
+                                    color: colors[1],
                                     fontsize: 18.sp,
                                   ),
                                 ),

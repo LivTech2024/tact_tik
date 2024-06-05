@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -248,8 +249,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   // Initialize default value
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -261,9 +260,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -273,7 +272,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
@@ -283,18 +282,18 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     InterBold(
                       text: 'New Report',
-                      fontsize: width / width20,
+                      fontsize: 20.sp,
                       color: Primarycolor,
                       letterSpacing: -.3,
                     ),
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     CustomeTextField(
                       hint: 'Title',
                       controller: titleController,
@@ -303,29 +302,29 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           ? false
                           : true,
                     ),
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     InterBold(
                       text: 'Category',
-                      fontsize: width / width20,
+                      fontsize: 20.sp,
                       color: Primarycolor,
                       letterSpacing: -.3,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     Container(
-                      height: height / height60,
+                      height: 60.h,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width20),
+                          EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         color: WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
-                          iconSize: width / width24,
+                          iconSize: 24.sp,
                           dropdownColor: WidgetColor,
                           style: TextStyle(color: color2),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.r),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
                             setState(() {
@@ -348,7 +347,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         ),
                       ),
                     ),
-                    if (dropdownShoe) SizedBox(height: height / height20),
+                    if (dropdownShoe) SizedBox(height: 20.h),
                     if (dropdownShoe)
                       CustomeTextField(
                         hint: 'Create category',
@@ -356,7 +355,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         showIcon: false,
                         controller: newCategoryController,
                       ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     CustomeTextField(
                       hint: 'Explain',
                       isExpanded: true,
@@ -366,14 +365,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           ? false
                           : true,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     Container(
-                      height: height / height60,
+                      height: 60.h,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width20),
+                          EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         color: WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -383,13 +382,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               Icon(
                                 Icons.follow_the_signs,
                                 color: color2,
-                                size: width / width24,
+                                size: 24.sp,
                               ),
-                              SizedBox(width: width / width6),
+                              SizedBox(width: 6.w),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
                                 color: color8,
-                                fontsize: width / width16,
+                                fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
@@ -407,7 +406,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -420,15 +419,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                 clipBehavior: Clip.none,
                                 children: [
                                   Container(
-                                    height: height / height66,
-                                    width: width / width66,
+                                    height: 66.h,
+                                    width: 66.w,
                                     decoration: BoxDecoration(
                                       color: WidgetColor,
-                                      borderRadius: BorderRadius.circular(
-                                        width / width10,
-                                      ),
+                                      borderRadius: BorderRadius.circular(10.r),
                                     ),
-                                    margin: EdgeInsets.all(width / width8),
+                                    margin: EdgeInsets.all(8.sp),
                                     child: upload['type'] == 'image'
                                         ? Image.file(
                                             upload['file'],
@@ -436,7 +433,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                           )
                                         : Icon(
                                             Icons.videocam,
-                                            size: width / width20,
+                                            size: 20.sp,
                                           ),
                                   ),
                                   Positioned(
@@ -447,7 +444,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                       icon: Icon(
                                         Icons.delete,
                                         color: Colors.black,
-                                        size: width / width20,
+                                        size: 20.sp,
                                       ),
                                       padding: EdgeInsets.zero,
                                     ),
@@ -466,11 +463,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     ListTile(
                                       leading: Icon(
                                         Icons.video_collection,
-                                        size: width / width20,
+                                        size: 20.sp,
                                       ),
                                       title: InterRegular(
                                         text: 'Add Image from Camera',
-                                        fontsize: width / width14,
+                                        fontsize: 14.sp,
                                       ),
                                       onTap: () {
                                         Navigator.pop(context);
@@ -480,11 +477,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     ListTile(
                                       leading: Icon(
                                         Icons.photo,
-                                        size: width / width20,
+                                        size: 20.sp,
                                       ),
                                       title: InterRegular(
                                         text: 'Add Image',
-                                        fontsize: width / width14,
+                                        fontsize: 14.sp,
                                       ),
                                       onTap: () {
                                         Navigator.pop(context);
@@ -496,17 +493,16 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               );
                             },
                             child: Container(
-                              height: height / height66,
-                              width: width / width66,
+                              height: 66.h,
+                              width: 66.w,
                               decoration: BoxDecoration(
                                 color: WidgetColor,
-                                borderRadius:
-                                    BorderRadius.circular(width / width8),
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
                                   Icons.add,
-                                  size: width / width20,
+                                  size: 20.sp,
                                 ),
                               ),
                             ),
@@ -514,6 +510,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10.h),
                     if (DisplayIMage.isNotEmpty)
                       GridView.builder(
                         shrinkWrap: true,
@@ -525,38 +522,21 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         ),
                         itemCount: DisplayIMage.length,
                         itemBuilder: (context, index) {
-                          return Stack(
-                            children: [
-                              Image.network(
-                                DisplayIMage[index]['url'],
+                          return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(DisplayIMage[index]['url']),
                                 fit: BoxFit.cover,
                               ),
-                              Positioned(
-                                top: 5,
-                                right: 5,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // IconButton(
-                                    //   onPressed: () {
-                                    //     _removeImage(index);
-                                    //   },
-                                    //   icon: const Icon(
-                                    //     Icons.delete,
-                                    //     color: Colors.white,
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           );
                         },
                       ),
-                    SizedBox(height: height / height60),
+                    SizedBox(height: 60.h),
                     Visibility(
                       visible: shouldShowButton,
                       child: Button1(
+                        height: 50.h,
                         text: 'Submit',
                         onPressed: () async {
                           setState(() {
@@ -726,7 +706,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           });
                         },
                         backgroundcolor: Primarycolor,
-                        borderRadius: width / width10,
+                        borderRadius: 10.r,
                       ),
                     ),
                   ],

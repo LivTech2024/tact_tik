@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
@@ -30,9 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
     try {
+      if (_emailcontrller.text.isEmpty && _passwordcontrller.text.isEmpty) {
+        showErrorToast(context, "Fields cannot be empty");
+        return;
+      }
       await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text, context);
-
+      await Future.delayed(const Duration(seconds: 2));
       await storage.ready;
       final String? role = storage.getItem("Role");
       print('Here is the role of emp:');
@@ -44,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (role == "CLIENT") {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => ClientHomeScreen()));
-      } else {
+      } else if (role != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
@@ -75,53 +80,12 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _errorMessage = 'An unexpected error occurred';
       });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
-
-/*
-  Future<void> signInEmailPassword(BuildContext context) async {
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      var data = await Auth().signInWithEmailAndPassword(
-          _emailcontrller.text, _passwordcontrller.text, context);
-
-      await storage.ready;
-      final String? role = storage.getItem("Role");
-      _showSnackBar(context, 'An unexpected error occurred');
-      if (role == "SUPERVISOR") {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
-      } else if (role == "CLIENT") {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => ClientHomeScreen()));
-      } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      }
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An error occurred';
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Incorrect password';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Invalid email address';
-      }
-      _showSnackBar(context, errorMessage);
-    } catch (e) {
-      print('Error signing in login screen: $e');
-      _showSnackBar(context, 'An unexpected error occurred');
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-*/
 
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(content: Text(message));
@@ -206,8 +170,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.black,
                     borderRadius: 5.r,
                     onPressed: () {
-                      Auth().signInWithEmailAndPassword(_emailcontrller.text,
-                          _passwordcontrller.text, context);
+                      // Auth().signInWithEmailAndPassword(_emailcontrller.text,
+                      //     _passwordcontrller.text, context);
+                      signInEmailPassword(context);
                     },
                   ),
                 ],
@@ -220,6 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   visible: _isLoading,
                   child: const CircularProgressIndicator(
                     color: Primarycolor,
+                    strokeWidth: 2,
                   ),
                 ),
               ),
