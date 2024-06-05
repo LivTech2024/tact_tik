@@ -835,9 +835,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       if (currentTime.isBefore(bufferStart) ||
                           currentTime.isAfter(bufferEnd)) {
                         bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus(
+                            await fireStoreService.checkShiftReturnTaskStatus2(
                                 widget.EmployeId, widget.ShiftId);
-                        if (status == true) {
+                        if (status == false) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -970,9 +970,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             await SharedPreferences.getInstance();
 
                         bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus(
+                            await fireStoreService.checkShiftReturnTaskStatus2(
                                 widget.EmployeId, widget.ShiftId);
-                        if (status == true) {
+                        if (status == false) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

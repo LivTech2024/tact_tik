@@ -13,6 +13,7 @@ import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
@@ -55,7 +56,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   String _employeeImg = '';
   List<dynamic> localdarTiles = [];
   String ReportId = "";
-  String ReportName = "";
+  List<dynamic> TilePatrolData = [];
+  List<dynamic> TileReportData = [];
 
   @override
   void initState() {
@@ -87,7 +89,21 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     if (widget.darTiles[widget.index] != null &&
         widget.darTiles[widget.index]['TileReportName'] != null) {
       setState(() {
-        ReportName = widget.darTiles[widget.index]['TileReportName'];
+        // ReportName = widget.darTiles[widget.index]['TileReportName'];
+      });
+    }
+    if (widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TilePatrol'] != null) {
+      print("TIle PatrolData ${widget.darTiles[widget.index]['TilePatrol']}");
+      setState(() {
+        TilePatrolData = widget.darTiles[widget.index]['TilePatrol'];
+      });
+    }
+    if (widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TileReport'] != null) {
+      print("TIle PatrolData ${widget.darTiles[widget.index]['TileReport']}");
+      setState(() {
+        TileReportData = widget.darTiles[widget.index]['TileReport'];
       });
     }
   }
@@ -226,9 +242,12 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       'TileReportSearchId': ReportId.isNotEmpty
           ? ReportId
           : widget.darTiles[widget.index]['TileReportSearchId'] ?? "",
-      'TileReportName': ReportName.isNotEmpty
-          ? ReportName
-          : widget.darTiles[widget.index]['TileReportName'] ?? "",
+      'TileReport': TileReportData.isNotEmpty
+          ? TileReportData
+          : widget.darTiles[widget.index]['TileReport'] ?? [],
+      'TilePatrol': TilePatrolData.isNotEmpty
+          ? TilePatrolData
+          : widget.darTiles[widget.index]['TilePatrol'] ?? [],
     };
     print("data $data");
     widget.darTiles.removeAt(widget.index);
@@ -470,18 +489,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         itemBuilder: (context, index) {
                           return Stack(
                             children: [
-                             /* Image.network(
+                              /* Image.network(
                                 imageUrls[index],
                                 fit: BoxFit.cover,
                               ),*/
                               Container(
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(image: NetworkImage(imageUrls[index]),fit: BoxFit.cover,)
-                                ),
+                                    image: DecorationImage(
+                                  image: NetworkImage(imageUrls[index]),
+                                  fit: BoxFit.cover,
+                                )),
                               ),
                               Positioned(
-                                top: - 5.h,
-                                right: - 5.w,
+                                top: -5.h,
+                                right: -5.w,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -502,11 +523,11 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         },
                       ),
                     SizedBox(height: 20.h),
-                    ReportId.isNotEmpty
+                    TilePatrolData.isNotEmpty
                         ? Column(
                             children: [
                               InterBold(
-                                text: 'Patrol Reports',
+                                text: 'Patrol',
                                 fontsize: 20.sp,
                                 color: Primarycolor,
                               ),
@@ -514,17 +535,113 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             ],
                           )
                         : SizedBox(height: 10.h),
-                    ReportId.isNotEmpty
+                    TilePatrolData.isNotEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 1,
+                            itemCount: TilePatrolData.length,
                             itemBuilder: (context, index) {
+                              final patrolData = TilePatrolData[index];
+                              print("TIle Patrol Data ${TilePatrolData}");
+                              // final hourKey = reportsByHour.keys.toList()[index];
+                              // final reportsForHour = reportsByHour[hourKey] ?? [];
+                              // var data = reportsByHour;
+
+                              return GestureDetector(
+                                onTap: () {
+                                  print("TIle Patrol Data ${TilePatrolData}");
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           CreateReportScreen(
+                                  //         locationId: '',
+                                  //         locationName: '',
+                                  //         companyID: '',
+                                  //         empId: '',
+                                  //         empName: '',
+                                  //         ClientId: '',
+                                  //         reportId: '',
+                                  //         buttonEnable: false,
+                                  //         ShiftId: 'widget.shifID',
+                                  //         SearchId:
+                                  //             ReportId, //Need to Work Here
+                                  //       ),
+                                  //     ));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: 30.h,
+                                  ),
+                                  height: 45.h,
+                                  decoration: BoxDecoration(
+                                    color: WidgetColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 15.w,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            InterBold(
+                                              text: TilePatrolData.isNotEmpty
+                                                  ? "Patrol Name : ${patrolData['TilePatrolName']}"
+                                                  : "",
+                                              fontsize: 12.sp,
+                                              color: Colors.white,
+                                            ),
+                                            InterBold(
+                                              text: TilePatrolData.isNotEmpty
+                                                  ? "${patrolData['TilePatrolData']}"
+                                                  : "",
+                                              fontsize: 12.sp,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : SizedBox(height: 30.h),
+                    TileReportData.isNotEmpty
+                        ? Column(
+                            children: [
+                              InterBold(
+                                text: 'Reports',
+                                fontsize: 20.sp,
+                                color: Primarycolor,
+                              ),
+                              SizedBox(height: 20.h)
+                            ],
+                          )
+                        : SizedBox(height: 10.h),
+                    TileReportData.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: TileReportData.length,
+                            itemBuilder: (context, index) {
+                              final ReportData = TileReportData[index];
                               // final hourKey = reportsByHour.keys.toList()[index];
                               // final reportsForHour = reportsByHour[hourKey] ?? [];
                               // var data = reportsByHour;
                               return GestureDetector(
                                 onTap: () {
+                                  print('Tile Report Data ${TileReportData}');
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -539,8 +656,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                           reportId: '',
                                           buttonEnable: false,
                                           ShiftId: 'widget.shifID',
-                                          SearchId:
-                                              ReportId, //Need to Work Here
+                                          SearchId: ReportData[
+                                              'TileReportSearchId'], //Need to Work Here
                                         ),
                                       ));
                                 },
@@ -567,87 +684,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       SizedBox(width: 2.w),
                                       Expanded(
                                         child: InterBold(
-                                          text: ReportId.isNotEmpty
-                                              ? "# $ReportId  ${ReportName}"
-                                              : "",
-                                          fontsize: 12.sp,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : SizedBox(height: 30.h),
-                    ReportId.isNotEmpty
-                        ? Column(
-                            children: [
-                              InterBold(
-                                text: 'Reports',
-                                fontsize: 20.sp,
-                                color: Primarycolor,
-                              ),
-                              SizedBox(height: 20.h)
-                            ],
-                          )
-                        : SizedBox(height: 10.h),
-                    ReportId.isNotEmpty
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 1,
-                            itemBuilder: (context, index) {
-                              // final hourKey = reportsByHour.keys.toList()[index];
-                              // final reportsForHour = reportsByHour[hourKey] ?? [];
-                              // var data = reportsByHour;
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateReportScreen(
-                                          locationId: '',
-                                          locationName: '',
-                                          companyID: '',
-                                          empId: '',
-                                          empName: '',
-                                          ClientId: '',
-                                          reportId: '',
-                                          buttonEnable: false,
-                                          ShiftId: 'widget.shifID',
-                                          SearchId:
-                                              ReportId, //Need to Work Here
-                                        ),
-                                      ));
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: 30.h,
-                                  ),
-                                  height: 35.h,
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 15.w,
-                                        height: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius:
-                                          BorderRadius.circular(10.r),
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      Expanded(
-                                        child: InterBold(
-                                          text: ReportId.isNotEmpty
-                                              ? "# $ReportId  ${ReportName}"
+                                          text: TileReportData.isNotEmpty
+                                              ? "\t\t\t\t # ${ReportData['TileReportSearchId']}  ${ReportData['TileReportName']}"
                                               : "",
                                           fontsize: 12.sp,
                                           color: Colors.white,
@@ -662,7 +700,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         : SizedBox(height: 30.h),
                     widget.iseditable
                         ? Button1(
-                      height: 60.h,
+                            height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
                             onPressed: submitDarTileData,
                             backgroundcolor: Primarycolor,

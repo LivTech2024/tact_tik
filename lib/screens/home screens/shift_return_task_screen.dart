@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_return_type_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -50,7 +51,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
 
       for (int i = 0; i < fetchedData.length; i++) {
         final task = fetchedData[i];
-        if (task.containsKey('ShiftTaskStatus') &&
+        if (task.containsKey('ShiftReturnTaskStatus') &&
             task['ShiftTaskStatus'] is List &&
             task['ShiftTaskStatus'].isNotEmpty &&
             task['ShiftTaskStatus'][0].containsKey('TaskStatus') &&
@@ -64,7 +65,13 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
         this.completedTaskCount = completedTaskCount;
         this.totalTaskCount = totalTaskCount;
       });
-
+      if (completedTaskCount == totalTaskCount) {
+        // Navigator.pop(context); // Pop the screen if all tasks are completed
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
       print(fetchedData);
     } else {
       print('No tasks fetched');
@@ -149,7 +156,8 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       } else {
                         taskType = ShiftTaskEnum.upload;
                       }
-                      final shiftTaskStatus = task['ShiftTaskStatus'] ?? [];
+                      final shiftTaskStatus =
+                          task['ShiftReturnTaskStatus'] ?? [];
                       final filteredStatus = shiftTaskStatus
                           .where((status) =>
                               status['TaskCompletedById'] == widget.Empid)
@@ -161,9 +169,22 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                         taskStatu =
                             filteredStatus.first['TaskStatus'] ?? "unchecked";
                         ShiftTaskReturnStatus =
-                            filteredStatus.first['ShiftTaskReturnStatus'] ??
+                            filteredStatus.first['ShiftReturnTaskStatus'] ??
                                 false;
                         // print("Task Completion Status : - ${taskStatus}");
+                      }
+                    }
+                    List<String> taskPhotos = [];
+                    if (fetchedTasks?[index]?['ShiftReturnTaskStatus'] !=
+                        null) {
+                      List taskStatusList =
+                          fetchedTasks?[index]?['ShiftReturnTaskStatus'];
+                      if (taskStatusList.isNotEmpty) {
+                        Map taskStatusMap = taskStatusList[0];
+                        if (taskStatusMap.containsKey('TaskPhotos')) {
+                          taskPhotos =
+                              List<String>.from(taskStatusMap['TaskPhotos']);
+                        }
                       }
                     }
 
@@ -177,8 +198,9 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                       shiftReturnTask: true,
                       refreshDataCallback: _refreshData,
                       EmpName: widget.EmpName,
-                      ShiftTaskReturnStatus: ShiftTaskReturnStatus ??
-                          false, // Default to upload if taskType is null
+                      ShiftTaskReturnStatus: ShiftTaskReturnStatus ?? false,
+                      taskPhotos:
+                          taskPhotos, // Default to upload if taskType is null
                     );
                   },
                   childCount: fetchedTasks?.length ?? 0,

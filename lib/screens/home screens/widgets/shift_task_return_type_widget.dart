@@ -31,6 +31,7 @@ class ShiftTaskReturnTypeWidget extends StatefulWidget {
     required this.refreshDataCallback,
     required this.EmpName,
     required this.ShiftTaskReturnStatus,
+    required this.taskPhotos,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -42,6 +43,7 @@ class ShiftTaskReturnTypeWidget extends StatefulWidget {
   final String EmpID;
   final String EmpName;
   final bool shiftReturnTask;
+  final List<String> taskPhotos;
 
   @override
   State<ShiftTaskReturnTypeWidget> createState() =>
@@ -123,7 +125,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
     print("Uploads Images  $uploads");
     try {
       print("Task Id : ${widget.taskId}");
-      await fireStoreService.addImagesToShiftTasks(
+      await fireStoreService.addImagesToShiftReturnTasks(
         uploads,
         widget.taskId,
         widget.ShiftId,
@@ -154,7 +156,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
       print("Uploads Images  ${uploads}");
       try {
         print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
+        await fireStoreService.addImagesToShiftReturnTasks(
           uploads,
           widget.taskId ?? "",
           widget.ShiftId ?? "",
@@ -389,15 +391,14 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    widget.shiftReturnTask == true
-                                        ? widget.ShiftTaskReturnStatus == true
-                                            ? Icons.done
-                                            : Icons.add_a_photo
-                                        : widget.taskStatus == "completed" ||
-                                                widget.ShiftTaskReturnStatus ==
-                                                    true
-                                            ? Icons.done
-                                            : Icons.add_a_photo,
+                                    // widget.shiftReturnTask == true
+                                    // ? widget.ShiftTaskReturnStatus == true
+                                    //     ? Icons.done
+                                    //     : Icons.add_a_photo
+                                    widget.taskStatus == "completed" ||
+                                            widget.ShiftTaskReturnStatus == true
+                                        ? Icons.done
+                                        : Icons.add_a_photo,
                                     size: width / width24,
                                     color: Primarycolor,
                                   ),
@@ -568,6 +569,28 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                       ],
                     ),
                   ),
+                  if (widget.taskPhotos.isNotEmpty)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: widget.taskPhotos.map((photoUrl) {
+                          return Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: WidgetColor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                            ),
+                            margin: EdgeInsets.all(width / width8),
+                            child: Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   if (_isLoading)
                     Container(
                       alignment: Alignment.center,

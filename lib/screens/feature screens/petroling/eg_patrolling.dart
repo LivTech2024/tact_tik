@@ -1036,7 +1036,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             },
                     ),
                     Visibility(
-                        visible: widget.p.CurrentStatus == "started",
+                        visible: widget.p.CurrentStatus == "started" && _expand,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: widget.p.categories.map((category) {
@@ -1050,15 +1050,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
+                                    print("Clicked");
                                     // Handle tap action to expand checkpoints
                                     // Toggle visibility of checkpoints associated with this category
                                     setState(() {
-                                      if (_expandCategoryMap[category.title] !=
-                                          null) {
-                                        _expandCategoryMap[category.title] =
-                                            !_expandCategoryMap[
-                                                category.title]!;
-                                      }
+                                      // if (_expandCategoryMap[category.title] !=
+                                      //     null) {
+                                      _expandCategoryMap[category.title] =
+                                          !_expandCategoryMap[category.title]!;
+                                      // }
+
                                       // _expand2 = !_expand2;
                                     });
                                   },

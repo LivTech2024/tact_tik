@@ -528,7 +528,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          onTap:(){
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -638,12 +638,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // List<String> patrolLogIds = [];
                         // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
                         // // patrolLogIds.add("sDFfQDSLM9oVxkJxuQ1D");
-                        // // patrolLogIds.add("BrRI6OO1GRiwkuiXhLgitQZ");
+                        // // patrolLogIds.add("BrRI6OO1GRiwkuisXhLgitQZ");
                         // // //Sending Shift end report
                         // var data =
                         //     await fireStoreService.fetchTemplateDataForPdf(
                         //   "paHVXXC99uNtXamURMBc",
-                        //   "7Hq6B8gQOQb63wVlqYv3",
+                        //   "jTJCSM4VAgwL1qF1fkli",
                         // );
 
                         // await sendShiftTemplateEmail(
@@ -653,7 +653,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   "Tacttik Shift Report",
                         //   data,
                         //   "Shift",
-                        //   "4 June",
+                        //   "5 June",
                         //   // "Sukhman Kooner",
                         //   "Pankaj Kumar",
                         //   "01:20:27",
@@ -669,7 +669,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //   'Tacttik DAR',
                         //   "Tacttik DAR",
                         //   "Shift",
-                        //   "2 JUN",
+                        //   "5 JUN",
                         //   "livjeet kaur",
                         //   "01:20:27",
                         //   "06:00:00",

@@ -209,7 +209,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       file.absolute.path + '_compressed.jpg',
-      quality: 10,
+      quality: 30,
     );
     return File(result!.path);
   }
@@ -249,7 +249,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   // Initialize default value
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Secondarycolor,
@@ -312,8 +311,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 20.h),
                     Container(
                       height: 60.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(10.r),
@@ -368,8 +366,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 20.h),
                     Container(
                       height: 60.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20.w),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         color: WidgetColor,
                         borderRadius: BorderRadius.circular(10.r),
