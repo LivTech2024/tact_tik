@@ -194,8 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         : LightColor.Secondarycolor,
                     borderRadius: 5.r,
                     onPressed: () {
-                      Auth().signInWithEmailAndPassword(_emailcontrller.text,
-                          _passwordcontrller.text, context);
+                      // Auth().signInWithEmailAndPassword(_emailcontrller.text,
+                      //     _passwordcontrller.text, context);
+                      signInEmailPassword(context);
                     },
                   ),
                 ],
