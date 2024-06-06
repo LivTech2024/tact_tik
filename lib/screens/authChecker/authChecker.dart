@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/riverpod/auth_provider.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/get%20started/getstarted_screen.dart';
@@ -20,9 +21,10 @@ class AuthChecker extends ConsumerWidget {
       future: storage.ready,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
+          return  Center(
             child: CircularProgressIndicator(
-              color: Primarycolor,
+              backgroundColor: isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
+              color: isDark?DarkColor. Primarycolor:LightColor.Primarycolor ,
             ),
           );
         } else {

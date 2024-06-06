@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_manag_create_screen.dart';
 
 import '../../../../common/sizes.dart';
@@ -66,7 +67,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -76,7 +77,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
               ),
             );
           },
-          backgroundColor: Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -86,12 +87,13 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
-              elevation: 0,
+              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -100,10 +102,10 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                   print("Navigator debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Keys',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -121,7 +123,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                     InterBold(
                       text: 'Keys',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     SizedBox(
                       height: height / height30,
@@ -145,7 +147,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: width / width20,
-                          color: Primarycolor,
+                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         ),
                       );
                     }
@@ -177,7 +179,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                           decoration: BoxDecoration(
                             borderRadius:
                             BorderRadius.circular(width / width10),
-                            color: WidgetColor,
+                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,12 +196,16 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                           width / width10),
-                                      color: Primarycolorlight,
+                                      color: isDark
+                                          ? DarkColor.Primarycolorlight
+                                          : LightColor.Primarycolorlight,
                                     ),
                                     child: Center(
                                       child: Icon(
                                         Icons.vpn_key,
-                                        color: Primarycolor,
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
                                         size: width / width24,
                                       ),
                                     ),
@@ -208,13 +214,17 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                   InterMedium(
                                     text: key['KeyName'],
                                     fontsize: width / width16,
-                                    color: color1,
+                                    color: isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
                                   ),
                                 ],
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color: color17,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
                                 fontsize: width / width16,
                               ),
                               SizedBox(width: width / width20),

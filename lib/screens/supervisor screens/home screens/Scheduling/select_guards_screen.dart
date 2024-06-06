@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
@@ -77,14 +79,15 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+           shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1), 
+          backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color:  isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -92,10 +95,10 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Guards',
             fontsize: width / width18,
-            color: Colors.white,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -112,8 +115,11 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       iconSize: width / width24,
-                      dropdownColor: WidgetColor,
-                      style: TextStyle(color: color2),
+                      dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      style: TextStyle(color:  isDark ? DarkColor.color2 : LightColor.color3),
+                      // borderRadius: BorderRadius.circular(10),
+                      // dropdownColor: WidgetColor,
+                      // style: TextStyle(color: color2),
                       borderRadius: BorderRadius.circular(width / width10),
                       value: dropdownValue,
                       onChanged: (String? newValue) {
@@ -145,7 +151,6 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                             String name = guardInfo['EmployeeName'] ?? "";
                             String id = guardInfo['EmployeeId'] ?? "";
                             String url = guardInfo['EmployeeImg'] ?? "";
-
                             print(guardInfo);
                             return GestureDetector(
                                 onTap: () {
@@ -159,12 +164,20 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                   );
                                 },
                                 child: Container(
-                                  height: height / height60,
+                                  // height: 60,
                                   decoration: BoxDecoration(
-                                    color: color19,
-                                    borderRadius:
-                                        BorderRadius.circular(width / width12),
+                                    color: isDark
+                                        ? DarkColor.color19
+                                        : LightColor.WidgetColor,
+                                    borderRadius: BorderRadius.circular(width / width12),
                                   ),
+                                  // margin: EdgeInsets.only(bottom: 10),
+                                  height: height / height60,
+                                  // decoration: BoxDecoration(
+                                  //   color: color19,
+                                  //   borderRadius:
+                                  //       BorderRadius.circular(width / width12),
+                                  // ),
                                   margin: EdgeInsets.only(
                                       bottom: height / height10),
                                   width: double.maxFinite,
@@ -172,6 +185,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
+                                        // height: 48,
+                                        // padding:
+                                        //     EdgeInsets.symmetric(horizontal: 20),
                                         height: height / height48,
                                         padding: EdgeInsets.symmetric(
                                             horizontal: width / width20),
@@ -201,7 +217,11 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                       : BoxDecoration(
                                                           shape:
                                                               BoxShape.circle,
-                                                          color: Primarycolor,
+                                                          color: isDark
+                                                              ? DarkColor
+                                                                  .Primarycolor
+                                                              : LightColor
+                                                                  .Primarycolor,
                                                           image:
                                                               DecorationImage(
                                                             image: AssetImage(
@@ -218,7 +238,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                 InterBold(
                                                   text: name,
                                                   letterSpacing: -.3,
-                                                  color: color1,
+                                                  color: isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
                                                   fontsize: width / width12,
                                                 ),
                                               ],
@@ -249,7 +271,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: color2,
+                            color: DarkColor.  color2,
                             fontsize: width / width16,
                           ),
                         )

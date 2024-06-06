@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path_provider/path_provider.dart';
@@ -53,37 +56,48 @@ class EmploymentLetterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? DarkColor.color3.withOpacity(.1) : LightColor.color3.withOpacity(0.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
+              size: 24.w,
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Employment Letter',
-            fontsize: width / width18,
-            color: Colors.white,
+            fontsize: 18.w,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
         body: Center(
           child: Container(
-            height: height / height500,
+            height: 500.h,
             width: double.maxFinite,
             margin: EdgeInsets.symmetric(horizontal: width / width30),
             decoration: BoxDecoration(
-              color: WidgetColor,
-              borderRadius: BorderRadius.circular(width / width12),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.transparent
+                      : LightColor.color3.withOpacity(.05),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  offset: Offset(0, 3),
+                )
+              ],
+              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+              borderRadius: BorderRadius.circular(12.w),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,19 +105,22 @@ class EmploymentLetterScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.only(
-                    top: height / height20,
-                    left: width / width10,
+                    top: 20.h,
+                    left: 10.w,
                   ),
                   child: InterBold(
                     text: '',
-                    fontsize: width / width18,
-                    color: Primarycolor,
+                    fontsize: 18.sp,
+                    color: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.Primarycolor,
                   ),
                 ),
                 Center(
                   child: SvgPicture.asset(
+                    isDark? 'assets/images/folder_dark.svg':
                     'assets/images/folder.svg',
-                    width: width / width190,
+                    width: 190.w,
                   ),
                 ),
                 Button1(
@@ -114,25 +131,25 @@ class EmploymentLetterScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.download_for_offline,
-                        color: color1,
-                        size: width / width24,
+                        color: DarkColor.  color1,
+                        size: 24.w,
                       ),
                       SizedBox(
-                        width: width / width10,
+                        width: 10.w,
                       ),
                       InterSemibold(
                         text: 'Download',
-                        color: color1,
-                        fontsize: width / width16,
+                        color: DarkColor.color1,
+                        fontsize: 16.w,
                       )
                     ],
                   ),
                   onPressed: () => _downloadAndOpenPdf(context),
-                  backgroundcolor: Primarycolorlight,
+                  backgroundcolor: isDark ? DarkColor.Primarycolorlight : LightColor.Primarycolorlight,
                   useBorderRadius: true,
                   MyBorderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(width / width12),
-                    bottomRight: Radius.circular(width / width12),
+                    bottomLeft: Radius.circular(12.w),
+                    bottomRight: Radius.circular(12.w),
                   ),
                 ),
               ],

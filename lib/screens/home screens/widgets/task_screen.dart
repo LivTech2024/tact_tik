@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
@@ -252,7 +253,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       : Center(
                           child: InterMedium(
                             text: 'Loading...',
-                            color: Primarycolor,
+                            color: DarkColor. Primarycolor,
                             fontsize: width / width14,
                           ),
                         ),
@@ -267,7 +268,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                 ? Container(
                                     constraints: BoxConstraints(),
                                     height: height / height242,
-                                    color: WidgetColor,
+                                    color: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -295,7 +298,10 @@ class _TaskScreenState extends State<TaskScreen> {
                                                   InterBold(
                                                     text:
                                                         widget.ShiftDate ?? "",
-                                                    color: Colors.white,
+                                                    color: isDark
+                                                        ? DarkColor.color1
+                                                        : LightColor
+                                                            .color3,
                                                     fontsize: width / width18,
                                                   ),
                                                   Row(
@@ -305,14 +311,18 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'In time',
-                                                        color: Colors.white,
+                                                        color:  isDark
+                                                            ? DarkColor.color1
+                                                            : LightColor.color3,
                                                         fontsize:
                                                             width / width18,
                                                       ),
                                                       InterMedium(
                                                         text: widget
                                                             .ShiftStartTime,
-                                                        color: Colors.white,
+                                                        color:  isDark
+                                                            ? DarkColor.color1
+                                                            : LightColor.color3,
                                                         fontsize:
                                                             width / width16,
                                                       )
@@ -325,14 +335,18 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'Out time',
-                                                        color: Colors.white,
+                                                        color:  isDark
+                                                            ? DarkColor.color1
+                                                            : LightColor.color3,
                                                         fontsize:
                                                             width / width18,
                                                       ),
                                                       InterMedium(
                                                         text:
                                                             widget.ShiftEndTime,
-                                                        color: Colors.white,
+                                                        color:  isDark
+                                                            ? DarkColor.color1
+                                                            : LightColor.color3,
                                                         fontsize:
                                                             width / width16,
                                                       )
@@ -365,7 +379,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     horizontal:
                                                         width / width26),
                                                 height: height / height90,
-                                                color: colorRed,
+                                                color:  isDark
+                                                    ? DarkColor.colorRed
+                                                    : LightColor.colorRed,
                                                 child: Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
@@ -418,7 +434,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                 : Center(
                                     child: InterMedium(
                                       text: 'Loading...',
-                                      color: Primarycolor,
+                                      color: DarkColor.Primarycolor,
                                       fontsize: width / width14,
                                     ),
                                   ),
@@ -427,7 +443,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             child: InterMedium(
                               text: 'No Shifts',
                               textAlign: TextAlign.center,
-                              color: color2,
+                              color: DarkColor. color2,
                               fontsize: width / width18,
                             ),
                           ),
@@ -438,8 +454,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       Button1(
                         text: 'Start Shift',
                         fontsize: width / width18,
-                        color: color5,
-                        backgroundcolor: WidgetColor /*.withOpacity(50)*/,
+                        color: isDark
+                            ? DarkColor.color5
+                            : LightColor.WidgetColor,
+                        backgroundcolor:
+                            isDark?DarkColor.WidgetColor :LightColor.Primarycolor /*.withOpacity(50)*/,
                         onPressed: () async {
                           print(widget.CheckUserRadius);
                           // if (isShiftStartTimeWithinRange(

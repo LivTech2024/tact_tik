@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
@@ -220,9 +221,10 @@ class _CreateReportScreenState extends State<displayReport> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -235,7 +237,7 @@ class _CreateReportScreenState extends State<displayReport> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: reportData.isNotEmpty &&
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
@@ -258,7 +260,7 @@ class _CreateReportScreenState extends State<displayReport> {
                     InterBold(
                       text: 'New Report',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -274,7 +276,7 @@ class _CreateReportScreenState extends State<displayReport> {
                     InterBold(
                       text: 'Category',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height20),
@@ -283,15 +285,17 @@ class _CreateReportScreenState extends State<displayReport> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: width / width24,
-                          dropdownColor: WidgetColor,
-                          style: TextStyle(color: color2),
+                          dropdownColor: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          style: TextStyle(color: isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color2),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -339,7 +343,7 @@ class _CreateReportScreenState extends State<displayReport> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -349,21 +353,29 @@ class _CreateReportScreenState extends State<displayReport> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: color2,
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color2,
                                 size: width / width24,
                               ),
                               SizedBox(width: width / width6),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: color8,
+                                color: isDark
+                                    ? DarkColor.color8
+                                    : LightColor.color2,
                                 fontsize: width / width16,
                                 letterSpacing: -.3,
                               )
                             ],
                           ),
                           Checkbox(
-                            activeColor: Primarycolor,
-                            checkColor: color1,
+                            activeColor: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
+                            checkColor: isDark
+                                ? DarkColor.color1
+                                : LightColor.color3,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -390,7 +402,9 @@ class _CreateReportScreenState extends State<displayReport> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: isDark
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -466,7 +480,9 @@ class _CreateReportScreenState extends State<displayReport> {
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                color: WidgetColor,
+                                color: isDark
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.WidgetColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width8),
                               ),
@@ -692,7 +708,7 @@ class _CreateReportScreenState extends State<displayReport> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: Primarycolor,
+                        backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                         borderRadius: width / width10,
                       ),
                     ),

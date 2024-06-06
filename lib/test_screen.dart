@@ -55,9 +55,9 @@ class _DatePickerDemoState extends State<DatePickerDemo> {
                 SizedBox(height: 20),
                 Expanded(
                   child: SfDateRangePicker(
-                    selectionTextStyle: TextStyle(color: Primarycolor), // Use primary color here
+                    selectionTextStyle: TextStyle(color:DarkColor. Primarycolor), // Use primary color here
                     selectionShape: DateRangePickerSelectionShape.circle,
-                    selectionColor: Primarycolor, // Use primary color here
+                    selectionColor: DarkColor.Primarycolor, // Use primary color here
                     selectionRadius: 4,
                     view: DateRangePickerView.month,
                     selectionMode: DateRangePickerSelectionMode.multiple,

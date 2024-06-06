@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tact_tik/main.dart';
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
 import '../../../../fonts/inter_medium.dart';
@@ -22,16 +23,20 @@ class _SPanicScreenState extends State<SPanicScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
-              elevation: 0,
+              shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
+              backgroundColor:
+                  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark
+                      ? DarkColor.color1
+                      : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -39,10 +44,12 @@ class _SPanicScreenState extends State<SPanicScreen> {
                   Navigator.pop(context);
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Panic',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark
+                    ? DarkColor.color1
+                    : LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,
@@ -103,7 +110,9 @@ class _SPanicScreenState extends State<SPanicScreen> {
                               child: InterBold(
                                 text: date,
                                 fontsize: width / width18,
-                                color: color21,
+                                color: isDark
+                                    ? DarkColor.color21
+                                    : LightColor.color2,
                               ),
                             ),
                             SizedBox(height: height / height10),
@@ -117,7 +126,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: width / width20, vertical: height / height20),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: color19,
+                                    color: DarkColor.color19,
                                     borderRadius: BorderRadius.circular(width / width12),
                                   ),
                                   padding: EdgeInsets.all(width / width20),
@@ -131,20 +140,26 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                             backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
                                             foregroundImage: AssetImage('assets/images/default.png'),
                                             radius: width / width20,
-                                            backgroundColor: Primarycolor,
+                                            backgroundColor: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                           ),
                                           SizedBox(width: width / width20),
                                           InterBold(
                                             text: createdBy,
                                             letterSpacing: -.3,
-                                            color: color1,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
                                           ),
                                         ],
                                       ),
                                       InterMedium(
                                         text: formattedTime,
                                         fontsize: width / width16,
-                                        color: color1,
+                                        color: isDark
+                                            ? DarkColor.color1
+                                            : LightColor.color3,
                                       ),
                                     ],
                                   ),

@@ -8,6 +8,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import 'package:tact_tik/screens/supervisor%20screens/TrackingScreen/s_tracking_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/history/s_history_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/s_loogbook_screen.dart';
@@ -50,7 +52,12 @@ class SHomeScreen extends StatefulWidget {
 }
 
 class _SHomeScreenState extends State<SHomeScreen> {
-  List IconColors = [Primarycolor, color4, color4, color4];
+  List IconColors = [
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3
+  ];
   int ScreenIndex = 0;
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
   final GlobalKey<ScaffoldState> _scaffoldKeyS = GlobalKey();
@@ -83,22 +90,24 @@ class _SHomeScreenState extends State<SHomeScreen> {
     setState(() {
       switch (index) {
         case 0:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 1:
-          IconColors[0] = color4;
-          IconColors[1] = Primarycolor;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 2:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] = DarkColor.Primarycolor;
+          IconColors[1] = DarkColor.color4;
+          IconColors[2] = DarkColor.color4;
+          IconColors[3] = DarkColor.color4;
           ScreenIndex = 0;
           NavigateScreen(AllSchedulesScreen(
             BranchId: '9tgQzYBJTL3QqJKe34eJ',
@@ -106,10 +115,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
           ));
           break;
         case 3:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] = DarkColor.Primarycolor;
+          IconColors[1] = DarkColor.color4;
+          IconColors[2] = DarkColor.color4;
+          IconColors[3] = DarkColor.color4;
           ScreenIndex = 0;
           NavigateScreen(SuperInboxScreen(
             companyId: 'aSvLtwII6Cjs7uCISBRR',
@@ -126,10 +135,18 @@ class _SHomeScreenState extends State<SHomeScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
-    IconColors[0] = Primarycolor;
-    IconColors[1] = color4;
-    IconColors[2] = color4;
-    IconColors[3] = color4;
+    if (isDark) {
+      IconColors[0] = DarkColor.Primarycolor;
+      IconColors[1] = DarkColor.color4;
+      IconColors[2] = DarkColor.color4;
+      IconColors[3] = DarkColor.color4;
+    } else {
+      IconColors[0] = LightColor.Primarycolor;
+      IconColors[1] = LightColor.color3;
+      IconColors[2] = LightColor.color3;
+      IconColors[3] = LightColor.color3;
+    }
+
     ScreenIndex = 0;
     _getUserInfo();
     // checkLocation();
@@ -186,6 +203,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
       ['assets/images/keys.png', 'Key'],
     ];
 
+    
+
     int _selectedIndex = 0; // Index of the selected screen
 
     void _onItemTapped(int index) {
@@ -202,15 +221,19 @@ class _SHomeScreenState extends State<SHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isSelected
-              ? Primarycolor
-              : color3, // Change color based on selection
-          size: width / width24,
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected
+                  ? LightColor.Primarycolor
+                  : LightColor.color3), // Change color based on selection
+          size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
-          color: isSelected ? Primarycolor : color3,
-          fontsize: width / width14,
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
+          fontsize: 14.w,
         ),
         onTap: onPressed,
       );
@@ -219,53 +242,49 @@ class _SHomeScreenState extends State<SHomeScreen> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKeyS,
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         endDrawer: Drawer(
+          backgroundColor:
+              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           child: Column(
             children: [
               Container(
-                height: height / height180,
+                height: 180.h,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
-                  color: Primarycolor, // Background color for the drawer header
+                  borderRadius: BorderRadius.circular(20.w),
+                  color: isDark
+                      ? DarkColor.Primarycolor
+                      : LightColor
+                          .Primarycolor, // Background color for the drawer header
                 ),
                 child: Center(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileScreen(),
-                              ),
-                            );
-                          },
-                          child: CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/images/default.png'),
-                            foregroundImage: NetworkImage(_userImg),
-                            radius: width / width50,
-                            backgroundColor: Primarycolor,
-                            // maxRadius: width / width50,
-                            // minRadius: width / width50,
-                          ),
+                        CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/default.png'),
+                          foregroundImage: NetworkImage(_userImg),
+                          radius: width / width50,
+                          backgroundColor: DarkColor.Primarycolor,
+                          // maxRadius: width / width50,
+                          // minRadius: width / width50,
                         ),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: WidgetColor,
-                          fontsize: width / width16,
+                          color: DarkColor.WidgetColor,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: height / height5),
+                        SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: WidgetColor,
-                          fontsize: width / width16,
+                          color:isDark? DarkColor.WidgetColor:LightColor.WidgetColor,
+                          fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
                       ]),
@@ -316,7 +335,11 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             ),
                           ));
                     }),
-                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {}),
+                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {
+                      setState(() {
+                        isDark = !isDark;
+                      });
+                    }),
                   ],
                 ),
               ),
@@ -335,7 +358,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                   auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height20)
+              SizedBox(height: 20.h)
             ],
           ),
         ),
@@ -344,7 +367,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           slivers: [
             SliverToBoxAdapter(
               child: SizedBox(
-                height: 20.h,
+                height: 30.h,
               ),
             ),
             HomeScreenPart1(
@@ -366,8 +389,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.only(
-                  left: width / width30,
-                  right: width / width30,
+                  left: 30.w,
+                  right: 30.w,
                 ),
                 child: Column(
                   children: [
@@ -379,8 +402,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Guards',
                             icon: Icons.add_task,
-                            color: IconColors[0],
-                            textcolor: ScreenIndex == 0 ? color1 : color4,
+                            color: isDark
+                                ? (ScreenIndex == 0
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 0
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 0
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 0
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                         Bounce(
@@ -388,8 +423,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Explore',
                             icon: Icons.grid_view_rounded,
-                            color: IconColors[1],
-                            textcolor: ScreenIndex == 1 ? color1 : color4,
+                            color: isDark
+                                ? (ScreenIndex == 1
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 1
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 1
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 1
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                         Bounce(
@@ -400,8 +447,20 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             SVG: 'assets/images/calendar_clock.svg',
                             text: 'Calendar',
                             icon: Icons.calendar_today,
-                            color: IconColors[2],
-                            textcolor: ScreenIndex == 2 ? color1 : color4,
+                            color: isDark
+                                ? (ScreenIndex == 2
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 2
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 2
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 2
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                         Bounce(
@@ -417,13 +476,25 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     : 'assets/images/no_message.svg',
                             text: 'Message',
                             icon: Icons.chat_bubble_outline,
-                            color: IconColors[3],
-                            textcolor: ScreenIndex == 3 ? color1 : color4,
+                            color: isDark
+                                ? (ScreenIndex == 3
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 3
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
+                            textcolor: isDark
+                                ? (ScreenIndex == 3
+                                    ? DarkColor.color1
+                                    : DarkColor.color4)
+                                : (ScreenIndex == 3
+                                    ? LightColor.Primarycolor
+                                    : LightColor.color3),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: height / height30)
+                    SizedBox(height: 30.h)
                   ],
                 ),
               ),
@@ -587,8 +658,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         if (index < _guardsInfo.length) {
                           return Padding(
                             padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
+                              left: 30.w,
+                              right: 30.w,
                             ),
                             child: HomeScreenUserCard(
                               guardsInfo: _guardsInfo[index],
@@ -642,10 +713,19 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
             ? BoxConstraints(minHeight: 80.h)
             : BoxConstraints(minHeight: 60.h),
         decoration: BoxDecoration(
-          color: color19,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        padding: EdgeInsets.symmetric(
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.transparent
+                  : LightColor.color3.withOpacity(.05),
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: Offset(0, 3),
+            )
+          ],
+          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          borderRadius: BorderRadius.circular(12.w),
+        ),padding: EdgeInsets.symmetric(
           vertical: 10.h,
         ),
         margin: EdgeInsets.only(bottom: 10.h),
@@ -677,7 +757,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                               )
                             : BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Primarycolor,
+                                color: DarkColor.Primarycolor,
                                 image: DecorationImage(
                                   image: /*widget.guardsInfo['EmployeeImg'] != null ? NetworkImage(
                                 widget.guardsInfo['EmployeeImg'] ?? "") :*/
@@ -691,7 +771,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       InterBold(
                         text: widget.guardsInfo['EmployeeName'] ?? "",
                         letterSpacing: -.3,
-                        color: color1,
+                        color: isDark ? DarkColor.color1 : LightColor.color3,
                       ),
                     ],
                   ),
@@ -751,7 +831,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         ),
                         RoundedButton(
                           icon: Icons.add_card,
-                        ),
+                        ), 
                         Bounce(
                           onTap: () {
                             Navigator.push(

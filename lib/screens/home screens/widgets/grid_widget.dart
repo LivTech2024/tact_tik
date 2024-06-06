@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_bold.dart';
@@ -24,7 +25,17 @@ class gridWidget extends StatelessWidget {
           height: 100.h,
           width: 100.w,
           decoration: BoxDecoration(
-            color: WidgetColor,
+            boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? Colors.transparent
+                    : LightColor.color3.withOpacity(.05),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
             borderRadius: BorderRadius.circular(18.r),
           ),
           child: Center(
@@ -38,7 +49,7 @@ class gridWidget extends StatelessWidget {
         SizedBox(height: 10.h),
         InterBold(
           text: tittle,
-          color: color25,
+          color: isDark? DarkColor.color25:LightColor.color3,
           fontsize: 16.sp,
           letterSpacing: -0.3,
         ),

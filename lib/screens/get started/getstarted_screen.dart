@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/get%20started/page_type1.dart';
 import 'package:tact_tik/screens/get%20started/page_type2.dart';
 import '../../fonts/poppins_bold.dart';
@@ -36,7 +37,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
             ? const SizedBox()
             : Container(
                 height: 66.h,
-                color: Secondarycolor,
+                color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40.w),
                   child: Row(
@@ -50,15 +51,19 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         child: PoppinsBold(
                           text: 'Skip',
                           fontsize: 16.sp,
-                          color: Primarycolor,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                         ),
                       ),
                       SmoothPageIndicator(
                         controller: _pagecontroller,
                         count: 3,
                         effect: WormEffect(
-                          dotColor: color3,
-                          activeDotColor: Primarycolor,
+                          dotColor: DarkColor.color3,
+                          activeDotColor: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                           dotHeight: 13.h,
                           dotWidth: 13.w,
                           type: WormType.thinUnderground,
@@ -76,8 +81,10 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
                         ),
                         icon: Icon(
                           Icons.arrow_forward_ios,
-                          size: 24.sp,
-                          color: Primarycolor,
+                       size: 24.sp,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                         ),
                       )
                     ],

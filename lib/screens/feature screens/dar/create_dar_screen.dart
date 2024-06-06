@@ -13,6 +13,8 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -319,14 +321,18 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          shadowColor:
+              isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -334,10 +340,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'DAR',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -354,7 +360,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color:
+                          isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     SizedBox(height: height / height30),
                     CustomeTextField(
@@ -383,7 +390,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: DarkColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -460,9 +467,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width8),
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Center(
                               child: Icon(
@@ -511,9 +519,11 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       onPressed: () {
                                         _removeImage(index);
                                       },
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.delete,
-                                        color: Colors.white,
+                                        color: isDark
+                                            ? DarkColor.color1
+                                            : LightColor.color3,
                                       ),
                                     ),
                                   ],
@@ -530,7 +540,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               InterBold(
                                 text: 'Patrol',
                                 fontsize: 20.sp,
-                                color: Primarycolor,
+                                color: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.color3,
                               ),
                               SizedBox(height: 20.h),
                             ],
@@ -571,14 +583,11 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                   //     ));
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: 30.h,
-                                  ),
-                                  height: 45.h,
-                                  decoration: BoxDecoration(
-                                    color: WidgetColor,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
+                                  margin: EdgeInsets.only(bottom: 30.h),
+                                  height: 35.h,
+                                  color: isDark
+                                      ? DarkColor.WidgetColor
+                                      : LightColor.WidgetColor,
                                   child: Row(
                                     children: [
                                       Container(
@@ -624,7 +633,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               InterBold(
                                 text: 'Reports',
                                 fontsize: 20.sp,
-                                color: Primarycolor,
+                                color: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.color3,
                               ),
                               SizedBox(height: 20.h)
                             ],
@@ -671,7 +682,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                     minHeight: 80.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: WidgetColor,
+                                    color: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
                                     borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Row(
@@ -680,7 +693,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         width: 15.w,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Primarycolor,
+                                          color: isDark
+                                              ? DarkColor.WidgetColor
+                                              : LightColor.WidgetColor,
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                         ),
@@ -707,7 +722,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
                             onPressed: submitDarTileData,
-                            backgroundcolor: Primarycolor,
+                            backgroundcolor: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
                             borderRadius: 10.r,
                           )
                         : SizedBox(),

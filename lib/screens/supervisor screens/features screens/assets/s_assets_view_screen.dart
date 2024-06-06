@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart'; // for date formatting
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
 
 import '../../../../common/sizes.dart';
@@ -65,7 +67,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -75,31 +77,32 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: false, equipemtAllocId: '',),
                 ));
           },
-          backgroundColor: Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
-              elevation: 0,
+              shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.white,
-                  size: width / width24,
+                  size: 24.w,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                   print("Navigator debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Assets',
-                fontsize: width / width18,
-                color: Colors.white,
+                fontsize: 18.sp,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -107,12 +110,20 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: height / height30,
+                      height: 30.h,
+                    ),
+                    InterBold(
+                      text: 'Today',
+                      fontsize: 20.w,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                    ),
+                    SizedBox(
+                      height: 30.h,
                     ),
                   ],
                 ),
@@ -128,12 +139,12 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     if (index == 0) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: width / width30,
-                            vertical: height / height30),
+                            horizontal: 30.w,
+                            vertical: 30.h),
                         child: InterBold(
                           text: getDateHeader(date),
-                          fontsize: width / width20,
-                          color: Primarycolor,
+                          fontsize: 20.sp,
+                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         ),
                       );
                     }
@@ -145,7 +156,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                          EdgeInsets.symmetric(horizontal: 30.w),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -160,13 +171,14 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       )));
                         },
                         child: Container(
-                          height: width / width60,
+                          height: 60.h,
                           width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: height / height10),
+                          margin: EdgeInsets.only(bottom: 10.h),
                           decoration: BoxDecoration(
                             borderRadius:
-                                BorderRadius.circular(width / width10),
-                            color: WidgetColor,
+                                BorderRadius.circular(10.w),
+                            color:
+                                isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,24 +188,28 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: height / height44,
-                                    width: width / width44,
+                                    height: 44.h,
+                                    width: 44.w,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: width / width10),
+                                        horizontal: 10.w),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
-                                          width / width10),
-                                      color: Primarycolorlight,
+                                          10.w),
+                                      color: isDark
+                                          ? DarkColor.Primarycolorlight
+                                          : LightColor.Primarycolorlight,
                                     ),
                                     child: Center(
                                       child: Icon(
                                         Icons.home_repair_service,
-                                        color: Primarycolor,
-                                        size: width / width24,
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
+                                        size: 24.w,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: width / width20),
+                                  SizedBox(width: 20.w),
                                   FutureBuilder<String>(
                                     future: getEquipmentName(equipment['EquipmentAllocationEquipId']),
                                     builder: (context, snapshot) {
@@ -201,19 +217,23 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                         return InterMedium(
                                           text: 'Loading...',
                                           fontsize: width / width16,
-                                          color: color1,
+                                          color: DarkColor.color1,
                                         );
                                       } else if (snapshot.hasError) {
                                         return InterMedium(
                                           text: 'Error: ${snapshot.error}',
                                           fontsize: width / width16,
-                                          color: color1,
+                                          color: isDark
+                                              ? DarkColor.color1
+                                              : LightColor.color3,
                                         );
                                       } else {
                                         return InterMedium(
                                           text: snapshot.data ?? 'Unknown Equipment',
                                           fontsize: width / width16,
-                                          color: color1,
+                                          color: isDark
+                                              ? DarkColor.color1
+                                              : LightColor.color3,
                                         );
                                       }
                                     },
@@ -222,7 +242,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color: color17,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                                 fontsize: width / width16,
                               ),
                               SizedBox(width: width / width20),

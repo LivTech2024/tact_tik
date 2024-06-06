@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
@@ -77,7 +78,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-  List IconColors = [Primarycolor, color4, color4, color4];
+  List IconColors = [
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3
+  ];
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
@@ -108,28 +114,34 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     setState(() {
       switch (index) {
         case 0:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 1:
-          IconColors[0] = color4;
-          IconColors[1] = Primarycolor;
-          IconColors[2] = color4;
-          IconColors[3] = color4;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 2:
-          IconColors[0] = color4;
-          IconColors[1] = color4;
-          IconColors[2] = Primarycolor;
-          IconColors[3] = color4;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
+
           break;
         case 3:
-          IconColors[0] = color4;
-          IconColors[1] = color4;
-          IconColors[2] = color4;
-          IconColors[3] = Primarycolor;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+
           break;
       }
     });
@@ -478,15 +490,19 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isSelected
-              ? Primarycolor
-              : color3, // Change color based on selection
-          size: width / width24,
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected
+                  ? LightColor.Primarycolor
+                  : LightColor.color3), // Change color based on selection
+          size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
-          color: isSelected ? Primarycolor : color3,
-          fontsize: width / width14,
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
+          fontsize: 14.sp,
         ),
         onTap: onPressed,
       );
@@ -494,9 +510,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
+          backgroundColor:
+              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           child: Column(
             children: [
               GestureDetector(
@@ -513,8 +532,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color:
-                        Primarycolor, // Background color for the drawer header
+                    color: isDark?DarkColor.Primarycolor:LightColor.Primarycolor, // Background color for the drawer header
                   ),
                   child: Center(
                     child: Column(
@@ -537,14 +555,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                           SizedBox(height: height / height10),
                           PoppinsSemibold(
                             text: _userName,
-                            color: WidgetColor,
+                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                             fontsize: width / width16,
                             letterSpacing: -.3,
                           ),
                           SizedBox(height: height / height5),
                           PoppinsRegular(
                             text: _empEmail,
-                            color: WidgetColor,
+                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                             fontsize: width / width16,
                             letterSpacing: -.3,
                           )
@@ -615,6 +633,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                       5,
                       () async {},
                     ),
+                    buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
+                      setState(() {
+                        isDark = !isDark;
+                      });
+                    }),
                   ],
                 ),
               ),
@@ -679,8 +702,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Patrol',
                                 icon: Icons.map,
-                                color: IconColors[0],
-                                textcolor: ScreenIndex == 0 ? color1 : color4,
+                                color: isDark
+                                    ? (ScreenIndex == 0
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 0
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
+                                textcolor: isDark
+                                    ? (ScreenIndex == 0
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 0
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                               ),
                             ),
                             Bounce(
@@ -688,8 +723,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               child: HomeScreenCustomNavigation(
                                 text: 'Shifts',
                                 icon: Icons.add_task,
-                                color: IconColors[1],
-                                textcolor: ScreenIndex == 1 ? color1 : color4,
+                                color: isDark
+                                    ? (ScreenIndex == 1
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 1
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
+                                textcolor: isDark
+                                    ? (ScreenIndex == 1
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 1
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                               ),
                             ),
                             Bounce(
@@ -699,8 +746,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 SVG: 'assets/images/lab_profile.svg',
                                 text: 'Reports',
                                 icon: Icons.celebration,
-                                color: IconColors[2],
-                                textcolor: ScreenIndex == 2 ? color1 : color4,
+                                color: isDark
+                                    ? (ScreenIndex == 2
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 2
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
+                                textcolor: isDark
+                                    ? (ScreenIndex == 2
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 2
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                               ),
                             ),
                             Bounce(
@@ -716,8 +775,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         : 'assets/images/no_message.svg',
                                 text: 'Message',
                                 icon: Icons.chat_bubble_outline,
-                                color: IconColors[3],
-                                textcolor: ScreenIndex == 3 ? color1 : color4,
+                                color: isDark
+                                    ? (ScreenIndex == 3
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 3
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
+                                textcolor: isDark
+                                    ? (ScreenIndex == 3
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 3
+                                        ? LightColor.Primarycolor
+                                        : LightColor.color3),
                               ),
                             ),
                           ],
@@ -747,31 +818,43 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 left: 30.w,
                                 right: 30.w,
                               ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  print("Clicked");
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ClientCheckPatrolScreen(
-                                                  PatrolIdl: PatrolId)));
-                                },
-                                child: Container(
-                                  height: 100.h,
-                                  margin: EdgeInsets.only(top: 10.h),
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                    color: Primarycolor,
-                                    borderRadius: BorderRadius.circular(14.r),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterBold(
+                                    text: '19/9/2004',
+                                    color: isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
+                                    fontsize: 20.sp,
                                   ),
-                                  padding: EdgeInsets.only(
-                                      top: 20.h, bottom: 20.h, right: 10.w),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                  SizedBox(
+                                    height: 10.sp,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      print("Clicked");
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ClientCheckPatrolScreen(
+                                                      PatrolIdl: PatrolId)));
+                                    },
+                                    child: Container(
+                                      height: 160.h,
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
+                                        borderRadius:
+                                            BorderRadius.circular(14.r),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20.h),
+                                      child: Column(
                                         children: [
                                           Row(
                                             mainAxisAlignment:
@@ -791,89 +874,138 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       10.r,
                                                     ),
                                                   ),
-                                                  color: WidgetColor,
+                                                  color: isDark
+                                                      ? DarkColor.color22
+                                                      : LightColor.color3,
                                                 ),
                                               ),
                                               SizedBox(width: 14.w),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  InterSemibold(
-                                                    text: PatrolName ?? "",
-                                                    color: color22,
-                                                    fontsize: 14.sp,
-                                                  ),
-                                                  SizedBox(height: 4.h),
-                                                  SizedBox(
-                                                    width: 200.w,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        // TODO : Add location svg
-                                                        SvgPicture.asset(
-                                                          'assets/images/location_icon.svg',
-                                                          height: 20.h,
-                                                        ),
-                                                        SizedBox(width: 5.w),
-                                                        Flexible(
-                                                          child: InterRegular(
-                                                            text:
-                                                                '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
-                                                            maxLines: 2,
-                                                            fontsize: 14.sp,
-                                                          ),
-                                                        )
-                                                      ],
+                                              SizedBox(
+                                                width: 190.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InterSemibold(
+                                                      text: PatrolName ?? "",
+                                                      color: isDark
+                                                          ? DarkColor.color22
+                                                          : LightColor.color3,
+                                                      fontsize: 14.sp,
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
+                                                    SizedBox(height: 5.h),
+                                                    InterRegular(
+                                                      text:
+                                                          PatrolLocation ?? "",
+                                                      maxLines: 1,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
                                             ],
                                           ),
-                                          SizedBox(
-                                            child: Column(
+                                          SizedBox(height: 10.h),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 18.w,
+                                              right: 24.w,
+                                            ),
+                                            child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                InterRegular(
-                                                  text: 'CheckPoints',
-                                                  fontsize: 14.sp,
-                                                  color: color2,
+                                                // shift time and date
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'CheckPoints',
+                                                        color: isDark
+                                                            ? DarkColor.color22
+                                                            : LightColor.color3,
+                                                        fontsize: 14.w,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .check_circle_outlined,
+                                                            size: 24.sp,
+                                                            color: isDark
+                                                                ? DarkColor.color22
+                                                                : LightColor.color3,
+                                                          ),
+                                                          SizedBox(width: 6.w),
+                                                          InterMedium(
+                                                            text: CheckpointCount
+                                                                    .toString() ??
+                                                                "",
+                                                            fontsize: 14.sp,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                SizedBox(height: 10.h),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.qr_code,
-                                                      color: Primarycolor,
-                                                      size: 24.sp,
-                                                    ),
-                                                    SizedBox(width: 4.w),
-                                                    InterMedium(
-                                                      text: '100',
-                                                      fontsize: 13.sp,
-                                                      color: color1,
-                                                    )
-                                                  ],
+                                                SizedBox(
+                                                  width: width / width100,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Required Times',
+                                                        color: isDark
+                                                            ? DarkColor.color22
+                                                            : LightColor.color3,  
+                                                        fontsize:
+                                                            width / width14,
+                                                      ),
+                                                      SizedBox(
+                                                          height:
+                                                              height / height5),
+                                                      Row(
+                                                        children: [
+                                                          // SvgPicture.asset(
+                                                          //   'assets/images/avg_pace.svg',
+                                                          //   width: width / width24,
+                                                          // ),
+                                                          SizedBox(
+                                                              width: width /
+                                                                  width6),
+                                                          InterMedium(
+                                                            text: "2",
+                                                            fontsize:
+                                                                width / width14,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 20.sp,
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -910,7 +1042,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       children: [
                                         InterBold(
                                           text: dateString,
-                                          color: Primarycolor,
+                                        color: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                           fontsize: 14.sp,
                                         ),
                                         SizedBox(
@@ -921,7 +1055,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           margin: EdgeInsets.only(top: 10.h),
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
-                                            color: Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                             borderRadius:
                                                 BorderRadius.circular(14.sp),
                                           ),
@@ -946,7 +1082,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             Radius.circular(
                                                                 10.r),
                                                       ),
-                                                      color: color22,
+                                                      color: isDark
+                                                          ? DarkColor.color22
+                                                          : LightColor.color3,
                                                     ),
                                                   ),
                                                   SizedBox(width: 14.w),
@@ -963,7 +1101,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         InterSemibold(
                                                           text: shifts[index]
                                                               ['ShiftName'],
-                                                          color: color22,
+                                                          color: isDark
+                                                              ? DarkColor
+                                                                  .color22
+                                                              : LightColor
+                                                                  .color3,
                                                           fontsize: 14.sp,
                                                         ),
                                                         SizedBox(height: 5.h),
@@ -1001,7 +1143,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           InterRegular(
                                                             text: 'Guards',
                                                             fontsize: 14.sp,
-                                                            color: color22,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .color22
+                                                                : LightColor
+                                                                    .color3,
                                                           ),
                                                           SizedBox(
                                                               height: 12.h),
@@ -1030,15 +1176,21 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       .length >
                                                                   3)
                                                                 CircleAvatar(
-                                                                  radius: 12.r,
-                                                                  backgroundColor:
-                                                                      color23,
+                                                                  radius:
+                                                                      
+                                                                          12.r,
+                                                                  backgroundColor: isDark
+                                                                      ? DarkColor
+                                                                          .color22
+                                                                      : LightColor
+                                                                          .color3,
                                                                   child:
                                                                       InterMedium(
                                                                     text:
                                                                         '+${shifts[index]['members'].length - 3}',
                                                                     fontsize:
-                                                                        12.sp,
+                                                                        
+                                                                            12.sp,
                                                                   ),
                                                                 ),
                                                             ],
@@ -1047,7 +1199,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: 100.w,
+                                                      width:  100.w,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1055,25 +1207,39 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Started At',
-                                                            color: color22,
-                                                            fontsize: 14.sp,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .color22
+                                                                : LightColor
+                                                                    .color3,
+                                                            fontsize:
+                                                                14.sp,
                                                           ),
-                                                          SizedBox(height: 5.h),
+                                                          SizedBox(
+                                                              height:
+                                                                   5.h),
                                                           Row(
                                                             children: [
                                                               Icon(
                                                                 Icons
                                                                     .check_circle_outlined,
-                                                                size: 24.sp,
-                                                                color: color22,
+                                                                size:
+                                                                     24.w,
+                                                                color: isDark
+                                                                    ? DarkColor
+                                                                        .color22
+                                                                    : LightColor
+                                                                        .color3,
                                                               ),
                                                               SizedBox(
-                                                                  width: 6.w),
+                                                                  width: 
+                                                                      6.w),
                                                               InterMedium(
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftStartTime'],
-                                                                fontsize: 14.sp,
+                                                                fontsize:
+                                                                     14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1089,10 +1255,17 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Ended At',
-                                                            color: color22,
-                                                            fontsize: 14.sp,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .color22
+                                                                : LightColor
+                                                                    .color3,
+                                                            fontsize:
+                                                                 14.sp,
                                                           ),
-                                                          SizedBox(height: 5.h),
+                                                          SizedBox(
+                                                              height:
+                                                                   5.h),
                                                           Row(
                                                             children: [
                                                               SizedBox(
@@ -1101,7 +1274,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftEndTime'],
-                                                                fontsize: 14.sp,
+                                                                fontsize:
+                                                                     14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1115,7 +1289,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           ),
                                         ),
                                         SizedBox(
-                                          height: 10.h,
+                                          height:  10.h,
                                         ),
                                       ],
                                     ),
@@ -1162,7 +1336,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             children: [
                               InterBold(
                                 text: dateString,
-                                color: Primarycolor,
+                                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                                 fontsize: 14.sp,
                               ),
                               SizedBox(
@@ -1172,7 +1346,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 constraints: BoxConstraints(minHeight: 200.h),
                                 width: double.maxFinite,
                                 decoration: BoxDecoration(
-                                  color: WidgetColor,
+                                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                                   borderRadius: BorderRadius.circular(14.r),
                                 ),
                                 padding: EdgeInsets.symmetric(
@@ -1186,7 +1360,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     InterSemibold(
                                       text: reports[index]['ReportGuardName'],
                                       fontsize: 18.sp,
-                                      color: Primarycolor,
+                                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                                     ),
                                     SizedBox(height: 19.h),
                                     SizedBox(
@@ -1200,12 +1374,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               InterMedium(
                                                 text: 'Report Name:',
                                                 fontsize: 16.sp,
-                                                color: color1,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
                                               ),
                                               InterMedium(
                                                 text: reports[index]['ReportName'],
                                                 fontsize: 16.sp,
-                                                color: color3,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
                                               ),
                                             ],
                                           ),
@@ -1217,12 +1391,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               InterMedium(
                                                 text: 'Category:',
                                                 fontsize: 16.sp,
-                                                color: color1,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
                                               ),
                                               InterMedium(
                                                 text: reports[index]['ReportCategory'],
                                                 fontsize: 16.sp,
-                                                color: color3,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
                                               ),
                                             ],
                                           ),
@@ -1234,12 +1408,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               InterMedium(
                                                 text: 'Emp Name:',
                                                 fontsize: 16.sp,
-                                                color: color1,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
                                               ),
                                               InterMedium(
                                                 text: reports[index]['ReportEmployeeName'],
                                                 fontsize: 16.sp,
-                                                color: color3,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
                                               ),
                                             ],
                                           ),
@@ -1251,12 +1425,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               InterMedium(
                                                 text: 'Status:',
                                                 fontsize: 16.sp,
-                                                color: color1,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
                                               ),
                                               InterMedium(
                                                 text: reports[index]['ReportStatus'],
                                                 fontsize: 16.sp,
-                                                color: color3,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
                                               ),
                                             ],
                                           ),
@@ -1289,7 +1463,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         children: [
                                           InterBold(
                                             text: 'Received Message ',
-                                            color: Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                             fontsize: 14.sp,
                                           ),
                                           Row(
@@ -1298,14 +1474,18 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             children: [
                                               Icon(
                                                 Icons.add,
-                                                color: Primarycolor,
+                                                color: isDark
+                                                    ? DarkColor.Primarycolor
+                                                    : LightColor.Primarycolor,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 4.w),
                                               InterBold(
                                                 text: 'Create Message',
                                                 fontsize: 14.sp,
-                                                color: Primarycolor,
+                                                color: isDark
+                                                    ? DarkColor.Primarycolor
+                                                    : LightColor.Primarycolor,
                                                 maxLine: 2,
                                               )
                                             ],
@@ -1321,8 +1501,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                           (context, index) {
                             return Padding(
                               padding: EdgeInsets.only(
-                                left: width / width30,
-                                right: width / width30,
+                                left: 30.w,
+                                right: 30.w,
                               ),
                               child: GestureDetector(
                                 onTap: () {
@@ -1349,7 +1529,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 1,
-                                        color: Primarycolor,
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
                                       ),
                                     ),
                                     // color: WidgetColor,
@@ -1407,19 +1589,25 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 InterRegular(
                                                   text: 'Supervisor',
                                                   fontsize: 17.sp,
-                                                  color: color1,
+                                                  color: isDark
+                                                      ? DarkColor.color3
+                                                      : LightColor.color3,
                                                 ),
                                                 Row(
                                                   // mainAxisAlignment: MainAxisAlignment.end,
                                                   children: [
                                                     PoppinsRegular(
                                                       text: '9:36 AM',
-                                                      color: color3,
+                                                      color: isDark
+                                                          ? DarkColor.color3
+                                                          : LightColor.color3,
                                                       fontsize: 15.sp,
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,
-                                                      color: color1,
+                                                      color: isDark
+                                                          ? DarkColor.color1
+                                                          : LightColor.color3,
                                                       size: 15.sp,
                                                     )
                                                   ],
@@ -1434,7 +1622,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 text:
                                                     'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                 fontsize: 15.sp,
-                                                color: color3,
+                                                color: isDark
+                                                    ? DarkColor.color3
+                                                    : LightColor.color3,
                                               ),
                                             ),
                                           ],

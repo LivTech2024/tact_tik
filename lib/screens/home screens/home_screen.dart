@@ -20,6 +20,7 @@ import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/poppis_semibold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/report_screen.dart';
@@ -111,7 +112,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool issShift = false;
   int _shiftRestrictedRadius = 0;
   int scheduleCount = 0;
-  List IconColors = [Primarycolor, color21, color21, color21];
+  List IconColors = [
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3,
+    isDark ? DarkColor.color4 : LightColor.color3
+  ];
   int ScreenIndex = 0;
   late GoogleMapController mapController;
   List<DocumentSnapshot> schedules_list = [];
@@ -198,23 +204,25 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       switch (index) {
         case 0:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color21;
-          IconColors[2] = color21;
-          IconColors[3] = color21;
+          IconColors[0] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 1:
-          IconColors[0] = color21;
-          IconColors[1] = Primarycolor;
-          IconColors[2] = color21;
-          IconColors[3] = color21;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
           break;
         case 2:
-          IconColors[0] = Primarycolor;
-          IconColors[1] = color21;
-          IconColors[2] = color21;
-          IconColors[3] = color21;
-          ScreenIndex = 0;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;ScreenIndex = 0;
           // CalendarScreen
           // Navigator.push(
           //     context,
@@ -224,10 +232,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           break;
         case 3:
-          IconColors[0] = color21;
-          IconColors[1] = color21;
-          IconColors[2] = color21;
-          IconColors[3] = Primarycolor;
+          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
+          IconColors[3] =
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
           break;
       }
     });
@@ -493,14 +502,18 @@ class _HomeScreenState extends State<HomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isSelected
-              ? Primarycolor
-              : color3, // Change color based on selection
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected
+                  ? LightColor.Primarycolor
+                  : LightColor.color3), // Change color based on selection
           size: 24.sp,
         ),
         title: PoppinsBold(
           text: title,
-          color: isSelected ? Primarycolor : color3,
+          color: isDark
+              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
+              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
           fontsize: 16.sp,
         ),
         onTap: onPressed,
@@ -509,18 +522,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
+          backgroundColor:
+              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.all(10.sp),
-                height: 178.h,
+                height: (178.h),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
-                  color: Primarycolor, // Background color for the drawer header
+                  color: isDark
+                      ? DarkColor.Primarycolor
+                      : LightColor
+                          .Primarycolor, // Background color for the drawer header
                 ),
                 child: Center(
                   child: Column(
@@ -541,7 +560,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 AssetImage('assets/images/default.png'),
                             foregroundImage: NetworkImage(employeeImg!),
                             radius: 50.r,
-                            backgroundColor: Primarycolor,
+                            backgroundColor: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
                             // maxRadius: width / width50,
                             // minRadius: width / width50,
                           ),
@@ -549,14 +570,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: WidgetColor,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: WidgetColor,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -623,66 +648,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    buildListTile(
-                      Icons.switch_left,
-                      'Theme',
-                      5,
-                      () async {
-                        List<String> emails = [];
-                        // emails.add("sutarvaibhav37@gmail.com");
-                        // emails.add("pankaj.kumar1312@yahoo.com");
-                        // emails.add("alerts.tactik@gmail.com");
-                        // emails.add("security@lestonholdings.com");
-                        // emails.add("dan@tpssolution.com");
-                        // // "security@lestonholdings.com"
-                        // // List<String> patrolLogIds = [];
-                        // // patrolLogIds.add("87WnD0GicwKSGunKnHpD");
-                        // // patrolLogIds.add("sDFfQDSLM9oVxkJxuQ1D");
-                        // // patrolLogIds.add("BrRI6OO1GRiwkuisXhLgitQZ");
-                        // // //Sending Shift end report
-                        // var data =
-                        //     await fireStoreService.fetchTemplateDataForPdf(
-                        //   "Sf6OBHLu11l4o4HcxH0p",
-                        //   "sjkkxLqBKckb4eu8CqmR",
-                        // );
-
-                        // await sendShiftTemplateEmail(
-                        //   "Leston holdings ",
-                        //   emails,
-                        //   'Tacttik Shift Report',
-                        //   "Tacttik Shift Report",
-                        //   data,
-                        //   "Shift",
-                        //   "6 June",
-                        //   // "Sukhman Kooner",
-                        //   "Parampreet Singh",
-                        //   // "Pankaj Kumar",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
-                        // await sendDARTemplateEmail(
-                        //   "Leston holdings",
-                        //   emails,
-                        //   'Tacttik DAR',
-                        //   "Tacttik DAR",
-                        //   "Shift",
-                        //   "5 JUN",
-                        //   "livjeet kaur",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
-                        // await fireStoreService.copyAndCreateDocument(
-                        //     "PatrolLogs", "pi31q4bOrncvYoIPF4Kx");
-                      },
-                    ),
+                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {
+                      setState(() {
+                        isDark = !isDark;
+                      });
+                    }),
                   ],
                 ),
               ),
@@ -740,9 +710,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Shifts',
                               icon: Icons.add_task,
-                              color: IconColors[0],
+                              color: isDark
+                                    ? (ScreenIndex == 0
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 0
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                               textcolor:
-                                  ScreenIndex == 0 ? Primarycolor : color21,
+                                  isDark
+                                    ? (ScreenIndex == 0
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 0
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -750,9 +732,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Explore',
                               icon: Icons.grid_view_rounded,
-                              color: IconColors[1],
+                              color: isDark
+                                    ? (ScreenIndex == 1
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 1
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                               textcolor:
-                                  ScreenIndex == 1 ? Primarycolor : color21,
+                                 isDark
+                                    ? (ScreenIndex == 1
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 1
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -760,9 +754,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Calendar',
                               icon: Icons.calendar_today,
-                              color: IconColors[2],
+                              color: isDark
+                                    ? (ScreenIndex == 2
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 2
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                               textcolor:
-                                  ScreenIndex == 2 ? Primarycolor : color21,
+                                  isDark
+                                    ? (ScreenIndex == 2
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 2
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -778,9 +784,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : 'assets/images/no_message.svg',
                               text: 'Message',
                               icon: Icons.chat_bubble_outline,
-                              color: IconColors[3],
+                              color: isDark
+                                    ? (ScreenIndex == 3
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 3
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                               textcolor:
-                                  ScreenIndex == 3 ? Primarycolor : color21,
+                                  isDark
+                                    ? (ScreenIndex == 3
+                                        ? DarkColor.color1
+                                        : DarkColor.color4)
+                                    : (ScreenIndex == 3
+                                        ? LightColor.Primarycolor
+                                        : DarkColor.color4),
                             ),
                           ),
                         ],
@@ -820,7 +838,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : Center(
                                           child: InterMedium(
                                             text: 'Loading...',
-                                            color: Primarycolor,
+                                            color: isDark?DarkColor.Primarycolor:LightColor.Primarycolor,
                                             fontsize: 14.sp,
                                           ),
                                         ),
@@ -1014,7 +1032,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: Border(
                                             bottom: BorderSide(
                                               width: 1,
-                                              color: Primarycolor,
+                                              color: isDark
+                                                  ? DarkColor.Primarycolor
+                                                  : LightColor.Primarycolor,
                                             ),
                                           ),
                                           // color: WidgetColor,
@@ -1074,20 +1094,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       InterRegular(
                                                         text: 'Supervisor',
                                                         fontsize: 17.sp,
-                                                        color: color1,
+                                                        color: isDark?DarkColor.color1:LightColor.color3,
                                                       ),
                                                       Row(
                                                         // mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
                                                           PoppinsRegular(
                                                             text: '9:36 AM',
-                                                            color: color3,
+                                                            color: isDark?DarkColor.color3:LightColor.color2,
                                                             fontsize: 15.sp,
                                                           ),
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_ios,
-                                                            color: color1,
+                                                            color: isDark?DarkColor.color1:LightColor.color3,
                                                             size: 15.sp,
                                                           )
                                                         ],
@@ -1102,7 +1122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       text:
                                                           'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                       fontsize: 15.sp,
-                                                      color: color3,
+                                                      color: isDark?DarkColor.color3:LightColor.color2,
                                                     ),
                                                   ),
                                                 ],

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
@@ -126,8 +127,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor,
-              secondary: Primarycolor,
+              primary: DarkColor. Primarycolor,
+              secondary: DarkColor. Primarycolor,
             ),
           ),
           child: child!,
@@ -194,6 +195,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
     bool isEditMode = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,8 +203,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
-                color: Primarycolor,
-                fontsize: 20.sp,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+          fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
               Row(
@@ -211,18 +213,18 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     child: Container(
                       height: 60.h,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        color: WidgetColor,
+                         borderRadius: BorderRadius.circular(10.r),
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(
-                              text: widget.startDate,
-                              fontsize: 16.sp,
-                              color: color2),
-                          SvgPicture.asset('assets/images/calendar_clock.svg',
-                              width: 20.w)
+                          InterMedium(text: widget.startDate, fontsize: 16.sp, color: isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color2),
+                          SvgPicture.asset('assets/images/calendar_clock.svg', width: 20.w)
                         ],
                       ),
                     ),
@@ -233,17 +235,17 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: WidgetColor,
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(
-                              text: widget.endDate,
-                              fontsize: 16.sp,
-                              color: color2),
-                          SvgPicture.asset('assets/images/calendar_clock.svg',
-                              width: 20.w)
+                          InterMedium(text: widget.endDate, fontsize: 16.sp, color: isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color2),
+                          SvgPicture.asset('assets/images/calendar_clock.svg', width: 20.w)
                         ],
                       ),
                     ),
@@ -251,14 +253,14 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                 ],
               ),
               SizedBox(height: 30.h),
-              InterBold(text: 'Key', color: color1, fontsize: 16.sp),
+              InterBold(text: 'Key', color: isDark ? DarkColor.color1 : LightColor.color3, fontsize: 16.sp),
               Container(
                 height: 60.h,
                 width: double.maxFinite,
                 margin: EdgeInsets.only(bottom: 10.h),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: WidgetColor,
+                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,14 +273,17 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           height: 44.h,
                           width: 44.w,
                           decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(10.r),
-                            color: Primarycolorlight,
+                            borderRadius: BorderRadius.circular(10.r),
+                            color: isDark
+                                ? DarkColor.Primarycolorlight
+                                : LightColor.Primarycolorlight,
                           ),
                           child: Center(
                             child: Icon(
                               Icons.home_repair_service,
-                              color: Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
                               size: 24.sp,
                             ),
                           ),
@@ -302,7 +307,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                             return InterMedium(
                               text: keyName,
                               fontsize: 16.sp,
-                              color: color1,
+                              color: isDark
+                                  ? DarkColor.color1
+                                  : LightColor.color3,
                             );
                           },
                         ),
@@ -310,7 +317,9 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     ),
                     InterMedium(
                       text: widget.time,
-                      color: color17,
+                      color: isDark
+                          ? DarkColor.color17
+                          : LightColor.color2,
                       fontsize: 16.sp,
                     ),
                     SizedBox(width: 20.w),
@@ -324,7 +333,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                   SizedBox(height: 30.h),
                   InterBold(
                     text: 'Add Visitor',
-                    color: Primarycolor,
+                    color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     fontsize: 20.sp,
                   ),
                   SizedBox(height: 30.h),
@@ -434,8 +443,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     onPressed: () async {
                       await _saveVisitorData();
                     },
-                    backgroundcolor: Primarycolor,
-                    color: color22,
+                    backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                    color: isDark ? DarkColor.color22 : LightColor.color1,
                     borderRadius: 10.r,
                     fontsize: 18.sp,
                   ),

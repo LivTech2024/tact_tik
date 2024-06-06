@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_return_type_widget.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -90,7 +91,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -103,7 +104,7 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: "Return Shift Task",
             fontsize: width / width18,
             color: Colors.white,
@@ -129,13 +130,13 @@ class _ShiftTaskReturnScreenState extends State<ShiftReturnTaskScreen> {
                         child: InterBold(
                           text: "${widget.ShiftName}",
                           fontsize: width / width18,
-                          color: Primarycolor,
+                          color: DarkColor.Primarycolor,
                         ),
                       ),
                       InterBold(
                         text: '$completedTaskCount/$totalTaskCount',
                         fontsize: width / width18,
-                        color: Primarycolor,
+                        color: DarkColor.Primarycolor,
                       ),
                     ],
                   ),

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 
 import '../../../common/sizes.dart';
@@ -34,8 +35,8 @@ class ViewAssetsScreen extends StatelessWidget {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor, // Change primary color to red
-              secondary: Primarycolor,
+              primary: DarkColor. Primarycolor, // Change primary color to red
+              secondary: DarkColor. Primarycolor,
             ),
           ),
           child: child!,
@@ -76,9 +77,9 @@ class ViewAssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor. AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -91,7 +92,7 @@ class ViewAssetsScreen extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'View Assets',
             fontsize: 18.sp,
             color: Colors.white,
@@ -107,7 +108,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
-                color: Primarycolor,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color1,
                 fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
@@ -118,7 +119,7 @@ class ViewAssetsScreen extends StatelessWidget {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -126,7 +127,7 @@ class ViewAssetsScreen extends StatelessWidget {
                           InterMedium(
                             text: startDate,
                             fontsize: 16.sp,
-                            color: color2,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
                           ),
                           SvgPicture.asset(
                             'assets/images/calendar_clock.svg',
@@ -142,7 +143,7 @@ class ViewAssetsScreen extends StatelessWidget {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -150,7 +151,7 @@ class ViewAssetsScreen extends StatelessWidget {
                           InterMedium(
                             text: endDate,
                             fontsize: 16.sp,
-                            color: color2,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
                           ),
                           SvgPicture.asset(
                             'assets/images/calendar_clock.svg',
@@ -165,7 +166,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Equipment',
-                color: color1,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color1,
                 fontsize: 16.sp,
               ),
               SizedBox(height: 20.h),
@@ -188,7 +189,7 @@ class ViewAssetsScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: WidgetColor,
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,12 +198,12 @@ class ViewAssetsScreen extends StatelessWidget {
 
                           InterMedium(
                             text: equipmentName,
-                            color: color2,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
                             fontsize: 16.sp,
                           ),
                           InterMedium(
                             text: "Quantity: $equipmentQty",
-                            color: color2,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
                             fontsize: 16.sp,
                           ),
                         ],

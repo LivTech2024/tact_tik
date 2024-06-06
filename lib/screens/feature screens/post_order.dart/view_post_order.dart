@@ -8,6 +8,9 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -223,13 +226,14 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 24.sp,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
+                size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -239,12 +243,13 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
           title: InterBold(
             text: 'Post Order',
             fontsize: 18.sp,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -254,7 +259,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
               InterSemibold(
                 text: widget.date,
                 fontsize: 20.sp,
-                color: Primarycolor,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
               SizedBox(height: 30.h),
               CustomeTextField(
@@ -285,7 +290,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: WidgetColor,
+                                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               margin: EdgeInsets.all(8.sp),
@@ -330,7 +335,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 ),
                                 title: InterRegular(
                                   text: 'Add Image',
-                                  color: color2,
+                                  color: isDark ? DarkColor.color2 : LightColor.color3,
                                   fontsize: 12.sp,
                                 ),
                                 onTap: () {
@@ -345,7 +350,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 ),
                                 title: InterRegular(
                                   text: 'Add from Gallery',
-                                  color: color2,
+                                  color:  isDark ? DarkColor.color2 : LightColor.color3,
                                   fontsize: 12.sp,
                                 ),
                                 onTap: () {
@@ -360,7 +365,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 ),
                                 title: InterRegular(
                                   text: 'Add PDF',
-                                  color: color2,
+                                  color:  isDark ? DarkColor.color2 : LightColor.color3,
                                   fontsize: 12.sp,
                                 ),
                                 onTap: () {
@@ -376,7 +381,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                         height: 66.h,
                         width: 66.w,
                         decoration: BoxDecoration(
-                          color: WidgetColor,
+                          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Center(
@@ -419,7 +424,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 height: 46.h,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.r),
-                                  color: color1,
+                                  color:  isDark ? DarkColor.color1 : LightColor.color3,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -441,12 +446,12 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                           children: [
                                             PoppinsMedium(
                                               text: otherFileName,
-                                              color: color15,
+                                              color:  isDark ? DarkColor.color15 : LightColor.color3,
                                               fontsize: 12.sp,
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color: color16,
+                                              color:  isDark ? DarkColor.color16 : LightColor.color3,
                                               fontsize: 12.sp,
                                             )
                                           ],
@@ -506,7 +511,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                       onPressed: () {
                         _uploadFiles();
                       },
-                      backgroundcolor: Primarycolor,
+                      backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                       borderRadius: 10.r,
                     )
             ],

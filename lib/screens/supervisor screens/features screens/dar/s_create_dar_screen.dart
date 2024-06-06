@@ -10,6 +10,7 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
@@ -308,9 +309,9 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor. Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor. AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -323,7 +324,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'DAR',
             fontsize: width / width18,
             color: Colors.white,
@@ -343,7 +344,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: DarkColor. Primarycolor,
                     ),
                     SizedBox(height: height / height30),
                     CustomeTextField(
@@ -372,7 +373,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: DarkColor. WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -449,7 +450,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                              color: WidgetColor,
+                              color: DarkColor. WidgetColor,
                               borderRadius:
                                   BorderRadius.circular(width / width8),
                             ),
@@ -506,7 +507,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                     Button1(
                       text: _isSubmitting ? 'Submitting...' : 'Submit',
                       onPressed: submitDarTileData,
-                      backgroundcolor: Primarycolor,
+                      backgroundcolor: DarkColor. Primarycolor,
                       borderRadius: 20,
                     ),
                   ],

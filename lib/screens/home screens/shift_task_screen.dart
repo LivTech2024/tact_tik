@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/shift_task_type_widget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -91,13 +93,15 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -106,10 +110,10 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                   MaterialPageRoute(builder: (context) => HomeScreen()));
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: "${widget.Name}",
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -132,12 +136,12 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         InterBold(
                           text: '',
                           fontsize: width / width18,
-                          color: Primarycolor,
+                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         ),
                         InterBold(
                           text: '$completedTaskCount/$totalTaskCount',
                           fontsize: width / width18,
-                          color: Primarycolor,
+                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         ),
                       ],
                     ),

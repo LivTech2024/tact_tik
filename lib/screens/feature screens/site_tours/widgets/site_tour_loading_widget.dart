@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../utils/colors.dart';
@@ -20,7 +21,7 @@ class SiteTourLoadingWidget extends StatelessWidget {
             height: 470.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40.r),
-              color: Secondarycolor,
+              color:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
             ),
             child: Center(
               child: Column(
@@ -31,7 +32,9 @@ class SiteTourLoadingWidget extends StatelessWidget {
                   Text(
                     'Getting your location...',
                     style: GoogleFonts.inter(
-                        color: const Color(0xffD0D0D0),
+                        color: isDark
+                            ? DarkColor.color1
+                            : LightColor.color3,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400),
                   )

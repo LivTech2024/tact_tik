@@ -6,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -41,7 +43,7 @@ class DarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
-  List colors = [Primarycolor, color25];
+  List colors = [DarkColor.Primarycolor, DarkColor.color25];
 
   bool showAllDARS = false;
 
@@ -98,7 +100,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -111,7 +114,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               if (documents == null || documents.isEmpty) {
                 return Center(
                   child: Text('No DAR entries found.',
-                      style: TextStyle(color: Colors.white)),
+                      style: TextStyle(
+                          color:
+                              isDark ? DarkColor.color1 : LightColor.color3)),
                 );
               }
 
@@ -142,7 +147,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                         InterBold(
                           text: date,
                           fontsize: 20.sp,
-                          color: Primarycolor,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.color3,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 20.h),
@@ -170,15 +177,31 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               );
                             },
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 20.h),
+                              // margin: EdgeInsets.only(bottom: 20.h),
                               width: double.maxFinite,
                               height: 140.h,
                               decoration: BoxDecoration(
-                                color: WidgetColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: isDark
+                                        ? Colors.transparent
+                                        : LightColor.color3.withOpacity(.05),
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                color: isDark
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.WidgetColor,
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 20.w,
+                                vertical: 10.h,
+                              ),
+                              margin: EdgeInsets.symmetric(
+                                // horizontal: 20.w,
                                 vertical: 10.h,
                               ),
                               child: Column(
@@ -192,17 +215,54 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                         ? document['EmpDarShiftName']
                                         : "",
                                     fontsize: 18.sp,
-                                    color: Primarycolor,
+                                    color: isDark
+                                        ? DarkColor.Primarycolor
+                                        : LightColor.color3,
                                   ),
-                                  SizedBox(height: 10.h),
+                                  isNew
+                                      ? InterBold(
+                                          text: "New",
+                                          fontsize: 18.sp,
+                                          color: Colors.green,
+                                        )
+                                      : SizedBox(),
+                                  SizedBox(height: height10),
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
                                       fontsize: 16.sp,
-                                      color: color26,
+                                      color: isDark
+                                          ? DarkColor.color26
+                                          : LightColor.color3,
                                       maxLines: 4,
                                     ),
                                   ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.w),
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.image,
+                                          size: 18.sp,
+                                          color: isDark
+                                              ? DarkColor.color2
+                                              : LightColor.color3,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.video_collection,
+                                          size: 18.sp,
+                                          color: isDark
+                                              ? DarkColor.color2
+                                              : LightColor.color3,
+                                        ),
+                                      )
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
@@ -219,12 +279,16 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    backgroundColor: AppBarcolor,
-                    elevation: 0,
+                    shadowColor: isDark
+                        ? DarkColor.color3
+                        : LightColor.color3.withOpacity(.1),
+                    backgroundColor:
+                        isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                    elevation: 5,
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        color: Colors.white,
+                        color: isDark ? DarkColor.color1 : LightColor.color3,
                         size: 24.sp,
                       ),
                       padding: EdgeInsets.only(left: 20.w),
@@ -232,10 +296,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    title: InterRegular(
+                    title: InterMedium(
                       text: 'DAR',
-                      fontsize: 18.sp,
-                      color: Colors.white,
+                      fontsize: 18.w,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     centerTitle: true,
@@ -245,8 +309,24 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     child: Container(
                       height: 65.h,
                       width: double.maxFinite,
-                      color: color24,
-                      // padding: EdgeInsets.symmetric(vertical: 16.h),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
+                        // borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      // color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -255,13 +335,17 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = Primarycolor;
-                                  colors[1] = color25;
+                                  colors[0] = isDark
+                                      ? DarkColor.color25
+                                      : LightColor.color2;
+                                  colors[1] = isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.Primarycolor;
                                 });
                               },
                               child: Container(
                                 height: 65.h,
-                                color: color24,
+                                color: DarkColor.Primarycolor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
@@ -281,13 +365,19 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                                  colors[0] = color25;
-                                  colors[1] = Primarycolor;
+                                  colors[0] = DarkColor.Primarycolor;
+                                  colors[1] = DarkColor.Primarycolor;
+                                  colors[0] = isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.Primarycolor;
+                                  colors[1] = isDark
+                                      ? DarkColor.color25
+                                      : LightColor.color2;
                                 });
                               },
                               child: Container(
                                 height: 65.h,
-                                color: color24,
+                                color: DarkColor.WidgetColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',

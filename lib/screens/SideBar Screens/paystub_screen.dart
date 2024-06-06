@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import '../../utils/colors.dart';
 import '../../fonts/inter_bold.dart';
 import '../../fonts/inter_regular.dart';
@@ -42,9 +43,9 @@ class _PayStubScreenState extends State<PayStubScreen> {
 
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Secondarycolor,
+            backgroundColor: DarkColor.Secondarycolor,
             appBar: AppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: DarkColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
@@ -58,7 +59,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                 },
               ),
 
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Paystub',
                 fontsize: width / width18,
                 color: Colors.white,
@@ -79,7 +80,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                   width: double.maxFinite,
                   margin: EdgeInsets.symmetric(horizontal: width / width30),
                   decoration: BoxDecoration(
-                    color: WidgetColor,
+                    color: DarkColor.WidgetColor,
                     borderRadius: BorderRadius.circular(width / width12),
                   ),
                   child: Column(
@@ -94,12 +95,12 @@ class _PayStubScreenState extends State<PayStubScreen> {
                         child: InterBold(
                           text: 'Pay Discrepancy',
                           fontsize: width / width18,
-                          color: Primarycolor,
+                          color: DarkColor.  Primarycolor,
                         ),
                       ),
                       Button1(
                         text: 'Open',
-                        color: color1,
+                        color: DarkColor.  color1,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -111,7 +112,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                             ),
                           );
                         },
-                        backgroundcolor: Primarycolorlight,
+                        backgroundcolor: DarkColor.Primarycolorlight,
                         useBorderRadius: true,
                         MyBorderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(width / width12),

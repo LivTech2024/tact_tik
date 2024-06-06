@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'dart:io';
 
 import '../../common/sizes.dart';
@@ -104,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -112,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: DarkColor.color1 ,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -120,10 +122,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Your Profile',
             fontsize: 18.sp,
-            color: Colors.white,
+            color:  DarkColor.color1,
             letterSpacing: -.3,
           ),
           actions: [
@@ -152,9 +154,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
               icon: Icon(
-                isEdit ? Icons.check : Icons.border_color,
+                isEdit ? Icons.close : Icons.border_color,
                 size: 24.sp,
-                color: color1,
+                color:  DarkColor.color1 ,
               ),
             )
           ],
@@ -167,11 +169,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Container(
                 height: 340.h,
                 width: double.maxFinite,
-                decoration: const BoxDecoration(
-                  gradient: const LinearGradient(
+                decoration: BoxDecoration(
+                  gradient:  LinearGradient(
                     colors: [
                       Colors.black,
-                      const Color(0xFF9C6400),
+                      isDark? Color(0xFF9C6400):LightColor.Primarycolor,
                     ],
                     begin: Alignment(0, -1.5),
                     end: Alignment.bottomCenter,
@@ -184,11 +186,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       GestureDetector(
                         onTap: _selectImageFromGallery,
                         child: Container(
-                          padding: EdgeInsets.all(4.sp),
+                          padding: EdgeInsets.all(4.w),
                           decoration: BoxDecoration(
-                            color: _employeeImageUrl != null
-                                ? const Color(0xFFAC7310)
-                                : Primarycolor,
+                            color: _employeeImageUrl != null ? Color(0xFFAC7310) : isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                             shape: BoxShape.circle,
                           ),
                           child: ClipOval(
@@ -213,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       PoppinsMedium(
                         text: _employeeName ?? '',
                         fontsize: 18.sp,
-                        color: color1,
+                        color: DarkColor.color1,
                       )
                     ],
                   ),
@@ -234,7 +234,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 InterSemibold(
                                   text: 'Name',
                                   fontsize: 20.sp,
-                                  color: color1,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
                                 ),
                                 SizedBox(height: 5.h),
                                 Row(
@@ -269,8 +271,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                       child: Icon(
                                         Icons.check,
-                                        color: color2,
-                                        size: width / width30,
+                                        color: DarkColor.color2,
+                                        size: 30.w,
                                       ),
                                     )*/
                                   ],
@@ -295,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InterSemibold(
                                 text: 'Contact No',
                                 fontsize: 20.sp,
-                                color: color1,
+                                color: isDark?DarkColor.  color1:LightColor.color3,
                               ),
                               SizedBox(height: 5.h),
                               Row(
@@ -332,8 +334,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     },
                                     child: Icon(
                                       Icons.check,
-                                      color: color2,
-                                      size: width / width30,
+                                      color: DarkColor.  color2,
+                                      size: 30.w,
                                     ),
                                   )*/
                                 ],
@@ -377,7 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: PoppinsRegular(
                     text: 'complete your profile !',
                     fontsize: 20.sp,
-                    color: color3,
+                    color: isDark ? DarkColor.color3 : LightColor.color2,
                   ),
                 )
             ],

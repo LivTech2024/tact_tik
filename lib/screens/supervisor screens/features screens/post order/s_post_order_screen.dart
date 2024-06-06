@@ -7,10 +7,12 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 // import 'package:workmanager/workmanager.dart';
 
 import '../../../../common/sizes.dart';
+import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/post_order.dart/view_post_order.dart';
@@ -82,7 +84,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
           future: _locationDataFuture,
           builder: (context, snapshot) {
@@ -103,12 +105,19 @@ class _SPostOrderState extends State<SPostOrder> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  backgroundColor: AppBarcolor,
-                  elevation: 0,
+                  shadowColor:  isDark
+                      ? Colors.transparent
+                      : LightColor.color3.withOpacity(.1),
+                  backgroundColor:  isDark
+                      ? DarkColor.AppBarcolor
+                      : LightColor.AppBarcolor,
+                  elevation: 5,
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Colors.white,
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor.color3,
                       size: width / width24,
                     ),
                     padding: EdgeInsets.only(left: width / width20),
@@ -117,10 +126,10 @@ class _SPostOrderState extends State<SPostOrder> {
                       print("Navigator debug: ${Navigator.of(context).toString()}");
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Post Orders',
                     fontsize: width / width18,
-                    color: Colors.white,
+                    color: isDark ? DarkColor.color1 : LightColor.color3,
                     letterSpacing: -.3,
                   ),
                   centerTitle: true,
@@ -140,7 +149,9 @@ class _SPostOrderState extends State<SPostOrder> {
                             child: InterSemibold(
                               text: date,
                               fontsize: width / width20,
-                              color: Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3,
                             ),
                           ),
                           ...posts.map((postOrder) {
@@ -187,14 +198,18 @@ class _SPostOrderState extends State<SPostOrder> {
                                       margin: EdgeInsets.only(bottom: height / height10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(width / width10),
-                                        color: WidgetColor,
+                                        color: isDark
+                                            ? DarkColor.WidgetColor
+                                            : LightColor.WidgetColor,
                                       ),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: color2,
+                                            color: isDark
+                                                ? DarkColor.color2
+                                                : LightColor.color2,
                                             fontsize: width / width14,
                                           ),
                                           SizedBox(
@@ -205,7 +220,9 @@ class _SPostOrderState extends State<SPostOrder> {
                                             height: height / height46,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(width / width10),
-                                              color: color1,
+                                              color: isDark
+                                                  ? DarkColor.color1
+                                                  : LightColor.color1,
                                             ),
                                             child: Row(
                                               children: [
@@ -221,11 +238,19 @@ class _SPostOrderState extends State<SPostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: color15,
+                                                      color: isDark
+                                                          ? DarkColor
+                                                              .color15
+                                                          : LightColor
+                                                              .color3,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: color16,
+                                                      color: isDark
+                                                          ? DarkColor
+                                                              .color16
+                                                          : LightColor
+                                                              .color2,
                                                     )
                                                   ],
                                                 )
@@ -263,7 +288,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                                       height: height / height46,
                                                       decoration: BoxDecoration(
                                                         borderRadius: BorderRadius.circular(width / width10),
-                                                        color: color1,
+                                                        color: DarkColor. color1,
                                                       ),
                                                       child: Row(
                                                         children: [
@@ -279,11 +304,13 @@ class _SPostOrderState extends State<SPostOrder> {
                                                             children: [
                                                               PoppinsMedium(
                                                                 text: otherFileName,
-                                                                color: color15,
+                                                                color: DarkColor
+                                                                    . color15,
                                                               ),
                                                               PoppinsRegular(
                                                                 text: otherFileSize,
-                                                                color: color16,
+                                                                color: DarkColor
+                                                                    .color16,
                                                               )
                                                             ],
                                                           )

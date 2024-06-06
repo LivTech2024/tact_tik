@@ -12,10 +12,10 @@ class IconTextWidget extends StatelessWidget {
     required this.icon,
     required this.text,
     this.useBold = true,
-    this.color = color6,
+    this.color = DarkColor. color6,
     this.fontsize = 14,
     this.iconSize,
-    this.Iconcolor = Primarycolor,
+    this.Iconcolor = DarkColor.Primarycolor,
     this.space,
   });
 

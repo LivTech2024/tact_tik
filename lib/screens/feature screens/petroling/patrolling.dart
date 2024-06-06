@@ -140,9 +140,9 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -154,7 +154,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Patrolling',
             fontsize: width / width18,
             color: Colors.white,
@@ -282,7 +282,7 @@ class _MovieCategoryState extends State<MovieCategory> {
           InterBold(
             text: widget.movies[0].patrolDate,
             fontsize: width / width18,
-            color: color1,
+            color: DarkColor.  color1,
           ),
           SizedBox(height: height / height30),
           for (var movie in widget.movies)
@@ -291,7 +291,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                 AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   decoration: BoxDecoration(
-                    color: WidgetColor,
+                    color: DarkColor.  WidgetColor,
                     borderRadius: BorderRadius.circular(width / width10),
                   ),
                   constraints: _expanded
@@ -312,11 +312,11 @@ class _MovieCategoryState extends State<MovieCategory> {
                               icon: Icons.location_on,
                               text: movie.patrolArea,
                               useBold: false,
-                              color: color13,
+                              color: DarkColor.  color13,
                             ),
                             SizedBox(height: height / height16),
                             Divider(
-                              color: color14,
+                              color: DarkColor.  color14,
                             ),
                             SizedBox(height: height / height5),
                             IconTextWidget(
@@ -324,11 +324,11 @@ class _MovieCategoryState extends State<MovieCategory> {
                               icon: Icons.access_time,
                               text: movie.patrolTime,
                               useBold: false,
-                              color: color13,
+                              color: DarkColor.color13,
                             ),
                             SizedBox(height: height / height16),
                             Divider(
-                              color: color14,
+                              color: DarkColor.color14,
                             ),
                             SizedBox(height: height / height5),
                             Row(
@@ -340,7 +340,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                   children: [
                                     Icon(
                                       Icons.qr_code_scanner,
-                                      color: Primarycolor,
+                                      color: DarkColor.Primarycolor,
                                       size: width / width24,
                                     ),
                                     SizedBox(width: width / width20),
@@ -348,7 +348,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                       text:
                                           'Total ${movie.PatrolRequiredCount} Completed ${movie.PatrolCompletedCount}',
                                       fontsize: width / width14,
-                                      color: color13,
+                                      color: DarkColor.  color13,
                                     )
                                   ],
                                 ),
@@ -363,7 +363,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                         ? Icons.arrow_circle_up_outlined
                                         : Icons.arrow_circle_down_outlined,
                                     size: width / width24,
-                                    color: Primarycolor,
+                                    color: DarkColor.  Primarycolor,
                                   ),
                                 )
                               ],
@@ -376,7 +376,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                           children: [
                             Button1(
                               text: 'START',
-                              backgroundcolor: colorGreen,
+                              backgroundcolor: DarkColor.  colorGreen,
                               color: Colors.green,
                               borderRadius: width / width10,
                               onPressed: () async {
@@ -645,7 +645,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                         margin: EdgeInsets.only(
                                             top: height / height10),
                                         decoration: BoxDecoration(
-                                          color: color15,
+                                          color: DarkColor.color15,
                                           borderRadius: BorderRadius.circular(
                                               width / width10),
                                         ),
@@ -659,7 +659,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                   height: height / height48,
                                                   width: width / width48,
                                                   decoration: BoxDecoration(
-                                                    color: color16,
+                                                    color: DarkColor.color16,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             width / width10),
@@ -677,7 +677,8 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                                 BoxDecoration(
                                                               shape: BoxShape
                                                                   .circle,
-                                                              color: color2,
+                                                              color: DarkColor
+                                                                  .  color2,
                                                             ),
                                                             child: Icon(
                                                               Icons.done,
@@ -690,7 +691,8 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                                 .qr_code_scanner,
                                                             size:
                                                                 width / width24,
-                                                            color: Primarycolor,
+                                                            color: DarkColor
+                                                                .Primarycolor,
                                                           ),
                                                   ),
                                                 ),
@@ -700,7 +702,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                 InterRegular(
                                                   text: checkpoint[
                                                       'CheckPointName'],
-                                                  color: color17,
+                                                  color: DarkColor.color17,
                                                   fontsize: width / width18,
                                                 ),
                                               ],
@@ -710,7 +712,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                               width: width / width34,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: color16,
+                                                color: DarkColor.color16,
                                               ),
                                               child: Center(
                                                 child: IconButton(
@@ -765,7 +767,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                                                   },
                                                   icon: Icon(
                                                     Icons.info,
-                                                    color: color18,
+                                                    color: DarkColor.color18,
                                                     size: width / width24,
                                                   ),
                                                   padding: EdgeInsets.zero,
@@ -784,7 +786,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                             ),
                             Button1(
                                 text: 'END',
-                                backgroundcolor: colorRed2,
+                                backgroundcolor: DarkColor.colorRed2,
                                 color: Colors.redAccent,
                                 borderRadius: 10,
                                 onPressed: () async {

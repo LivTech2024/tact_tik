@@ -11,31 +11,11 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
-import 'package:tact_tik/screens/SideBar%20Screens/profile_screen.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
-import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
-import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
-import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
-import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
-import 'package:tact_tik/screens/feature%20screens/Log%20Book/logbook_screen.dart';
-import 'package:tact_tik/screens/home%20screens/home_screen.dart';
-import 'package:tact_tik/screens/home%20screens/notification_screen.dart';
-import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/select_reports_guards.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_assets_view_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/select_assets_guards.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/select_dar_guards.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_managment_view_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/loogbook/select_loogbook_guards.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/panic/s_panic_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
-import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/s_post_order_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/all_schedules_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/Scheduling/select_guards_screen.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
+// import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
+// import 'package:workmanager/workmanager.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
@@ -54,6 +34,8 @@ Future<void> main() async {
   MapboxOptions.setAccessToken(appConstants.mapBoxPublicKey);
   runApp(const MyApp());
 }
+
+bool isDark = false;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -94,16 +76,17 @@ class MyApp extends StatelessWidget {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return child;
+            return AuthChecker();
           } else {
             return Scaffold(
-              backgroundColor: Secondarycolor,
+              backgroundColor:
+                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
               body: Center(
                 child: InterSemibold(
                   text:
                       'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
-                  color: color1,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
               ),
             );

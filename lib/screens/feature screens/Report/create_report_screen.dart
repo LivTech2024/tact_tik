@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../common/sizes.dart';
@@ -251,28 +252,31 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 24.sp,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
+             size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: reportData.isNotEmpty &&
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
             fontsize: 18.sp,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -288,8 +292,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 30.h),
                     InterBold(
                       text: 'New Report',
-                      fontsize: 20.sp,
-                      color: Primarycolor,
+                    fontsize: 20.sp,
+                      color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 30.h),
@@ -304,8 +308,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 30.h),
                     InterBold(
                       text: 'Category',
-                      fontsize: 20.sp,
-                      color: Primarycolor,
+                    fontsize: 20.sp,
+                      color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 20.h),
@@ -313,16 +317,28 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       height: 60.h,
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
-                        borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.sp,
-                          dropdownColor: WidgetColor,
-                          style: TextStyle(color: color2),
-                          borderRadius: BorderRadius.circular(10.r),
+                          dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          style: TextStyle(color:  isDark
+                                  ? DarkColor.color2
+                                  : LightColor.color3),
+                          borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
                             setState(() {
@@ -347,28 +363,64 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     ),
                     if (dropdownShoe) SizedBox(height: 20.h),
                     if (dropdownShoe)
-                      CustomeTextField(
-                        hint: 'Create category',
-                        isExpanded: true,
-                        showIcon: false,
-                        controller: newCategoryController,
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: LightColor.color3.withOpacity(.2),
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: CustomeTextField(
+                          hint: 'Create category',
+                          isExpanded: true,
+                          showIcon: false,
+                          controller: newCategoryController,
+                        ),
                       ),
-                    SizedBox(height: 20.h),
-                    CustomeTextField(
-                      hint: 'Explain',
-                      isExpanded: true,
-                      controller: explainController,
-                      isEnabled: reportData.isNotEmpty &&
-                              reportData['ReportIsFollowUpRequired'] == false
-                          ? false
-                          : true,
+                      SizedBox(height: 20.h),
+                    Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                       
+                      ),
+                      child: CustomeTextField(
+                        hint: 'Explain',
+                        isExpanded: true,
+                        controller: explainController,
+                        isEnabled: reportData.isNotEmpty &&
+                                reportData['ReportIsFollowUpRequired'] == false
+                            ? false
+                            : true,
+                      ),
                     ),
                     SizedBox(height: 20.h),
                     Container(
                       height: 60.h,
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -378,21 +430,25 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: color2,
+                                color:  isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
                                 size: 24.sp,
                               ),
                               SizedBox(width: 6.w),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: color8,
-                                fontsize: 16.sp,
+                                color:  isDark
+                                    ? DarkColor.color8
+                                    : LightColor.color3,
+                                fontsize:16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
                           ),
                           Checkbox(
-                            activeColor: Primarycolor,
-                            checkColor: color1,
+                            activeColor: DarkColor.Primarycolor,
+                            checkColor: DarkColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -419,7 +475,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     height: 66.h,
                                     width: 66.w,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: isDark? DarkColor.WidgetColor : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     margin: EdgeInsets.all(8.sp),
@@ -493,11 +549,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: WidgetColor,
-                                borderRadius: BorderRadius.circular(8.r),
+                                color: isDark? DarkColor.WidgetColor : LightColor.Primarycolor,
+                              borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
                                   Icons.add,
                                   size: 20.sp,
                                 ),
@@ -702,8 +761,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: Primarycolor,
-                        borderRadius: 10.r,
+                        backgroundcolor: isDark
+                            ? DarkColor.Primarycolor
+                            : LightColor.Primarycolor,
+                         borderRadius: 10.r,
                       ),
                     ),
                   ],

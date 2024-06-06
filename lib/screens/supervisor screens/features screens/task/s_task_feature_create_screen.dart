@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -76,7 +77,7 @@ class _TaskFeatureCreateScreenState extends State<STaskFeatureCreateScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor. AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -89,7 +90,7 @@ class _TaskFeatureCreateScreenState extends State<STaskFeatureCreateScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Task',
             fontsize: width / width18,
             color: Colors.white,
@@ -119,7 +120,7 @@ class _TaskFeatureCreateScreenState extends State<STaskFeatureCreateScreen> {
                     Button1(
                       text: 'Done',
                       onPressed: saveTaskToFirestore,
-                      backgroundcolor: Primarycolor,
+                      backgroundcolor: DarkColor. Primarycolor,
                       borderRadius: width / width10,
                     ),
                   ],

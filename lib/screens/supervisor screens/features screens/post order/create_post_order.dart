@@ -6,6 +6,10 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/main.dart';
+
 import 'package:path_provider/path_provider.dart';
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
@@ -220,13 +224,14 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     return SafeArea(
       child: Scaffold(
+        
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -234,15 +239,15 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Post Order',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: width / width30),
@@ -252,7 +257,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               InterSemibold(
                 text: widget.date,
                 fontsize: width / width20,
-                color: Primarycolor,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
               SizedBox(height: height / height30),
               CustomeTextField(
@@ -283,7 +288,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                  color: WidgetColor,
+                                  color: DarkColor. WidgetColor,
                                   borderRadius: BorderRadius.circular(
                                     width / width10,
                                   )),
@@ -360,7 +365,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                         height: height / height66,
                         width: width / width66,
                         decoration: BoxDecoration(
-                            color: WidgetColor,
+                            color:DarkColor. WidgetColor,
                             borderRadius: BorderRadius.circular(width / width8)),
                         child: Center(
                           child: Icon(Icons.add),
@@ -404,7 +409,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                 height: height / height46,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(width / width10),
-                                  color: color1,
+                                  color: DarkColor.color1,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -426,11 +431,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                           children: [
                                             PoppinsMedium(
                                               text: otherFileName,
-                                              color: color15,
+                                              color: isDark? DarkColor.color15 : LightColor.color3,
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color: color16,
+                                              color: isDark? DarkColor.color16 : LightColor.color3,
                                             ),
                                           ],
                                         ),
@@ -475,7 +480,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
               Button1(
                 text: 'Done',
                 onPressed: _uploadFiles,
-                backgroundcolor: Primarycolor,
+                backgroundcolor: DarkColor.Primarycolor,
                 borderRadius: width / width10,
               ),
             ],

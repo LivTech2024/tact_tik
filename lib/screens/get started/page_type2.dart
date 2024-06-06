@@ -2,6 +2,7 @@ import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../common/sizes.dart';
 import '../../fonts/poppins_medium.dart';
@@ -41,7 +42,7 @@ class PageType2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Secondarycolor,
+      color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +51,7 @@ class PageType2 extends StatelessWidget {
             height: 470.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: Primarycolor,
+              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(40.r),
                 bottomLeft: Radius.circular(40.r),
@@ -76,8 +77,8 @@ class PageType2 extends StatelessWidget {
           ),
           PoppinsSemibold(
             text: tittls[index],
-            fontsize: 32.sp,
-            color: color1,
+             fontsize: 32.sp,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           SizedBox(height: 27.h),
           SizedBox(
@@ -89,8 +90,8 @@ class PageType2 extends StatelessWidget {
           SizedBox(height: 10.h),
           PoppinsRegular(
             text: description[index],
-            fontsize: 14.sp,
-            color: color2,
+             fontsize: 14.sp,
+            color: isDark ? DarkColor.color2 : LightColor.color3,
             textAlign: TextAlign.center,
           ),
           Visibility(
@@ -104,8 +105,10 @@ class PageType2 extends StatelessWidget {
                 height: 60.h,
                 margin: EdgeInsets.only(left: 24.w, right: 24.w, top: 74.h),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.r),
-                  color: Primarycolor,
+           borderRadius: BorderRadius.circular(15.r),
+                  color: isDark
+                      ? DarkColor.Primarycolor
+                      : LightColor.Primarycolor,
                 ),
                 child: Center(
                   child: PoppinsMedium(

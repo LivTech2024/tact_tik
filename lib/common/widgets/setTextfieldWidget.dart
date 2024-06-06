@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/main.dart';
 import '../sizes.dart';
 import '../../utils/colors.dart';
 
@@ -45,8 +46,18 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        color: WidgetColor,
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.transparent
+                : LightColor.color3.withOpacity(.05),
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
+       borderRadius: BorderRadius.circular(10.r),
+        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
       ),
       margin: EdgeInsets.only(top: 10.h),
       child: Center(
@@ -57,8 +68,8 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           // Enable or disable TextField based on shouldDisable
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
-            fontSize: 18.sp,
-            color: Colors.white,
+             fontSize: 18.sp,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           onSubmitted: (value) {
             setState(() {
@@ -75,13 +86,13 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             focusedBorder: InputBorder.none,
             hintStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w300,
-              fontSize: 18.sp,
-              color: color2,
+       fontSize: 18.sp,
+              color: isDark ? DarkColor.color2 : LightColor.color3,
             ),
             hintText: widget.hintText,
             contentPadding: EdgeInsets.zero,
           ),
-          cursorColor: Primarycolor,
+          cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           controller: widget.controller,
           inputFormatters: widget.inputFormatters,
         ),

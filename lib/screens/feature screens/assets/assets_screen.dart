@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/assets/view_assets_screen.dart';
 
 import '../../../common/sizes.dart';
@@ -59,7 +60,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: StreamBuilder(
             stream: _assetAllocationStream,
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -73,12 +74,12 @@ class _AssetsScreenState extends State<AssetsScreen> {
                   return CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        backgroundColor: AppBarcolor,
+                        backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                         elevation: 0,
                         leading: IconButton(
                           icon: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.white,
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
                             size: 24.sp,
                           ),
                           padding: EdgeInsets.only(left: 20.w),
@@ -88,10 +89,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                 "Navigator debug: ${Navigator.of(context).toString()}");
                           },
                         ),
-                        title: InterRegular(
+                        title: InterMedium(
                           text: 'Assets',
                           fontsize: 18.sp,
-                          color: Colors.white,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                           letterSpacing: -0.3,
                         ),
                         centerTitle: true,
@@ -143,8 +144,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                       text: isToday
                                           ? 'Today'
                                           : DateFormat.yMMMd().format(date),
-                                      fontsize: 20.sp,
-                                      color: Primarycolor,
+                                   fontsize: 20.sp,
+                                      color: isDark
+                                          ? DarkColor.Primarycolor
+                                          : LightColor.color3,
                                     ),
                                   ),
                                   SizedBox(height: 30.h),
@@ -197,8 +200,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                 EdgeInsets.only(bottom: 10.h),
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(10.r),
-                                              color: WidgetColor,
+                                                     BorderRadius.circular(10.r),
+                                              color: isDark
+                                                  ? DarkColor.WidgetColor
+                                                  : LightColor.WidgetColor,
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -223,13 +228,21 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                             BorderRadius
                                                                 .circular(10.r),
                                                         color:
-                                                            Primarycolorlight,
+                                                         isDark
+                                                            ? DarkColor
+                                                                .Primarycolorlight
+                                                            : LightColor
+                                                                .Primarycolorlight,
                                                       ),
                                                       child: Center(
                                                         child: Icon(
                                                           Icons
                                                               .home_repair_service,
-                                                          color: Primarycolor,
+                                                          color: isDark
+                                                              ? DarkColor
+                                                                  .Primarycolor
+                                                              : LightColor
+                                                                  .Primarycolor,
                                                           size: 24.sp,
                                                         ),
                                                       ),
@@ -265,8 +278,12 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                         }
                                                         return InterMedium(
                                                           text: equipmentName,
-                                                          fontsize: 16.sp,
-                                                          color: color1,
+                                                             fontsize: 16.sp,
+                                                          color: isDark
+                                                              ? DarkColor
+                                                                  .color1
+                                                              : LightColor
+                                                                  .color3,
                                                         );
                                                       },
                                                     ),
@@ -274,8 +291,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                 ),
                                                 InterMedium(
                                                   text: allocationDateTime,
-                                                  color: color17,
-                                                  fontsize: 16.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color17
+                                                      : LightColor.color2,
+                                                fontsize: 16.sp,
                                                 ),
                                               ],
                                             ),

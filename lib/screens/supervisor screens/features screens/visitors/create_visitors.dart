@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -119,8 +120,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor,
-              secondary: Primarycolor,
+              primary: DarkColor. Primarycolor,
+              secondary: DarkColor.Primarycolor,
             ),
           ),
           child: child!,
@@ -277,13 +278,13 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor. Secondarycolor,
         body: Stack(
           children: [
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  backgroundColor: AppBarcolor,
+                  backgroundColor: DarkColor. AppBarcolor,
                   elevation: 0,
                   leading: IconButton(
                     icon: Icon(
@@ -298,7 +299,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                           "Navigtor debug: ${Navigator.of(context).toString()}");
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Create Visitors',
                     fontsize: width / width18,
                     color: Colors.white,
@@ -316,7 +317,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                         SizedBox(height: height / height30),
                         InterBold(
                           text: 'Add Visitor',
-                          color: Primarycolor,
+                          color: DarkColor. Primarycolor,
                           fontsize: width / width20,
                         ),
                         SizedBox(height: height / height30),
@@ -431,8 +432,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                               // Handle the case when saving or updating visitor data fails
                             }
                           },
-                          backgroundcolor: Primarycolor,
-                          color: color22,
+                          backgroundcolor: DarkColor. Primarycolor,
+                          color: DarkColor.color22,
                           borderRadius: width / width10,
                           fontsize: width / width18,
                         ),

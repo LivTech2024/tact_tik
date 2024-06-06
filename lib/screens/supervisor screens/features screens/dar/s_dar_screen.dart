@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -41,7 +42,7 @@ class SDarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<SDarDisplayScreen> {
-  List colors = [Primarycolor, color25];
+  List colors = [DarkColor.Primarycolor, DarkColor.color25];
 
   bool showAllDARS = false;
 
@@ -101,7 +102,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -144,7 +145,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                         InterBold(
                           text: date,
                           fontsize: width / width20,
-                          color: Primarycolor,
+                          color: DarkColor.Primarycolor,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: height / height20),
@@ -173,7 +174,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               width: double.maxFinite,
                               height: 140.h,
                               decoration: BoxDecoration(
-                                color: WidgetColor,
+                                color: DarkColor.WidgetColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width20),
                               ),
@@ -188,7 +189,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                   InterBold(
                                     text: document['EmpDarShiftName'] ?? "",
                                     fontsize: width / width18,
-                                    color: Primarycolor,
+                                    color: DarkColor.Primarycolor,
                                   ),
                                   isNew
                                       ? InterBold(
@@ -202,7 +203,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
                                       fontsize: width / width16,
-                                      color: color26,
+                                      color: DarkColor.color26,
                                       maxLines: 4,
                                     ),
                                   ),
@@ -216,7 +217,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                         icon: Icon(
                                           Icons.image,
                                           size: width / width18,
-                                          color: color2,
+                                          color: DarkColor.color2,
                                         ),
                                       ),
                                       IconButton(
@@ -224,7 +225,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                         icon: Icon(
                                           Icons.video_collection,
                                           size: width / width18,
-                                          color: color2,
+                                          color: DarkColor.color2,
                                         ),
                                       ),
                                     ],
@@ -245,7 +246,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    backgroundColor: AppBarcolor,
+                    backgroundColor: DarkColor.AppBarcolor,
                     elevation: 0,
                     leading: IconButton(
                       icon: Icon(
@@ -258,7 +259,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                         Navigator.pop(context);
                       },
                     ),
-                    title: InterRegular(
+                    title: InterMedium(
                       text: 'DAR',
                       fontsize: width / width18,
                       color: Colors.white,
@@ -271,7 +272,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                     child: Container(
                       height: height / height65,
                       width: double.maxFinite,
-                      color: color24,
+                      color: DarkColor.color24,
                       padding:
                           EdgeInsets.symmetric(vertical: height / height16),
                       child: Row(
@@ -282,13 +283,13 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = Primarycolor;
-                                  colors[1] = color25;
+                                  colors[0] = DarkColor.color25;
+                                  colors[1] = DarkColor.Primarycolor;
                                 });
                               },
                               child: Container(
                                 height: 65.h,
-                                color: color24,
+                                color: DarkColor.Primarycolor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
@@ -308,13 +309,13 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                                  colors[0] = color25;
-                                  colors[1] = Primarycolor;
+                                  colors[0] = DarkColor.Primarycolor;
+                                  colors[1] = DarkColor.color25;
                                 });
                               },
                               child: Container(
                                 height: 65.h,
-                                color: color24,
+                                color: DarkColor.Primarycolor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',

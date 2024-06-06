@@ -1,10 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/create_discrepancy_screen.dart';
+import 'package:tact_tik/main.dart';
+import 'package:tact_tik/pay_discrepancy_screen.dart';
+import 'package:tact_tik/screens/new%20guard/new_guard_screen.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/write_msg_screen.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/poppins_light.dart';
 import '../../../fonts/poppis_semibold.dart';
@@ -172,7 +177,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             )
                           : BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
                               image: DecorationImage(
                                 image: AssetImage('assets/images/default.png'),
                                 filterQuality: FilterQuality.high,
@@ -185,11 +192,22 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     children: [
                       Stack(
                         children: [
-                          Icon(
-                            Icons.notifications,
-                            // Use the notifications_active icon
-                            color: Primarycolor, // Change color if unread
-                            size: 28.sp,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                              WriteMsgScreen()));
+                            },
+                            child: Icon(
+                              Icons.notifications,
+                              // Use the notifications_active icon
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3, // Change color if unread
+                              size: 28.sp,
+                            ),
                           ),
                           if (isUnread)
                             Positioned(
@@ -197,10 +215,12 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               right: 0,
                               child: Container(
                                 padding: EdgeInsets.all(2.sp),
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color:
-                                      Primarycolor, // Background color for unread indicator
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor
+                                          .color3, // Background color for unread indicator
                                 ),
                               ),
                             ),
@@ -215,7 +235,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           scaleX: -1,
                           child: Icon(
                             Icons.short_text_rounded,
-                            color: Primarycolor,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
                             size: 40.sp,
                           ),
                         ),
@@ -232,7 +254,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     children: [
                       PoppinsSemibold(
                         text: '${greeting}',
-                        color: Primarycolor,
+                        color:
+                            isDark ? DarkColor.Primarycolor : LightColor.color3,
                         letterSpacing: -.5,
                         fontsize: 35.sp,
                       ),
@@ -241,7 +264,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         text: widget.userName != ''
                             ? widget.userName
                             : 'User not found',
-                        color: Primarycolor,
+                        color:
+                            isDark ? DarkColor.Primarycolor : LightColor.color3,
                         fontsize: 30.sp,
                       ),
                       SizedBox(height: 46.h),
@@ -254,7 +278,17 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
               ),
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
-                color: WidgetColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.transparent
+                        : LightColor.color3.withOpacity(.05),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(13.r),
               ),
               child: Column(
@@ -301,13 +335,15 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               hintStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 18.sp,
-                                color: color2,
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color3,
                               ),
                               hintText: 'Search screen',
                               contentPadding: EdgeInsets.zero,
                               counterText: "",
                             ),
-                            cursorColor: Primarycolor,
+                            cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                           ),
                           suggestionsCallback: suggestionsCallback,
                           itemBuilder: (context, Screens screen) {
@@ -316,7 +352,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                   Icon(screen.icon, color: Colors.blueAccent),
                               title: InterRegular(
                                 text: screen.name,
-                                color: color2,
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color3,
                               ),
                             );
                           },
@@ -327,7 +365,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ),
                             child: InterRegular(
                               text: 'No Such Screen found',
-                              color: color2,
+                              color: isDark ? DarkColor.color2 : LightColor.color3,
                               fontsize: 18.sp,
                             ),
                           ),
@@ -456,7 +494,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         height: 43.h,
                         width: 43.w,
                         decoration: BoxDecoration(
-                          color: Primarycolor,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                           borderRadius: BorderRadius.circular(9.r),
                         ),
                         child: Center(
@@ -480,7 +520,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           child: InterRegular(
                             text: 'CLEAR',
                             fontsize: 14.sp,
-                            color: Primarycolor,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
                           ),
                         )
                       : SizedBox()

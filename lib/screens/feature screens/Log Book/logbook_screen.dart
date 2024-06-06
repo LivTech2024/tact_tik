@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/widget/log_type_widget.dart';
 import '../../../common/enums/log_type_enums.dart';
 import '../../../fonts/inter_regular.dart';
@@ -56,17 +57,18 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
-                  size: 24.sp,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                   size: 24.sp,
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -74,10 +76,10 @@ class _LogBookScreenState extends State<LogBookScreen> {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'LogBook',
                 fontsize: 18.sp,
-                color: Colors.white,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,
@@ -99,7 +101,7 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
                 if (!snapshot.hasData) {
                   return SliverToBoxAdapter(
-                    child: Center(child: InterMedium(text: 'Loading...' , color: Primarycolor,fontsize: 18.sp,)),
+                    child: Center(child: InterMedium(text: 'Loading...' , color:DarkColor.Primarycolor ,fontsize: 18.sp,)),
                   );
                 }
 
@@ -232,23 +234,35 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               height: 70.h,
               width: double.maxFinite,
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.transparent
+                        : LightColor.color3.withOpacity(.05),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
                 borderRadius: BorderRadius.circular(10.r),
-                color: WidgetColor,
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: Primarycolor,
+                    color: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.color3,
                     fontsize: 18.sp,
                   ),
                   Icon(
                     expand
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
-                    size: 24.sp,
-                    color: Primarycolor,
+                      size: 24.sp,
+                    color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                   )
                 ],
               ),
@@ -261,7 +275,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: 18.sp,
-                color: Primarycolor,
+                 color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
             ),
           // ),

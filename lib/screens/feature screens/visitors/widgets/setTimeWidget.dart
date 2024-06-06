@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_medium.dart';
+import '../../../../main.dart';
 import '../../../../utils/colors.dart';
 
 class SetTimeWidget extends StatelessWidget {
@@ -40,8 +41,18 @@ class SetTimeWidget extends StatelessWidget {
         height: height / height60,
         width: double.maxFinite,
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.transparent
+                  : LightColor.color3.withOpacity(.05),
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: Offset(0, 3),
+            )
+          ],
           borderRadius: BorderRadius.circular(width / width10),
-          color: WidgetColor,
+          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
         ),
         child: Center(
           child: IgnorePointer(
@@ -51,7 +62,7 @@ class SetTimeWidget extends StatelessWidget {
               child: InterMedium(
                 text: hintText,
                 fontsize: width / width18,
-                color: color25,
+                color: isDark ? DarkColor.color25 : LightColor.color3,
               ),
             ),
           ),

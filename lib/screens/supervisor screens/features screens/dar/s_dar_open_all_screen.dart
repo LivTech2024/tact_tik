@@ -33,7 +33,7 @@ class SDarOpenAllScreen extends StatefulWidget {
 }
 
 class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
-  List colors = [Primarycolor, color25];
+  List colors = [DarkColor.Primarycolor, DarkColor.color25];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -464,9 +464,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -479,7 +479,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'DAR',
             fontsize: width / width18,
             color: Colors.white,
@@ -494,7 +494,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
               Container(
                 height: height / height65,
                 width: double.maxFinite,
-                color: color24,
+                color: DarkColor.color24,
                 padding: EdgeInsets.symmetric(vertical: height / height16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -504,13 +504,13 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = Primarycolor;
-                            colors[1] = color25;
+                            colors[0] = DarkColor.Primarycolor;
+                            colors[1] = DarkColor.color25;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: color24,
+                          color: DarkColor.Primarycolor,
                           child: Center(
                             child: InterBold(
                               text: 'Edit',
@@ -522,20 +522,20 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                       ),
                     ),
                     VerticalDivider(
-                      color: Primarycolor,
+                      color: DarkColor.Primarycolor,
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] = color25;
-                            colors[1] = Primarycolor;
+                            colors[0] = DarkColor.color25;
+                            colors[1] = DarkColor.Primarycolor;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: color24,
+                          color: DarkColor.Primarycolor,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
@@ -561,7 +561,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               InterRegular(
                                 text: 'Shift Name :',
                                 fontsize: width / width20,
-                                color: color17,
+                                color: DarkColor.color17,
                               ),
                               SizedBox(
                                 width: width / width6,
@@ -569,7 +569,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftName ?? 'Loading...',
-                                  color: Primarycolor,
+                                  color: DarkColor.Primarycolor,
                                   fontsize: width / width20,
                                 ),
                               ),
@@ -582,7 +582,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               InterRegular(
                                 text: 'Location :',
                                 fontsize: width / width20,
-                                color: color17,
+                                color: DarkColor.color17,
                               ),
                               SizedBox(
                                 width: width / width6,
@@ -591,7 +591,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                 child: InterRegular(
                                   text: _userService.shiftLocation ??
                                       'Loading...',
-                                  color: Primarycolor,
+                                  color: DarkColor.Primarycolor,
                                   fontsize: width / width20,
                                   maxLines: 3,
                                 ),
@@ -656,7 +656,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                             ),
                                             width: double.maxFinite,
                                             decoration: BoxDecoration(
-                                              color: WidgetColor,
+                                              color: DarkColor.WidgetColor,
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       width / width10),
@@ -673,7 +673,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         "${data[index]['TileTime']}",
                                                     // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: color21,
+                                                    color: DarkColor.color21,
                                                   ),
                                                   SizedBox(
                                                     height: height / height10,
@@ -682,7 +682,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         '${data[index]['TileContent']}',
                                                     fontsize: width / width16,
-                                                    color: color12,
+                                                    color: DarkColor.color12,
                                                     maxLines: 5,
                                                   ),
                                                   SizedBox(
@@ -841,7 +841,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                           InterBold(
                             text: 'Reports',
                             fontsize: width / width20,
-                            color: Primarycolor,
+                            color: DarkColor.Primarycolor,
                           ),
                           SizedBox(height: height / height25),
                           FutureBuilder<
@@ -878,7 +878,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                       Text(
                                         'Reports for $hourKey',
                                         style: const TextStyle(
-                                          color: Primarycolor,
+                                          color: DarkColor.Primarycolor,
                                         ),
                                       ),
                                       ...reportsForHour.map((report) {

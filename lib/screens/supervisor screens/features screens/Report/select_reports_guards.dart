@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -54,9 +55,9 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor. Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -69,7 +70,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Reports Guards',
             fontsize: width / width18,
             color: Colors.white,
@@ -111,7 +112,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                         child: Container(
                           height: height / height60,
                           decoration: BoxDecoration(
-                            color: color19,
+                            color: DarkColor. color19,
                             borderRadius:
                             BorderRadius.circular(width / width12),
                           ),
@@ -147,7 +148,8 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: Primarycolor,
+                                            color: DarkColor
+                                                            .Primarycolor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -160,7 +162,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: color1,
+                                          color: DarkColor. color1,
                                         ),
                                       ],
                                     ),
@@ -184,7 +186,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                       : Center(
                     child: PoppinsBold(
                       text: 'No Guards Found',
-                      color: color2,
+                      color: DarkColor.color2,
                       fontsize: width / width16,
                     ),
                   )
