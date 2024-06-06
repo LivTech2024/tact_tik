@@ -1003,7 +1003,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               widget.ShiftClientID,
                               widget.ShiftLocationId,
                               widget.ShiftName);
-                          await fireStoreService.EndShiftLog(
+                          await fireStoreService.EndShiftLog2(
                               widget.EmployeId,
                               formattedStopwatchTime,
                               widget.ShiftId,

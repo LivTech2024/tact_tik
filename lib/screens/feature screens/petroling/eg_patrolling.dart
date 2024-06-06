@@ -1059,7 +1059,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       _expandCategoryMap[category.title] =
                                           !_expandCategoryMap[category.title]!;
                                       // }
-
                                       // _expand2 = !_expand2;
                                     });
                                   },

@@ -1353,6 +1353,69 @@ class FireStoreService {
     }
   }
 
+  Future<void> EndShiftLog2(
+      String employeeId,
+      String Stopwatch,
+      String? shiftId,
+      String LocationName,
+      String BrachId,
+      String CompyId,
+      String EmpNames,
+      String ClientId) async {
+    try {
+      if (shiftId == null || shiftId.isEmpty) {
+        throw ArgumentError('Invalid shiftId: $shiftId');
+      }
+
+      // Update the shift status in Firestore
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int? savedInTime = prefs.getInt('savedInTime');
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+      final statusData = {
+        'Status': 'completed',
+        'StatusReportedById': employeeId,
+        'StatusReportedByName': EmpNames,
+        'StatusReportedTime': Timestamp.now(),
+        'StatusStartedTime': savedInTime != null
+            ? DateTime.fromMillisecondsSinceEpoch(savedInTime)
+            : null,
+        // 'StatusEndReason': Reason ?? ""
+      };
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'started');
+      if (index != -1) {
+        // If the map already exists in the array, update it
+        currentArray[index]['Status'] = 'completed';
+        currentArray[index]['StatusReportedById'] = employeeId;
+        currentArray[index]['StatusReportedByName'] = EmpNames;
+        currentArray[index]['StatusReportedTime'] = Timestamp.now();
+        // currentArray[index]['StatusEndReason'] = Reason ?? "";
+      } else {
+        // If the map doesn't exist, add it to the array
+        currentArray.add(statusData);
+      }
+      await documentReference.update({'ShiftCurrentStatus': currentArray});
+
+      // Generate report
+      String Title = "ShiftEnded";
+      String Data = "Shift Ended ";
+      String type = "Shift";
+      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
+      //     CompyId, "completed", EmpNames, ClientId, type);
+
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+      print('Shift end logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift end: $e');
+    }
+  }
+
 //Start Shift
 //Break
 //Stop push the timer also change the shiftStatus as done
@@ -3123,7 +3186,7 @@ class FireStoreService {
       // Query PatrolLogs for data
       var querySnapshot = await FirebaseFirestore.instance
           .collection('PatrolLogs')
-          .where('PatrolShiftId', isEqualTo: ShiftId)
+          // .where('PatrolShiftId', isEqualTo: ShiftId)
           .where('PatrolLogGuardId', isEqualTo: empId)
           // .where('changePatrolStatus', isEqualTo: ShiftId)
           .orderBy('PatrolLogPatrolCount')
@@ -3131,22 +3194,21 @@ class FireStoreService {
 
       // Process query results
       List<String> specificDocIds = [
-        '0qRktNvV0f9kQHLn3Nhn',
-        'ycu5qIbXOu0593jQB6fi',
-        '3VUuYWhhtjik9mx1BOal'
+        '17R4yMJsBmegl2088uIe',
+        '4YSj5Q4JNO9YFwSeOdua',
+        'Gnq53zSuCqIa6JqXObnT'
       ];
 
       querySnapshot.docs.forEach((doc) {
         // Check if the document ID is in the list of specific IDs
         // Check if the document ID already exists in pdfDataList
-        // if (specificDocIds.contains(doc.id)) {
-
-        // Check if the document ID already exists in pdfDataList
-        if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
-          pdfDataList.add(doc.data());
-          print("Data for Pdf: ${doc.data()}");
+        if (specificDocIds.contains(doc.id)) {
+          // Check if the document ID already exists in pdfDataList
+          if (!pdfDataList.any((element) => element['PatrolLogId'] == doc.id)) {
+            pdfDataList.add(doc.data());
+            print("Data for Pdf: ${doc.data()}");
+          }
         }
-        // }
       });
     } catch (e) {
       print(e);
