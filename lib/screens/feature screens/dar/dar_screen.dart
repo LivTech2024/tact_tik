@@ -49,9 +49,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     // keep this code in firebase_function file  and handle its errors here
     Future<String?> _submitDAR() async {
       final _userService = UserService(firestoreService: FireStoreService());
@@ -148,7 +145,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                           color: Primarycolor,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         ...darEntries.map((document) {
                           bool isNew = isNewEntry(document);
                           if (!showAllDARS && !isNew) {
@@ -175,7 +172,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             child: Container(
                               margin: EdgeInsets.only(bottom: 20.h),
                               width: double.maxFinite,
-                              height: 200.h,
+                              height: 140.h,
                               decoration: BoxDecoration(
                                 color: WidgetColor,
                                 borderRadius: BorderRadius.circular(20.r),
@@ -185,8 +182,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 vertical: 10.h,
                               ),
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InterBold(
@@ -198,14 +194,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                     fontsize: 18.sp,
                                     color: Primarycolor,
                                   ),
-                                  isNew
-                                      ? InterBold(
-                                          text: "New",
-                                          fontsize: 18.sp,
-                                          color: Colors.green,
-                                        )
-                                      : SizedBox(),
-                                  SizedBox(height: height / height10),
+                                  SizedBox(height: 10.h),
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
@@ -214,28 +203,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                       maxLines: 4,
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: width / width10),
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.image,
-                                          size: 18.sp,
-                                          color: color2,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.video_collection,
-                                          size: 18.sp,
-                                          color: color2,
-                                        ),
-                                      )
-                                    ],
-                                  )
                                 ],
                               ),
                             ),
@@ -267,7 +234,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     ),
                     title: InterRegular(
                       text: 'DAR',
-                      fontsize: width / width18,
+                      fontsize: 18.sp,
                       color: Colors.white,
                       letterSpacing: -.3,
                     ),
@@ -279,7 +246,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       height: 65.h,
                       width: double.maxFinite,
                       color: color24,
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      // padding: EdgeInsets.symmetric(vertical: 16.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -292,7 +259,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   colors[1] = color25;
                                 });
                               },
-                              child: SizedBox(
+                              child: Container(
+                                height: 65.h,
+                                color: color24,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
@@ -303,16 +272,22 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               ),
                             ),
                           ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            child: const VerticalDivider(),
+                          ),
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                                  colors[0] = color25 ;
+                                  colors[0] = color25;
                                   colors[1] = Primarycolor;
                                 });
                               },
-                              child: SizedBox(
+                              child: Container(
+                                height: 65.h,
+                                color: color24,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -507,7 +508,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                             colors[1] = color25;
                           });
                         },
-                        child: SizedBox(
+                        child: Container(
+                          height: 65.h,
+                          color: color24,
                           child: Center(
                             child: InterBold(
                               text: 'Edit',
@@ -530,7 +533,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                             colors[1] = Primarycolor;
                           });
                         },
-                        child: SizedBox(
+                        child: Container(
+                          height: 65.h,
+                          color: color24,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',

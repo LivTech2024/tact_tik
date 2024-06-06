@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -170,7 +171,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                             },
                             child: Container(
                               width: double.maxFinite,
-                              height: height / height200,
+                              height: 140.h,
                               decoration: BoxDecoration(
                                 color: WidgetColor,
                                 borderRadius:
@@ -181,8 +182,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                 vertical: height / height10,
                               ),
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InterBold(
@@ -282,36 +282,44 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = color25;
-                                  colors[1] = Primarycolor;
+                                  colors[0] = Primarycolor;
+                                  colors[1] = color25;
                                 });
                               },
-                              child: SizedBox(
+                              child: Container(
+                                height: 65.h,
+                                color: color24,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
-                                    color: colors[1],
-                                    fontsize: width / width18,
+                                    color: colors[0],
+                                    fontsize: 18.sp,
                                   ),
                                 ),
                               ),
                             ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            child: const VerticalDivider(),
                           ),
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                                  colors[0] = Primarycolor;
-                                  colors[1] = color25;
+                                  colors[0] = color25;
+                                  colors[1] = Primarycolor;
                                 });
                               },
-                              child: SizedBox(
+                              child: Container(
+                                height: 65.h,
+                                color: color24,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',
-                                    color: colors[0],
-                                    fontsize: width / width18,
+                                    color: colors[1],
+                                    fontsize: 18.sp,
                                   ),
                                 ),
                               ),

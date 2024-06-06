@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -470,18 +471,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         itemBuilder: (context, index) {
                           return Stack(
                             children: [
-                             /* Image.network(
+                              /* Image.network(
                                 imageUrls[index],
                                 fit: BoxFit.cover,
                               ),*/
                               Container(
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(image: NetworkImage(imageUrls[index]),fit: BoxFit.cover,)
-                                ),
+                                    image: DecorationImage(
+                                  image: NetworkImage(imageUrls[index]),
+                                  fit: BoxFit.cover,
+                                )),
                               ),
                               Positioned(
-                                top: - 5.h,
-                                right: - 5.w,
+                                top: -5.h,
+                                right: -5.w,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -627,7 +630,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                   margin: EdgeInsets.only(
                                     bottom: 30.h,
                                   ),
-                                  height: 35.h,
+                                  // height: 80.h,
+                                  constraints: BoxConstraints(
+                                    minHeight: 80.h,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: WidgetColor,
                                     borderRadius: BorderRadius.circular(10.r),
@@ -638,21 +644,93 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         width: 15.w,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Colors.red,
+                                          color: Primarycolor,
                                           borderRadius:
-                                          BorderRadius.circular(10.r),
+                                              BorderRadius.circular(10.r),
                                         ),
                                       ),
-                                      SizedBox(width: 2.w),
+                                      SizedBox(width: 6.w),
                                       Expanded(
-                                        child: InterBold(
-                                          text: ReportId.isNotEmpty
-                                              ? "# $ReportId  ${ReportName}"
-                                              : "",
-                                          fontsize: 12.sp,
-                                          color: Colors.white,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterBold(
+                                                  text: 'Patrol Name ',
+                                                  fontsize: 16.sp,
+                                                  color: color12,
+                                                ),
+                                                Flexible(
+                                                  child: InterBold(
+                                                    text: ReportName.isNotEmpty
+                                                        ? "${ReportName}"
+                                                        : "",
+                                                    fontsize: 16.sp,
+                                                    color: Colors.white,
+                                                    maxLine: 2,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterBold(
+                                                  text: 'Started ',
+                                                  fontsize: 16.sp,
+                                                  color: color12,
+                                                ),
+                                                InterBold(
+                                                  text: ReportName.isNotEmpty
+                                                      ? "${ReportName}"
+                                                      : "",
+                                                  fontsize: 16.sp,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterBold(
+                                                  text: 'Ended ',
+                                                  fontsize: 16.sp,
+                                                  color: color12,
+                                                ),
+                                                InterBold(
+                                                  text: ReportName.isNotEmpty
+                                                      ? "${ReportName}"
+                                                      : "",
+                                                  fontsize: 16.sp,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
+                                      InterBold(
+                                        text: '11.36pm',
+                                        fontsize: 16.sp,
+                                        color: color12,
+                                      ),
+                                      SizedBox(width: 5.w)
                                     ],
                                   ),
                                 ),
@@ -662,7 +740,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         : SizedBox(height: 30.h),
                     widget.iseditable
                         ? Button1(
-                      height: 60.h,
+                            height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
                             onPressed: submitDarTileData,
                             backgroundcolor: Primarycolor,
