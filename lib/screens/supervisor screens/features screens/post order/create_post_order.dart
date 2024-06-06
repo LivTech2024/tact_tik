@@ -171,9 +171,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
     // Update Firestore with the new URLs
     final docRef = FirebaseFirestore.instance.collection('Locations').doc(widget.locationId);
-    docRef.update({
+    await docRef.update({
       'LocationPostOrder.PostOrderOtherData': FieldValue.arrayUnion(urls),
     });
+
+    Navigator.of(context).pop();
   }
 
   Future<void> _downloadAndOpenPdf(BuildContext context, String url) async {
