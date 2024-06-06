@@ -20,7 +20,7 @@ class SheduleScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: width / width20),
             height: 68,
-            color: WidgetColor,
+            color:  DarkColor.WidgetColor,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,20 +29,20 @@ class SheduleScreen extends StatelessWidget {
                   onPressed: () {},
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: Primarycolor,
+                    color: DarkColor. Primarycolor,
                     size: width / width24,
                   ),
                 ),
                 InterBold(
                   text: '14/03/2024',
                   fontsize: width / width19,
-                  color: Primarycolor,
+                  color: DarkColor. Primarycolor,
                 ),
                 IconButton(
                     onPressed: () {},
                     icon: Icon(
                       Icons.arrow_forward_ios,
-                      color: Primarycolor,
+                      color:  DarkColor.Primarycolor,
                     )),
               ],
             ),
@@ -54,7 +54,7 @@ class SheduleScreen extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return Container(
-                color: WidgetColor,
+                color: DarkColor. WidgetColor,
                 margin: EdgeInsets.symmetric(vertical: 10.0),
                 height: 242,
                 child: Column(
@@ -85,7 +85,7 @@ class SheduleScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: width / width16),
                       height: 56,
-                      color: Primarycolor,
+                      color: DarkColor. Primarycolor,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,

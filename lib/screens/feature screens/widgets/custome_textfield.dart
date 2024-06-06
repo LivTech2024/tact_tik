@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
@@ -30,13 +31,24 @@ class CustomeTextField extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Container(
+
       padding: EdgeInsets.only(
         left: width / width20,
         top: height / height5,
         bottom: height / height5,
       ),
       decoration: BoxDecoration(
-        color: WidgetColor,
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.transparent
+                : LightColor.color3.withOpacity(.05),
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
+        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
         borderRadius: BorderRadius.circular(width / width10),
       ),
       constraints: isExpanded
@@ -56,7 +68,9 @@ class CustomeTextField extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
                 fontSize: width / width18,
-                color: Colors.white, // Change text color to white
+                color: isDark
+                    ? DarkColor.color1
+                    : LightColor.color3, // Change text color to white
               ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -69,13 +83,15 @@ class CustomeTextField extends StatelessWidget {
                 hintStyle: GoogleFonts.poppins(
                   fontWeight: FontWeight.w300,
                   fontSize: width / width18,
-                  color: color2, // Change text color to white
+                  color: isDark
+                      ? DarkColor.color2
+                      : LightColor.color3, // Change text color to white
                 ),
                 hintText: hint,
                 contentPadding: EdgeInsets.zero, // Remove padding
               ),
               keyboardType: textInputType,
-              cursorColor: Primarycolor,
+              cursorColor: DarkColor.Primarycolor,
               enabled: isEnabled,
             ),
           ),
@@ -84,7 +100,7 @@ class CustomeTextField extends StatelessWidget {
               onPressed: () {},
               icon: Icon(
                 Icons.mic,
-                color: color33,
+                color: DarkColor.color33,
                 size: width / width24,
               ),
             )

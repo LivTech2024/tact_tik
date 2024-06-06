@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/dar/s_dar_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -53,14 +55,15 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+          backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
+          shadowColor:  isDark ? Colors.transparent: LightColor.color3.withOpacity(.1),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color:  isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -68,10 +71,10 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Guards',
             fontsize: width / width18,
-            color: Colors.white,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -141,7 +144,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                         child: Container(
                           height: height / height60,
                           decoration: BoxDecoration(
-                            color: color19,
+                            color: DarkColor. color19,
                             borderRadius:
                             BorderRadius.circular(width / width12),
                           ),
@@ -177,7 +180,11 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: Primarycolor,
+                                            color:  isDark
+                                                            ? DarkColor
+                                                                .Primarycolor
+                                                            : LightColor
+                                                                .Primarycolor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -190,7 +197,9 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: color1,
+                                          color: isDark
+                                                    ? DarkColor.color1
+                                                    : LightColor.color3,
                                         ),
                                       ],
                                     ),
@@ -214,7 +223,9 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                       : Center(
                     child: PoppinsBold(
                       text: 'No Guards Found',
-                      color: color2,
+                      color:  isDark
+                                ? DarkColor.color2
+                                : LightColor.color3,
                       fontsize: width / width16,
                     ),
                   )

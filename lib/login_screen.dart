@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/client%20screens/client_home_screen.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
@@ -30,9 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
     try {
+      if (_emailcontrller.text.isEmpty && _passwordcontrller.text.isEmpty) {
+        showErrorToast(context, "Fields cannot be empty");
+        return;
+      }
       await Auth().signInWithEmailAndPassword(
           _emailcontrller.text, _passwordcontrller.text, context);
-
+      await Future.delayed(const Duration(seconds: 2));
       await storage.ready;
       final String? role = storage.getItem("Role");
       print('Here is the role of emp:');
@@ -44,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (role == "CLIENT") {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => ClientHomeScreen()));
-      } else {
+      } else if (role != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
@@ -75,53 +83,12 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _errorMessage = 'An unexpected error occurred';
       });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
-
-/*
-  Future<void> signInEmailPassword(BuildContext context) async {
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      var data = await Auth().signInWithEmailAndPassword(
-          _emailcontrller.text, _passwordcontrller.text, context);
-
-      await storage.ready;
-      final String? role = storage.getItem("Role");
-      _showSnackBar(context, 'An unexpected error occurred');
-      if (role == "SUPERVISOR") {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SHomeScreen()));
-      } else if (role == "CLIENT") {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => ClientHomeScreen()));
-      } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      }
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An error occurred';
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Incorrect password';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Invalid email address';
-      }
-      _showSnackBar(context, errorMessage);
-    } catch (e) {
-      print('Error signing in login screen: $e');
-      _showSnackBar(context, 'An unexpected error occurred');
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-*/
 
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(content: Text(message));
@@ -132,12 +99,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final double height = MediaQuery.of(context).size.height;
-    // final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Stack(
           children: [
             Padding(
@@ -148,14 +113,28 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 300.h,
+                    width: double.maxFinite,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.fitHeight,
+                      filterQuality: FilterQuality.high,
+                    ),
+                  ),
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
                       fontSize: 15.sp,
-                      color: Colors.white, // Change text color to white
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor.color3, // Change text color to white
                     ),
                     controller: _emailcontrller,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      focusColor: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
                       labelText: 'Email',
                       hintText: 'Enter your email',
                     ),
@@ -165,8 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: 15.sp,
-                      color: Colors.white, // Change text color to white
+                      fontSize: (15.sp),
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor.color3, // Change text color to white
                     ),
                     controller: _passwordcontrller,
                     obscureText: _obscureText,
@@ -182,9 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                           size: 24.sp,
-                          color: color6,
+                          color: isDark ? DarkColor.color6 : LightColor.color2,
                         ),
                       ),
+                      focusColor: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.Primarycolor,
                       labelText: 'Password',
                       hintText: 'Enter your password',
                     ),
@@ -200,14 +184,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   Button1(
                     height: 50.57.h,
-                    backgroundcolor: Primarycolor,
+                    backgroundcolor: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.Primarycolor,
                     text: 'Login',
                     fontsize: 18.sp,
-                    color: Colors.black,
+                    color: isDark
+                        ? DarkColor.Secondarycolor
+                        : LightColor.Secondarycolor,
                     borderRadius: 5.r,
                     onPressed: () {
-                      Auth().signInWithEmailAndPassword(_emailcontrller.text,
-                          _passwordcontrller.text, context);
+                      // Auth().signInWithEmailAndPassword(_emailcontrller.text,
+                      //     _passwordcontrller.text, context);
+                      signInEmailPassword(context);
                     },
                   ),
                 ],
@@ -218,8 +207,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.center,
                 child: Visibility(
                   visible: _isLoading,
-                  child: const CircularProgressIndicator(
-                    color: Primarycolor,
+                  child: CircularProgressIndicator(
+                    color: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor.Primarycolor,
                   ),
                 ),
               ),

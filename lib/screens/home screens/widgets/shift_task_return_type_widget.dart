@@ -31,6 +31,7 @@ class ShiftTaskReturnTypeWidget extends StatefulWidget {
     required this.refreshDataCallback,
     required this.EmpName,
     required this.ShiftTaskReturnStatus,
+    required this.taskPhotos,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -42,6 +43,7 @@ class ShiftTaskReturnTypeWidget extends StatefulWidget {
   final String EmpID;
   final String EmpName;
   final bool shiftReturnTask;
+  final List<String> taskPhotos;
 
   @override
   State<ShiftTaskReturnTypeWidget> createState() =>
@@ -123,7 +125,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
     print("Uploads Images  $uploads");
     try {
       print("Task Id : ${widget.taskId}");
-      await fireStoreService.addImagesToShiftTasks(
+      await fireStoreService.addImagesToShiftReturnTasks(
         uploads,
         widget.taskId,
         widget.ShiftId,
@@ -154,7 +156,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
       print("Uploads Images  ${uploads}");
       try {
         print("Task Id : ${widget.taskId}");
-        await fireStoreService.addImagesToShiftTasks(
+        await fireStoreService.addImagesToShiftReturnTasks(
           uploads,
           widget.taskId ?? "",
           widget.ShiftId ?? "",
@@ -227,7 +229,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
             ),
             margin: EdgeInsets.only(top: height / height10),
             decoration: BoxDecoration(
-              color: color15,
+              color: DarkColor.color15,
               borderRadius: BorderRadius.circular(width / width10),
             ),
             child: Row(
@@ -239,14 +241,14 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                       height: height / height48,
                       width: width / width48,
                       decoration: BoxDecoration(
-                        color: color16,
+                        color: DarkColor.color16,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.qr_code_scanner,
                           size: width / width24,
-                          color: Primarycolor,
+                          color: DarkColor.Primarycolor,
                         ),
                       ),
                     ),
@@ -255,7 +257,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                     ),
                     InterRegular(
                       text: widget.taskName,
-                      color: color17,
+                      color: DarkColor.color17,
                       fontsize: width / width18,
                     ),
                   ],
@@ -265,7 +267,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                   width: width / width34,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: color16,
+                    color: DarkColor.color16,
                   ),
                   child: Center(
                     child: IconButton(
@@ -311,7 +313,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                       },
                       icon: Icon(
                         Icons.info,
-                        color: color18,
+                        color: DarkColor.color18,
                         size: width / width24,
                       ),
                       padding: EdgeInsets.zero,
@@ -371,7 +373,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                       ),
                       margin: EdgeInsets.only(top: height / height10),
                       decoration: BoxDecoration(
-                        color: color15,
+                        color: DarkColor.color15,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -383,23 +385,22 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                 height: height / height48,
                                 width: width / width48,
                                 decoration: BoxDecoration(
-                                  color: color16,
+                                  color: DarkColor.color16,
                                   borderRadius:
                                       BorderRadius.circular(width / width10),
                                 ),
                                 child: Center(
                                   child: Icon(
-                                    widget.shiftReturnTask == true
-                                        ? widget.ShiftTaskReturnStatus == true
-                                            ? Icons.done
-                                            : Icons.add_a_photo
-                                        : widget.taskStatus == "completed" ||
-                                                widget.ShiftTaskReturnStatus ==
-                                                    true
-                                            ? Icons.done
-                                            : Icons.add_a_photo,
+                                    // widget.shiftReturnTask == true
+                                    // ? widget.ShiftTaskReturnStatus == true
+                                    //     ? Icons.done
+                                    //     : Icons.add_a_photo
+                                    widget.taskStatus == "completed" ||
+                                            widget.ShiftTaskReturnStatus == true
+                                        ? Icons.done
+                                        : Icons.add_a_photo,
                                     size: width / width24,
-                                    color: Primarycolor,
+                                    color: DarkColor.Primarycolor,
                                   ),
                                 ),
                               ),
@@ -408,7 +409,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                               ),
                               InterRegular(
                                 text: widget.taskName,
-                                color: color17,
+                                color: DarkColor.color17,
                                 fontsize: width / width18,
                               ),
                             ],
@@ -418,7 +419,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                             width: width / width34,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: color16,
+                              color: DarkColor.color16,
                             ),
                             child: Center(
                               child: IconButton(
@@ -464,7 +465,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                 },
                                 icon: Icon(
                                   Icons.info,
-                                  color: color18,
+                                  color: DarkColor.color18,
                                   size: width / width24,
                                 ),
                                 padding: EdgeInsets.zero,
@@ -491,7 +492,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                                   height: height / height66,
                                   width: width / width66,
                                   decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: DarkColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       )),
@@ -551,7 +552,7 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                                color: WidgetColor,
+                                color: DarkColor.WidgetColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width8)),
                             child: Center(
@@ -561,13 +562,35 @@ class _ShiftTaskReturnTypeWidgetState extends State<ShiftTaskReturnTypeWidget> {
                         ),
                         FloatingActionButton(
                           onPressed: _uploadImages,
-                          backgroundColor: Primarycolor,
+                          backgroundColor: DarkColor.Primarycolor,
                           shape: CircleBorder(),
                           child: Icon(Icons.cloud_upload),
                         )
                       ],
                     ),
                   ),
+                  if (widget.taskPhotos.isNotEmpty)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: widget.taskPhotos.map((photoUrl) {
+                          return Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: DarkColor.Primarycolor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                            ),
+                            margin: EdgeInsets.all(width / width8),
+                            child: Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   if (_isLoading)
                     Container(
                       alignment: Alignment.center,

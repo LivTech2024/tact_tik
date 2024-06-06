@@ -4,7 +4,7 @@
 //   final String id;
 //   final String startTime;
 //   final String endTime;
-//
+
 //   OtherUsersModel({
 //     required this.othersShiftName,
 //     required this.othersShiftLocation,

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
@@ -21,7 +23,8 @@ class SuperInboxScreen extends StatefulWidget {
 }
 
 class _SuperInboxScreenState extends State<SuperInboxScreen> {
-  List colors = [Primarycolor, color25];
+  List colors = [isDark?DarkColor.Primarycolor:LightColor.Primarycolor, isDark ? DarkColor.color25 : LightColor.Primarycolorlight
+  ];
 
   bool showGuards = true;
 
@@ -70,14 +73,14 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -85,10 +88,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Inbox',
             fontsize: width / width18,
-            color: Colors.white,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -98,7 +101,20 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
             Container(
               height: height / height65,
               width: double.maxFinite,
-              color: color24,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.transparent
+                        : LightColor.color3.withOpacity(.05),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
+                color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+              ),
+             
               padding: EdgeInsets.symmetric(vertical: height / height16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -108,8 +124,9 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       onTap: () {
                         setState(() {
                           showGuards = true;
-                          colors[0] = Primarycolor;
-                          colors[1] = color25;
+                          colors[0] =
+                              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
+                          colors[1] =  isDark ? DarkColor.Primarycolorlight : LightColor.Primarycolorlight;
                         });
                       },
                       child: SizedBox(
@@ -123,16 +140,20 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                       ),
                     ),
                   ),
-                  const VerticalDivider(
-                    color: Primarycolor,
+                   VerticalDivider(
+                    color:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                   ),
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
                           showGuards = false;
-                          colors[0] = color25;
-                          colors[1] = Primarycolor;
+                          colors[0] = isDark
+                              ? DarkColor.Primarycolorlight
+                              : LightColor.Primarycolorlight;
+                          colors[1] = isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor;
                         });
                       },
                       child: SizedBox(
@@ -159,9 +180,13 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             iconSize: width / width24,
-                            dropdownColor: WidgetColor,
+                            dropdownColor: isDark
+                                ? DarkColor.WidgetColor
+                                : LightColor.WidgetColor,
                             style: TextStyle(
-                                color: color2, fontSize: width / width14),
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color3, fontSize: width / width14),
                             borderRadius:
                                 BorderRadius.circular(width / width10),
                             value: dropdownValue,
@@ -210,7 +235,19 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                               child: Container(
                                 height: height / height60,
                                 decoration: BoxDecoration(
-                                  color: color19,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3.withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: isDark
+                                      ? DarkColor.color19
+                                      : LightColor.WidgetColor,
                                   borderRadius:
                                       BorderRadius.circular(width / width12),
                                 ),
@@ -233,7 +270,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                             width: width / width50,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: Primarycolor,
+                                              color:DarkColor.Primarycolor ,
                                               // image: DecorationImage(
                                               //   image: NetworkImage(
                                               //     'url',
@@ -250,42 +287,53 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                           InterBold(
                                             text: 'name',
                                             letterSpacing: -.3,
-                                            color: color1,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
                                           ),
                                         ],
                                       ),
                                       Stack(
                                         clipBehavior: Clip.none,
                                         children: [
-                                          SvgPicture.asset(
-                                              'assets/images/chat_bubble.svg'),
-                                          Positioned(
-                                            top: -4,
-                                            left: -8,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: width / width4,
-                                              ),
-                                              height: height / height14,
-                                              // width: width / width20,
-                                              constraints: BoxConstraints(
-                                                minWidth: width / width20,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Colors.red,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  width / width50,
+                                          Stack(
+                                            clipBehavior: Clip.none,
+                                            children: [
+                                              SvgPicture.asset(
+                                                  'assets/images/chat_bubble.svg'),
+                                              Positioned(
+                                                top: -4,
+                                                left: -8,
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: width / width4,
+                                                  ),
+                                                  height: height / height14,
+                                                  // width: width / width20,
+                                                  constraints: BoxConstraints(
+                                                    minWidth: width / width20,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      width / width50,
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: InterBold(
+                                                      text: '2',
+                                                      fontsize: width / width8,
+                                                      color: isDark
+                                                          ? DarkColor
+                                                              .color1
+                                                          : LightColor
+                                                              .color3,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                              child: Center(
-                                                child: InterBold(
-                                                  text: '2',
-                                                  fontsize: width / width8,
-                                                  color: color1,
-                                                ),
-                                              ),
-                                            ),
+                                            ]
                                           ),
                                         ],
                                       )

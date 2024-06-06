@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:bounce/bounce.dart';
+import 'package:tact_tik/main.dart';
 import '../../fonts/inter_bold.dart';
 import '../../utils/colors.dart';
 
@@ -13,12 +14,7 @@ class Button1 extends StatelessWidget {
     this.color,
     required this.onPressed,
     this.height = 65,
-    this.backgroundcolor = WidgetColor,
-    this.borderRadius = 0,
-    this.useBorderRadius = false,
-    this.MyBorderRadius,
-    this.useWidget = false,
-    this.MyWidget,
+    this.backgroundcolor = DarkColor. WidgetColor, this.borderRadius = 0, this.useBorderRadius = false, this.MyBorderRadius, this.useWidget = false, this.MyWidget,
   });
 
   final bool useBold;
@@ -40,6 +36,16 @@ class Button1 extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: isDark
+                    ? Colors.transparent
+                    : LightColor.color3.withOpacity(.05),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+          ],
             color: backgroundcolor,
             borderRadius: useBorderRadius
                 ? MyBorderRadius

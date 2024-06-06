@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tact_tik/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
@@ -31,8 +32,18 @@ class LogTypeWidget extends StatelessWidget {
       height: 90.h,
       width: double.maxFinite,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        color: WidgetColor,
+        boxShadow: [
+         BoxShadow(
+            color: isDark
+                ? Colors.transparent
+                : LightColor.color3.withOpacity(.05),
+            blurRadius: 5,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          )
+        ],
+       borderRadius: BorderRadius.circular(10.r),
+        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,7 +68,7 @@ class LogTypeWidget extends StatelessWidget {
                     : type == LogBookEnum.shift_break
                     ? Icons.free_breakfast
                                 : Icons.error,
-                color: Primarycolor,
+                color:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                 size: 24.sp,
               ),
               SizedBox(width: 30.w),
@@ -68,21 +79,20 @@ class LogTypeWidget extends StatelessWidget {
                   InterMedium(
                     text: '$logtype',
                     fontsize: 14.sp,
-                    color: color2,
+                    color:  isDark ? DarkColor.color2 : LightColor.color3,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: InterMedium(
                       text: '$location',
-                      fontsize: 14.sp,
-                      color: color1,
-                      maxLines: 1,
+                     fontsize: 14.sp,maxLines: 1,
+                      color:  isDark ? DarkColor.color1 : LightColor.color3,
                     ),
                   ),
                   InterBold(
                     text: 'Client: $clientname',
-                    fontsize: 14.sp,
-                    color: color2,
+                   fontsize: 14.sp,
+                    color:  isDark ? DarkColor.color2 : LightColor.color3,
                   ),
                 ],
               ),
@@ -90,7 +100,7 @@ class LogTypeWidget extends StatelessWidget {
           ),
           InterMedium(
             text: time,
-            color: color1,
+            color:  isDark ? DarkColor.color1 : LightColor.color3,
             fontsize: 14.sp,
           ),
         ],

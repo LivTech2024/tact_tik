@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 
 import '../../../common/enums/shift_task_enums.dart';
@@ -31,6 +32,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
     required this.refreshDataCallback,
     required this.EmpName,
     required this.ShiftTaskReturnStatus,
+    required this.taskPhotos,
   }) : super(key: key);
 
   final ShiftTaskEnum type;
@@ -42,7 +44,7 @@ class ShiftTaskTypeWidget extends StatefulWidget {
   final String EmpID;
   final String EmpName;
   final bool shiftReturnTask;
-
+  final List<String> taskPhotos;
   @override
   State<ShiftTaskTypeWidget> createState() => _ShiftTaskTypeWidgetState();
 }
@@ -50,31 +52,12 @@ class ShiftTaskTypeWidget extends StatefulWidget {
 class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   List<Map<String, dynamic>> uploads = [];
   bool _isLoading = false;
-  // Future<void> _addImage() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.camera);
-  //   if (pickedFile != null) {
-  //     // await fireStoreService
-  //     //     .addImageToStorageShiftTask(File(pickedFile.path));
-  //     setState(() {
-  //       uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-  //     });
-  //   }
-  //   print("Statis ${widget.taskStatus}");
-  // }
+  @override
+  void initState() {
+    super.initState();
+    print("Task Phots ${widget.taskPhotos}");
+  }
 
-  // Future<void> _addGallery() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     // await fireStoreService
-  //     //     .addImageToStorageShiftTask(File(pickedFile.path));
-  //     setState(() {
-  //       uploads.add({'type': 'image', 'file': File(pickedFile.path)});
-  //     });
-  //   }
-  //   print("Statis ${widget.taskStatus}");
-  // }
   Future<void> _addImage() async {
     XFile? pickedFile = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 20);
@@ -267,7 +250,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
             ),
             margin: EdgeInsets.only(top: height / height10),
             decoration: BoxDecoration(
-              color: color15,
+              color: isDark ? DarkColor.color15 : LightColor.WidgetColor,
               borderRadius: BorderRadius.circular(width / width10),
             ),
             child: Row(
@@ -279,14 +262,17 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       height: height / height48,
                       width: width / width48,
                       decoration: BoxDecoration(
-                        color: color16,
+                        color:
+                            isDark ? DarkColor.color16 : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Center(
                         child: Icon(
                           Icons.qr_code_scanner,
                           size: width / width24,
-                          color: Primarycolor,
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.color3,
                         ),
                       ),
                     ),
@@ -295,7 +281,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                     ),
                     InterRegular(
                       text: widget.taskName,
-                      color: color17,
+                      color: DarkColor.color17,
                       fontsize: width / width18,
                     ),
                   ],
@@ -305,7 +291,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                   width: width / width34,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: color16,
+                    color: DarkColor.color16,
                   ),
                   child: Center(
                     child: IconButton(
@@ -351,7 +337,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       },
                       icon: Icon(
                         Icons.info,
-                        color: color18,
+                        color: DarkColor.color18,
                         size: width / width24,
                       ),
                       padding: EdgeInsets.zero,
@@ -411,7 +397,18 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       ),
                       margin: EdgeInsets.only(top: height / height10),
                       decoration: BoxDecoration(
-                        color: color15,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color:
+                            isDark ? DarkColor.color15 : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -423,7 +420,19 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 height: height / height48,
                                 width: width / width48,
                                 decoration: BoxDecoration(
-                                  color: color16,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3.withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: isDark
+                                      ? DarkColor.color16
+                                      : LightColor.WidgetColor,
                                   borderRadius:
                                       BorderRadius.circular(width / width10),
                                 ),
@@ -438,7 +447,9 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                             ? Icons.done
                                             : Icons.add_a_photo,
                                     size: width / width24,
-                                    color: Primarycolor,
+                                    color: isDark
+                                        ? DarkColor.Primarycolor
+                                        : LightColor.color3,
                                   ),
                                 ),
                               ),
@@ -447,7 +458,9 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               ),
                               InterRegular(
                                 text: widget.taskName,
-                                color: color17,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                                 fontsize: width / width18,
                               ),
                             ],
@@ -457,7 +470,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             width: width / width34,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: color16,
+                              color: DarkColor.color16,
                             ),
                             child: Center(
                               child: IconButton(
@@ -466,20 +479,33 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
+                                        backgroundColor: isDark
+                                            ? DarkColor.WidgetColor
+                                            : LightColor.WidgetColor,
                                         title: Text(
                                           'Report Qr',
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(
+                                              color: isDark
+                                                  ? DarkColor.color1
+                                                  : LightColor.color3),
                                         ),
                                         content: Text(
                                           'The scanned QR code does work.',
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(
+                                              color: isDark
+                                                  ? DarkColor.color1
+                                                  : LightColor.color3),
                                         ),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text("Cancel"),
+                                            child: Text("Cancel",
+                                                style: TextStyle(
+                                                    color: isDark
+                                                        ? DarkColor.color1
+                                                        : LightColor.color3)),
                                           ),
                                           TextButton(
                                             onPressed: () {
@@ -492,7 +518,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                               //         'CheckPointId']);
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('Submit'),
+                                            child: Text('Submit',
+                                                style: TextStyle(
+                                                    color: isDark
+                                                        ? DarkColor.Primarycolor
+                                                        : LightColor
+                                                            .Primarycolor)),
                                           ),
                                         ],
                                       );
@@ -503,7 +534,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 },
                                 icon: Icon(
                                   Icons.info,
-                                  color: color18,
+                                  color: DarkColor.color18,
                                   size: width / width24,
                                 ),
                                 padding: EdgeInsets.zero,
@@ -530,7 +561,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                   height: height / height66,
                                   width: width / width66,
                                   decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: DarkColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       )),
@@ -590,23 +621,67 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                                color: WidgetColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: isDark
+                                        ? Colors.transparent
+                                        : LightColor.color3.withOpacity(.05),
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                color: isDark
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.WidgetColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width8)),
                             child: Center(
-                              child: Icon(Icons.add),
+                              child: Icon(
+                                Icons.add,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
+                              ),
                             ),
                           ),
                         ),
                         FloatingActionButton(
                           onPressed: _uploadImages,
-                          backgroundColor: Primarycolor,
+                          backgroundColor: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
                           shape: CircleBorder(),
-                          child: Icon(Icons.cloud_upload),
+                          child: Icon(Icons.cloud_upload,
+                              color: isDark
+                                  ? DarkColor.color1
+                                  : LightColor.color1),
                         )
                       ],
                     ),
                   ),
+                  if (widget.taskPhotos.isNotEmpty)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: widget.taskPhotos.map((photoUrl) {
+                          return Container(
+                            height: height / height66,
+                            width: width / width66,
+                            decoration: BoxDecoration(
+                              color: DarkColor.Primarycolor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
+                            ),
+                            margin: EdgeInsets.all(width / width8),
+                            child: Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   if (_isLoading)
                     Container(
                       alignment: Alignment.center,

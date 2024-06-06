@@ -4,6 +4,7 @@ import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/fonts/roboto_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -49,7 +50,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
           margin: EdgeInsets.only(bottom: 30.w),
           padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -65,16 +66,15 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
             children: [
               PoppinsMedium(
                 text: 'Are you in panic?',
-                fontsize: 18.sp,
-                color: colorRed3,
+              fontsize: 18.sp,
+                color: DarkColor. colorRed3,
               ),
               SizedBox(height: 8.h),
               PoppinsRegular(
                 text:
                     'If yes, then your supervisor and admin will get notified!',
                 textAlign: TextAlign.center,
-                color: color16,
-                fontsize: 18.sp,
+                color: DarkColor. color16, fontsize: 18.sp,
               ),
               SizedBox(height: 16.h),
               Row(
@@ -86,8 +86,10 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'No',
-                      color: color27,
-                      fontsize: 18.sp,
+                      color: isDark
+                          ? DarkColor.color1
+                          : LightColor.color3,
+                     fontsize: 18.sp,
                     ),
                   ),
                   SizedBox(width: 16.w),
@@ -128,7 +130,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'Yes',
-                      color: color27,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
                       fontsize: 18.sp,
                     ),
                   ),
@@ -167,7 +169,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               margin: EdgeInsets.only(bottom: height / height30),
               padding: EdgeInsets.all(width / width16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(width / width16),
                 boxShadow: [
                   BoxShadow(
@@ -183,6 +185,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   PoppinsMedium(
+                    color: isDark ? DarkColor.color3 : LightColor.color3,
                     text: 'Supervisors & Admin Informed',
                     fontsize: width / width16,
                   ),
@@ -201,6 +204,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                           TextButton(
                             onPressed: () {
                               showModalBottomSheet(
+                                backgroundColor: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
                                 context: context,
                                 builder: (context) => Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -217,12 +221,17 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                                         return ListTile(
                                           leading: Icon(
                                             Icons.call,
-                                            color: Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                             size: width / width20,
                                           ),
                                           title: InterMedium(
                                             text: contactName,
                                             fontsize: width / width12,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
                                           ),
                                           onTap: () async {
                                             final url = 'tel://$phoneNumber';
@@ -244,7 +253,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                             child: RobotoMedium(
                               text: 'Call',
                               fontsize: width / width18,
-                              color: colorRed3,
+                              color: DarkColor. colorRed3,
                             ),
                           ),
                           SizedBox(width: width / width10),
@@ -260,7 +269,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                             child: RobotoMedium(
                               text: 'OK',
                               fontsize: width / width18,
-                              color: color27,
+                              color: isDark ? DarkColor.color1 : LightColor.color3,
                             ),
                           ),
                         ],

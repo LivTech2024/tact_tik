@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../../common/sizes.dart';
@@ -26,7 +27,7 @@ class MyMessageCard extends StatelessWidget {
         child: Card(
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width / width8),),
-          color: WidgetColor,
+          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           margin: EdgeInsets.symmetric(horizontal: width / width15, vertical: height / height5),
           child: Stack(
             children: [
@@ -40,7 +41,7 @@ class MyMessageCard extends StatelessWidget {
                 child: InterMedium(
                   text: message,
                   fontsize: width / width16,
-                  color: color1,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
               ),
               Positioned(
@@ -51,7 +52,7 @@ class MyMessageCard extends StatelessWidget {
                     InterMedium(
                       text: date,
                       fontsize: width / width13,
-                      color: Colors.white60,
+                      color:  isDark ? DarkColor.color2 : LightColor.color3,
                     ),
                     SizedBox(
                       width: width / width4
@@ -59,7 +60,7 @@ class MyMessageCard extends StatelessWidget {
                     Icon(
                       Icons.done_all,
                       size: width / width20,
-                      color: Colors.white60,
+                      color:  isDark ? DarkColor.color2 : LightColor.color3,
                     ),
                   ],
                 ),

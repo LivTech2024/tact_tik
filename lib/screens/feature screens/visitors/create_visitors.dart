@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -12,6 +13,7 @@ import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_regular.dart';
+import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../supervisor screens/home screens/widgets/set_details_widget.dart';
 import '../widgets/custome_textfield.dart';
@@ -44,7 +46,9 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   TimeOfDay? OutTime;
   bool _isLoading = false;
   bool showCreate = true;
-  List colors = [Primarycolor, color25];
+  List colors = [
+    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,  isDark ? DarkColor.color25 : LightColor.color2
+  ];
   String? selectedKeyName;
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
@@ -129,8 +133,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor,
-              secondary: Primarycolor,
+              primary: isDark ? DarkColor.Primarycolor : LightColor.Secondarycolor,
+              secondary: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
             ),
           ),
           child: child!,
@@ -279,39 +283,38 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     bool isEditMode = widget.visitorData != null;
 
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Stack(
           children: [
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  backgroundColor: AppBarcolor,
-                  elevation: 0,
+                  shadowColor:  isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
+                  backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                  elevation: 5,
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Colors.white,
-                      size: width / width24,
+                      color:  isDark ? DarkColor.color1 : LightColor.color3,
+                      size: 24.sp,
                     ),
-                    padding: EdgeInsets.only(left: width / width20),
+                    padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
                       Navigator.pop(context);
                       print(
                           "Navigtor debug: ${Navigator.of(context).toString()}");
                     },
                   ),
-                  title: InterRegular(
+                  title: InterMedium(
                     text: 'Create Visitors',
-                    fontsize: width / width18,
-                    color: Colors.white,
+                     fontsize: 18.sp,
+                    color:  isDark ? DarkColor.color1 : LightColor.color3,
                     letterSpacing: -.3,
                   ),
                   centerTitle: true,
@@ -323,13 +326,19 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
                           InterBold(
                             text: 'Add Visitor',
-                            color: Primarycolor,
-                            fontsize: width / width20,
+                            color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            fontsize: 20.sp,
                           ),
-                          SizedBox(height: height / height30),
+                          SizedBox(height: 30.h),
+                          InterBold(
+                            text: 'Allocation Date',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           Row(
                             children: [
                               SetTimeWidget(
@@ -342,7 +351,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 enabled: !isEditMode,
                                 isEditMode: isEditMode,
                               ),
-                              SizedBox(width: width / width6),
+                              SizedBox(width: 6.w),
                               SetTimeWidget(
                                 hintText: OutTime == null
                                     ? 'Out Time'
@@ -355,21 +364,39 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Name',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Name',
                             controller: nameController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Email',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Email',
                             controller: EmailController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Contact Number',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Contact Number',
                             controller: ContactNoController,
@@ -381,49 +408,91 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                   .digitsOnly, // Allows only digits
                             ],
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Asset Handover',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Asset Handover',
                             controller: AssetHandoverController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Asset Return',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Asset Return',
                             controller: AssetReturnController,
                             enabled: isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'License Plate Number.',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'License Plate Number ',
                             controller: LicensePlateNumberController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Set Countdown',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Set Countdown',
                             controller: SetCountdownController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Comments',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Comments ',
                             controller: CommentsController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'No. of Person',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'No. Of Person',
                             controller: NoOfPersonController,
                             enabled: !isEditMode,
                             isEditMode: isEditMode,
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
+                          InterBold(
+                            text: 'Company Name',
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: 20.sp,
+                          ),
+                          SizedBox(height: 10.h),
                           SetTextfieldWidget(
                             hintText: 'Company Name',
                             controller: CompanyNameController,
@@ -431,7 +500,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                             isEditMode: isEditMode,
                           ),
                           SizedBox(
-                            height: height / height30,
+                            height: 30.h,
                           ),
                           Button1(
                             text: 'Save',
@@ -441,10 +510,11 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 // Handle the case when saving or updating visitor data fails
                               }
                             },
-                            backgroundcolor: Primarycolor,
-                            color: color22,
-                            borderRadius: width / width10,
-                            fontsize: width / width18,
+                            backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            color:  isDark ? DarkColor.color22 : LightColor.color3,
+                            borderRadius: 10.r,
+                            fontsize: 18.sp,
+                            height: 60.h,
                           ),
                         ],
                       )),

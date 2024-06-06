@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -75,13 +77,16 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? DarkColor.color3 : LightColor.color3.withOpacity(0.1),
+          
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -89,10 +94,10 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
               Navigator.pop(context);
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Task',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -119,7 +124,7 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
                     Button1(
                       text: 'Done',
                       onPressed: saveTaskToFirestore,
-                      backgroundcolor: Primarycolor,
+                      backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
                       borderRadius: width / width10,
                     ),
                   ],

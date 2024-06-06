@@ -5,9 +5,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
+import 'package:tact_tik/main.dart';
+// import 'package:workmanager/workmanager.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 // import 'package:workmanager/workmanager.dart';
 
@@ -84,9 +87,9 @@ class _PostOrderState extends State<PostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor. AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -99,7 +102,7 @@ class _PostOrderState extends State<PostOrder> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'Post Orders',
             fontsize: 18.sp,
             color: Colors.white,
@@ -167,7 +170,9 @@ class _PostOrderState extends State<PostOrder> {
                             child: InterSemibold(
                               text: date,
                               fontsize: 20.sp,
-                              color: Primarycolor,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3,
                             ),
                           ),
                           ...posts.map((postOrder) {
@@ -217,9 +222,9 @@ class _PostOrderState extends State<PostOrder> {
                                       width: double.maxFinite,
                                       margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
-                                        borderRadius:
+                                         borderRadius:
                                             BorderRadius.circular(10.r),
-                                        color: WidgetColor,
+                                        color: DarkColor.WidgetColor,
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
@@ -227,7 +232,7 @@ class _PostOrderState extends State<PostOrder> {
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: color2,
+                                            color: DarkColor. color2,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(
@@ -240,7 +245,7 @@ class _PostOrderState extends State<PostOrder> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
-                                              color: color1,
+                                              color: DarkColor.color1,
                                             ),
                                             child: Row(
                                               children: [
@@ -259,13 +264,11 @@ class _PostOrderState extends State<PostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: color15,
-                                                      fontsize: 12.sp,
+                                                      color: DarkColor. color15,fontsize: 12.sp,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: color16,
-                                                      fontsize: 12.sp,
+                                                      color: DarkColor.color16,fontsize: 12.sp,
                                                     )
                                                   ],
                                                 )
@@ -286,7 +289,7 @@ class _PostOrderState extends State<PostOrder> {
                                               mainAxisSpacing: 10.0,
                                             ),
                                             itemCount:
-                                                postOrderOtherData.length,
+                                                postOrderOtherData.length > 3 ? 3 : postOrderOtherData.length,
                                             itemBuilder: (context, index) {
                                               String url =
                                                   postOrderOtherData[index];
@@ -317,8 +320,8 @@ class _PostOrderState extends State<PostOrder> {
                                                       decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(10.r),
-                                                        color: color1,
+                                                                  .circular(10.r),
+                                                        color: DarkColor.color1,
                                                       ),
                                                       child: Row(
                                                         children: [
@@ -344,14 +347,14 @@ class _PostOrderState extends State<PostOrder> {
                                                               PoppinsMedium(
                                                                 text:
                                                                     otherFileName,
-                                                                color: color15,
-                                                                fontsize: 12.sp,
+                                                                color: DarkColor
+                                                                    . color15, fontsize: 12.sp,
                                                               ),
                                                               PoppinsRegular(
                                                                 text:
                                                                     otherFileSize,
-                                                                color: color16,
-                                                                fontsize: 10.sp,
+                                                                color: DarkColor
+                                                                    . color16, fontsize: 10.sp,
                                                               )
                                                             ],
                                                           )

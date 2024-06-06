@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emailjs/emailjs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_html_to_pdf/flutter_native_html_to_pdf.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -668,7 +669,9 @@ Future<String> generateShiftReportPdf(
       if (checkpoint['CheckPointImage'] != null) {
         for (var image in checkpoint['CheckPointImage']) {
           checkpointImages +=
-              '<img src="$image" style="max-width: 100%; height: auto; display: block; margin-bottom: 10px;">'; // Set max-width to ensure responsiveness
+              '<img src="$image">'; // Set max-width to ensure responsiveness
+          // checkpointImages +=
+          //     '<p>$image</p>'; // Set max-width to ensure responsiveness
         }
       }
       checkpointImagesHTML += '''
@@ -852,6 +855,85 @@ Future<String> generateShiftReportPdf(
 }
 
 final dateFormat = DateFormat('HH:mm:ss'); // Define the format for time
+Future<void> sendDARTemplateEmail(
+  String? ClientName,
+  List<String> toEmails,
+  String Subject,
+  String fromName,
+  String type,
+  String date,
+  String GuardName,
+  String StartTime,
+  String EndTime,
+  String Location,
+  String Status,
+  String shiftinTime,
+  String shiftOutTime,
+) async {
+  final htmlcontent2 = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dar</title>
+    </head>
+    <body>
+        <p>Dear Leston Holdings,
+
+I hope this email finds you well. Attached, please find the Detailed Action Report (DAR) for your review and records.
+
+Thank you for your attention 
+</p>
+ <p>Best regards,</p>
+        <p>Tactical protection solutions ltd.</p>
+    </body>
+    </html>
+  """;
+
+  // Read the PDF files and encode them as base64
+  // final file1 = File('../../../assets/emp_dar-2.pdf');
+  // final pdfContent1 = await file1.readAsBytes();
+  // final pdfContentBase64_1 = base64Encode(pdfContent1);
+
+  // final file2 = File('../../../assets/emp_dar-3.pdf');
+  // final pdfContent2 = await file2.readAsBytes();
+  // final pdfContentBase64_2 = base64Encode(pdfContent2);
+
+  final pdfContent = await rootBundle.load('assets/DAR.pdf');
+  final pdfContentBase64 = base64Encode(pdfContent.buffer.asUint8List());
+  // final pdfContent1 = await rootBundle.load('assets/a');
+  // final pdfContentBase641 = base64Encode(pdfContent.buffer.asUint8List());
+  // Send the email
+  for (var toEmail in toEmails) {
+    final emailResponse = await http.post(
+      Uri.parse('https://backend-sceurity-app.onrender.com/api/send_email'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'to_email': toEmail,
+        'subject': Subject,
+        'from_name': fromName,
+        'html': htmlcontent2,
+        'attachments': [
+          {
+            'filename': 'DAR.pdf',
+            'content': pdfContentBase64,
+            'contentType': 'application/pdf',
+          },
+        ],
+      }),
+    );
+
+    if (emailResponse.statusCode == 201) {
+      print('Email sent successfully to $toEmail');
+      // Handle success
+    } else {
+      print(
+          'Failed to send email to $toEmail. Status code: ${emailResponse.statusCode}');
+      // Handle failure
+    }
+  }
+}
 
 Future<void> sendShiftEmail(
   String? ClientName,

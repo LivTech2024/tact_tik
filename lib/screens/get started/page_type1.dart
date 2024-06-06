@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tact_tik/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/sizes.dart';
@@ -37,7 +38,7 @@ class PageType1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Secondarycolor,
+      color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +47,7 @@ class PageType1 extends StatelessWidget {
             height: 470.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: Primarycolor,
+              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(40.r),
                 bottomLeft: Radius.circular(40.r),
@@ -73,7 +74,7 @@ class PageType1 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
             fontsize: 32.sp,
-            color: color1,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           SizedBox(height: 27.h),
           SizedBox(
@@ -85,8 +86,8 @@ class PageType1 extends StatelessWidget {
           SizedBox(height: 30.h),
           PoppinsRegular(
             text: description[index],
-            fontsize: 14.sp,
-            color: color2,
+          fontsize: 14.sp,
+            color: isDark ? DarkColor.color2 : LightColor.color3,
             textAlign: TextAlign.center,
           ),
         ],

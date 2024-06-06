@@ -203,9 +203,9 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor. Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -218,7 +218,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: reportData.isNotEmpty &&
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
@@ -241,7 +241,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     InterBold(
                       text: 'New Report',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: DarkColor. Primarycolor,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -257,7 +257,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     InterBold(
                       text: 'Category',
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color: DarkColor. Primarycolor,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height20),
@@ -266,15 +266,15 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: DarkColor. WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: width / width24,
-                          dropdownColor: WidgetColor,
-                          style: TextStyle(color: color2),
+                          dropdownColor: DarkColor.WidgetColor,
+                          style: TextStyle(color: DarkColor.color2),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -322,7 +322,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: DarkColor. WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -332,21 +332,21 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: color2,
+                                color: DarkColor. color2,
                                 size: width / width24,
                               ),
                               SizedBox(width: width / width6),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: color8,
+                                color: DarkColor. color8,
                                 fontsize: width / width16,
                                 letterSpacing: -.3,
                               )
                             ],
                           ),
                           Checkbox(
-                            activeColor: Primarycolor,
-                            checkColor: color1,
+                            activeColor: DarkColor. Primarycolor,
+                            checkColor: DarkColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -373,7 +373,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: DarkColor. WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -449,7 +449,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                color: WidgetColor,
+                                color: DarkColor. WidgetColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width8),
                               ),
@@ -675,7 +675,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: Primarycolor,
+                        backgroundcolor: DarkColor. Primarycolor,
                         borderRadius: width / width10,
                       ),
                     ),

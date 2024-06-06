@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Log%20Book/widget/log_type_widget.dart';
 
 import '../../../../common/enums/log_type_enums.dart';
@@ -25,6 +27,8 @@ class SLogBookScreen extends StatefulWidget {
 
 class _LogBookScreenState extends State<SLogBookScreen> {
   late Stream<QuerySnapshot> _logBookStream;
+  
+  get datePickerController => null;
 
   // Future<String> getempID() async {
   //   var userInfo = await fireStoreService.getUserInfoByCurrentUserEmail();
@@ -53,16 +57,19 @@ class _LogBookScreenState extends State<SLogBookScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
-              elevation: 0,
+              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.5),
+              backgroundColor:
+
+                  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              elevation: 5,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                   size: width / width24,
                 ),
                 padding: EdgeInsets.only(left: width / width20),
@@ -71,10 +78,10 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'LogBook -  ${widget.empName}',
                 fontsize: width / width18,
-                color: Colors.white,
+                color: isDark? DarkColor. color1:LightColor.color3,
                 letterSpacing: -.3,
               ),
               centerTitle: true,
@@ -132,7 +139,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                     child: InterMedium(
                       text: 'No Logs Generated For\n${widget.empName}',
                       textAlign: TextAlign.center,
-                      color: color1,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
                     ),
                   );
                 }
@@ -240,15 +247,25 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               height: height / height70,
               width: double.maxFinite,
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.transparent
+                        : LightColor.color3.withOpacity(.05),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: Offset(0, 3),
+                  )
+                ],
                 borderRadius: BorderRadius.circular(width / width10),
-                color: WidgetColor,
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: Primarycolor,
+                    color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     fontsize: width / width18,
                   ),
                   Icon(
@@ -256,7 +273,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
                     size: width / width24,
-                    color: Primarycolor,
+                    color:isDark? DarkColor. Primarycolor:LightColor.color3,
                   )
                 ],
               ),
@@ -269,7 +286,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: width / width18,
-                color: Primarycolor,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
               // ),
             ),

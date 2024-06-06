@@ -260,26 +260,31 @@ class FireStoreService {
         return doc.data() as Map<String, dynamic>;
       }).toList();
 
-      // Group by ShiftId and order by PatrolLogCount
-      Map<String, List<Map<String, dynamic>>> groupedByShiftId = {};
+      // Group by date and order by PatrolLogPatrolCount
+      Map<String, List<Map<String, dynamic>>> groupedByDate = {};
       for (var log in patrolLogs) {
-        String shiftId = log['PatrolShiftId'];
-        if (groupedByShiftId[shiftId] == null) {
-          groupedByShiftId[shiftId] = [];
+        String dateKey = DateFormat('yyyy-MM-dd').format(
+          DateTime.fromMillisecondsSinceEpoch(
+            log['PatrolLogStartedAt'].millisecondsSinceEpoch,
+          ),
+        );
+
+        if (groupedByDate[dateKey] == null) {
+          groupedByDate[dateKey] = [];
         }
-        groupedByShiftId[shiftId]!.add(log);
+        groupedByDate[dateKey]!.add(log);
       }
 
-      // Sort each group by PatrolLogCount
-      for (var shiftId in groupedByShiftId.keys) {
-        groupedByShiftId[shiftId]!.sort((a, b) {
+      // Sort each group by PatrolLogPatrolCount
+      for (var dateKey in groupedByDate.keys) {
+        groupedByDate[dateKey]!.sort((a, b) {
           return b['PatrolLogPatrolCount'].compareTo(a['PatrolLogPatrolCount']);
         });
       }
 
       // Flatten the list of grouped logs
       List<Map<String, dynamic>> sortedPatrolLogs = [];
-      groupedByShiftId.forEach((shiftId, logs) {
+      groupedByDate.forEach((dateKey, logs) {
         sortedPatrolLogs.addAll(logs);
       });
 
@@ -899,7 +904,7 @@ class FireStoreService {
       String EmpName,
       int PatrolCount,
       String ShiftDate,
-      Timestamp StartTime,
+      Timestamp? StartTime,
       Timestamp EndTime,
       String FeedbackComment,
       String ShiftId) async {
@@ -1015,7 +1020,8 @@ class FireStoreService {
 
               // if (Timestamp.now().toDate().isAfter(startTime) &&
               //     Timestamp.now().toDate().isBefore(endTime)) {
-              if ((StartTime.toDate().isBefore(endTime) &&
+              if (StartTime != null) if ((StartTime.toDate()
+                          .isBefore(endTime) &&
                       StartTime.toDate().isAfter(startTime)) ||
                   (EndTime.toDate().isBefore(endTime) &&
                       EndTime.toDate().isAfter(startTime)) ||
@@ -1033,11 +1039,13 @@ class FireStoreService {
                       for (var status in statuses) {
                         if (status['StatusReportedById'] == empId) {
                           List<dynamic>? statusImages = status['StatusImage'];
-                          if (statusImages != null) {
-                            for (var imageUrl in statusImages) {
-                              if (imageUrl is String) {
-                                imageUrls.add(imageUrl);
-                              }
+                          if (statusImages != null && statusImages.length > 0) {
+                            // Check if there are any images and at least one exists
+                            var imageUrl = statusImages[
+                                0]; // Access the first element (index 0)
+                            if (imageUrl is String) {
+                              imageUrls.add(imageUrl);
+                              break; // Exit the inner loop after adding the first image
                             }
                           }
                         }
@@ -1045,11 +1053,26 @@ class FireStoreService {
                     }
                   }
                 }
+
+                Map<String, dynamic> tilePatrol = {
+                  'TilePatrolName': PatrolName,
+                  'TilePatrolId': docRef.id,
+                  // Format patrol start and end times for display
+                  'TilePatrolData':
+                      'Patrol Started At: ${DateFormat('HH:mm').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('HH:mm').format(EndTime.toDate())}',
+                  'TilePatrolImage': imageUrls,
+                };
                 print(imageUrls);
                 String updateString =
                     "Patrol Name ${PatrolName} Patrol Started At: ${DateFormat('HH:mm').format(StartTime.toDate())}, Patrol Ended At: ${DateFormat('HH:mm').format(EndTime.toDate())}";
-                tile['TileContent'] = updateString;
+                // tile['TileContent'] = updateString;
+                if (!tile.containsKey('TilePatrol')) {
+                  tile['TilePatrol'] = []; // Initialize as an empty array
+                }
+                tile['TilePatrol'].add(tilePatrol);
+
                 empDarTiles[i] = tile;
+                // empDarTiles[i] = tilePatrol;
                 print('Updated Tile at index $i: $tile');
               } else {
                 print("Current Timestamp ${Timestamp.now().toDate()}");
@@ -1205,14 +1228,15 @@ class FireStoreService {
   }
 
   Future<void> EndShiftLog(
-      String employeeId,
-      String Stopwatch,
-      String? shiftId,
-      String LocationName,
-      String BrachId,
-      String CompyId,
-      String EmpNames,
-      String ClientId) async {
+    String employeeId,
+    String Stopwatch,
+    String? shiftId,
+    String LocationName,
+    String BrachId,
+    String CompyId,
+    String EmpNames,
+    String ClientId,
+  ) async {
     try {
       if (shiftId == null || shiftId.isEmpty) {
         throw ArgumentError('Invalid shiftId: $shiftId');
@@ -1223,36 +1247,41 @@ class FireStoreService {
       final int? savedInTime = prefs.getInt('savedInTime');
       DocumentReference documentReference =
           FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
-      DocumentSnapshot documentSnapshot = await documentReference.get();
-      List<dynamic> currentArray =
-          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
-      final statusData = {
-        'Status': 'completed',
-        'StatusReportedById': employeeId,
-        'StatusReportedByName': EmpNames,
-        'StatusReportedTime': Timestamp.now(),
-        'StatusStartedTime': savedInTime != null
-            ? DateTime.fromMillisecondsSinceEpoch(savedInTime)
-            : null
-      };
-      int index = currentArray.indexWhere((element) =>
-          element['StatusReportedById'] == employeeId &&
-          element['Status'] == 'started');
-      if (index != -1) {
-        // If the map already exists in the array, update it
-        currentArray[index] = statusData;
-      } else {
-        // If the map doesn't exist, add it to the array
-        currentArray.add(statusData);
-      }
-      await documentReference.update({'ShiftCurrentStatus': currentArray});
 
-      // Generate report
-      String Title = "ShiftEnded";
-      String Data = "Shift Ended ";
-      String type = "Shift";
-      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
-      //     CompyId, "completed", EmpNames, ClientId, type);
+      // Use a transaction to ensure data consistency
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot documentSnapshot =
+            await transaction.get(documentReference);
+        List<dynamic> currentArray =
+            List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+
+        final statusData = {
+          'Status': 'completed',
+          'StatusReportedById': employeeId,
+          'StatusReportedByName': EmpNames,
+          'StatusReportedTime': Timestamp.now(),
+        };
+
+        int index = currentArray.indexWhere((element) =>
+            element['StatusReportedById'] == employeeId &&
+            element['Status'] == 'started');
+
+        if (index != -1) {
+          // If the map already exists, update it excluding StatusStartedTime
+          currentArray[index]
+              .removeWhere((key) => key['StatusStartedTime'] != null);
+          currentArray[index].addAll(statusData);
+        } else {
+          // If the map doesn't exist, add it to the array
+          currentArray.add(statusData);
+        }
+
+        transaction
+            .update(documentReference, {'ShiftCurrentStatus': currentArray});
+      });
+
+      // Generate report (rest of the code remains the same)
+      // ...
 
       // Get the current system time
       DateTime currentTime = DateTime.now();
@@ -1300,7 +1329,74 @@ class FireStoreService {
           element['Status'] == 'started');
       if (index != -1) {
         // If the map already exists in the array, update it
-        currentArray[index] = statusData;
+        currentArray[index]['Status'] = 'completed';
+        currentArray[index]['StatusReportedById'] = employeeId;
+        currentArray[index]['StatusReportedByName'] = EmpNames;
+        currentArray[index]['StatusReportedTime'] = Timestamp.now();
+        currentArray[index]['StatusEndReason'] = Reason ?? "";
+      } else {
+        // If the map doesn't exist, add it to the array
+        currentArray.add(statusData);
+      }
+      await documentReference.update({'ShiftCurrentStatus': currentArray});
+
+      // Generate report
+      String Title = "ShiftEnded";
+      String Data = "Shift Ended ";
+      String type = "Shift";
+      // await generateReport(LocationName, Title, employeeId, BrachId, Data,
+      //     CompyId, "completed", EmpNames, ClientId, type);
+
+      // Get the current system time
+      DateTime currentTime = DateTime.now();
+      print('Shift end logged at $currentTime');
+    } catch (e) {
+      print('Error logging shift end: $e');
+    }
+  }
+
+  Future<void> EndShiftLog2(
+      String employeeId,
+      String Stopwatch,
+      String? shiftId,
+      String LocationName,
+      String BrachId,
+      String CompyId,
+      String EmpNames,
+      String ClientId) async {
+    try {
+      if (shiftId == null || shiftId.isEmpty) {
+        throw ArgumentError('Invalid shiftId: $shiftId');
+      }
+
+      // Update the shift status in Firestore
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final int? savedInTime = prefs.getInt('savedInTime');
+      DocumentReference documentReference =
+          FirebaseFirestore.instance.collection('Shifts').doc(shiftId);
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      List<dynamic> currentArray =
+          List.from(documentSnapshot['ShiftCurrentStatus'] ?? []);
+      final statusData = {
+        'Status': 'completed',
+        'StatusReportedById': employeeId,
+        'StatusReportedByName': EmpNames,
+        'StatusReportedTime': Timestamp.now(),
+        'StatusStartedTime': savedInTime != null
+            ? DateTime.fromMillisecondsSinceEpoch(savedInTime)
+            : null,
+        // 'StatusEndReason': Reason ?? ""
+      };
+      int index = currentArray.indexWhere((element) =>
+          element['StatusReportedById'] == employeeId &&
+          element['Status'] == 'started');
+      if (index != -1) {
+        // If the map already exists in the array, update it
+        currentArray[index]['Status'] = 'completed';
+        currentArray[index]['StatusReportedById'] = employeeId;
+        currentArray[index]['StatusReportedByName'] = EmpNames;
+        currentArray[index]['StatusReportedTime'] = Timestamp.now();
+        // currentArray[index]['StatusEndReason'] = Reason ?? "";
       } else {
         // If the map doesn't exist, add it to the array
         currentArray.add(statusData);
@@ -2045,6 +2141,57 @@ class FireStoreService {
     }
   }
 
+  Future<bool?> checkShiftReturnTaskStatus2(
+      String empId, String shiftID) async {
+    try {
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection("Shifts")
+          .doc(shiftID)
+          .get();
+
+      if (documentSnapshot.exists) {
+        print('SHift Task exists');
+        final shiftTasks = documentSnapshot['ShiftTask'] as List<dynamic>;
+        if (shiftTasks.isNotEmpty) {
+          print("Shift Task is not empty");
+          for (var shiftTask in shiftTasks) {
+            // Check if ShiftReturnTaskStatus exists before accessing it
+            if (shiftTask.containsKey('ShiftReturnTaskStatus')) {
+              final taskStatusList =
+                  shiftTask['ShiftReturnTaskStatus'] as List<dynamic>;
+              if (taskStatusList == null || taskStatusList.isEmpty) {
+                return true;
+              }
+              if (taskStatusList.isNotEmpty) {
+                print("ShiftTaskStatus is not empty");
+                for (var shiftTaskStatus in taskStatusList) {
+                  if (shiftTaskStatus['TaskCompletedById'] == empId &&
+                      (shiftTaskStatus['TaskStatus'] == "pending" ||
+                          shiftTaskStatus['TaskStatus'] == null)) {
+                    return false; // If any task matches the condition, return false
+                  }
+                }
+              } else {
+                return false; // If ShiftReturnTaskStatus is empty, return false
+              }
+            } else {
+              // If ShiftReturnTaskStatus doesn't exist, return false
+              return false;
+            }
+          }
+        } else {
+          return true; // If ShiftTask is empty, return true
+        }
+      } else {
+        return false; // If document doesn't exist, return false
+      }
+      return true; // If no task matches the condition, return true
+    } catch (e) {
+      print("Error checking shift task status: $e");
+      return null; // Return null in case of error
+    }
+  }
+
   //Check Shift Return Task
   Future<bool?> checkShiftReturnTaskStatus(String empId, String shiftID) async {
     try {
@@ -2261,6 +2408,85 @@ class FireStoreService {
             }
             // Update the ShiftTaskStatus array with the new object
             shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+
+            // Update the Firestore document with the new ShiftTaskStatus
+            await shiftDocRef.update({'ShiftTask': shiftTasks});
+            break; // Exit loop after updating
+          }
+        }
+      } else {
+        print("Shift document not found");
+      }
+    } catch (e) {
+      print('Error adding images to ShiftTaskPhotos: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addImagesToShiftReturnTasks(
+      List<Map<String, dynamic>> uploads,
+      String ShiftTaskId,
+      String ShiftId,
+      String EmpId,
+      String EmpName,
+      bool shiftTaskReturnStatus) async {
+    try {
+      print("Uploads from FIrebase: $uploads");
+      print("Shift Task ID from FIrebase: $ShiftTaskId");
+
+      if (ShiftId.isEmpty) {
+        print("Shift ID from FIrebase: $ShiftId");
+      } else {
+        print("Shift ID is empty");
+      }
+
+      // String empId = storage.getItem('EmpId') ?? "";
+      if (ShiftId.isEmpty) {
+        print("LocalStorage shiftId is null or empty");
+      }
+      final DocumentReference shiftDocRef =
+          FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
+      final DocumentSnapshot shiftDoc = await shiftDocRef.get();
+      print(DocumentSnapshot);
+      if (shiftDoc.exists) {
+        List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+        print("Shift Doc exists");
+        print(shiftTasks.length);
+        for (int i = 0; i < shiftTasks.length; i++) {
+          print("Success: $ShiftTaskId");
+          List<String> imgUrls = [];
+          for (var upload in uploads) {
+            if (upload['type'] == 'image') {
+              File file = upload['file'];
+              print(file);
+              // Upload the image file and get the download URL
+              List<Map<String, dynamic>> downloadURLs =
+                  await addImageToStorageShiftTask(file);
+              // Add the image URLs to the list
+              for (var urlMap in downloadURLs) {
+                if (urlMap.containsKey('downloadURL')) {
+                  imgUrls.add(urlMap['downloadURL'] as String);
+                }
+              }
+            }
+          }
+
+          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+            // Create ShiftTaskStatus object with image URLs
+            Map<String, dynamic> shiftTaskStatus = {
+              "TaskStatus": "completed",
+              "TaskCompletedById": EmpId ?? "",
+              "TaskCompletedByName": EmpName,
+              "TaskCompletionTime": DateTime.now(),
+              "TaskPhotos": imgUrls,
+              // "ShiftTaskReturnStatus": true,
+            };
+            if (shiftTaskReturnStatus) {
+              // shiftTaskStatus["ShiftTaskReturnStatus"] = true;
+              shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
+            }
+            // Update the ShiftTaskStatus array with the new object
+            shiftTasks[i]['ShiftReturnTaskStatus'] = [shiftTaskStatus];
 
             // Update the Firestore document with the new ShiftTaskStatus
             await shiftDocRef.update({'ShiftTask': shiftTasks});
@@ -2962,7 +3188,7 @@ class FireStoreService {
       // Query PatrolLogs for data
       var querySnapshot = await FirebaseFirestore.instance
           .collection('PatrolLogs')
-          .where('PatrolId', whereIn: shiftLinkedPatrolIds)
+          // .where('PatrolShiftId', isEqualTo: ShiftId)
           .where('PatrolLogGuardId', isEqualTo: empId)
           // .where('changePatrolStatus', isEqualTo: ShiftId)
           .orderBy('PatrolLogPatrolCount')
@@ -2970,9 +3196,9 @@ class FireStoreService {
 
       // Process query results
       List<String> specificDocIds = [
-        '0qRktNvV0f9kQHLn3Nhn',
-        'ycu5qIbXOu0593jQB6fi',
-        '3VUuYWhhtjik9mx1BOal'
+        '17R4yMJsBmegl2088uIe',
+        '4YSj5Q4JNO9YFwSeOdua',
+        'Gnq53zSuCqIa6JqXObnT'
       ];
 
       querySnapshot.docs.forEach((doc) {
@@ -2991,6 +3217,37 @@ class FireStoreService {
     }
     return pdfDataList;
   }
+
+  Future<void> copyAndCreateDocument(
+      String collection, String sourceDocumentId) async {
+    final DocumentReference sourceDocRef =
+        FirebaseFirestore.instance.collection(collection).doc(sourceDocumentId);
+
+    DocumentSnapshot sourceDocSnapshot = await sourceDocRef.get();
+
+    if (!sourceDocSnapshot.exists) {
+      print('Document does not exist');
+      return;
+    }
+
+    final Map<String, dynamic> data =
+        sourceDocSnapshot.data() as Map<String, dynamic>;
+
+    // Copy the document to a new document with a different ID
+    final DocumentReference newDocRef =
+        FirebaseFirestore.instance.collection(collection).doc();
+
+    await newDocRef.set(data);
+
+    // Create another new document with a different ID in the same location
+    // final DocumentReference anotherNewDocRef =
+    //     FirebaseFirestore.instance.collection(collection).doc();
+
+    // await anotherNewDocRef.set({
+    //   'exampleField': 'exampleValue',
+    // });
+  }
+
   //Create log
   // Future<void> addToLog(
   //     String logType,
@@ -3214,7 +3471,7 @@ class FireStoreService {
             List<dynamic>.from(patrolSnapshot['PatrolCurrentStatus'] ?? []);
         for (var status in currentStatusList) {
           if (status['StatusReportedById'] == empId) {
-            status['Status'] = 'started';
+            status['Status'] = 'pending';
             status['StatusCompletedCount'] = 0;
             status['StatusShiftId'] = shiftId;
             // status['StatusReportedTime'] = DateTime.now().toUtc().toString();
@@ -3489,8 +3746,19 @@ class FireStoreService {
                 print("endTime At $endTime");
                 // String updateString = "${reportName} : ${uniqueid}";
                 // tile['TileContent'] = updateString;
-                tile['TileReportSearchId'] = uniqueid;
-                tile['TileReportName'] = reportName;
+                Map<String, dynamic> tileReport = {
+                  'TileReportName': reportName,
+                  'TileReportId': reportDoc.id,
+                  // Format patrol start and end times for display
+                  'TileReportSearchId': uniqueid,
+                };
+                if (!tile.containsKey('TileReport')) {
+                  tile['TileReport'] = []; // Initialize as an empty array
+                }
+                tile['TileReport'].add(tileReport);
+
+                // tile['TileReportSearchId'] = uniqueid;
+                // tile['TileReportName'] = reportName;
 
                 // tile['ReportSearchId'] = uniqueid;
                 empDarTiles[i] = tile;

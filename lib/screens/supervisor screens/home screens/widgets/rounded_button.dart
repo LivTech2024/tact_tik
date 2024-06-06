@@ -19,14 +19,14 @@ class RoundedButton extends StatelessWidget {
     return Container(
       height: height / height48,
       width: width / width48,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color21),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: DarkColor.color21),
       child: Center(
         child: useSVG
             ? SvgPicture.asset(svg!)
             : Icon(
                 icon,
                 size: width / width24,
-                color: color20,
+                color: DarkColor.  color20,
               ),
       ),
     );

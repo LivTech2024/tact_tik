@@ -16,7 +16,7 @@ class TaskFeatureScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor: DarkColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -25,7 +25,7 @@ class TaskFeatureScreen extends StatelessWidget {
                   builder: (context) => TaskFeatureCreateScreen(),
                 ));
           },
-          backgroundColor: Primarycolor,
+          backgroundColor: DarkColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
@@ -33,7 +33,7 @@ class TaskFeatureScreen extends StatelessWidget {
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              backgroundColor: AppBarcolor,
+              backgroundColor: DarkColor. AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
@@ -47,7 +47,7 @@ class TaskFeatureScreen extends StatelessWidget {
                   print("Navigtor debug: ${Navigator.of(context).toString()}");
                 },
               ),
-              title: InterRegular(
+              title: InterMedium(
                 text: 'Task',
                 fontsize: width / width18,
                 color: Colors.white,
@@ -78,7 +78,7 @@ class TaskFeatureScreen extends StatelessWidget {
                           horizontal: width / width14,
                           vertical: height / height10),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        color: DarkColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Column(
@@ -87,13 +87,13 @@ class TaskFeatureScreen extends StatelessWidget {
                           InterSemibold(
                             text: 'Guard Name',
                             fontsize: width / width20,
-                            color: Primarycolor,
+                            color: DarkColor. Primarycolor,
                           ),
                           SizedBox(height: height / height10),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
                             fontsize: width / width20,
-                            color: color1,
+                            color: DarkColor.color1,
                             maxLines: 5,
                           ),
                           SizedBox(height: height / height5),
@@ -101,7 +101,7 @@ class TaskFeatureScreen extends StatelessWidget {
                             text:
                                 'Take care of all the computers Make sure they are properly turned off',
                             fontsize: width / width14,
-                            color: color3,
+                            color: DarkColor. color3,
                             maxLines: 4,
                           ),
                         ],

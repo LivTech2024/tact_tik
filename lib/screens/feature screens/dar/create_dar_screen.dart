@@ -2,8 +2,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
@@ -11,7 +13,10 @@ import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.dart';
+import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
@@ -54,7 +59,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   String _employeeImg = '';
   List<dynamic> localdarTiles = [];
   String ReportId = "";
-  String ReportName = "";
+  List<dynamic> TilePatrolData = [];
+  List<dynamic> TileReportData = [];
 
   @override
   void initState() {
@@ -86,7 +92,21 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
     if (widget.darTiles[widget.index] != null &&
         widget.darTiles[widget.index]['TileReportName'] != null) {
       setState(() {
-        ReportName = widget.darTiles[widget.index]['TileReportName'];
+        // ReportName = widget.darTiles[widget.index]['TileReportName'];
+      });
+    }
+    if (widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TilePatrol'] != null) {
+      print("TIle PatrolData ${widget.darTiles[widget.index]['TilePatrol']}");
+      setState(() {
+        TilePatrolData = widget.darTiles[widget.index]['TilePatrol'];
+      });
+    }
+    if (widget.darTiles[widget.index] != null &&
+        widget.darTiles[widget.index]['TileReport'] != null) {
+      print("TIle PatrolData ${widget.darTiles[widget.index]['TileReport']}");
+      setState(() {
+        TileReportData = widget.darTiles[widget.index]['TileReport'];
       });
     }
   }
@@ -225,9 +245,12 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
       'TileReportSearchId': ReportId.isNotEmpty
           ? ReportId
           : widget.darTiles[widget.index]['TileReportSearchId'] ?? "",
-      'TileReportName': ReportName.isNotEmpty
-          ? ReportName
-          : widget.darTiles[widget.index]['TileReportName'] ?? "",
+      'TileReport': TileReportData.isNotEmpty
+          ? TileReportData
+          : widget.darTiles[widget.index]['TileReport'] ?? [],
+      'TilePatrol': TilePatrolData.isNotEmpty
+          ? TilePatrolData
+          : widget.darTiles[widget.index]['TilePatrol'] ?? [],
     };
     print("data $data");
     widget.darTiles.removeAt(widget.index);
@@ -298,14 +321,18 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          shadowColor:
+              isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -313,10 +340,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'DAR',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -333,7 +360,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: width / width20,
-                      color: Primarycolor,
+                      color:
+                          isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     SizedBox(height: height / height30),
                     CustomeTextField(
@@ -362,7 +390,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: WidgetColor,
+                                      color: DarkColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -439,9 +467,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                              color: WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(width / width8),
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Center(
                               child: Icon(
@@ -452,6 +481,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(
+                      height: 20.h,
                     ),
                     if (imageUrls.isNotEmpty)
                       GridView.builder(
@@ -466,13 +498,20 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         itemBuilder: (context, index) {
                           return Stack(
                             children: [
-                              Image.network(
+                              /* Image.network(
                                 imageUrls[index],
                                 fit: BoxFit.cover,
+                              ),*/
+                              Container(
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                  image: NetworkImage(imageUrls[index]),
+                                  fit: BoxFit.cover,
+                                )),
                               ),
                               Positioned(
-                                top: 5,
-                                right: 5,
+                                top: -5.h,
+                                right: -5.w,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -480,9 +519,11 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       onPressed: () {
                                         _removeImage(index);
                                       },
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.delete,
-                                        color: Colors.white,
+                                        color: isDark
+                                            ? DarkColor.color1
+                                            : LightColor.color3,
                                       ),
                                     ),
                                   ],
@@ -492,25 +533,127 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                           );
                         },
                       ),
-                    SizedBox(height: height / height20),
-                    ReportId.isNotEmpty
-                        ? InterBold(
-                            text: 'Reports',
-                            fontsize: width / width20,
-                            color: Primarycolor,
+                    SizedBox(height: 20.h),
+                    TilePatrolData.isNotEmpty
+                        ? Column(
+                            children: [
+                              InterBold(
+                                text: 'Patrol',
+                                fontsize: 20.sp,
+                                color: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.color3,
+                              ),
+                              SizedBox(height: 20.h),
+                            ],
                           )
-                        : SizedBox(height: height / height10),
-                    ReportId.isNotEmpty
+                        : SizedBox(height: 10.h),
+                    TilePatrolData.isNotEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 1,
+                            itemCount: TilePatrolData.length,
                             itemBuilder: (context, index) {
+                              final patrolData = TilePatrolData[index];
+                              print("TIle Patrol Data ${TilePatrolData}");
+                              // final hourKey = reportsByHour.keys.toList()[index];
+                              // final reportsForHour = reportsByHour[hourKey] ?? [];
+                              // var data = reportsByHour;
+
+                              return GestureDetector(
+                                onTap: () {
+                                  print("TIle Patrol Data ${TilePatrolData}");
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           CreateReportScreen(
+                                  //         locationId: '',
+                                  //         locationName: '',
+                                  //         companyID: '',
+                                  //         empId: '',
+                                  //         empName: '',
+                                  //         ClientId: '',
+                                  //         reportId: '',
+                                  //         buttonEnable: false,
+                                  //         ShiftId: 'widget.shifID',
+                                  //         SearchId:
+                                  //             ReportId, //Need to Work Here
+                                  //       ),
+                                  //     ));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 30.h),
+                                  height: 35.h,
+                                  color: isDark
+                                      ? DarkColor.WidgetColor
+                                      : LightColor.WidgetColor,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 15.w,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            InterBold(
+                                              text: TilePatrolData.isNotEmpty
+                                                  ? "Patrol Name : ${patrolData['TilePatrolName']}"
+                                                  : "",
+                                              fontsize: 12.sp,
+                                              color: Colors.white,
+                                            ),
+                                            InterBold(
+                                              text: TilePatrolData.isNotEmpty
+                                                  ? "${patrolData['TilePatrolData']}"
+                                                  : "",
+                                              fontsize: 12.sp,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : SizedBox(height: 30.h),
+                    TileReportData.isNotEmpty
+                        ? Column(
+                            children: [
+                              InterBold(
+                                text: 'Reports',
+                                fontsize: 20.sp,
+                                color: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.color3,
+                              ),
+                              SizedBox(height: 20.h)
+                            ],
+                          )
+                        : SizedBox(height: 10.h),
+                    TileReportData.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: TileReportData.length,
+                            itemBuilder: (context, index) {
+                              final ReportData = TileReportData[index];
                               // final hourKey = reportsByHour.keys.toList()[index];
                               // final reportsForHour = reportsByHour[hourKey] ?? [];
                               // var data = reportsByHour;
                               return GestureDetector(
                                 onTap: () {
+                                  print('Tile Report Data ${TileReportData}');
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -525,30 +668,45 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                           reportId: '',
                                           buttonEnable: false,
                                           ShiftId: 'widget.shifID',
-                                          SearchId:
-                                              ReportId, //Need to Work Here
+                                          SearchId: ReportData[
+                                              'TileReportSearchId'], //Need to Work Here
                                         ),
                                       ));
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(
-                                      bottom: height / height30),
-                                  height: height / height25,
-                                  color: WidgetColor,
+                                    bottom: 30.h,
+                                  ),
+                                  // height: 80.h,
+                                  constraints: BoxConstraints(
+                                    minHeight: 80.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: width / width20,
+                                        width: 15.w,
                                         height: double.infinity,
-                                        color: Colors.red,
+                                        decoration: BoxDecoration(
+                                          color: isDark
+                                              ? DarkColor.WidgetColor
+                                              : LightColor.WidgetColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
                                       ),
-                                      SizedBox(width: width / width2),
+                                      SizedBox(width: 6.w),
                                       Expanded(
                                         child: InterBold(
-                                          text: ReportId.isNotEmpty
-                                              ? "# $ReportId  ${ReportName}"
+                                          text: TileReportData.isNotEmpty
+                                              ? "\t\t\t\t # ${ReportData['TileReportSearchId']}  ${ReportData['TileReportName']}"
                                               : "",
-                                          fontsize: width / width12,
+                                          fontsize: 12.sp,
                                           color: Colors.white,
                                         ),
                                       ),
@@ -558,15 +716,19 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               );
                             },
                           )
-                        : SizedBox(height: height / height30),
+                        : SizedBox(height: 30.h),
                     widget.iseditable
                         ? Button1(
+                            height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
                             onPressed: submitDarTileData,
-                            backgroundcolor: Primarycolor,
-                            borderRadius: 20,
+                            backgroundcolor: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
+                            borderRadius: 10.r,
                           )
                         : SizedBox(),
+                    SizedBox(height: 40.h),
                   ],
                 ),
               ),

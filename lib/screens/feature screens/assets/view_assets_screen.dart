@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 
 import '../../../common/sizes.dart';
@@ -34,8 +35,8 @@ class ViewAssetsScreen extends StatelessWidget {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Primarycolor, // Change primary color to red
-              secondary: Primarycolor,
+              primary: DarkColor. Primarycolor, // Change primary color to red
+              secondary: DarkColor. Primarycolor,
             ),
           ),
           child: child!,
@@ -76,8 +77,9 @@ class ViewAssetsScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: DarkColor. AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -90,7 +92,7 @@ class ViewAssetsScreen extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'View Assets',
             fontsize: 18.sp,
             color: Colors.white,
@@ -98,119 +100,124 @@ class ViewAssetsScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 30.h),
-            InterBold(
-              text: 'Allocation Date',
-              color: Primarycolor,
-              fontsize: 20.sp,
-            ),
-            SizedBox(height: 30.h),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 60.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: WidgetColor,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InterMedium(
-                          text: startDate,
-                          fontsize: 16.sp,
-                          color: color2,
-                        ),
-                        SvgPicture.asset(
-                          'assets/images/calendar_clock.svg',
-                          width: 20.w,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(width: 6.w),
-                Expanded(
-                  child: Container(
-                    height: 60.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: WidgetColor,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InterMedium(
-                          text: endDate,
-                          fontsize: 16.sp,
-                          color: color2,
-                        ),
-                        SvgPicture.asset(
-                          'assets/images/calendar_clock.svg',
-                          width: 20.w,
-                        )
-                      ],
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 30.h),
+              InterBold(
+                text: 'Allocation Date',
+                color: isDark ? DarkColor.Primarycolor : LightColor.color1,
+                fontsize: 20.sp,
+              ),
+              SizedBox(height: 30.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 60.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          InterMedium(
+                            text: startDate,
+                            fontsize: 16.sp,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                          ),
+                          SvgPicture.asset(
+                            'assets/images/calendar_clock.svg',
+                            width: 20.w,
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.h),
-            InterBold(
-              text: 'Equipment',
-              color: color1,
-              fontsize: 16.sp,
-            ),
-            SizedBox(height: 20.h),
-            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseFirestore.instance
-                  .collection('Equipments')
-                  .where('EquipmentId', isEqualTo: equipmentId)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final documents = snapshot.data!.docs;
-                  final equipmentName = documents.isNotEmpty
-                      ? (documents.first.data()['EquipmentName'] ??
-                          'Equipment Not Available')
-                      : 'Equipment Not Available';
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Container(
+                      height: 60.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          InterMedium(
+                            text: endDate,
+                            fontsize: 16.sp,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                          ),
+                          SvgPicture.asset(
+                            'assets/images/calendar_clock.svg',
+                            width: 20.w,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.h),
+              InterBold(
+                text: 'Equipment',
+                color: isDark ? DarkColor.Primarycolor : LightColor.color1,
+                fontsize: 16.sp,
+              ),
+              SizedBox(height: 20.h),
+              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: FirebaseFirestore.instance
+                    .collection('Equipments')
+                    .where('EquipmentId', isEqualTo: equipmentId)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final documents = snapshot.data!.docs;
+                    final equipmentName = documents.isNotEmpty
+                        ? (documents.first.data()['EquipmentName'] ??
+                            'Equipment Not Available')
+                        : 'Equipment Not Available';
 
-                  return Container(
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: WidgetColor,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 10.w),
-                        InterMedium(
-                          text: equipmentName,
-                          color: color2,
-                          fontsize: 16.sp,
-                        ),
-                        SizedBox(width: 200.w),
-                        InterMedium(
-                          text: "Quantity: $equipmentQty",
-                          color: color2,
-                          fontsize: 16.sp,
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            )
-          ],
+                    return Container(
+                      height: 60.h,
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+
+                          InterMedium(
+                            text: equipmentName,
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            fontsize: 16.sp,
+                          ),
+                          InterMedium(
+                            text: "Quantity: $equipmentQty",
+                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            fontsize: 16.sp,
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -7,22 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
-import 'package:tact_tik/riverpod/task_screen_provider.dart';
+import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/MapScreen/map_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/eg_patrolling.dart';
-import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/screens/home%20screens/controller/home_screen_controller.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
@@ -31,8 +28,6 @@ import 'package:tact_tik/screens/home%20screens/shift_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/wellness_check_screen.dart';
 import 'package:tact_tik/services/DAR/darFucntions.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
-import 'package:tact_tik/services/StopWatchBackgroundService/stop_watch_background_service.dart';
-import 'package:tact_tik/services/backgroundService/countDownTimer.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -42,13 +37,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:open_file/open_file.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../common/sizes.dart';
 import '../../../common/widgets/button1.dart';
 import '../../../fonts/inter_bold.dart';
 import '../../../fonts/inter_semibold.dart';
-import '../../MapScreen/map_screen.dart';
 
 class StartTaskScreen extends StatefulWidget {
   final String ShiftDate;
@@ -208,8 +201,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     //     clickedIn = true;
     //     prefs.setBool('clickedIn', clickedIn);
     //   });
-    await homeScreenController.startBgLocationService();
-    updateLateTimeAndStartTimer();
+    // await homeScreenController.startBgLocationService();
+    // updateLateTimeAndStartTimer();
     // } else {
     //   setState(() {
     //     prefs.setBool('clickedIn', clickedIn);
@@ -238,8 +231,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         onBreak = breakState;
       });
       if (!onBreak) {
-        startStopwatch();
-        // updateLateTimeAndStartTimer();
+        // startStopwatch();
+        _startTimer();
+        updateLateTimeAndStartTimer();
       }
     }
     int? savedSeconds = prefs.getInt('stopwatchSeconds');
@@ -445,8 +439,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       children: [
         Container(
           constraints: BoxConstraints(minHeight: 170.h),
-          decoration: const BoxDecoration(
-            color: WidgetColor,
+          decoration:  BoxDecoration(
+             boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? Colors.transparent
+                    : LightColor.color3.withOpacity(.05),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           ),
           padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
@@ -456,7 +460,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               SizedBox(height: 10.h),
               InterBold(
                 text: widget.ShiftDate,
-                color: color1,
+                color: isDark ? DarkColor.color1 : LightColor.color3,
                 fontsize: 18.sp,
               ),
               SizedBox(height: 10.h),
@@ -465,13 +469,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   InterMedium(
                     text: 'location:',
                     fontsize: 14.sp,
-                    color: color1,
+                    color: isDark ? DarkColor.color1 : LightColor.color3,
                   ),
                   SizedBox(width: 10.w),
                   InterRegular(
                     text: widget.ShiftAddressName,
                     fontsize: 14.sp,
-                    color: color5,
+                    color: isDark ? DarkColor.color5 : LightColor.color2,
                   )
                 ],
               ),
@@ -489,20 +493,20 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'In time',
                           fontsize: 28.sp,
-                          color: color1,
+                          color:  isDark ? DarkColor.color1 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
-                          color: color7,
+                          color:  isDark ? DarkColor.color7 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
                                 text: isLate ? "Late $lateTime" : 'on time',
-                                color: isLate ? Colors.redAccent : color8,
+                                color: isLate ? Colors.redAccent : DarkColor.color8,
                                 fontsize: 14.sp,
                               )
                             : const SizedBox(),
@@ -518,18 +522,19 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'Out time',
                           fontsize: 28.sp,
-                          color: color1,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: 18.99.sp,
-                          color: color7,
+                          color: isDark ? DarkColor.color7 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(
                           text: remainingTimeFormatted,
-                          color: color8,
+                          // '${(_stopwatchSeconds ~/ 3600).toString().padLeft(2, '0')} : ${((_stopwatchSeconds ~/ 60) % 60).toString().padLeft(2, '0')} : ${(_stopwatchSeconds % 60).toString().padLeft(2, '0')}',
+                          color: DarkColor.color8,
                           fontsize: 14.sp,
                         )
                       ],
@@ -557,8 +562,18 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           height: height / height65,
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: height / height5),
-          decoration: const BoxDecoration(
-            color: WidgetColor,
+          decoration: BoxDecoration(
+             boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? Colors.transparent
+                    : LightColor.color3.withOpacity(.05),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: Offset(0, 3),
+              )
+            ],
+            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           ),
           child: Row(
             children: [
@@ -635,47 +650,47 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   updateLateTimeAndStartTimer();
 
                                   ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
-                                  FirebaseFirestore firestore =
-                                      FirebaseFirestore.instance;
-                                  // Create a new document reference
+                                  // FirebaseFirestore firestore =
+                                  //     FirebaseFirestore.instance;
+                                  // // Create a new document reference
 
-                                  DocumentReference docRef = firestore
-                                      .collection('EmployeeRoutes')
-                                      .doc();
+                                  // DocumentReference docRef = firestore
+                                  //     .collection('EmployeeRoutes')
+                                  //     .doc();
 
                                   // Data to be added
-                                  Map<String, dynamic> empRouteData = {
-                                    'EmpRouteCreatedAt': Timestamp.now(),
-                                    'EmpRouteDate': Timestamp.now(),
-                                    'EmpRouteEmpId': widget.EmployeId,
-                                    'EmployeeName': widget.EmployeeName,
-                                    'EmpRouteId': docRef.id,
-                                    'EmpRouteLocations': [],
-                                    'EmpRouteShiftId': widget.ShiftId,
-                                    'EmpRouteShiftStatus': 'started',
-                                    'EmployeeShiftStartTime':
-                                        widget.ShiftStartTime,
-                                    'EmployeeShiftEndTime': widget.ShiftEndTime,
-                                    'EmployeeShiftShiftName': widget.ShiftName,
-                                    'EmpRouteEmpRole':
-                                        userStorage.getItem("Role"),
-                                  };
-                                  try {
-                                    // Add the document to the collection
-                                    await docRef.set(empRouteData);
-                                    print(
-                                        'Employee route created with ID: ${docRef.id}');
-                                  } catch (e) {
-                                    print('Error creating employee route: $e');
-                                  }
+                                  // Map<String, dynamic> empRouteData = {
+                                  //   'EmpRouteCreatedAt': Timestamp.now(),
+                                  //   'EmpRouteDate': Timestamp.now(),
+                                  //   'EmpRouteEmpId': widget.EmployeId,
+                                  //   'EmployeeName': widget.EmployeeName,
+                                  //   'EmpRouteId': docRef.id,
+                                  //   'EmpRouteLocations': [],
+                                  //   'EmpRouteShiftId': widget.ShiftId,
+                                  //   'EmpRouteShiftStatus': 'started',
+                                  //   'EmployeeShiftStartTime':
+                                  //       widget.ShiftStartTime,
+                                  //   'EmployeeShiftEndTime': widget.ShiftEndTime,
+                                  //   'EmployeeShiftShiftName': widget.ShiftName,
+                                  //   'EmpRouteEmpRole':
+                                  //       userStorage.getItem("Role"),
+                                  // };
+                                  // try {
+                                  //   // Add the document to the collection
+                                  //   await docRef.set(empRouteData);
+                                  //   print(
+                                  //       'Employee route created with ID: ${docRef.id}');
+                                  // } catch (e) {
+                                  //   print('Error creating employee route: $e');
+                                  // }
 
                                   // start stop watch
                                   // await controller.startStopWatch();
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  await homeScreenController
-                                      .startBgLocationService();
+                                  // await homeScreenController
+                                  //     .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -750,22 +765,26 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                     /// TODO changed here
                     child: Container(
-                      color: WidgetColor,
+                      color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
                           fontsize: width / width18,
-                          color:
-                              // controller.stopWatchRunning.value ||
-                              clickedIn ? Primarycolorlight : Primarycolor,
+                          color: clickedIn
+                              ? (isDark
+                                  ? DarkColor.Primarycolorlight
+                                  : LightColor.color2)
+                              : (isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const VerticalDivider(
-                color: Colors.white,
+               VerticalDivider(
+                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
               Expanded(
                 child: IgnorePointer(
@@ -835,9 +854,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       if (currentTime.isBefore(bufferStart) ||
                           currentTime.isAfter(bufferEnd)) {
                         bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus(
+                            await fireStoreService.checkShiftReturnTaskStatus2(
                                 widget.EmployeId, widget.ShiftId);
-                        if (status == true) {
+                        if (status == false) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -856,7 +875,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 return AlertDialog(
                                     title: InterRegular(
                                       text: 'Add Reason',
-                                      color: color2,
+                                      color: isDark?DarkColor.color22:LightColor.color3,
                                       fontsize: width / width12,
                                     ),
                                     content: Column(
@@ -874,9 +893,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         onPressed: () async {
                                           Navigator.pop(context);
                                         },
-                                        child: const InterRegular(
+                                        child:  InterRegular(
                                           text: 'Cancel',
-                                          color: Primarycolor,
+                                          color:  isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                         ),
                                       ),
                                       TextButton(
@@ -887,8 +908,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                                           if (CommentController
                                               .text.isNotEmpty) {
-                                            await homeScreenController
-                                                .stopBgLocationService();
+                                            // await homeScreenController
+                                            //     .stopBgLocationService();
                                             widget.onRefresh();
                                             var data = await fireStoreService
                                                 .fetchDataForPdf(
@@ -949,9 +970,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                 "Reason cannot be empty");
                                           }
                                         },
-                                        child: const InterRegular(
+                                        child:  InterRegular(
                                           text: 'Submit',
-                                          color: Primarycolor,
+                                          color:  isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                         ),
                                       ),
                                     ]);
@@ -970,9 +993,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             await SharedPreferences.getInstance();
 
                         bool? status =
-                            await fireStoreService.checkShiftReturnTaskStatus(
+                            await fireStoreService.checkShiftReturnTaskStatus2(
                                 widget.EmployeId, widget.ShiftId);
-                        if (status == true) {
+                        if (status == false) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -1003,7 +1026,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                               widget.ShiftClientID,
                               widget.ShiftLocationId,
                               widget.ShiftName);
-                          await fireStoreService.EndShiftLog(
+                          await fireStoreService.EndShiftLog2(
                               widget.EmployeId,
                               formattedStopwatchTime,
                               widget.ShiftId,
@@ -1047,14 +1070,23 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       // }
                     },
                     child: Container(
-                      color: WidgetColor,
+                      color: isDark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor,
                       child: Center(
-                        child: InterBold(
-                          text: 'End Shift',
-                          fontsize: width / width18,
-                          // color: controller.stopWatchRunning.value
-                          color: clickedIn ? Primarycolor : Primarycolorlight,
-                        ),
+                        child: 
+                           InterBold(
+                            text: 'End Shift',
+                            fontsize: width / width18,
+                            color: clickedIn
+                                ? (isDark
+                                    ? DarkColor.Primarycolorlight
+                                    : LightColor.color2)
+                                : (isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.Primarycolor),
+                          ),
+                        
                       ),
                     ),
                   ),
@@ -1070,8 +1102,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 // text: controller.isPaused.value ? 'Resume' : 'Break',
                 text: true ? 'Resume' : 'Break',
                 fontsize: width / width18,
-                color: color5,
-                backgroundcolor: WidgetColor,
+                color: DarkColor. color5,
+                backgroundcolor: DarkColor. WidgetColor,
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
@@ -1138,8 +1170,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           child: Button1(
             text: 'Check Patrolling',
             fontsize: width / width18,
-            color: color5,
-            backgroundcolor: WidgetColor,
+            color: DarkColor.color5,
+            backgroundcolor: isDark
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,

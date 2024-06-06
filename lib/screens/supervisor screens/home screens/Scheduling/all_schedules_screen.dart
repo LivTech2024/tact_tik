@@ -8,6 +8,7 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/home%20screens/s_home_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -115,14 +116,14 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Secondarycolor,
+        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: AppBarcolor,
+          backgroundColor: isDark?DarkColor. AppBarcolor:LightColor.WidgetColor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color:isDark? Colors.white:LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -130,10 +131,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SHomeScreen()));
             },
           ),
-          title: InterRegular(
+          title: InterMedium(
             text: 'All Schedule',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? Colors.white : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -142,7 +143,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             shape: const CircleBorder(),
-            backgroundColor: Primarycolor,
+            backgroundColor:isDark?DarkColor. Primarycolor:LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,
@@ -156,10 +157,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         supervisorEmail: '',
                       )));
             },
-            child: Icon(
-              Icons.add,
-              size: width / width20,
-            ),
+            child: Icon(Icons.add,color: isDark ? DarkColor.color15 : LightColor.color1,),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -177,7 +175,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     InterBold(
                       text: 'Search',
                       fontsize: width / width20,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : LightColor.color3,
                     ),
                     SizedBox(height: height / height24),
                     Container(
@@ -185,7 +183,17 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width10),
                       decoration: BoxDecoration(
-                        color: WidgetColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width13),
                       ),
                       child: Row(
@@ -209,26 +217,34 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
                                   fontSize: width / width18,
-                                  color: color2,
+                                  color: isDark
+                                      ? Colors.white
+                                      : LightColor
+                                          .color3, // Change text color to white
                                 ),
                                 hintText: 'Search',
                                 contentPadding: EdgeInsets.zero,
                               ),
-                              cursorColor: Primarycolor,
+                              cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                             ),
                           ),
                           Container(
                             height: height / height44,
                             width: width / width44,
                             decoration: BoxDecoration(
-                              color: Primarycolor,
-                              borderRadius: BorderRadius.circular(width / width10),
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
+                              borderRadius:
+                                  BorderRadius.circular(width / width10),
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.search,
                                 size: width / width20,
-                                color: Colors.black,
+                                color: isDark
+                                    ? DarkColor.Secondarycolor
+                                    : LightColor.color1,
                               ),
                             ),
                           )
@@ -271,7 +287,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             margin: EdgeInsets.only(top: height / height10),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
-                              color: Primarycolor,
+                              color: DarkColor.Primarycolor,
                               borderRadius: BorderRadius.circular(width / width14),
                             ),
                             padding: EdgeInsets.symmetric(vertical: height / height20),
@@ -288,7 +304,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           topRight: Radius.circular(width / width10),
                                           bottomRight: Radius.circular(width / width10),
                                         ),
-                                        color: color22,
+                                        color: DarkColor. color22,
                                       ),
                                     ),
                                     SizedBox(width: width / width14),
@@ -300,7 +316,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                         children: [
                                           InterSemibold(
                                             text: shiftName,
-                                            color: color22,
+                                            color: DarkColor. color22,
                                             fontsize: width / width14,
                                           ),
                                           SizedBox(height: height / height5),
@@ -335,7 +351,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                             InterRegular(
                                               text: 'Guards',
                                               fontsize: width / width14,
-                                              color: color22,
+                                              color: DarkColor.color22,
                                             ),
                                             SizedBox(height: height / height12),
                                             Wrap(
@@ -349,7 +365,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                 if (employeeImages.length > 3)
                                                   CircleAvatar(
                                                     radius: width / width10,
-                                                    backgroundColor: color23,
+                                                    backgroundColor:
+                                                        DarkColor. color23,
                                                     child: InterMedium(
                                                       text: '+${employeeImages.length - 3}',
                                                       fontsize: width / width12,
@@ -367,7 +384,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           children: [
                                             InterRegular(
                                               text: 'Shift',
-                                              color: color22,
+                                              color: DarkColor.color22,
                                               fontsize: width / width14,
                                             ),
                                             SizedBox(height: height / height5),
