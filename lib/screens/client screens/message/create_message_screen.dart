@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
@@ -39,16 +40,16 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                   Icons.arrow_back_ios,
                   color:
                   isDark ? DarkColor.color1 : LightColor.color3,
-                  size: width / width24,
+                  size: 24.w,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               title: InterMedium(
                 text: 'Write Message',
-                fontsize: width / width18,
+                fontsize: 18.sp,
                 color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
@@ -58,17 +59,17 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     InterBold(
                       text: 'Employee',
                       fontsize: width / width18,
                       color: isDark ? DarkColor.color1 : LightColor.color3,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     // TODO : Comment out this
                     /*Container(
                       height: height / height60,
@@ -96,13 +97,13 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                         ),
                       ),
                     ),*/
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     Container(
-                      height: height / height60,
-                      padding: EdgeInsets.symmetric(horizontal: width / width20),
+                      height: 60.h,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
                         color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,7 +115,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                                 color: isDark
                                     ? DarkColor.color8
                                     : LightColor.color3,
-                                fontsize: width / width16,
+                                fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
@@ -132,7 +133,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     CustomeTextField(
                       hint: 'Write Your Message...',
                       isExpanded: true,
@@ -144,15 +145,15 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Button1(
-                      height: height / height60,
+                      height: 60.h,
                       backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                      borderRadius: width / width10,
-                      fontsize: width / width18,
+                      borderRadius: 10.r,
+                      fontsize: 18.sp,
                       color: DarkColor. color1,
                       text: 'Send',
                       onPressed: () {},

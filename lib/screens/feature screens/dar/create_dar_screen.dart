@@ -446,7 +446,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             decoration: BoxDecoration(
                               color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                               borderRadius:
-                                  BorderRadius.circular(width / width8),
+                                  BorderRadius.circular(8.r),
                             ),
                             child: Center(
                               child: Icon(

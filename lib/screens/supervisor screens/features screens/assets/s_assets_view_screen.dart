@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart'; // for date formatting
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/assets/s_create_assign_asset.dart';
@@ -90,9 +91,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                 icon: Icon(
                   Icons.arrow_back_ios,
                   color: Colors.white,
-                  size: width / width24,
+                  size: 24.w,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                   print("Navigator debug: ${Navigator.of(context).toString()}");
@@ -100,7 +101,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
               ),
               title: InterMedium(
                 text: 'Assets',
-                fontsize: width / width18,
+                fontsize: 18.sp,
                 color: isDark ? DarkColor.color1 : LightColor.color3,
                 letterSpacing: -0.3,
               ),
@@ -109,20 +110,20 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: height / height30,
+                      height: 30.h,
                     ),
                     InterBold(
                       text: 'Today',
-                      fontsize: width / width20,
+                      fontsize: 20.w,
                       color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     SizedBox(
-                      height: height / height30,
+                      height: 30.h,
                     ),
                   ],
                 ),
@@ -138,11 +139,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     if (index == 0) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: width / width30,
-                            vertical: height / height30),
+                            horizontal: 30.w,
+                            vertical: 30.h),
                         child: InterBold(
                           text: getDateHeader(date),
-                          fontsize: width / width20,
+                          fontsize: 20.sp,
                           color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         ),
                       );
@@ -155,7 +156,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                          EdgeInsets.symmetric(horizontal: 30.w),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -170,12 +171,12 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       )));
                         },
                         child: Container(
-                          height: width / width60,
+                          height: 60.h,
                           width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: height / height10),
+                          margin: EdgeInsets.only(bottom: 10.h),
                           decoration: BoxDecoration(
                             borderRadius:
-                                BorderRadius.circular(width / width10),
+                                BorderRadius.circular(10.w),
                             color:
                                 isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                           ),
@@ -187,13 +188,13 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: height / height44,
-                                    width: width / width44,
+                                    height: 44.h,
+                                    width: 44.w,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: width / width10),
+                                        horizontal: 10.w),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
-                                          width / width10),
+                                          10.w),
                                       color: isDark
                                           ? DarkColor.Primarycolorlight
                                           : LightColor.Primarycolorlight,
@@ -204,11 +205,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                         color: isDark
                                             ? DarkColor.Primarycolor
                                             : LightColor.Primarycolor,
-                                        size: width / width24,
+                                        size: 24.w,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: width / width20),
+                                  SizedBox(width: 20.w),
                                   FutureBuilder<String>(
                                     future: getEquipmentName(equipment['EquipmentAllocationEquipId']),
                                     builder: (context, snapshot) {

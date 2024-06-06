@@ -64,56 +64,56 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: height / height30),
+                SizedBox(height: 30.h),
                 InterBold(
                   text: 'Details',
-                  fontsize: width / width18,
+                  fontsize: 18.sp,
                   color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
-                SizedBox(height: height / height20),
+                SizedBox(height: 20.h),
                 InterMedium(
                   text: 'Time: ' + widget.reportedAt,
-                  fontsize: width / width14,
+                  fontsize: 14.sp,
                   color: isDark ? DarkColor.color21 : LightColor.color3,
                 ),
-                SizedBox(height: height / height50),
+                SizedBox(height: 50.h),
                 InterBold(
                   text: 'Comments',
-                  fontsize: width / width18,
+                  fontsize: 18.sp,
                   color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
-                SizedBox(height: height / height10),
+                SizedBox(height: 10.h),
                 InterMedium(
                   text: widget.comment,
-                  fontsize: width / width14,
+                  fontsize: 14.sp,
                   color: isDark ? DarkColor.color21 : LightColor.color3,
                   maxLines: 3,
                 ),
-                SizedBox(height: height / height50),
+                SizedBox(height: 50.h),
                 InterBold(
                   text: 'Images',
-                  fontsize: width / width18,
+                  fontsize: 18.sp,
                   color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
                 GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing: width / width10,
-                    mainAxisSpacing: height / height10,
+                    crossAxisSpacing: 10.w,
+                    mainAxisSpacing: 10.h,
                     crossAxisCount: 3,
                   ),
                   itemCount: widget.images.length,
                   itemBuilder: (context, index) {
                     final imageUrl = widget.images[index];
                     return Container(
-                      height: height / height66,
-                      width: width / width66,
+                      height: 66.h,
+                      width: 66.w,
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(width / width10),
@@ -125,7 +125,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                     );
                   },
                 ),
-                SizedBox(height: height / height50),
+                SizedBox(height: 50.h),
                 // InterBold(
                 //   text: 'Reports',
                 //   fontsize: width / width18,
