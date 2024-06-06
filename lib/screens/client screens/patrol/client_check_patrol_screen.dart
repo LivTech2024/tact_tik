@@ -18,6 +18,7 @@ import 'client_open_patrol_screen.dart';
 
 class ClientCheckPatrolScreen extends StatefulWidget {
   final String PatrolIdl;
+
   ClientCheckPatrolScreen({super.key, required this.PatrolIdl});
 
   @override
@@ -50,6 +51,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
     'https://pikwizard.com/pw/small/39573f81d4d58261e5e1ed8f1ff890f6.jpg',
   ];
+
   @override
   void initState() {
     FireStoreService fireStoreService = FireStoreService();
@@ -156,244 +158,261 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                 SizedBox(
                   height: 20.h,
                 ),
-              ListView.builder(
-                itemCount: patrolsList.length,
-                itemBuilder: (context, index) {
-                  final patrol = patrolsList[index];
-                  if (selectedDate == null ||
-                      (DateTime.fromMillisecondsSinceEpoch(patrol['PatrolLogStartedAt']
-                          .millisecondsSinceEpoch)
-                          .year ==
-                          selectedDate!.year &&
-                          DateTime.fromMillisecondsSinceEpoch(patrol['PatrolLogStartedAt']
-                              .millisecondsSinceEpoch)
-                              .month ==
-                              selectedDate!.month &&
-                          DateTime.fromMillisecondsSinceEpoch(patrol['PatrolLogStartedAt']
-                              .millisecondsSinceEpoch)
-                              .day ==
-                              selectedDate!.day)) {
-                    return GestureDetector(
-                      onTap: () {
-                        final DateTime startTime = DateTime.fromMillisecondsSinceEpoch(
-                            patrol['PatrolLogStartedAt'].millisecondsSinceEpoch);
-                        final DateTime endTime = DateTime.fromMillisecondsSinceEpoch(
-                            patrol['PatrolLogEndedAt'].millisecondsSinceEpoch);
+            ListView.builder(
+              itemCount: patrolsList.length,
+              itemBuilder: (context, index) {
+                final patrol = patrolsList[index];
+                final patrolDate = DateTime.fromMillisecondsSinceEpoch(
+                  patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                );
 
-                        NavigateScreen(
-                          ClientOpenPatrolScreen(
-                            guardName: patrol['PatrolLogGuardName'] ?? '',
-                            startDate: DateFormat('dd/MM/yyyy').format(startTime),
-                            startTime: DateFormat('hh:mm a').format(startTime),
-                            endTime: DateFormat('hh:mm a').format(endTime),
-                            patrolLogCount: patrol['PatrolLogPatrolCount'] ?? 0,
-                            status: patrol['PatrolLogStatus'] ?? '',
-                            feedback: patrol['PatrolLogFeedbackComment'] ?? '',
-                            checkpoints: patrol['PatrolLogCheckPoints'] ?? [],
-                          ),
-                          context,
-                        );
-                      },
-                      child: Container(
-                        height: 140.h,
-                        margin: EdgeInsets.only(top: 10.h),
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                          color: WidgetColor,
-                          borderRadius: BorderRadius.circular(14.r),
+                final bool isNewDate = index == 0 ||
+                    patrolDate.day != DateTime.fromMillisecondsSinceEpoch(
+                      patrolsList[index - 1]['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                    ).day ||
+                    patrolDate.month != DateTime.fromMillisecondsSinceEpoch(
+                      patrolsList[index - 1]['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                    ).month ||
+                    patrolDate.year != DateTime.fromMillisecondsSinceEpoch(
+                      patrolsList[index - 1]['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                    ).year;
+
+                if (selectedDate == null ||
+                    (patrolDate.year == selectedDate!.year &&
+                        patrolDate.month == selectedDate!.month &&
+                        patrolDate.day == selectedDate!.day)) {
+                  return GestureDetector(
+                    onTap: () {
+                      final DateTime startTime = DateTime.fromMillisecondsSinceEpoch(
+                        patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                      );
+                      final DateTime endTime = DateTime.fromMillisecondsSinceEpoch(
+                        patrol['PatrolLogEndedAt'].millisecondsSinceEpoch,
+                      );
+
+                      NavigateScreen(
+                        ClientOpenPatrolScreen(
+                          guardName: patrol['PatrolLogGuardName'] ?? '',
+                          startDate: DateFormat('dd/MM/yyyy').format(startTime),
+                          startTime: DateFormat('hh:mm a').format(startTime),
+                          endTime: DateFormat('hh:mm a').format(endTime),
+                          patrolLogCount: patrol['PatrolLogPatrolCount'] ?? 0,
+                          status: patrol['PatrolLogStatus'] ?? '',
+                          feedback: patrol['PatrolLogFeedbackComment'] ?? '',
+                          checkpoints: patrol['PatrolLogCheckPoints'] ?? [],
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 20.h),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  children: [
-                                    SizedBox(height: 5.h),
-                                    Container(
-                                      height: 30.h,
-                                      width: 4.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10.r),
-                                          bottomRight: Radius.circular(10.r),
-                                        ),
-                                        color: Primarycolor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 14.w),
-                                SizedBox(
-                                  width: 190.w,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                        context,
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (isNewDate)
+                          InterMedium(
+                            text: DateFormat('dd/MM/yyyy').format(patrolDate),
+                            fontsize: 18.sp,
+                            color: color1,
+                          ),
+                        SizedBox(height: 20.h),
+                        Container(
+                          height: 140.h,
+                          margin: EdgeInsets.only(bottom: 10.h),
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            color: WidgetColor,
+                            borderRadius: BorderRadius.circular(14.r),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 20.h),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
                                     children: [
-                                      InterSemibold(
-                                        text: patrol['PatrolLogGuardName'] ?? "",
-                                        color: color21,
-                                        fontsize: 18.sp,
+                                      SizedBox(height: 5.h),
+                                      Container(
+                                        height: 30.h,
+                                        width: 4.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10.r),
+                                            bottomRight: Radius.circular(10.r),
+                                          ),
+                                          color: Primarycolor,
+                                        ),
                                       ),
-                                      // SizedBox(height: height / height5),
                                     ],
                                   ),
-                                )
-                              ],
-                            ),
-                            // SizedBox(height: height / height10),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 18.w,
-                                right: 24.w,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
+                                  SizedBox(width: 14.w),
                                   SizedBox(
-                                    width: 80.w,
+                                    width: 190.w,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        InterRegular(
-                                          text: 'Started at',
-                                          fontsize: 12.sp,
+                                        InterSemibold(
+                                          text: patrol['PatrolLogGuardName'] ?? "",
                                           color: color21,
-                                        ),
-                                        SizedBox(height: 12.h),
-                                        InterMedium(
-                                          text: patrol['PatrolLogStartedAt'] != null
-                                              ? DateFormat('hh:mm a').format(DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                              patrol['PatrolLogStartedAt']
-                                                  .millisecondsSinceEpoch))
-                                              : "",
-                                          fontsize: 12.sp,
-                                          color: color1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 80.w,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        InterRegular(
-                                          text: 'Ended at',
-                                          fontsize: 12.sp,
-                                          color: color21,
-                                        ),
-                                        SizedBox(height: 12.h),
-                                        InterMedium(
-                                          text: patrol['PatrolLogEndedAt'] != null
-                                              ? DateFormat('hh:mm a').format(DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                              patrol['PatrolLogEndedAt']
-                                                  .millisecondsSinceEpoch))
-                                              : "",
-                                          fontsize: 12.sp,
-                                          color: color1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 60.w,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        InterRegular(
-                                          text: 'Count',
-                                          fontsize: 12.sp,
-                                          color: color21,
-                                        ),
-                                        SizedBox(height: 12.h),
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.check_circle_outline,
-                                              color: Primarycolor,
-                                              size: 16.sp,
-                                            ),
-                                            SizedBox(
-                                              width: 2.w,
-                                            ),
-                                            InterMedium(
-                                              text: patrol['PatrolLogPatrolCount']
-                                                  .toString() ??
-                                                  "",
-                                              fontsize: 12.sp,
-                                              color: color1,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 80.w,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        InterRegular(
-                                          text: 'Status',
-                                          fontsize: 12.sp,
-                                          color: color21,
-                                        ),
-                                        SizedBox(height: 12.h),
-                                        InterBold(
-                                          text: 'Completed',
-                                          fontsize: 12.sp,
-                                          color: Colors.green,
+                                          fontsize: 18.sp,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: EdgeInsets.only(left: 18.w, right: 24.w),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 80.w,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InterRegular(
+                                            text: 'Started at',
+                                            fontsize: 12.sp,
+                                            color: color21,
+                                          ),
+                                          SizedBox(height: 12.h),
+                                          InterMedium(
+                                            text: patrol['PatrolLogStartedAt'] != null
+                                                ? DateFormat('hh:mm a').format(
+                                              DateTime.fromMillisecondsSinceEpoch(
+                                                patrol['PatrolLogStartedAt']
+                                                    .millisecondsSinceEpoch,
+                                              ),
+                                            )
+                                                : "",
+                                            fontsize: 12.sp,
+                                            color: color1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 80.w,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InterRegular(
+                                            text: 'Ended at',
+                                            fontsize: 12.sp,
+                                            color: color21,
+                                          ),
+                                          SizedBox(height: 12.h),
+                                          InterMedium(
+                                            text: patrol['PatrolLogEndedAt'] != null
+                                                ? DateFormat('hh:mm a').format(
+                                              DateTime.fromMillisecondsSinceEpoch(
+                                                patrol['PatrolLogEndedAt']
+                                                    .millisecondsSinceEpoch,
+                                              ),
+                                            )
+                                                : "",
+                                            fontsize: 12.sp,
+                                            color: color1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 60.w,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InterRegular(
+                                            text: 'Count',
+                                            fontsize: 12.sp,
+                                            color: color21,
+                                          ),
+                                          SizedBox(height: 12.h),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle_outline,
+                                                color: Primarycolor,
+                                                size: 16.sp,
+                                              ),
+                                              SizedBox(width: 2.w),
+                                              InterMedium(
+                                                text: patrol['PatrolLogPatrolCount']
+                                                    ?.toString() ??
+                                                    "",
+                                                fontsize: 12.sp,
+                                                color: color1,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 80.w,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          InterRegular(
+                                            text: 'Status',
+                                            fontsize: 12.sp,
+                                            color: color21,
+                                          ),
+                                          SizedBox(height: 12.h),
+                                          InterBold(
+                                            text: patrol['PatrolLogStatus'],
+                                            fontsize: 12.sp,
+                                            color: Colors.green,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                  if (patrolsList.isEmpty ||
-                      (selectedDate != null &&
-                          patrolsList.every((patrol) =>
+                      ],
+                    ),
+                  );
+                }
+                if (patrolsList.isEmpty ||
+                    (selectedDate != null &&
+                        patrolsList.every(
+                              (patrol) =>
                           DateTime.fromMillisecondsSinceEpoch(
-                              patrol['PatrolLogStartedAt'].millisecondsSinceEpoch)
-                              .year !=
-                              selectedDate?.year ||
+                            patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                          ).year != selectedDate?.year ||
                               DateTime.fromMillisecondsSinceEpoch(
-                                  patrol['PatrolLogStartedAt'].millisecondsSinceEpoch)
-                                  .month !=
-                                  selectedDate?.month ||
+                                patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                              ).month != selectedDate?.month ||
                               DateTime.fromMillisecondsSinceEpoch(
-                                  patrol['PatrolLogStartedAt'].millisecondsSinceEpoch)
-                                  .day !=
-                                  selectedDate?.day))) {
-                    return Center(
-                      child: Text(
-                        patrolsList.isEmpty
-                            ? 'No Patrols Found'
-                            : 'No Patrols Found for Selected Date',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Primarycolor,
-                        ),
+                                patrol['PatrolLogStartedAt'].millisecondsSinceEpoch,
+                              ).day != selectedDate?.day,
+                        ))) {
+                  return Center(
+                    child: Text(
+                      patrolsList.isEmpty
+                          ? 'No Patrols Found'
+                          : 'No Patrols Found for Selected Date',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Primarycolor,
                       ),
-                    );
-                  }
-                },
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-              ),
-              ],
+                    ),
+                  );
+                }
+                return Container(); // Ensure this line is added to handle the else case properly.
+              },
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+            ),
+            ],
             ),
           ),
         ),

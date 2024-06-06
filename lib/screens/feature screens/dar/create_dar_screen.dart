@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -665,7 +666,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                   margin: EdgeInsets.only(
                                     bottom: 30.h,
                                   ),
-                                  height: 35.h,
+                                  // height: 80.h,
+                                  constraints: BoxConstraints(
+                                    minHeight: 80.h,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: WidgetColor,
                                     borderRadius: BorderRadius.circular(10.r),
@@ -676,12 +680,12 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         width: 15.w,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Colors.red,
+                                          color: Primarycolor,
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                         ),
                                       ),
-                                      SizedBox(width: 2.w),
+                                      SizedBox(width: 6.w),
                                       Expanded(
                                         child: InterBold(
                                           text: TileReportData.isNotEmpty

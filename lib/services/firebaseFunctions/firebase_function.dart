@@ -260,29 +260,31 @@ class FireStoreService {
         return doc.data() as Map<String, dynamic>;
       }).toList();
 
-      // Group by ShiftId and order by PatrolLogCount
-      Map<String, List<Map<String, dynamic>>> groupedByShiftId = {};
+      // Group by date and order by PatrolLogPatrolCount
+      Map<String, List<Map<String, dynamic>>> groupedByDate = {};
       for (var log in patrolLogs) {
-        String? shiftId = log['PatrolShiftId']; // Use null check
-        if (shiftId == null) {
-          continue; // Skip logs without PatrolShiftId
+        String dateKey = DateFormat('yyyy-MM-dd').format(
+          DateTime.fromMillisecondsSinceEpoch(
+            log['PatrolLogStartedAt'].millisecondsSinceEpoch,
+          ),
+        );
+
+        if (groupedByDate[dateKey] == null) {
+          groupedByDate[dateKey] = [];
         }
-        if (groupedByShiftId[shiftId] == null) {
-          groupedByShiftId[shiftId] = [];
-        }
-        groupedByShiftId[shiftId]!.add(log);
+        groupedByDate[dateKey]!.add(log);
       }
 
       // Sort each group by PatrolLogPatrolCount
-      for (var shiftId in groupedByShiftId.keys) {
-        groupedByShiftId[shiftId]!.sort((a, b) {
+      for (var dateKey in groupedByDate.keys) {
+        groupedByDate[dateKey]!.sort((a, b) {
           return b['PatrolLogPatrolCount'].compareTo(a['PatrolLogPatrolCount']);
         });
       }
 
       // Flatten the list of grouped logs
       List<Map<String, dynamic>> sortedPatrolLogs = [];
-      groupedByShiftId.forEach((shiftId, logs) {
+      groupedByDate.forEach((dateKey, logs) {
         sortedPatrolLogs.addAll(logs);
       });
 

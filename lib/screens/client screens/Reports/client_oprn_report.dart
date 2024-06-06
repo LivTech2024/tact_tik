@@ -6,9 +6,31 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../utils/colors.dart';
 
-class ClientOpenReport extends StatelessWidget {
-  const ClientOpenReport({super.key});
+class ClientOpenReport extends StatefulWidget {
+  final String reportName;
+  final String reportCategory;
+  final String reportDate;
+  final String reportFollowUpRequire;
+  final String reportData;
+  final String reportStatus;
+  final String reportEmployeeName;
+  final String reportLocation;
 
+  const ClientOpenReport({super.key,
+    required this.reportName,
+    required this.reportCategory,
+    required this.reportDate,
+    required this.reportFollowUpRequire,
+    required this.reportData,
+    required this.reportStatus,
+    required this.reportEmployeeName,
+    required this.reportLocation,});
+
+  @override
+  State<ClientOpenReport> createState() => _ClientOpenReportState();
+}
+
+class _ClientOpenReportState extends State<ClientOpenReport> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,7 +75,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'guy: ',
+                      text: widget.reportName,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -70,7 +92,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'Security safety',
+                      text: widget.reportCategory,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -87,7 +109,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: '04 Jun-24 14:10',
+                      text: widget.reportDate,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -104,7 +126,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'Yes',
+                      text: widget.reportFollowUpRequire,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -121,7 +143,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'ftfy',
+                      text: widget.reportData,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -138,7 +160,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'completed',
+                      text: widget.reportStatus,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -155,7 +177,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'Vaibhav Sutar',
+                      text: widget.reportEmployeeName,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -172,7 +194,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'Thakur Polytechnic',
+                      text: widget.reportLocation,
                       fontsize: 14.sp,
                       color: color21,
                     ),
@@ -189,7 +211,7 @@ class ClientOpenReport extends StatelessWidget {
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
-                      text: 'Thakur Polytechnic',
+                      text: 'NOT FOUND?',
                       fontsize: 14.sp,
                       color: color21,
                     ),

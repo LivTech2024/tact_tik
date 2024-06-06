@@ -659,13 +659,24 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           {
                                             print("Value: ${value}"),
                                             setState(() {
-                                              selectedGuards.add({
-                                                'GuardId': value['id'],
-                                                'GuardName': value['name'],
-                                                'GuardImg': value['url']
-                                              });
+                                              bool guardExists = selectedGuards.any((guard) => guard['GuardId'] == value['id']);
+
+                                              if (guardExists) {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text('Guard already added'),
+                                                  ),
+                                                );
+                                              } else {
+                                                // Add the guard if it does not exist
+                                                selectedGuards.add({
+                                                  'GuardId': value['id'],
+                                                  'GuardName': value['name'],
+                                                  'GuardImg': value['url']
+                                                });
+                                              }
                                             }),
-                                          }
+                                }
                                       });
                                 },
                                 child: InterBold(
@@ -692,7 +703,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 Expanded(
                                   child: TypeAheadField<Guards>(
                                     autoFlipDirection: true,
-                                    controller: _controller,
+                                    controller: _searchController,
                                     direction: VerticalDirection.down,
                                     builder:
                                         (context, _controller, focusNode) =>
