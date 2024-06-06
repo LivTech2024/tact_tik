@@ -103,8 +103,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
@@ -117,16 +115,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: DarkColor.color1 ,
-              size: 24.w,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: InterMedium(
             text: 'Your Profile',
-            fontsize: 18.w,
+            fontsize: 18.sp,
             color:  DarkColor.color1,
             letterSpacing: -.3,
           ),
@@ -136,10 +134,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 setState(() {
                   isEdit = !isEdit;
                 });
+                if (isEdit) {
+                  final newName = _nameController.text.trim();
+                  final newPhoneNo = _phoneNoController.text.trim();
+
+                  if (newName.isNotEmpty && newPhoneNo.isNotEmpty) {
+                    _updateEmployeeData(newName, newPhoneNo);
+                    setState(() {
+                      isEdit = false;
+                      _nameController.clear();
+                      _phoneNoController.clear();
+                    });
+                    _getCurrentUserUid();
+                  } else if (_selectedImageFile != null && isEdit) {
+                    // TODO Upload image code
+
+                    _getCurrentUserUid();
+                  }
+                }
               },
               icon: Icon(
                 isEdit ? Icons.close : Icons.border_color,
-                size: 24.w,
+                size: 24.sp,
                 color:  DarkColor.color1 ,
               ),
             )
@@ -177,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: ClipOval(
                             child: SizedBox.fromSize(
-                              size: Size.fromRadius(50.w),
+                              size: Size.fromRadius(50.r),
                               child: _selectedImageFile != null
                                   ? Image.file(
                                       File(_selectedImageFile!.path),
@@ -188,8 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           _employeeImageUrl!,
                                           fit: BoxFit.cover,
                                         )
-                                      : Image.asset(
-                                          'assets/images/default.png'),
+                                      : Image.asset('assets/images/default.png'),
                             ),
                           ),
                         ),
@@ -234,8 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         isEditMode: false,
                                       ),
                                     ),
-                                    SizedBox(width: 6.w),
-                                    Bounce(
+                                    /*  Bounce(
                                       onTap: () {
                                         final newName =
                                             _nameController.text.trim();
@@ -260,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: DarkColor.color2,
                                         size: 30.w,
                                       ),
-                                    )
+                                    )*/
                                   ],
                                 ),
                               ],
@@ -285,7 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontsize: 20.sp,
                                 color: isDark?DarkColor.  color1:LightColor.color3,
                               ),
-                              SizedBox(height: height / height5),
+                              SizedBox(height: 5.h),
                               Row(
                                 children: [
                                   Expanded(
@@ -298,8 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isEditMode: false,
                                     ),
                                   ),
-                                  SizedBox(width: 6.w),
-                                  Bounce(
+                                  /*Bounce(
                                     onTap: () {
                                       final newName =
                                           _nameController.text.trim();
@@ -324,7 +337,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       color: DarkColor.  color2,
                                       size: 30.w,
                                     ),
-                                  )
+                                  )*/
                                 ],
                               ),
                             ],
@@ -365,7 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: PoppinsRegular(
                     text: 'complete your profile !',
-                    fontsize: 20.w,
+                    fontsize: 20.sp,
                     color: isDark ? DarkColor.color3 : LightColor.color2,
                   ),
                 )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
@@ -19,8 +20,6 @@ class ProfileEditWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
 
     return GestureDetector(
       onTap: onTap,
@@ -29,13 +28,13 @@ class ProfileEditWidget extends StatelessWidget {
         children: [
           InterSemibold(
             text: tittle,
-            fontsize: width / width20,
+            fontsize: 20.sp,
             color:  isDark ? DarkColor.color1 : LightColor.color3,
           ),
-          SizedBox(height: height / height10),
+          SizedBox(height: 10.h),
           InterRegular(
             text: content,
-            fontsize: width / width16,
+            fontsize: 16.sp,
             letterSpacing: -.05,
             color:  isDark ? DarkColor.color3 : LightColor.color3,
           ),

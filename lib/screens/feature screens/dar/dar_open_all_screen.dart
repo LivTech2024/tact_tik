@@ -733,43 +733,33 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                                   SizedBox(
                                                       height:
                                                           height / height20),
-                                                  SizedBox(
-                                                    width: double.maxFinite,
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      child: Row(
-                                                        children: List.generate(
-                                                          (data[index][
-                                                                      'TileImages']
-                                                                  as List)
-                                                              .length,
-                                                          (i) => Container(
-                                                            margin: EdgeInsets.only(
-                                                                right: height /
-                                                                    height10),
-                                                            height: height /
-                                                                height50,
-                                                            width:
-                                                                width / width50,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                width / width10,
-                                                              ),
-                                                              image:
-                                                                  DecorationImage(
-                                                                image:
-                                                                    NetworkImage(
-                                                                  data[index][
-                                                                      'TileImages'][i],
-                                                                ),
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
+
+                                                  Row(
+                                                    children: List.generate(
+                                                      (data[index]['TileImages']
+                                                              as List)
+                                                          .length > 5 ? 5 : (data[index]['TileImages']
+                                                      as List)
+                                                          .length,
+                                                      (i) => Container(
+                                                        margin: EdgeInsets.only(
+                                                            right: height /
+                                                                height10),
+                                                        height:
+                                                            height / height50,
+                                                        width: width / width50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            width / width10,
+                                                          ),
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                              data[index][
+                                                                  'TileImages'][i],
                                                             ),
                                                           ),
                                                         ),

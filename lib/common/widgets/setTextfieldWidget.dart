@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/main.dart';
 import '../sizes.dart';
@@ -35,18 +36,15 @@ class SetTextfieldWidget extends StatefulWidget {
 class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     final bool shouldDisable = widget.isEditMode
         ? !widget.enabled // Disable based on 'enabled' in edit mode
         : widget.hintText.toLowerCase().contains(
             'asset return'); // Disable if "Asset Return" when creating a new visitor
 
     return Container(
-      height: height / height60,
+      height: 60.h,
       width: double.maxFinite,
-      padding: EdgeInsets.symmetric(horizontal: width / width20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -58,10 +56,10 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             offset: Offset(0, 3),
           )
         ],
-        borderRadius: BorderRadius.circular(width / width10),
+       borderRadius: BorderRadius.circular(10.r),
         color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
       ),
-      margin: EdgeInsets.only(top: height / height10),
+      margin: EdgeInsets.only(top: 10.h),
       child: Center(
         child: TextField(
           maxLength: widget.maxlength,
@@ -70,7 +68,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           // Enable or disable TextField based on shouldDisable
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
-            fontSize: width / width18,
+             fontSize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           onSubmitted: (value) {
@@ -82,13 +80,13 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.all(
-                Radius.circular(width / width10),
+                Radius.circular(10.r),
               ),
             ),
             focusedBorder: InputBorder.none,
             hintStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w300,
-              fontSize: width / width18,
+       fontSize: 18.sp,
               color: isDark ? DarkColor.color2 : LightColor.color3,
             ),
             hintText: widget.hintText,

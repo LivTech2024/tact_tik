@@ -263,14 +263,17 @@ class FireStoreService {
       // Group by ShiftId and order by PatrolLogCount
       Map<String, List<Map<String, dynamic>>> groupedByShiftId = {};
       for (var log in patrolLogs) {
-        String shiftId = log['PatrolShiftId'];
+        String? shiftId = log['PatrolShiftId']; // Use null check
+        if (shiftId == null) {
+          continue; // Skip logs without PatrolShiftId
+        }
         if (groupedByShiftId[shiftId] == null) {
           groupedByShiftId[shiftId] = [];
         }
         groupedByShiftId[shiftId]!.add(log);
       }
 
-      // Sort each group by PatrolLogCount
+      // Sort each group by PatrolLogPatrolCount
       for (var shiftId in groupedByShiftId.keys) {
         groupedByShiftId[shiftId]!.sort((a, b) {
           return b['PatrolLogPatrolCount'].compareTo(a['PatrolLogPatrolCount']);

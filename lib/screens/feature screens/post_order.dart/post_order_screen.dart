@@ -289,7 +289,7 @@ class _PostOrderState extends State<PostOrder> {
                                               mainAxisSpacing: 10.0,
                                             ),
                                             itemCount:
-                                                postOrderOtherData.length,
+                                                postOrderOtherData.length > 3 ? 3 : postOrderOtherData.length,
                                             itemBuilder: (context, index) {
                                               String url =
                                                   postOrderOtherData[index];

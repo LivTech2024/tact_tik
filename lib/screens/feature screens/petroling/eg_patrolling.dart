@@ -1305,16 +1305,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   .color3,
                                                           fontsize: 18.sp,
                                                         ),
-                                                        SizedBox(height: 2.h),
-                                                        InterRegular(
-                                                          text: checkpoint
-                                                              .timestamp,
-                                                          color: isDark
-                                                              ? DarkColor.Primarycolor
-                                                              : LightColor
-                                                                  .color3,
-                                                          fontsize: 12.sp,
-                                                        )
+                                                        SizedBox(
+                                                            height: checkpoint
+                                                                        .timestamp !=
+                                                                    ''
+                                                                ? 2.h
+                                                                : 0.h),
+                                                        checkpoint.timestamp !=
+                                                                ''
+                                                            ? InterRegular(
+                                                                text: checkpoint
+                                                                    .timestamp,
+                                                                color:
+                                                                    isDark ? DarkColor.Primarycolor : LightColor.color3,
+                                                                fontsize: 12.sp,
+                                                              )
+                                                            : SizedBox()
                                                       ],
                                                     ),
                                                   ),

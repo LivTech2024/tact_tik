@@ -53,7 +53,9 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
               brightness: Brightness.dark,
               textTheme: GoogleFonts.poppinsTextTheme(
-                Theme.of(context).textTheme,
+                Theme
+                    .of(context)
+                    .textTheme,
               ),
             ),
             // navigatorKey: navigatorKey,
@@ -69,11 +71,9 @@ class MyApp extends StatelessWidget {
         );
       },
       child: OfflineBuilder(
-        connectivityBuilder: (
-          BuildContext context,
-          ConnectivityResult connectivity,
-          Widget child,
-        ) {
+        connectivityBuilder: (BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
             return AuthChecker();
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
               body: Center(
                 child: InterSemibold(
                   text:
-                      'No internet connection.\nConnect to Internet or Restart the app',
+                  'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
                   color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
@@ -190,3 +190,5 @@ class MyApp extends StatelessWidget {
           // ),
         ),
       ),*/
+// "default": "livtech-dbcf2"
+// "default": "security-app-3b156"

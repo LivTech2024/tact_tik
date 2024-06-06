@@ -29,6 +29,7 @@ import '../SideBar Screens/profile_screen.dart';
 import '../get started/getstarted_screen.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
+import 'Reports/client_oprn_report.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -163,18 +164,20 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     super.initState();
     _getUserInfo();
     fetchShifts();
+    fetchReports();
   }
 
   List<Map<String, dynamic>> shifts = [];
+  List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
 
   Future<void> fetchShifts() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('shifts')
+          .collection('Shifts')
           .where('ShiftClientId', isEqualTo: _employeeId)
           .get();
-
+      print('Snapshot ${querySnapshot}');
       List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return {
@@ -183,7 +186,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
-          'members': data['members'],
+          // 'members': data['members'],
         };
       }).toList();
 
@@ -198,6 +201,60 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       });
     }
   }
+
+  Future<void> fetchReports() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Reports')
+          .where('ReportClientId', isEqualTo: _employeeId)
+          .get();
+      print('Snapshot ${querySnapshot}');
+      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return {
+          'ReportDate': (data['ReportCreatedAt'] != null)
+              ? data['ReportCreatedAt'].toDate()
+              : DateTime.now(), // default to now if missing or null
+          'ReportName': (data['ReportName'] != null && data['ReportName'].toString().isNotEmpty)
+              ? data['ReportName']
+              : 'Not Found',
+          'ReportGuardName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportEmployeeName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportStatus': (data['ReportStatus'] != null && data['ReportStatus'].toString().isNotEmpty)
+              ? data['ReportStatus']
+              : 'Not Found',
+          'ReportCategory': (data['ReportCategoryName'] != null && data['ReportCategoryName'].toString().isNotEmpty)
+              ? data['ReportCategoryName']
+              : 'Not Found',
+          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
+          'ReportData': (data['ReportData'] != null && data['ReportData'].toString().isNotEmpty)
+              ? data['ReportData']
+              : 'Not Found',
+          'ReportLocation': (data['ReportLocationName'] != null && data['ReportLocationName'].toString().isNotEmpty)
+              ? data['ReportLocationName']
+              : 'Not Found',
+        };
+      }).toList();
+
+      setState(() {
+        reports = fetchedReports;
+        isLoading = false;
+      });
+      print("REPORT DATA HERE IT'S  :$reports");
+    } catch (e) {
+      print("Error fetching reports: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
+
 
   // 12 datani mall shift start id A local stoarage
   // 2 capital mall
@@ -461,53 +518,56 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
               isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
           child: Column(
             children: [
-              Container(
-                height: 180.h,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(width / width15),
-                  color: isDark
-                      ? DarkColor.Primarycolor
-                      : LightColor
-                          .Primarycolor, // Background color for the drawer header
-                ),
-                child: Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 180.h,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    color: isDark?DarkColor.Primarycolor:LightColor.Primarycolor, // Background color for the drawer header
+                  ),
+                  child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: ClipOval(
+                              child: SizedBox.fromSize(
+                                  size: Size.fromRadius(50.r),
+                                  child: Image.network(
+                                    employeeImg!,
+                                    fit: BoxFit.cover,
+                                  )),
+                            ),
                           ),
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                                size: Size.fromRadius(50.w),
-                                child: Image.network(
-                                  employeeImg!,
-                                  fit: BoxFit.cover,
-                                )),
+                          SizedBox(height: height / height10),
+                          PoppinsSemibold(
+                            text: _userName,
+                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                            fontsize: width / width16,
+                            letterSpacing: -.3,
                           ),
-                        ),
-                        SizedBox(height: 10.h),
-                        PoppinsSemibold(
-                          text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
-                          fontsize: 16.sp,
-                          letterSpacing: -.3,
-                        ),
-                        SizedBox(height: 5.h),
-                        PoppinsRegular(
-                          text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
-                          fontsize: 16.w,
-                          letterSpacing: -.3,
-                        )
-                      ]),
+                          SizedBox(height: height / height5),
+                          PoppinsRegular(
+                            text: _empEmail,
+                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                            fontsize: width / width16,
+                            letterSpacing: -.3,
+                          )
+                        ]),
+                  ),
                 ),
               ),
               Expanded(
@@ -585,24 +645,24 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 leading: Icon(
                   Icons.logout,
                   color: Colors.red,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
                 title: PoppinsBold(
                   text: 'Logout',
                   color: Colors.red,
-                  fontsize: width / width14,
+                  fontsize: 14.sp,
                 ),
                 onTap: () {
                   auth.signOut(context, LoginScreen(), _employeeId);
                 },
               ),
-              SizedBox(height: height / height20)
+              SizedBox(height: 20.h)
             ],
           ),
         ),
         body: Padding(
           padding: EdgeInsets.only(
-            top: height / height30,
+            top: 30.h,
           ),
           child: RefreshIndicator(
             onRefresh: _refreshData,
@@ -629,8 +689,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: width / width30,
-                      right: width / width30,
+                      left: 30.w,
+                      right: 30.w,
                     ),
                     child: Column(
                       children: [
@@ -659,7 +719,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             ),
                             Bounce(
-                              onTap: () => ChangeScreenIndex(1),
+                              // onTap: () => ChangeScreenIndex(1),
                               child: HomeScreenCustomNavigation(
                                 text: 'Shifts',
                                 icon: Icons.add_task,
@@ -680,7 +740,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             ),
                             Bounce(
-                              // onTap: () => ChangeScreenIndex(2),
+                              onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: 'assets/images/lab_profile.svg',
@@ -758,226 +818,194 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 left: 30.w,
                                 right: 30.w,
                               ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  // NavigateScreen(
-                                  //     ClientCheckPatrolScreen(
-                                  //       PatrolIdl: '',
-                                  //     ),
-                                  //     context);
-                                  print("Clicked");
-                                  // NavigateScreen(
-                                  //     ClientCheckPatrolScreen(
-                                  //       PatrolIdl: PatrolId,
-                                  //     ),
-                                  //     context);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ClientCheckPatrolScreen(
-                                                  PatrolIdl: PatrolId)));
-                                },
-                                child: Container(
-                                  height: 160.h,
-                                  margin:
-                                      EdgeInsets.only(top: height / height10),
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: isDark
-                                            ? Colors.transparent
-                                            : LightColor.color3
-                                                .withOpacity(.05),
-                                        blurRadius: 5,
-                                        spreadRadius: 2,
-                                        offset: Offset(0, 3),
-                                      )
-                                    ],
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  InterBold(
+                                    text: '19/9/2004',
                                     color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.color1,
-                                    borderRadius: BorderRadius.circular(14.w),
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
+                                    fontsize: 20.sp,
                                   ),
-                                  padding: EdgeInsets.symmetric(vertical: 20.h),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                  SizedBox(
+                                    height: 10.sp,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      print("Clicked");
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ClientCheckPatrolScreen(
+                                                      PatrolIdl: PatrolId)));
+                                    },
+                                    child: Container(
+                                      height: 160.h,
+                                      margin: EdgeInsets.only(top: 10.h),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
+                                        borderRadius:
+                                            BorderRadius.circular(14.r),
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20.h),
+                                      child: Column(
                                         children: [
-                                          Container(
-                                            height: 30.h,
-                                            width: 4.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10.w),
-                                                bottomRight:
-                                                    Radius.circular(10.w),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight: Radius.circular(
+                                                      10.r,
+                                                    ),
+                                                    bottomRight:
+                                                        Radius.circular(
+                                                      10.r,
+                                                    ),
+                                                  ),
+                                                  color: isDark
+                                                      ? DarkColor.color22
+                                                      : LightColor.color3,
+                                                ),
                                               ),
-                                              color: isDark
-                                                  ? DarkColor.color22
-                                                  : LightColor.color3,
-                                            ),
+                                              SizedBox(width: 14.w),
+                                              SizedBox(
+                                                width: 190.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InterSemibold(
+                                                      text: PatrolName ?? "",
+                                                      color: isDark
+                                                          ? DarkColor.color22
+                                                          : LightColor.color3,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                    SizedBox(height: 5.h),
+                                                    InterRegular(
+                                                      text:
+                                                          PatrolLocation ?? "",
+                                                      maxLines: 1,
+                                                      fontsize: 14.sp,
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          SizedBox(width: 14.w),
-                                          SizedBox(
-                                            width: 190.w,
-                                            child: Column(
+                                          SizedBox(height: 10.h),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 18.w,
+                                              right: 24.w,
+                                            ),
+                                            child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                InterSemibold(
-                                                  text: 'Marvin McKinney',
-                                                  color: DarkColor.color22,
-                                                  fontsize: 14.sp,
+                                                // shift time and date
+                                                SizedBox(
+                                                  width: 100.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'CheckPoints',
+                                                        color: isDark
+                                                            ? DarkColor.color22
+                                                            : LightColor.color3,
+                                                        fontsize: 14.w,
+                                                      ),
+                                                      SizedBox(height: 5.h),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .check_circle_outlined,
+                                                            size: 24.sp,
+                                                            color: isDark
+                                                                ? DarkColor.color22
+                                                                : LightColor.color3,
+                                                          ),
+                                                          SizedBox(width: 6.w),
+                                                          InterMedium(
+                                                            text: CheckpointCount
+                                                                    .toString() ??
+                                                                "",
+                                                            fontsize: 14.sp,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                SizedBox(height: 5.h),
-                                                InterRegular(
-                                                  text: PatrolLocation ?? "",
-                                                  maxLines: 1,
-                                                  fontsize: 14.sp,
-                                                ),
+                                                SizedBox(
+                                                  width: width / width100,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      InterRegular(
+                                                        text: 'Required Times',
+                                                        color: isDark
+                                                            ? DarkColor.color22
+                                                            : LightColor.color3,  
+                                                        fontsize:
+                                                            width / width14,
+                                                      ),
+                                                      SizedBox(
+                                                          height:
+                                                              height / height5),
+                                                      Row(
+                                                        children: [
+                                                          // SvgPicture.asset(
+                                                          //   'assets/images/avg_pace.svg',
+                                                          //   width: width / width24,
+                                                          // ),
+                                                          SizedBox(
+                                                              width: width /
+                                                                  width6),
+                                                          InterMedium(
+                                                            text: "2",
+                                                            fontsize:
+                                                                width / width14,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 10.w),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 18.w,
-                                          right: 24.w,
-                                        ),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 100.w,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterRegular(
-                                                    text: 'Guards',
-                                                    fontsize: 14.sp,
-                                                    color: DarkColor.color22,
-                                                  ),
-                                                  SizedBox(height: 12.h),
-                                                  Wrap(
-                                                    spacing: -5.0,
-                                                    // spacing between avatars
-                                                    // runSpacing: 8.0, // spacing between rows
-                                                    children: [
-                                                      for (int i = 0;
-                                                          i <
-                                                              (members.length >
-                                                                      3
-                                                                  ? 3
-                                                                  : members
-                                                                      .length);
-                                                          i++)
-                                                        CircleAvatar(
-                                                          radius: 10.w,
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                            members[i],
-                                                          ), // Assuming members list contains URLs of profile photos
-                                                        ),
-                                                      if (members.length > 3)
-                                                        CircleAvatar(
-                                                          radius: 12.w,
-                                                          backgroundColor: isDark
-                                                              ? DarkColor
-                                                                  .color23
-                                                              : LightColor
-                                                                  .Primarycolorlight,
-                                                          child: InterMedium(
-                                                            text:
-                                                                '+${members.length - 3}',
-                                                            fontsize: 12.sp,
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-
-                                            // shift time and date
-                                            SizedBox(
-                                              width: 100.w,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterRegular(
-                                                    text: 'CheckPoints',
-                                                    color: DarkColor.color22,
-                                                    fontsize: 14.w,
-                                                  ),
-                                                  SizedBox(height: 5.h),
-                                                  Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons
-                                                            .check_circle_outlined,
-                                                        size: 24.w,
-                                                        color:
-                                                            DarkColor.color22,
-                                                      ),
-                                                      SizedBox(width: 6.w),
-                                                      InterMedium(
-                                                        text: CheckpointCount
-                                                                .toString() ??
-                                                            "",
-                                                        fontsize: 14.sp,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 100.w,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterRegular(
-                                                    text: 'Required Times',
-                                                    color: DarkColor.color22,
-                                                    fontsize: 14.w,
-                                                  ),
-                                                  SizedBox(height: 5.h),
-                                                  Row(
-                                                    children: [
-                                                      // SvgPicture.asset(
-                                                      //   'assets/images/avg_pace.svg',
-                                                      //   width: width / width24,
-                                                      // ),
-                                                      SizedBox(width: 6.w),
-                                                      InterMedium(
-                                                        text: "2",
-                                                        fontsize: 14.sp,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 20.sp,
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -1014,13 +1042,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       children: [
                                         InterBold(
                                           text: dateString,
-                                          color: isDark
+                                        color: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.color3,
                                           fontsize: 14.sp,
                                         ),
                                         SizedBox(
-                                          height: 10.h,
+                                          height: 10.sp,
                                         ),
                                         Container(
                                           height: 160.h,
@@ -1031,7 +1059,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 ? DarkColor.Primarycolor
                                                 : LightColor.Primarycolor,
                                             borderRadius:
-                                                BorderRadius.circular(14.w),
+                                                BorderRadius.circular(14.sp),
                                           ),
                                           padding: EdgeInsets.symmetric(
                                               vertical: 20.h),
@@ -1049,10 +1077,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           BorderRadius.only(
                                                         topRight:
                                                             Radius.circular(
-                                                                10.w),
+                                                                10.r),
                                                         bottomRight:
                                                             Radius.circular(
-                                                                10.w),
+                                                                10.r),
                                                       ),
                                                       color: isDark
                                                           ? DarkColor.color22
@@ -1114,7 +1142,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Guards',
-                                                            fontsize: 14.w,
+                                                            fontsize: 14.sp,
                                                             color: isDark
                                                                 ? DarkColor
                                                                     .color22
@@ -1135,7 +1163,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                               .length);
                                                                   i++)
                                                                 CircleAvatar(
-                                                                  radius: 10.w,
+                                                                  radius: 10.r,
                                                                   backgroundImage:
                                                                       NetworkImage(
                                                                     shifts[index]
@@ -1150,7 +1178,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 CircleAvatar(
                                                                   radius:
                                                                       
-                                                                          12.w,
+                                                                          12.r,
                                                                   backgroundColor: isDark
                                                                       ? DarkColor
                                                                           .color22
@@ -1185,7 +1213,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 : LightColor
                                                                     .color3,
                                                             fontsize:
-                                                                14.w,
+                                                                14.sp,
                                                           ),
                                                           SizedBox(
                                                               height:
@@ -1211,7 +1239,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                         index][
                                                                     'ShiftStartTime'],
                                                                 fontsize:
-                                                                     14.w,
+                                                                     14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1241,14 +1269,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           Row(
                                                             children: [
                                                               SizedBox(
-                                                                  width: width /
-                                                                      6),
+                                                                  width: 6.w),
                                                               InterMedium(
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftEndTime'],
                                                                 fontsize:
-                                                                     14.w,
+                                                                     14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1273,12 +1300,162 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             ),
                           )
                         : ScreenIndex == 2
-                            ? SliverToBoxAdapter()
+                            ? SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                      DateTime reportDate = reports[index]['ReportDate'];
+                      String dateString = (isSameDate(reportDate, DateTime.now()))
+                          ? 'Today'
+                          : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
+
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: 30.w,
+                          right: 30.w,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ClientOpenReport(
+                                  reportName: reports[index]['ReportName'],
+                                  reportCategory: reports[index]['ReportCategory'],
+                                  reportDate: dateString,
+                                  reportFollowUpRequire: reports[index]['ReportFollowUpRequire'].toString(),
+                                  reportData: reports[index]['ReportData'],
+                                  reportStatus: reports[index]['ReportStatus'],
+                                  reportEmployeeName: reports[index]['ReportEmployeeName'],
+                                  reportLocation: reports[index]['ReportLocation'],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InterBold(
+                                text: dateString,
+                                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                                fontsize: 14.sp,
+                              ),
+                              SizedBox(
+                                height: 10.sp,
+                              ),
+                              Container(
+                                constraints: BoxConstraints(minHeight: 200.h),
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                  borderRadius: BorderRadius.circular(14.r),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 18.h,
+                                  horizontal: 18.w,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InterSemibold(
+                                      text: reports[index]['ReportGuardName'],
+                                      fontsize: 18.sp,
+                                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                                    ),
+                                    SizedBox(height: 19.h),
+                                    SizedBox(
+                                      width: 240.w,
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              InterMedium(
+                                                text: 'Report Name:',
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
+                                              ),
+                                              InterMedium(
+                                                text: reports[index]['ReportName'],
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              InterMedium(
+                                                text: 'Category:',
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
+                                              ),
+                                              InterMedium(
+                                                text: reports[index]['ReportCategory'],
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              InterMedium(
+                                                text: 'Emp Name:',
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
+                                              ),
+                                              InterMedium(
+                                                text: reports[index]['ReportEmployeeName'],
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              InterMedium(
+                                                text: 'Status:',
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color1 : LightColor.color3,
+                                              ),
+                                              InterMedium(
+                                                text: reports[index]['ReportStatus'],
+                                                fontsize: 16.sp,
+                                                color: isDark ? DarkColor.color3 : LightColor.color3,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20.sp,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: reports.length,
+                  ),
+                )
                             : ScreenIndex == 3
                                 ? SliverToBoxAdapter(
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: 30.h,
+                                        horizontal: 30.w,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:

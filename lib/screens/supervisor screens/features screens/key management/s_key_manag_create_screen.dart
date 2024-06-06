@@ -423,6 +423,19 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 isExpanded: true,
                               ),
                               SizedBox(height: height / height20),
+                              Button1(
+                                text: 'Save',
+                                onPressed: () {
+                                  _saveData();
+                                },
+                                borderRadius: width / width10,
+                                backgroundcolor: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.Primarycolor,
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              )
                             ],
                           ),
                         )
@@ -440,40 +453,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     : LightColor.color3,
                               ),
                               SizedBox(height: height / height10),
-                              DropdownButtonFormField<String>(
-                                value: selectedKeyName,
-                                items: keys.map((DocumentSnapshot document) {
-                                  Map<String, dynamic> data =
-                                      document.data() as Map<String, dynamic>;
-                                  return DropdownMenuItem<String>(
-                                    value: data['KeyName'],
-                                    child: Text(data['KeyName']),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    selectedKeyName = newValue;
-                                    selectedKeyId = keys
-                                        .firstWhere((document) =>
-                                            (document.data() as Map<String,
-                                                dynamic>)['KeyName'] ==
-                                            newValue)
-                                        .id;
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(width / width10),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
-                                      vertical: height / height60),
-                                  hintText: 'Select Key Name',
-                                  hintStyle: TextStyle(color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3),
-                                ),
+                              CustomeTextField(
+                                hint: 'Tittle',
+                                controller: _AllocateQtController2,
+                                showIcon: true,
                               ),
                               SizedBox(height: height / height10),
                               InterBold(
@@ -505,35 +488,28 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 showIcon: true,
                                 isExpanded: true,
                               ),
-                              SizedBox(height: height / height100),
+                              SizedBox(
+                                height: 40.h,
+                              ),
+                              Button1(
+                                text: 'Save',
+                                onPressed: () {
+                                  _saveData();
+                                },
+                                borderRadius: width / width10,
+                                backgroundcolor: isDark
+                                    ? DarkColor.Primarycolor
+                                    : LightColor.Primarycolor,
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              )
                             ],
                           ),
                         ),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Button1(
-                      text: 'Save',
-                      onPressed: () {
-                        _saveData();
-                      },
-                      borderRadius: width / width10,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                    ),
-                    SizedBox(
-                      height: height / height20,
-                    )
-                  ],
-                ),
-              ),
-            )
           ],
         ),
       ),

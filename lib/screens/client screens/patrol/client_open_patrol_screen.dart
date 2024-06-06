@@ -64,8 +64,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
-  Future<void> _selectDate(
-      BuildContext context) async {
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -74,7 +73,6 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
     setState(() {
       if (picked != null) {
         selectedDate = picked;
-
       }
     });
   }
@@ -119,7 +117,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
             },
           ),
           title: InterRegular(
-              text: widget.guardName,
+            text: "${widget.guardName}",
             fontsize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
@@ -409,6 +407,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             reportedAt: reportedAtTime,
                             comment: checkpointComment,
                             images: checkpointImages,
+                            GuardName: widget.guardName,
                           ),
                           context,
                         );
@@ -441,7 +440,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   height: 12.h,
                                   width: 12.w,
                                   decoration: BoxDecoration(
-                                    color: checkpointStatus == 'unchecked'
+                                    color: checkpointStatus == 'checked'
                                         ? Colors.green
                                         : Colors.red,
                                     shape: BoxShape.circle,

@@ -45,7 +45,7 @@ class DarDisplayScreen extends StatefulWidget {
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
   List colors = [DarkColor.Primarycolor, DarkColor. color25];
 
-  bool showAllDARS = true;
+  bool showAllDARS = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -175,6 +175,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               );
                             },
                             child: Container(
+                              // margin: EdgeInsets.only(bottom: 20.h),
                               width: double.maxFinite,
                               height: 200.h,
                               decoration: BoxDecoration(
@@ -205,7 +206,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   InterBold(
-                                    text: document['EmpDarShiftName'] ?? "",
+                                    text: (document.data()
+                                                as Map<String, dynamic>)
+                                            .containsKey('EmpDarShiftName')
+                                        ? document['EmpDarShiftName']
+                                        : "",
                                     fontsize: 18.sp,
                                     color: isDark
                                         ? DarkColor.Primarycolor
@@ -339,7 +344,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
-                                    color: colors[1],
+                                    color: colors[0],
                                     fontsize: 18.sp,
                                   ),
                                 ),
@@ -363,7 +368,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',
-                                    color: colors[0],
+                                    color: colors[1],
                                     fontsize: 18.sp,
                                   ),
                                 ),

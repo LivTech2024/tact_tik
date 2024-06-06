@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ import '../../../fonts/poppis_semibold.dart';
 import '../../../utils/colors.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../../SideBar Screens/profile_screen.dart';
 import '../../feature screens/Log Book/logbook_screen.dart';
 import '../../feature screens/Report/report_screen.dart';
 import '../../feature screens/assets/assets_screen.dart';
@@ -72,11 +74,14 @@ class HomeScreenPart1 extends StatefulWidget {
 class _HomeScreenPart1State extends State<HomeScreenPart1> {
   bool isUnread = true;
 
+  bool cleartext = false;
+
   DateTime now = DateTime.now();
 
   int hour = DateTime.now().hour;
 
   String greeting = 'Good ';
+
   final TextEditingController _controller = TextEditingController();
 
   final List<Screens> _screens = [
@@ -143,35 +148,45 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 30.h),
+            SizedBox(height: 10.h),
             SizedBox(
               height: 55.h,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: 55.h,
-                    width: 55.w,
-                    decoration: widget.employeeImg != ""
-                        ? BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(widget.employeeImg ?? ""),
-                              filterQuality: FilterQuality.high,
-                              fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 55.h,
+                      width: 55.w,
+                      decoration: widget.employeeImg != ""
+                          ? BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(widget.employeeImg ?? ""),
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/default.png'),
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          )
-                        : BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/default.png'),
-                              filterQuality: FilterQuality.high,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                    ),
                   ),
                   Row(
                     children: [
@@ -258,7 +273,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                   )
                 : const SizedBox(),
             Container(
-              height: 64.h,
+              constraints: BoxConstraints(
+                minHeight: cleartext ? 64.h : 64.h,
+              ),
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
                 boxShadow: [
@@ -274,235 +291,241 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                 color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                 borderRadius: BorderRadius.circular(13.r),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: TypeAheadField<Screens>(
-                      autoFlipDirection: true,
-                      controller: _controller,
-                      direction: VerticalDirection.down,
-                      builder: (context, _controller, focusNode) => TextField(
-                        controller: _controller,
-                        focusNode: focusNode,
-                        autofocus: false,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 18.sp,
-                          color: isDark
-                              ? Colors.white
-                              : LightColor.color3, // Change text color to white
-                        ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.r),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TypeAheadField<Screens>(
+                          autoFlipDirection: true,
+                          controller: _controller,
+                          direction: VerticalDirection.down,
+                          builder: (context, _controller, focusNode) =>
+                              TextField(
+                            maxLength: 20,
+                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                            onChanged: (text) {
+                              setState(() {
+                                if (text != '') {
+                                  cleartext = true;
+                                } else {
+                                  cleartext = false;
+                                }
+                              });
+                            },
+                            controller: _controller,
+                            focusNode: focusNode,
+                            autofocus: false,
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 18.sp,
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.r),
+                                ),
+                              ),
+                              focusedBorder: InputBorder.none,
+                              hintStyle: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 18.sp,
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color3,
+                              ),
+                              hintText: 'Search screen',
+                              contentPadding: EdgeInsets.zero,
+                              counterText: "",
+                            ),
+                            cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                          ),
+                          suggestionsCallback: suggestionsCallback,
+                          itemBuilder: (context, Screens screen) {
+                            return ListTile(
+                              leading:
+                                  Icon(screen.icon, color: Colors.blueAccent),
+                              title: InterRegular(
+                                text: screen.name,
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color3,
+                              ),
+                            );
+                          },
+                          emptyBuilder: (context) => Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.h,
+                              horizontal: 10.w,
+                            ),
+                            child: InterRegular(
+                              text: 'No Such Screen found',
+                              color: isDark ? DarkColor.color2 : LightColor.color3,
+                              fontsize: 18.sp,
                             ),
                           ),
-                          focusedBorder: InputBorder.none,
-                          hintStyle: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 18.sp,
-                            color:
-                                isDark ? DarkColor.color2 : LightColor.color2,
+                          decorationBuilder: (context, child) => Material(
+                            type: MaterialType.card,
+                            elevation: 4,
+                            borderRadius: BorderRadius.circular(10.r),
+                            child: child,
                           ),
-                          hintText: 'Search screen',
-                          contentPadding: EdgeInsets.zero,
+                          debounceDuration: const Duration(milliseconds: 300),
+                          onSelected: (Screens value) {
+                            print(
+                                'home screen search bar############################################');
+
+                            print(value.name);
+                            switch (value) {
+                              case 'Site Tours':
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return SiteTourScreen(
+                                //       height: height,
+                                //       width: width,
+                                //       schedulesList: schedules_list,
+                                //     );
+                                //   },
+                                // );
+                                break;
+                              case 'DAR Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DarDisplayScreen(
+                                              EmpEmail: widget.empEmail,
+                                              EmpID: widget.empId,
+                                              EmpDarCompanyId:
+                                                  widget.shiftCompanyId ?? "",
+                                              EmpDarCompanyBranchId:
+                                                  widget.branchId,
+                                              EmpDarShiftID: widget.shiftId,
+                                              EmpDarClientID:
+                                                  widget.shiftClientId,
+                                              Username: widget.userName,
+                                            )));
+                                break;
+                              case 'Reports Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReportScreen(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                              locationName:
+                                                  widget.shiftLocationId,
+                                              companyId:
+                                                  widget.shiftCompanyId ?? "",
+                                              empId: widget.empId,
+                                              empName: widget.userName,
+                                              clientId: widget.shiftClientId,
+                                              ShiftId: widget.shiftId,
+                                            )));
+                                break;
+                              case 'Post Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PostOrder(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                            )));
+                                break;
+                              case 'Task Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TaskFeatureScreen()));
+                                break;
+                              case 'LogBook Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LogBookScreen(
+                                              EmpId: widget.empId,
+                                            )));
+                                break;
+                              case 'Visitors Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => VisiTorsScreen(
+                                              locationId:
+                                                  widget.shiftLocationId,
+                                            )));
+                                break;
+                              case 'Assets Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            // KeysScreen(
+                                            //     keyId: _employeeId)
+                                            AssetsScreen(
+                                                assetEmpId: widget.empId)));
+                                break;
+                              case 'Key Screen':
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => KeysScreen(
+                                              keyId: widget.empId,
+                                              companyId: widget.shiftCompanyId,
+                                            )
+                                        // AssetsScreen(
+                                        //     assetEmpId:
+                                        //         _employeeId)
+
+                                        ));
+                                break;
+                            }
+                          },
+                          listBuilder: gridLayoutBuilder,
                         ),
-                        cursorColor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
                       ),
-                      suggestionsCallback: suggestionsCallback,
-                      itemBuilder: (context, Screens screen) {
-                        return ListTile(
-                          leading: Icon(screen.icon, color: Colors.blueAccent),
-                          title: InterRegular(
-                            text: screen.name,
-                            color:
-                                isDark ? DarkColor.color2 : LightColor.color3,
+                      Container(
+                        height: 43.h,
+                        width: 43.w,
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.Primarycolor,
+                          borderRadius: BorderRadius.circular(9.r),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.search,
+                            size: 19.sp,
+                            color: Colors.black,
                           ),
-                        );
-                      },
-                      emptyBuilder: (context) => Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.h,
-                          horizontal: 10.w,
                         ),
-                        child: InterRegular(
-                          text: 'No Such Screen found',
-                          color: isDark ? DarkColor.color2 : LightColor.color3,
-                          fontsize: 18.sp,
-                        ),
-                      ),
-                      decorationBuilder: (context, child) => Material(
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
-                        shadowColor: isDark
-                            ? Colors.transparent
-                            : LightColor.color3.withOpacity(.1),
-                        type: MaterialType.card,
-                        elevation: 4,
-                        borderRadius: BorderRadius.circular(10.r),
-                        child: child,
-                      ),
-                      debounceDuration: const Duration(milliseconds: 300),
-                      onSelected: (Screens value) {
-                        print(
-                            'home screen search bar############################################');
-
-                        print(value.name);
-                        switch (value) {
-                          case 'Site Tours':
-                            // showDialog(
-                            //   context: context,
-                            //   builder: (BuildContext context) {
-                            //     return SiteTourScreen(
-                            //       height: height,
-                            //       width: width,
-                            //       schedulesList: schedules_list,
-                            //     );
-                            //   },
-                            // );
-                            break;
-                          case 'DAR Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DarDisplayScreen(
-                                          EmpEmail: widget.empEmail,
-                                          EmpID: widget.empId,
-                                          EmpDarCompanyId:
-                                              widget.shiftCompanyId ?? "",
-                                          EmpDarCompanyBranchId:
-                                              widget.branchId,
-                                          EmpDarShiftID: widget.shiftId,
-                                          EmpDarClientID: widget.shiftClientId,
-                                          Username: widget.userName,
-                                        )));
-                            break;
-                          case 'Reports Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ReportScreen(
-                                          locationId: widget.shiftLocationId,
-                                          locationName: widget.shiftLocationId,
-                                          companyId:
-                                              widget.shiftCompanyId ?? "",
-                                          empId: widget.empId,
-                                          empName: widget.userName,
-                                          clientId: widget.shiftClientId,
-                                          ShiftId: widget.shiftId,
-                                        )));
-                            break;
-                          case 'Post Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PostOrder(
-                                          locationId: widget.shiftLocationId,
-                                        )));
-                            break;
-                          case 'Task Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TaskFeatureScreen()));
-                            break;
-                          case 'LogBook Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LogBookScreen(
-                                          EmpId: widget.empId,
-                                        )));
-                            break;
-                          case 'Visitors Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VisiTorsScreen(
-                                          locationId: widget.shiftLocationId,
-                                        )));
-                            break;
-                          case 'Assets Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        // KeysScreen(
-                                        //     keyId: _employeeId)
-                                        AssetsScreen(
-                                            assetEmpId: widget.empId)));
-                            break;
-                          case 'Key Screen':
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        KeysScreen(keyId: widget.empId)
-                                    // AssetsScreen(
-                                    //     assetEmpId:
-                                    //         _employeeId)
-
-                                    ));
-                            break;
-                        }
-                      },
-                      listBuilder: gridLayoutBuilder,
-                    ),
+                      )
+                    ],
                   ),
-                  /*Expanded(
-                    child: TextField(
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w300,
-                        fontSize: width / width18,
-                        color: isDark
-                            ? Colors.white
-                            : LightColor.color3, // Change text color to white
-                      ),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(width / width10),
+                  cleartext
+                      ? TextButton(
+                          onPressed: () {
+                            setState(() {
+                              cleartext = false;
+                              _controller.text = '';
+                            });
+                          },
+                          child: InterRegular(
+                            text: 'CLEAR',
+                            fontsize: 14.sp,
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
                           ),
-                        ),
-                        focusedBorder: InputBorder.none,
-                        hintStyle: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w300,
-                          fontSize: width / width18,
-                          color: DarkColor.color2, // Change text color to white
-                        ),
-                        hintText: 'Search',
-                        contentPadding: EdgeInsets.zero, // Remove padding
-                      ),
-                      cursorColor: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
-                    ),
-                  ),*/
-
-                  Container(
-                    height: 43.h,
-                    width: 43.w,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
-                      borderRadius: BorderRadius.circular(9.r),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.search,
-                        size: 19.sp,
-                        color: isDark ? Colors.black : Colors.white,
-                      ),
-                    ),
-                  )
+                        )
+                      : SizedBox()
                 ],
               ),
             ),
