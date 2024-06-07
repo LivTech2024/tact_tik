@@ -510,7 +510,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                 height: 65.h,
                 width: double.maxFinite,
                 color: isDark ? DarkColor.color24 : LightColor.color1,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -522,14 +521,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                             colors[0] = isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor;
-                            colors[1] = DarkColor.color25;
+                            colors[1] =
+                            isDark ? DarkColor.color25 : LightColor.color2;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: widget.editable ? 'Edit' : 'Read',
@@ -540,15 +538,19 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         ),
                       ),
                     ),
-                    VerticalDivider(
-                      color: DarkColor.Primarycolor,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: VerticalDivider(
+                        color: isDark ? DarkColor.color2 : LightColor.color2,
+                      ),
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] = DarkColor.color25;
+                            colors[0] =
+                            isDark ? DarkColor.color25 : LightColor.color2;
                             colors[1] = isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor;
@@ -556,9 +558,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         },
                         child: Container(
                           height: 65.h,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
@@ -575,453 +575,453 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               SizedBox(height: 20.h),
               showDARS
                   ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              InterRegular(
-                                text: 'Shift Name :',
-                                fontsize: 20.w,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
-                              ),
-                              SizedBox(
-                                width: 6.w,
-                              ),
-                              Flexible(
-                                child: InterRegular(
-                                  text: _userService.shiftName ?? 'Loading...',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor,
-                                  fontsize: 20.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InterRegular(
-                                text: 'Location :',
-                                fontsize: 20.w,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
-                              ),
-                              SizedBox(
-                                width: 6.w,
-                              ),
-                              Flexible(
-                                child: InterRegular(
-                                  text: _userService.shiftLocation ??
-                                      'Loading...',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor,
-                                  fontsize: 20.w,
-                                  maxLines: 3,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                          FutureBuilder(
-                            future:
-                                fetchDarTileData(widget.passdate, widget.DarId),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              if (snapshot.hasError) {
-                                return const Center(
-                                  child: Text('error'),
-                                );
-                              }
-                              final data = snapshot.data;
-                              print("Data length ${data?.length}");
-                              // print(
-                              //     'image length = ${(data![0]['images'] as List).length}');
-                              return data == null
-                                  ? const Center(
-                                      child: Text(
-                                        'Null',
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    )
-                                  : Column(
-                                      children: List.generate(
-                                        data?.length ?? 0,
-                                        (index) => GestureDetector(
-                                          onTap: () {
-                                            print(data[index]);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreateDarScreen(
-                                                  // darTiles: data,
-                                                  // index: index,
-                                                  index: index,
-                                                  DarId: widget.DarId,
-                                                  darTiles: data,
-                                                  EmployeeId: widget.Empid,
-                                                  EmployeeName: widget.Username,
-                                                  iseditable: widget.editable,
-                                                  onCallback: () {
-                                                    print("Callback Called");
-                                                    refresh();
-                                                  },
-                                                ),
-                                              ),
-                                            );
-                                            //refresh the screen
-                                            refresh();
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                              bottom: 10.h,
-                                            ),
-                                            width: double.maxFinite,
-                                            decoration: BoxDecoration(
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: isDark
-                                                      ? Colors.transparent
-                                                      : LightColor.color3
-                                                          .withOpacity(.05),
-                                                  blurRadius: 5,
-                                                  spreadRadius: 2,
-                                                  offset: Offset(0, 3),
-                                                )
-                                              ],
-                                              color: isDark
-                                                  ? DarkColor.WidgetColor
-                                                  : LightColor.WidgetColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 20.h,
-                                              horizontal: 20.w,
-                                            ),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  InterMedium(
-                                                    text:
-                                                        "${data[index]['TileTime']}",
-                                                    // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: isDark
-                                                        ? DarkColor.color21
-                                                        : LightColor.color3,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                  InterRegular(
-                                                    text:
-                                                        '${data[index]['TileContent']}',
-                                                    fontsize: 16.sp,
-                                                    color: isDark
-                                                        ? DarkColor.color12
-                                                        : LightColor.color3,
-                                                    maxLines: 5,
-                                                  ),
-                                                  SizedBox(height: 20.h),
-                                                  Row(
-                                                    children: List.generate(
-                                                      (data[index]['TileImages']
-                                                                      as List)
-                                                                  .length >
-                                                              5
-                                                          ? 5
-                                                          : (data[index][
-                                                                      'TileImages']
-                                                                  as List)
-                                                              .length,
-                                                      (i) => Container(
-                                                        margin: EdgeInsets.only(
-                                                            right: 10.h),
-                                                        height: 50.h,
-                                                        width: 50.w,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                            10.r,
-                                                          ),
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                              data[index][
-                                                                  'TileImages'][i],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  FutureBuilder<
-                                                      Map<
-                                                          String,
-                                                          List<
-                                                              Map<String,
-                                                                  dynamic>>>>(
-                                                    future: fetchReports(),
-                                                    builder: (context,
-                                                        reportsSnapshot) {
-                                                      if (reportsSnapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .waiting) {
-                                                        return const CircularProgressIndicator();
-                                                      }
-
-                                                      final reportsByHour =
-                                                          reportsSnapshot
-                                                                  .data ??
-                                                              {};
-                                                      final hourKey = data[
-                                                                      index][
-                                                                  'startTime'] !=
-                                                              null
-                                                          ? '${data[index]['startTime']!.substring(0, 2)}:00'
-                                                          : '';
-                                                      final reportsForHour =
-                                                          reportsByHour[
-                                                                  hourKey] ??
-                                                              [];
-
-                                                      return Column(
-                                                        children: reportsForHour
-                                                            .map((report) {
-                                                          final patrolLogCheckPoints =
-                                                              report['PatrolLogCheckPoints']
-                                                                      as List<
-                                                                          dynamic>? ??
-                                                                  [];
-                                                          final timestamp =
-                                                              report['PatrolLogStartedAt']
-                                                                  as Timestamp;
-                                                          final formattedTime =
-                                                              timestamp != null
-                                                                  ? DateFormat
-                                                                          .jm()
-                                                                      .format(timestamp
-                                                                          .toDate())
-                                                                  : '';
-                                                          return Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                formattedTime,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          195,
-                                                                          21,
-                                                                          21),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                              ...patrolLogCheckPoints
-                                                                  .expand(
-                                                                      (checkPoint) {
-                                                                final checkPointImages =
-                                                                    checkPoint['CheckPointImage']
-                                                                            as List<dynamic>? ??
-                                                                        [];
-
-                                                                if (checkPointImages
-                                                                    .isNotEmpty) {
-                                                                  return [
-                                                                    Image
-                                                                        .network(
-                                                                      checkPointImages
-                                                                          .first
-                                                                          .toString(),
-                                                                      width:
-                                                                          100.w,
-                                                                      height:
-                                                                          100.h,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )
-                                                                  ];
-                                                                } else {
-                                                                  return [];
-                                                                }
-                                                              }).toList(),
-                                                            ],
-                                                          );
-                                                        }).toList(),
-                                                      );
-                                                    },
-                                                  ),
-                                                ]),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InterBold(
-                            text: 'Reports',
-                            fontsize: 20.sp,
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        InterRegular(
+                          text: 'Shift Name :',
+                          fontsize: 20.w,
+                          color: isDark
+                              ? DarkColor.color17
+                              : LightColor.color3,
+                        ),
+                        SizedBox(
+                          width: 6.w,
+                        ),
+                        Flexible(
+                          child: InterRegular(
+                            text: _userService.shiftName ?? 'Loading...',
                             color: isDark
                                 ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                                : LightColor.Primarycolor,
+                            fontsize: 20.sp,
                           ),
-                          SizedBox(height: 25.h),
-                          FutureBuilder<
-                              Map<String, List<Map<String, dynamic>>>>(
-                            future: fetchReportLogs(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              }
-
-                              if (snapshot.hasError) {
-                                return Center(
-                                    child: Text('Error: ${snapshot.error}'));
-                              }
-
-                              final reportsByHour = snapshot.data ?? {};
-
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: reportsByHour.length,
-                                itemBuilder: (context, index) {
-                                  final hourKey =
-                                      reportsByHour.keys.toList()[index];
-                                  final reportsForHour =
-                                      reportsByHour[hourKey] ?? [];
-                                  var data = reportsByHour;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      print("data ${reportsForHour}");
-                                      print("time ${reportsByHour[hourKey]}");
-                                      var ReportSId = reportsForHour[0];
-                                      print("ReportSId ${ReportSId}");
-                                      print(
-                                          "ReportSearchId ${ReportSId['ReportSearchId']}");
-                                      String ReportSerachID =
-                                          ReportSId['ReportSearchId'];
-                                      // String ReportSearchId = ReportSId[''];
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CreateReportScreen(
-                                              locationId: '',
-                                              locationName: '',
-                                              companyID: '',
-                                              empId: widget.Empid,
-                                              empName: widget.Username,
-                                              ClientId: '',
-                                              reportId: '',
-                                              buttonEnable: false,
-                                              ShiftId: "",
-                                              SearchId:
-                                                  ReportSerachID, //Need to Work Here
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InterRegular(
+                          text: 'Location :',
+                          fontsize: 20.w,
+                          color: isDark
+                              ? DarkColor.color17
+                              : LightColor.color3,
+                        ),
+                        SizedBox(
+                          width: 6.w,
+                        ),
+                        Flexible(
+                          child: InterRegular(
+                            text: _userService.shiftLocation ??
+                                'Loading...',
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
+                            fontsize: 20.w,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    FutureBuilder(
+                      future:
+                      fetchDarTileData(widget.passdate, widget.DarId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return const Center(
+                            child: Text('error'),
+                          );
+                        }
+                        final data = snapshot.data;
+                        print("Data length ${data?.length}");
+                        // print(
+                        //     'image length = ${(data![0]['images'] as List).length}');
+                        return data == null
+                            ? const Center(
+                          child: Text(
+                            'Null',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                            : Column(
+                          children: List.generate(
+                            data?.length ?? 0,
+                                (index) => GestureDetector(
+                              onTap: () {
+                                print(data[index]);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateDarScreen(
+                                          // darTiles: data,
+                                          // index: index,
+                                          index: index,
+                                          DarId: widget.DarId,
+                                          darTiles: data,
+                                          EmployeeId: widget.Empid,
+                                          EmployeeName: widget.Username,
+                                          iseditable: widget.editable,
+                                          onCallback: () {
+                                            print("Callback Called");
+                                            refresh();
+                                          },
+                                        ),
+                                  ),
+                                );
+                                //refresh the screen
+                                refresh();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  bottom: 10.h,
+                                ),
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3
+                                          .withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: isDark
+                                      ? DarkColor.WidgetColor
+                                      : LightColor.WidgetColor,
+                                  borderRadius:
+                                  BorderRadius.circular(10.r),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 20.h,
+                                  horizontal: 20.w,
+                                ),
+                                child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      InterMedium(
+                                        text:
+                                        "${data[index]['TileTime']}",
+                                        // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
+                                        color: isDark
+                                            ? DarkColor.color21
+                                            : LightColor.color3,
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      InterRegular(
+                                        text:
+                                        '${data[index]['TileContent']}',
+                                        fontsize: 16.sp,
+                                        color: isDark
+                                            ? DarkColor.color12
+                                            : LightColor.color3,
+                                        maxLines: 5,
+                                      ),
+                                      SizedBox(height: 20.h),
+                                      Row(
+                                        children: List.generate(
+                                          (data[index]['TileImages']
+                                          as List)
+                                              .length >
+                                              5
+                                              ? 5
+                                              : (data[index][
+                                          'TileImages']
+                                          as List)
+                                              .length,
+                                              (i) => Container(
+                                            margin: EdgeInsets.only(
+                                                right: 10.h),
+                                            height: 50.h,
+                                            width: 50.w,
+                                            decoration:
+                                            BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                10.r,
+                                              ),
+                                              image:
+                                              DecorationImage(
+                                                image: NetworkImage(
+                                                  data[index][
+                                                  'TileImages'][i],
+                                                ),
+                                              ),
                                             ),
-                                          ));
-                                    },
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Reports for $hourKey',
-                                          style: TextStyle(
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.color3,
                                           ),
                                         ),
-                                        ...reportsForHour.map((report) {
-                                          final timestampStr =
-                                              report['ReportCreatedAt']
-                                                  as Timestamp;
-                                          final formattedTime = timestampStr !=
-                                                  null
-                                              ? DateFormat.jm()
-                                                  .format(timestampStr.toDate())
+                                      ),
+                                      FutureBuilder<
+                                          Map<
+                                              String,
+                                              List<
+                                                  Map<String,
+                                                      dynamic>>>>(
+                                        future: fetchReports(),
+                                        builder: (context,
+                                            reportsSnapshot) {
+                                          if (reportsSnapshot
+                                              .connectionState ==
+                                              ConnectionState
+                                                  .waiting) {
+                                            return const CircularProgressIndicator();
+                                          }
+
+                                          final reportsByHour =
+                                              reportsSnapshot
+                                                  .data ??
+                                                  {};
+                                          final hourKey = data[
+                                          index][
+                                          'startTime'] !=
+                                              null
+                                              ? '${data[index]['startTime']!.substring(0, 2)}:00'
                                               : '';
-                                          return Container(
-                                            margin:
-                                                EdgeInsets.only(bottom: 30.h),
-                                            height: 25.h,
-                                            color: const Color(0xFF7C7C7C),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width: 20.w,
-                                                  height: double.infinity,
-                                                  color: Colors.red,
-                                                ),
-                                                SizedBox(width: 2.w),
-                                                Expanded(
-                                                  child: Text(
-                                                    '# ${report['ReportSearchId'] ?? ''}',
-                                                    style: const TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 48, 48, 48),
+                                          final reportsForHour =
+                                              reportsByHour[
+                                              hourKey] ??
+                                                  [];
+
+                                          return Column(
+                                            children: reportsForHour
+                                                .map((report) {
+                                              final patrolLogCheckPoints =
+                                                  report['PatrolLogCheckPoints']
+                                                  as List<
+                                                      dynamic>? ??
+                                                      [];
+                                              final timestamp =
+                                              report['PatrolLogStartedAt']
+                                              as Timestamp;
+                                              final formattedTime =
+                                              timestamp != null
+                                                  ? DateFormat
+                                                  .jm()
+                                                  .format(timestamp
+                                                  .toDate())
+                                                  : '';
+                                              return Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  Text(
+                                                    formattedTime,
+                                                    style:
+                                                    const TextStyle(
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          195,
+                                                          21,
+                                                          21),
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                      FontWeight
+                                                          .bold,
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 2.w),
-                                                Text(
-                                                  formattedTime,
-                                                  style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 48, 48, 48),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                                  ...patrolLogCheckPoints
+                                                      .expand(
+                                                          (checkPoint) {
+                                                        final checkPointImages =
+                                                            checkPoint['CheckPointImage']
+                                                            as List<dynamic>? ??
+                                                                [];
+
+                                                        if (checkPointImages
+                                                            .isNotEmpty) {
+                                                          return [
+                                                            Image
+                                                                .network(
+                                                              checkPointImages
+                                                                  .first
+                                                                  .toString(),
+                                                              width:
+                                                              100.w,
+                                                              height:
+                                                              100.h,
+                                                              fit: BoxFit
+                                                                  .cover,
+                                                            )
+                                                          ];
+                                                        } else {
+                                                          return [];
+                                                        }
+                                                      }).toList(),
+                                                ],
+                                              );
+                                            }).toList(),
                                           );
-                                        }).toList(),
-                                      ],
+                                        },
+                                      ),
+                                    ]),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              )
+                  : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InterBold(
+                      text: 'Reports',
+                      fontsize: 20.sp,
+                      color: isDark
+                          ? DarkColor.Primarycolor
+                          : LightColor.color3,
+                    ),
+                    SizedBox(height: 25.h),
+                    FutureBuilder<
+                        Map<String, List<Map<String, dynamic>>>>(
+                      future: fetchReportLogs(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        final reportsByHour = snapshot.data ?? {};
+
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: reportsByHour.length,
+                          itemBuilder: (context, index) {
+                            final hourKey =
+                            reportsByHour.keys.toList()[index];
+                            final reportsForHour =
+                                reportsByHour[hourKey] ?? [];
+                            var data = reportsByHour;
+                            return GestureDetector(
+                              onTap: () {
+                                print("data ${reportsForHour}");
+                                print("time ${reportsByHour[hourKey]}");
+                                var ReportSId = reportsForHour[0];
+                                print("ReportSId ${ReportSId}");
+                                print(
+                                    "ReportSearchId ${ReportSId['ReportSearchId']}");
+                                String ReportSerachID =
+                                ReportSId['ReportSearchId'];
+                                // String ReportSearchId = ReportSId[''];
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CreateReportScreen(
+                                            locationId: '',
+                                            locationName: '',
+                                            companyID: '',
+                                            empId: widget.Empid,
+                                            empName: widget.Username,
+                                            ClientId: '',
+                                            reportId: '',
+                                            buttonEnable: false,
+                                            ShiftId: "",
+                                            SearchId:
+                                            ReportSerachID, //Need to Work Here
+                                          ),
+                                    ));
+                              },
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Reports for $hourKey',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? DarkColor.Primarycolor
+                                          : LightColor.color3,
                                     ),
-                                  );
-                                },
-                              );
-                            },
-                          )
-                        ],
-                      ),
+                                  ),
+                                  ...reportsForHour.map((report) {
+                                    final timestampStr =
+                                    report['ReportCreatedAt']
+                                    as Timestamp;
+                                    final formattedTime = timestampStr !=
+                                        null
+                                        ? DateFormat.jm()
+                                        .format(timestampStr.toDate())
+                                        : '';
+                                    return Container(
+                                      margin:
+                                      EdgeInsets.only(bottom: 30.h),
+                                      height: 25.h,
+                                      color: const Color(0xFF7C7C7C),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 20.w,
+                                            height: double.infinity,
+                                            color: Colors.red,
+                                          ),
+                                          SizedBox(width: 2.w),
+                                          Expanded(
+                                            child: Text(
+                                              '# ${report['ReportSearchId'] ?? ''}',
+                                              style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 48, 48, 48),
+                                                fontWeight:
+                                                FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 2.w),
+                                          Text(
+                                            formattedTime,
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 48, 48, 48),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
                     )
+                  ],
+                ),
+              )
             ],
           ),
         ),

@@ -35,7 +35,7 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-bool isDark = false;
+bool isDark = true;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

@@ -1118,7 +1118,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: width / width10),
                             decoration: BoxDecoration(
-                              
+
                               // color: Colors.redAccent,
                               borderRadius:
                                   BorderRadius.circular(width / width10),
