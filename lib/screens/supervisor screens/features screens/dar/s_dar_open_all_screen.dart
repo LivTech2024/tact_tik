@@ -13,6 +13,7 @@ import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
+import '../../../../main.dart';
 import '../../../../utils/colors.dart';
 
 class SDarOpenAllScreen extends StatefulWidget {
@@ -492,10 +493,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: height / height65,
+                height: 65.h,
                 width: double.maxFinite,
-                color: DarkColor.color24,
-                padding: EdgeInsets.symmetric(vertical: height / height16),
+                color: isDark ? DarkColor.color24 : LightColor.color1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -504,16 +504,19 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = DarkColor.Primarycolor;
-                            colors[1] = DarkColor.color25;
+                            colors[0] = isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor;
+                            colors[1] =
+                                isDark ? DarkColor.color25 : LightColor.color2;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: DarkColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
-                              text: 'Edit',
+                              text: 'Read',
                               color: colors[0],
                               fontsize: width / width18,
                             ),
@@ -521,21 +524,27 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         ),
                       ),
                     ),
-                    VerticalDivider(
-                      color: DarkColor.Primarycolor,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: VerticalDivider(
+                        color: isDark ? DarkColor.color2 : LightColor.color2,
+                      ),
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] = DarkColor.color25;
-                            colors[1] = DarkColor.Primarycolor;
+                            colors[0] =
+                                isDark ? DarkColor.color25 : LightColor.color2;
+                            colors[1] = isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: DarkColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
@@ -549,56 +558,56 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: height / height20),
+              SizedBox(height: 20.h),
               showDARS
                   ? Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                          EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         children: [
                           Row(
                             children: [
                               InterRegular(
                                 text: 'Shift Name :',
-                                fontsize: width / width20,
+                                fontsize: 20.sp,
                                 color: DarkColor.color17,
                               ),
                               SizedBox(
-                                width: width / width6,
+                                width: 6.w,
                               ),
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftName ?? 'Loading...',
                                   color: DarkColor.Primarycolor,
-                                  fontsize: width / width20,
+                                  fontsize: 20.sp,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height10),
+                          SizedBox(height: 10.h),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InterRegular(
                                 text: 'Location :',
-                                fontsize: width / width20,
+                                fontsize: 20.sp,
                                 color: DarkColor.color17,
                               ),
                               SizedBox(
-                                width: width / width6,
+                                width: 6.w,
                               ),
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftLocation ??
                                       'Loading...',
                                   color: DarkColor.Primarycolor,
-                                  fontsize: width / width20,
+                                  fontsize: 20.sp,
                                   maxLines: 3,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
                           FutureBuilder(
                             future:
                                 fetchDarTileData(widget.passdate, widget.DarId),

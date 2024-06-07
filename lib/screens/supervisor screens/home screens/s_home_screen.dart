@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -33,6 +36,7 @@ import '../../get started/getstarted_screen.dart';
 import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
+import '../features screens/Report/select_reports_guards.dart';
 import '../features screens/assets/select_assets_guards.dart';
 import '../features screens/dar/select_dar_guards.dart';
 import '../features screens/history/select_history_guards.dart';
@@ -203,8 +207,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
       ['assets/images/keys.png', 'Key'],
     ];
 
-    
-
     int _selectedIndex = 0; // Index of the selected screen
 
     void _onItemTapped(int index) {
@@ -268,7 +270,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           backgroundImage:
                               AssetImage('assets/images/default.png'),
                           foregroundImage: NetworkImage(_userImg),
-                          radius: width / width50,
+                          radius: Platform.isIOS ? 40.r : 50.r,
                           backgroundColor: DarkColor.Primarycolor,
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
@@ -283,7 +285,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color:isDark? DarkColor.WidgetColor:LightColor.WidgetColor,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -299,7 +303,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    buildListTile(Icons.home, 'Home', 0, () {}),
                     buildListTile(
                       Icons.account_circle_outlined,
                       'Profile',
@@ -363,7 +366,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           ),
         ),
         body: CustomScrollView(
-          physics: PageScrollPhysics(),
+          // physics: PageScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
               child: SizedBox(
@@ -499,156 +502,178 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 ),
               ),
             ),
-            /*ScreenIndex == 0
-                ? SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        String guardStatus = "";
-
-                        if (index < _guardsInfo.length) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: width / width30,
-                              right: width / width30,
-                            ),
-                            child: HomeScreenUserCard(
-                              guardsInfo: _guardsInfo[index],
-                              CompanyId: _CompanyId,
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: InterMedium(text: 'No Guards Available'),
-                          ); // Return an empty SizedBox for index out of bounds
-                        }
-                      },
-                      childCount: _guardsInfo.length,
-                    ),
-                  )
-                :*/
-            ScreenIndex == 1
-                ? SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, // Number of columns
-                      // mainAxisSpacing: 10.0, // Spacing between rows
-                      // crossAxisSpacing: 14.0,
-                      // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return Bounce(
-                          onTap: () {
-                            switch (index) {
-                              case 0:
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SPanicScreen(
-                                              empId: _employeeId,
-                                            )));
-                              case 1:
-                                Get.to(() => SupervisorTrackingScreen(
-                                      companyId: _CompanyId,
-                                      guardsInfo: _guardsInfo,
-                                    ));
-                              //   break;
-                              // case 2:
-                              //   Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //           builder: (context) =>
-                              //               DarDisplayScreen(
-                              //                 EmpEmail: _employeeId,
-                              //               )));
-                              //   break;
-                              case 2:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SelectDARGuardsScreen(
-                                      companyId: _CompanyId,
+            ScreenIndex == 0
+                ? SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InterBold(
+                                text: 'All Guards',
+                                fontsize: 14.sp,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
+                              ),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      size: 20.sp,
+                                      color: isDark
+                                          ? DarkColor.color1
+                                          : LightColor.color3,
                                     ),
-                                  ),
-                                );
-                                break;
-                              case 4:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SPostOrder(
-                                      locationId: 'DrD1H6YXEui4G72EHTEZ',
+                                    SizedBox(width: 10.w),
+                                    InterBold(
+                                      text: 'Add',
+                                      fontsize: 14.sp,
+                                      color: isDark
+                                          ? DarkColor.color1
+                                          : LightColor.color3,
                                     ),
-                                  ),
-                                );
-                                break;
-                              // case 5:
-                              //   // TODO Task Screen
-                              //   Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) =>
-                              //           PatrollLogsScreen(),
-                              //     ),
-                              //   );
-                              //   break;
-                              case 6:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectLoogBookGuardsScreen(
-                                      companyId: _CompanyId,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              case 7:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectVisitorsGuardsScreen(
-                                      companyId: _CompanyId,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              case 8:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectAssetsGuardsScreen(
-                                      companyId: _CompanyId,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              case 9:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectKeysGuardsScreen(
-                                      companyId: _CompanyId,
-                                    ),
-                                  ),
-                                );
-                                break;
-                              default:
-                            }
-                          },
-                          child: gridWidget(
-                            img: data[index][0],
-                            tittle: data[index][1],
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                      childCount: data.length,
+                          SizedBox(height: 20.h)
+                        ],
+                      ),
                     ),
                   )
-                : SliverToBoxAdapter(),
+                : ScreenIndex == 1
+                    ? SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, // Number of columns
+                          // mainAxisSpacing: 10.0, // Spacing between rows
+                          // crossAxisSpacing: 14.0,
+                          // childAspectRatio: 1.0, // Aspect ratio of each grid item (width / height)
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            return Bounce(
+                              onTap: () {
+                                switch (index) {
+                                  case 0:
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => SPanicScreen(
+                                                  empId: _employeeId,
+                                                )));
+                                  case 1:
+                                    Get.to(() => SupervisorTrackingScreen(
+                                          companyId: _CompanyId,
+                                          guardsInfo: _guardsInfo,
+                                        ));
+                                    break;
+                                  case 2:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectDARGuardsScreen(
+                                          companyId: _CompanyId,
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  case 3:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectReportsGuardsScreen(
+                                          companyId: _CompanyId,
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  case 4:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SPostOrder(
+                                          locationId: 'DrD1H6YXEui4G72EHTEZ',
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  // case 5:
+                                  //   // TODO Task Screen
+                                  //   Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           PatrollLogsScreen(),
+                                  //     ),
+                                  //   );
+                                  //   break;
+                                  case 6:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectLoogBookGuardsScreen(
+                                          companyId: _CompanyId,
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  case 7:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectVisitorsGuardsScreen(
+                                          companyId: _CompanyId,
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  case 8:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectAssetsGuardsScreen(
+                                          companyId: _CompanyId,
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  case 9:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelectKeysGuardsScreen(
+                                          companyId: _CompanyId,
+                                        ),
+                                      ),
+                                    );
+                                    break;
+                                  default:
+                                }
+                              },
+                              child: gridWidget(
+                                img: data[index][0],
+                                tittle: data[index][1],
+                              ),
+                            );
+                          },
+                          childCount: data.length,
+                        ),
+                      )
+                    : SliverToBoxAdapter(),
             ScreenIndex == 0
                 ? SliverList(
                     delegate: SliverChildBuilderDelegate(
@@ -725,7 +750,8 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
           ],
           color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           borderRadius: BorderRadius.circular(12.w),
-        ),padding: EdgeInsets.symmetric(
+        ),
+        padding: EdgeInsets.symmetric(
           vertical: 10.h,
         ),
         margin: EdgeInsets.only(bottom: 10.h),
@@ -831,7 +857,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                         ),
                         RoundedButton(
                           icon: Icons.add_card,
-                        ), 
+                        ),
                         Bounce(
                           onTap: () {
                             Navigator.push(
