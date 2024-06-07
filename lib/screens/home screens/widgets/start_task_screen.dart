@@ -438,8 +438,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       children: [
         Container(
           constraints: BoxConstraints(minHeight: 170.h),
-          decoration:  BoxDecoration(
-             boxShadow: [
+          decoration: BoxDecoration(
+            boxShadow: [
               BoxShadow(
                 color: isDark
                     ? Colors.transparent
@@ -449,7 +449,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 offset: Offset(0, 3),
               )
             ],
-            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           ),
           padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
@@ -492,20 +492,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'In time',
                           fontsize: 28.sp,
-                          color:  isDark ? DarkColor.color1 : LightColor.color3,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
-                          color:  isDark ? DarkColor.color7 : LightColor.color3,
+                          color: isDark ? DarkColor.color7 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
                                 text: isLate ? "Late $lateTime" : 'on time',
-                                color: isLate ? Colors.redAccent : DarkColor.color8,
+                                color: isLate
+                                    ? Colors.redAccent
+                                    : DarkColor.color8,
                                 fontsize: 14.sp,
                               )
                             : const SizedBox(),
@@ -562,7 +564,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(vertical: height / height5),
           decoration: BoxDecoration(
-             boxShadow: [
+            boxShadow: [
               BoxShadow(
                 color: isDark
                     ? Colors.transparent
@@ -572,7 +574,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 offset: Offset(0, 3),
               )
             ],
-            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           ),
           child: Row(
             children: [
@@ -764,7 +766,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                     /// TODO changed here
                     child: Container(
-                      color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
+                      color: isDark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor,
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
@@ -782,7 +786,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                 ),
               ),
-               VerticalDivider(
+              VerticalDivider(
                 color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
               Expanded(
@@ -874,7 +878,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 return AlertDialog(
                                     title: InterRegular(
                                       text: 'Add Reason',
-                                      color: isDark?DarkColor.color22:LightColor.color3,
+                                      color: isDark
+                                          ? DarkColor.color22
+                                          : LightColor.color3,
                                       fontsize: width / width12,
                                     ),
                                     content: Column(
@@ -892,9 +898,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         onPressed: () async {
                                           Navigator.pop(context);
                                         },
-                                        child:  InterRegular(
+                                        child: InterRegular(
                                           text: 'Cancel',
-                                          color:  isDark
+                                          color: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.color3,
                                         ),
@@ -969,9 +975,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                 "Reason cannot be empty");
                                           }
                                         },
-                                        child:  InterRegular(
+                                        child: InterRegular(
                                           text: 'Submit',
-                                          color:  isDark
+                                          color: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.color3,
                                         ),
@@ -1073,19 +1079,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           ? DarkColor.WidgetColor
                           : LightColor.WidgetColor,
                       child: Center(
-                        child: 
-                           InterBold(
-                            text: 'End Shift',
-                            fontsize: width / width18,
-                            color: clickedIn
-                                ? (isDark
-                                    ? DarkColor.Primarycolorlight
-                                    : LightColor.color2)
-                                : (isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor),
-                          ),
-                        
+                        child: InterBold(
+                          text: 'End Shift',
+                          fontsize: width / width18,
+                          color: clickedIn
+                              ? (isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor)
+                              : (isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor),
+                        ),
                       ),
                     ),
                   ),
@@ -1101,8 +1105,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 // text: controller.isPaused.value ? 'Resume' : 'Break',
                 text: true ? 'Resume' : 'Break',
                 fontsize: width / width18,
-                color: DarkColor. color5,
-                backgroundcolor: DarkColor. WidgetColor,
+                color: DarkColor.color5,
+                backgroundcolor: DarkColor.WidgetColor,
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
@@ -1170,9 +1174,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             text: 'Check Patrolling',
             fontsize: width / width18,
             color: DarkColor.color5,
-            backgroundcolor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.Primarycolor,
+            backgroundcolor:
+                isDark ? DarkColor.WidgetColor : LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,

@@ -345,7 +345,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               },
                               child: Container(
                                 height: 65.h,
-                                color: DarkColor.Primarycolor,
+                                // color: DarkColor.Primarycolor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
