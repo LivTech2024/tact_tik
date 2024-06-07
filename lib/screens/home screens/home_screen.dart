@@ -648,9 +648,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {
+                    buildListTile(
+                        isDark ? Icons.light_mode_outlined : Icons.light_mode,
+                        isDark ? 'Switch To Light Mode' : 'Switch to dark mode',
+                        5, () {
                       setState(() {
-                        isDark = !isDark;
+                        // isDark = !isDark;
                       });
                     }),
                   ],
