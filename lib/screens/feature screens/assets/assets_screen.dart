@@ -293,7 +293,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                   text: allocationDateTime,
                                                   color: isDark
                                                       ? DarkColor.color17
-                                                      : LightColor.color2,
+                                                      : LightColor.color3,
                                                 fontsize: 16.sp,
                                                 ),
                                               ],
