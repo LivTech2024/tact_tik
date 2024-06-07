@@ -99,7 +99,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
+          backgroundColor: DarkColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -133,7 +133,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       'Add Note',
                       style: TextStyle(
                         fontSize: width / width14,
-                        color: DarkColor. Primarycolor,
+                        color: DarkColor.Primarycolor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -141,7 +141,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                     Row(
                       children: [
                         Radio(
-                          activeColor: DarkColor. Primarycolor,
+                          activeColor: DarkColor.Primarycolor,
                           value: 'Emergency',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -160,7 +160,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                     Row(
                       children: [
                         Radio(
-                          activeColor: DarkColor. Primarycolor,
+                          activeColor: DarkColor.Primarycolor,
                           value: 'Normal',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -172,7 +172,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         InterRegular(
                           text: 'Normal',
                           fontsize: width / width16,
-                          color: DarkColor. color1,
+                          color: DarkColor.color1,
                         )
                       ],
                     ),
@@ -193,7 +193,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: DarkColor. Primarycolor,
+                      color: DarkColor.Primarycolor,
                     ),
                   ),
                 ),
@@ -501,7 +501,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       },
                       color: Colors.white,
                       borderRadius: width / width20,
-                      backgroundcolor: DarkColor. Primarycolor,
+                      backgroundcolor: DarkColor.Primarycolor,
                     ),
                     SizedBox(
                       height: height / height20,
