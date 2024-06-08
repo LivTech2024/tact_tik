@@ -695,8 +695,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       setState(() async {
                                         isDark = !isDark;
                                         await prefs.setBool('Theme', isDark);
-                                        SystemChannels.platform.invokeMethod(
-                                            'SystemNavigator.pop');
+                                        // SystemChannels.platform.invokeMethod(
+                                        //     'SystemNavigator.pop');
                                       });
                                     },
                                     child: InterMedium(

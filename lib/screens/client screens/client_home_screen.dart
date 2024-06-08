@@ -597,47 +597,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         );
                       },
                     ),
-                    buildListTile(
-                      Icons.add_card,
-                      'Payment',
-                      2,
-                      () {},
-                    ),
-                    buildListTile(
-                      Icons.article,
-                      'Employment Letter',
-                      3,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EmploymentLetterScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.restart_alt,
-                      'History',
-                      4,
-                      () {
-                        // customEmail();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HistoryScreen(
-                              empID: _employeeId,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.settings,
-                      'Settings',
-                      5,
-                      () async {},
-                    ),
+
+
                     buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
                       setState(() {
                         isDark = !isDark;
@@ -672,7 +633,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           child: RefreshIndicator(
             onRefresh: _refreshData,
             child: CustomScrollView(
-              physics: PageScrollPhysics(),
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,

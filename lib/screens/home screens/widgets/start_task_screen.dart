@@ -438,8 +438,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
       children: [
         Container(
           constraints: BoxConstraints(minHeight: 170.h),
-          decoration:  BoxDecoration(
-             boxShadow: [
+          decoration: BoxDecoration(
+            boxShadow: [
               BoxShadow(
                 color: isDark
                     ? Colors.transparent
@@ -449,7 +449,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 offset: Offset(0, 3),
               )
             ],
-            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           ),
           padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
@@ -492,20 +492,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'In time',
                           fontsize: 28.sp,
-                          color:  isDark ? DarkColor.color1 : LightColor.color3,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
-                          color:  isDark ? DarkColor.color7 : LightColor.color3,
+                          color: isDark ? DarkColor.color7 : LightColor.color3,
                         ),
                         SizedBox(height: 10.h),
                         clickedIn
                             ? InterSemibold(
                                 /// Todo isLate Time here
                                 text: isLate ? "Late $lateTime" : 'on time',
-                                color: isLate ? Colors.redAccent : DarkColor.color8,
+                                color: isLate
+                                    ? Colors.redAccent
+                                    : DarkColor.color8,
                                 fontsize: 14.sp,
                               )
                             : const SizedBox(),
@@ -556,23 +558,23 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             ],
           ),
         ),
-        SizedBox(height: height / height10),
+        SizedBox(height: 10.h),
         Container(
-          height: height / height65,
+          height: 65.h,
           width: double.maxFinite,
-          padding: EdgeInsets.symmetric(vertical: height / height5),
+          padding: EdgeInsets.symmetric(vertical: 5.h),
           decoration: BoxDecoration(
-             boxShadow: [
+            boxShadow: [
               BoxShadow(
                 color: isDark
                     ? Colors.transparent
                     : LightColor.color3.withOpacity(.05),
                 blurRadius: 5,
                 spreadRadius: 2,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               )
             ],
-            color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
           ),
           child: Row(
             children: [
@@ -764,11 +766,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                     /// TODO changed here
                     child: Container(
-                      color: isDark?DarkColor. WidgetColor:LightColor.WidgetColor,
+                      color: isDark
+                          ? DarkColor.WidgetColor
+                          : LightColor.WidgetColor,
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
-                          fontsize: width / width18,
+                          fontsize: 18.sp,
                           color: clickedIn
                               ? (isDark
                                   ? DarkColor.Primarycolorlight
@@ -782,7 +786,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                 ),
               ),
-               VerticalDivider(
+              VerticalDivider(
                 color: isDark ? Colors.white : LightColor.color3,
               ),
               Expanded(
@@ -874,7 +878,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 return AlertDialog(
                                     title: InterRegular(
                                       text: 'Add Reason',
-                                      color: isDark?DarkColor.color22:LightColor.color3,
+                                      color: isDark
+                                          ? DarkColor.color22
+                                          : LightColor.color3,
                                       fontsize: width / width12,
                                     ),
                                     content: Column(
@@ -892,9 +898,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         onPressed: () async {
                                           Navigator.pop(context);
                                         },
-                                        child:  InterRegular(
+                                        child: InterRegular(
                                           text: 'Cancel',
-                                          color:  isDark
+                                          color: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.color3,
                                         ),
@@ -969,9 +975,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                                 "Reason cannot be empty");
                                           }
                                         },
-                                        child:  InterRegular(
+                                        child: InterRegular(
                                           text: 'Submit',
-                                          color:  isDark
+                                          color: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.color3,
                                         ),
@@ -1073,19 +1079,17 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           ? DarkColor.WidgetColor
                           : LightColor.WidgetColor,
                       child: Center(
-                        child: 
-                           InterBold(
-                            text: 'End Shift',
-                            fontsize: width / width18,
-                            color: clickedIn
-                                ? (isDark
-                                    ? DarkColor.Primarycolorlight
-                                    : LightColor.color2)
-                                : (isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor),
-                          ),
-                        
+                        child: InterBold(
+                          text: 'End Shift',
+                          fontsize: 18.sp,
+                          color: clickedIn
+                              ? (isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor)
+                              : (isDark
+                                  ? DarkColor.Primarycolorlight
+                                  : LightColor.color2),
+                        ),
                       ),
                     ),
                   ),
@@ -1097,12 +1101,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
         SizedBox(height: clickedIn ? 10.h : 0.h),
         clickedIn
             ? Button1(
-                height: height / height65,
+                height: 65.h,
                 // text: controller.isPaused.value ? 'Resume' : 'Break',
                 text: true ? 'Resume' : 'Break',
-                fontsize: width / width18,
-                color: DarkColor. color5,
-                backgroundcolor: DarkColor. WidgetColor,
+                fontsize: 18.sp,
+                color: DarkColor.color5,
+                backgroundcolor: DarkColor.WidgetColor,
                 onPressed: () async {
                   await fireStoreService.fetchPatrolData(
                       widget.ShiftId, widget.EmployeId);
@@ -1168,11 +1172,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           ignoring: !clickedIn,
           child: Button1(
             text: 'Check Patrolling',
-            fontsize: width / width18,
-            color: DarkColor.color5,
-            backgroundcolor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.Primarycolor,
+            fontsize: 18.sp,
+            color: clickedIn
+                ? (isDark ? DarkColor.color5 : LightColor.color1)
+                : (isDark ? DarkColor.color3 : LightColor.color5),
+            backgroundcolor:
+                isDark ? DarkColor.WidgetColor : LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,
@@ -1225,12 +1230,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   pw.Positioned(
                     left: 0,
                     top: 0,
-                    child: pw.Image(logo1, width: 150, height: 150),
+                    child: pw.Image(logo1, width: 150.w, height: 150.h),
                   ),
                   pw.Positioned(
-                    right: 10,
-                    top: 15,
-                    child: pw.Image(logo2, width: 100, height: 90),
+                    right: 10.w,
+                    top: 15.h,
+                    child: pw.Image(logo2, width: 100.w, height: 90.h),
                   ),
                 ],
               ),
@@ -1243,33 +1248,33 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 pw.Text(
                   'SHIFT/PATROL REPORT',
                   style: pw.TextStyle(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
-                pw.SizedBox(height: 50),
+                pw.SizedBox(height: 50.h),
                 pw.Text(
                   'Dear $clientName,\n\nI hope this email finds you well. I wanted to provide you with an update on the recent patrol activities carried out by our assigned security guard during their shift. Below is a detailed breakdown of the patrols conducted:',
                   style: pw.TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
-                pw.SizedBox(height: 40),
+                pw.SizedBox(height: 40.h),
                 pw.Text(
                   '** Shift Information:**',
                   style: pw.TextStyle(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
-                pw.SizedBox(height: 8),
+                pw.SizedBox(height: 8.h),
                 pw.Container(
                   decoration: pw.BoxDecoration(
                     border: pw.Border.all(
                       color: PdfColors.black,
-                      width: 2,
+                      width: 2.w,
                     ),
-                    borderRadius: pw.BorderRadius.circular(8),
+                    borderRadius: pw.BorderRadius.circular(8.r),
                   ),
                   child: pw.Table(
                     border: null,
@@ -1280,7 +1285,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         ),
                         children: [
                           pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
+                            padding: pw.EdgeInsets.all(8.sp),
                             child: pw.Text(
                               'Guard Name',
                               style: pw.TextStyle(
@@ -1289,7 +1294,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             ),
                           ),
                           pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
+                            padding: pw.EdgeInsets.all(8.sp),
                             child: pw.Text(
                               'Shift Time In',
                               style: pw.TextStyle(
@@ -1298,7 +1303,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             ),
                           ),
                           pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
+                            padding: pw.EdgeInsets.all(8.sp),
                             child: pw.Text(
                               'Shift Time Out',
                               style: pw.TextStyle(
@@ -1307,7 +1312,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                             ),
                           ),
                           pw.Padding(
-                            padding: pw.EdgeInsets.all(8),
+                            padding: pw.EdgeInsets.all(8.sp),
                             child: pw.Text(
                               'Date',
                               style: pw.TextStyle(
@@ -1321,22 +1326,22 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         pw.TableRow(
                           children: [
                             pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
+                              padding: pw.EdgeInsets.all(8.sp),
                               child: pw.Text("Vaibhav"),
                             ),
                             pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
+                              padding: pw.EdgeInsets.all(8.sp),
                               child: pw.Text(
                                   patrol['PatrolId'] as String? ?? 'N/A'),
                             ),
                             pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
+                              padding: pw.EdgeInsets.all(8.sp),
                               child: pw.Text(
                                   patrol['PatrolLogPatrolCount'] as String? ??
                                       'N/A'),
                             ),
                             pw.Padding(
-                              padding: pw.EdgeInsets.all(8),
+                              padding: pw.EdgeInsets.all(8.sp),
                               child: pw.Text(patrol['PatrolLogFeedbackComment']
                                       as String? ??
                                   'N/A'),

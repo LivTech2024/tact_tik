@@ -113,7 +113,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
     if (shiftData != null) {
       if (shiftData.containsKey('ShiftAssignedUserId')) {
-        List<String> assignedUserIds = List<String>.from(shiftData['ShiftAssignedUserId']);
+        List<String> assignedUserIds =
+            List<String>.from(shiftData['ShiftAssignedUserId']);
 
         for (String guardId in assignedUserIds) {
           final querySnapshot = await FirebaseFirestore.instance
@@ -187,7 +188,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
       if (locationSnapshot.exists) {
         setState(() {
-          selectedLocatin = locationSnapshot.data()?['LocationName'] ?? 'Select Location';
+          selectedLocatin =
+              locationSnapshot.data()?['LocationName'] ?? 'Select Location';
         });
       }
     }
@@ -196,10 +198,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     requiredEmpcontroller.value = shiftData['ShiftRequiredEmp'] ?? '';
     _Description.text = shiftData['ShiftDescription'] ?? 0;
     requiredRadius.value = shiftData['ShiftRestrictedRadius'] ?? 0;
-    _PhotoUploadIntervalInMinutes.value = shiftData['ShiftPhotoUploadIntervalInMinutes'] ?? 0;
+    _PhotoUploadIntervalInMinutes.value =
+        shiftData['ShiftPhotoUploadIntervalInMinutes'] ?? 0;
     _isRestrictedChecked = shiftData['ShiftEnableRestrictedRadius'] ?? false;
   }
-
 
   void getEmployeeRoles() async {
     List<String> roles =
@@ -241,7 +243,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
             .toList();
         isLoading = false;
       });
-
     } else {
       setState(() {
         isLoading = false;
@@ -308,12 +309,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                     selectionTextStyle: TextStyle(
                         color: isDark
                             ? DarkColor.Primarycolor
-                            : LightColor.color3), // Use primary color here
+                            : LightColor.color3),
+                    // Use primary color here
                     selectionShape: DateRangePickerSelectionShape.circle,
                     selectionColor:
-                       isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor.color3, // Use primary color here
+                        isDark ? DarkColor.Primarycolor : LightColor.color3,
+                    // Use primary color here
                     selectionRadius: 4,
                     view: DateRangePickerView.month,
                     selectionMode: DateRangePickerSelectionMode.multiple,
@@ -480,7 +481,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   Future<void> callPdfApi(String base64Image) async {
-    final url = Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf');
+    final url =
+        Uri.parse('https://backend-sceurity-app.onrender.com/api/html_to_pdf');
 
     final headers = {
       'Content-Type': 'application/json',
@@ -521,7 +523,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         'pdfFile': pdfBase64,
       });
     } else {
-      print('Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
+      print(
+          'Failed to call API: ${response.statusCode}, ${response.reasonPhrase}');
     }
   }
 
@@ -647,17 +650,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
- 
     int requiredEmp = 0;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color:  isDark ? DarkColor.color1 : LightColor.color3,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -668,12 +671,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
           title: InterMedium(
             text: 'Create Schedule',
             fontsize: 18.sp,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
-        backgroundColor: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: SingleChildScrollView(
           // physics: PageScrollPhysics(),
           child: Column(
@@ -713,7 +717,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       ),
                     ),
                     VerticalDivider(
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color:
+                          isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -734,8 +739,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               SizedBox(height: 30.h),
               !nextScreen
                   ? Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.w),
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -762,12 +766,17 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           {
                                             print("Value: ${value}"),
                                             setState(() {
-                                              bool guardExists = selectedGuards.any((guard) => guard['GuardId'] == value['id']);
+                                              bool guardExists =
+                                                  selectedGuards.any((guard) =>
+                                                      guard['GuardId'] ==
+                                                      value['id']);
 
                                               if (guardExists) {
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
                                                   SnackBar(
-                                                    content: Text('Guard already added'),
+                                                    content: Text(
+                                                        'Guard already added'),
                                                   ),
                                                 );
                                               } else {
@@ -779,7 +788,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                                 });
                                               }
                                             }),
-                                }
+                                          }
                                       });
                                 },
                                 child: InterBold(
@@ -795,8 +804,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           SizedBox(height: 24.h),
                           Container(
                             height: 64.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w),
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
@@ -808,9 +816,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   offset: Offset(0, 3),
                                 )
                               ],
-                              color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(13.r),
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
+                              borderRadius: BorderRadius.circular(13.r),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -863,7 +872,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                             shape: BoxShape.circle,
                                             color: isDark
                                                 ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor ,
+                                                : LightColor.Primarycolor,
                                           ),
                                         ),
                                         title: InterRegular(
@@ -911,17 +920,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   height: 44.h,
                                   width: 44.w,
                                   decoration: BoxDecoration(
-                                    color:  isDark
+                                    color: isDark
                                         ? DarkColor.Primarycolor
                                         : LightColor.Primarycolor,
-                                    borderRadius:
-                                        BorderRadius.circular(10.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Center(
                                     child: Icon(
                                       Icons.search,
                                       size: 20.w,
-                                      color:  isDark
+                                      color: isDark
                                           ? DarkColor.Secondarycolor
                                           : LightColor.color1,
                                     ),
@@ -956,107 +964,120 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             },
                           ),
                           SizedBox(height: 20.h),
-                          Container(
-                            margin: EdgeInsets.only(top: 20.h),
-                            height: 80.h,
-                            width: double.maxFinite,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: selectedGuards.length,
-                              itemBuilder: (context, index) {
-                                String guardId =
-                                    selectedGuards[index]['GuardId'];
-                                String guardName =
-                                    selectedGuards[index]['GuardName'];
-                                String guardImg =
-                                    selectedGuards[index]['GuardImg'];
-                                return Padding(
-                                  padding:
-                                      EdgeInsets.only(right: 20.h),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Container(
-                                            height: 50.h,
-                                            width: 50.w,
-                                            decoration: guardImg != ""
-                                                ? BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          guardImg ?? ""),
-                                                      filterQuality:
-                                                          FilterQuality.high,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  )
-                                                : BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor.Primarycolor,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          'assets/images/default.png'),
-                                                      filterQuality:
-                                                          FilterQuality.high,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                          ),
-                                          Positioned(
-                                            top: -4,
-                                            right: -5,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedGuards
-                                                      .removeAt(index);
-                                                });
-                                              },
-                                              child: Container(
-                                                height: 20.h,
-                                                width: 20.w,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: DarkColor.color1),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    size: 8,
-                                                    color: DarkColor
-                                                        .Secondarycolor,
-                                                  ),
+                          selectedGuards.isNotEmpty
+                              ? Container(
+                                  margin: EdgeInsets.only(top: 20.h),
+                                  height: 80.h,
+                                  width: double.maxFinite,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: selectedGuards.length,
+                                    itemBuilder: (context, index) {
+                                      String guardId =
+                                          selectedGuards[index]['GuardId'];
+                                      String guardName =
+                                          selectedGuards[index]['GuardName'];
+                                      String guardImg =
+                                          selectedGuards[index]['GuardImg'];
+                                      return Padding(
+                                        padding: EdgeInsets.only(right: 20.h),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Stack(
+                                              clipBehavior: Clip.none,
+                                              children: [
+                                                Container(
+                                                  height: 50.h,
+                                                  width: 50.w,
+                                                  decoration: guardImg != ""
+                                                      ? BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                guardImg ?? ""),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: isDark
+                                                              ? DarkColor
+                                                                  .Primarycolor
+                                                              : LightColor
+                                                                  .Primarycolor,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                                'assets/images/default.png'),
+                                                            filterQuality:
+                                                                FilterQuality
+                                                                    .high,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
                                                 ),
-                                              ),
+                                                Positioned(
+                                                  top: -4,
+                                                  right: -5,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        selectedGuards
+                                                            .removeAt(index);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      height: 20.h,
+                                                      width: 20.w,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              DarkColor.color1),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          size: 8,
+                                                          color: DarkColor
+                                                              .Secondarycolor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 8.h),
-                                      InterBold(
-                                        text: guardName,
-                                        fontsize: 14.sp,
-                                        color:  isDark
-                                            ? DarkColor.color26
-                                            : LightColor.color3,
-                                      )
-                                    ],
+                                            SizedBox(height: 8.h),
+                                            InterBold(
+                                              text: guardName,
+                                              fontsize: 14.sp,
+                                              color: isDark
+                                                  ? DarkColor.color26
+                                                  : LightColor.color3,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
-                          ),
+                                )
+                              : SizedBox(),
                           SizedBox(
                             height: 30.h,
                           ),
                           InterBold(
                             text: 'Set Details',
                             fontsize: 16.sp,
-                            color:  isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                isDark ? DarkColor.color1 : LightColor.color3,
                           ),
                           SizedBox(height: 10.h),
                           // Select Guard
@@ -1069,15 +1090,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // ),
                           Container(
                             height: 60.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w),
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius:
-                                  BorderRadius.circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                               border: Border(
                                 bottom: BorderSide(
-                                  color:  isDark
+                                  color: isDark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1088,14 +1107,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 isExpanded: true,
                                 iconSize: 24.w,
                                 icon: Icon(Icons.arrow_drop_down),
-                                iconEnabledColor:  isDark
+                                iconEnabledColor: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 // Set icon color for enabled state
-                                dropdownColor:  isDark
+                                dropdownColor: isDark
                                     ? DarkColor.WidgetColor
                                     : LightColor.WidgetColor,
-                                style: TextStyle(color:  isDark
+                                style: TextStyle(
+                                    color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3),
                                 value: selectedPosition,
@@ -1114,11 +1134,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       children: [
                                         selectedPosition == value
                                             ? Icon(Icons.control_camera,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color1
                                                     : LightColor.color3)
                                             : Icon(Icons.control_camera,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color3
                                                     : LightColor.color2),
                                         // Conditional icon color based on selection
@@ -1126,10 +1146,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         InterRegular(
                                             text: value,
                                             color: selectedPosition == value
-                                                ?  isDark
+                                                ? isDark
                                                     ? DarkColor.color1
                                                     : LightColor.color3
-                                                :  isDark
+                                                : isDark
                                                     ? DarkColor.color3
                                                     : LightColor.color2),
                                         // Conditional text color based on selection
@@ -1156,9 +1176,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           SizedBox(height: 5.h),
                           Row(
                             children: [
-                              InterMedium(text: 'Selected dates: ' , color: isDark
+                              InterMedium(
+                                text: 'Selected dates: ',
+                                color: isDark
                                     ? DarkColor.Primarycolor
-                                    : LightColor.color3,fontsize: 14.sp,),
+                                    : LightColor.color3,
+                                fontsize: 14.sp,
+                              ),
                               if (_selectedDates != null)
                                 for (var date in _selectedDates)
                                   Flexible(
@@ -1192,16 +1216,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // Location DropDown
                           Container(
                             height: 60.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w),
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
-
                               // color: Colors.redAccent,
-                              borderRadius:
-                                  BorderRadius.circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                               border: Border(
                                 bottom: BorderSide(
-                                  color:  isDark
+                                  color: isDark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1211,16 +1232,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               child: DropdownButton<String>(
                                 isExpanded: true,
                                 iconSize: 24.w,
-                                icon: Icon(Icons.arrow_drop_down,
-                                    size: 24.w),
-                                iconEnabledColor:  isDark
+                                icon: Icon(Icons.arrow_drop_down, size: 24.w),
+                                iconEnabledColor: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 // Set icon color for enabled state
-                                dropdownColor:  isDark
+                                dropdownColor: isDark
                                     ? DarkColor.WidgetColor
                                     : LightColor.WidgetColor,
-                                style: TextStyle(color:  isDark
+                                style: TextStyle(
+                                    color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3),
                                 value: selectedLocatin,
@@ -1238,11 +1259,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       children: [
                                         selectedLocatin == value
                                             ? Icon(Icons.location_on,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color1
                                                     : LightColor.color3)
                                             : Icon(Icons.location_on,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color3
                                                     : LightColor.color2),
                                         // Conditional icon color based on selection
@@ -1250,10 +1271,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         InterRegular(
                                             text: value,
                                             color: selectedLocatin == value
-                                                ?  isDark
+                                                ? isDark
                                                     ? DarkColor.color1
                                                     : LightColor.color3
-                                                :  isDark
+                                                : isDark
                                                     ? DarkColor.color3
                                                     : LightColor.color2),
                                         // Conditional text color based on selection
@@ -1268,15 +1289,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // Clint DropDown
                           Container(
                             height: 60.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w),
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius:
-                                  BorderRadius.circular(10.w),
+                              borderRadius: BorderRadius.circular(10.w),
                               border: Border(
                                 bottom: BorderSide(
-                                  color:  isDark
+                                  color: isDark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1287,14 +1306,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 isExpanded: true,
                                 iconSize: 24.w,
                                 icon: Icon(Icons.arrow_drop_down),
-                                iconEnabledColor:  isDark
+                                iconEnabledColor: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 // Set icon color for enabled state
-                                dropdownColor:  isDark
+                                dropdownColor: isDark
                                     ? DarkColor.WidgetColor
                                     : LightColor.WidgetColor,
-                                style: TextStyle(color: isDark
+                                style: TextStyle(
+                                    color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3),
                                 value: selectedClint,
@@ -1314,12 +1334,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         selectedClint == value
                                             ? Icon(
                                                 Icons.account_circle_outlined,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color1
                                                     : LightColor.color3)
                                             : Icon(
                                                 Icons.account_circle_outlined,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.color3
                                                     : LightColor.color2),
                                         // Conditional icon color based on selection
@@ -1327,10 +1347,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         InterRegular(
                                             text: value,
                                             color: selectedClint == value
-                                                ?  isDark
+                                                ? isDark
                                                     ? DarkColor.color1
                                                     : LightColor.color3
-                                                :  isDark
+                                                : isDark
                                                     ? DarkColor.color2
                                                     : LightColor.color2),
                                         // Conditional text color based on selection
@@ -1345,18 +1365,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           // Select Guards
                           Container(
                             // height: ,
-                            constraints:
-                                BoxConstraints(minHeight: 60.h),
+                            constraints: BoxConstraints(minHeight: 60.h),
                             padding: EdgeInsets.symmetric(
                               horizontal: 10.w,
                             ),
                             decoration: BoxDecoration(
                               // color: Colors.redAccent,
-                              borderRadius:
-                                  BorderRadius.circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                               border: Border(
                                 bottom: BorderSide(
-                                  color:  isDark
+                                  color: isDark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1374,8 +1392,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ? Center(
                                           child: CircularProgressIndicator())
                                       : MultiSelectDropDown(
-                                          selectedOptionBackgroundColor:
-                                              isDark
+                                          selectedOptionBackgroundColor: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.Primarycolor,
                                           dropdownBackgroundColor: isDark
@@ -1402,10 +1419,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                             wrapType: WrapType.wrap,
                                           ),
                                           dropdownHeight: 300.h,
-                                          optionTextStyle: TextStyle(
-                                              fontSize: 16.sp),
-                                          selectedOptionIcon:
-                                          Icon(Icons.check_circle , size: 24.sp,),
+                                          optionTextStyle:
+                                              TextStyle(fontSize: 16.sp),
+                                          selectedOptionIcon: Icon(
+                                            Icons.check_circle,
+                                            size: 24.sp,
+                                          ),
                                         ),
                                 ),
                               ],
@@ -1422,11 +1441,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 padding: EdgeInsets.only(left: 10.w),
                                 decoration: BoxDecoration(
                                   // color: Colors.redAccent,
-                                  borderRadius:
-                                      BorderRadius.circular(10.w),
+                                  borderRadius: BorderRadius.circular(10.w),
                                   border: Border(
                                     bottom: BorderSide(
-                                      color: DarkColor. color19,
+                                      color: DarkColor.color19,
                                     ),
                                   ),
                                 ),
@@ -1434,7 +1452,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   children: [
                                     Icon(
                                       Icons.checklist,
-                                      color: DarkColor. color1,
+                                      color: DarkColor.color1,
                                       size: 24.w,
                                     ),
                                     SizedBox(
@@ -1459,14 +1477,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           hintStyle: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 18.sp,
-                                            color: DarkColor. color2,
+                                            color: DarkColor.color2,
                                           ),
                                           hintText:
                                               '${_selectedOptions[index].label} Hit Count',
                                           contentPadding: EdgeInsets.zero,
                                         ),
-                                        cursorColor: DarkColor. Primarycolor,
-
+                                        cursorColor: DarkColor.Primarycolor,
                                         onSubmitted: (value) {
                                           setState(() {
                                             PatrolList[index][0] = value;
@@ -1522,10 +1539,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Row(
                             children: [
                               Checkbox(
-                                activeColor:  isDark
+                                activeColor: isDark
                                     ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor,
-                                checkColor:  isDark
+                                checkColor: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 value: _isRestrictedChecked,
@@ -1538,9 +1555,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               InterMedium(
                                 text: 'Enable Restricted Radius',
                                 fontsize: 16.w,
-                                color:  isDark
-                                      ? DarkColor.color2
-                                      : LightColor.color2,
+                                color: isDark
+                                    ? DarkColor.color2
+                                    : LightColor.color2,
                               ),
                             ],
                           ),
@@ -1591,7 +1608,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   nextScreen = !nextScreen;
                                 });
                               } else {
-                                String errorMessage = "Please fill in the following required fields:";
+                                String errorMessage =
+                                    "Please fill in the following required fields:";
                                 if (selectedClint == null) {
                                   errorMessage += "\n- Client";
                                 }
@@ -1599,304 +1617,337 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   errorMessage += "\n- Location";
                                 }
                                 if (requiredEmpcontroller.text.isEmpty) {
-                                  errorMessage += "\n- Required Number of Employees";
+                                  errorMessage +=
+                                      "\n- Required Number of Employees";
                                 }
                                 if (_ShiftName.text.isEmpty) {
                                   errorMessage += "\n- Shift Name";
                                 }
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(errorMessage)));
                                 print(errorMessage);
                               }
                             },
-                            backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            color:  isDark ? DarkColor.color22 : LightColor.color1,
+                            backgroundcolor: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
+                            color:
+                                isDark ? DarkColor.color22 : LightColor.color1,
                             borderRadius: 10.r,
                             fontsize: 14.sp,
                           ),
                           SizedBox(height: 40.h),
                         ],
                       ),
-              )
+                    )
                   : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        String taskName = tasks[index]['name'];
-                        bool isChecked = tasks[index]['isQrRequired'] ?? false;
-                        bool isReturnChecked = tasks[index]['isReturnQrRequired'] ?? false;
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: tasks.length,
+                            itemBuilder: (context, index) {
+                              String taskName = tasks[index]['name'];
+                              bool isChecked =
+                                  tasks[index]['isQrRequired'] ?? false;
+                              bool isReturnChecked =
+                                  tasks[index]['isReturnQrRequired'] ?? false;
 
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: Container(
-                                padding: EdgeInsets.only(left: 10.w),
-                                decoration: BoxDecoration(
-                                  color:  isDark
+                              return Column(
+                                children: [
+                                  ListTile(
+                                    title: Container(
+                                      padding: EdgeInsets.only(left: 10.w),
+                                      decoration: BoxDecoration(
+                                        color: isDark
                                             ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor, // WidgetColor,
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: TextField(
-                                  controller: taskControllers[index],
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 18.sp,
-                                    color: Colors.white,
-                                  ),
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10.r),
+                                            : LightColor
+                                                .WidgetColor, // WidgetColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      child: TextField(
+                                        controller: taskControllers[index],
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 18.sp,
+                                          color: Colors.white,
+                                        ),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10.r),
+                                            ),
+                                          ),
+                                          focusedBorder: InputBorder.none,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18.sp,
+                                            color: Colors.grey, // color2,
+                                          ),
+                                          hintText: 'Task ${index + 1}',
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        cursorColor: Colors.red,
+                                        // Primarycolor,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            tasks[index]['name'] = value;
+                                          });
+                                          print("textfield value $value");
+                                        },
                                       ),
                                     ),
-                                    focusedBorder: InputBorder.none,
-                                    hintStyle: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 18.sp,
-                                      color: Colors.grey, // color2,
+                                    trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                        size: 24.w,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          tasks.removeAt(index);
+                                          taskControllers.removeAt(index);
+                                        });
+                                      },
                                     ),
-                                    hintText: 'Task ${index + 1}',
-                                    contentPadding: EdgeInsets.zero,
                                   ),
-                                  cursorColor: Colors.red,
-                                  // Primarycolor,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      tasks[index]['name'] = value;
-                                    });
-                                    print("textfield value $value");
-                                  },
-                                ),
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                  size: 24.w,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    tasks.removeAt(index);
-                                    taskControllers.removeAt(index);
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              children: [
-                                Checkbox(
-                                  activeColor: Colors.red, // Primarycolor,
-                                  checkColor: Colors.black, // color1,
-                                  value: isChecked,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      tasks[index]['isQrRequired'] = value ?? false;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  'QR Code Required',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16.sp,
-                                    color: Colors.grey, // color2,
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        activeColor:
+                                            Colors.red, // Primarycolor,
+                                        checkColor: Colors.black, // color1,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tasks[index]['isQrRequired'] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        'QR Code Required',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16.sp,
+                                          color: Colors.grey, // color2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              children: [
-                                Checkbox(
-                                  activeColor: Colors.red, // Primarycolor,
-                                  checkColor: Colors.black, // color1,
-                                  value: isReturnChecked,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      tasks[index]['isReturnQrRequired'] = value ?? false;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  'Return QR Code Required',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16.w,
-                                    color: Colors.grey, // color2,
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                        activeColor:
+                                            Colors.red, // Primarycolor,
+                                        checkColor: Colors.black, // color1,
+                                        value: isReturnChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            tasks[index]['isReturnQrRequired'] =
+                                                value ?? false;
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        'Return QR Code Required',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16.w,
+                                          color: Colors.grey, // color2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            Button1(
-                              height: 50.h,
-                              borderRadius: 10.w,
-                              backgroundcolor:  isDark
+                                  Button1(
+                                    height: 50.h,
+                                    borderRadius: 10.w,
+                                    backgroundcolor: isDark
                                         ? DarkColor.color33
                                         : LightColor.WidgetColor,
-                              color:  isDark
+                                    color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3,
-                              text: "Generate Qr",
-                              onPressed: () async {
-                                final name = taskControllers[index].text;
-                                _saveQrCode(name);
-                                print('Generate QR Button Pressed');
+                                    text: "Generate Qr",
+                                    onPressed: () async {
+                                      final name = taskControllers[index].text;
+                                      _saveQrCode(name);
+                                      print('Generate QR Button Pressed');
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          SizedBox(height: 20.h),
+                          SizedBox(
+                            width: 120.w,
+                            child: Button1(
+                              borderRadius: 10.r,
+                              onPressed: () {
+                                // if (nextScreen == false) {
+                                //   setState(() {
+                                //     nextScreen = true;
+                                //   });
+                                // }  else
+                                print(tasks);
+                                _addNewTask();
                               },
+                              height: 50.h,
+                              backgroundcolor: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
+                              text: nextScreen == false
+                                  ? 'Create Shift Task'
+                                  : 'Create Task',
+                              color:
+                                  isDark ? DarkColor.color1 : LightColor.color3,
                             ),
-                          ],
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.h),
-                    SizedBox(
-                      width: 120.w,
-                      child: Button1(
-                        borderRadius: 10.r,
-                        onPressed: () {
-                          // if (nextScreen == false) {
-                          //   setState(() {
-                          //     nextScreen = true;
-                          //   });
-                          // }  else
-                          print(tasks);
-                          _addNewTask();
-                        },
-                        height: 50.h,
-                        backgroundcolor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                        text: nextScreen == false ? 'Create Shift Task' : 'Create Task',
-                        color:  isDark ? DarkColor.color1 : LightColor.color3,
+                          ),
+                          SizedBox(height: 90.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Button1(
+                                  height: 50.h,
+                                  text: 'Done',
+                                  onPressed: () async {
+                                    if (nextScreen!) {
+                                      String address = "";
+                                      GeoPoint coordinates = GeoPoint(0, 0);
+                                      String name = "";
+                                      String locationId = "";
+
+                                      // Fetching the patrols ids using patrol name
+                                      List<String> patrolids =
+                                          await fireStoreService
+                                              .getPatrolIdsFromNames(
+                                                  selectedPatrols);
+
+                                      // Fetching client id
+                                      String clientId = await fireStoreService
+                                          .getClientIdfromName(selectedClint!);
+                                      print('ClientName: $selectedClint');
+                                      print('ClientId: $clientId');
+
+                                      // Fetching location details from location name
+                                      var locationData = await fireStoreService
+                                          .getLocationByName(selectedLocatin!,
+                                              widget.CompanyId);
+                                      if (locationData.exists) {
+                                        var data = locationData.data()
+                                            as Map<String, dynamic>?;
+                                        if (data != null) {
+                                          address = data['LocationAddress'];
+                                          coordinates =
+                                              data['LocationCoordinates']
+                                                  as GeoPoint;
+                                          name = data['LocationName'];
+                                          locationId = data['LocationId'];
+
+                                          print("Address ${address}");
+                                          print("Coordinates ${coordinates}");
+                                          print(
+                                              "Latitude: ${coordinates.latitude}");
+                                          print(
+                                              "Longitude: ${coordinates.longitude}");
+                                        }
+                                      }
+
+                                      print("LocationData ids ${locationData}");
+                                      var requiredEmp =
+                                          requiredEmpcontroller.text;
+                                      print(
+                                          "Number Editing Controller ${requiredEmpcontroller.number}");
+                                      print("ShiftName ${_ShiftName.text}");
+                                      print("ShiftDesc ${_Description.text}");
+
+                                      if (widget.shiftId.isNotEmpty) {
+                                        // Update the existing document
+                                        await fireStoreService.updateShift(
+                                          widget.shiftId,
+                                          selectedGuards,
+                                          selectedPosition,
+                                          address,
+                                          "CompanyBranchId",
+                                          widget.CompanyId,
+                                          _selectedDates,
+                                          startTime,
+                                          endTime,
+                                          patrolids,
+                                          clientId,
+                                          requiredEmpcontroller.text,
+                                          requiredPhotocontroller.text,
+                                          requiredRadius.text,
+                                          _isRestrictedChecked,
+                                          coordinates,
+                                          name,
+                                          locationId,
+                                          address,
+                                          _Branch.text,
+                                          _Description.text,
+                                          _ShiftName.text,
+                                          tasks, // Pass the tasks list
+                                        );
+                                      } else {
+                                        // Create a new document
+                                        String id = await fireStoreService
+                                            .ScheduleShift(
+                                          selectedGuards,
+                                          selectedPosition,
+                                          address,
+                                          "CompanyBranchId",
+                                          widget.CompanyId,
+                                          _selectedDates,
+                                          startTime,
+                                          endTime,
+                                          patrolids,
+                                          clientId,
+                                          requiredEmpcontroller.text,
+                                          requiredPhotocontroller.text,
+                                          requiredRadius.text,
+                                          _isRestrictedChecked,
+                                          coordinates,
+                                          name,
+                                          locationId,
+                                          address,
+                                          _Branch.text,
+                                          _Description.text,
+                                          _ShiftName.text,
+                                          tasks, // Pass the tasks list
+                                        );
+                                        setState(() {
+                                          CreatedshiftId = id;
+                                        });
+                                      }
+
+                                      setState(() {
+                                        Navigator.pop(context);
+                                        _addNewTask();
+                                      });
+                                      print("Shift Created/Updated");
+                                    }
+                                  },
+                                  backgroundcolor: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.Primarycolor,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                  borderRadius: 10.r,
+                                  fontsize: 14.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 90.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Button1(
-                            height: 50.h,
-                            text: 'Done',
-                            onPressed: () async {
-                              if (nextScreen!) {
-                                String address = "";
-                                GeoPoint coordinates = GeoPoint(0, 0);
-                                String name = "";
-                                String locationId = "";
-
-                                // Fetching the patrols ids using patrol name
-                                List<String> patrolids =
-                                await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
-
-                                // Fetching client id
-                                String clientId =
-                                await fireStoreService.getClientIdfromName(selectedClint!);
-                                print('ClientName: $selectedClint');
-                                print('ClientId: $clientId');
-
-                                // Fetching location details from location name
-                                var locationData = await fireStoreService
-                                    .getLocationByName(selectedLocatin!, widget.CompanyId);
-                                if (locationData.exists) {
-                                  var data = locationData.data() as Map<String, dynamic>?;
-                                  if (data != null) {
-                                    address = data['LocationAddress'];
-                                    coordinates = data['LocationCoordinates'] as GeoPoint;
-                                    name = data['LocationName'];
-                                    locationId = data['LocationId'];
-
-                                    print("Address ${address}");
-                                    print("Coordinates ${coordinates}");
-                                    print("Latitude: ${coordinates.latitude}");
-                                    print("Longitude: ${coordinates.longitude}");
-                                  }
-                                }
-
-                                print("LocationData ids ${locationData}");
-                                var requiredEmp = requiredEmpcontroller.text;
-                                print("Number Editing Controller ${requiredEmpcontroller.number}");
-                                print("ShiftName ${_ShiftName.text}");
-                                print("ShiftDesc ${_Description.text}");
-
-                                if (widget.shiftId.isNotEmpty) {
-                                  // Update the existing document
-                                  await fireStoreService.updateShift(
-                                    widget.shiftId,
-                                    selectedGuards,
-                                    selectedPosition,
-                                    address,
-                                    "CompanyBranchId",
-                                    widget.CompanyId,
-                                    _selectedDates,
-                                    startTime,
-                                    endTime,
-                                    patrolids,
-                                    clientId,
-                                    requiredEmpcontroller.text,
-                                    requiredPhotocontroller.text,
-                                    requiredRadius.text,
-                                    _isRestrictedChecked,
-                                    coordinates,
-                                    name,
-                                    locationId,
-                                    address,
-                                    _Branch.text,
-                                    _Description.text,
-                                    _ShiftName.text,
-                                    tasks, // Pass the tasks list
-                                  );
-                                } else {
-                                  // Create a new document
-                                  String id = await fireStoreService.ScheduleShift(
-                                    selectedGuards,
-                                    selectedPosition,
-                                    address,
-                                    "CompanyBranchId",
-                                    widget.CompanyId,
-                                    _selectedDates,
-                                    startTime,
-                                    endTime,
-                                    patrolids,
-                                    clientId,
-                                    requiredEmpcontroller.text,
-                                    requiredPhotocontroller.text,
-                                    requiredRadius.text,
-                                    _isRestrictedChecked,
-                                    coordinates,
-                                    name,
-                                    locationId,
-                                    address,
-                                    _Branch.text,
-                                    _Description.text,
-                                    _ShiftName.text,
-                                    tasks, // Pass the tasks list
-                                  );
-                                  setState(() {
-                                    CreatedshiftId = id;
-                                  });
-                                }
-
-                                setState(() {
-                                  Navigator.pop(context);
-                                  _addNewTask();
-                                });
-                                print("Shift Created/Updated");
-                              }
-                            },
-                            backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
-                            borderRadius: 10.r,
-                            fontsize: 14.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

@@ -145,7 +145,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: isEdit ? updateProfile : null,
+              onPressed: (){
+                setState(() {
+                  isEdit ? updateProfile : null;
+                });
+              },
               icon: Icon(
                 isEdit ? Icons.check : Icons.border_color,
                 size: 24.sp,

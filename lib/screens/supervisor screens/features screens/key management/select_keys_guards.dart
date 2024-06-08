@@ -105,12 +105,12 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                       print(guardInfo);
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                         /* Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => SKeyManagementViewScreen(
                                      companyId: '',
-                                  )));
+                                  )));*/
                         },
                         child: Container(
                           height: 60.h,
