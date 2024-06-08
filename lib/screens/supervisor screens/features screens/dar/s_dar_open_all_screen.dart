@@ -34,7 +34,7 @@ class SDarOpenAllScreen extends StatefulWidget {
 }
 
 class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor.color25];
+  List colors =isDark? [DarkColor.Primarycolor, DarkColor.color25]:[LightColor.color3, LightColor.color2];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -462,14 +462,17 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        backgroundColor:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark
+              ? Colors.transparent
+              : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark? DarkColor.color1:LightColor.color3,
               size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -480,7 +483,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
           title: InterMedium(
             text: 'DAR',
             fontsize: 18.sp,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -503,7 +506,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                             showDARS = true;
                             colors[0] = isDark
                                 ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor;
+                                : LightColor.color3;
                             colors[1] =
                                 isDark ? DarkColor.color25 : LightColor.color2;
                           });
@@ -524,7 +527,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: VerticalDivider(
-                        color: isDark ? DarkColor.color2 : LightColor.color2,
+                        color: isDark ? DarkColor.color2 : LightColor.color3,
                       ),
                     ),
                     Expanded(
@@ -536,7 +539,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                 isDark ? DarkColor.color25 : LightColor.color2;
                             colors[1] = isDark
                                 ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor;
+                                : LightColor.color3;
                           });
                         },
                         child: Container(
@@ -567,7 +570,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               InterRegular(
                                 text: 'Shift Name :',
                                 fontsize: 20.sp,
-                                color: DarkColor.color17,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                               ),
                               SizedBox(
                                 width: 6.w,
@@ -575,7 +580,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftName ?? 'Loading...',
-                                  color: DarkColor.Primarycolor,
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.color3,
                                   fontsize: 20.sp,
                                 ),
                               ),
@@ -588,7 +595,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               InterRegular(
                                 text: 'Location :',
                                 fontsize: 20.sp,
-                                color: DarkColor.color17,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                               ),
                               SizedBox(
                                 width: 6.w,
@@ -597,7 +606,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                 child: InterRegular(
                                   text: _userService.shiftLocation ??
                                       'Loading...',
-                                  color: DarkColor.Primarycolor,
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.color3,
                                   fontsize: 20.sp,
                                   maxLines: 3,
                                 ),
@@ -662,7 +673,20 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                             ),
                                             width: double.maxFinite,
                                             decoration: BoxDecoration(
-                                              color: DarkColor.WidgetColor,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? Colors.transparent
+                                                      : LightColor.color3
+                                                          .withOpacity(.05),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 2,
+                                                  offset: const Offset(0, 3),
+                                                )
+                                              ],
+                                              color: isDark
+                                                  ? DarkColor.WidgetColor
+                                                  : LightColor.WidgetColor,
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
                                             ),
@@ -678,7 +702,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         "${data[index]['TileTime']}",
                                                     // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: DarkColor.color21,
+                                                    color: isDark
+                                                        ? DarkColor.color21
+                                                        : LightColor.color3,
                                                   ),
                                                   SizedBox(
                                                     height: 10.h,
@@ -687,7 +713,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         '${data[index]['TileContent']}',
                                                     fontsize: 16.w,
-                                                    color: DarkColor.color12,
+                                                    color: isDark
+                                                        ? DarkColor.color12
+                                                        : LightColor.color3,
                                                     maxLines: 5,
                                                   ),
                                                   SizedBox(height: 20.h),
@@ -840,7 +868,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                           InterBold(
                             text: 'Reports',
                             fontsize: 20.sp,
-                            color: DarkColor.Primarycolor,
+                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                           ),
                           SizedBox(height: 25.h),
                           FutureBuilder<
@@ -915,9 +943,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                               SizedBox(width: 2.w),
                                               Text(
                                                 formattedTime,
-                                                style: const TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 48, 48, 48),
+                                                style:  TextStyle(
+                                                  color:isDark? Color.fromARGB(
+                                                      255, 48, 48, 48):LightColor.color3,
                                                 ),
                                               ),
                                             ],

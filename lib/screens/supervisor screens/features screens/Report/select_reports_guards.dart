@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -55,14 +56,15 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -73,7 +75,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
           title: InterMedium(
             text: 'Reports Guards',
             fontsize: 18.w,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -112,7 +114,19 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                         child: Container(
                           height: 60.h,
                           decoration: BoxDecoration(
-                            color: DarkColor. color19,
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? DarkColor.color1.withOpacity(.1)
+                                    : LightColor.color3.withOpacity(.1),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset: Offset(0, 3),
+                              )
+                            ],
+                            color: isDark
+                                      ? DarkColor.WidgetColor
+                                      : LightColor.WidgetColor,
                             borderRadius:
                             BorderRadius.circular(12.w),
                           ),
@@ -148,8 +162,9 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: DarkColor
-                                                            .Primarycolor,
+                                            color: isDark
+                                                            ? DarkColor.Primarycolor
+                                                            : LightColor.Primarycolor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),
@@ -162,7 +177,9 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: DarkColor. color1,
+                                          color: isDark
+                                                    ? DarkColor.color1
+                                                    : LightColor.color3,
                                         ),
                                       ],
                                     ),

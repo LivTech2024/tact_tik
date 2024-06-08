@@ -211,6 +211,17 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                   margin: EdgeInsets.only(
                                       bottom: 10.h),
                                   decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: isDark
+                                            ? Colors.transparent
+                                            : LightColor.color3
+                                                .withOpacity(.05),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     borderRadius:
                                         BorderRadius.circular(10.r),
                                     color: isDark

@@ -175,6 +175,16 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                           width: double.maxFinite,
                           margin: EdgeInsets.only(bottom: 10.h),
                           decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? Colors.transparent
+                                    : LightColor.color3.withOpacity(.05),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset: Offset(0, 3),
+                              )
+                            ],
                             borderRadius:
                                 BorderRadius.circular(10.w),
                             color:
@@ -184,61 +194,64 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 44.h,
-                                    width: 44.w,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          10.w),
-                                      color: isDark
-                                          ? DarkColor.Primarycolorlight
-                                          : LightColor.Primarycolorlight,
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.home_repair_service,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 44.h,
+                                      width: 44.w,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            10.w),
                                         color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
-                                        size: 24.w,
+                                            ? DarkColor.Primarycolorlight
+                                            : LightColor.Primarycolorlight,
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.home_repair_service,
+                                          color: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.Primarycolor,
+                                          size: 24.w,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(width: 20.w),
-                                  FutureBuilder<String>(
-                                    future: getEquipmentName(equipment['EquipmentAllocationEquipId']),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return InterMedium(
-                                          text: 'Loading...',
-                                          fontsize: 16.sp,
-                                          color: DarkColor.color1,
-                                        );
-                                      } else if (snapshot.hasError) {
-                                        return InterMedium(
-                                          text: 'Error: ${snapshot.error}',
-                                          fontsize: 16.sp,
-                                          color: isDark
-                                              ? DarkColor.color1
-                                              : LightColor.color3,
-                                        );
-                                      } else {
-                                        return InterMedium(
-                                          text: snapshot.data ?? 'Unknown Equipment',
-                                          fontsize: 16.sp,
-                                          color: isDark
-                                              ? DarkColor.color1
-                                              : LightColor.color3,
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
+                                    SizedBox(width: 20.w),
+                                    FutureBuilder<String>(
+                                      future: getEquipmentName(equipment['EquipmentAllocationEquipId']),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return InterMedium(
+                                            text: 'Loading...',
+                                            fontsize: 16.sp,
+                                            color: DarkColor.color1,
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return InterMedium(
+                                            text: 'Error: ${snapshot.error}',
+                                            fontsize: 16.sp,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
+                                          );
+                                        } else {
+                                          return InterMedium(
+                                            text: snapshot.data ?? 'Unknown Equipment',
+                                            fontsize: 16.sp,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                               InterMedium(
                                 text: formattedTime,

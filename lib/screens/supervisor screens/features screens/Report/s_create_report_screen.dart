@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
@@ -203,14 +204,15 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -224,7 +226,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
             fontsize: 18.sp,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -241,7 +243,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     InterBold(
                       text: 'New Report',
                       fontsize: 20.sp,
-                      color: DarkColor. Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 30.h),
@@ -257,7 +259,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                     InterBold(
                       text: 'Category',
                       fontsize: 20.sp,
-                      color: DarkColor. Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 20.h),
@@ -266,15 +268,27 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
-                        color: DarkColor. WidgetColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(10.w),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.w,
-                          dropdownColor: DarkColor.WidgetColor,
-                          style: TextStyle(color: DarkColor.color2),
+                          dropdownColor: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          style: TextStyle(color: isDark
+                                  ? DarkColor.color1
+                                  : LightColor.color3),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -322,7 +336,17 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
-                        color: DarkColor. WidgetColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.transparent
+                                : LightColor.color3.withOpacity(.05),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: Offset(0, 3),
+                          )
+                        ],
+                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -332,7 +356,9 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: DarkColor. color2,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
                                 size: 24.w,
                               ),
                               SizedBox(width: 6.w),
@@ -345,8 +371,8 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             ],
                           ),
                           Checkbox(
-                            activeColor: DarkColor. Primarycolor,
-                            checkColor: DarkColor.color1,
+                            activeColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            checkColor: isDark ? DarkColor.color1 : LightColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -373,7 +399,20 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                                     height: 66.h,
                                     width: 66.w,
                                     decoration: BoxDecoration(
-                                      color: DarkColor. WidgetColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: isDark
+                                              ? Colors.transparent
+                                              : LightColor.color3
+                                                  .withOpacity(.05),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
+                                      color: isDark
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
                                         10.w,
                                       ),
@@ -449,7 +488,19 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: DarkColor. WidgetColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: isDark
+                                        ? Colors.transparent
+                                        : LightColor.color3.withOpacity(.05),
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
+                                color: isDark
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.WidgetColor,
                                 borderRadius:
                                     BorderRadius.circular(8.r),
                               ),
@@ -675,7 +726,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: DarkColor. Primarycolor,
+                        backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                         borderRadius: 10.h,
                       ),
                     ),
