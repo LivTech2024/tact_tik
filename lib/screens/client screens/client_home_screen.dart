@@ -823,43 +823,33 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 left: 30.w,
                                 right: 30.w,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InterBold(
-                                    text: '19/9/2004',
+                              child: GestureDetector(
+                                onTap: () {
+                                  print("Clicked");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClientCheckPatrolScreen(
+                                                  PatrolIdl: PatrolId)));
+                                },
+                                child: Container(
+                                  height: 100.h,
+                                  margin: EdgeInsets.only(top: 10.h),
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
                                     color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
-                                    fontsize: 20.sp,
+                                        ? DarkColor.Primarycolor
+                                        : LightColor.Primarycolor,
+                                    borderRadius: BorderRadius.circular(14.r),
                                   ),
-                                  SizedBox(
-                                    height: 10.sp,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      print("Clicked");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ClientCheckPatrolScreen(
-                                                      PatrolIdl: PatrolId)));
-                                    },
-                                    child: Container(
-                                      height: 160.h,
-                                      margin: EdgeInsets.only(top: 10.h),
-                                      width: double.maxFinite,
-                                      decoration: BoxDecoration(
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
-                                        borderRadius:
-                                            BorderRadius.circular(14.r),
-                                      ),
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 20.h),
-                                      child: Column(
+                                  padding: EdgeInsets.only(
+                                      top: 20.h, bottom: 20.h, right: 10.w),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             mainAxisAlignment:
@@ -880,137 +870,98 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     ),
                                                   ),
                                                   color: isDark
-                                                      ? DarkColor.color22
-                                                      : LightColor.color3,
+                                                      ? DarkColor.WidgetColor
+                                                      : LightColor.WidgetColor,
                                                 ),
                                               ),
                                               SizedBox(width: 14.w),
-                                              SizedBox(
-                                                width: 190.w,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    InterSemibold(
-                                                      text: PatrolName ?? "",
-                                                      color: isDark
-                                                          ? DarkColor.color22
-                                                          : LightColor.color3,
-                                                      fontsize: 14.sp,
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  InterSemibold(
+                                                    text: PatrolName ?? "",
+                                                    color: isDark
+                                                        ? DarkColor.color1
+                                                        : LightColor.color3,
+                                                    fontsize: 14.sp,
+                                                  ),
+                                                  SizedBox(height: 4.h),
+                                                  SizedBox(
+                                                    width: 200.w,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        // TODO : Add location svg
+                                                        SvgPicture.asset(
+                                                          'assets/images/location_icon.svg',
+                                                          height: 20.h,
+                                                        ),
+                                                        SizedBox(width: 5.w),
+                                                        Flexible(
+                                                          child: InterRegular(
+                                                            text:
+                                                                '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                                            maxLines: 2,
+                                                            fontsize: 14.sp,
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                    SizedBox(height: 5.h),
-                                                    InterRegular(
-                                                      text:
-                                                          PatrolLocation ?? "",
-                                                      maxLines: 1,
-                                                      fontsize: 14.sp,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
+                                                  ),
+                                                ],
+                                              ),
                                             ],
                                           ),
-                                          SizedBox(height: 10.h),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: 18.w,
-                                              right: 24.w,
-                                            ),
-                                            child: Row(
+                                          SizedBox(
+                                            child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
-                                                // shift time and date
-                                                SizedBox(
-                                                  width: 100.w,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      InterRegular(
-                                                        text: 'CheckPoints',
-                                                        color: isDark
-                                                            ? DarkColor.color22
-                                                            : LightColor.color3,
-                                                        fontsize: 14.w,
-                                                      ),
-                                                      SizedBox(height: 5.h),
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .check_circle_outlined,
-                                                            size: 24.sp,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
-                                                          ),
-                                                          SizedBox(width: 6.w),
-                                                          InterMedium(
-                                                            text: CheckpointCount
-                                                                    .toString() ??
-                                                                "",
-                                                            fontsize: 14.sp,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
+                                                InterRegular(
+                                                  text: 'CheckPoints',
+                                                  fontsize: 14.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color1
+                                                      : LightColor.color3,
                                                 ),
-                                                SizedBox(
-                                                  width: 100.w,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      InterRegular(
-                                                        text: 'Required Times',
-                                                        color: isDark
-                                                            ? DarkColor.color22
-                                                            : LightColor.color3,
-                                                        fontsize:
-                                                            14.sp,
-                                                      ),
-                                                      SizedBox(
-                                                          height:
-                                                              5.h),
-                                                      Row(
-                                                        children: [
-                                                          // SvgPicture.asset(
-                                                          //   'assets/images/avg_pace.svg',
-                                                          //   width: width / width24,
-                                                          // ),
-                                                          SizedBox(
-                                                              width: 6.w),
-                                                          InterMedium(
-                                                            text: "2",
-                                                            fontsize: 14.sp,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
+                                                SizedBox(height: 10.h),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.qr_code,
+                                                      color: isDark
+                                                          ? DarkColor.Primarycolor
+                                                          : LightColor.Primarycolor,
+                                                      size: 24.sp,
+                                                    ),
+                                                    SizedBox(width: 4.w),
+                                                    InterMedium(
+                                                      text: '100',
+                                                      fontsize: 13.sp,
+                                                      color: isDark
+                                                          ? DarkColor.color1
+                                                          : LightColor.color3,
+                                                    )
+                                                  ],
                                                 )
                                               ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: 20.sp,
-                                  ),
-                                ],
+                                ),
                               ),
                             );
                           },
