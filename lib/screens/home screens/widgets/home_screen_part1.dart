@@ -365,13 +365,14 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ),
                             child: InterRegular(
                               text: 'No Such Screen found',
-                              color: isDark ? DarkColor.color2 : LightColor.color3,
+                              color: isDark ? DarkColor.color2 : LightColor.color5,
                               fontsize: 18.sp,
                             ),
                           ),
                           decorationBuilder: (context, child) => Material(
                             type: MaterialType.card,
                             elevation: 4,
+                            // surfaceTintColor: LightColor.color3,
                             borderRadius: BorderRadius.circular(10.r),
                             child: child,
                           ),

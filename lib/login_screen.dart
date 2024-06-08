@@ -105,101 +105,104 @@ class _LoginScreenState extends State<LoginScreen> {
             isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30.w,
-                vertical: 20.h,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 300.h,
-                    width: double.maxFinite,
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      fit: BoxFit.fitHeight,
-                      filterQuality: FilterQuality.high,
+            SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30.w,
+                  vertical: 20.h,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 300.h,
+                      width: double.maxFinite,
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.fitHeight,
+                        filterQuality: FilterQuality.high,
+                      ),
                     ),
-                  ),
-                  TextField(
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 15.sp,
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color3, // Change text color to white
+                    TextField(
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 15.sp,
+                        color: isDark
+                            ? DarkColor.color1
+                            : LightColor.color3, // Change text color to white
+                      ),
+                      controller: _emailcontrller,
+                      decoration: InputDecoration(
+                        focusColor: isDark
+                            ? DarkColor.Primarycolor
+                            : LightColor.Primarycolor,
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                      ),
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    controller: _emailcontrller,
-                    decoration: InputDecoration(
-                      focusColor: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
-                      labelText: 'Email',
-                      hintText: 'Enter your email',
+                    SizedBox(height: 30.h),
+                    TextField(
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w300,
+                        fontSize: (15.sp),
+                        color: isDark
+                            ? DarkColor.color1
+                            : LightColor.color3, // Change text color to white
+                      ),
+                      controller: _passwordcontrller,
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            size: 24.sp,
+                            color:
+                                isDark ? DarkColor.color6 : LightColor.color2,
+                          ),
+                        ),
+                        focusColor: isDark
+                            ? DarkColor.Primarycolor
+                            : LightColor.Primarycolor,
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                      ),
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  SizedBox(height: 30.h),
-                  TextField(
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w300,
-                      fontSize: (15.sp),
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color3, // Change text color to white
-                    ),
-                    controller: _passwordcontrller,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: Icon(
-                          _obscureText
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          size: 24.sp,
-                          color: isDark ? DarkColor.color6 : LightColor.color2,
+                    SizedBox(height: 20.h),
+                    if (_errorMessage != null)
+                      Text(
+                        _errorMessage!,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 24.sp,
                         ),
                       ),
-                      focusColor: isDark
+                    Button1(
+                      height: 50.57.h,
+                      backgroundcolor: isDark
                           ? DarkColor.Primarycolor
                           : LightColor.Primarycolor,
-                      labelText: 'Password',
-                      hintText: 'Enter your password',
+                      text: 'Login',
+                      fontsize: 18.sp,
+                      color: isDark
+                          ? DarkColor.Secondarycolor
+                          : LightColor.Secondarycolor,
+                      borderRadius: 5.r,
+                      onPressed: () {
+                        // Auth().signInWithEmailAndPassword(_emailcontrller.text,
+                        //     _passwordcontrller.text, context);
+                        signInEmailPassword(context);
+                      },
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                  if (_errorMessage != null)
-                    Text(
-                      _errorMessage!,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 24.sp,
-                      ),
-                    ),
-                  Button1(
-                    height: 50.57.h,
-                    backgroundcolor: isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor.Primarycolor,
-                    text: 'Login',
-                    fontsize: 18.sp,
-                    color: isDark
-                        ? DarkColor.Secondarycolor
-                        : LightColor.Secondarycolor,
-                    borderRadius: 5.r,
-                    onPressed: () {
-                      // Auth().signInWithEmailAndPassword(_emailcontrller.text,
-                      //     _passwordcontrller.text, context);
-                      signInEmailPassword(context);
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             if (_isLoading)

@@ -15,6 +15,7 @@ import '../../supervisor screens/features screens/key management/s_key_manag_cre
 class KeysScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
+
   const KeysScreen({super.key, required this.keyId, required this.companyId});
 
   @override
@@ -61,17 +62,22 @@ class _KeysScreenState extends State<KeysScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // TODO Pass Values
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SCreateKeyManagScreen(keyId: widget.keyId, companyId: '',),
+                  builder: (context) => SCreateKeyManagScreen(
+                    keyId: widget.keyId,
+                    companyId: '',
+                  ),
                 ));
           },
-          backgroundColor:isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
+          backgroundColor:
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -81,7 +87,8 @@ class _KeysScreenState extends State<KeysScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+              backgroundColor:
+                  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
               elevation: 0,
               leading: IconButton(
                 icon: Icon(
@@ -226,8 +233,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
                                                 color: isDark
-                                                    ? DarkColor.Primarycolorlight
-                                                    : LightColor.Primarycolorlight,
+                                                    ? DarkColor
+                                                        .Primarycolorlight
+                                                    : LightColor
+                                                        .Primarycolorlight,
                                               ),
                                               child: Center(
                                                 child: Icon(

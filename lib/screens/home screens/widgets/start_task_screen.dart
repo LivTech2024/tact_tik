@@ -786,8 +786,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   ),
                 ),
               ),
-              VerticalDivider(
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+               VerticalDivider(
+                color: isDark ? Colors.white : LightColor.color3,
               ),
               Expanded(
                 child: IgnorePointer(

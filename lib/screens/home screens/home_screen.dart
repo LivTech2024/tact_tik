@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -37,6 +38,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 // import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
+import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -596,7 +598,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.door_back_door_outlined,
                       'Home',
                       0,
-                      () {},
+                      () {
+                        //If on homescreen the
+                      },
                     ),
                     buildListTile(
                       Icons.account_circle_outlined,
@@ -638,6 +642,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       'History',
                       4,
                       () async {
+                        List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // // emails.add("pankaj.kumar1312@yahoo.com");
+                        // // emails.add("alerts.tactik@gmail.com");
+                        // // emails.add("security@lestonholdings.com");
+                        // // emails.add("dan@tpssolution.com");
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "2 JUN",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // customEmail();
                         Navigator.push(
                           context,
@@ -649,34 +674,69 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    buildListTile(Icons.swipe_down_alt, 'Theme', 5, () async* {
-                      setState(() {
-                        isDark = !isDark;
-                      });
-                      //sending dar email Temporary comment this do not delete
-                      List<String> emails = [];
-                      emails.add("sutarvaibhav37@gmail.com");
-                      emails.add("pankaj.kumar1312@yahoo.com");
-                      // emails.add("alerts.tactik@gmail.com");
-                      // emails.add("security@lestonholdings.com");
-                      // emails.add("dan@tpssolution.com");
-                      await sendDARTemplateEmail(
-                        "Leston holdings",
-                        emails,
-                        'Tacttik DAR',
-                        "Tacttik DAR",
-                        "Shift",
-                        "2 JUN",
-                        "Panka kaur",
-                        "01:20:27",
-                        "06:00:00",
-                        "High level place",
-                        "completed",
-                        "formattedDateTime",
-                        "formattedEndTime",
-                      );
-                      print('Dar email sent');
-                    }),
+                    // buildListTile(
+                    //     isDark ? Icons.light_mode_outlined : Icons.light_mode,
+                    //     isDark ? 'Switch To Light Mode' : 'Switch to dark mode',
+                    //     5, () {
+                    //   showDialog(
+                    //       context: context,
+                    //       builder: (context) => AlertDialog(
+                    //             title: InterMedium(
+                    //               text: 'Change Theme',
+                    //               color: isDark
+                    //                   ? DarkColor.color2
+                    //                   : LightColor.color3,
+                    //               fontsize: 20.sp,
+                    //             ),
+                    //             content: InterRegular(
+                    //               text: isDark
+                    //                   ? 'Switch to Light Theme Restart App'
+                    //                   : 'Switch to Dark Theme Restart App',
+                    //               fontsize: 12.sp,
+                    //               color: isDark
+                    //                   ? DarkColor.color3
+                    //                   : LightColor.color4,
+                    //             ),
+                    //             actions: [
+                    //               TextButton(
+                    //                 onPressed: () {
+                    //                   Navigator.pop(context, false);
+                    //                 },
+                    //                 child: InterMedium(
+                    //                   text: 'CANCEL',
+                    //                   fontsize: 16.sp,
+                    //                   color: isDark
+                    //                       ? DarkColor.color3
+                    //                       : LightColor.color4,
+                    //                 ),
+                    //               ),
+                    //               TextButton(
+                    //                 onPressed: () async {
+                    //                   final SharedPreferences prefs =
+                    //                       await SharedPreferences.getInstance();
+                    //                   print("Dark : ${isDark}");
+                    //                   bool? ThemeVar = prefs.getBool('Theme');
+                    //                   if (ThemeVar != null) {
+                    //                     print("ThemeVar ${ThemeVar}");
+                    //                     setState(() async {
+                    //                       isDark = !ThemeVar;
+                    //                       await prefs.setBool('Theme', isDark);
+                    //                       // SystemChannels.platform.invokeMethod(
+                    //                       //     'SystemNavigator.pop');
+                    //                     });
+                    //                   }
+                    //                 },
+                    //                 child: InterMedium(
+                    //                   text: 'Change & Restart',
+                    //                   fontsize: 16.sp,
+                    //                   color: isDark
+                    //                       ? DarkColor.color2
+                    //                       : LightColor.color3,
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ));
+                    // }),
                   ],
                 ),
               ),
@@ -1025,16 +1085,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       : /*ScreenIndex == 2
                           ? SliverToBoxAdapter(
                               child: Padding(
-                                padding: EdgeInsets.only
-                                  left: width / width30,
-                                  right: width / width30,
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                                // left: width / width30,
+                                // right: width / width30,
                                 child: CustomCalendar(
                                   selectedDates: selectedDates,
                                 ),
                               ),
                             )
-                          :*/
+                          : 
+                            */
                       ScreenIndex == 3
                           ? SliverList(
                               delegate: SliverChildBuilderDelegate(
