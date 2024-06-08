@@ -112,7 +112,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                 fontsize: 18.sp,
                                 color: isDark
                                     ? DarkColor.color21
-                                    : LightColor.color2,
+                                    : LightColor.color3,
                               ),
                             ),
                             SizedBox(height: 10.h),
@@ -126,7 +126,20 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: DarkColor.color19,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: isDark
+                                            ? Colors.transparent
+                                            : LightColor.color3
+                                                .withOpacity(.05),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
                                   padding: EdgeInsets.all(20.w),
