@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -58,7 +59,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
         for (var schedule in schedules) {
           DateTime shiftDate = (schedule['ShiftDate'] as Timestamp).toDate();
-          DateTime shiftDateWithoutTime = DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
+          DateTime shiftDateWithoutTime =
+              DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
 
           if (!groupedSchedules.containsKey(shiftDateWithoutTime)) {
             groupedSchedules[shiftDateWithoutTime] = [];
@@ -80,7 +82,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
     for (var date in groupedSchedules.keys) {
       for (var schedule in groupedSchedules[date]!) {
-        List<dynamic> assignedUserIds = List<dynamic>.from(schedule['ShiftAssignedUserId']);
+        List<dynamic> assignedUserIds =
+            List<dynamic>.from(schedule['ShiftAssignedUserId']);
         List<dynamic> employeeImages = [];
 
         try {
@@ -93,10 +96,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             employeeImages.add(employee['EmployeeImg']);
           }
 
-          Map<String, dynamic> scheduleData = schedule.data() as Map<String, dynamic>;
+          Map<String, dynamic> scheduleData =
+              schedule.data() as Map<String, dynamic>;
           scheduleData['EmployeeImages'] = employeeImages;
 
-          schedule.reference.update(scheduleData); // Update the schedule document in Firestore
+          schedule.reference.update(
+              scheduleData); // Update the schedule document in Firestore
         } catch (e) {
           print("Error fetching employee images: $e");
         }
@@ -107,7 +112,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
   }
 
   void NavigateScreen(BuildContext context, Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SHomeScreen()));
   }
 
   @override
@@ -116,19 +122,22 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: isDark?DarkColor. AppBarcolor:LightColor.WidgetColor,
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color:isDark? Colors.white:LightColor.color3,
+              color: isDark ? Colors.white : LightColor.color3,
               size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SHomeScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SHomeScreen()));
             },
           ),
           title: InterMedium(
@@ -143,21 +152,25 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
             shape: const CircleBorder(),
-            backgroundColor:isDark?DarkColor. Primarycolor:LightColor.Primarycolor,
+            backgroundColor:
+                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (builder) => CreateSheduleScreen(
-                        BranchId: widget.BranchId,
-                        GuardId: '',
-                        GuardName: '',
-                        GuardImg: '',
-                        CompanyId: widget.CompanyId,
-                        supervisorEmail: '',
-                      )));
+                            BranchId: widget.BranchId,
+                            GuardId: '',
+                            GuardName: '',
+                            GuardImg: '',
+                            CompanyId: widget.CompanyId,
+                            supervisorEmail: '',
+                          )));
             },
-            child: Icon(Icons.add,color: isDark ? DarkColor.color15 : LightColor.color1,),
+            child: Icon(
+              Icons.add,
+              color: isDark ? DarkColor.color15 : LightColor.color1,
+            ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -165,7 +178,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           padding:
               EdgeInsets.only(left: 30.w, right: 30.w),
           child: CustomScrollView(
-            physics: PageScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: Column(
@@ -193,7 +205,9 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(13.w),
                       ),
                       child: Row(
@@ -225,7 +239,9 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                 hintText: 'Search',
                                 contentPadding: EdgeInsets.zero,
                               ),
-                              cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                              cursorColor: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
                             ),
                           ),
                           Container(
@@ -259,14 +275,20 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     DateTime date = groupedSchedules.keys.elementAt(index);
-                    List<DocumentSnapshot> schedulesForDate = groupedSchedules[date]!;
+                    List<DocumentSnapshot> schedulesForDate =
+                        groupedSchedules[date]!;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 30.h),
                         InterBold(
-                          text: date == DateTime.now().toLocal().toIso8601String().split('T').first
+                          text: date ==
+                                  DateTime.now()
+                                      .toLocal()
+                                      .toIso8601String()
+                                      .split('T')
+                                      .first
                               ? 'Today'
                               : '${date.toLocal().toIso8601String().split('T').first}',
                           fontsize: 20.sp,
@@ -275,12 +297,15 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
                           String shiftName = schedule['ShiftName'];
-                          String shiftLocation = schedule['ShiftLocationAddress'];
+                          String shiftLocation =
+                              schedule['ShiftLocationAddress'];
                           String shiftStartTime = schedule['ShiftStartTime'];
                           String shiftEndTime = schedule['ShiftEndTime'];
 
-                          Map<String, dynamic>? scheduleData = schedule.data() as Map<String, dynamic>?;
-                          List<dynamic> employeeImages = scheduleData?['EmployeeImages'] ?? [];
+                          Map<String, dynamic>? scheduleData =
+                              schedule.data() as Map<String, dynamic>?;
+                          List<dynamic> employeeImages =
+                              scheduleData?['EmployeeImages'] ?? [];
 
                           return Container(
                             height: 160.h,
@@ -288,9 +313,11 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             width: double.maxFinite,
                             decoration: BoxDecoration(
                               color: DarkColor.Primarycolor,
-                              borderRadius: BorderRadius.circular(14.r),
+                              borderRadius:
+                                  BorderRadius.circular(14.r),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20.h),
                             child: Column(
                               children: [
                                 Row(
@@ -304,15 +331,17 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           topRight: Radius.circular(10.r),
                                           bottomRight: Radius.circular(10.r),
                                         ),
-                                        color: DarkColor. color22,
+                                        color: DarkColor.color22,
                                       ),
                                     ),
                                     SizedBox(width: 14.w),
                                     SizedBox(
                                       width: 190.w,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           InterSemibold(
                                             text: shiftName,
@@ -357,7 +386,14 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                             Wrap(
                                               spacing: -5.0,
                                               children: [
-                                                for (int i = 0; i < (employeeImages.length > 3 ? 3 : employeeImages.length); i++)
+                                                for (int i = 0;
+                                                    i <
+                                                        (employeeImages.length >
+                                                                3
+                                                            ? 3
+                                                            : employeeImages
+                                                                .length);
+                                                    i++)
                                                   CircleAvatar(
                                                     radius: 10.r,
                                                     backgroundImage: NetworkImage(employeeImages[i]),
@@ -366,7 +402,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                   CircleAvatar(
                                                     radius: 10.r,
                                                     backgroundColor:
-                                                        DarkColor. color23,
+                                                        DarkColor.color23,
                                                     child: InterMedium(
                                                       text: '+${employeeImages.length - 3}',
                                                       fontsize: 12.sp,
@@ -380,7 +416,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                       SizedBox(
                                         width: 200.w,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             InterRegular(
                                               text: 'Shift',
@@ -389,7 +426,9 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                             ),
                                             SizedBox(height: 5.h),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Row(
                                                   children: [
@@ -399,18 +438,30 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       child: SvgPicture.asset(
                                                           'assets/images/calendar_line.svg'),
                                                     ),
-                                                    SizedBox(width: 6.w),
+                                                    SizedBox(
+                                                        width: 6.w),
                                                     InterMedium(
-                                                      text: '$shiftStartTime - $shiftEndTime',
+                                                      text:
+                                                          '$shiftStartTime - $shiftEndTime',
                                                       fontsize: 14.sp,
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(
-                                                  height: 20.h,
-                                                  width: 20.w,
-                                                  child: SvgPicture.asset('assets/images/edit_square.svg'),
-                                                )
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => CreateSheduleScreen(GuardId: '', GuardName: '', GuardImg: '', CompanyId: '', BranchId: '', supervisorEmail: '',),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    'assets/images/edit_square.svg',
+                                                    width: 20.w,
+                                                    height: 20.h,
+                                                  ),
+                                                ),
                                               ],
                                             )
                                           ],

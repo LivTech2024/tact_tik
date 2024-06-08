@@ -32,6 +32,7 @@ class SCreateAssignAssetScreen extends StatefulWidget {
   final String empId;
   final bool OnlyView;
   final String equipemtAllocId;
+
   SCreateAssignAssetScreen(
       {super.key,
       required this.companyId,
@@ -207,7 +208,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   Future<List<Guards>> suggestionsCallback(String pattern) async =>
       Future<List<Guards>>.delayed(
         Duration(milliseconds: 300),
-            () => _screens.where((product) {
+        () => _screens.where((product) {
           // print(product.name);
           final nameLower = product.name.toLowerCase().split(' ').join('');
           final patternLower = pattern.toLowerCase().split(' ').join('');
@@ -216,9 +217,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
       );
 
   Widget gridLayoutBuilder(
-      BuildContext context,
-      List<Widget> items,
-      ) {
+    BuildContext context,
+    List<Widget> items,
+  ) {
     return GridView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: items.length,
@@ -234,8 +235,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
       itemBuilder: (context, index) => items[index],
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +297,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             child: InterBold(
                               text: 'Assign',
                               color: colors[0],
-                              fontsize: width / width18,
+                              fontsize: 18.sp,
                             ),
                           ),
                         ),
@@ -341,344 +340,17 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
               SizedBox(height: 20.h),
               showCreate
                   ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InterBold(
-                          text: 'Select Guards',
-                          fontsize: 16.sp,
-                          color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                        ),
-                        IgnorePointer(
-                          ignoring: widget.OnlyView,
-                          child: TextButton(
-                            onPressed: () async {
-                              final result = await FirebaseFirestore.instance
-                                  .collection('Employees')
-                                  .where('EmployeeRole', isEqualTo: 'GUARD')
-                                  .where('EmployeeCompanyId', isEqualTo: widget.companyId)
-                                  .get();
-
-                              setState(() {
-                                guards = result.docs.map((doc) => doc.data()).toList();
-                              });
-                            },
-                            child: InterBold(
-                              text: 'view all',
-                              fontsize: 14.sp,
-                              color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    Container(
-                      height: 64.h,
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      decoration: BoxDecoration(
-                        color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                        borderRadius: BorderRadius.circular(13.w),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: TypeAheadField<Guards>(
-                              autoFlipDirection: true,
-                              controller: _controller,
-                              direction: VerticalDirection.down,
-                              builder:
-                                  (context, _controller, focusNode) =>
-                                  TextField(
-                                    controller: _controller,
-                                    focusNode: focusNode,
-                                    autofocus: false,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 18.sp,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.w),
-                                        ),
-                                      ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.w,
-                                        color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
-                                      ),
-                                      hintText: 'Search Guards',
-                                      contentPadding: EdgeInsets.zero,
-                                    ),
-                                    cursorColor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
-                                  ),
-                              suggestionsCallback: suggestionsCallback,
-                              itemBuilder: (context, Guards guards) {
-                                return ListTile(
-                                  leading: Container(
-                                    height: 30.h,
-                                    width: 30.w,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
-                                    ),
-                                  ),
-                                  title: InterRegular(
-                                    text: guards.name,
-                                    color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
-                                  ),
-                                );
-                              },
-                              emptyBuilder: (context) => Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.h,
-                                  horizontal: 10.w,
-                                ),
-                                child: InterRegular(
-                                  text: 'No Such Screen found',
-                                  color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
-                                  fontsize: 18.sp,
-                                ),
-                              ),
-                              decorationBuilder: (context, child) =>
-                                  Material(
-                                    type: MaterialType.card,
-                                    elevation: 4,
-                                    borderRadius: BorderRadius.circular(
-                                      width / width10,
-                                    ),
-                                    child: child,
-                                  ),
-                              debounceDuration:
-                              const Duration(milliseconds: 300),
-                              onSelected: (Guards guard) {
-                                print(
-                                    'home screen search bar############################################');
-
-                                print(guard.name);
-                              },
-                              listBuilder: gridLayoutBuilder,
-                            ),
-                          ),
-                          Container(
-                            height: 44.w,
-                            width: 44.w,
-                            decoration: BoxDecoration(
-                              color: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.search,
-                                size: 20.sp,
-                                color: Colors.black,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: guards.length,
-                      itemBuilder: (context, index) {
-                        final guard = guards[index];
-                        return ListTile(
-                          title: Text(guard['EmployeeName']),
-                          onTap: () {
-                            setState(() {
-                              _searchController.text = guard['EmployeeName'];
-                              selectedGuardId = guard['EmployeeId'];
-                              guards.clear();
-                            });
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: 20.h),
-                    InterBold(
-                      text: 'Select equipment',
-                      fontsize: 16.sp,
-                      color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                    ),
-                    SizedBox(height: 10.h),
-                    IgnorePointer(
-                      ignoring: widget.OnlyView,
-                      child: DropdownButtonFormField<String>(
-                        value: selectedEquipmentName,
-                        items: equipment.map((DocumentSnapshot document) {
-                          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                          return DropdownMenuItem<String>(
-                            value: data['EquipmentName'],
-                            child: InterRegular(text: data['EquipmentName'] , color: isDark
-                                    ? DarkColor.color3
-                                    : LightColor.color2,),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedEquipmentName = newValue;
-                            selectedEquipmentId = equipment.firstWhere((document) => (document.data() as Map<String, dynamic>)['EquipmentName'] == newValue).id;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Select Equipment',
-                          hintStyle: TextStyle(color: Colors.white),
-                          filled: true,
-                          fillColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13.r),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    InterBold(
-                      text: 'Allocate Qt.',
-                      fontsize: 16.sp,
-                      color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                    ),
-                    SizedBox(height: 10.h),
-                    CustomeTextField(
-                      isEnabled: !widget.OnlyView,
-                      hint: '0',
-                      controller: _allocateQtController1,
-                      showIcon: true,
-                    ),
-                    SizedBox(height: 20.h),
-                    InterBold(
-                      text: 'Allocation Date',
-                      color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                      fontsize: 16.sp,
-                    ),
-                    SizedBox(height: 10.h),
-                    IgnorePointer(
-                      ignoring: widget.OnlyView,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap:(){
-                                _selectDate(context , true);
-                              },
-                              child: Container(
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    InterMedium(
-                                      text: StartDate != null ? '${StartDate!.toLocal()}'.split(' ')[0] :'Start Time',
-                                      fontsize: 16.sp,
-                                      color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
-                                    ),
-                                    SvgPicture.asset(
-                                      'assets/images/calendar_clock.svg',
-                                      width: 20.w,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 6.w),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: (){
-                                _selectDate(context , false);
-                              },
-                              child: Container(
-                                height: height / height60,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    InterMedium(
-                                      text: EndDate!= null ? '${EndDate!.toLocal()}'.split(' ')[0] : 'End Time',
-                                      fontsize: 16.sp,
-                                      color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
-                                    ),
-                                    SvgPicture.asset(
-                                      'assets/images/calendar_clock.svg',
-                                      width: 20.sp,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20.sp),
-                    Container(
-                      height: 60.h,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      decoration: BoxDecoration(
-                        color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               InterBold(
                                 text: 'Select Guards',
-                                fontsize: 16.w,
+                                fontsize: 16.sp,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
@@ -704,7 +376,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   },
                                   child: InterBold(
                                     text: 'view all',
-                                    fontsize: 14.w,
+                                    fontsize: 14.sp,
                                     color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3,
@@ -717,52 +389,107 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           Container(
                             height: 64.h,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10.w),
+                                horizontal: 10.h),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? DarkColor.WidgetColor
                                   : LightColor.WidgetColor,
                               borderRadius:
-                                  BorderRadius.circular(13.w),
+                                  BorderRadius.circular(13.r),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: TextField(
-                                    enabled: !widget.OnlyView,
-                                    controller: _searchController,
-                                    onChanged: (query) {
-                                      searchGuards(query);
-                                    },
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 18.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.r),
-                                        ),
-                                      ),
-                                      focusedBorder: InputBorder.none,
-                                      hintStyle: GoogleFonts.poppins(
+                                  child: TypeAheadField<Guards>(
+                                    autoFlipDirection: true,
+                                    controller: _controller,
+                                    direction: VerticalDirection.down,
+                                    builder:
+                                        (context, _controller, focusNode) =>
+                                            TextField(
+                                      controller: _controller,
+                                      focusNode: focusNode,
+                                      autofocus: false,
+                                      style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w300,
-                                        fontSize: 18.sp,
+                                        fontSize: width / width18,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.r),
+                                          ),
+                                        ),
+                                        focusedBorder: InputBorder.none,
+                                        hintStyle: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: width / width18,
+                                          color: isDark
+                                              ? DarkColor.color2
+                                              : LightColor.color2,
+                                        ),
+                                        hintText: 'Search Guards',
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                      cursorColor: isDark
+                                          ? DarkColor.Primarycolor
+                                          : LightColor.Primarycolor,
+                                    ),
+                                    suggestionsCallback: suggestionsCallback,
+                                    itemBuilder: (context, Guards guards) {
+                                      return ListTile(
+                                        leading: Container(
+                                          height: 30.h,
+                                          width: 30.w,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
+                                          ),
+                                        ),
+                                        title: InterRegular(
+                                          text: guards.name,
+                                          color: isDark
+                                              ? DarkColor.color2
+                                              : LightColor.color2,
+                                        ),
+                                      );
+                                    },
+                                    emptyBuilder: (context) => Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.h,
+                                        horizontal: 10.w,
+                                      ),
+                                      child: InterRegular(
+                                        text: 'No Such Screen found',
                                         color: isDark
                                             ? DarkColor.color2
-                                            : LightColor.color3,
+                                            : LightColor.color2,
+                                        fontsize: 18.sp,
                                       ),
-                                      hintText: 'Search Guard',
-                                      contentPadding: EdgeInsets.zero,
                                     ),
-                                    cursorColor: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.Primarycolor,
+                                    decorationBuilder: (context, child) =>
+                                        Material(
+                                      type: MaterialType.card,
+                                      elevation: 4,
+                                      borderRadius: BorderRadius.circular(
+                                        10.r,
+                                      ),
+                                      child: child,
+                                    ),
+                                    debounceDuration:
+                                        const Duration(milliseconds: 300),
+                                    onSelected: (Guards guard) {
+                                      print(
+                                          'home screen search bar############################################');
+
+                                      print(guard.name);
+                                    },
+                                    listBuilder: gridLayoutBuilder,
                                   ),
                                 ),
                                 Container(
@@ -842,10 +569,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               },
                               decoration: InputDecoration(
                                 hintText: 'Select Equipment',
-                                hintStyle: TextStyle(
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3),
+                                hintStyle: TextStyle(color: Colors.white),
                                 filled: true,
                                 fillColor: isDark
                                     ? DarkColor.WidgetColor
@@ -909,8 +633,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                 : 'Start Time',
                                             fontsize: 16.sp,
                                             color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                                ? DarkColor.color2
+                                                : LightColor.color2,
                                           ),
                                           SvgPicture.asset(
                                             'assets/images/calendar_clock.svg',
@@ -948,7 +672,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                             fontsize: 16.sp,
                                             color: isDark
                                                 ? DarkColor.color2
-                                                : LightColor.color3,
+                                                : LightColor.color2,
                                           ),
                                           SvgPicture.asset(
                                             'assets/images/calendar_clock.svg',
@@ -978,32 +702,437 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                      size: 24.sp,
+                                    InterBold(
+                                      text: 'Select Guards',
+                                      fontsize: width / width16,
+                                      color: isDark
+                                          ? DarkColor.color1
+                                          : LightColor.color3,
                                     ),
-                                    SizedBox(width: 6.w),
-                                    InterMedium(
-                                      text: 'Asset Returned ?',
-                                      color: DarkColor.color8,
-                                      fontsize: 16.sp,
-                                      letterSpacing: -.3,
+                                    IgnorePointer(
+                                      ignoring: widget.OnlyView,
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          final result = await FirebaseFirestore
+                                              .instance
+                                              .collection('Employees')
+                                              .where('EmployeeRole',
+                                                  isEqualTo: 'GUARD')
+                                              .where('EmployeeCompanyId',
+                                                  isEqualTo: widget.companyId)
+                                              .get();
+
+                                          setState(() {
+                                            guards = result.docs
+                                                .map((doc) => doc.data())
+                                                .toList();
+                                          });
+                                        },
+                                        child: InterBold(
+                                          text: 'view all',
+                                          fontsize: width / width14,
+                                          color: isDark
+                                              ? DarkColor.color1
+                                              : LightColor.color3,
+                                        ),
+                                      ),
                                     )
                                   ],
                                 ),
-                                Checkbox(
-                                  activeColor: isDark
+                                SizedBox(height: height / height24),
+                                Container(
+                                  height: height / height64,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width / width10),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
+                                    borderRadius:
+                                        BorderRadius.circular(width / width13),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          enabled: !widget.OnlyView,
+                                          controller: _searchController,
+                                          onChanged: (query) {
+                                            searchGuards(query);
+                                          },
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: width / width18,
+                                            color: isDark
+                                                ? DarkColor.color1
+                                                : LightColor.color3,
+                                          ),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    width / width10),
+                                              ),
+                                            ),
+                                            focusedBorder: InputBorder.none,
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: width / width18,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color3,
+                                            ),
+                                            hintText: 'Search Guard',
+                                            contentPadding: EdgeInsets.zero,
+                                          ),
+                                          cursorColor: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.Primarycolor,
+                                        ),
+                                      ),
+                                      Container(
+                                        height: height / height44,
+                                        width: width / width44,
+                                        decoration: BoxDecoration(
+                                          color: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.Primarycolor,
+                                          borderRadius: BorderRadius.circular(
+                                              width / width10),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.search,
+                                            size: width / width20,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: guards.length,
+                                  itemBuilder: (context, index) {
+                                    final guard = guards[index];
+                                    return ListTile(
+                                      title: Text(guard['EmployeeName']),
+                                      onTap: () {
+                                        setState(() {
+                                          _searchController.text =
+                                              guard['EmployeeName'];
+                                          selectedGuardId = guard['EmployeeId'];
+                                          guards.clear();
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: height / height20),
+                                InterBold(
+                                  text: 'Select equipment',
+                                  fontsize: width / width16,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                ),
+                                SizedBox(height: height / height10),
+                                IgnorePointer(
+                                  ignoring: widget.OnlyView,
+                                  child: DropdownButtonFormField<String>(
+                                    value: selectedEquipmentName,
+                                    items: equipment
+                                        .map((DocumentSnapshot document) {
+                                      Map<String, dynamic> data = document
+                                          .data() as Map<String, dynamic>;
+                                      return DropdownMenuItem<String>(
+                                        value: data['EquipmentName'],
+                                        child: InterRegular(
+                                          text: data['EquipmentName'],
+                                          color: isDark
+                                              ? DarkColor.color3
+                                              : LightColor.color2,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedEquipmentName = newValue;
+                                        selectedEquipmentId = equipment
+                                            .firstWhere((document) =>
+                                                (document.data() as Map<String,
+                                                        dynamic>)[
+                                                    'EquipmentName'] ==
+                                                newValue)
+                                            .id;
+                                      });
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Select Equipment',
+                                      hintStyle: TextStyle(
+                                          color: isDark
+                                              ? DarkColor.color1
+                                              : LightColor.color3),
+                                      filled: true,
+                                      fillColor: isDark
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            width / width13),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: height / height20),
+                                InterBold(
+                                  text: 'Allocate Qt.',
+                                  fontsize: width / width16,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                ),
+                                SizedBox(height: height / height10),
+                                CustomeTextField(
+                                  isEnabled: !widget.OnlyView,
+                                  hint: '0',
+                                  controller: _allocateQtController1,
+                                  showIcon: true,
+                                ),
+                                SizedBox(height: height / height20),
+                                InterBold(
+                                  text: 'Allocation Date',
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                  fontsize: width / width16,
+                                ),
+                                SizedBox(height: height / height10),
+                                IgnorePointer(
+                                  ignoring: widget.OnlyView,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _selectDate(context, true);
+                                          },
+                                          child: Container(
+                                            height: height / height60,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      width / width10),
+                                              color: isDark
+                                                  ? DarkColor.WidgetColor
+                                                  : LightColor.WidgetColor,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                InterMedium(
+                                                  text: StartDate != null
+                                                      ? '${StartDate!.toLocal()}'
+                                                          .split(' ')[0]
+                                                      : 'Start Time',
+                                                  fontsize: width / width16,
+                                                  color: isDark
+                                                      ? DarkColor.color1
+                                                      : LightColor.color3,
+                                                ),
+                                                SvgPicture.asset(
+                                                  'assets/images/calendar_clock.svg',
+                                                  width: width / width20,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: width / width6),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            _selectDate(context, false);
+                                          },
+                                          child: Container(
+                                            height: height / height60,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      width / width10),
+                                              color: isDark
+                                                  ? DarkColor.WidgetColor
+                                                  : LightColor.WidgetColor,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                InterMedium(
+                                                  text: EndDate != null
+                                                      ? '${EndDate!.toLocal()}'
+                                                          .split(' ')[0]
+                                                      : 'End Time',
+                                                  fontsize: width / width16,
+                                                  color: isDark
+                                                      ? DarkColor.color2
+                                                      : LightColor.color3,
+                                                ),
+                                                SvgPicture.asset(
+                                                  'assets/images/calendar_clock.svg',
+                                                  width: width / width20,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: height / height20),
+                                Container(
+                                  height: height / height60,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width / width20),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
+                                    borderRadius:
+                                        BorderRadius.circular(width / width10),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                            size: width / width24,
+                                          ),
+                                          SizedBox(width: width / width6),
+                                          InterMedium(
+                                            text: 'Asset Returned ?',
+                                            color: DarkColor.color8,
+                                            fontsize: width / width16,
+                                            letterSpacing: -.3,
+                                          )
+                                        ],
+                                      ),
+                                      Checkbox(
+                                        activeColor: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
+                                        checkColor: DarkColor.color1,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isChecked = value ?? false;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: height / height40),
+                                IgnorePointer(
+                                  ignoring: widget.OnlyView
+                                      ? isChecked == false
+                                          ? true
+                                          : false
+                                      : true,
+                                  child: Button1(
+                                    text: 'Done',
+                                    onPressed: () {
+                                      createEquipmentAllocation();
+                                    },
+                                    backgroundcolor: isDark
+                                        ? (widget.OnlyView
+                                            ? isChecked == false
+                                                ? DarkColor.Primarycolorlight
+                                                : DarkColor.Primarycolor
+                                            : DarkColor.Primarycolorlight)
+                                        : (widget.OnlyView
+                                            ? isChecked == false
+                                                ? LightColor.Primarycolor
+                                                : LightColor.Primarycolor
+                                            : LightColor.Primarycolorlight),
+                                    borderRadius: width / width10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: width / width30),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: height / height10),
+                                InterBold(
+                                  text: 'Allocate Qt.',
+                                  fontsize: width / width16,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                ),
+                                SizedBox(height: height / height10),
+                                CustomeTextField(
+                                  hint: 'Title',
+                                  controller: _titleController2,
+                                  showIcon: true,
+                                ),
+                                SizedBox(height: height / height10),
+                                InterBold(
+                                  text: 'Allocate Qt.',
+                                  fontsize: width / width16,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                ),
+                                SizedBox(height: height / height10),
+                                CustomeTextField(
+                                  hint: '0',
+                                  controller: _allocateQtController2,
+                                ),
+                                SizedBox(height: height / height10),
+                                InterBold(
+                                  text: 'Description',
+                                  fontsize: width / width16,
+                                  color: isDark
+                                      ? DarkColor.color1
+                                      : LightColor.color3,
+                                ),
+                                SizedBox(height: height / height10),
+                                CustomeTextField(
+                                  hint: 'Write something about asset...',
+                                  controller: _descriptionController,
+                                  showIcon: true,
+                                ),
+                                SizedBox(height: height / height40),
+                                Button1(
+                                  text: 'Done',
+                                  onPressed: () {
+                                    createEquipmentAllocation();
+                                  },
+                                  backgroundcolor: isDark
                                       ? DarkColor.Primarycolor
                                       : LightColor.Primarycolor,
-                                  checkColor: DarkColor.color1,
-                                  value: isChecked,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      isChecked = value ?? false;
-                                    });
-                                  },
+                                  borderRadius: width / width10,
                                 ),
                               ],
                             ),
@@ -1016,28 +1145,28 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     : false
                                 : true,
                             child: Button1(
-                              text: 'Done',
+                              text: 'Save',
                               onPressed: () {
                                 createEquipmentAllocation();
                               },
-                              backgroundcolor: isDark
-                                  ? (widget.OnlyView
-                                      ? isChecked == false
+                              backgroundcolor: widget.OnlyView
+                                  ? isChecked == false
+                                      ? isDark
                                           ? DarkColor.Primarycolorlight
-                                          : DarkColor.Primarycolor
-                                      : DarkColor.Primarycolorlight)
-                                  : (widget.OnlyView
-                                      ? isChecked == false
-                                          ? LightColor.Primarycolor
+                                          : LightColor.Primarycolorlight
+                                      : isDark
+                                          ? DarkColor.Primarycolor
                                           : LightColor.Primarycolor
-                                      : LightColor.Primarycolorlight),
+                                  : isDark
+                                      ? DarkColor.Primarycolorlight
+                                      : LightColor.Primarycolorlight,
                               borderRadius: width / width10,
                             ),
                           ),
                         ],
                       ),
                     )
-                  , Padding(
+                  : Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
@@ -1059,8 +1188,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height:10.sp),
                           InterBold(
                             text: 'Allocate Qt.',
-                            fontsize: 16.sp,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: width / width16,
+                            color:
+                                isDark ? DarkColor.color1 : LightColor.color3,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1070,8 +1200,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 10.h),
                           InterBold(
                             text: 'Description',
-                            fontsize: 16.w,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            fontsize: width / width16,
+                            color:
+                                isDark ? DarkColor.color1 : LightColor.color3,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1081,97 +1212,18 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           ),
                           SizedBox(height: 40.h),
                           Button1(
-                            text: 'Done',
+                            text: 'Save',
                             onPressed: () {
                               createEquipmentAllocation();
                             },
-                            backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            borderRadius: 10.r,
+                            backgroundcolor: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor,
+                            borderRadius: width / width10,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 40.h),
-                    IgnorePointer(
-                      ignoring: widget.OnlyView ? isChecked == false ? true : false : true,
-                      child: Button1(
-                        text: 'Save',
-                        onPressed: () {
-                          createEquipmentAllocation();
-                        },
-                        backgroundcolor: widget.OnlyView ? isChecked == false ? isDark
-                                          ? DarkColor.Primarycolorlight
-                                          : LightColor.Primarycolorlight : isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.Primarycolor : isDark
-                                      ? DarkColor.Primarycolorlight
-                                      : LightColor.Primarycolorlight,
-                        borderRadius: 10.r,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-                  : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: height / height10),
-                    InterBold(
-                      text: 'Allocate Qt.',
-                      fontsize: width / width16,
-                      color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                    ),
-                    SizedBox(height: 10.h),
-                    CustomeTextField(
-                      hint: 'Title',
-                      controller: _titleController2,
-                      showIcon: true,
-                    ),
-                    SizedBox(height: 10.h),
-                    InterBold(
-                      text: 'Allocate Qt.',
-                      fontsize: width / width16,
-                      color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                    ),
-                    SizedBox(height: 10.h),
-                    CustomeTextField(
-                      hint: '0',
-                      controller: _allocateQtController2,
-                    ),
-                    SizedBox(height: 10.h),
-                    InterBold(
-                      text: 'Description',
-                      fontsize: width / width16,
-                      color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
-                    ),
-                    SizedBox(height: 10.h),
-                    CustomeTextField(
-                      hint: 'Write something about asset...',
-                      controller: _descriptionController,
-                      showIcon: true,
-                    ),
-                    SizedBox(height: 40.h),
-                    Button1(
-                      text: 'Save',
-                      onPressed: () {
-                        createEquipmentAllocation();
-                      },
-                      backgroundcolor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
-                      borderRadius: width / width10,
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

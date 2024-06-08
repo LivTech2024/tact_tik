@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,9 +11,6 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
-import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
-
-import '../../common/sizes.dart';
 import '../../fonts/inter_bold.dart';
 import '../../fonts/inter_medium.dart';
 import '../../fonts/inter_regular.dart';
@@ -26,7 +24,6 @@ import '../../utils/colors.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
-import '../get started/getstarted_screen.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
@@ -84,6 +81,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     isDark ? DarkColor.color4 : LightColor.color3,
     isDark ? DarkColor.color4 : LightColor.color3
   ];
+
   int ScreenIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyClient = GlobalKey();
   List<Map<String, dynamic>> patrolsList = [];
@@ -215,26 +213,33 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           'ReportDate': (data['ReportCreatedAt'] != null)
               ? data['ReportCreatedAt'].toDate()
               : DateTime.now(), // default to now if missing or null
-          'ReportName': (data['ReportName'] != null && data['ReportName'].toString().isNotEmpty)
+          'ReportName': (data['ReportName'] != null &&
+                  data['ReportName'].toString().isNotEmpty)
               ? data['ReportName']
               : 'Not Found',
-          'ReportGuardName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+          'ReportGuardName': (data['ReportEmployeeName'] != null &&
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
-          'ReportEmployeeName': (data['ReportEmployeeName'] != null && data['ReportEmployeeName'].toString().isNotEmpty)
+          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
+                  data['ReportEmployeeName'].toString().isNotEmpty)
               ? data['ReportEmployeeName']
               : 'Not Found',
-          'ReportStatus': (data['ReportStatus'] != null && data['ReportStatus'].toString().isNotEmpty)
+          'ReportStatus': (data['ReportStatus'] != null &&
+                  data['ReportStatus'].toString().isNotEmpty)
               ? data['ReportStatus']
               : 'Not Found',
-          'ReportCategory': (data['ReportCategoryName'] != null && data['ReportCategoryName'].toString().isNotEmpty)
+          'ReportCategory': (data['ReportCategoryName'] != null &&
+                  data['ReportCategoryName'].toString().isNotEmpty)
               ? data['ReportCategoryName']
               : 'Not Found',
           'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
-          'ReportData': (data['ReportData'] != null && data['ReportData'].toString().isNotEmpty)
+          'ReportData': (data['ReportData'] != null &&
+                  data['ReportData'].toString().isNotEmpty)
               ? data['ReportData']
               : 'Not Found',
-          'ReportLocation': (data['ReportLocationName'] != null && data['ReportLocationName'].toString().isNotEmpty)
+          'ReportLocation': (data['ReportLocationName'] != null &&
+                  data['ReportLocationName'].toString().isNotEmpty)
               ? data['ReportLocationName']
               : 'Not Found',
         };
@@ -252,9 +257,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       });
     }
   }
-
-
-
 
   // 12 datani mall shift start id A local stoarage
   // 2 capital mall
@@ -532,53 +534,56 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color: isDark?DarkColor.Primarycolor:LightColor.Primarycolor, // Background color for the drawer header
+                    color: isDark
+                        ? DarkColor.Primarycolor
+                        : LightColor
+                            .Primarycolor, // Background color for the drawer header
                   ),
                   child: Center(
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: ClipOval(
-                              child: SizedBox.fromSize(
-                                  size: Size.fromRadius(50.r),
-                                  child: Image.network(
-                                    employeeImg!,
-                                    fit: BoxFit.cover,
-                                  )),
-                            ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
                           ),
-                          SizedBox(height: height / height10),
-                          PoppinsSemibold(
-                            text: _userName,
-                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                            fontsize: width / width16,
-                            letterSpacing: -.3,
+                          child: ClipOval(
+                            child: SizedBox.fromSize(
+                                size: Size.fromRadius(
+                                    Platform.isIOS ? 40.r : 50.r),
+                                child: Image.network(
+                                  employeeImg!,
+                                  fit: BoxFit.cover,
+                                )),
                           ),
-                          SizedBox(height: height / height5),
-                          PoppinsRegular(
-                            text: _empEmail,
-                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                            fontsize: width / width16,
-                            letterSpacing: -.3,
-                          )
-                        ]),
+                        ),
+                        SizedBox(height: 10.h),
+                        PoppinsSemibold(
+                          text: _userName,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
+                          fontsize: 16.sp,
+                          letterSpacing: -.3,
+                        ),
+                        SizedBox(height: 5.h),
+                        PoppinsRegular(
+                          text: _empEmail,
+                          color: isDark
+                              ? DarkColor.WidgetColor
+                              : LightColor.WidgetColor,
+                          fontsize: 16.sp,
+                          letterSpacing: -.3,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
               Expanded(
                 child: Column(
                   children: [
-                    buildListTile(
-                      Icons.door_back_door_outlined,
-                      'Home',
-                      0,
-                      () {},
-                    ),
                     buildListTile(
                       Icons.account_circle_outlined,
                       'Profile',
@@ -818,43 +823,33 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                 left: 30.w,
                                 right: 30.w,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  InterBold(
-                                    text: '19/9/2004',
+                              child: GestureDetector(
+                                onTap: () {
+                                  print("Clicked");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClientCheckPatrolScreen(
+                                                  PatrolIdl: PatrolId)));
+                                },
+                                child: Container(
+                                  height: 100.h,
+                                  margin: EdgeInsets.only(top: 10.h),
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
                                     color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
-                                    fontsize: 20.sp,
+                                        ? DarkColor.Primarycolor
+                                        : LightColor.Primarycolor,
+                                    borderRadius: BorderRadius.circular(14.r),
                                   ),
-                                  SizedBox(
-                                    height: 10.sp,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      print("Clicked");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ClientCheckPatrolScreen(
-                                                      PatrolIdl: PatrolId)));
-                                    },
-                                    child: Container(
-                                      height: 160.h,
-                                      margin: EdgeInsets.only(top: 10.h),
-                                      width: double.maxFinite,
-                                      decoration: BoxDecoration(
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
-                                        borderRadius:
-                                            BorderRadius.circular(14.r),
-                                      ),
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 20.h),
-                                      child: Column(
+                                  padding: EdgeInsets.only(
+                                      top: 20.h, bottom: 20.h, right: 10.w),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             mainAxisAlignment:
@@ -875,137 +870,98 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     ),
                                                   ),
                                                   color: isDark
-                                                      ? DarkColor.color22
-                                                      : LightColor.color3,
+                                                      ? DarkColor.WidgetColor
+                                                      : LightColor.WidgetColor,
                                                 ),
                                               ),
                                               SizedBox(width: 14.w),
-                                              SizedBox(
-                                                width: 190.w,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    InterSemibold(
-                                                      text: PatrolName ?? "",
-                                                      color: isDark
-                                                          ? DarkColor.color22
-                                                          : LightColor.color3,
-                                                      fontsize: 14.sp,
-                                                    ),
-                                                    SizedBox(height: 5.h),
-                                                    InterRegular(
-                                                      text:
-                                                          PatrolLocation ?? "",
-                                                      maxLines: 1,
-                                                      fontsize: 14.sp,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: 18.w,
-                                              right: 24.w,
-                                            ),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                // shift time and date
-                                                SizedBox(
-                                                  width: 100.w,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      InterRegular(
-                                                        text: 'CheckPoints',
-                                                        color: isDark
-                                                            ? DarkColor.color22
-                                                            : LightColor.color3,
-                                                        fontsize: 14.w,
-                                                      ),
-                                                      SizedBox(height: 5.h),
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .check_circle_outlined,
-                                                            size: 24.sp,
-                                                            color: isDark
-                                                                ? DarkColor.color22
-                                                                : LightColor.color3,
-                                                          ),
-                                                          SizedBox(width: 6.w),
-                                                          InterMedium(
-                                                            text: CheckpointCount
-                                                                    .toString() ??
-                                                                "",
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  InterSemibold(
+                                                    text: PatrolName ?? "",
+                                                    color: isDark
+                                                        ? DarkColor.color1
+                                                        : LightColor.color3,
+                                                    fontsize: 14.sp,
+                                                  ),
+                                                  SizedBox(height: 4.h),
+                                                  SizedBox(
+                                                    width: 200.w,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        // TODO : Add location svg
+                                                        SvgPicture.asset(
+                                                          'assets/images/location_icon.svg',
+                                                          height: 20.h,
+                                                        ),
+                                                        SizedBox(width: 5.w),
+                                                        Flexible(
+                                                          child: InterRegular(
+                                                            text:
+                                                                '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                                            maxLines: 2,
                                                             fontsize: 14.sp,
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                InterRegular(
+                                                  text: 'CheckPoints',
+                                                  fontsize: 14.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color1
+                                                      : LightColor.color3,
                                                 ),
-                                                SizedBox(
-                                                  width: width / width100,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      InterRegular(
-                                                        text: 'Required Times',
-                                                        color: isDark
-                                                            ? DarkColor.color22
-                                                            : LightColor.color3,  
-                                                        fontsize:
-                                                            width / width14,
-                                                      ),
-                                                      SizedBox(
-                                                          height:
-                                                              height / height5),
-                                                      Row(
-                                                        children: [
-                                                          // SvgPicture.asset(
-                                                          //   'assets/images/avg_pace.svg',
-                                                          //   width: width / width24,
-                                                          // ),
-                                                          SizedBox(
-                                                              width: width /
-                                                                  width6),
-                                                          InterMedium(
-                                                            text: "2",
-                                                            fontsize:
-                                                                width / width14,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
+                                                SizedBox(height: 10.h),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.qr_code,
+                                                      color: isDark
+                                                          ? DarkColor.Primarycolor
+                                                          : LightColor.Primarycolor,
+                                                      size: 24.sp,
+                                                    ),
+                                                    SizedBox(width: 4.w),
+                                                    InterMedium(
+                                                      text: '100',
+                                                      fontsize: 13.sp,
+                                                      color: isDark
+                                                          ? DarkColor.color1
+                                                          : LightColor.color3,
+                                                    )
+                                                  ],
                                                 )
                                               ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: 20.sp,
-                                  ),
-                                ],
+                                ),
                               ),
                             );
                           },
@@ -1042,7 +998,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       children: [
                                         InterBold(
                                           text: dateString,
-                                        color: isDark
+                                          color: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.color3,
                                           fontsize: 14.sp,
@@ -1176,9 +1132,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       .length >
                                                                   3)
                                                                 CircleAvatar(
-                                                                  radius:
-                                                                      
-                                                                          12.r,
+                                                                  radius: 12.r,
                                                                   backgroundColor: isDark
                                                                       ? DarkColor
                                                                           .color22
@@ -1189,8 +1143,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     text:
                                                                         '+${shifts[index]['members'].length - 3}',
                                                                     fontsize:
-                                                                        
-                                                                            12.sp,
+                                                                        12.sp,
                                                                   ),
                                                                 ),
                                                             ],
@@ -1199,7 +1152,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width:  100.w,
+                                                      width: 100.w,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -1212,19 +1165,15 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     .color22
                                                                 : LightColor
                                                                     .color3,
-                                                            fontsize:
-                                                                14.sp,
+                                                            fontsize: 14.sp,
                                                           ),
-                                                          SizedBox(
-                                                              height:
-                                                                   5.h),
+                                                          SizedBox(height: 5.h),
                                                           Row(
                                                             children: [
                                                               Icon(
                                                                 Icons
                                                                     .check_circle_outlined,
-                                                                size:
-                                                                     24.w,
+                                                                size: 24.w,
                                                                 color: isDark
                                                                     ? DarkColor
                                                                         .color22
@@ -1232,14 +1181,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                         .color3,
                                                               ),
                                                               SizedBox(
-                                                                  width: 
-                                                                      6.w),
+                                                                  width: 6.w),
                                                               InterMedium(
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftStartTime'],
-                                                                fontsize:
-                                                                     14.sp,
+                                                                fontsize: 14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1260,12 +1207,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                     .color22
                                                                 : LightColor
                                                                     .color3,
-                                                            fontsize:
-                                                                 14.sp,
+                                                            fontsize: 14.sp,
                                                           ),
-                                                          SizedBox(
-                                                              height:
-                                                                   5.h),
+                                                          SizedBox(height: 5.h),
                                                           Row(
                                                             children: [
                                                               SizedBox(
@@ -1274,8 +1218,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 text: shifts[
                                                                         index][
                                                                     'ShiftEndTime'],
-                                                                fontsize:
-                                                                     14.sp,
+                                                                fontsize: 14.sp,
                                                               ),
                                                             ],
                                                           ),
@@ -1289,7 +1232,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           ),
                                         ),
                                         SizedBox(
-                                          height:  10.h,
+                                          height: 10.h,
                                         ),
                                       ],
                                     ),
@@ -1301,156 +1244,266 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                           )
                         : ScreenIndex == 2
                             ? SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      DateTime reportDate = reports[index]['ReportDate'];
-                      String dateString = (isSameDate(reportDate, DateTime.now()))
-                          ? 'Today'
-                          : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    DateTime reportDate =
+                                        reports[index]['ReportDate'];
+                                    String dateString = (isSameDate(
+                                            reportDate, DateTime.now()))
+                                        ? 'Today'
+                                        : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
 
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: 30.w,
-                          right: 30.w,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ClientOpenReport(
-                                  reportName: reports[index]['ReportName'],
-                                  reportCategory: reports[index]['ReportCategory'],
-                                  reportDate: dateString,
-                                  reportFollowUpRequire: reports[index]['ReportFollowUpRequire'].toString(),
-                                  reportData: reports[index]['ReportData'],
-                                  reportStatus: reports[index]['ReportStatus'],
-                                  reportEmployeeName: reports[index]['ReportEmployeeName'],
-                                  reportLocation: reports[index]['ReportLocation'],
-                                ),
-                              ),
-                            );
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InterBold(
-                                text: dateString,
-                                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                                fontsize: 14.sp,
-                              ),
-                              SizedBox(
-                                height: 10.sp,
-                              ),
-                              Container(
-                                constraints: BoxConstraints(minHeight: 200.h),
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                                  borderRadius: BorderRadius.circular(14.r),
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 18.h,
-                                  horizontal: 18.w,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InterSemibold(
-                                      text: reports[index]['ReportGuardName'],
-                                      fontsize: 18.sp,
-                                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                                    ),
-                                    SizedBox(height: 19.h),
-                                    SizedBox(
-                                      width: 240.w,
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              InterMedium(
-                                                text: 'Report Name:',
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color1 : LightColor.color3,
-                                              ),
-                                              InterMedium(
-                                                text: reports[index]['ReportName'],
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color3 : LightColor.color3,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              InterMedium(
-                                                text: 'Category:',
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color1 : LightColor.color3,
-                                              ),
-                                              InterMedium(
-                                                text: reports[index]['ReportCategory'],
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color3 : LightColor.color3,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              InterMedium(
-                                                text: 'Emp Name:',
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color1 : LightColor.color3,
-                                              ),
-                                              InterMedium(
-                                                text: reports[index]['ReportEmployeeName'],
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color3 : LightColor.color3,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              InterMedium(
-                                                text: 'Status:',
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color1 : LightColor.color3,
-                                              ),
-                                              InterMedium(
-                                                text: reports[index]['ReportStatus'],
-                                                fontsize: 16.sp,
-                                                color: isDark ? DarkColor.color3 : LightColor.color3,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 30.w,
+                                        right: 30.w,
                                       ),
-                                    )
-                                  ],
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ClientOpenReport(
+                                                reportName: reports[index]
+                                                    ['ReportName'],
+                                                reportCategory: reports[index]
+                                                    ['ReportCategory'],
+                                                reportDate: dateString,
+                                                reportFollowUpRequire: reports[
+                                                            index][
+                                                        'ReportFollowUpRequire']
+                                                    .toString(),
+                                                reportData: reports[index]
+                                                    ['ReportData'],
+                                                reportStatus: reports[index]
+                                                    ['ReportStatus'],
+                                                reportEmployeeName:
+                                                    reports[index]
+                                                        ['ReportEmployeeName'],
+                                                reportLocation: reports[index]
+                                                    ['ReportLocation'],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InterBold(
+                                              text: dateString,
+                                              color: isDark
+                                                  ? DarkColor.Primarycolor
+                                                  : LightColor.color3,
+                                              fontsize: 14.sp,
+                                            ),
+                                            SizedBox(
+                                              height: 10.sp,
+                                            ),
+                                            Column(
+                                              children: List.generate(
+                                                10,
+                                                (index) => Container(
+                                                  constraints: BoxConstraints(
+                                                      minHeight: 200.h),
+                                                  width: double.maxFinite,
+                                                  decoration: BoxDecoration(
+                                                    color: isDark
+                                                        ? DarkColor.WidgetColor
+                                                        : LightColor
+                                                            .WidgetColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            14.r),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 18.h,
+                                                    horizontal: 18.w,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      InterSemibold(
+                                                        text: reports[index]
+                                                            ['ReportGuardName'],
+                                                        fontsize: 18.sp,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .Primarycolor
+                                                            : LightColor.color3,
+                                                      ),
+                                                      SizedBox(height: 19.h),
+                                                      SizedBox(
+                                                        width: 240.w,
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                InterMedium(
+                                                                  text:
+                                                                      'Report Name:',
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color1
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                                InterMedium(
+                                                                  text: reports[
+                                                                          index]
+                                                                      [
+                                                                      'ReportName'],
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color3
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                                height: 10.h),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                InterMedium(
+                                                                  text:
+                                                                      'Category:',
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color1
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                                InterMedium(
+                                                                  text: reports[
+                                                                          index]
+                                                                      [
+                                                                      'ReportCategory'],
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color3
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                                height: 10.h),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                InterMedium(
+                                                                  text:
+                                                                      'Emp Name:',
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color1
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                                InterMedium(
+                                                                  text: reports[
+                                                                          index]
+                                                                      [
+                                                                      'ReportEmployeeName'],
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color3
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                                height: 10.h),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                InterMedium(
+                                                                  text:
+                                                                      'Status:',
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color1
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                                InterMedium(
+                                                                  text: reports[
+                                                                          index]
+                                                                      [
+                                                                      'ReportStatus'],
+                                                                  fontsize:
+                                                                      16.sp,
+                                                                  color: isDark
+                                                                      ? DarkColor
+                                                                          .color3
+                                                                      : LightColor
+                                                                          .color3,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 20.sp,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  childCount: reports.length,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 20.sp,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: reports.length,
-                  ),
-                )
+                              )
                             : ScreenIndex == 3
                                 ? SliverToBoxAdapter(
                                     child: Padding(

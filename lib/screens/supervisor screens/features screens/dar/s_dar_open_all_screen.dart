@@ -13,6 +13,7 @@ import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
+import '../../../../main.dart';
 import '../../../../utils/colors.dart';
 
 class SDarOpenAllScreen extends StatefulWidget {
@@ -491,8 +492,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
               Container(
                 height: 65.h,
                 width: double.maxFinite,
-                color: DarkColor.color24,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
+                color: isDark ? DarkColor.color24 : LightColor.color1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -501,16 +501,19 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = DarkColor.Primarycolor;
-                            colors[1] = DarkColor.color25;
+                            colors[0] = isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor;
+                            colors[1] =
+                                isDark ? DarkColor.color25 : LightColor.color2;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: DarkColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
-                              text: 'Edit',
+                              text: 'Read',
                               color: colors[0],
                               fontsize: 18.sp,
                             ),
@@ -518,21 +521,27 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         ),
                       ),
                     ),
-                    VerticalDivider(
-                      color: DarkColor.Primarycolor,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: VerticalDivider(
+                        color: isDark ? DarkColor.color2 : LightColor.color2,
+                      ),
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] = DarkColor.color25;
-                            colors[1] = DarkColor.Primarycolor;
+                            colors[0] =
+                                isDark ? DarkColor.color25 : LightColor.color2;
+                            colors[1] = isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.Primarycolor;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: DarkColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
@@ -549,14 +558,15 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
               SizedBox(height: 20.h),
               showDARS
                   ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         children: [
                           Row(
                             children: [
                               InterRegular(
                                 text: 'Shift Name :',
-                                fontsize: 20.w,
+                                fontsize: 20.sp,
                                 color: DarkColor.color17,
                               ),
                               SizedBox(
@@ -588,7 +598,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                   text: _userService.shiftLocation ??
                                       'Loading...',
                                   color: DarkColor.Primarycolor,
-                                  fontsize: 20.w,
+                                  fontsize: 20.sp,
                                   maxLines: 3,
                                 ),
                               ),

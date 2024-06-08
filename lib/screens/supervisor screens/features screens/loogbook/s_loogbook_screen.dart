@@ -242,9 +242,9 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               });
             },
             child: Container(
-              margin: EdgeInsets.only(top: height / height10),
-              padding: EdgeInsets.symmetric(horizontal: width / width20),
-              height: height / height70,
+              margin: EdgeInsets.only(top: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              height: 70.h,
               width: double.maxFinite,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -257,7 +257,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                     offset: Offset(0, 3),
                   )
                 ],
-                borderRadius: BorderRadius.circular(width / width10),
+                borderRadius: BorderRadius.circular(10.r),
                 color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
               ),
               child: Row(
@@ -265,15 +265,19 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                    fontsize: width / width18,
+                    color: isDark
+                        ? DarkColor.color21
+                        : LightColor.color3,
+                    fontsize: 18.sp,
                   ),
                   Icon(
                     expand
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
-                    size: width / width24,
-                    color:isDark? DarkColor. Primarycolor:LightColor.color3,
+                    size: 24.sp,
+                    color:  isDark
+                        ? DarkColor.color21
+                        : LightColor.color3,
                   )
                 ],
               ),
@@ -298,7 +302,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 final logReportTime = log['LOGREPORTTIME'] as Timestamp;
                 final dateTime = logReportTime.toDate();
                 final formattedDateTime =
-                    DateFormat('hh:mm:ss a').format(dateTime);
+                DateFormat('hh:mm a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
                   clientname: log['CLIENTNAME'],

@@ -79,12 +79,12 @@ class ViewAssetsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? Colors.white : LightColor.color3,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -95,7 +95,7 @@ class ViewAssetsScreen extends StatelessWidget {
           title: InterMedium(
             text: 'View Assets',
             fontsize: 18.sp,
-            color: Colors.white,
+            color: isDark ? Colors.white : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -108,7 +108,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color1,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                 fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
@@ -166,7 +166,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Equipment',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color1,
+                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                 fontsize: 16.sp,
               ),
               SizedBox(height: 20.h),

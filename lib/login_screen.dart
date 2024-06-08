@@ -178,7 +178,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                             size: 24.sp,
-                            color: isDark ? DarkColor.color6 : LightColor.color2,
+                            color:
+                                isDark ? DarkColor.color6 : LightColor.color2,
                           ),
                         ),
                         focusColor: isDark

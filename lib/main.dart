@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:async';
@@ -11,15 +12,19 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
+
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
 
+bool isDark = true;
 // final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,13 +37,14 @@ Future<void> main() async {
   //Fethcing FCM TOken
   await FirebaseNotificationApi().initNotifications();
   MapboxOptions.setAccessToken(appConstants.mapBoxPublicKey);
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-bool isDark = true;
-
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+
+  // final ThemeChangeController = Get.put(UIProvider);
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +57,10 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               useMaterial3: true,
-              brightness: Brightness.dark,
-              textTheme: GoogleFonts.poppinsTextTheme(
-                Theme.of(context).textTheme,
-              ),
+              // brightness: Brightness.light,
+              // textTheme: GoogleFonts.poppinsTextTheme(
+              //   Theme.of(context).textTheme,
+              // ),
             ),
             // navigatorKey: navigatorKey,
             // routes: {
@@ -69,22 +75,20 @@ class MyApp extends StatelessWidget {
         );
       },
       child: OfflineBuilder(
-        connectivityBuilder: (
-          BuildContext context,
-          ConnectivityResult connectivity,
-          Widget child,
-        ) {
+        connectivityBuilder: (BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
             return AuthChecker();
           } else {
             return Scaffold(
               backgroundColor:
-                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
               body: Center(
                 child: InterSemibold(
                   text:
-                      'No internet connection.\nConnect to Internet or Restart the app',
+                  'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
                   color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
