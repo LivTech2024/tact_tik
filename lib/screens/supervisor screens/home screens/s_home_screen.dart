@@ -317,7 +317,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
+                              builder: (context) => ProfileScreen(empId: _employeeId,)),
                         );
                       },
                     ),
@@ -845,6 +845,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       CreateSheduleScreen(
+                                        shiftId: '',
                                         supervisorEmail: '',
                                         BranchId: widget.guardsInfo[
                                         "EmployeeCompanyBranchId"] ??

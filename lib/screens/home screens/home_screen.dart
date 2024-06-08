@@ -555,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfileScreen(),
+                                builder: (context) => ProfileScreen(empId: _employeeId,),
                               ),
                             );
                           },
@@ -609,7 +609,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfileScreen()));
+                                builder: (context) => ProfileScreen(empId: _employeeId,)));
                       },
                     ),
                     buildListTile(

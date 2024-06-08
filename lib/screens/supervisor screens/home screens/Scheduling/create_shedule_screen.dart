@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emailjs/emailjs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -25,10 +24,8 @@ import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/main.dart';
-import 'package:tact_tik/screens/supervisor%20screens/home%20screens/widgets/inputwidget.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:http/http.dart' as http;
 import '../widgets/set_details_widget.dart';
 import 'select_guards_screen.dart';
@@ -47,6 +44,7 @@ class CreateSheduleScreen extends StatefulWidget {
   final String CompanyId;
   final String BranchId;
   final String supervisorEmail;
+  final String shiftId;
 
   CreateSheduleScreen({
     super.key,
@@ -56,6 +54,7 @@ class CreateSheduleScreen extends StatefulWidget {
     required this.CompanyId,
     required this.BranchId,
     required this.supervisorEmail,
+    required this.shiftId,
   });
 
   @override
@@ -66,7 +65,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   FireStoreService fireStoreService = FireStoreService();
 
   List colors = [
-    isDark ? DarkColor.Primarycolor : LightColor.color3, isDark ? DarkColor.color25 : LightColor.color2
+    isDark ? DarkColor.Primarycolor : LightColor.color3,
+    isDark ? DarkColor.color25 : LightColor.color2
   ];
   List selectedGuards = [];
   String compId = "";
@@ -84,7 +84,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   String? selectedGuardImage;
   String? selectedGuardName;
 
-  // selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
   List<String> ClintValues = ['Client'];
   List<String> LocationValues = ['Select Location'];
   List<String> PatrolValues = [];
@@ -102,26 +101,105 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     getAllClientNames();
     getAllPatrolNames();
     getAllLocationNames();
-    selectedPosition = PositionValues.isNotEmpty ? PositionValues[0] : null;
-    selectedClint = ClintValues.isNotEmpty ? ClintValues[0] : null;
-    selectedLocatin = LocationValues.isNotEmpty ? LocationValues[0] : null;
-    selectedPatrol = selectedPatrols.isNotEmpty ? selectedPatrols[0] : null;
+    initializeData();
+  }
 
-    // Add the initial guard data to selectedGuards if not already present
-    if (!selectedGuards.any((guard) => guard['GuardId'] == widget.GuardId)) {
-      setState(() {
-        selectedGuards.add({
-          'GuardId': widget.GuardId,
-          'GuardName': widget.GuardName,
-          'GuardImg': widget.GuardImg
-        });
-        compId = widget.CompanyId;
-      });
-    }
-    for (int i = 0; i < tasks.length; i++) {
-      taskControllers.add(TextEditingController());
+  void initializeData() async {
+    await fetchShiftDataAndUpdateGuards();
+  }
+
+  Future<void> fetchShiftDataAndUpdateGuards() async {
+    final shiftData = await fetchShiftData();
+
+    if (shiftData != null) {
+      if (shiftData.containsKey('ShiftAssignedUserId')) {
+        List<String> assignedUserIds = List<String>.from(shiftData['ShiftAssignedUserId']);
+
+        for (String guardId in assignedUserIds) {
+          final querySnapshot = await FirebaseFirestore.instance
+              .collection('Employees')
+              .where('EmployeeId', isEqualTo: guardId)
+              .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+            final employeeData = querySnapshot.docs.first.data();
+            setState(() {
+              selectedGuards.add({
+                'GuardId': guardId,
+                'GuardName': employeeData['EmployeeName'] ?? '',
+                'GuardImg': employeeData['EmployeeImg'] ?? '',
+              });
+            });
+          }
+        }
+      }
+
+      // Set default values based on shift data
+      setDefaultValuesFromShiftData(shiftData);
     }
   }
+
+  Future<Map<String, dynamic>?> fetchShiftData() async {
+    if (widget.shiftId.isNotEmpty) {
+      final shiftDoc = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(widget.shiftId)
+          .get();
+
+      if (shiftDoc.exists) {
+        return shiftDoc.data();
+      }
+    }
+    return null;
+  }
+
+  void setDefaultValuesFromShiftData(Map<String, dynamic> shiftData) async {
+    // Fetch and set default position
+    String? shiftPosition = shiftData['ShiftPosition'];
+    if (shiftPosition != null && shiftPosition.isNotEmpty) {
+      setState(() {
+        selectedPosition = shiftPosition;
+      });
+    }
+
+    // Fetch and set default client
+    String? shiftClientId = shiftData['ShiftClientId'];
+    if (shiftClientId != null && shiftClientId.isNotEmpty) {
+      final clientSnapshot = await FirebaseFirestore.instance
+          .collection('Clients')
+          .doc(shiftClientId)
+          .get();
+
+      if (clientSnapshot.exists) {
+        setState(() {
+          selectedClint = clientSnapshot.data()?['ClientName'] ?? 'Client';
+        });
+      }
+    }
+
+    // Fetch and set default location
+    String? shiftLocationId = shiftData['ShiftLocationId'];
+    if (shiftLocationId != null && shiftLocationId.isNotEmpty) {
+      final locationSnapshot = await FirebaseFirestore.instance
+          .collection('Locations')
+          .doc(shiftLocationId)
+          .get();
+
+      if (locationSnapshot.exists) {
+        setState(() {
+          selectedLocatin = locationSnapshot.data()?['LocationName'] ?? 'Select Location';
+        });
+      }
+    }
+
+    _ShiftName.text = shiftData['ShiftName'] ?? '';
+    requiredEmpcontroller.value = shiftData['ShiftRequiredEmp'] ?? '';
+    _Description.text = shiftData['ShiftDescription'] ?? 0;
+    requiredRadius.value = shiftData['ShiftRestrictedRadius'] ?? 0;
+    _PhotoUploadIntervalInMinutes.value = shiftData['ShiftPhotoUploadIntervalInMinutes'] ?? 0;
+    _isRestrictedChecked = shiftData['ShiftEnableRestrictedRadius'] ?? false;
+  }
+
 
   void getEmployeeRoles() async {
     List<String> roles =
@@ -200,7 +278,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final requiredRadius = NumberEditingTextController.integer();
   List<ValueItem> _selectedOptions = [];
   bool _isRestrictedChecked = false;
-  List<DateTime> selectedDates = []; // Define and initialize selectedDates list
+  List<DateTime> selectedDates = [];
 
   List<Map<String, dynamic>> tasks = [
     {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false}
@@ -1704,22 +1782,24 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             text: 'Done',
                             onPressed: () async {
                               if (nextScreen!) {
-                                // TODO Commented the backend code here
                                 String address = "";
                                 GeoPoint coordinates = GeoPoint(0, 0);
                                 String name = "";
                                 String locationId = "";
 
                                 // Fetching the patrols ids using patrol name
-                                List<String> patrolids = await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
+                                List<String> patrolids =
+                                await fireStoreService.getPatrolIdsFromNames(selectedPatrols);
 
                                 // Fetching client id
-                                String clientId = await fireStoreService.getClientIdfromName(selectedClint!);
+                                String clientId =
+                                await fireStoreService.getClientIdfromName(selectedClint!);
                                 print('ClientName: $selectedClint');
                                 print('ClientId: $clientId');
 
                                 // Fetching location details from location name
-                                var locationData = await fireStoreService.getLocationByName(selectedLocatin!, widget.CompanyId);
+                                var locationData = await fireStoreService
+                                    .getLocationByName(selectedLocatin!, widget.CompanyId);
                                 if (locationData.exists) {
                                   var data = locationData.data() as Map<String, dynamic>?;
                                   if (data != null) {
@@ -1736,49 +1816,78 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 }
 
                                 print("LocationData ids ${locationData}");
-                                var requiredEmp = _RequirednoofEmployees.text;
+                                var requiredEmp = requiredEmpcontroller.text;
                                 print("Number Editing Controller ${requiredEmpcontroller.number}");
                                 print("ShiftName ${_ShiftName.text}");
                                 print("ShiftDesc ${_Description.text}");
 
-                                // Pass the tasks to the ScheduleShift function
-                                String id = await fireStoreService.ScheduleShift(
-                                  selectedGuards,
-                                  selectedPosition,
-                                  address,
-                                  "CompanyBranchId",
-                                  widget.CompanyId,
-                                  _selectedDates,
-                                  startTime,
-                                  endTime,
-                                  patrolids,
-                                  clientId,
-                                  requiredEmpcontroller.text,
-                                  requiredPhotocontroller.text,
-                                  requiredRadius.text,
-                                  _isRestrictedChecked,
-                                  coordinates,
-                                  name,
-                                  locationId,
-                                  address,
-                                  _Branch.text,
-                                  _Description.text,
-                                  _ShiftName.text,
-                                  tasks, // Pass the tasks list
-                                );
+                                if (widget.shiftId.isNotEmpty) {
+                                  // Update the existing document
+                                  await fireStoreService.updateShift(
+                                    widget.shiftId,
+                                    selectedGuards,
+                                    selectedPosition,
+                                    address,
+                                    "CompanyBranchId",
+                                    widget.CompanyId,
+                                    _selectedDates,
+                                    startTime,
+                                    endTime,
+                                    patrolids,
+                                    clientId,
+                                    requiredEmpcontroller.text,
+                                    requiredPhotocontroller.text,
+                                    requiredRadius.text,
+                                    _isRestrictedChecked,
+                                    coordinates,
+                                    name,
+                                    locationId,
+                                    address,
+                                    _Branch.text,
+                                    _Description.text,
+                                    _ShiftName.text,
+                                    tasks, // Pass the tasks list
+                                  );
+                                } else {
+                                  // Create a new document
+                                  String id = await fireStoreService.ScheduleShift(
+                                    selectedGuards,
+                                    selectedPosition,
+                                    address,
+                                    "CompanyBranchId",
+                                    widget.CompanyId,
+                                    _selectedDates,
+                                    startTime,
+                                    endTime,
+                                    patrolids,
+                                    clientId,
+                                    requiredEmpcontroller.text,
+                                    requiredPhotocontroller.text,
+                                    requiredRadius.text,
+                                    _isRestrictedChecked,
+                                    coordinates,
+                                    name,
+                                    locationId,
+                                    address,
+                                    _Branch.text,
+                                    _Description.text,
+                                    _ShiftName.text,
+                                    tasks, // Pass the tasks list
+                                  );
+                                  setState(() {
+                                    CreatedshiftId = id;
+                                  });
+                                }
+
                                 setState(() {
                                   Navigator.pop(context);
                                   _addNewTask();
                                 });
-                                print("Shift Created");
-                                print("Shift ID : ${id}");
-                                setState(() {
-                                  CreatedshiftId = id;
-                                });
+                                print("Shift Created/Updated");
                               }
                             },
-                            backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            color:  isDark ? DarkColor.color1 : LightColor.color3,
+                            backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            color: isDark ? DarkColor.color1 : LightColor.color3,
                             borderRadius: 10.r,
                             fontsize: 14.sp,
                           ),

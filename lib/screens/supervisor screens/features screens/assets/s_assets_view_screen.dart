@@ -117,11 +117,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     SizedBox(
                       height: 30.h,
                     ),
-                    InterBold(
-                      text: 'Today',
-                      fontsize: 20.w,
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                    ),
+                    // InterBold(
+                    //   text: 'Today',
+                    //   fontsize: 20.w,
+                    //   color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                    // ),
                     SizedBox(
                       height: 30.h,
                     ),

@@ -12,7 +12,7 @@ import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/main.dart';
 import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_semibold.dart';
@@ -22,7 +22,8 @@ import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String empId;
+  const ProfileScreen({Key? key, required this.empId}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -44,6 +45,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchEmployeeData();
+  }
+
+  Future<void> _fetchEmployeeData() async {
+    final employeeSnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeId', isEqualTo: widget.empId)
+        .get();
+
+    if (employeeSnapshot.docs.isNotEmpty) {
+      final employeeData = employeeSnapshot.docs.first.data();
+      setState(() {
+        _employeeName = employeeData['EmployeeName'];
+        _employeeEmail = employeeData['EmployeeEmail'];
+        _employeeRole = employeeData['EmployeeRole'];
+        _employeePhone = employeeData['EmployeePhone'];
+        _employeeImageUrl = employeeData['EmployeeImg'];
+      });
+    }
+  }
+
+  Future<void> updateProfile() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Employees')
+          .doc(widget.empId)
+          .update({
+        'EmployeeName': _nameController.text,
+        'EmployeePhone': _phoneNoController.text,
+      });
+
+      if (_selectedImageFile != null) {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('employees/images/${_selectedImageFile!.name}');
+        await storageRef.putFile(File(_selectedImageFile!.path));
+        final downloadUrl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('Employees')
+            .doc(widget.empId)
+            .update({'EmployeeImg': downloadUrl});
+      }
+
+      // Reset the state
+      setState(() {
+        isEdit = false;
+        _selectedImageFile = null;
+      });
+    } catch (e) {
+      print('Error updating profile: $e');
+    }
   }
 
   Future<void> _selectImageFromGallery() async {
@@ -92,17 +145,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                setState(() {
-                  isEdit = !isEdit;
-                });
-              },
+              onPressed: isEdit ? updateProfile : null,
               icon: Icon(
                 isEdit ? Icons.check : Icons.border_color,
                 size: 24.sp,
                 color: DarkColor.color1,
               ),
-            )
+            ),
           ],
           centerTitle: true,
         ),

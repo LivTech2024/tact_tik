@@ -58,9 +58,13 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
         groupedSchedules.clear();
 
         for (var schedule in schedules) {
-          DateTime shiftDate = (schedule['ShiftDate'] as Timestamp).toDate();
-          DateTime shiftDateWithoutTime =
-              DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
+          DateTime? shiftDate = (schedule['ShiftDate'] as Timestamp?)?.toDate();
+          if (shiftDate == null) {
+            schedule.reference.update({'ShiftDate': 'No Data Found'});
+            continue;
+          }
+
+          DateTime shiftDateWithoutTime = DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
 
           if (!groupedSchedules.containsKey(shiftDateWithoutTime)) {
             groupedSchedules[shiftDateWithoutTime] = [];
@@ -82,8 +86,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
     for (var date in groupedSchedules.keys) {
       for (var schedule in groupedSchedules[date]!) {
-        List<dynamic> assignedUserIds =
-            List<dynamic>.from(schedule['ShiftAssignedUserId']);
+        List<dynamic> assignedUserIds = List<dynamic>.from(schedule['ShiftAssignedUserId'] ?? 'NO DATA FOUND');
         List<dynamic> employeeImages = [];
 
         try {
@@ -93,15 +96,18 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
               .get();
 
           for (var employee in employeesSnapshot.docs) {
-            employeeImages.add(employee['EmployeeImg']);
+            String? employeeImg = employee['EmployeeImg'] as String?;
+            if (employeeImg == null || employeeImg.isEmpty) {
+              employeeImages.add('No Data Found');
+            } else {
+              employeeImages.add(employeeImg);
+            }
           }
 
-          Map<String, dynamic> scheduleData =
-              schedule.data() as Map<String, dynamic>;
+          Map<String, dynamic> scheduleData = schedule.data() as Map<String, dynamic>;
           scheduleData['EmployeeImages'] = employeeImages;
 
-          schedule.reference.update(
-              scheduleData); // Update the schedule document in Firestore
+          schedule.reference.update(scheduleData); // Update the schedule document in Firestore
         } catch (e) {
           print("Error fetching employee images: $e");
         }
@@ -164,7 +170,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             GuardName: '',
                             GuardImg: '',
                             CompanyId: widget.CompanyId,
-                            supervisorEmail: '',
+                            supervisorEmail: '', shiftId: '',
                           )));
             },
             child: Icon(
@@ -296,11 +302,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         ),
                         SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
-                          String shiftName = schedule['ShiftName'];
+                          String shiftName = schedule['ShiftName'] ?? 'NO DATA FOUND';
                           String shiftLocation =
-                              schedule['ShiftLocationAddress'];
-                          String shiftStartTime = schedule['ShiftStartTime'];
-                          String shiftEndTime = schedule['ShiftEndTime'];
+                              schedule['ShiftLocationAddress'] ?? 'NO DATA FOUND';
+                          String shiftStartTime = schedule['ShiftStartTime'] ?? 'NO DATA FOUND';
+                          String shiftEndTime = schedule['ShiftEndTime'] ?? 'NO DATA FOUND';
+                          String shiftId = schedule['ShiftId'];
 
                           Map<String, dynamic>? scheduleData =
                               schedule.data() as Map<String, dynamic>?;
@@ -452,7 +459,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => CreateSheduleScreen(GuardId: '', GuardName: '', GuardImg: '', CompanyId: '', BranchId: '', supervisorEmail: '',),
+                                                        builder: (context) => CreateSheduleScreen(GuardId: '', GuardName: '', GuardImg: '', CompanyId: widget.CompanyId, BranchId: '', supervisorEmail: '', shiftId: shiftId,),
                                                       ),
                                                     );
                                                   },

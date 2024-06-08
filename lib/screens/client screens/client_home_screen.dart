@@ -525,7 +525,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfileScreen(),
+                      builder: (context) => ProfileScreen(empId: _employeeId,),
                     ),
                   );
                 },
@@ -592,7 +592,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProfileScreen(),
+                            builder: (context) => ProfileScreen(empId: _employeeId,),
                           ),
                         );
                       },
