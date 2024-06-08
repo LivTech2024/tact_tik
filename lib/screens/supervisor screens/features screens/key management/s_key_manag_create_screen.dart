@@ -123,7 +123,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       'KeyAllocationId': docRef.id,
     });
   }
-   final List<Guards> _screens = [
+
+  final List<Guards> _screens = [
     Guards('Site Tours', 'Image URL'),
     Guards('DAR Screen', 'Image URL'),
     Guards('Reports Screen', 'Image URL'),
@@ -134,10 +135,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     Guards('Assets Screen', 'Image URL'),
     Guards('Key Screen', 'Image URL'),
   ];
+
   Widget gridLayoutBuilder(
-      BuildContext context,
-      List<Widget> items,
-      ) {
+    BuildContext context,
+    List<Widget> items,
+  ) {
     return GridView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: items.length,
@@ -157,7 +159,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   Future<List<Guards>> suggestionsCallback(String pattern) async =>
       Future<List<Guards>>.delayed(
         Duration(milliseconds: 300),
-            () => _screens.where((product) {
+        () => _screens.where((product) {
           // print(product.name);
           final nameLower = product.name.toLowerCase().split(' ').join('');
           final patternLower = pattern.toLowerCase().split(' ').join('');
@@ -221,7 +223,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               });
                             },
                             child: Container(
-                              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
                               child: Center(
                                 child: InterBold(
                                   text: 'Assign',
@@ -254,7 +258,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               });
                             },
                             child: Container(
-                              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
                               child: Center(
                                 child: InterBold(
                                   text: 'Create',
@@ -361,7 +367,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   borderRadius: BorderRadius.circular(13.r),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: TypeAheadField<Guards>(
@@ -370,38 +377,39 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         direction: VerticalDirection.down,
                                         builder:
                                             (context, _controller, focusNode) =>
-                                            TextField(
-                                              controller: _controller,
-                                              focusNode: focusNode,
-                                              autofocus: false,
-                                              style: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.w300,
-                                                fontSize: 18.w,
-                                                color: Colors.white,
+                                                TextField(
+                                          controller: _controller,
+                                          focusNode: focusNode,
+                                          autofocus: false,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18.w,
+                                            color: Colors.white,
+                                          ),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.r),
                                               ),
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide.none,
-                                                  borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.r),
-                                                  ),
-                                                ),
-                                                focusedBorder: InputBorder.none,
-                                                hintStyle: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 18.w,
-                                                  color: isDark
-                                                      ? DarkColor.color2
-                                                      : LightColor.color2,
-                                                ),
-                                                hintText: 'Search Guards',
-                                                contentPadding: EdgeInsets.zero,
-                                              ),
-                                              cursorColor: isDark
-                                                  ? DarkColor.Primarycolor
-                                                  : LightColor.Primarycolor,
                                             ),
-                                        suggestionsCallback: suggestionsCallback,
+                                            focusedBorder: InputBorder.none,
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 18.w,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color2,
+                                            ),
+                                            hintText: 'Search Guards',
+                                            contentPadding: EdgeInsets.zero,
+                                          ),
+                                          cursorColor: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.Primarycolor,
+                                        ),
+                                        suggestionsCallback:
+                                            suggestionsCallback,
                                         itemBuilder: (context, Guards guards) {
                                           return ListTile(
                                             leading: Container(
@@ -437,15 +445,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         ),
                                         decorationBuilder: (context, child) =>
                                             Material(
-                                              type: MaterialType.card,
-                                              elevation: 4,
-                                              borderRadius: BorderRadius.circular(
-                                                10.r,
-                                              ),
-                                              child: child,
-                                            ),
+                                          type: MaterialType.card,
+                                          elevation: 4,
+                                          borderRadius: BorderRadius.circular(
+                                            10.r,
+                                          ),
+                                          child: child,
+                                        ),
                                         debounceDuration:
-                                        const Duration(milliseconds: 300),
+                                            const Duration(milliseconds: 300),
                                         onSelected: (Guards guard) {
                                           print(
                                               'home screen search bar############################################');
@@ -462,7 +470,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         color: isDark
                                             ? DarkColor.Primarycolor
                                             : LightColor.Primarycolor,
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       child: Center(
                                         child: Icon(
@@ -487,16 +496,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   itemCount: selectedGuards.length,
                                   itemBuilder: (context, index) {
                                     String guardId =
-                                    selectedGuards[index]['GuardId'];
+                                        selectedGuards[index]['GuardId'];
                                     String guardName =
-                                    selectedGuards[index]['GuardName'];
+                                        selectedGuards[index]['GuardName'];
                                     String guardImg =
-                                    selectedGuards[index]['GuardImg'];
+                                        selectedGuards[index]['GuardImg'];
                                     return Padding(
-                                      padding:
-                                      EdgeInsets.only(right: 20.h),
+                                      padding: EdgeInsets.only(right: 20.h),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
                                           Stack(
                                             clipBehavior: Clip.none,
@@ -506,28 +515,32 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                 width: 50.w,
                                                 decoration: guardImg != ""
                                                     ? BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        guardImg ?? ""),
-                                                    filterQuality:
-                                                    FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              guardImg ?? ""),
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      )
                                                     : BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: isDark
-                                                      ? DarkColor.Primarycolor
-                                                      : LightColor.Primarycolor,
-                                                  image: DecorationImage(
-                                                    image: AssetImage(
-                                                        'assets/images/default.png'),
-                                                    filterQuality:
-                                                    FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
+                                                        shape: BoxShape.circle,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .Primarycolor
+                                                            : LightColor
+                                                                .Primarycolor,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              'assets/images/default.png'),
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                               ),
                                               Positioned(
                                                 top: -4,
@@ -544,7 +557,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                     width: 20.w,
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: DarkColor.color1),
+                                                        color:
+                                                            DarkColor.color1),
                                                     child: Center(
                                                       child: Icon(
                                                         Icons.close,
@@ -562,7 +576,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           InterBold(
                                             text: guardName,
                                             fontsize: 14.sp,
-                                            color:  isDark
+                                            color: isDark
                                                 ? DarkColor.color26
                                                 : LightColor.color3,
                                           )
