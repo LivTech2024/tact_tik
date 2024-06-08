@@ -43,7 +43,7 @@ class DarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor.color25];
+  List colors = isDark?[DarkColor.Primarycolor, DarkColor.color25]:[LightColor.color3, LightColor.color2];
 
   bool showAllDARS = false;
 
@@ -179,7 +179,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             child: Container(
                               // margin: EdgeInsets.only(bottom: 20.h),
                               width: double.maxFinite,
-                              height: 140.h,
+                              height: 145.h,
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
@@ -310,7 +310,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   showAllDARS = false;
                                   colors[0] = isDark
                                       ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor;
+                                      : LightColor.color3;
                                   colors[1] = isDark
                                       ? DarkColor.color25
                                       : LightColor.color2;
@@ -333,7 +333,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
-                            child: const VerticalDivider(),
+                            child:  VerticalDivider(color: isDark?DarkColor.Primarycolor:LightColor.color3,),
                           ),
                           Expanded(
                             child: GestureDetector(
@@ -347,7 +347,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                       : LightColor.color2;
                                   colors[1] = isDark
                                       ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor;
+                                      : LightColor.color3;
                                 });
                               },
                               child: Container(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
 import 'package:tact_tik/main.dart';
@@ -74,8 +75,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     return SafeArea(
       child: Scaffold(
@@ -88,16 +88,16 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color:  isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.w,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'Guards',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -107,20 +107,20 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
           onRefresh: _refreshdata,
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: width / width30),
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: height / height30),
+                  SizedBox(height: 30.h),
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
-                      iconSize: width / width24,
+                      iconSize: 24.w,
                       dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
                       style: TextStyle(color:  isDark ? DarkColor.color2 : LightColor.color3),
                       // borderRadius: BorderRadius.circular(10),
                       // dropdownColor: WidgetColor,
                       // style: TextStyle(color: color2),
-                      borderRadius: BorderRadius.circular(width / width10),
+                      borderRadius: BorderRadius.circular(10.r),
                       value: dropdownValue,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -140,7 +140,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                       }).toList(),
                     ),
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   _guardsInfo.length != 0
                       ? ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
@@ -169,17 +169,17 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                     color: isDark
                                         ? DarkColor.color19
                                         : LightColor.WidgetColor,
-                                    borderRadius: BorderRadius.circular(width / width12),
+                                    borderRadius: BorderRadius.circular(12.h),
                                   ),
                                   // margin: EdgeInsets.only(bottom: 10),
-                                  height: height / height60,
+                                  height: 60.h,
                                   // decoration: BoxDecoration(
                                   //   color: color19,
                                   //   borderRadius:
                                   //       BorderRadius.circular(width / width12),
                                   // ),
                                   margin: EdgeInsets.only(
-                                      bottom: height / height10),
+                                      bottom: 10.h),
                                   width: double.maxFinite,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -188,9 +188,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                         // height: 48,
                                         // padding:
                                         //     EdgeInsets.symmetric(horizontal: 20),
-                                        height: height / height48,
+                                        height: 48.h,
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: width / width20),
+                                            horizontal: 20.w),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -198,8 +198,8 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                             Row(
                                               children: [
                                                 Container(
-                                                  height: height / height50,
-                                                  width: width / width50,
+                                                  height: 50.h,
+                                                  width: 50.w,
                                                   decoration: url != ""
                                                       ? BoxDecoration(
                                                           shape:
@@ -234,20 +234,20 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                         ),
                                                 ),
                                                 SizedBox(
-                                                    width: width / width20),
+                                                    width: 20.w),
                                                 InterBold(
                                                   text: name,
                                                   letterSpacing: -.3,
                                                   color: isDark
                                         ? DarkColor.color1
                                         : LightColor.color3,
-                                                  fontsize: width / width12,
+                                                  fontsize: 12.sp,
                                                 ),
                                               ],
                                             ),
                                             Container(
-                                              height: height / height16,
-                                              width: width / width16,
+                                              height: 16.h,
+                                              width: 16.w,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: guardInfo[
@@ -272,7 +272,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                           child: PoppinsBold(
                             text: 'No Guards Found',
                             color: DarkColor.  color2,
-                            fontsize: width / width16,
+                            fontsize: 16.sp,
                           ),
                         )
                 ],

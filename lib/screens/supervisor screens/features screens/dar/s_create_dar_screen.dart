@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
@@ -304,8 +305,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+   
 
     return SafeArea(
       child: Scaffold(
@@ -317,16 +317,16 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'DAR',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: Colors.white,
             letterSpacing: -.3,
           ),
@@ -336,29 +336,29 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
-                      fontsize: width / width20,
+                      fontsize: 20.sp,
                       color: DarkColor. Primarycolor,
                     ),
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     CustomeTextField(
                       controller: _titleController,
                       hint: 'Spot',
                       isExpanded: true,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     CustomeTextField(
                       controller: _darController,
                       hint: 'Write your DAR here...',
                       isExpanded: true,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     Row(
                       children: [
                         Row(
@@ -370,15 +370,15 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                                 clipBehavior: Clip.none,
                                 children: [
                                   Container(
-                                    height: height / height66,
-                                    width: width / width66,
+                                    height: 66.h,
+                                    width: 66.w,
                                     decoration: BoxDecoration(
                                       color: DarkColor. WidgetColor,
                                       borderRadius: BorderRadius.circular(
-                                        width / width10,
+                                        10.r,
                                       ),
                                     ),
-                                    margin: EdgeInsets.all(width / width8),
+                                    margin: EdgeInsets.all(8.r),
                                     child: upload['type'] == 'image'
                                         ? Image.file(
                                             upload['file'],
@@ -386,7 +386,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                                           )
                                         : Icon(
                                             Icons.videocam,
-                                            size: width / width20,
+                                            size: 20.sp,
                                           ),
                                   ),
                                   Positioned(
@@ -397,7 +397,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                                       icon: Icon(
                                         Icons.delete,
                                         color: Colors.black,
-                                        size: width / width20,
+                                        size: 20.w,
                                       ),
                                       padding: EdgeInsets.zero,
                                     ),
@@ -417,11 +417,11 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                                   ListTile(
                                     leading: Icon(
                                       Icons.photo,
-                                      size: width / width20,
+                                      size: 20.sp,
                                     ),
                                     title: InterRegular(
                                       text: 'Add Image',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                     ),
                                     onTap: () {
                                       Navigator.pop(context);
@@ -431,11 +431,11 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                                   ListTile(
                                     leading: Icon(
                                       Icons.image,
-                                      size: width / width20,
+                                      size: 20.sp,
                                     ),
                                     title: InterRegular(
                                       text: 'Add from Gallery',
-                                      fontsize: width / width14,
+                                      fontsize: 14.sp,
                                     ),
                                     onTap: () {
                                       Navigator.pop(context);
@@ -447,17 +447,17 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                             );
                           },
                           child: Container(
-                            height: height / height66,
-                            width: width / width66,
+                            height: 66.h,
+                            width: 66.w,
                             decoration: BoxDecoration(
                               color: DarkColor. WidgetColor,
                               borderRadius:
-                                  BorderRadius.circular(width / width8),
+                                  BorderRadius.circular(8.r),
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.add,
-                                size: width / width20,
+                                size: 20.sp,
                               ),
                             ),
                           ),
@@ -503,7 +503,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
                           );
                         },
                       ),
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     Button1(
                       text: _isSubmitting ? 'Submitting...' : 'Submit',
                       onPressed: submitDarTileData,

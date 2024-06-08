@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -79,8 +80,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+   
 
     return SafeArea(
       child: Scaffold(
@@ -118,9 +118,9 @@ class _SPostOrderState extends State<SPostOrder> {
                       color: isDark
                           ? DarkColor.color1
                           : LightColor.color3,
-                      size: width / width24,
+                      size: 24.sp,
                     ),
-                    padding: EdgeInsets.only(left: width / width20),
+                    padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
                       Navigator.pop(context);
                       print("Navigator debug: ${Navigator.of(context).toString()}");
@@ -128,7 +128,7 @@ class _SPostOrderState extends State<SPostOrder> {
                   ),
                   title: InterMedium(
                     text: 'Post Orders',
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                     color: isDark ? DarkColor.color1 : LightColor.color3,
                     letterSpacing: -.3,
                   ),
@@ -145,10 +145,10 @@ class _SPostOrderState extends State<SPostOrder> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: width / width30, vertical: height / height30),
+                            padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
                             child: InterSemibold(
                               text: date,
-                              fontsize: width / width20,
+                              fontsize: 20.sp,
                               color: isDark
                                   ? DarkColor.Primarycolor
                                   : LightColor.color3,
@@ -185,19 +185,19 @@ class _SPostOrderState extends State<SPostOrder> {
                                     );
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                                     child: Container(
                                       constraints: BoxConstraints(
-                                        minHeight: height / height250,
+                                        minHeight: 250.h,
                                       ),
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width / width20,
-                                        vertical: height / height10,
+                                        horizontal: 20.w,
+                                        vertical: 10.h,
                                       ),
                                       width: double.maxFinite,
-                                      margin: EdgeInsets.only(bottom: height / height10),
+                                      margin: EdgeInsets.only(bottom: 10.h),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(width / width10),
+                                        borderRadius: BorderRadius.circular(10.r),
                                         color: isDark
                                             ? DarkColor.WidgetColor
                                             : LightColor.WidgetColor,
@@ -210,16 +210,16 @@ class _SPostOrderState extends State<SPostOrder> {
                                             color: isDark
                                                 ? DarkColor.color2
                                                 : LightColor.color2,
-                                            fontsize: width / width14,
+                                            fontsize: 14.sp,
                                           ),
                                           SizedBox(
-                                            height: height / height16,
+                                            height: 16.h,
                                           ),
                                           Container(
-                                            constraints: BoxConstraints(minWidth: width / width200),
-                                            height: height / height46,
+                                            constraints: BoxConstraints(minWidth: 200.w),
+                                            height: 46.h,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(width / width10),
+                                              borderRadius: BorderRadius.circular(10.r),
                                               color: isDark
                                                   ? DarkColor.color1
                                                   : LightColor.color1,
@@ -227,10 +227,10 @@ class _SPostOrderState extends State<SPostOrder> {
                                             child: Row(
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: width / width6),
+                                                  padding: EdgeInsets.symmetric(horizontal: 6.w),
                                                   child: SvgPicture.asset(
                                                       'assets/images/pdf.svg',
-                                                      width: width / width32),
+                                                      width: 32.w),
                                                 ),
                                                 Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +258,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: height / height20,
+                                            height: 20.h,
                                           ),
                                           GridView.builder(
                                             shrinkWrap: true,
@@ -321,8 +321,8 @@ class _SPostOrderState extends State<SPostOrder> {
                                                 );
                                               } else {*/
                                                 return SizedBox(
-                                                  height: height / height20,
-                                                  width: width / width20,
+                                                  height: 20.h,
+                                                  width: 20.w,
                                                   child: Image.network(url),
                                                 );
                                               // }

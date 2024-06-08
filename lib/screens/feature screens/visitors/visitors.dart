@@ -287,7 +287,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                         fontsize: 12.sp,
                                                         color:  isDark
                                                             ? DarkColor.color3
-                                                            : LightColor.color2,
+                                                            : LightColor.color3,
                                                       )
                                                     ],
                                                   ),
@@ -306,7 +306,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                         fontsize: 12.sp,
                                                         color:  isDark
                                                             ? DarkColor.color3
-                                                            : LightColor.color2,
+                                                            : LightColor.color3,
                                                       )
                                                     ],
                                                   ),
@@ -353,7 +353,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                   fontsize: 12.sp,
                                                   color:  isDark
                                                       ? DarkColor.color2
-                                                      : LightColor.color2,
+                                                      : LightColor.color3,
                                                 ),
                                               )
                                             ],

@@ -216,13 +216,13 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       if (snapshot.connectionState == ConnectionState.waiting) {
                                         return InterMedium(
                                           text: 'Loading...',
-                                          fontsize: width / width16,
+                                          fontsize: 16.sp,
                                           color: DarkColor.color1,
                                         );
                                       } else if (snapshot.hasError) {
                                         return InterMedium(
                                           text: 'Error: ${snapshot.error}',
-                                          fontsize: width / width16,
+                                          fontsize: 16.sp,
                                           color: isDark
                                               ? DarkColor.color1
                                               : LightColor.color3,
@@ -230,7 +230,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       } else {
                                         return InterMedium(
                                           text: snapshot.data ?? 'Unknown Equipment',
-                                          fontsize: width / width16,
+                                          fontsize: 16.sp,
                                           color: isDark
                                               ? DarkColor.color1
                                               : LightColor.color3,
@@ -245,9 +245,9 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                 color: isDark
                                     ? DarkColor.color17
                                     : LightColor.color3,
-                                fontsize: width / width16,
+                                fontsize: 16.sp,
                               ),
-                              SizedBox(width: width / width20),
+                              SizedBox(width:20.w),
                             ],
                           ),
                         ),

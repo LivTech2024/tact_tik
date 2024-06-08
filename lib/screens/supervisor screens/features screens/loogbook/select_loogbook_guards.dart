@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/fonts/poppins_bold.dart';
@@ -76,8 +77,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+   
 
     return SafeArea(
       child: Scaffold(
@@ -93,16 +93,16 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'LogBook Guards',
-            fontsize: width / width18,
+            fontsize: 18.w,
             color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -112,11 +112,11 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
           onRefresh: _refreshdata,
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: width / width30),
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: height / height30),
+                  SizedBox(height: 30.h),
                   _guardsInfo.length != 0
                       ? ListView.builder(
                           shrinkWrap: true,
@@ -141,22 +141,22 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                             )));
                               },
                               child: Container(
-                                height: height / height60,
+                                height: 60.h,
                                 decoration: BoxDecoration(
                                   color: DarkColor. color19,
                                   borderRadius:
-                                      BorderRadius.circular(width / width12),
+                                      BorderRadius.circular(12.r),
                                 ),
                                 margin:
-                                    EdgeInsets.only(bottom: height / height10),
+                                    EdgeInsets.only(bottom: 10.h),
                                 width: double.maxFinite,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                      height: height / height48,
+                                      height: 48.h,
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: width / width20),
+                                          horizontal: 20.w),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -164,8 +164,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                           Row(
                                             children: [
                                               Container(
-                                                height: height / height50,
-                                                width: width / width50,
+                                                height: 50.h,
+                                                width: 50.w,
                                                 decoration: guardInfo['EmployeeImg'] != null
                                                     ? BoxDecoration(
                                                   shape: BoxShape.circle,
@@ -192,7 +192,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(width: width / width20),
+                                              SizedBox(width: 20.w),
                                               InterBold(
                                                 text: name,
                                                 letterSpacing: -.3,
@@ -203,8 +203,8 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: height / height14,
-                                            width: width / width24,
+                                            height: 14.h,
+                                            width: 24.w,
                                             child: SvgPicture.asset(
                                               'assets/images/arrow.svg',
                                               fit: BoxFit.fitWidth,
@@ -225,7 +225,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                             color: isDark
                                 ? DarkColor.color2
                                 : LightColor.color3,
-                            fontsize: width / width16,
+                            fontsize: 16.sp,
                           ),
                         )
                 ],

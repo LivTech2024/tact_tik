@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/main.dart';
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
@@ -18,8 +19,7 @@ class SPanicScreen extends StatefulWidget {
 class _SPanicScreenState extends State<SPanicScreen> {
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+  
 
     return SafeArea(
       child: Scaffold(
@@ -37,16 +37,16 @@ class _SPanicScreenState extends State<SPanicScreen> {
                   color: isDark
                       ? DarkColor.color1
                       : LightColor.color3,
-                  size: width / width24,
+                  size: 24.w,
                 ),
-                padding: EdgeInsets.only(left: width / width20),
+                padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               title: InterMedium(
                 text: 'Panic',
-                fontsize: width / width18,
+                fontsize: 18.w,
                 color: isDark
                     ? DarkColor.color1
                     : LightColor.color3,
@@ -101,21 +101,21 @@ class _SPanicScreenState extends State<SPanicScreen> {
                       List<DocumentSnapshot> dailyMessages = groupedMessages[date]!;
 
                       return Padding(
-                        padding: EdgeInsets.symmetric(vertical: height / height20),
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: width / width20),
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
                               child: InterBold(
                                 text: date,
-                                fontsize: width / width18,
+                                fontsize: 18.sp,
                                 color: isDark
                                     ? DarkColor.color21
                                     : LightColor.color2,
                               ),
                             ),
-                            SizedBox(height: height / height10),
+                            SizedBox(height: 10.h),
                             ...dailyMessages.map((message) {
                               var messageData = message['MessageData'] ?? '';
                               var messageDate = (message['MessageCreatedAt'] as Timestamp).toDate();
@@ -123,13 +123,13 @@ class _SPanicScreenState extends State<SPanicScreen> {
                               var createdBy = message['MessageCreatedByName'] ?? 'Unknown';
 
                               return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: width / width20, vertical: height / height20),
+                                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: DarkColor.color19,
-                                    borderRadius: BorderRadius.circular(width / width12),
+                                    borderRadius: BorderRadius.circular(12.r),
                                   ),
-                                  padding: EdgeInsets.all(width / width20),
+                                  padding: EdgeInsets.all(20.w),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -139,12 +139,12 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                           CircleAvatar(
                                             backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
                                             foregroundImage: AssetImage('assets/images/default.png'),
-                                            radius: width / width20,
+                                            radius: 20.r,
                                             backgroundColor: isDark
                                                 ? DarkColor.Primarycolor
                                                 : LightColor.Primarycolor,
                                           ),
-                                          SizedBox(width: width / width20),
+                                          SizedBox(width: 20.w),
                                           InterBold(
                                             text: createdBy,
                                             letterSpacing: -.3,
@@ -156,7 +156,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                       ),
                                       InterMedium(
                                         text: formattedTime,
-                                        fontsize: width / width16,
+                                        fontsize: 16.sp,
                                         color: isDark
                                             ? DarkColor.color1
                                             : LightColor.color3,

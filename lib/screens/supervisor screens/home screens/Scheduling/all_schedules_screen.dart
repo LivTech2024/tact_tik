@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -111,8 +112,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     return SafeArea(
       child: Scaffold(
@@ -124,16 +124,16 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color:isDark? Colors.white:LightColor.color3,
-              size: width / width24,
+              size: 24.w,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SHomeScreen()));
             },
           ),
           title: InterMedium(
             text: 'All Schedule',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: isDark ? Colors.white : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -163,7 +163,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
           padding:
-              EdgeInsets.only(left: width / width30, right: width / width30),
+              EdgeInsets.only(left: 30.w, right: 30.w),
           child: CustomScrollView(
             physics: PageScrollPhysics(),
             slivers: [
@@ -171,17 +171,17 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     InterBold(
                       text: 'Search',
-                      fontsize: width / width20,
+                      fontsize: 20.sp,
                       color: isDark ? Colors.white : LightColor.color3,
                     ),
-                    SizedBox(height: height / height24),
+                    SizedBox(height: 24.h),
                     Container(
-                      height: height / height64,
+                      height: 64.h,
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width10),
+                          EdgeInsets.symmetric(horizontal: 10.w),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -194,7 +194,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                           )
                         ],
                         color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                        borderRadius: BorderRadius.circular(width / width13),
+                        borderRadius: BorderRadius.circular(13.w),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -203,20 +203,20 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             child: TextField(
                               style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
-                                fontSize: width / width18,
+                                fontSize: 18.sp,
                                 color: Colors.white,
                               ),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                   borderRadius: BorderRadius.all(
-                                    Radius.circular(width / width10),
+                                    Radius.circular(10.r),
                                   ),
                                 ),
                                 focusedBorder: InputBorder.none,
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
-                                  fontSize: width / width18,
+                                  fontSize: 18.sp,
                                   color: isDark
                                       ? Colors.white
                                       : LightColor
@@ -229,19 +229,19 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             ),
                           ),
                           Container(
-                            height: height / height44,
-                            width: width / width44,
+                            height: 44.h,
+                            width: 44.w,
                             decoration: BoxDecoration(
                               color: isDark
                                   ? DarkColor.Primarycolor
                                   : LightColor.Primarycolor,
                               borderRadius:
-                                  BorderRadius.circular(width / width10),
+                                  BorderRadius.circular(10.r),
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.search,
-                                size: width / width20,
+                                size: 20.w,
                                 color: isDark
                                     ? DarkColor.Secondarycolor
                                     : LightColor.color1,
@@ -251,7 +251,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                   ],
                 ),
               ),
@@ -264,15 +264,15 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: height / height30),
+                        SizedBox(height: 30.h),
                         InterBold(
                           text: date == DateTime.now().toLocal().toIso8601String().split('T').first
                               ? 'Today'
                               : '${date.toLocal().toIso8601String().split('T').first}',
-                          fontsize: width / width20,
+                          fontsize: 20.sp,
                           color: Colors.white,
                         ),
-                        SizedBox(height: height / height24),
+                        SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
                           String shiftName = schedule['ShiftName'];
                           String shiftLocation = schedule['ShiftLocationAddress'];
@@ -283,33 +283,33 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                           List<dynamic> employeeImages = scheduleData?['EmployeeImages'] ?? [];
 
                           return Container(
-                            height: height / height160,
-                            margin: EdgeInsets.only(top: height / height10),
+                            height: 160.h,
+                            margin: EdgeInsets.only(top: 10.h),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
                               color: DarkColor.Primarycolor,
-                              borderRadius: BorderRadius.circular(width / width14),
+                              borderRadius: BorderRadius.circular(14.r),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: height / height20),
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
                             child: Column(
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      height: height / height30,
-                                      width: width / width4,
+                                      height: 30.h,
+                                      width: 4.w,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(width / width10),
-                                          bottomRight: Radius.circular(width / width10),
+                                          topRight: Radius.circular(10.r),
+                                          bottomRight: Radius.circular(10.r),
                                         ),
                                         color: DarkColor. color22,
                                       ),
                                     ),
-                                    SizedBox(width: width / width14),
+                                    SizedBox(width: 14.w),
                                     SizedBox(
-                                      width: width / width190,
+                                      width: 190.w,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -317,24 +317,24 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           InterSemibold(
                                             text: shiftName,
                                             color: DarkColor. color22,
-                                            fontsize: width / width14,
+                                            fontsize: 14.sp,
                                           ),
-                                          SizedBox(height: height / height5),
+                                          SizedBox(height: 5.h),
                                           InterRegular(
                                             text: shiftLocation,
                                             maxLines: 1,
-                                            fontsize: width / width14,
+                                            fontsize: 14.sp,
                                           ),
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
-                                SizedBox(height: height / height10),
+                                SizedBox(height: 10.h),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    left: width / width18,
-                                    right: width / width24,
+                                    left: 18.w,
+                                    right: 24.w,
                                   ),
                                   child: Row(
                                     crossAxisAlignment:
@@ -343,33 +343,33 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       SizedBox(
-                                        width: width / width100,
+                                        width: 100.w,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             InterRegular(
                                               text: 'Guards',
-                                              fontsize: width / width14,
+                                              fontsize: 14.sp,
                                               color: DarkColor.color22,
                                             ),
-                                            SizedBox(height: height / height12),
+                                            SizedBox(height: 12.h),
                                             Wrap(
                                               spacing: -5.0,
                                               children: [
                                                 for (int i = 0; i < (employeeImages.length > 3 ? 3 : employeeImages.length); i++)
                                                   CircleAvatar(
-                                                    radius: width / width10,
+                                                    radius: 10.r,
                                                     backgroundImage: NetworkImage(employeeImages[i]),
                                                   ),
                                                 if (employeeImages.length > 3)
                                                   CircleAvatar(
-                                                    radius: width / width10,
+                                                    radius: 10.r,
                                                     backgroundColor:
                                                         DarkColor. color23,
                                                     child: InterMedium(
                                                       text: '+${employeeImages.length - 3}',
-                                                      fontsize: width / width12,
+                                                      fontsize: 12.sp,
                                                     ),
                                                   ),
                                               ],
@@ -378,37 +378,37 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: width / width200,
+                                        width: 200.w,
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             InterRegular(
                                               text: 'Shift',
                                               color: DarkColor.color22,
-                                              fontsize: width / width14,
+                                              fontsize: 14.sp,
                                             ),
-                                            SizedBox(height: height / height5),
+                                            SizedBox(height: 5.h),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Row(
                                                   children: [
                                                     SizedBox(
-                                                      height: height / height14,
-                                                      width: width / width14,
+                                                      height: 14.h,
+                                                      width: 14.w,
                                                       child: SvgPicture.asset(
                                                           'assets/images/calendar_line.svg'),
                                                     ),
-                                                    SizedBox(width: width / width6),
+                                                    SizedBox(width: 6.w),
                                                     InterMedium(
                                                       text: '$shiftStartTime - $shiftEndTime',
-                                                      fontsize: width / width14,
+                                                      fontsize: 14.sp,
                                                     ),
                                                   ],
                                                 ),
                                                 SizedBox(
-                                                  height: height / height20,
-                                                  width: width / width20,
+                                                  height: 20.h,
+                                                  width: 20.w,
                                                   child: SvgPicture.asset('assets/images/edit_square.svg'),
                                                 )
                                               ],

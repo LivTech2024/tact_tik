@@ -187,8 +187,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+  
 
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
@@ -268,7 +267,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           backgroundImage:
                               AssetImage('assets/images/default.png'),
                           foregroundImage: NetworkImage(_userImg),
-                          radius: width / width50,
+                          radius: 50.r,
                           backgroundColor: DarkColor.Primarycolor,
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
@@ -347,12 +346,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 leading: Icon(
                   Icons.logout,
                   color: Colors.red,
-                  size: width / width24,
+                  size: 24.sp,
                 ),
                 title: PoppinsBold(
                   text: 'Logout',
                   color: Colors.red,
-                  fontsize: width / width14,
+                  fontsize: 14.sp,
                 ),
                 onTap: () {
                   auth.signOut(context, LoginScreen(), _employeeId);

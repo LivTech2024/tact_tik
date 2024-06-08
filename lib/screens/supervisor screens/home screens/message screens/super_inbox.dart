@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -23,7 +24,7 @@ class SuperInboxScreen extends StatefulWidget {
 }
 
 class _SuperInboxScreenState extends State<SuperInboxScreen> {
-  List colors = [isDark?DarkColor.Primarycolor:LightColor.Primarycolor, isDark ? DarkColor.color25 : LightColor.Primarycolorlight
+  List colors = [isDark?DarkColor.Primarycolor:LightColor.color3, isDark ? DarkColor.color25 : LightColor.color2
   ];
 
   bool showGuards = true;
@@ -68,29 +69,29 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+ 
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
+          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
           backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
-          elevation: 0,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
               color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.w,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'Inbox',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color:  isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -98,8 +99,9 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
         ),
         body: ListView(
           children: [
+            // SizedBox(height: 5),
             Container(
-              height: height / height65,
+              height: 65.h,
               width: double.maxFinite,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -115,7 +117,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                 color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
               ),
              
-              padding: EdgeInsets.symmetric(vertical: height / height16),
+              padding: EdgeInsets.symmetric(vertical: 16.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -125,8 +127,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         setState(() {
                           showGuards = true;
                           colors[0] =
-                              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-                          colors[1] =  isDark ? DarkColor.Primarycolorlight : LightColor.Primarycolorlight;
+                              isDark ? DarkColor.Primarycolor : LightColor.color3;
+                          colors[1] =  isDark ? DarkColor.Primarycolorlight : LightColor.color2;
                         });
                       },
                       child: SizedBox(
@@ -134,14 +136,14 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           child: InterBold(
                             text: 'Guards',
                             color: colors[0],
-                            fontsize: width / width18,
+                            fontsize: 18.sp,
                           ),
                         ),
                       ),
                     ),
                   ),
                    VerticalDivider(
-                    color:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                    color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
                   ),
                   Expanded(
                     child: GestureDetector(
@@ -150,10 +152,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           showGuards = false;
                           colors[0] = isDark
                               ? DarkColor.Primarycolorlight
-                              : LightColor.Primarycolorlight;
+                              : LightColor.color2;
                           colors[1] = isDark
                               ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor;
+                              : LightColor.color3;
                         });
                       },
                       child: SizedBox(
@@ -161,7 +163,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           child: InterBold(
                             text: 'Admin',
                             color: colors[1],
-                            fontsize: width / width18,
+                            fontsize: 18.sp,
                           ),
                         ),
                       ),
@@ -172,23 +174,23 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
             ),
             showGuards
                 ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
-                            iconSize: width / width24,
+                            iconSize: 24.w,
                             dropdownColor: isDark
                                 ? DarkColor.WidgetColor
                                 : LightColor.WidgetColor,
                             style: TextStyle(
                                 color: isDark
                                     ? DarkColor.color2
-                                    : LightColor.color3, fontSize: width / width14),
+                                    : LightColor.color3, fontSize: 14.sp),
                             borderRadius:
-                                BorderRadius.circular(width / width10),
+                                BorderRadius.circular(10.r),
                             value: dropdownValue,
                             onChanged: (String? newValue) {
                               setState(() {
@@ -208,7 +210,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                             }).toList(),
                           ),
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         /*_guardsInfo.length == 0
                   ?*/
                         ListView.builder(
@@ -233,7 +235,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                 );
                               },
                               child: Container(
-                                height: height / height60,
+                                height: 60.h,
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
@@ -249,15 +251,15 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                       ? DarkColor.color19
                                       : LightColor.WidgetColor,
                                   borderRadius:
-                                      BorderRadius.circular(width / width12),
+                                      BorderRadius.circular(12.r),
                                 ),
                                 margin:
-                                    EdgeInsets.only(bottom: height / height10),
+                                    EdgeInsets.only(bottom: 10.h),
                                 width: double.maxFinite,
                                 child: Container(
-                                  height: height / height48,
+                                  height: 48.h,
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: width / width20,
+                                    horizontal: 20.w,
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -266,8 +268,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                       Row(
                                         children: [
                                           Container(
-                                            height: height / height50,
-                                            width: width / width50,
+                                            height: 50.h,
+                                            width: 50.w,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               color:DarkColor.Primarycolor ,
@@ -282,7 +284,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: width / width20,
+                                            width: 20.w,
                                           ),
                                           InterBold(
                                             text: 'name',
@@ -306,24 +308,24 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                                 left: -8,
                                                 child: Container(
                                                   padding: EdgeInsets.symmetric(
-                                                    horizontal: width / width4,
+                                                    horizontal: 4.w,
                                                   ),
-                                                  height: height / height14,
+                                                  height: 14.h,
                                                   // width: width / width20,
                                                   constraints: BoxConstraints(
-                                                    minWidth: width / width20,
+                                                    minWidth: 20.w,
                                                   ),
                                                   decoration: BoxDecoration(
                                                     color: Colors.red,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                      width / width50,
+                                                      50.r,
                                                     ),
                                                   ),
                                                   child: Center(
                                                     child: InterBold(
                                                       text: '2',
-                                                      fontsize: width / width8,
+                                                      fontsize: 8.sp,
                                                       color: isDark
                                                           ? DarkColor
                                                               .color1

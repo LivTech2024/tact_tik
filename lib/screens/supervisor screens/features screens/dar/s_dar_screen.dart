@@ -50,8 +50,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     // keep this code in firebase_function file  and handle its errors here
     Future<String?> _submitDAR() async {
@@ -144,11 +143,11 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                       children: [
                         InterBold(
                           text: date,
-                          fontsize: width / width20,
+                          fontsize: 20.w,
                           color: DarkColor.Primarycolor,
                           letterSpacing: -.3,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         ...darEntries.map((document) {
                           bool isNew = isNewEntry(document);
                           if (!showAllDARS && !isNew) {
@@ -176,11 +175,11 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               decoration: BoxDecoration(
                                 color: DarkColor.WidgetColor,
                                 borderRadius:
-                                    BorderRadius.circular(width / width20),
+                                    BorderRadius.circular(20.r),
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: width / width20,
-                                vertical: height / height10,
+                                horizontal: 20.w,
+                                vertical: 10.h,
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -188,21 +187,21 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                 children: [
                                   InterBold(
                                     text: document['EmpDarShiftName'] ?? "",
-                                    fontsize: width / width18,
+                                    fontsize: 18.w,
                                     color: DarkColor.Primarycolor,
                                   ),
                                   isNew
                                       ? InterBold(
                                           text: "New",
-                                          fontsize: width / width18,
+                                          fontsize: 18.sp,
                                           color: Colors.green,
                                         )
                                       : SizedBox(),
-                                  SizedBox(height: height / height10),
+                                  SizedBox(height: 10.h),
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
-                                      fontsize: width / width16,
+                                      fontsize: 16.sp,
                                       color: DarkColor.color26,
                                       maxLines: 4,
                                     ),
@@ -211,12 +210,12 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                     children: [
                                       IconButton(
                                         padding: EdgeInsets.symmetric(
-                                          horizontal: width / width10,
+                                          horizontal: 10.w,
                                         ),
                                         onPressed: () {},
                                         icon: Icon(
                                           Icons.image,
-                                          size: width / width18,
+                                          size: 18.w,
                                           color: DarkColor.color2,
                                         ),
                                       ),
@@ -224,7 +223,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                         onPressed: () {},
                                         icon: Icon(
                                           Icons.video_collection,
-                                          size: width / width18,
+                                          size: 18.w,
                                           color: DarkColor.color2,
                                         ),
                                       ),
@@ -235,7 +234,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                             ),
                           );
                         }).toList(),
-                        SizedBox(height: height / height10),
+                        SizedBox(height: 10.h),
                       ],
                     ));
                   }
@@ -252,16 +251,16 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                       icon: Icon(
                         Icons.arrow_back_ios,
                         color: Colors.white,
-                        size: width / width24,
+                        size: 24.sp,
                       ),
-                      padding: EdgeInsets.only(left: width / width20),
+                      padding: EdgeInsets.only(left: 20.w),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     title: InterMedium(
                       text: 'DAR',
-                      fontsize: width / width18,
+                      fontsize: 18.w,
                       color: Colors.white,
                       letterSpacing: -.3,
                     ),
@@ -270,11 +269,11 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                      height: height / height65,
+                      height: 65.h,
                       width: double.maxFinite,
                       color: DarkColor.color24,
                       padding:
-                          EdgeInsets.symmetric(vertical: height / height16),
+                          EdgeInsets.symmetric(vertical: 16.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -332,8 +331,8 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                   ),
                   SliverPadding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: width / width16,
-                      vertical: height / height20,
+                      horizontal: 16.w,
+                      vertical: 20.h,
                     ),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate(

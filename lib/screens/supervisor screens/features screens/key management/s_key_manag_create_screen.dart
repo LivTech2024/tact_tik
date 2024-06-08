@@ -112,8 +112,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    
 
     return SafeArea(
       child: Scaffold(
@@ -125,16 +124,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.w,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'Keys Guards',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -147,10 +146,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: height / height65,
+                    height: 65.h,
                     width: double.maxFinite,
                     color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
-                    padding: EdgeInsets.symmetric(vertical: height / height16),
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -172,7 +171,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 child: InterBold(
                                   text: 'Edit',
                                   color: colors[0],
-                                  fontsize: width / width18,
+                                  fontsize: 18.w,
                                 ),
                               ),
                             ),
@@ -199,7 +198,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 child: InterBold(
                                   text: 'Create',
                                   color: colors[1],
-                                  fontsize: width / width18,
+                                  fontsize: 18.w,
                                 ),
                               ),
                             ),
@@ -208,36 +207,36 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: height / height20),
+                  SizedBox(height: 20.h),
                   showCreate
                       ? Padding(
                           padding:
-                              EdgeInsets.symmetric(horizontal: width / width30),
+                              EdgeInsets.symmetric(horizontal: 30.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InterBold(
                                 text: 'Recipient Name',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: 'Eg. Leslie Alexander',
                                 controller: _RecipientNameController,
                                 showIcon: false,
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Contact',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 maxlength: 11,
                                 hint: '12345678901',
@@ -245,50 +244,50 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 showIcon: false,
                                 textInputType: TextInputType.number,
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Company Name',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: 'Eg. Tacttik',
                                 controller: _CompanyNameController,
                                 showIcon: false,
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Allocate Qt.',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: '0',
                                 controller: _AllocateQtController1,
                                 showIcon: false,
                                 textInputType: TextInputType.number,
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Date',
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               GestureDetector(
                                 onTap: () {
                                   _selectDate(context, true, true);
                                 },
                                 child: Container(
-                                  height: height / height60,
+                                  height: 60.h,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 20.w,
                                   ),
@@ -308,28 +307,28 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                             ? '${SelectedDate!.toLocal()}'
                                                 .split(' ')[0]
                                             : 'Start Time',
-                                        fontsize: width / width16,
+                                        fontsize: 16.w,
                                         color: isDark
                                       ? DarkColor.color2
                                       : LightColor.color2,
                                       ),
                                       SvgPicture.asset(
                                         'assets/images/calendar_clock.svg',
-                                        width: width / width20,
+                                        width: 20.w,
                                       )
                                     ],
                                   ),
                                 ),
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Allocation Date',
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
-                                fontsize: width / width16,
+                                fontsize: 16.sp,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               Row(
                                 children: [
                                   Expanded(
@@ -338,9 +337,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         _selectDate(context, true, false);
                                       },
                                       child: Container(
-                                        height: height / height60,
+                                        height: 60.h,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(width / width10),
+                                          borderRadius: BorderRadius.circular(10.r),
                                           color: isDark
                                               ? DarkColor.WidgetColor
                                               : LightColor.WidgetColor,
@@ -354,30 +353,30 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                   ? '${StartDate!.toLocal()}'
                                                       .split(' ')[0]
                                                   : 'Start Time',
-                                              fontsize: width / width16,
+                                              fontsize: 16.sp,
                                               color: isDark
                                                   ? DarkColor.color2
                                                   : LightColor.color2,
                                             ),
                                             SvgPicture.asset(
                                               'assets/images/calendar_clock.svg',
-                                              width: width / width20,
+                                              width: 20.w,
                                             )
                                           ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: width / width6),
+                                  SizedBox(width: 6.w),
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: () {
                                         _selectDate(context, false, false);
                                       },
                                       child: Container(
-                                        height: height / height60,
+                                        height: 60.h,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(width / width10),
+                                          borderRadius: BorderRadius.circular(10.r),
                                           color: isDark
                                               ? DarkColor.WidgetColor
                                               : LightColor.WidgetColor,
@@ -391,14 +390,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                   ? '${EndDate!.toLocal()}'
                                                       .split(' ')[0]
                                                   : 'End Time',
-                                              fontsize: width / width16,
+                                              fontsize: 16.w,
                                               color: isDark
                                                   ? DarkColor.color2
                                                   : LightColor.color2,
                                             ),
                                             SvgPicture.asset(
                                               'assets/images/calendar_clock.svg',
-                                              width: width / width20,
+                                              width: 20.w,
                                             )
                                           ],
                                         ),
@@ -407,28 +406,28 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Allocation Purpose',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: 'Write something...',
                                 controller: _AllocationPurposeController,
                                 showIcon: true,
                                 isExpanded: true,
                               ),
-                              SizedBox(height: height / height20),
+                              SizedBox(height: 20.h),
                               Button1(
                                 text: 'Save',
                                 onPressed: () {
                                   _saveData();
                                 },
-                                borderRadius: width / width10,
+                                borderRadius: 10.r,
                                 backgroundcolor: isDark
                                     ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor,
@@ -441,47 +440,47 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                         )
                       : Padding(
                           padding:
-                              EdgeInsets.symmetric(horizontal: width / width30),
+                              EdgeInsets.symmetric(horizontal: 30.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InterBold(
                                 text: 'Key Name',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: 'Tittle',
                                 controller: _AllocateQtController2,
                                 showIcon: true,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               InterBold(
                                 text: 'Allocate Qt.',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: '0',
                                 controller: _AllocateQtController2,
                                 showIcon: false,
                                 textInputType: TextInputType.number,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               InterBold(
                                 text: 'Description',
-                                fontsize: width / width16,
+                                fontsize: 16.w,
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
                               ),
-                              SizedBox(height: height / height10),
+                              SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: 'Write something...',
                                 controller: _DescriptionController,
@@ -496,7 +495,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 onPressed: () {
                                   _saveData();
                                 },
-                                borderRadius: width / width10,
+                                borderRadius: 10.r,
                                 backgroundcolor: isDark
                                     ? DarkColor.Primarycolor
                                     : LightColor.Primarycolor,

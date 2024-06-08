@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -212,8 +213,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+    
 
     // Combine postOrderPdfUrl and postOrderOtherData for display
     List<String> allUrls = [];
@@ -232,16 +232,16 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
             icon: Icon(
               Icons.arrow_back_ios,
               color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              size: 24.w,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           title: InterMedium(
             text: 'Post Order',
-            fontsize: width / width18,
+            fontsize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
@@ -250,29 +250,29 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
         backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: ListView(
             children: [
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               InterSemibold(
                 text: widget.date,
-                fontsize: width / width20,
+                fontsize: 20.sp,
                 color: isDark ? DarkColor.Primarycolor : LightColor.color3,
               ),
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               CustomeTextField(
                 isEnabled: widget.isDisplay,
                 hint: widget.title,
                 showIcon: false,
               ),
-              SizedBox(height: height / height20),
+              SizedBox(height: 20.h),
               CustomeTextField(
                 isEnabled: !widget.isDisplay,
                 hint: 'Comment',
                 isExpanded: true,
                 controller: _explainController,
               ),
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -285,14 +285,14 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                           clipBehavior: Clip.none,
                           children: [
                             Container(
-                              height: height / height66,
-                              width: width / width66,
+                              height: 66.h,
+                              width: 66.w,
                               decoration: BoxDecoration(
                                   color: DarkColor. WidgetColor,
                                   borderRadius: BorderRadius.circular(
-                                    width / width10,
+                                    10.r,
                                   )),
-                              margin: EdgeInsets.all(width / width8),
+                              margin: EdgeInsets.all(8.w),
                               child: upload['type'] == 'image'
                                   ? Image.file(
                                 upload['file'],
@@ -300,7 +300,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                               )
                                   : SvgPicture.asset(
                                 'assets/images/pdf.svg',
-                                width: width / width32,
+                                width: 32.w,
                               ),
                             ),
                             Positioned(
@@ -316,7 +316,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                   child: Icon(
                                     Icons.close_sharp,
                                     color: Colors.black,
-                                    size: width / width20,
+                                    size: 20.w,
                                   ),
                                 ),
                                 padding: EdgeInsets.zero,
@@ -362,11 +362,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                         );
                       },
                       child: Container(
-                        height: height / height66,
-                        width: width / width66,
+                        height: 66.h,
+                        width: 66.w,
                         decoration: BoxDecoration(
                             color:DarkColor. WidgetColor,
-                            borderRadius: BorderRadius.circular(width / width8)),
+                            borderRadius: BorderRadius.circular(8.r)),
                         child: Center(
                           child: Icon(Icons.add),
                         ),
@@ -375,7 +375,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                   ],
                 ),
               ),
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               ListView(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -404,11 +404,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                 _downloadAndOpenPdf(context, url);
                               },
                               child: Container(
-                                margin: EdgeInsets.only(bottom: height / height10),
-                                width: width / width200,
-                                height: height / height46,
+                                margin: EdgeInsets.only(bottom: 10.h),
+                                width: 200.w,
+                                height: 46.h,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(width / width10),
+                                  borderRadius: BorderRadius.circular(10.r),
                                   color: DarkColor.color1,
                                 ),
                                 child: Row(
@@ -418,11 +418,11 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: width / width6,
+                                            horizontal: 6.w,
                                           ),
                                           child: SvgPicture.asset(
                                             'assets/images/pdf.svg',
-                                            width: width / width32,
+                                            width: 32.w,
                                           ),
                                         ),
                                         Column(
@@ -463,8 +463,8 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                     itemBuilder: (context, index) {
                       String imageUrl = allUrls.where((url) => !url.contains('.pdf')).toList()[index];
                       return SizedBox(
-                        height: height / height80,
-                        width: width / width80,
+                        height: 80.h,
+                        width: 80.w,
                         child: Image.network(
                           imageUrl,
                           fit: BoxFit.contain,
@@ -475,13 +475,13 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
                 ],
               ),
               SizedBox(
-                height: height / height40,
+                height: 40.h,
               ),
               Button1(
                 text: 'Done',
                 onPressed: _uploadFiles,
                 backgroundcolor: DarkColor.Primarycolor,
-                borderRadius: width / width10,
+                borderRadius: 10.r,
               ),
             ],
           ),
