@@ -115,6 +115,16 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                         child: Container(
                           height: 60.h,
                           decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? Colors.transparent
+                                    : LightColor.color3.withOpacity(.05),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset: Offset(0, 3),
+                              )
+                            ],
                             color: isDark
                                       ? DarkColor.color19
                                       : LightColor.WidgetColor,

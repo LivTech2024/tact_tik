@@ -116,6 +116,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         width: 190.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
+                          Iconcolor: isDark
+                              ? DarkColor.Primarycolor
+                              : LightColor.color3,
                           text: selectedDate != null
                               ? DateFormat('dd/MM/yyyy').format(selectedDate!)
                               : 'display shift date',
@@ -131,14 +134,16 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       child: IconTextWidget(
                         space: 6.w,
                         icon: Icons.add,
+                          Iconcolor:
+                            isDark ? DarkColor.Primarycolor : LightColor.color3,
                         iconSize: 20.sp,
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: 14.sp,
                         color: isDark
                             ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
-                        Iconcolor: DarkColor.color1,
+                            : LightColor.color3,
+                        // Iconcolor: DarkColor.color1,
                       ),
                     ),
                   ],
@@ -224,6 +229,16 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                 margin: EdgeInsets.only(top: 10.h),
                                 width: double.maxFinite,
                                 decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3.withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
                                   color: isDark
                                       ? DarkColor.WidgetColor
                                       : LightColor.WidgetColor,
@@ -372,9 +387,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     horizontal: 10.w,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color: isDark
-                                                        ? DarkColor.color21
-                                                        : LightColor.color3,
+                                                    // color: isDark
+                                                    //     ? DarkColor.color21
+                                                    //     : LightColor.color3,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5.r),

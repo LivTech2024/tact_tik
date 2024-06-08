@@ -43,7 +43,7 @@ class SDarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<SDarDisplayScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor.color25];
+  List colors =isDark? [DarkColor.Primarycolor, DarkColor.color25]:[LightColor.color3, LightColor.color2];
 
   bool showAllDARS = false;
 

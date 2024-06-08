@@ -250,7 +250,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                                           ? DarkColor
                                                               .color16
                                                           : LightColor
-                                                              .color2,
+                                                              .color3,
                                                     )
                                                   ],
                                                 )

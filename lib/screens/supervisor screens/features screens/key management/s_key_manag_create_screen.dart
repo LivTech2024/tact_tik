@@ -29,7 +29,7 @@ class SCreateKeyManagScreen extends StatefulWidget {
 }
 
 class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor. color25];
+  List colors =isDark? [DarkColor.Primarycolor, DarkColor. color25]:[LightColor.color3, LightColor.color2];
   bool isChecked = false;
   bool showCreate = true;
 
@@ -160,7 +160,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 showCreate = true;
                                 colors[0] = isDark
                                     ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor;
+                                    : LightColor.color3;
                                 colors[1] = isDark
                                     ? DarkColor.color25
                                     : LightColor.color2;
@@ -190,7 +190,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     : LightColor.color2;
                                 colors[1] = isDark
                                     ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor;
+                                    : LightColor.color3;
                               });
                             },
                             child: SizedBox(
