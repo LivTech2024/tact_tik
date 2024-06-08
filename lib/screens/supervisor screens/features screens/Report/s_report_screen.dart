@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/Report/s_create_report_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
@@ -106,34 +108,37 @@ class _ReportScreenState extends State<SReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
+          shadowColor: isDark
+              ? Colors.transparent
+              : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
+              size: 24.sp,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'Report',
-            fontsize: width / width18,
-            color: Colors.white,
+            fontsize: 18.sp,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
-        backgroundColor: DarkColor. Secondarycolor,
+        // backgroundColor: DarkColor. Secondarycolor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -155,48 +160,62 @@ class _ReportScreenState extends State<SReportScreen> {
               }
             });
           },
-          backgroundColor: DarkColor. Primarycolor,
+          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add),
+          child: Icon(Icons.add,color: isDark ? DarkColor.color1 : LightColor.color3,),
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: Column(
             children: [
-              SizedBox(height: height / height30),
+              SizedBox(height: 30.h),
               SizedBox(
-                height: height / height40,
+                
+                height: 50.h,
                 child: ListView.builder(
                   itemCount: tittles.length,
                   // shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          currentIndex = index;
-                          getAllReports();
-                        });
-                      },
-                      child: AnimatedContainer(
-                        margin: EdgeInsets.only(right: width / width10),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: width / width20),
-                        constraints: BoxConstraints(
-                          minWidth: width / width70,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(width / width20),
-                          color: currentIndex == index
-                              ? DarkColor.Primarycolor
-                              : DarkColor.WidgetColor,
-                        ),
-                        duration: const Duration(microseconds: 500),
-                        child: Center(
-                          child: InterRegular(
-                            text: tittles[index],
-                            fontsize: width / width16,
-                            color: DarkColor. color18,
+                    return Padding(
+                      padding:  EdgeInsets.symmetric(vertical: 8.h),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentIndex = index;
+                            getAllReports();
+                          });
+                        },
+                        child: AnimatedContainer(
+                          margin: EdgeInsets.only(right: 10.w),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20.w),
+                          constraints: BoxConstraints(
+                            minWidth: 70.w,
+                          ),
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? Colors.transparent
+                                    : LightColor.color3.withOpacity(.1),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset: Offset(0, 3),
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(20.w),
+                            color: isDark?(currentIndex == index
+                                ? DarkColor.Primarycolor
+                                : DarkColor.WidgetColor):(currentIndex == index?LightColor.Primarycolor:LightColor.WidgetColor),
+                          ),
+                          duration: const Duration(microseconds: 500),
+                          child: Center(
+                            child: InterRegular(
+                              text: tittles[index],
+                              fontsize: 16.sp,
+                              color: isDark ? DarkColor.color18 : LightColor.color3,
+                            ),
                           ),
                         ),
                       ),
@@ -204,7 +223,7 @@ class _ReportScreenState extends State<SReportScreen> {
                   },
                 ),
               ),
-              SizedBox(height: height / height20),
+              SizedBox(height: 20.h),
               Expanded(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -220,10 +239,10 @@ class _ReportScreenState extends State<SReportScreen> {
                         if (groupReports.isNotEmpty)
                           InterBold(
                             text: groupDate,
-                            color: DarkColor. Primarycolor,
-                            fontsize: width / width20,
+                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            fontsize: 20.sp,
                           ),
-                        SizedBox(height: height / height30),
+                        SizedBox(height: 30.h),
                         ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -259,26 +278,38 @@ class _ReportScreenState extends State<SReportScreen> {
                                 children: [
                                   Container(
                                     margin: EdgeInsets.only(
-                                      bottom: height / height10,
+                                      bottom: 10.h,
                                     ),
                                     padding: EdgeInsets.symmetric(
-                                      horizontal: width / width20,
+                                      horizontal: 20.w,
                                     ),
-                                    height: height / height100,
+                                    height: 100.h,
                                     decoration: BoxDecoration(
-                                      color: DarkColor.WidgetColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: isDark
+                                              ? Colors.transparent
+                                              : LightColor.color3.withOpacity(.1),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: Offset(0, 3),
+                                        )
+                                      ],
+                                      color: isDark
+                                          ? DarkColor.WidgetColor
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(
-                                          width / width10),
+                                          10.w),
                                     ),
                                     child: Row(
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
-                                            right: width / width20,
+                                            right: 20.w,
                                           ),
-                                          child: SvgPicture.asset(
-                                            'assets/images/report_icon.svg',
-                                            height: height / height24,
+                                          child: SvgPicture.asset(isDark?
+                                            'assets/images/report_icon.svg':'assets/images/report_icon_light.svg',
+                                            height: 24.h,
                                             fit: BoxFit.fitHeight,
                                           ),
                                         ),
@@ -292,13 +323,15 @@ class _ReportScreenState extends State<SReportScreen> {
                                               Text(
                                                 report['ReportName'],
                                                 style: TextStyle(
-                                                  fontSize: width / width20,
-                                                  color: DarkColor.color2,
+                                                  fontSize: 20.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color2
+                                                      : LightColor.color3,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
                                               SizedBox(
-                                                  height: height / height10),
+                                                  height: 10.h),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -309,22 +342,28 @@ class _ReportScreenState extends State<SReportScreen> {
                                                       InterMedium(
                                                         text: 'CATEGORY: ',
                                                         fontsize:
-                                                            width / width14,
-                                                        color: DarkColor.color32,
+                                                            14.w,
+                                                        color: isDark
+                                                            ? DarkColor.color32
+                                                            : LightColor.color3,
                                                       ),
                                                       InterRegular(
                                                         text: report[
                                                             'ReportCategoryName'],
                                                         fontsize:
-                                                            width / width14,
-                                                        color: DarkColor.color26,
+                                                            14.w,
+                                                        color: isDark
+                                                            ? DarkColor.color26
+                                                            : LightColor.color3,
                                                       ),
                                                     ],
                                                   ),
                                                   InterRegular(
                                                     text: formattedTime,
-                                                    color: DarkColor. color26,
-                                                    fontsize: width / width14,
+                                                    color: isDark
+                                                        ? DarkColor.color26
+                                                        : LightColor.color3,
+                                                    fontsize: 14.w,
                                                   )
                                                 ],
                                               ),
@@ -335,7 +374,7 @@ class _ReportScreenState extends State<SReportScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: height / height20,
+                                    height: 20.h,
                                   )
                                 ],
                               ),

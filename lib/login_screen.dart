@@ -125,8 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextField(
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20.sp,
                         color: isDark
                             ? DarkColor.color1
                             : LightColor.color3, // Change text color to white
@@ -137,6 +137,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             ? DarkColor.Primarycolor
                             : LightColor.Primarycolor,
                         labelText: 'Email',
+                        hintStyle: GoogleFonts.poppins(
+                          // fontWeight: FontWeight.w700,
+                          fontSize: 20.sp,
+                          color: isDark
+                              ? DarkColor.color1
+                              : LightColor.color3, // Change text color to white
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          // fontWeight: FontWeight.w700,
+                          fontSize: 20.sp,
+                          color: isDark
+                              ? DarkColor.color1
+                              : LightColor.color3, // Change text color to white
+                        ),
                         hintText: 'Enter your email',
                       ),
                       keyboardType: TextInputType.emailAddress,
@@ -144,8 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 30.h),
                     TextField(
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w300,
-                        fontSize: (15.sp),
+                        fontWeight: FontWeight.w700,
+                        fontSize: (20.sp),
                         color: isDark
                             ? DarkColor.color1
                             : LightColor.color3, // Change text color to white
@@ -164,12 +178,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                             size: 24.sp,
-                            color: isDark ? DarkColor.color6 : LightColor.color2,
+                            color:
+                                isDark ? DarkColor.color6 : LightColor.color2,
                           ),
                         ),
                         focusColor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
+                            ? DarkColor.color1
+                            : LightColor.color3,
+                            hintStyle: GoogleFonts.poppins(
+                          // fontWeight: FontWeight.w700,
+                          fontSize: 20.sp,
+                          color: isDark
+                              ? DarkColor.color1
+                              : LightColor.color3, // Change text color to white
+                        ),
+                        labelStyle: GoogleFonts.poppins(
+                          // fontWeight: FontWeight.w700,
+                          fontSize: 20.sp,
+                          color: isDark
+                              ? DarkColor.color1
+                              : LightColor
+                                  .color3, // Change text color to white
+                        ),
                         labelText: 'Password',
                         hintText: 'Enter your password',
                       ),

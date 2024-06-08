@@ -13,6 +13,7 @@ import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../fonts/inter_bold.dart';
+import '../../../../main.dart';
 import '../../../../utils/colors.dart';
 
 class SDarOpenAllScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class SDarOpenAllScreen extends StatefulWidget {
 }
 
 class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
-  List colors = [DarkColor.Primarycolor, DarkColor.color25];
+  List colors =isDark? [DarkColor.Primarycolor, DarkColor.color25]:[LightColor.color3, LightColor.color2];
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -459,30 +460,30 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        backgroundColor:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark
+              ? Colors.transparent
+              : LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
+              color: isDark? DarkColor.color1:LightColor.color3,
+              size: 24.w,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: InterMedium(
             text: 'DAR',
-            fontsize: width / width18,
-            color: Colors.white,
+            fontsize: 18.sp,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -492,10 +493,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: height / height65,
+                height: 65.h,
                 width: double.maxFinite,
-                color: DarkColor.color24,
-                padding: EdgeInsets.symmetric(vertical: height / height16),
+                color: isDark ? DarkColor.color24 : LightColor.color1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -504,43 +504,52 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = DarkColor.Primarycolor;
-                            colors[1] = DarkColor.color25;
+                            colors[0] = isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3;
+                            colors[1] =
+                                isDark ? DarkColor.color25 : LightColor.color2;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: DarkColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
-                              text: 'Edit',
+                              text: 'Read',
                               color: colors[0],
-                              fontsize: width / width18,
+                              fontsize: 18.sp,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    VerticalDivider(
-                      color: DarkColor.Primarycolor,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: VerticalDivider(
+                        color: isDark ? DarkColor.color2 : LightColor.color3,
+                      ),
                     ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] = DarkColor.color25;
-                            colors[1] = DarkColor.Primarycolor;
+                            colors[0] =
+                                isDark ? DarkColor.color25 : LightColor.color2;
+                            colors[1] = isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: DarkColor.Primarycolor,
+                          color: isDark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
                               color: colors[1],
-                              fontsize: width / width18,
+                              fontsize: 18.sp,
                             ),
                           ),
                         ),
@@ -549,56 +558,64 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: height / height20),
+              SizedBox(height: 20.h),
               showDARS
                   ? Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                          EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         children: [
                           Row(
                             children: [
                               InterRegular(
                                 text: 'Shift Name :',
-                                fontsize: width / width20,
-                                color: DarkColor.color17,
+                                fontsize: 20.sp,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                               ),
                               SizedBox(
-                                width: width / width6,
+                                width: 6.w,
                               ),
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftName ?? 'Loading...',
-                                  color: DarkColor.Primarycolor,
-                                  fontsize: width / width20,
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.color3,
+                                  fontsize: 20.sp,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height10),
+                          SizedBox(height: 10.h),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               InterRegular(
                                 text: 'Location :',
-                                fontsize: width / width20,
-                                color: DarkColor.color17,
+                                fontsize: 20.sp,
+                                color: isDark
+                                    ? DarkColor.color17
+                                    : LightColor.color3,
                               ),
                               SizedBox(
-                                width: width / width6,
+                                width: 6.w,
                               ),
                               Flexible(
                                 child: InterRegular(
                                   text: _userService.shiftLocation ??
                                       'Loading...',
-                                  color: DarkColor.Primarycolor,
-                                  fontsize: width / width20,
+                                  color: isDark
+                                      ? DarkColor.Primarycolor
+                                      : LightColor.color3,
+                                  fontsize: 20.sp,
                                   maxLines: 3,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: height / height20),
+                          SizedBox(height: 20.h),
                           FutureBuilder(
                             future:
                                 fetchDarTileData(widget.passdate, widget.DarId),
@@ -652,18 +669,30 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                           },
                                           child: Container(
                                             margin: EdgeInsets.only(
-                                              bottom: height / height10,
+                                              bottom: 10.h,
                                             ),
                                             width: double.maxFinite,
                                             decoration: BoxDecoration(
-                                              color: DarkColor.WidgetColor,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: isDark
+                                                      ? Colors.transparent
+                                                      : LightColor.color3
+                                                          .withOpacity(.05),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 2,
+                                                  offset: const Offset(0, 3),
+                                                )
+                                              ],
+                                              color: isDark
+                                                  ? DarkColor.WidgetColor
+                                                  : LightColor.WidgetColor,
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      width / width10),
+                                                  BorderRadius.circular(10.r),
                                             ),
                                             padding: EdgeInsets.symmetric(
-                                              vertical: height / height20,
-                                              horizontal: width / width20,
+                                              vertical: 20.h,
+                                              horizontal: 20.w,
                                             ),
                                             child: Column(
                                                 crossAxisAlignment:
@@ -673,21 +702,23 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         "${data[index]['TileTime']}",
                                                     // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: DarkColor.color21,
+                                                    color: isDark
+                                                        ? DarkColor.color21
+                                                        : LightColor.color3,
                                                   ),
                                                   SizedBox(
-                                                    height: height / height10,
+                                                    height: 10.h,
                                                   ),
                                                   InterRegular(
                                                     text:
                                                         '${data[index]['TileContent']}',
-                                                    fontsize: width / width16,
-                                                    color: DarkColor.color12,
+                                                    fontsize: 16.w,
+                                                    color: isDark
+                                                        ? DarkColor.color12
+                                                        : LightColor.color3,
                                                     maxLines: 5,
                                                   ),
-                                                  SizedBox(
-                                                      height:
-                                                          height / height20),
+                                                  SizedBox(height: 20.h),
                                                   Row(
                                                     children: List.generate(
                                                       (data[index]['TileImages']
@@ -695,17 +726,15 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                           .length,
                                                       (i) => Container(
                                                         margin: EdgeInsets.only(
-                                                            right: height /
-                                                                height10),
-                                                        height:
-                                                            height / height50,
-                                                        width: width / width50,
+                                                            right: 10.w),
+                                                        height: 50.h,
+                                                        width: 50.w,
                                                         decoration:
                                                             BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                            width / width10,
+                                                            10.r,
                                                           ),
                                                           image:
                                                               DecorationImage(
@@ -804,10 +833,8 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                                       checkPointImages
                                                                           .first
                                                                           .toString(),
-                                                                      width: width /
-                                                                          width100,
-                                                                      height: height /
-                                                                          height100,
+                                                                      width: 100.w,
+                                                                      height: 100.h,
                                                                       fit: BoxFit
                                                                           .cover,
                                                                     )
@@ -834,16 +861,16 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                     )
                   : Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: width / width30),
+                          EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterBold(
                             text: 'Reports',
-                            fontsize: width / width20,
-                            color: DarkColor.Primarycolor,
+                            fontsize: 20.sp,
+                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                           ),
-                          SizedBox(height: height / height25),
+                          SizedBox(height: 25.h),
                           FutureBuilder<
                               Map<String, List<Map<String, dynamic>>>>(
                             future: fetchReportLogs(),
@@ -892,17 +919,17 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                             : '';
                                         return Container(
                                           margin: EdgeInsets.only(
-                                              bottom: height / height30),
-                                          height: height / height25,
+                                              bottom: 30.h),
+                                          height: 25.h,
                                           color: const Color(0xFF7C7C7C),
                                           child: Row(
                                             children: [
                                               Container(
-                                                width: width / width20,
+                                                width: 20.w,
                                                 height: double.infinity,
                                                 color: Colors.red,
                                               ),
-                                              SizedBox(width: width / width2),
+                                              SizedBox(width: 2.w),
                                               Expanded(
                                                 child: Text(
                                                   '# ${report['ReportSearchId'] ?? ''}',
@@ -913,12 +940,12 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(width: width / width2),
+                                              SizedBox(width: 2.w),
                                               Text(
                                                 formattedTime,
-                                                style: const TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 48, 48, 48),
+                                                style:  TextStyle(
+                                                  color:isDark? Color.fromARGB(
+                                                      255, 48, 48, 48):LightColor.color3,
                                                 ),
                                               ),
                                             ],

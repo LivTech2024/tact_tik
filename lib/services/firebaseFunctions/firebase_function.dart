@@ -1812,6 +1812,109 @@ class FireStoreService {
     }
   }
 
+  Future<void> updateShift(
+      String shiftId,
+      List guards,
+      String? role,
+      String Address,
+      String CompanyBranchId,
+      String CompanyId,
+      List<DateTime> Date,
+      TimeOfDay? startTime,
+      TimeOfDay? EndTime,
+      List patrol,
+      String clientID,
+      String requiredEmp,
+      String photoInterval,
+      String restrictedRadius,
+      bool shiftenablerestriction,
+      GeoPoint coordinates,
+      String locationName,
+      String locationId,
+      String locationAddress,
+      String branchId,
+      String shiftDesc,
+      String ShiftName,
+      List<Map<String, dynamic>> tasks,
+      ) async {
+    try {
+      List<String> convertToStringArray(List list) {
+        List<String> stringArray = [];
+        for (var element in list) {
+          stringArray.add(element.toString());
+        }
+        return stringArray;
+      }
+
+      List<String> guardUserIds = convertToStringArray(guards);
+      List<String> selectedGuardIds =
+      guards.map((guard) => guard['GuardId'] as String).toList();
+
+      final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+      final DateFormat timeFormatter = DateFormat('HH:mm');
+
+      // Get the shift document reference
+      final shiftDocRef = shifts.doc(shiftId);
+
+      // Update the shift document
+      await shiftDocRef.update({
+        'ShiftName': ShiftName,
+        'ShiftPosition': role,
+        'ShiftStartTime': timeFormatter.format(DateTime(
+          Date.first.year,
+          Date.first.month,
+          Date.first.day,
+          startTime!.hour,
+          startTime.minute,
+        )),
+        'ShiftEndTime': timeFormatter.format(DateTime(
+          Date.first.year,
+          Date.first.month,
+          Date.first.day,
+          EndTime!.hour,
+          EndTime.minute,
+        )),
+        'ShiftCompanyBranchId': branchId,
+        'ShiftDescription': shiftDesc,
+        'ShiftLocationName': locationName,
+        'ShiftLocationAddress': locationAddress,
+        'ShiftLocationId': locationId,
+        'ShiftLocation': coordinates,
+        'ShiftAssignedUserId': selectedGuardIds,
+        'ShiftClientId': clientID,
+        'ShiftCompanyId': CompanyId,
+        'ShiftRequiredEmp': int.parse(requiredEmp),
+        'ShiftCompanyBranchId': branchId,
+        'ShiftLinkedPatrolIds': patrol,
+        'ShiftPhotoUploadIntervalInMinutes': int.parse(photoInterval),
+        'ShiftRestrictedRadius': int.parse(restrictedRadius),
+        'ShiftEnableRestrictedRadius': shiftenablerestriction,
+        'ShiftModifiedAt': Timestamp.now(),
+      });
+
+      // Prepare the shift tasks array with the document id
+      List<Map<String, dynamic>> shiftTasks = tasks.map((task) {
+        return {
+          'ShiftTask': task['name'],
+          'ShiftTaskId': shiftId, // Assign the shift id to each task
+          'ShiftTaskQrCodeReq': task['isQrRequired'] ?? false,
+          'ShiftTaskReturnReq': task['isReturnQrRequired'] ?? false,
+          'ShiftTaskStatus': [],
+        };
+      }).toList();
+
+      // Update the shift tasks
+      await shiftDocRef.update({
+        'ShiftTasks': shiftTasks,
+      });
+
+      print('Shift updated successfully');
+    } catch (e) {
+      print('Error updating shift: $e');
+      // Handle the error as needed
+    }
+  }
+
   //Get all the Schedules for Guards
 
   Future<List<DocumentSnapshot>> getAllSchedules(String empId) async {

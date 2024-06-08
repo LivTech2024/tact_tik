@@ -7,6 +7,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:toastification/toastification.dart';
 
@@ -164,12 +165,13 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark?Colors.transparent:LightColor.color3.withOpacity(.1),
+          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -180,7 +182,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           title: InterMedium(
             text: 'Report Checkpoint',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -198,7 +200,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       'Add Image/Comment',
                       style: TextStyle(
                         fontSize: width / width14,
-                        color: DarkColor. Primarycolor,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -247,7 +249,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: isDark ? DarkColor.color1 : LightColor.color3),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
@@ -304,7 +306,9 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   Icon(
                                     Icons.add,
                                     size: width / width20,
-                                    color: DarkColor. color1,
+                                    color: isDark
+                                        ? DarkColor.color1
+                                        : LightColor.color3,
                                   ),
                                   SizedBox(height: height / height10),
                                   InterMedium(
@@ -405,7 +409,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       },
                       color: Colors.white,
                       borderRadius: width / width20,
-                      backgroundcolor: DarkColor. Primarycolor,
+                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                     ),
                     SizedBox(
                       height: height / height20,

@@ -12,7 +12,7 @@ import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/main.dart';
 import 'dart:io';
-
+import 'package:firebase_storage/firebase_storage.dart';
 import '../../common/sizes.dart';
 import '../../fonts/inter_regular.dart';
 import '../../fonts/inter_semibold.dart';
@@ -22,7 +22,8 @@ import '../../common/widgets/setTextfieldWidget.dart';
 import '../home screens/widgets/profile_edit_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String empId;
+  const ProfileScreen({Key? key, required this.empId}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -44,37 +45,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _getCurrentUserUid();
-  }
-
-  Future<void> _getCurrentUserUid() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      setState(() {
-        _currentUserUid = user.uid;
-      });
-      _fetchEmployeeData();
-    }
+    _fetchEmployeeData();
   }
 
   Future<void> _fetchEmployeeData() async {
-    if (_currentUserUid != null) {
-      final employeeDoc = await FirebaseFirestore.instance
+    final employeeSnapshot = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeId', isEqualTo: widget.empId)
+        .get();
+
+    if (employeeSnapshot.docs.isNotEmpty) {
+      final employeeData = employeeSnapshot.docs.first.data();
+      setState(() {
+        _employeeName = employeeData['EmployeeName'];
+        _employeeEmail = employeeData['EmployeeEmail'];
+        _employeeRole = employeeData['EmployeeRole'];
+        _employeePhone = employeeData['EmployeePhone'];
+        _employeeImageUrl = employeeData['EmployeeImg'];
+      });
+    }
+  }
+
+  Future<void> updateProfile() async {
+    try {
+      await FirebaseFirestore.instance
           .collection('Employees')
-          .doc(_currentUserUid)
-          .get();
-      if (employeeDoc.exists) {
-        final employeeData = employeeDoc.data();
-        setState(() {
-          _employeeName = employeeData?['EmployeeName'];
-          _nameController.text = employeeData?['EmployeeName'];
-          _employeeEmail = employeeData?['EmployeeEmail'];
-          _employeeRole = employeeData?['EmployeeRole'];
-          _employeePhone = employeeData?['EmployeePhone'];
-          _phoneNoController.text = employeeData?['EmployeePhone'];
-          _employeeImageUrl = employeeData?['EmployeeImg'];
-        });
+          .doc(widget.empId)
+          .update({
+        'EmployeeName': _nameController.text,
+        'EmployeePhone': _phoneNoController.text,
+      });
+
+      if (_selectedImageFile != null) {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('employees/images/${_selectedImageFile!.name}');
+        await storageRef.putFile(File(_selectedImageFile!.path));
+        final downloadUrl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('Employees')
+            .doc(widget.empId)
+            .update({'EmployeeImg': downloadUrl});
       }
+
+      // Reset the state
+      setState(() {
+        isEdit = false;
+        _selectedImageFile = null;
+      });
+    } catch (e) {
+      print('Error updating profile: $e');
     }
   }
 
@@ -89,76 +110,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _updateEmployeeData(String newName, String newPhoneNo) async {
-    if (_currentUserUid != null) {
-      await FirebaseFirestore.instance
-          .collection('Employees')
-          .doc(_currentUserUid)
-          .update({
-        'EmployeeName': newName,
-        'EmployeePhone': newPhoneNo,
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
-              color: DarkColor.color1 ,
+              isEdit ? Icons.close : Icons.arrow_back_ios,
+              color: DarkColor.color1,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
-              Navigator.pop(context);
+              if (isEdit) {
+                setState(() {
+                  isEdit = !isEdit;
+                });
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
           title: InterMedium(
             text: 'Your Profile',
             fontsize: 18.sp,
-            color:  DarkColor.color1,
+            color: DarkColor.color1,
             letterSpacing: -.3,
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                setState(() {
-                  isEdit = !isEdit;
-                });
-                if (isEdit) {
-                  final newName = _nameController.text.trim();
-                  final newPhoneNo = _phoneNoController.text.trim();
-
-                  if (newName.isNotEmpty && newPhoneNo.isNotEmpty) {
-                    _updateEmployeeData(newName, newPhoneNo);
-                    setState(() {
-                      isEdit = false;
-                      _nameController.clear();
-                      _phoneNoController.clear();
-                    });
-                    _getCurrentUserUid();
-                  } else if (_selectedImageFile != null && isEdit) {
-                    // TODO Upload image code
-
-                    _getCurrentUserUid();
-                  }
-                }
-              },
+              onPressed: isEdit ? updateProfile : null,
               icon: Icon(
-                isEdit ? Icons.close : Icons.border_color,
+                isEdit ? Icons.check : Icons.border_color,
                 size: 24.sp,
-                color:  DarkColor.color1 ,
+                color: DarkColor.color1,
               ),
-            )
+            ),
           ],
           centerTitle: true,
         ),
@@ -170,10 +163,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 340.h,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
-                  gradient:  LinearGradient(
+                  gradient: LinearGradient(
                     colors: [
                       Colors.black,
-                      isDark? Color(0xFF9C6400):LightColor.Primarycolor,
+                      isDark
+                          ? const Color(0xFF9C6400)
+                          : LightColor.Primarycolor,
                     ],
                     begin: Alignment(0, -1.5),
                     end: Alignment.bottomCenter,
@@ -183,31 +178,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: _selectImageFromGallery,
-                        child: Container(
-                          padding: EdgeInsets.all(4.w),
-                          decoration: BoxDecoration(
-                            color: _employeeImageUrl != null ? Color(0xFFAC7310) : isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                              size: Size.fromRadius(50.r),
-                              child: _selectedImageFile != null
-                                  ? Image.file(
-                                      File(_selectedImageFile!.path),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : _employeeImageUrl != null
+                      Container(
+                        padding: EdgeInsets.all(4.w),
+                        decoration: BoxDecoration(
+                          color: _employeeImageUrl != null
+                              ? Color(0xFFAC7310)
+                              : isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.Primarycolor,
+                          shape: BoxShape.circle,
+                        ),
+
+                        /*Image.file(
+                              File(_selectedImageFile!.path),
+                              fit: BoxFit.cover,
+                            )*/
+                        child: isEdit
+                            ? Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  ClipOval(
+                                    child: SizedBox.fromSize(
+                                      size: Size.fromRadius(50.r),
+                                      child: _selectedImageFile != null
+                                          ? Image.file(
+                                              File(_selectedImageFile!.path),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : _employeeImageUrl != null
+                                              ? Image.network(
+                                                  _employeeImageUrl!,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/default.png'),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: -10.w,
+                                    bottom: -4.h,
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () =>
+                                          _selectImageFromGallery(),
+                                      icon: Icon(
+                                        Icons.add_a_photo,
+                                        size: 24.sp,
+                                        color: isDark
+                                            ? DarkColor.color1
+                                            : LightColor.color3,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            : ClipOval(
+                                child: SizedBox.fromSize(
+                                  size: Size.fromRadius(50.r),
+                                  child: _employeeImageUrl != null
                                       ? Image.network(
                                           _employeeImageUrl!,
                                           fit: BoxFit.cover,
                                         )
-                                      : Image.asset('assets/images/default.png'),
-                            ),
-                          ),
-                        ),
+                                      : Image.asset(
+                                          'assets/images/default.png'),
+                                ),
+                              ),
                       ),
                       SizedBox(height: 20.h),
                       PoppinsMedium(
@@ -225,8 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 40.h),
+                      padding: EdgeInsets.symmetric(vertical: 40.h),
                       child: isEdit
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,32 +284,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         isEditMode: false,
                                       ),
                                     ),
-                                    /*  Bounce(
-                                      onTap: () {
-                                        final newName =
-                                            _nameController.text.trim();
-                                        final newPhoneNo =
-                                            _phoneNoController.text.trim();
-
-                                        if (newName.isNotEmpty &&
-                                            newPhoneNo.isNotEmpty) {
-                                          _updateEmployeeData(
-                                              newName, newPhoneNo);
-                                          setState(() {
-                                            isEdit = false;
-                                            _nameController.clear();
-                                            _phoneNoController.clear();
-                                          });
-                                        } else {
-                                          // shw error
-                                        }
-                                      },
-                                      child: Icon(
-                                        Icons.check,
-                                        color: DarkColor.color2,
-                                        size: 30.w,
-                                      ),
-                                    )*/
                                   ],
                                 ),
                               ],
@@ -282,12 +291,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : ProfileEditWidget(
                               tittle: 'Name',
                               content: _employeeName ?? '',
-                              onTap: () {
-                                setState(() {
-                                  isEdit = true;
-                                  _nameController.text = _employeeName ?? '';
-                                });
-                              },
+                              onTap: () {},
                             ),
                     ),
                     isEdit
@@ -297,7 +301,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InterSemibold(
                                 text: 'Contact No',
                                 fontsize: 20.sp,
-                                color: isDark?DarkColor.  color1:LightColor.color3,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
                               ),
                               SizedBox(height: 5.h),
                               Row(
@@ -312,32 +318,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isEditMode: false,
                                     ),
                                   ),
-                                  /*Bounce(
-                                    onTap: () {
-                                      final newName =
-                                          _nameController.text.trim();
-                                      final newPhoneNo =
-                                          _phoneNoController.text.trim();
-
-                                      if (newName.isNotEmpty &&
-                                          newPhoneNo.isNotEmpty) {
-                                        _updateEmployeeData(
-                                            newName, newPhoneNo);
-                                        setState(() {
-                                          isEdit = false;
-                                          _nameController.clear();
-                                          _phoneNoController.clear();
-                                        });
-                                      } else {
-                                        //  show snackbar
-                                      }
-                                    },
-                                    child: Icon(
-                                      Icons.check,
-                                      color: DarkColor.  color2,
-                                      size: 30.w,
-                                    ),
-                                  )*/
                                 ],
                               ),
                             ],
@@ -345,16 +325,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : ProfileEditWidget(
                             tittle: 'Contact No',
                             content: _employeePhone ?? '',
-                            onTap: () {
-                              setState(() {
-                                isEdit = true;
-                                _phoneNoController.text = _employeePhone ?? '';
-                              });
-                            },
+                            onTap: () {},
                           ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 40.h),
+                      padding: EdgeInsets.symmetric(vertical: 40.h),
                       child: ProfileEditWidget(
                         tittle: 'Email',
                         content: _employeeEmail ?? '',
@@ -370,10 +344,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(height: 60.h),
-              if (_employeeImageUrl == null &&
-                  _employeeRole == null &&
-                  _employeeEmail == null &&
-                  _employeePhone == null &&
+              if (_employeeImageUrl == null ||
+                  _employeeRole == null ||
+                  _employeeEmail == null ||
+                  _employeePhone == null ||
                   _employeeName == null)
                 Center(
                   child: PoppinsRegular(

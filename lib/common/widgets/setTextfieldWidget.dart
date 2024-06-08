@@ -56,7 +56,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             offset: Offset(0, 3),
           )
         ],
-       borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(10.r),
         color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
       ),
       margin: EdgeInsets.only(top: 10.h),
@@ -68,7 +68,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           // Enable or disable TextField based on shouldDisable
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
-             fontSize: 18.sp,
+            fontSize: 18.sp,
             color: isDark ? DarkColor.color1 : LightColor.color3,
           ),
           onSubmitted: (value) {
@@ -86,13 +86,15 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             focusedBorder: InputBorder.none,
             hintStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w300,
-       fontSize: 18.sp,
+              fontSize: 18.sp,
               color: isDark ? DarkColor.color2 : LightColor.color3,
             ),
             hintText: widget.hintText,
             contentPadding: EdgeInsets.zero,
+            counterText: "",
           ),
-          cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          cursorColor:
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           controller: widget.controller,
           inputFormatters: widget.inputFormatters,
         ),

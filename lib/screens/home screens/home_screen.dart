@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -37,6 +38,7 @@ import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 // import 'package:tact_tik/screens/home%20screens/widgets/start_task_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/task_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
+import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -532,8 +534,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.all(10.sp),
+                // padding: EdgeInsets.all(10.sp),
                 height: (178.h),
+                margin: EdgeInsets.all(10.sp),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
@@ -552,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfileScreen(),
+                                builder: (context) => ProfileScreen(empId: _employeeId,),
                               ),
                             );
                           },
@@ -560,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             backgroundImage:
                                 AssetImage('assets/images/default.png'),
                             foregroundImage: NetworkImage(employeeImg!),
-                            radius: 50.r,
+                            radius: 40.r,
                             backgroundColor: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor,
@@ -606,7 +609,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfileScreen()));
+                                builder: (context) => ProfileScreen(empId: _employeeId,)));
                       },
                     ),
                     buildListTile(
@@ -653,9 +656,59 @@ class _HomeScreenState extends State<HomeScreen> {
                         isDark ? Icons.light_mode_outlined : Icons.light_mode,
                         isDark ? 'Switch To Light Mode' : 'Switch to dark mode',
                         5, () {
-                      setState(() {
-                        // isDark = !isDark;
-                      });
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: InterMedium(
+                                  text: 'Change Theme',
+                                  color: isDark
+                                      ? DarkColor.color2
+                                      : LightColor.color3,
+                                  fontsize: 20.sp,
+                                ),
+                                content: InterRegular(
+                                  text: isDark
+                                      ? 'Switch to Light Theme Restart App'
+                                      : 'Switch to Dark Theme Restart App',
+                                  fontsize: 12.sp,
+                                  color: isDark
+                                      ? DarkColor.color3
+                                      : LightColor.color4,
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context, false);
+                                    },
+                                    child: InterMedium(
+                                      text: 'CANCEL',
+                                      fontsize: 16.sp,
+                                      color: isDark
+                                          ? DarkColor.color3
+                                          : LightColor.color4,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      final SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      setState(() async {
+                                        isDark = !isDark;
+                                        await prefs.setBool('Theme', isDark);
+                                        SystemChannels.platform.invokeMethod(
+                                            'SystemNavigator.pop');
+                                      });
+                                    },
+                                    child: InterMedium(
+                                      text: 'Change & Restart',
+                                      fontsize: 16.sp,
+                                      color: isDark
+                                          ? DarkColor.color2
+                                          : LightColor.color3,
+                                    ),
+                                  ),
+                                ],
+                              ));
                     }),
                   ],
                 ),

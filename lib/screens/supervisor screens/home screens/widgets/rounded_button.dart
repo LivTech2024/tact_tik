@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tact_tik/utils/colors.dart';
 
@@ -13,19 +14,18 @@ class RoundedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     return Container(
-      height: height / height48,
-      width: width / width48,
+      height: 48.h,
+      width: 48.w,
       decoration: BoxDecoration(shape: BoxShape.circle, color: DarkColor.color21),
       child: Center(
         child: useSVG
             ? SvgPicture.asset(svg!)
             : Icon(
                 icon,
-                size: width / width24,
+                size: 24.w,
                 color: DarkColor.  color20,
               ),
       ),

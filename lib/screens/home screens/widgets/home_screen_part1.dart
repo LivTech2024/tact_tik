@@ -100,19 +100,22 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
     BuildContext context,
     List<Widget> items,
   ) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: items.length,
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 400,
-        mainAxisExtent: 58,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
+    return Container(
+      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+      child: GridView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: items.length,
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 400,
+          mainAxisExtent: 58,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        reverse: SuggestionsController.of<Screens>(context).effectiveDirection ==
+            VerticalDirection.up,
+        itemBuilder: (context, index) => items[index],
       ),
-      reverse: SuggestionsController.of<Screens>(context).effectiveDirection ==
-          VerticalDirection.up,
-      itemBuilder: (context, index) => items[index],
     );
   }
 
@@ -159,7 +162,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(),
+                          builder: (context) => ProfileScreen(empId: widget.empId,),
                         ),
                       );
                     },
@@ -348,12 +351,13 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           suggestionsCallback: suggestionsCallback,
                           itemBuilder: (context, Screens screen) {
                             return ListTile(
+                              
                               leading:
                                   Icon(screen.icon, color: Colors.blueAccent),
                               title: InterRegular(
                                 text: screen.name,
                                 color: isDark
-                                    ? DarkColor.color2
+                                    ? DarkColor.color1
                                     : LightColor.color3,
                               ),
                             );
@@ -365,13 +369,14 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ),
                             child: InterRegular(
                               text: 'No Such Screen found',
-                              color: isDark ? DarkColor.color2 : LightColor.color3,
+                              color: isDark ? DarkColor.color2 : LightColor.color5,
                               fontsize: 18.sp,
                             ),
                           ),
                           decorationBuilder: (context, child) => Material(
                             type: MaterialType.card,
                             elevation: 4,
+                            // surfaceTintColor: LightColor.color3,
                             borderRadius: BorderRadius.circular(10.r),
                             child: child,
                           ),
