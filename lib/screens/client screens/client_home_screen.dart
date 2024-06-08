@@ -204,6 +204,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Reports')
+          .orderBy('ReportCreatedAt', descending: true)
           .where('ReportClientId', isEqualTo: _employeeId)
           .get();
       print('Snapshot ${querySnapshot}');
@@ -1278,7 +1279,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             ),
                                             Column(
                                               children: List.generate(
-                                                10,
+                                                1,
                                                 (index) => Container(
                                                   constraints: BoxConstraints(
                                                       minHeight: 200.h),
