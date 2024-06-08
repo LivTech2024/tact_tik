@@ -123,7 +123,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                     Container(
                                       height: height / height50,
                                       width: width / width50,
-                                      decoration:  BoxDecoration(
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: isDark
                                             ? DarkColor.Primarycolor
@@ -184,7 +184,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                         ),
                                                       ],
                                                     ),
-                                                     VerticalDivider(
+                                                    VerticalDivider(
                                                       color: isDark
                                                           ? DarkColor.color1
                                                           : LightColor.color3,
@@ -346,9 +346,10 @@ class DayEventsBottomSheet extends StatelessWidget {
               Container(
                 height: height / height50,
                 width: width / width50,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                  color:
+                      isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                   image: DecorationImage(
                     image: AssetImage('assets/images/default.png'),
                     filterQuality: FilterQuality.high,
@@ -393,7 +394,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                               VerticalDivider(
+                              VerticalDivider(
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
@@ -421,7 +422,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                               id,
                               style: TextStyle(
                                 fontSize: width / width14,
-                                color: color2,
+                                // color: color2,
                               ),
                             );
                           }).toList(),
@@ -489,9 +490,10 @@ class DayEventsBottomSheet extends StatelessWidget {
               Container(
                 height: height / height50,
                 width: width / width50,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                  color:
+                      isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                   image: DecorationImage(
                     image: AssetImage('assets/images/default.png'),
                     filterQuality: FilterQuality.high,
@@ -536,7 +538,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                               VerticalDivider(
+                              VerticalDivider(
                                 color: isDark
                                     ? DarkColor.color1
                                     : LightColor.color3,
@@ -560,7 +562,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                           id,
                           style: TextStyle(
                             fontSize: width / width14,
-                            color: color2,
+                            // color: color2,
                           ),
                         ),
                       ],
@@ -573,7 +575,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                 child: Icon(
                   Icons.arrow_forward_ios,
                   size: width / width20,
-                  color:isDark? DarkColor.color1:LightColor.color3,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
                 ),
               ),
             ],

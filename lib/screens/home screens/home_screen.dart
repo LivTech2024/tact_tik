@@ -222,13 +222,14 @@ class _HomeScreenState extends State<HomeScreen> {
           IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
           IconColors[2] =
               isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;ScreenIndex = 0;
+          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
+          ScreenIndex = 0;
           // CalendarScreen
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => CalendarScreen(
-          //             companyId: _employeeCompanyID, employeeId: _employeeId)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CalendarScreen(
+                      companyId: _employeeCompanyID, employeeId: _employeeId)));
 
           break;
         case 3:
@@ -714,20 +715,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               text: 'Shifts',
                               icon: Icons.add_task,
                               color: isDark
-                                    ? (ScreenIndex == 0
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 0
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
-                              textcolor:
-                                  isDark
-                                    ? (ScreenIndex == 0
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 0
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                  ? (ScreenIndex == 0
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 0
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
+                              textcolor: isDark
+                                  ? (ScreenIndex == 0
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 0
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -736,20 +736,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               text: 'Explore',
                               icon: Icons.grid_view_rounded,
                               color: isDark
-                                    ? (ScreenIndex == 1
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 1
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
-                              textcolor:
-                                 isDark
-                                    ? (ScreenIndex == 1
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 1
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                  ? (ScreenIndex == 1
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 1
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
+                              textcolor: isDark
+                                  ? (ScreenIndex == 1
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 1
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -758,20 +757,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               text: 'Calendar',
                               icon: Icons.calendar_today,
                               color: isDark
-                                    ? (ScreenIndex == 2
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 2
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
-                              textcolor:
-                                  isDark
-                                    ? (ScreenIndex == 2
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 2
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                  ? (ScreenIndex == 2
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 2
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
+                              textcolor: isDark
+                                  ? (ScreenIndex == 2
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 2
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                           Bounce(
@@ -788,20 +786,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               text: 'Message',
                               icon: Icons.chat_bubble_outline,
                               color: isDark
-                                    ? (ScreenIndex == 3
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 3
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
-                              textcolor:
-                                  isDark
-                                    ? (ScreenIndex == 3
-                                        ? DarkColor.color1
-                                        : DarkColor.color4)
-                                    : (ScreenIndex == 3
-                                        ? LightColor.Primarycolor
-                                        : DarkColor.color4),
+                                  ? (ScreenIndex == 3
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 3
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
+                              textcolor: isDark
+                                  ? (ScreenIndex == 3
+                                      ? DarkColor.color1
+                                      : DarkColor.color4)
+                                  : (ScreenIndex == 3
+                                      ? LightColor.Primarycolor
+                                      : DarkColor.color4),
                             ),
                           ),
                         ],
@@ -841,7 +838,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : Center(
                                           child: InterMedium(
                                             text: 'Loading...',
-                                            color: isDark?DarkColor.Primarycolor:LightColor.Primarycolor,
+                                            color: isDark
+                                                ? DarkColor.Primarycolor
+                                                : LightColor.Primarycolor,
                                             fontsize: 14.sp,
                                           ),
                                         ),
@@ -1097,20 +1096,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       InterRegular(
                                                         text: 'Supervisor',
                                                         fontsize: 17.sp,
-                                                        color: isDark?DarkColor.color1:LightColor.color3,
+                                                        color: isDark
+                                                            ? DarkColor.color1
+                                                            : LightColor.color3,
                                                       ),
                                                       Row(
                                                         // mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
                                                           PoppinsRegular(
                                                             text: '9:36 AM',
-                                                            color: isDark?DarkColor.color3:LightColor.color2,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .color3
+                                                                : LightColor
+                                                                    .color2,
                                                             fontsize: 15.sp,
                                                           ),
                                                           Icon(
                                                             Icons
                                                                 .arrow_forward_ios,
-                                                            color: isDark?DarkColor.color1:LightColor.color3,
+                                                            color: isDark
+                                                                ? DarkColor
+                                                                    .color1
+                                                                : LightColor
+                                                                    .color3,
                                                             size: 15.sp,
                                                           )
                                                         ],
@@ -1125,7 +1134,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       text:
                                                           'Nice. I don\'t know why people get all worked up about hawaiian pizza. I ...',
                                                       fontsize: 15.sp,
-                                                      color: isDark?DarkColor.color3:LightColor.color2,
+                                                      color: isDark
+                                                          ? DarkColor.color3
+                                                          : LightColor.color2,
                                                     ),
                                                   ),
                                                 ],
