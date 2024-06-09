@@ -114,8 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           

@@ -252,8 +252,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
         appBar: AppBar(
          
           leading: IconButton(
