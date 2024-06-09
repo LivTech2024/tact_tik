@@ -204,6 +204,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Reports')
+          .orderBy('ReportCreatedAt', descending: true)
           .where('ReportClientId', isEqualTo: _employeeId)
           .get();
       print('Snapshot ${querySnapshot}');
@@ -525,7 +526,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfileScreen(),
+                      builder: (context) => ProfileScreen(empId: _employeeId,),
                     ),
                   );
                 },
@@ -592,52 +593,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProfileScreen(),
+                            builder: (context) => ProfileScreen(empId: _employeeId,),
                           ),
                         );
                       },
                     ),
-                    buildListTile(
-                      Icons.add_card,
-                      'Payment',
-                      2,
-                      () {},
-                    ),
-                    buildListTile(
-                      Icons.article,
-                      'Employment Letter',
-                      3,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EmploymentLetterScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.restart_alt,
-                      'History',
-                      4,
-                      () {
-                        // customEmail();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HistoryScreen(
-                              empID: _employeeId,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.settings,
-                      'Settings',
-                      5,
-                      () async {},
-                    ),
+
+
                     buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
                       setState(() {
                         isDark = !isDark;
@@ -672,7 +634,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           child: RefreshIndicator(
             onRefresh: _refreshData,
             child: CustomScrollView(
-              physics: PageScrollPhysics(),
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
@@ -1318,7 +1279,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             ),
                                             Column(
                                               children: List.generate(
-                                                10,
+                                                1,
                                                 (index) => Container(
                                                   constraints: BoxConstraints(
                                                       minHeight: 200.h),

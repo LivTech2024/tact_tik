@@ -381,30 +381,14 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                       : LightColor.color3,
                                                 ),
                                                 SizedBox(height: 12.h),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 2.h,
-                                                    horizontal: 10.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    // color: isDark
-                                                    //     ? DarkColor.color21
-                                                    //     : LightColor.color3,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.r),
-                                                  ),
-                                                  child: InterBold(
-                                                    text: patrol[
-                                                            'PatrolLogStatus'] ??
-                                                        '',
-                                                    fontsize: 12.sp,
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor
-                                                            .Primarycolor,
-                                                  ),
+                                                InterMedium(
+                                                  text: patrol['PatrolLogStatus'] ?? 'incomplete',
+                                                  fontsize: 12.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color21
+                                                      : LightColor.color3,
                                                 ),
+
                                               ],
                                             ),
                                           ),

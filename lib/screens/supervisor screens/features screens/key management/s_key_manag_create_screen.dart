@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/main.dart';
@@ -17,6 +18,13 @@ import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
 import '../../home screens/widgets/set_details_widget.dart';
 
+class Guards {
+  final String image;
+  final String name;
+
+  Guards(this.name, this.image);
+}
+
 class SCreateKeyManagScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
@@ -25,18 +33,23 @@ class SCreateKeyManagScreen extends StatefulWidget {
       {super.key, required this.keyId, required this.companyId});
 
   @override
-  State<SCreateKeyManagScreen> createState() => _SCreateAssignAssetScreenState();
+  State<SCreateKeyManagScreen> createState() =>
+      _SCreateAssignAssetScreenState();
 }
 
 class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
-  List colors =isDark? [DarkColor.Primarycolor, DarkColor. color25]:[LightColor.color3, LightColor.color2];
+  List colors = isDark
+      ? [DarkColor.Primarycolor, DarkColor.color25]
+      : [LightColor.color3, LightColor.color2];
   bool isChecked = false;
   bool showCreate = true;
 
   DateTime? StartDate;
   DateTime? SelectedDate;
   DateTime? EndDate;
-
+  String dropdownValue = 'Select';
+  List<String> tittles = [];
+  List selectedGuards = [];
   TextEditingController _tittleController = TextEditingController();
   TextEditingController _RecipientNameController = TextEditingController();
   TextEditingController _ContactController = TextEditingController();
@@ -44,6 +57,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   TextEditingController _AllocationPurposeController = TextEditingController();
   TextEditingController _AllocateQtController1 = TextEditingController();
   TextEditingController _AllocateQtController2 = TextEditingController();
+  TextEditingController _keyNameController2 = TextEditingController();
   TextEditingController _DescriptionController = TextEditingController();
 
   String? selectedKeyName;
@@ -110,15 +124,58 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     });
   }
 
+  final List<Guards> _screens = [
+    Guards('Site Tours', 'Image URL'),
+    Guards('DAR Screen', 'Image URL'),
+    Guards('Reports Screen', 'Image URL'),
+    Guards('Post Screen', 'Image URL'),
+    Guards('Task Screen', 'Image URL'),
+    Guards('LogBook Screen', 'Image URL'),
+    Guards('Visitors Screen', 'Image URL'),
+    Guards('Assets Screen', 'Image URL'),
+    Guards('Key Screen', 'Image URL'),
+  ];
+
+  Widget gridLayoutBuilder(
+    BuildContext context,
+    List<Widget> items,
+  ) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: items.length,
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 400,
+        mainAxisExtent: 58,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      reverse: SuggestionsController.of<Guards>(context).effectiveDirection ==
+          VerticalDirection.up,
+      itemBuilder: (context, index) => items[index],
+    );
+  }
+
+  Future<List<Guards>> suggestionsCallback(String pattern) async =>
+      Future<List<Guards>>.delayed(
+        Duration(milliseconds: 300),
+        () => _screens.where((product) {
+          // print(product.name);
+          final nameLower = product.name.toLowerCase().split(' ').join('');
+          final patternLower = pattern.toLowerCase().split(' ').join('');
+          return nameLower.contains(patternLower);
+        }).toList(),
+      );
+
   @override
   Widget build(BuildContext context) {
-    
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:
+            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+          backgroundColor:
+              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,
           leading: IconButton(
             icon: Icon(
@@ -149,7 +206,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                     height: 65.h,
                     width: double.maxFinite,
                     color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
-                    padding: EdgeInsets.symmetric(vertical: 16.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -166,10 +222,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     : LightColor.color2;
                               });
                             },
-                            child: SizedBox(
+                            child: Container(
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
                               child: Center(
                                 child: InterBold(
-                                  text: 'Edit',
+                                  text: 'Assign',
                                   color: colors[0],
                                   fontsize: 18.w,
                                 ),
@@ -177,8 +236,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                             ),
                           ),
                         ),
-                        VerticalDivider(
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                          child: VerticalDivider(
+                            color: isDark
+                                ? DarkColor.Primarycolor
+                                : LightColor.color3,
+                          ),
                         ),
                         Expanded(
                           child: GestureDetector(
@@ -193,7 +257,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     : LightColor.color3;
                               });
                             },
-                            child: SizedBox(
+                            child: Container(
+                              color: isDark
+                                  ? DarkColor.WidgetColor
+                                  : LightColor.WidgetColor,
                               child: Center(
                                 child: InterBold(
                                   text: 'Create',
@@ -210,11 +277,68 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                   SizedBox(height: 20.h),
                   showCreate
                       ? Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 30.w),
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              InterBold(
+                                text: 'Select key',
+                                fontsize: 16.w,
+                                color: isDark
+                                    ? DarkColor.color1
+                                    : LightColor.color3,
+                              ),
+                              SizedBox(height: 10.h),
+                              Container(
+                                height: 60.h,
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3.withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: isDark
+                                      ? DarkColor.WidgetColor
+                                      : LightColor.WidgetColor,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    isExpanded: true,
+                                    iconSize: 24.sp,
+                                    dropdownColor: isDark
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
+                                    style: TextStyle(
+                                        color: isDark
+                                            ? DarkColor.color2
+                                            : LightColor.color3),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    value: dropdownValue,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        dropdownValue = newValue!;
+                                        print('$dropdownValue selected');
+                                      });
+                                    },
+                                    items: <String?>[...tittles]
+                                        .map<DropdownMenuItem<String>>(
+                                            (String? value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: InterMedium(text: value ?? ''),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Recipient Name',
                                 fontsize: 16.w,
@@ -223,10 +347,244 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     : LightColor.color3,
                               ),
                               SizedBox(height: 10.h),
-                              CustomeTextField(
-                                hint: 'Eg. Leslie Alexander',
-                                controller: _RecipientNameController,
-                                showIcon: false,
+                              Container(
+                                height: 64.h,
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isDark
+                                          ? Colors.transparent
+                                          : LightColor.color3.withOpacity(.05),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: isDark
+                                      ? DarkColor.WidgetColor
+                                      : LightColor.WidgetColor,
+                                  borderRadius: BorderRadius.circular(13.r),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: TypeAheadField<Guards>(
+                                        autoFlipDirection: true,
+                                        controller: _RecipientNameController,
+                                        direction: VerticalDirection.down,
+                                        builder:
+                                            (context, _controller, focusNode) =>
+                                                TextField(
+                                          controller: _controller,
+                                          focusNode: focusNode,
+                                          autofocus: false,
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18.w,
+                                            color: Colors.white,
+                                          ),
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.r),
+                                              ),
+                                            ),
+                                            focusedBorder: InputBorder.none,
+                                            hintStyle: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 18.w,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color2,
+                                            ),
+                                            hintText: 'Search Guards',
+                                            contentPadding: EdgeInsets.zero,
+                                          ),
+                                          cursorColor: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.Primarycolor,
+                                        ),
+                                        suggestionsCallback:
+                                            suggestionsCallback,
+                                        itemBuilder: (context, Guards guards) {
+                                          return ListTile(
+                                            leading: Container(
+                                              height: 30.h,
+                                              width: 30.w,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: isDark
+                                                    ? DarkColor.Primarycolor
+                                                    : LightColor.Primarycolor,
+                                              ),
+                                            ),
+                                            title: InterRegular(
+                                              text: guards.name,
+                                              color: isDark
+                                                  ? DarkColor.color2
+                                                  : LightColor.color2,
+                                            ),
+                                          );
+                                        },
+                                        emptyBuilder: (context) => Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 10.h,
+                                            horizontal: 10.w,
+                                          ),
+                                          child: InterRegular(
+                                            text: 'No Such Screen found',
+                                            color: isDark
+                                                ? DarkColor.color2
+                                                : LightColor.color2,
+                                            fontsize: 18.sp,
+                                          ),
+                                        ),
+                                        decorationBuilder: (context, child) =>
+                                            Material(
+                                          type: MaterialType.card,
+                                          elevation: 4,
+                                          borderRadius: BorderRadius.circular(
+                                            10.r,
+                                          ),
+                                          child: child,
+                                        ),
+                                        debounceDuration:
+                                            const Duration(milliseconds: 300),
+                                        onSelected: (Guards guard) {
+                                          print(
+                                              'home screen search bar############################################');
+
+                                          print(guard.name);
+                                        },
+                                        listBuilder: gridLayoutBuilder,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 44.h,
+                                      width: 44.w,
+                                      decoration: BoxDecoration(
+                                        color: isDark
+                                            ? DarkColor.Primarycolor
+                                            : LightColor.Primarycolor,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 20.w,
+                                          color: isDark
+                                              ? DarkColor.Secondarycolor
+                                              : LightColor.color1,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+                              Container(
+                                margin: EdgeInsets.only(top: 20.h),
+                                height: 80.h,
+                                width: double.maxFinite,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: selectedGuards.length,
+                                  itemBuilder: (context, index) {
+                                    String guardId =
+                                        selectedGuards[index]['GuardId'];
+                                    String guardName =
+                                        selectedGuards[index]['GuardName'];
+                                    String guardImg =
+                                        selectedGuards[index]['GuardImg'];
+                                    return Padding(
+                                      padding: EdgeInsets.only(right: 20.h),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Stack(
+                                            clipBehavior: Clip.none,
+                                            children: [
+                                              Container(
+                                                height: 50.h,
+                                                width: 50.w,
+                                                decoration: guardImg != ""
+                                                    ? BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              guardImg ?? ""),
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      )
+                                                    : BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: isDark
+                                                            ? DarkColor
+                                                                .Primarycolor
+                                                            : LightColor
+                                                                .Primarycolor,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              'assets/images/default.png'),
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                              ),
+                                              Positioned(
+                                                top: -4,
+                                                right: -5,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedGuards
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    height: 20.h,
+                                                    width: 20.w,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color:
+                                                            DarkColor.color1),
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        size: 8,
+                                                        color: DarkColor
+                                                            .Secondarycolor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          InterBold(
+                                            text: guardName,
+                                            fontsize: 14.sp,
+                                            color: isDark
+                                                ? DarkColor.color26
+                                                : LightColor.color3,
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                               SizedBox(height: 20.h),
                               InterBold(
@@ -292,11 +650,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     horizontal: 20.w,
                                   ),
                                   decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(10.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                        ? DarkColor.WidgetColor
+                                        : LightColor.WidgetColor,
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -309,8 +666,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                             : 'Start Time',
                                         fontsize: 16.w,
                                         color: isDark
-                                      ? DarkColor.color2
-                                      : LightColor.color2,
+                                            ? DarkColor.color2
+                                            : LightColor.color2,
                                       ),
                                       SvgPicture.asset(
                                         'assets/images/calendar_clock.svg',
@@ -339,7 +696,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       child: Container(
                                         height: 60.h,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.r),
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
                                           color: isDark
                                               ? DarkColor.WidgetColor
                                               : LightColor.WidgetColor,
@@ -376,7 +734,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       child: Container(
                                         height: 60.h,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.r),
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
                                           color: isDark
                                               ? DarkColor.WidgetColor
                                               : LightColor.WidgetColor,
@@ -439,8 +798,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                           ),
                         )
                       : Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 30.w),
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -454,7 +812,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               SizedBox(height: 10.h),
                               CustomeTextField(
                                 hint: 'Tittle',
-                                controller: _AllocateQtController2,
+                                controller: _keyNameController2,
                                 showIcon: true,
                               ),
                               SizedBox(height: 10.h),

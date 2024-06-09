@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -11,8 +12,6 @@ import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
-
-import '../../../../fonts/inter_regular.dart';
 
 class SHistoryScreen extends StatefulWidget {
   final String empID;
@@ -40,6 +39,19 @@ class _HistoryScreenState extends State<SHistoryScreen> {
       shiftHistory = shifthistory;
     });
     print('Shift History :  ${shifthistory}');
+  }
+
+  String _formatShiftDuration(String startTime, String endTime) {
+    final startTimeFormat = DateFormat('HH:mm');
+    final endTimeFormat = DateFormat('HH:mm');
+    final start = startTimeFormat.parse(startTime);
+    final end = endTimeFormat.parse(endTime);
+
+    final duration = end.difference(start);
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+
+    return '${hours.toString().padLeft(2, '0')}hr ${minutes.toString().padLeft(2, '0')}min';
   }
 
   String _getDayOfWeek(int day) {
@@ -102,6 +114,16 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                 height: 30.h,
               ),
             ),
+            shiftHistory.isEmpty
+                ? SliverFillRemaining(
+              child: Center(
+                child: InterMedium(
+                  text: 'No Data Found',
+                  fontsize: 18.sp,
+                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                ),
+              ),
+            ) :
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
@@ -252,7 +274,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                                             height: 20.h,
                                           ),
                                           InterSemibold(
-                                            text: '02hr 36min',
+                                            text: _formatShiftDuration(shift['ShiftStartTime'], shift['ShiftEndTime']),
                                             fontsize: 16.sp,
                                             color: isDark
                                                 ? DarkColor.color1

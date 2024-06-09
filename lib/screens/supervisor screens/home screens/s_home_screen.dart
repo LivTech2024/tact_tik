@@ -40,6 +40,7 @@ import '../features screens/Report/select_reports_guards.dart';
 import '../features screens/assets/select_assets_guards.dart';
 import '../features screens/dar/select_dar_guards.dart';
 import '../features screens/history/select_history_guards.dart';
+import '../features screens/key management/s_key_managment_view_screen.dart';
 import '../features screens/key management/select_keys_guards.dart';
 import '../features screens/loogbook/select_loogbook_guards.dart';
 import '../features screens/panic/s_panic_screen.dart';
@@ -317,7 +318,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
+                              builder: (context) => ProfileScreen(empId: _employeeId,)),
                         );
                       },
                     ),
@@ -665,7 +666,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  SelectKeysGuardsScreen(
+                                  SKeyManagementViewScreen(
                                     companyId: _CompanyId,
                                   ),
                             ),
@@ -845,6 +846,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       CreateSheduleScreen(
+                                        shiftId: '',
                                         supervisorEmail: '',
                                         BranchId: widget.guardsInfo[
                                         "EmployeeCompanyBranchId"] ??

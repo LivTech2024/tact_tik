@@ -47,6 +47,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
     super.initState();
     _logBookStream = FirebaseFirestore.instance
         .collection('LogBook')
+        .orderBy('LogBookDate', descending: true)
         .where('LogBookEmpId', isEqualTo: widget.empId)
         .snapshots();
   }
@@ -155,12 +156,6 @@ class _LogBookScreenState extends State<SLogBookScreen> {
       List<QueryDocumentSnapshot> documents) {
     final groups = <String, Map<String, List<Map<String, dynamic>>>>{};
 
-    documents.sort((a, b) {
-      final timestampA = a['LogBookDate'] as Timestamp;
-      final timestampB = b['LogBookDate'] as Timestamp;
-      return timestampB.compareTo(timestampA);
-    });
-
     for (int i = 0; i < documents.length; i++) {
       final document = documents[i];
       final data = document.data() as Map<String, dynamic>;
@@ -197,6 +192,10 @@ class _LogBookScreenState extends State<SLogBookScreen> {
           ];
         }
       }
+
+      logsByDate.forEach((date, logs) {
+        logs.sort((a, b) => b['LOGREPORTTIME'].compareTo(a['LOGREPORTTIME']));
+      });
 
       groups[shiftName] = logsByDate;
     }

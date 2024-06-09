@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextField(
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         fontSize: 20.sp,
                         color: isDark
                             ? DarkColor.color1
@@ -151,14 +151,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ? DarkColor.color1
                               : LightColor.color3, // Change text color to white
                         ),
-                        hintText: 'Enter your email',
+                        hintText: 'Email',
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 30.h),
                     TextField(
                       style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w500,
                         fontSize: (20.sp),
                         color: isDark
                             ? DarkColor.color1
