@@ -285,7 +285,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               margin: EdgeInsets.all(8.sp),
@@ -376,7 +376,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                         height: 66.h,
                         width: 66.w,
                         decoration: BoxDecoration(
-                          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Center(

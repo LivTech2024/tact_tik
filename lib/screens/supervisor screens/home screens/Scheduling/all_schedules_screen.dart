@@ -202,9 +202,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(13.w),
                       ),
                       child: Row(
@@ -313,9 +311,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             margin: EdgeInsets.only(top: 10.h),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(14.r),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 20.h),

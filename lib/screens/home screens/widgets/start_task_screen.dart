@@ -449,7 +449,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 offset: Offset(0, 3),
               )
             ],
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
           ),
           padding: EdgeInsets.only(left: 26.w, right: 12.47.w, bottom: 10.h),
           child: Column(
@@ -574,7 +574,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 offset: const Offset(0, 3),
               )
             ],
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
@@ -766,9 +766,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
                     /// TODO changed here
                     child: Container(
-                      color: isDark
-                          ? DarkColor.WidgetColor
-                          : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       child: Center(
                         child: InterBold(
                           text: 'Start Shift',
@@ -1075,9 +1073,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       // }
                     },
                     child: Container(
-                      color: isDark
-                          ? DarkColor.WidgetColor
-                          : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       child: Center(
                         child: InterBold(
                           text: 'End Shift',

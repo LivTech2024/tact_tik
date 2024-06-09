@@ -574,18 +574,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -1092,7 +1088,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : LightColor.Primarycolor,
                                             ),
                                           ),
-                                          // color: WidgetColor,
+                                         
                                         ),
                                         padding: EdgeInsets.symmetric(
                                           vertical: 7.h,

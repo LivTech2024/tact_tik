@@ -50,7 +50,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
           margin: EdgeInsets.only(bottom: 30.w),
           padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -165,7 +165,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               margin: EdgeInsets.only(bottom: 30.h),
               padding: EdgeInsets.all(16.sp),
               decoration: BoxDecoration(
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
@@ -200,9 +200,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                           TextButton(
                             onPressed: () {
                               showModalBottomSheet(
-                                backgroundColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                backgroundColor: Theme.of(context).cardColor,
                                 context: context,
                                 builder: (context) => Column(
                                   mainAxisSize: MainAxisSize.min,

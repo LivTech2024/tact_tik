@@ -192,9 +192,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                     offset: Offset(0, 3),
                                   )
                                 ],
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               padding: EdgeInsets.symmetric(
@@ -296,9 +294,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         // borderRadius: BorderRadius.circular(20.r),
                       ),
                       // color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
@@ -320,9 +316,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               },
                               child: Container(
                                 height: 65.h,
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',

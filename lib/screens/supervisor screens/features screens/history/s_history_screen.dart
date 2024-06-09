@@ -154,9 +154,7 @@ class _HistoryScreenState extends State<SHistoryScreen> {
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(10.r),
-                            color: isDark
-                                ? DarkColor.WidgetColor
-                                : LightColor.WidgetColor,
+                            color: Theme.of(context).cardColor,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

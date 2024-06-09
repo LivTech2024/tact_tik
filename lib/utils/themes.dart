@@ -2,49 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/utils/colors.dart';
 
-var ligthTheme=ThemeData(
+var ligthTheme = ThemeData(
   scaffoldBackgroundColor: LightColor.Secondarycolor,
   brightness: Brightness.light,
-    canvasColor: LightColor.Secondarycolor,
-    cardColor: LightColor.WidgetColor,
-    primaryColor: LightColor.Primarycolor,
-    appBarTheme: AppBarTheme(
-      backgroundColor: LightColor.AppBarcolor,
-      elevation: 5,
-      shadowColor: LightColor.color3.withOpacity(.1),
-      iconTheme: IconThemeData(
-        color: LightColor.color3,
-        size: 24.sp,
-      ),
-      titleTextStyle: TextStyle(
-        color: LightColor.color3,
-        fontSize: 18.sp,
-        fontWeight: FontWeight.bold,
-      letterSpacing: -.3,
-      ),
+  cardColor: LightColor.WidgetColor,
+  primaryColor: LightColor.Primarycolor,
+  appBarTheme: AppBarTheme(
+    backgroundColor: LightColor.AppBarcolor,
+    elevation: 5,
+    shadowColor: LightColor.color3.withOpacity(.1),
+    iconTheme: IconThemeData(
+      color: LightColor.color3,
+      size: 24.sp,
     ),
- );
-var darkTheme=ThemeData(
+    titleTextStyle: TextStyle(
+      color: LightColor.color3,
+      fontSize: 18.sp,
+      fontWeight: FontWeight.bold,
+      letterSpacing: -.3,
+    ),
+  ),
+  
+);
+var darkTheme = ThemeData(
   scaffoldBackgroundColor: DarkColor.Secondarycolor,
   brightness: Brightness.dark,
-    canvasColor: DarkColor.Secondarycolor,
-    cardColor: DarkColor.WidgetColor,
-    primaryColor: DarkColor.Primarycolor,
-    appBarTheme: AppBarTheme(
-      backgroundColor: DarkColor.AppBarcolor,
-      elevation: 0,
-
-      iconTheme: IconThemeData(
-        color: DarkColor.Primarycolor,
-        size: 24.sp,
-      ),
-      titleTextStyle: TextStyle(
+  cardColor: DarkColor.WidgetColor,
+  primaryColor: DarkColor.Primarycolor,
+  appBarTheme: AppBarTheme(
+    backgroundColor: DarkColor.AppBarcolor,
+    elevation: 0,
+    iconTheme: IconThemeData(
+      color: DarkColor.Primarycolor,
+      size: 24.sp,
+    ),
+    titleTextStyle: TextStyle(
       color: DarkColor.Primarycolor,
       fontSize: 18.sp,
       fontWeight: FontWeight.bold,
       letterSpacing: -.3,
     ),
-      
-    ),
-
-  );
+  ),
+);

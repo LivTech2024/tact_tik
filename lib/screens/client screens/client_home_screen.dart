@@ -567,9 +567,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -806,9 +804,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         offset: Offset(0, 3),
                                       )
                                     ],
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(14.r),
                                   ),
                                   padding: EdgeInsets.only(
@@ -1293,10 +1289,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         offset: Offset(0, 3),
                                                       )
                                                     ],
-                                                    color: isDark
-                                                        ? DarkColor.WidgetColor
-                                                        : LightColor
-                                                            .WidgetColor,
+                                                    color: Theme.of(context)
+                                                        .cardColor,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             14.r),

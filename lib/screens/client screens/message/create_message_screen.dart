@@ -98,7 +98,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                       height: 60.h,
                       padding: EdgeInsets.symmetric(horizontal: 20.w),
                       decoration: BoxDecoration(
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(

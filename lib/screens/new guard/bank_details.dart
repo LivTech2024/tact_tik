@@ -132,7 +132,7 @@ class _BankDetailsState extends State<BankDetails> {
                       offset: Offset(0, 3),
                     )
                   ],
-                  color:isDark? DarkColor.WidgetColor:LightColor.WidgetColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(

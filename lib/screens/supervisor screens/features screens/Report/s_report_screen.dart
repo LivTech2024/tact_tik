@@ -205,9 +205,9 @@ class _ReportScreenState extends State<SReportScreen> {
                               )
                             ],
                             borderRadius: BorderRadius.circular(20.w),
-                            color: isDark?(currentIndex == index
-                                ? DarkColor.Primarycolor
-                                : DarkColor.WidgetColor):(currentIndex == index?LightColor.Primarycolor:LightColor.WidgetColor),
+                            color: (currentIndex == index
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context).cardColor),
                           ),
                           duration: const Duration(microseconds: 500),
                           child: Center(
@@ -295,9 +295,7 @@ class _ReportScreenState extends State<SReportScreen> {
                                           offset: Offset(0, 3),
                                         )
                                       ],
-                                      color: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(
                                           10.w),
                                     ),

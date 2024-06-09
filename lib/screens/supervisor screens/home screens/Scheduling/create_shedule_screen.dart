@@ -679,7 +679,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               Container(
                 height: 65.h,
                 width: double.maxFinite,
-                // color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 decoration: BoxDecoration(
                   color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
@@ -810,9 +810,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   offset: Offset(0, 3),
                                 )
                               ],
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(13.r),
                             ),
                             child: Row(
@@ -1105,9 +1103,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 // Set icon color for enabled state
-                                dropdownColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                dropdownColor: Theme.of(context).cardColor,
                                 style: TextStyle(
                                     color: isDark
                                         ? DarkColor.color1
@@ -1231,9 +1227,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 // Set icon color for enabled state
-                                dropdownColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                dropdownColor: Theme.of(context).cardColor,
                                 style: TextStyle(
                                     color: isDark
                                         ? DarkColor.color1
@@ -1304,9 +1298,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     ? DarkColor.color1
                                     : LightColor.color3,
                                 // Set icon color for enabled state
-                                dropdownColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                dropdownColor: Theme.of(context).cardColor,
                                 style: TextStyle(
                                     color: isDark
                                         ? DarkColor.color1
@@ -1389,14 +1381,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           selectedOptionBackgroundColor: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.Primarycolor,
-                                          dropdownBackgroundColor: isDark
-                                              ? DarkColor.WidgetColor
-                                              : LightColor.WidgetColor,
+                                          dropdownBackgroundColor: Theme.of(context).cardColor,
                                           fieldBackgroundColor:
                                               Colors.transparent,
-                                          optionsBackgroundColor: isDark
-                                              ? DarkColor.WidgetColor
-                                              : LightColor.WidgetColor,
+                                          optionsBackgroundColor: Theme.of(context).cardColor,
                                           borderColor: Colors.transparent,
                                           controller: _Patrollcontroller,
                                           onOptionSelected: (options) {
@@ -1655,10 +1643,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     title: Container(
                                       padding: EdgeInsets.only(left: 10.w),
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor
-                                                .WidgetColor, // WidgetColor,
+                                        color: Theme.of(context)
+                                            .cardColor, 
                                         borderRadius:
                                             BorderRadius.circular(10.r),
                                       ),
@@ -1792,9 +1778,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 _addNewTask();
                               },
                               height: 50.h,
-                              backgroundcolor: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              backgroundcolor: Theme.of(context).cardColor,
                               text: nextScreen == false
                                   ? 'Create Shift Task'
                                   : 'Create Task',

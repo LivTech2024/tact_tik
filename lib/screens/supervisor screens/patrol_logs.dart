@@ -291,18 +291,14 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: width / width24,
-                          dropdownColor: isDark
-                              ? DarkColor. WidgetColor
-                              : LightColor. WidgetColor,
+                          dropdownColor: Theme.of(context).cardColor,
                           style: TextStyle(color: isDark?DarkColor.color2:LightColor.color3, fontSize: width / width20),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
@@ -527,7 +523,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             margin: EdgeInsets.only(bottom: height / height30),
             duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(
-              color: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(width / width10),
             ),
             constraints: BoxConstraints(),
@@ -1005,7 +1001,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                   height: height / height66,
                                                                                   width: width / width66,
                                                                                   decoration: BoxDecoration(
-                                                                                    color: DarkColor. WidgetColor,
+                                                                                    color: Theme.of(context).cardColor,
                                                                                     borderRadius: BorderRadius.circular(
                                                                                       width / width10,
                                                                                     ),
@@ -1080,7 +1076,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                 width / width66,
                                                                             decoration:
                                                                                 BoxDecoration(
-                                                                              color: DarkColor. WidgetColor,
+                                                                              color: Theme.of(context).cardColor,
                                                                               borderRadius: BorderRadius.circular(width / width8),
                                                                             ),
                                                                             child:

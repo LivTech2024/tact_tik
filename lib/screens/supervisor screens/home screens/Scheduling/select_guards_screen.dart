@@ -110,11 +110,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       iconSize: 24.w,
-                      dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      dropdownColor:  Theme.of(context).cardColor,
                       style: TextStyle(color:  isDark ? DarkColor.color2 : LightColor.color3),
-                      // borderRadius: BorderRadius.circular(10),
-                      // dropdownColor: WidgetColor,
-                      // style: TextStyle(color: color2),
+                      
                       borderRadius: BorderRadius.circular(10.r),
                       value: dropdownValue,
                       onChanged: (String? newValue) {

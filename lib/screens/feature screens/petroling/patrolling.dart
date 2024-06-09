@@ -288,7 +288,7 @@ class _MovieCategoryState extends State<MovieCategory> {
                 AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   decoration: BoxDecoration(
-                    color: DarkColor.  WidgetColor,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(width / width10),
                   ),
                   constraints: _expanded

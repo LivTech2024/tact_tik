@@ -122,9 +122,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(

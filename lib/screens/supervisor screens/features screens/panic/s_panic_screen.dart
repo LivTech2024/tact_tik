@@ -127,9 +127,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                         offset: Offset(0, 3),
                                       )
                                     ],
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
                                   padding: EdgeInsets.all(20.w),

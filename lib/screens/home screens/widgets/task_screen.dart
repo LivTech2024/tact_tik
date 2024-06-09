@@ -268,9 +268,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                 ? Container(
                                     constraints: BoxConstraints(),
                                     height: height / height242,
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,

@@ -101,7 +101,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
     List<Widget> items,
   ) {
     return Container(
-      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+      color: Theme.of(context).cardColor,
       child: GridView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: items.length,
@@ -291,7 +291,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     offset: Offset(0, 3),
                   )
                 ],
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(13.r),
               ),
               child: Column(

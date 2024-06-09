@@ -76,7 +76,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                   width: double.maxFinite,
                   margin: EdgeInsets.symmetric(horizontal: width / width30),
                   decoration: BoxDecoration(
-                    color: DarkColor.WidgetColor,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(width / width12),
                   ),
                   child: Column(

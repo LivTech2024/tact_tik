@@ -384,7 +384,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       height: 66.h,
                                       width: 66.w,
                                       decoration: BoxDecoration(
-                                        color: DarkColor.WidgetColor,
+                                        color: Theme.of(context).cardColor,
                                         borderRadius: BorderRadius.circular(
                                           10.r,
                                         ),
@@ -461,9 +461,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
@@ -563,9 +561,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 child: Container(
                                   margin: EdgeInsets.only(bottom: 30.h),
                                   height: 35.h,
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   child: Row(
                                     children: [
                                       Container(
@@ -660,9 +656,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                     minHeight: 80.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Row(
@@ -671,9 +665,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         width: 15.w,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: isDark
-                                              ? DarkColor.WidgetColor
-                                              : LightColor.WidgetColor,
+                                          color: Theme.of(context).cardColor,
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                         ),

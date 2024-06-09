@@ -218,9 +218,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               });
                             },
                             child: Container(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              color: Theme.of(context).cardColor,
                               child: Center(
                                 child: InterBold(
                                   text: 'Assign',
@@ -253,9 +251,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               });
                             },
                             child: Container(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              color: Theme.of(context).cardColor,
                               child: Center(
                                 child: InterBold(
                                   text: 'Create',
@@ -298,18 +294,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     isExpanded: true,
                                     iconSize: 24.sp,
-                                    dropdownColor: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    dropdownColor: Theme.of(context).cardColor,
                                     style: TextStyle(
                                         color: isDark
                                             ? DarkColor.color2
@@ -356,9 +348,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(13.r),
                                 ),
                                 child: Row(
@@ -646,9 +636,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -693,9 +681,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10.r),
-                                          color: isDark
-                                              ? DarkColor.WidgetColor
-                                              : LightColor.WidgetColor,
+                                          color: Theme.of(context).cardColor,
                                         ),
                                         child: Row(
                                           mainAxisAlignment:
@@ -731,9 +717,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10.r),
-                                          color: isDark
-                                              ? DarkColor.WidgetColor
-                                              : LightColor.WidgetColor,
+                                          color: Theme.of(context).cardColor,
                                         ),
                                         child: Row(
                                           mainAxisAlignment:

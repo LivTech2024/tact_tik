@@ -680,7 +680,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       return Container(
         constraints: BoxConstraints(minHeight: 90.h),
         decoration: BoxDecoration(
-          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          color: Theme.of(context).cardColor,
         ),
         padding: EdgeInsets.all(16.sp),
         child: Column(
@@ -898,7 +898,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 constraints: widget.p.CurrentStatus == "started"

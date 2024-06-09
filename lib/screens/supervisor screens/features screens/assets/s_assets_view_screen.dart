@@ -183,7 +183,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                             borderRadius:
                                 BorderRadius.circular(10.w),
                             color:
-                                isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                Theme.of(context).cardColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -145,7 +145,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ],
                             borderRadius:
                                 BorderRadius.circular(10.w),
-                            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                            color: Theme.of(context).cardColor,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

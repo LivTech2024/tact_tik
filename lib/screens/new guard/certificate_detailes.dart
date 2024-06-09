@@ -133,7 +133,7 @@ class _CertificateDetailsState extends State<CertificateDetails> {
                     )
                   ],
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                     Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(

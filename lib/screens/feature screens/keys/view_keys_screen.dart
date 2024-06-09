@@ -214,9 +214,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: 60.h,
                       decoration: BoxDecoration(
                          borderRadius: BorderRadius.circular(10.r),
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -235,9 +233,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -260,7 +256,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                 margin: EdgeInsets.only(bottom: 10.h),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                  color: Theme.of(context).cardColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

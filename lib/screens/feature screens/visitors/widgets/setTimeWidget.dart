@@ -52,7 +52,7 @@ class SetTimeWidget extends StatelessWidget {
             )
           ],
           borderRadius: BorderRadius.circular(width / width10),
-          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          color: Theme.of(context).cardColor,
         ),
         child: Center(
           child: IgnorePointer(

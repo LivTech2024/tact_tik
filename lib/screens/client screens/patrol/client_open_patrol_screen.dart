@@ -188,7 +188,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                           offset: Offset(0, 3),
                         )
                       ],
-                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(14.r),
                     ),
                     padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -425,7 +425,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                               offset: Offset(0, 3),
                             )
                           ],
-                          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(10.r),
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 20.w),

@@ -232,9 +232,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(14.r),
                                 ),
                                 padding: EdgeInsets.symmetric(vertical: 20.h),

@@ -199,9 +199,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                   margin: EdgeInsets.only(bottom: 16.h),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
-                                    color:  isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color:  Theme.of(context).cardColor,
                                   ),
                                   child: Column(
                                     children: [

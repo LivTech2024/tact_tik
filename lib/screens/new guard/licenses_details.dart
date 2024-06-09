@@ -154,7 +154,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                     )
                   ],
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(
@@ -196,7 +196,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                   )
                 ],
                 borderRadius: BorderRadius.circular(width / width10),
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -278,7 +278,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                     )
                   ],
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(
@@ -319,7 +319,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                   )
                 ],
                 borderRadius: BorderRadius.circular(width / width10),
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

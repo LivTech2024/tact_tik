@@ -150,9 +150,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
                                 offset: Offset(0, 3),
                               )
                             ],
-                            color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                            color: Theme.of(context).cardColor,
                             borderRadius:
                             BorderRadius.circular(12.r),
                           ),

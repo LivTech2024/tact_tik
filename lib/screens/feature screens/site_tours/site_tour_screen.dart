@@ -351,7 +351,7 @@ class SiteTourScreen extends StatelessWidget {
                     ),
                     height: 60.h,
                     decoration: BoxDecoration(
-                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(
                         16.r,
                       ),
