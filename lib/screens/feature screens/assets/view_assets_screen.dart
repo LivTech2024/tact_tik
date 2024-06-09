@@ -105,7 +105,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
                 fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
@@ -195,12 +195,13 @@ class ViewAssetsScreen extends StatelessWidget {
 
                           InterMedium(
                             text: equipmentName,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                           InterMedium(
                             text: "Quantity: $equipmentQty",
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                         ],

@@ -117,7 +117,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                   child: Text('No DAR entries found.',
                       style: TextStyle(
                           color:
-                          isDark ? DarkColor.color1 : LightColor.color3)),
+                         Theme.of(context).textTheme.bodyMedium!.color)),
                 );
               }
 
@@ -148,9 +148,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                         InterBold(
                           text: date,
                           fontsize: 20.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 20.h),
@@ -214,9 +212,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                         ? document['EmpDarShiftName']
                                         : "",
                                     fontsize: 18.sp,
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .color,
                                   ),
                                   isNew
                                       ? InterBold(
@@ -252,17 +251,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    // shadowColor: isDark
-                    //     ? DarkColor.color3
-                    // //     : LightColor.color3.withOpacity(.1),
-                    // backgroundColor:
-                    // isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                    // elevation: 5,
+                   
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        // color: isDark ? DarkColor.color1 : LightColor.color3,
-                        size: 24.sp,
+                      
                       ),
                       padding: EdgeInsets.only(left: 20.w),
                       onPressed: () {
@@ -271,9 +264,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     ),
                     title: InterMedium(
                       text: 'DAR',
-                      // fontsize: 18.w,
-                      // color: isDark ? DarkColor.color1 : LightColor.color3,
-                      // letterSpacing: -.3,
+                  
                     ),
                     // title: Text('DAR'),
                     centerTitle: true,
@@ -306,9 +297,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3;
+                                  colors[0] = Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color;
                                   colors[1] = isDark
                                       ? DarkColor.color25
                                       : LightColor.color2;
@@ -341,9 +333,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   colors[0] = isDark
                                       ? DarkColor.color25
                                       : LightColor.color2;
-                                  colors[1] = isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3;
+                                  colors[1] = Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color;
                                 });
                               },
                               child: Container(

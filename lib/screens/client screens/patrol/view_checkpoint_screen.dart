@@ -64,7 +64,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterBold(
                   text: 'Details',
                   fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
                 SizedBox(height: 20.h),
                 InterMedium(
@@ -76,7 +76,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterBold(
                   text: 'Comments',
                   fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
                 SizedBox(height: 10.h),
                 InterMedium(
@@ -89,7 +89,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterBold(
                   text: 'Images',
                   fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
                 GridView.builder(
                   physics: NeverScrollableScrollPhysics(),

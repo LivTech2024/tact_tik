@@ -63,7 +63,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                     InterBold(
                       text: 'Employee',
                       fontsize: width / width18,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color ,
                     ),
                     SizedBox(height: 20.h),
                     // TODO : Comment out this
@@ -117,8 +117,8 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                             ],
                           ),
                           Checkbox(
-                            activeColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            checkColor: isDark ? DarkColor.color1 : LightColor.color3,
+                            activeColor: Theme.of(context).primaryColor,
+                            checkColor: Theme.of(context).textTheme.bodyMedium!.color,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {

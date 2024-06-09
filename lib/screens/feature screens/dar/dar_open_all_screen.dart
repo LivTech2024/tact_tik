@@ -589,9 +589,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         Flexible(
                           child: InterRegular(
                             text: _userService.shiftName ?? 'Loading...',
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            color: Theme.of(context)
+                                      .primaryColor,
                             fontsize: 20.sp,
                           ),
                         ),
@@ -715,9 +714,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                         text:
                                         "${data[index]['TileTime']}",
                                         // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                        color: isDark
-                                            ? DarkColor.color21
-                                            : LightColor.color3,
+                                        color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                       ),
                                       SizedBox(
                                         height: 10.h,
@@ -887,9 +887,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                     InterBold(
                       text: 'Reports',
                       fontsize: 20.sp,
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     SizedBox(height: 25.h),
                     FutureBuilder<
@@ -956,9 +954,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                   Text(
                                     'Reports for $hourKey',
                                     style: TextStyle(
-                                      color: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .color,
                                     ),
                                   ),
                                   ...reportsForHour.map((report) {

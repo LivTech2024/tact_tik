@@ -150,9 +150,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                   ? 'Today'
                                   : DateFormat.yMMMd().format(date),
                               fontsize: 20.sp,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color: Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           SizedBox(
@@ -266,9 +264,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                                 return InterMedium(
                                                   text: keyName,
                                                   fontsize: 16.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 );
                                               },
                                             ),

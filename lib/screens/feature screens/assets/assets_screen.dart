@@ -142,9 +142,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                           ? 'Today'
                                           : DateFormat.yMMMd().format(date),
                                    fontsize: 20.sp,
-                                      color: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .color,
                                     ),
                                   ),
                                   SizedBox(height: 30.h),

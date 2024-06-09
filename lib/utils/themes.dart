@@ -22,7 +22,17 @@ var ligthTheme = ThemeData(
       letterSpacing: -.3,
     ),
   ),
-  
+  textTheme: TextTheme(
+
+    bodyMedium: TextStyle(
+      color: LightColor.color3,
+   
+    ),
+    bodySmall: TextStyle(
+      color: LightColor.color3,
+     
+    ),
+  )
 );
 var darkTheme = ThemeData(
   scaffoldBackgroundColor: DarkColor.Secondarycolor,
@@ -43,4 +53,12 @@ var darkTheme = ThemeData(
       letterSpacing: -.3,
     ),
   ),
+   textTheme: TextTheme(
+      bodyMedium: TextStyle(
+        color: DarkColor.color1,
+      ),
+      bodySmall: TextStyle(
+        color: DarkColor.Primarycolor,
+      ),
+    )
 );

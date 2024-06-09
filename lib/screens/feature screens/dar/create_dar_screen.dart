@@ -353,7 +353,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: 20.sp,
                       color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     SizedBox(height: 30.h),
                     CustomeTextField(
@@ -515,9 +515,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                           },
                                           icon: Icon(
                                             Icons.delete,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                         ),
                                       ],
@@ -534,9 +535,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               InterBold(
                                 text: 'Patrol',
                                 fontsize: 20.sp,
-                                color: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
                               ),
                               SizedBox(height: 20.h),
                             ],
@@ -607,9 +609,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               InterBold(
                                 text: 'Reports',
                                 fontsize: 20.sp,
-                                color: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
                               ),
                               SizedBox(height: 20.h)
                             ],

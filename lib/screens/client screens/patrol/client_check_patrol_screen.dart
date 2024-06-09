@@ -109,16 +109,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         width: 190.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
-                          Iconcolor: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          Iconcolor:
+                              Theme.of(context).textTheme.bodySmall!.color as Color,
                           text: selectedDate != null
                               ? DateFormat('dd/MM/yyyy').format(selectedDate!)
                               : 'display shift date',
                           fontsize: 14.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color as Color,
                         ),
                       ),
                     ),
@@ -128,14 +125,12 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         space: 6.w,
                         icon: Icons.add,
                           Iconcolor:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            Theme.of(context).textTheme.bodySmall!.color as Color,
                         iconSize: 20.sp,
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: 14.sp,
-                        color: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color as Color,
                         // Iconcolor: DarkColor.color1,
                       ),
                     ),
@@ -161,9 +156,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                       )

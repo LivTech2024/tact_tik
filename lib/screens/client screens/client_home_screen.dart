@@ -847,9 +847,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 children: [
                                                   InterSemibold(
                                                     text: PatrolName ?? "",
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                                     fontsize: 14.sp,
                                                   ),
                                                   SizedBox(height: 4.h),
@@ -870,9 +871,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         ),
                                                         SizedBox(width: 5.w),
                                                         Flexible(
-                                                          child: InterRegular(color: isDark
-                                                              ? DarkColor.color1
-                                                              : LightColor.color3,
+                                                          child: InterRegular(color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color,
                                                             text:
                                                                 '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
                                                             maxLines: 2,
@@ -894,9 +897,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 InterRegular(
                                                   text: 'CheckPoints',
                                                   fontsize: 14.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
                                                 SizedBox(height: 10.h),
                                                 Row(
@@ -916,9 +920,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     InterMedium(
                                                       text: '100',
                                                       fontsize: 13.sp,
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                     )
                                                   ],
                                                 )
@@ -966,9 +971,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       children: [
                                         InterBold(
                                           text: dateString,
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.color3,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color,
                                           fontsize: 14.sp,
                                         ),
                                         SizedBox(
@@ -1261,9 +1267,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           children: [
                                             InterBold(
                                               text: dateString,
-                                              color: isDark
-                                                  ? DarkColor.Primarycolor
-                                                  : LightColor.color3,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .color,
                                               fontsize: 14.sp,
                                             ),
                                             SizedBox(
@@ -1314,10 +1321,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         text: reports[index]
                                                             ['ReportGuardName'],
                                                         fontsize: 18.sp,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall!
+                                                            .color,
                                                       ),
                                                       SizedBox(height: 19.h),
                                                       SizedBox(
@@ -1639,9 +1646,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       size: 15.sp,
                                                     )
                                                   ],

@@ -247,9 +247,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: isDark
-                        ? DarkColor.color21
-                        : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                     fontsize: 18.sp,
                   ),
                   Icon(
@@ -257,9 +255,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
                       size: 24.sp,
-                    color:  isDark
-                        ? DarkColor.color21
-                        : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   )
                 ],
               ),
@@ -272,7 +268,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: 18.sp,
-                 color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                 color:  Theme.of(context).textTheme.bodySmall!.color,
               ),
             ),
           // ),

@@ -42,8 +42,7 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              // color: isDark ? DarkColor.color1 : LightColor.color3,
-              // size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -70,13 +69,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Name:',
                       fontsize: 18.sp,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color ,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportName,
                       fontsize: 14.sp,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -87,13 +86,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Category:',
                       fontsize: 18.sp,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportCategory,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -104,13 +103,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Date:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportDate,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -121,13 +120,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Follow Up Required:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportFollowUpRequire,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -138,13 +137,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Data:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportData,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -155,13 +154,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Status:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportStatus,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -172,13 +171,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Employee Name:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportEmployeeName,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -189,13 +188,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Location:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: widget.reportLocation,
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
@@ -206,13 +205,13 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Followed Up Report:',
                       fontsize: 18.sp,
-                      color: isDark?DarkColor.color1:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(
                       text: 'NOT FOUND?',
                       fontsize: 14.sp,
-                      color: isDark?DarkColor.color21:LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ],
                 ),
