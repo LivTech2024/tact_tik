@@ -534,8 +534,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.all(10.sp),
+                // padding: EdgeInsets.all(10.sp),
                 height: (178.h),
+                margin: EdgeInsets.all(10.sp),
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
@@ -554,7 +555,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfileScreen(),
+                                builder: (context) => ProfileScreen(
+                                  empId: _employeeId,
+                                ),
                               ),
                             );
                           },
@@ -562,7 +565,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             backgroundImage:
                                 AssetImage('assets/images/default.png'),
                             foregroundImage: NetworkImage(employeeImg!),
-                            radius: 50.r,
+                            radius: 40.r,
                             backgroundColor: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.Primarycolor,
@@ -610,7 +613,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ProfileScreen()));
+                                builder: (context) => ProfileScreen(
+                                      empId: _employeeId,
+                                    )));
                       },
                     ),
                     buildListTile(
@@ -648,21 +653,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // emails.add("alerts.tactik@gmail.com");
                         // // emails.add("security@lestonholdings.com");
                         // // emails.add("dan@tpssolution.com");
-                        // await sendDARTemplateEmail(
-                        //   "Leston holdings",
-                        //   emails,
-                        //   'Tacttik DAR',
-                        //   "Tacttik DAR",
-                        //   "Shift",
-                        //   "2 JUN",
-                        //   "livjeet kaur",
-                        //   "01:20:27",
-                        //   "06:00:00",
-                        //   "High level place",
-                        //   "completed",
-                        //   "formattedDateTime",
-                        //   "formattedEndTime",
-                        // );
+                        await sendDARTemplateEmail(
+                          "Leston holdings",
+                          emails,
+                          'Tacttik DAR',
+                          "Tacttik DAR",
+                          "Shift",
+                          "2 JUN",
+                          "livjeet kaur",
+                          "01:20:27",
+                          "06:00:00",
+                          "High level place",
+                          "completed",
+                          "formattedDateTime",
+                          "formattedEndTime",
+                        );
                         // customEmail();
                         Navigator.push(
                           context,

@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/home%20screens/home_screen.dart';
 import 'package:tact_tik/services/EmailService/EmailJs_fucntion.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
@@ -99,12 +100,13 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+          shadowColor: isDark? Colors.transparent :LightColor.color3.withOpacity(.1),
+          backgroundColor:isDark? DarkColor. AppBarcolor:LightColor.AppBarcolor,
+          elevation: 5,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: width / width24,
             ),
             padding: EdgeInsets.only(left: width / width20),
@@ -115,7 +117,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
           title: InterMedium(
             text: 'End Patrol',
             fontsize: width / width18,
-            color: Colors.white,
+            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -133,7 +135,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       'Add Note',
                       style: TextStyle(
                         fontSize: width / width14,
-                        color: DarkColor.Primarycolor,
+                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -141,7 +143,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                     Row(
                       children: [
                         Radio(
-                          activeColor: DarkColor.Primarycolor,
+                          activeColor: isDark ? DarkColor.Primarycolor : LightColor.color3,
                           value: 'Emergency',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -153,14 +155,14 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         InterRegular(
                           text: 'Emergency',
                           fontsize: width / width16,
-                          color: DarkColor.color1,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                         )
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
-                          activeColor: DarkColor.Primarycolor,
+                          activeColor: isDark ? DarkColor.Primarycolor : LightColor.color3,
                           value: 'Normal',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -172,7 +174,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         InterRegular(
                           text: 'Normal',
                           fontsize: width / width16,
-                          color: DarkColor.color1,
+                          color: isDark ? DarkColor.color1 : LightColor.color3,
                         )
                       ],
                     ),
@@ -182,7 +184,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: isDark ? DarkColor.color1 : LightColor.color3),
                     ),
                     SizedBox(height: height / height100)
                   ],
@@ -193,7 +195,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: DarkColor.Primarycolor,
+                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
                     ),
                   ),
                 ),
@@ -499,9 +501,9 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                                 builder: (context) => HomeScreen()));
                         // }
                       },
-                      color: Colors.white,
+                      color: isDark ? DarkColor.color1 : LightColor.color1,
                       borderRadius: width / width20,
-                      backgroundcolor: DarkColor.Primarycolor,
+                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
                     ),
                     SizedBox(
                       height: height / height20,

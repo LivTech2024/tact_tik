@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -45,39 +46,38 @@ class SetDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     return Container(
-      height: height / height60,
+      height: 60.h,
       width: double.maxFinite,
       decoration: BoxDecoration(
         // color: Colors.redAccent,
-        borderRadius: BorderRadius.circular(width / width10),
+        borderRadius: BorderRadius.circular(10.r),
         border: Border(
           bottom: BorderSide(
             color: DarkColor.color19,
           ),
         ),
       ),
-      margin: EdgeInsets.only(top: height / height10),
+      margin: EdgeInsets.only(top: 10.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(width: width / width10),
+          SizedBox(width: 10.w),
           Icon(
             icon,
-            size: width / width24,
+            size: 24.w,
             color:  isDark ? DarkColor.color1 : LightColor.color3,
           ),
-          SizedBox(width: width / width10),
+          SizedBox(width: 10.w),
           useTextField
               ? Expanded(
                   child: TextField(
                     keyboardType: keyboardType,
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w300,
-                      fontSize: width / width18,
+                      fontSize: 18.sp,
                       color:  isDark
                           ? DarkColor.color1
                           : LightColor.color3, // Change text color to white
@@ -86,13 +86,13 @@ class SetDetailsWidget extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(
-                          Radius.circular(width / width10),
+                          Radius.circular(10.r),
                         ),
                       ),
                       focusedBorder: InputBorder.none,
                       hintStyle: GoogleFonts.poppins(
                         fontWeight: FontWeight.w300,
-                        fontSize: width / width18,
+                        fontSize: 18.sp,
                         color:  isDark
                             ? DarkColor.color2
                             : LightColor.color3, // Change text color to white
@@ -108,7 +108,7 @@ class SetDetailsWidget extends StatelessWidget {
                   onTap: onTap,
                   child: InterMedium(
                     text: hintText,
-                    fontsize: width / width18,
+                    fontsize: 18.sp,
                     color:  isDark ? DarkColor.color25 : LightColor.color3,
                   ),
                 ),

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
+import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/visitors.dart';
 import 'package:tact_tik/screens/feature%20screens/visitors/widgets/setTimeWidget.dart';
 import 'package:tact_tik/services/Userservice.dart';
@@ -270,29 +272,29 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     bool isEditMode = widget.visitorData != null;
 
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: Stack(
           children: [
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  backgroundColor: DarkColor. AppBarcolor,
-                  elevation: 0,
+                  shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+                  backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                  elevation: 5,
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: Colors.white,
-                      size: width / width24,
+                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      size: 24.w,
                     ),
-                    padding: EdgeInsets.only(left: width / width20),
+                    padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
                       Navigator.pop(context);
                       print(
@@ -301,8 +303,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                   ),
                   title: InterMedium(
                     text: 'Create Visitors',
-                    fontsize: width / width18,
-                    color: Colors.white,
+                    fontsize: 18.sp,
+                    color: isDark ? DarkColor.color1 : LightColor.color3,
                     letterSpacing: -.3,
                   ),
                   centerTitle: true,
@@ -310,17 +312,17 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width / width30),
+                    padding: EdgeInsets.symmetric(horizontal: 30.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: height / height30),
+                        SizedBox(height: 30.h),
                         InterBold(
                           text: 'Add Visitor',
-                          color: DarkColor. Primarycolor,
-                          fontsize: width / width20,
+                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          fontsize: 20.sp,
                         ),
-                        SizedBox(height: height / height30),
+                        SizedBox(height: 30.h),
                         Row(
                           children: [
                             SetTimeWidget(
@@ -333,7 +335,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                               enabled: !isEditMode,
                               isEditMode: isEditMode,
                             ),
-                            SizedBox(width: width / width6),
+                            SizedBox(width: 6.w),
                             SetTimeWidget(
                               hintText: OutTime == null
                                   ? 'Out Time'
@@ -346,21 +348,21 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                             ),
                           ],
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Name',
                           controller: nameController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Email',
                           controller: EmailController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Contact Number',
                           controller: ContactNoController,
@@ -372,49 +374,49 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                                 .digitsOnly, // Allows only digits
                           ],
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Asset Handover',
                           controller: AssetHandoverController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Asset Return',
                           controller: AssetReturnController,
                           enabled: isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'License Plate Number ',
                           controller: LicensePlateNumberController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Set Countdown',
                           controller: SetCountdownController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Comments ',
                           controller: CommentsController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'No. Of Person',
                           controller: NoOfPersonController,
                           enabled: !isEditMode,
                           isEditMode: isEditMode,
                         ),
-                        SizedBox(height: height / height20),
+                        SizedBox(height: 20.h),
                         SetTextfieldWidget(
                           hintText: 'Company Name',
                           controller: CompanyNameController,
@@ -422,7 +424,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                           isEditMode: isEditMode,
                         ),
                         SizedBox(
-                          height: height / height30,
+                          height: 30.h,
                         ),
                         Button1(
                           text: 'Save',
@@ -432,10 +434,10 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                               // Handle the case when saving or updating visitor data fails
                             }
                           },
-                          backgroundcolor: DarkColor. Primarycolor,
-                          color: DarkColor.color22,
-                          borderRadius: width / width10,
-                          fontsize: width / width18,
+                          backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                          color: isDark ? DarkColor.color1 : LightColor.color1,
+                          borderRadius: 10.w,
+                          fontsize: 18.sp,
                         ),
                       ],
                     ),
