@@ -279,7 +279,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: Stack(
           children: [
             CustomScrollView(

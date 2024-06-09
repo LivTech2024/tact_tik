@@ -64,7 +64,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             continue;
           }
 
-          DateTime shiftDateWithoutTime = DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
+          DateTime shiftDateWithoutTime =
+              DateTime(shiftDate.year, shiftDate.month, shiftDate.day);
 
           if (!groupedSchedules.containsKey(shiftDateWithoutTime)) {
             groupedSchedules[shiftDateWithoutTime] = [];
@@ -86,7 +87,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
     for (var date in groupedSchedules.keys) {
       for (var schedule in groupedSchedules[date]!) {
-        List<dynamic> assignedUserIds = List<dynamic>.from(schedule['ShiftAssignedUserId'] ?? 'NO DATA FOUND');
+        List<dynamic> assignedUserIds = List<dynamic>.from(
+            schedule['ShiftAssignedUserId'] ?? 'NO DATA FOUND');
         List<dynamic> employeeImages = [];
 
         try {
@@ -104,10 +106,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             }
           }
 
-          Map<String, dynamic> scheduleData = schedule.data() as Map<String, dynamic>;
+          Map<String, dynamic> scheduleData =
+              schedule.data() as Map<String, dynamic>;
           scheduleData['EmployeeImages'] = employeeImages;
 
-          schedule.reference.update(scheduleData); // Update the schedule document in Firestore
+          schedule.reference.update(
+              scheduleData); // Update the schedule document in Firestore
         } catch (e) {
           print("Error fetching employee images: $e");
         }
@@ -124,21 +128,12 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
-          elevation: 0,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? Colors.white : LightColor.color3,
-              size: 24.w,
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -148,9 +143,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           ),
           title: InterMedium(
             text: 'All Schedule',
-            fontsize: 18.sp,
-            color: isDark ? Colors.white : LightColor.color3,
-            letterSpacing: -.3,
           ),
           centerTitle: true,
         ),
@@ -170,7 +162,8 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             GuardName: '',
                             GuardImg: '',
                             CompanyId: widget.CompanyId,
-                            supervisorEmail: '', shiftId: '',
+                            supervisorEmail: '',
+                            shiftId: '',
                           )));
             },
             child: Icon(
@@ -181,8 +174,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: Padding(
-          padding:
-              EdgeInsets.only(left: 30.w, right: 30.w),
+          padding: EdgeInsets.only(left: 30.w, right: 30.w),
           child: CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -198,8 +190,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     SizedBox(height: 24.h),
                     Container(
                       height: 64.h,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10.w),
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -211,9 +202,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(13.w),
                       ),
                       child: Row(
@@ -257,8 +246,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               color: isDark
                                   ? DarkColor.Primarycolor
                                   : LightColor.Primarycolor,
-                              borderRadius:
-                                  BorderRadius.circular(10.r),
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
                               child: Icon(
@@ -302,11 +290,15 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                         ),
                         SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
-                          String shiftName = schedule['ShiftName'] ?? 'NO DATA FOUND';
+                          String shiftName =
+                              schedule['ShiftName'] ?? 'NO DATA FOUND';
                           String shiftLocation =
-                              schedule['ShiftLocationAddress'] ?? 'NO DATA FOUND';
-                          String shiftStartTime = schedule['ShiftStartTime'] ?? 'NO DATA FOUND';
-                          String shiftEndTime = schedule['ShiftEndTime'] ?? 'NO DATA FOUND';
+                              schedule['ShiftLocationAddress'] ??
+                                  'NO DATA FOUND';
+                          String shiftStartTime =
+                              schedule['ShiftStartTime'] ?? 'NO DATA FOUND';
+                          String shiftEndTime =
+                              schedule['ShiftEndTime'] ?? 'NO DATA FOUND';
                           String shiftId = schedule['ShiftId'];
 
                           Map<String, dynamic>? scheduleData =
@@ -319,12 +311,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                             margin: EdgeInsets.only(top: 10.h),
                             width: double.maxFinite,
                             decoration: BoxDecoration(
-                              color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
-                              borderRadius:
-                                  BorderRadius.circular(14.r),
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(14.r),
                             ),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 20.h),
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
                             child: Column(
                               children: [
                                 Row(
@@ -412,17 +402,19 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     i++)
                                                   CircleAvatar(
                                                     radius: 10.r,
-                                                    backgroundImage: NetworkImage(employeeImages[i]),
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            employeeImages[i]),
                                                   ),
                                                 if (employeeImages.length > 3)
                                                   CircleAvatar(
                                                     radius: 10.r,
-                                                    backgroundColor:
-                                                        isDark
+                                                    backgroundColor: isDark
                                                         ? DarkColor.color1
                                                         : LightColor.color3,
                                                     child: InterMedium(
-                                                      text: '+${employeeImages.length - 3}',
+                                                      text:
+                                                          '+${employeeImages.length - 3}',
                                                       fontsize: 12.sp,
                                                     ),
                                                   ),
@@ -458,8 +450,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                       child: SvgPicture.asset(
                                                           'assets/images/calendar_line.svg'),
                                                     ),
-                                                    SizedBox(
-                                                        width: 6.w),
+                                                    SizedBox(width: 6.w),
                                                     InterMedium(
                                                       color: isDark
                                                           ? DarkColor.color1
@@ -475,7 +466,17 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => CreateSheduleScreen(GuardId: '', GuardName: '', GuardImg: '', CompanyId: widget.CompanyId, BranchId: '', supervisorEmail: '', shiftId: shiftId,),
+                                                        builder: (context) =>
+                                                            CreateSheduleScreen(
+                                                          GuardId: '',
+                                                          GuardName: '',
+                                                          GuardImg: '',
+                                                          CompanyId:
+                                                              widget.CompanyId,
+                                                          BranchId: '',
+                                                          supervisorEmail: '',
+                                                          shiftId: shiftId,
+                                                        ),
                                                       ),
                                                     );
                                                   },

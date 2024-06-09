@@ -13,7 +13,8 @@ class CustomeTextField extends StatelessWidget {
     this.showIcon = true,
     this.isEnabled = true,
     this.controller,
-    this.textInputType, this.maxlength,
+    this.textInputType,
+    this.maxlength,
   });
 
   final String hint;
@@ -31,7 +32,6 @@ class CustomeTextField extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Container(
-
       padding: EdgeInsets.only(
         left: width / width20,
         top: height / height5,
@@ -48,7 +48,7 @@ class CustomeTextField extends StatelessWidget {
             offset: Offset(0, 3),
           )
         ],
-        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(width / width10),
       ),
       constraints: isExpanded
@@ -73,23 +73,24 @@ class CustomeTextField extends StatelessWidget {
                     : LightColor.color3, // Change text color to white
               ),
               decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(width / width10),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(width / width10),
+                    ),
                   ),
-                ),
-                focusedBorder: InputBorder.none,
-                hintStyle: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w300,
-                  fontSize: width / width18,
-                  color: isDark
-                      ? DarkColor.color2
-                      : LightColor.color3, // Change text color to white
-                ),
-                hintText: hint,
-                contentPadding: EdgeInsets.zero, // Remove padding
-              ),
+                  focusedBorder: InputBorder.none,
+                  hintStyle: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w300,
+                    fontSize: width / width18,
+                    color: isDark
+                        ? DarkColor.color2
+                        : LightColor.color3, // Change text color to white
+                  ),
+                  hintText: hint,
+                  contentPadding: EdgeInsets.zero,
+                  // Remove padding
+                  counterText: ''),
               keyboardType: textInputType,
               cursorColor: DarkColor.Primarycolor,
               enabled: isEnabled,

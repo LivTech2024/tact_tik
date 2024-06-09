@@ -56,7 +56,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
           shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
           backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
@@ -124,9 +124,7 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                 offset: Offset(0, 3),
                               )
                             ],
-                            color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                            color: Theme.of(context).cardColor,
                             borderRadius:
                             BorderRadius.circular(12.w),
                           ),

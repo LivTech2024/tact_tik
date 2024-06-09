@@ -204,7 +204,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                             height: height / height66,
                             width: width / width66,
                             decoration: BoxDecoration(
-                                color: DarkColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(
                                   width / width10,
                                 )),
@@ -263,7 +263,7 @@ class _WellnessCheckScreenState extends State<WellnessCheckScreen> {
                       height: height / height66,
                       width: width / width66,
                       decoration: BoxDecoration(
-                          color: DarkColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(width / width8)),
                       child: Center(
                         child: Icon(Icons.add),

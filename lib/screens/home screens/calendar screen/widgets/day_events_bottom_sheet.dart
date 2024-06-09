@@ -99,9 +99,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: event.isShiftAcknowledgedByEmployee
                                       ? Colors.green.shade700
-                                      : (isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor),
+                                      : (Theme.of(context).cardColor),
                                   borderRadius:
                                       BorderRadius.circular(width / width10),
                                   // border: Border.all(color: Colors.redAccent)
@@ -321,7 +319,7 @@ class DayEventsBottomSheet extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(width / width10),
 
             /// TODO : Change the border color to red if the shift exchange is not assigned
@@ -464,7 +462,7 @@ class DayEventsBottomSheet extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(width / width10),
 
             /// TODO : Change the border color to red if the shift exchange is not assigned

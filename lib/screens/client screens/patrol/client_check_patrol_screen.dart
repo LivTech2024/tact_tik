@@ -74,18 +74,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:Theme.of(context).canvasColor,
+        //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor:
-              isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -95,8 +90,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
           ),
           title: InterRegular(
             text: 'Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -116,16 +109,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         width: 190.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
-                          Iconcolor: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          Iconcolor:
+                              Theme.of(context).textTheme.bodySmall!.color as Color,
                           text: selectedDate != null
                               ? DateFormat('dd/MM/yyyy').format(selectedDate!)
                               : 'display shift date',
                           fontsize: 14.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color as Color,
                         ),
                       ),
                     ),
@@ -135,14 +125,12 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         space: 6.w,
                         icon: Icons.add,
                           Iconcolor:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            Theme.of(context).textTheme.bodySmall!.color as Color,
                         iconSize: 20.sp,
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: 14.sp,
-                        color: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color as Color,
                         // Iconcolor: DarkColor.color1,
                       ),
                     ),
@@ -168,9 +156,8 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                       )
@@ -239,9 +226,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius: BorderRadius.circular(14.r),
                                 ),
                                 padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -381,30 +366,14 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                       : LightColor.color3,
                                                 ),
                                                 SizedBox(height: 12.h),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 2.h,
-                                                    horizontal: 10.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    // color: isDark
-                                                    //     ? DarkColor.color21
-                                                    //     : LightColor.color3,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.r),
-                                                  ),
-                                                  child: InterBold(
-                                                    text: patrol[
-                                                            'PatrolLogStatus'] ??
-                                                        '',
-                                                    fontsize: 12.sp,
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor
-                                                            .Primarycolor,
-                                                  ),
+                                                InterMedium(
+                                                  text: patrol['PatrolLogStatus'] ?? 'incomplete',
+                                                  fontsize: 12.sp,
+                                                  color: isDark
+                                                      ? DarkColor.color21
+                                                      : LightColor.color3,
                                                 ),
+
                                               ],
                                             ),
                                           ),

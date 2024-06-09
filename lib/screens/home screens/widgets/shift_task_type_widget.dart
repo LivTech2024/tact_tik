@@ -479,9 +479,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        backgroundColor: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        backgroundColor: Theme.of(context).cardColor,
                                         title: Text(
                                           'Report Qr',
                                           style: TextStyle(
@@ -561,7 +559,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                   height: height / height66,
                                   width: width / width66,
                                   decoration: BoxDecoration(
-                                      color: DarkColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       )),
@@ -631,9 +629,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                     offset: Offset(0, 3),
                                   )
                                 ],
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width8)),
                             child: Center(

@@ -43,7 +43,7 @@ class LogTypeWidget extends StatelessWidget {
           )
         ],
        borderRadius: BorderRadius.circular(10.r),
-        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+        color:  Theme.of(context).cardColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,20 +79,20 @@ class LogTypeWidget extends StatelessWidget {
                   InterMedium(
                     text: '$logtype',
                     fontsize: 14.sp,
-                    color:  isDark ? DarkColor.color2 : LightColor.color3,
+                    color:  Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 4.h),
                     child: InterMedium(
                       text: '$location',
                      fontsize: 14.sp,maxLines: 1,
-                      color:  isDark ? DarkColor.color1 : LightColor.color3,
+                      color:  Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   ),
                   InterBold(
                     text: 'Client: $clientname',
                    fontsize: 14.sp,
-                    color:  isDark ? DarkColor.color2 : LightColor.color3,
+                    color:  Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                 ],
               ),
@@ -100,7 +100,7 @@ class LogTypeWidget extends StatelessWidget {
           ),
           InterMedium(
             text: time,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodyMedium!.color,
             fontsize: 14.sp,
           ),
         ],

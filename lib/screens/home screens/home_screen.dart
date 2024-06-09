@@ -525,12 +525,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor: Theme.of(context).canvasColor,
         key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
-          backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          backgroundColor: Theme.of(context).canvasColor,
           child: Column(
             children: [
               Container(
@@ -576,18 +574,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -653,21 +647,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         // // emails.add("alerts.tactik@gmail.com");
                         // // emails.add("security@lestonholdings.com");
                         // // emails.add("dan@tpssolution.com");
-                        await sendDARTemplateEmail(
-                          "Leston holdings",
-                          emails,
-                          'Tacttik DAR',
-                          "Tacttik DAR",
-                          "Shift",
-                          "2 JUN",
-                          "livjeet kaur",
-                          "01:20:27",
-                          "06:00:00",
-                          "High level place",
-                          "completed",
-                          "formattedDateTime",
-                          "formattedEndTime",
-                        );
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "2 JUN",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // customEmail();
                         Navigator.push(
                           context,
@@ -719,17 +713,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     //                 onPressed: () async {
                     //                   final SharedPreferences prefs =
                     //                       await SharedPreferences.getInstance();
-                    //                   print("Dark : ${isDark}");
-                    //                   bool? ThemeVar = prefs.getBool('Theme');
-                    //                   if (ThemeVar != null) {
-                    //                     print("ThemeVar ${ThemeVar}");
-                    //                     setState(() async {
-                    //                       isDark = !ThemeVar;
-                    //                       await prefs.setBool('Theme', isDark);
-                    //                       // SystemChannels.platform.invokeMethod(
-                    //                       //     'SystemNavigator.pop');
-                    //                     });
-                    //                   }
+                    //                   setState(() async {
+                    //                     isDark = !isDark;
+                    //                     await prefs.setBool('Theme', isDark);
+                    //                     // SystemChannels.platform.invokeMethod(
+                    //                     //     'SystemNavigator.pop');
+                    //                   });
                     //                 },
                     //                 child: InterMedium(
                     //                   text: 'Change & Restart',
@@ -1124,7 +1113,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   : LightColor.Primarycolor,
                                             ),
                                           ),
-                                          // color: WidgetColor,
                                         ),
                                         padding: EdgeInsets.symmetric(
                                           vertical: 7.h,

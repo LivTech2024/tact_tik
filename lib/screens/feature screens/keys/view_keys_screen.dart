@@ -195,7 +195,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
     bool isEditMode = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +203,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Allocation Date',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
           fontsize: 20.sp,
               ),
               SizedBox(height: 30.h),
@@ -214,9 +214,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: 60.h,
                       decoration: BoxDecoration(
                          borderRadius: BorderRadius.circular(10.r),
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -235,9 +233,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       height: 60.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.r),
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -253,14 +249,14 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                 ],
               ),
               SizedBox(height: 30.h),
-              InterBold(text: 'Key', color: isDark ? DarkColor.color1 : LightColor.color3, fontsize: 16.sp),
+              InterBold(text: 'Key', color: Theme.of(context).textTheme.bodyMedium!.color, fontsize: 16.sp),
               Container(
                 height: 60.h,
                 width: double.maxFinite,
                 margin: EdgeInsets.only(bottom: 10.h),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                  color: Theme.of(context).cardColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,9 +303,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                             return InterMedium(
                               text: keyName,
                               fontsize: 16.sp,
-                              color: isDark
-                                  ? DarkColor.color1
-                                  : LightColor.color3,
+                              color: Theme.of(context).textTheme.bodyMedium!.color,
                             );
                           },
                         ),
@@ -333,7 +327,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                   SizedBox(height: 30.h),
                   InterBold(
                     text: 'Add Visitor',
-                    color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodySmall!.color,
                     fontsize: 20.sp,
                   ),
                   SizedBox(height: 30.h),

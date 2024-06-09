@@ -50,7 +50,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
           margin: EdgeInsets.only(bottom: 30.w),
           padding: EdgeInsets.all(16.sp),
           decoration: BoxDecoration(
-            color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -129,7 +129,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                     },
                     child: RobotoMedium(
                       text: 'Yes',
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color ,
                       fontsize: 18.sp,
                     ),
                   ),
@@ -165,7 +165,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
               margin: EdgeInsets.only(bottom: 30.h),
               padding: EdgeInsets.all(16.sp),
               decoration: BoxDecoration(
-                color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
@@ -181,7 +181,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   PoppinsMedium(
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                     text: 'Supervisors & Admin Informed',
                     fontsize: 16.sp,
                   ),
@@ -200,9 +200,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                           TextButton(
                             onPressed: () {
                               showModalBottomSheet(
-                                backgroundColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                backgroundColor: Theme.of(context).cardColor,
                                 context: context,
                                 builder: (context) => Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -227,9 +225,10 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                                           title: InterMedium(
                                             text: contactName,
                                             fontsize: 12.sp,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                           onTap: () async {
                                             final url = 'tel://$phoneNumber';
@@ -268,7 +267,7 @@ class _PanicAlertDialogState extends State<PanicAlertDialog> {
                               text: 'OK',
                               fontsize: 18.sp,
                               color:
-                              isDark ? DarkColor.color1 : LightColor.color3,
+                              Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ),
                         ],

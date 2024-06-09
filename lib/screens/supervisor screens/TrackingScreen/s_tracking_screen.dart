@@ -27,16 +27,13 @@ class SupervisorTrackingScreen extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     final controller = Get.put(SupervisorTrackingScreenController(guardsInfo));
     return Scaffold(
-      backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      
       appBar: AppBar(
-        elevation: 5,
-        shadowColor:  isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
+       
         leading: IconButton(
           icon:  Icon(
             Icons.arrow_back_ios,
-            size: 20,
-            color:
-                isDark ? DarkColor.color1 : LightColor.color3,
+          
           ),
           onPressed: () {
             Get.back();
@@ -46,9 +43,7 @@ class SupervisorTrackingScreen extends StatelessWidget {
         centerTitle: true,
         title: InterMedium(
           text: 'Live Tracking',
-          fontsize: width / width18,
-          color:  isDark ? DarkColor.color1 : LightColor.color3,
-          letterSpacing: -.3,
+        
         ),
       ),
       body: Stack(

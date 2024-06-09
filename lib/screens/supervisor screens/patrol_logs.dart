@@ -203,17 +203,15 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: isDark?DarkColor.AppBarcolor:LightColor.AppBarcolor,
-              elevation: 0,
+             
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: width / width24,
+                  
                 ),
                 padding: EdgeInsets.only(left: width / width20),
                 onPressed: () {
@@ -223,9 +221,7 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
               ),
               title: InterMedium(
                 text: 'Patrolling',
-                fontsize: width / width18,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -.3,
+             
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -295,18 +291,14 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: width / width24,
-                          dropdownColor: isDark
-                              ? DarkColor. WidgetColor
-                              : LightColor. WidgetColor,
+                          dropdownColor: Theme.of(context).cardColor,
                           style: TextStyle(color: isDark?DarkColor.color2:LightColor.color3, fontSize: width / width20),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
@@ -531,7 +523,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             margin: EdgeInsets.only(bottom: height / height30),
             duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(
-              color: isDark?DarkColor.WidgetColor:LightColor.WidgetColor,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(width / width10),
             ),
             constraints: BoxConstraints(),
@@ -1009,7 +1001,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                   height: height / height66,
                                                                                   width: width / width66,
                                                                                   decoration: BoxDecoration(
-                                                                                    color: DarkColor. WidgetColor,
+                                                                                    color: Theme.of(context).cardColor,
                                                                                     borderRadius: BorderRadius.circular(
                                                                                       width / width10,
                                                                                     ),
@@ -1084,7 +1076,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                 width / width66,
                                                                             decoration:
                                                                                 BoxDecoration(
-                                                                              color: DarkColor. WidgetColor,
+                                                                              color: Theme.of(context).cardColor,
                                                                               borderRadius: BorderRadius.circular(width / width8),
                                                                             ),
                                                                             child:

@@ -81,19 +81,14 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      
+          
         appBar: AppBar(
-          shadowColor: isDark
-              ? Colors.transparent
-              : LightColor.WidgetColor.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -102,9 +97,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
           ),
           title: InterMedium(
             text: 'LogBook Guards',
-            fontsize: 18.w,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -153,9 +146,7 @@ class _SelectGuardsScreenState extends State<SelectLoogBookGuardsScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius:
                                       BorderRadius.circular(12.r),
                                 ),

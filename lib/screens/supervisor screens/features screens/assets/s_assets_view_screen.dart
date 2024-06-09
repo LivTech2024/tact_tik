@@ -67,7 +67,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -84,14 +84,11 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? Colors.transparent : LightColor.WidgetColor.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 5,
+          
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
-                  size: 24.w,
+                
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -101,9 +98,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
               ),
               title: InterMedium(
                 text: 'Assets',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -0.3,
+               
               ),
               centerTitle: true,
               floating: true,
@@ -188,7 +183,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                             borderRadius:
                                 BorderRadius.circular(10.w),
                             color:
-                                isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                Theme.of(context).cardColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

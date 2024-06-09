@@ -244,16 +244,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+      
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -262,9 +259,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           ),
           title: InterMedium(
             text: 'Assets',
-            fontsize:18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+         
           ),
           centerTitle: true,
         ),
@@ -391,9 +386,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 10.h),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              color: Theme.of(context).cardColor,
                               borderRadius:
                                   BorderRadius.circular(13.r),
                             ),
@@ -571,9 +564,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 hintText: 'Select Equipment',
                                 hintStyle: TextStyle(color: Colors.white),
                                 filled: true,
-                                fillColor: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                fillColor: Theme.of(context).cardColor,
                                 border: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.circular(13.w),
@@ -618,9 +609,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                             10.r),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        color: Theme.of(context).cardColor,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -656,9 +645,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                             10.r),
-                                        color: isDark
-                                            ? DarkColor.WidgetColor
-                                            : LightColor.WidgetColor,
+                                        color: Theme.of(context).cardColor,
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -692,9 +679,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: width / width20),
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.WidgetColor
-                                  : LightColor.WidgetColor,
+                              color: Theme.of(context).cardColor,
                               borderRadius:
                                   BorderRadius.circular(10.r),
                             ),
@@ -748,9 +733,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: width / width10),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius:
                                         BorderRadius.circular(width / width13),
                                   ),
@@ -881,9 +864,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                               ? DarkColor.color1
                                               : LightColor.color3),
                                       filled: true,
-                                      fillColor: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      fillColor: Theme.of(context).cardColor,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
                                             width / width13),
@@ -931,9 +912,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       width / width10),
-                                              color: isDark
-                                                  ? DarkColor.WidgetColor
-                                                  : LightColor.WidgetColor,
+                                              color: Theme.of(context).cardColor,
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -970,9 +949,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       width / width10),
-                                              color: isDark
-                                                  ? DarkColor.WidgetColor
-                                                  : LightColor.WidgetColor,
+                                              color: Theme.of(context).cardColor,
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -1006,9 +983,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: width / width20),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius:
                                         BorderRadius.circular(width / width10),
                                   ),

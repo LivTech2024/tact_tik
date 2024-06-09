@@ -63,7 +63,7 @@ class _KeysScreenState extends State<KeysScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // TODO Pass Values
@@ -77,7 +77,7 @@ class _KeysScreenState extends State<KeysScreen> {
                 ));
           },
           backgroundColor:
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -87,14 +87,11 @@ class _KeysScreenState extends State<KeysScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor:
-                  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
+             
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: 24.sp,
+                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -104,8 +101,7 @@ class _KeysScreenState extends State<KeysScreen> {
               ),
               title: InterMedium(
                 text: 'Keys',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -154,9 +150,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                   ? 'Today'
                                   : DateFormat.yMMMd().format(date),
                               fontsize: 20.sp,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color: Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           SizedBox(
@@ -212,9 +206,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.r),
-                                      color: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
@@ -272,9 +264,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                                 return InterMedium(
                                                   text: keyName,
                                                   fontsize: 16.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 );
                                               },
                                             ),

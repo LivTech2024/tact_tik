@@ -40,6 +40,7 @@ import '../features screens/Report/select_reports_guards.dart';
 import '../features screens/assets/select_assets_guards.dart';
 import '../features screens/dar/select_dar_guards.dart';
 import '../features screens/history/select_history_guards.dart';
+import '../features screens/key management/s_key_managment_view_screen.dart';
 import '../features screens/key management/select_keys_guards.dart';
 import '../features screens/loogbook/select_loogbook_guards.dart';
 import '../features screens/panic/s_panic_screen.dart';
@@ -250,11 +251,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKeyS,
-        backgroundColor:
-        isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         endDrawer: Drawer(
           backgroundColor:
-          isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          Theme.of(context).canvasColor,
           child: Column(
             children: [
               Container(
@@ -284,16 +284,14 @@ class _SHomeScreenState extends State<SHomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: DarkColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -665,7 +663,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  SelectKeysGuardsScreen(
+                                  SKeyManagementViewScreen(
                                     companyId: _CompanyId,
                                   ),
                             ),
@@ -758,7 +756,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
               offset: Offset(0, 3),
             )
           ],
-          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12.w),
         ),
         padding: EdgeInsets.symmetric(

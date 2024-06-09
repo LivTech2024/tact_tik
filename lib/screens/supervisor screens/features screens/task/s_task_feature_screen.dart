@@ -78,7 +78,7 @@ class TaskFeatureScreen extends StatelessWidget {
                           horizontal: 14.w,
                           vertical: 10.h),
                       decoration: BoxDecoration(
-                        color: DarkColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.w),
                       ),
                       child: Column(

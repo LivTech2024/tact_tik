@@ -289,20 +289,17 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:  Theme.of(context).canvasColor,
         body: Stack(
           children: [
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  shadowColor:  isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-                  backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                  elevation: 5,
+                 
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color:  isDark ? DarkColor.color1 : LightColor.color3,
-                      size: 24.sp,
+                      
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
@@ -313,9 +310,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                   ),
                   title: InterMedium(
                     text: 'Create Visitors',
-                     fontsize: 18.sp,
-                    color:  isDark ? DarkColor.color1 : LightColor.color3,
-                    letterSpacing: -.3,
+                     
                   ),
                   centerTitle: true,
                   floating: true, // Makes the app bar float above the content

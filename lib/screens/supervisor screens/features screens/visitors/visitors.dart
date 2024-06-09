@@ -117,7 +117,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                 SliverAppBar(
                   shadowColor: isDark
                       ? Colors.transparent
-                      : LightColor.WidgetColor.withOpacity(.1),
+                      : LightColor.color3.withOpacity(.1),
                   backgroundColor:
                       isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                   elevation: 5,
@@ -224,9 +224,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                     ],
                                     borderRadius:
                                         BorderRadius.circular(10.r),
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                   ),
                                   child: Column(
                                     children: [

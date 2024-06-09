@@ -60,18 +60,13 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          shadowColor:
-              isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -80,9 +75,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
           ),
           title: InterMedium(
             text: 'Write Message',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -129,9 +122,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(

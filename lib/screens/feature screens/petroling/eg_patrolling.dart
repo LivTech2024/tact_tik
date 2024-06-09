@@ -65,6 +65,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
   bool buttonClicked1 = false;
   TextEditingController CommentController = TextEditingController();
   Timestamp? StatusPatrolTime;
+
   @override
   void initState() {
     super.initState();
@@ -366,21 +367,18 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+           Theme.of(context).canvasColor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
             // physics: const PageScrollPhysics(),
             slivers: [
               SliverAppBar(
-                backgroundColor:
-                    isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
+                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    size: width / width24,
+                    
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -391,9 +389,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 ),
                 title: InterMedium(
                   text: 'Patrolling',
-                  fontsize: width / width18,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  letterSpacing: -.3,
+                 
                 ),
                 centerTitle: true,
                 floating: true, // Makes the app bar float above the content
@@ -491,6 +487,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       _expand = prefs.getBool('expand') ?? false;
     });
   }
+
   // void _loadShiftStartedState() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   if (widget.p.CurrentStatus == "started") {
@@ -683,7 +680,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
       return Container(
         constraints: BoxConstraints(minHeight: 90.h),
         decoration: BoxDecoration(
-          color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+          color: Theme.of(context).cardColor,
         ),
         padding: EdgeInsets.all(16.sp),
         child: Column(
@@ -901,7 +898,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 constraints: widget.p.CurrentStatus == "started"
@@ -1381,14 +1378,6 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   ),
                                                                   actions: [
                                                                     TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                        child: Text(
-                                                                            "Cancel")),
-                                                                    TextButton(
                                                                       onPressed:
                                                                           () {
                                                                         // fireStoreService.updatePatrolsReport(
@@ -1418,11 +1407,21 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                                       ShiftId: widget.p.ShiftId,
                                                                                       SearchId: '',
                                                                                     )));
-                                                                        ;
+                                                                      },
+                                                                      child: InterRegular(
+                                                                          text:
+                                                                              "Report"),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
                                                                       },
                                                                       child:
-                                                                          Text(
-                                                                        'Submit',
+                                                                          InterRegular(
+                                                                        text:
+                                                                            'Done',
                                                                       ),
                                                                     ),
                                                                   ],

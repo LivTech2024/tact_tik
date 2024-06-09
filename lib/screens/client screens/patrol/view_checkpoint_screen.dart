@@ -32,21 +32,13 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark
-                          ? DarkColor.Secondarycolor
-                          : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(0.1),
-          backgroundColor:   isDark
-                          ? DarkColor.AppBarcolor
-                          : LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color:  isDark ? DarkColor.color1 : LightColor.color3,
+              
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -57,8 +49,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
           title: InterRegular(
             // text: '$widget.guardName}',
             text: "${widget.GuardName}",
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+          
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -73,7 +64,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterBold(
                   text: 'Details',
                   fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
                 SizedBox(height: 20.h),
                 InterMedium(
@@ -85,7 +76,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterBold(
                   text: 'Comments',
                   fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
                 SizedBox(height: 10.h),
                 InterMedium(
@@ -98,7 +89,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterBold(
                   text: 'Images',
                   fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
                 GridView.builder(
                   physics: NeverScrollableScrollPhysics(),

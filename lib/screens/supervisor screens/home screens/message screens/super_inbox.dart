@@ -73,16 +73,13 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.WidgetColor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -91,9 +88,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
           ),
           title: InterMedium(
             text: 'Inbox',
-            fontsize: 18.sp,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -182,9 +177,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             iconSize: 24.w,
-                            dropdownColor: isDark
-                                ? DarkColor.WidgetColor
-                                : LightColor.WidgetColor,
+                            dropdownColor: Theme.of(context).cardColor,
                             style: TextStyle(
                                 color: isDark
                                     ? DarkColor.color2

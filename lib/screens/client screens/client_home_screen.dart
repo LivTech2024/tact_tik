@@ -204,6 +204,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Reports')
+          .orderBy('ReportCreatedAt', descending: true)
           .where('ReportClientId', isEqualTo: _employeeId)
           .get();
       print('Snapshot ${querySnapshot}');
@@ -513,11 +514,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              Theme.of(context).canvasColor,
           child: Column(
             children: [
               GestureDetector(
@@ -534,10 +535,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color: isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor
-                            .Primarycolor, // Background color for the drawer header
+                    color: Theme.of(context)
+                        .primaryColor, // Background color for the drawer header
                   ),
                   child: Center(
                     child: Column(
@@ -561,18 +560,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 5.h),
                         PoppinsRegular(
                           text: _empEmail,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         )
@@ -597,47 +592,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         );
                       },
                     ),
-                    buildListTile(
-                      Icons.add_card,
-                      'Payment',
-                      2,
-                      () {},
-                    ),
-                    buildListTile(
-                      Icons.article,
-                      'Employment Letter',
-                      3,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EmploymentLetterScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.restart_alt,
-                      'History',
-                      4,
-                      () {
-                        // customEmail();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HistoryScreen(
-                              empID: _employeeId,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    buildListTile(
-                      Icons.settings,
-                      'Settings',
-                      5,
-                      () async {},
-                    ),
+
+
                     buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
                       setState(() {
                         isDark = !isDark;
@@ -672,7 +628,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           child: RefreshIndicator(
             onRefresh: _refreshData,
             child: CustomScrollView(
-              physics: PageScrollPhysics(),
               slivers: [
                 HomeScreenPart1(
                   userName: _userName,
@@ -849,9 +804,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         offset: Offset(0, 3),
                                       )
                                     ],
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(14.r),
                                   ),
                                   padding: EdgeInsets.only(
@@ -894,9 +847,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 children: [
                                                   InterSemibold(
                                                     text: PatrolName ?? "",
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                                     fontsize: 14.sp,
                                                   ),
                                                   SizedBox(height: 4.h),
@@ -917,9 +871,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         ),
                                                         SizedBox(width: 5.w),
                                                         Flexible(
-                                                          child: InterRegular(color: isDark
-                                                              ? DarkColor.color1
-                                                              : LightColor.color3,
+                                                          child: InterRegular(color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color,
                                                             text:
                                                                 '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
                                                             maxLines: 2,
@@ -941,9 +897,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 InterRegular(
                                                   text: 'CheckPoints',
                                                   fontsize: 14.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
                                                 SizedBox(height: 10.h),
                                                 Row(
@@ -963,9 +920,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     InterMedium(
                                                       text: '100',
                                                       fontsize: 13.sp,
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                     )
                                                   ],
                                                 )
@@ -1013,9 +971,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       children: [
                                         InterBold(
                                           text: dateString,
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.color3,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color,
                                           fontsize: 14.sp,
                                         ),
                                         SizedBox(
@@ -1308,9 +1267,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           children: [
                                             InterBold(
                                               text: dateString,
-                                              color: isDark
-                                                  ? DarkColor.Primarycolor
-                                                  : LightColor.color3,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .color,
                                               fontsize: 14.sp,
                                             ),
                                             SizedBox(
@@ -1318,7 +1278,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             ),
                                             Column(
                                               children: List.generate(
-                                                10,
+                                                1,
                                                 (index) => Container(
                                                   constraints: BoxConstraints(
                                                       minHeight: 200.h),
@@ -1336,10 +1296,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         offset: Offset(0, 3),
                                                       )
                                                     ],
-                                                    color: isDark
-                                                        ? DarkColor.WidgetColor
-                                                        : LightColor
-                                                            .WidgetColor,
+                                                    color: Theme.of(context)
+                                                        .cardColor,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             14.r),
@@ -1363,10 +1321,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         text: reports[index]
                                                             ['ReportGuardName'],
                                                         fontsize: 18.sp,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodySmall!
+                                                            .color,
                                                       ),
                                                       SizedBox(height: 19.h),
                                                       SizedBox(
@@ -1688,9 +1646,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       size: 15.sp,
                                                     )
                                                   ],

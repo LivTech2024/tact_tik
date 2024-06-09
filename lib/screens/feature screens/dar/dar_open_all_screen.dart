@@ -478,16 +478,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -496,8 +493,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           ),
           title: InterMedium(
             text: 'DAR',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -593,9 +589,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         Flexible(
                           child: InterRegular(
                             text: _userService.shiftName ?? 'Loading...',
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            color: Theme.of(context)
+                                      .primaryColor,
                             fontsize: 20.sp,
                           ),
                         ),
@@ -703,9 +698,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
-                                      ? DarkColor.WidgetColor
-                                      : LightColor.WidgetColor,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius:
                                   BorderRadius.circular(10.r),
                                 ),
@@ -721,9 +714,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                         text:
                                         "${data[index]['TileTime']}",
                                         // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                        color: isDark
-                                            ? DarkColor.color21
-                                            : LightColor.color3,
+                                        color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                       ),
                                       SizedBox(
                                         height: 10.h,
@@ -893,9 +887,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                     InterBold(
                       text: 'Reports',
                       fontsize: 20.sp,
-                      color: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     SizedBox(height: 25.h),
                     FutureBuilder<
@@ -962,9 +954,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                   Text(
                                     'Reports for $hourKey',
                                     style: TextStyle(
-                                      color: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .color,
                                     ),
                                   ),
                                   ...reportsForHour.map((report) {

@@ -253,7 +253,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       : Center(
                           child: InterMedium(
                             text: 'Loading...',
-                            color: DarkColor. Primarycolor,
+                            color: DarkColor.Primarycolor,
                             fontsize: width / width14,
                           ),
                         ),
@@ -268,9 +268,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                 ? Container(
                                     constraints: BoxConstraints(),
                                     height: height / height242,
-                                    color: isDark
-                                        ? DarkColor.WidgetColor
-                                        : LightColor.WidgetColor,
+                                    color: Theme.of(context).cardColor,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -300,8 +298,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                         widget.ShiftDate ?? "",
                                                     color: isDark
                                                         ? DarkColor.color1
-                                                        : LightColor
-                                                            .color3,
+                                                        : LightColor.color3,
                                                     fontsize: width / width18,
                                                   ),
                                                   Row(
@@ -311,7 +308,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'In time',
-                                                        color:  isDark
+                                                        color: isDark
                                                             ? DarkColor.color1
                                                             : LightColor.color3,
                                                         fontsize:
@@ -320,7 +317,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                       InterMedium(
                                                         text: widget
                                                             .ShiftStartTime,
-                                                        color:  isDark
+                                                        color: isDark
                                                             ? DarkColor.color1
                                                             : LightColor.color3,
                                                         fontsize:
@@ -335,7 +332,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'Out time',
-                                                        color:  isDark
+                                                        color: isDark
                                                             ? DarkColor.color1
                                                             : LightColor.color3,
                                                         fontsize:
@@ -344,7 +341,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                       InterMedium(
                                                         text:
                                                             widget.ShiftEndTime,
-                                                        color:  isDark
+                                                        color: isDark
                                                             ? DarkColor.color1
                                                             : LightColor.color3,
                                                         fontsize:
@@ -379,7 +376,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     horizontal:
                                                         width / width26),
                                                 height: height / height90,
-                                                color:  isDark
+                                                color: isDark
                                                     ? DarkColor.colorRed
                                                     : LightColor.colorRed,
                                                 child: Row(
@@ -443,7 +440,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             child: InterMedium(
                               text: 'No Shifts',
                               textAlign: TextAlign.center,
-                              color: DarkColor. color2,
+                              color: DarkColor.color2,
                               fontsize: width / width18,
                             ),
                           ),
@@ -454,11 +451,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       Button1(
                         text: 'Start Shift',
                         fontsize: width / width18,
-                        color: isDark
-                            ? DarkColor.color5
-                            : LightColor.WidgetColor,
-                        backgroundcolor:
-                            isDark?DarkColor.WidgetColor :LightColor.Primarycolor /*.withOpacity(50)*/,
+                        color:
+                            isDark ? DarkColor.color5 : LightColor.WidgetColor,
+                        backgroundcolor: isDark
+                            ? DarkColor.WidgetColor
+                            : LightColor.Primarycolor /*.withOpacity(50)*/,
                         onPressed: () async {
                           print(widget.CheckUserRadius);
                           // if (isShiftStartTimeWithinRange(

@@ -37,7 +37,7 @@ class _GetStartedScreensState extends State<GetStartedScreens> {
             ? const SizedBox()
             : Container(
                 height: 66.h,
-                color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor,
+                color: Theme.of(context).canvasColor,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40.w),
                   child: Row(

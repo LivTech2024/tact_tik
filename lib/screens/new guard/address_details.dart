@@ -141,7 +141,7 @@ class _AddressDetailsState extends State<AddressDetails> {
                     )
                   ],
                   color:
-                      isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(width / width8)),
               child: Center(
                 child: InterBold(

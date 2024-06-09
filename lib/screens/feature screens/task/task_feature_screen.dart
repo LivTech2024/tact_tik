@@ -18,7 +18,6 @@ class TaskFeatureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -27,22 +26,21 @@ class TaskFeatureScreen extends StatelessWidget {
                   builder: (context) => TaskFeatureCreateScreen(),
                 ));
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor:
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add , size: 24.sp,),
+          child: Icon(
+            Icons.add,
+            size: 24.sp,
+          ),
         ),
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 10,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: 24.sp,
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -52,9 +50,6 @@ class TaskFeatureScreen extends StatelessWidget {
               ),
               title: InterMedium(
                 text: 'Task',
-               fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -.3,
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -93,17 +88,15 @@ class TaskFeatureScreen extends StatelessWidget {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
-                       borderRadius: BorderRadius.circular(10.h),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10.h),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterSemibold(
                             text: 'Guard Name',
-                              fontsize: 20.sp,
+                            fontsize: 20.sp,
                             color: isDark
                                 ? DarkColor.Primarycolor
                                 : LightColor.color3,
@@ -111,20 +104,18 @@ class TaskFeatureScreen extends StatelessWidget {
                           SizedBox(height: 10.h),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
-                             fontsize: 20.sp,
-                            color: isDark
-                                ? DarkColor.color1
-                                : LightColor.color3,
+                            fontsize: 20.sp,
+                            color:
+                                isDark ? DarkColor.color1 : LightColor.color3,
                             maxLines: 5,
                           ),
                           SizedBox(height: 5.h),
                           InterMedium(
                             text:
                                 'Take care of all the computers Make sure they are properly turned off',
-                           fontsize: 14.sp,
-                            color: isDark
-                                ? DarkColor.color3
-                                : LightColor.color3,
+                            fontsize: 14.sp,
+                            color:
+                                isDark ? DarkColor.color3 : LightColor.color3,
                             maxLines: 4,
                           ),
                         ],
@@ -141,3 +132,4 @@ class TaskFeatureScreen extends StatelessWidget {
     );
   }
 }
+ 

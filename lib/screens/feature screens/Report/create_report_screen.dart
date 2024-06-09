@@ -253,17 +253,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-             size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -275,9 +271,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),
@@ -327,14 +321,14 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color:  Theme.of(context).cardColor,
                          borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.sp,
-                          dropdownColor:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          dropdownColor:  Theme.of(context).cardColor,
                           style: TextStyle(color:  isDark
                                   ? DarkColor.color2
                                   : LightColor.color3),
@@ -420,7 +414,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:  isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color:  Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -475,7 +469,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     height: 66.h,
                                     width: 66.w,
                                     decoration: BoxDecoration(
-                                      color: isDark? DarkColor.WidgetColor : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     margin: EdgeInsets.all(8.sp),

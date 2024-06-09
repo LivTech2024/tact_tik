@@ -221,16 +221,13 @@ class _CreateReportScreenState extends State<displayReport> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: width / width24,
+             
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -242,9 +239,7 @@ class _CreateReportScreenState extends State<displayReport> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
@@ -285,14 +280,14 @@ class _CreateReportScreenState extends State<displayReport> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: width / width24,
-                          dropdownColor: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                          dropdownColor: Theme.of(context).cardColor,
                           style: TextStyle(color: isDark
                                   ? DarkColor.color2
                                   : LightColor.color2),
@@ -343,7 +338,7 @@ class _CreateReportScreenState extends State<displayReport> {
                       padding:
                           EdgeInsets.symmetric(horizontal: width / width20),
                       decoration: BoxDecoration(
-                        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -402,9 +397,7 @@ class _CreateReportScreenState extends State<displayReport> {
                                     height: height / height66,
                                     width: width / width66,
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? DarkColor.WidgetColor
-                                          : LightColor.WidgetColor,
+                                      color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(
                                         width / width10,
                                       ),
@@ -480,9 +473,7 @@ class _CreateReportScreenState extends State<displayReport> {
                               height: height / height66,
                               width: width / width66,
                               decoration: BoxDecoration(
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius:
                                     BorderRadius.circular(width / width8),
                               ),

@@ -100,7 +100,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-        isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        Theme.of(context).canvasColor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -190,9 +190,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                     offset: Offset(0, 3),
                                   )
                                 ],
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               padding: EdgeInsets.symmetric(
@@ -287,12 +285,10 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: isDark
-                            ? DarkColor.WidgetColor
-                            : LightColor.WidgetColor,
-                        // borderRadius: BorderRadius.circular(20.r),
+                        color: Theme.of(context).cardColor,
+                        
                       ),
-                      // color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                     
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -311,9 +307,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               },
                               child: Container(
                                 height: 65.h,
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'Today',
@@ -345,9 +339,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               },
                               child: Container(
                                 height: 65.h,
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context).cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',

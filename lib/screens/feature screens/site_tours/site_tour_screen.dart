@@ -78,7 +78,7 @@ class SiteTourScreen extends StatelessWidget {
                     height: 470.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(40.r),
-                      color: isDark?DarkColor.Secondarycolor:LightColor.Secondarycolor
+                      color: Theme.of(context).canvasColor
                     ),
                     child: Stack(
                       children: [
@@ -194,9 +194,7 @@ class SiteTourScreen extends StatelessWidget {
                                     horizontal: 15.w,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.Secondarycolor
-                                        : LightColor.Secondarycolor,
+                                    color: Theme.of(context).canvasColor,
                                     borderRadius: BorderRadius.circular(
                                       20.r,
                                     ),
@@ -353,7 +351,7 @@ class SiteTourScreen extends StatelessWidget {
                     ),
                     height: 60.h,
                     decoration: BoxDecoration(
-                      color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(
                         16.r,
                       ),
