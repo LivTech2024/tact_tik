@@ -100,8 +100,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        // backgroundColor:
+       backgroundColor: Theme.of(context).canvasColor,
+        //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -253,16 +254,16 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    shadowColor: isDark
-                        ? DarkColor.color3
-                        : LightColor.color3.withOpacity(.1),
-                    backgroundColor:
-                    isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                    elevation: 5,
+                    // shadowColor: isDark
+                    //     ? DarkColor.color3
+                    // //     : LightColor.color3.withOpacity(.1),
+                    // backgroundColor:
+                    // isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                    // elevation: 5,
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
+                        // color: isDark ? DarkColor.color1 : LightColor.color3,
                         size: 24.sp,
                       ),
                       padding: EdgeInsets.only(left: 20.w),
@@ -272,10 +273,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     ),
                     title: InterMedium(
                       text: 'DAR',
-                      fontsize: 18.w,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
-                      letterSpacing: -.3,
+                      // fontsize: 18.w,
+                      // color: isDark ? DarkColor.color1 : LightColor.color3,
+                      // letterSpacing: -.3,
                     ),
+                    // title: Text('DAR'),
                     centerTitle: true,
                     floating: true,
                   ),

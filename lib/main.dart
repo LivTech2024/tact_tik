@@ -23,6 +23,7 @@ import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
+import 'package:tact_tik/utils/themes.dart';
 
 bool isDark = true;
 // final navigatorKey = GlobalKey<NavigatorState>();
@@ -55,13 +56,9 @@ class MyApp extends StatelessWidget {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              useMaterial3: true,
-              // brightness: Brightness.light,
-              // textTheme: GoogleFonts.poppinsTextTheme(
-              //   Theme.of(context).textTheme,
-              // ),
-            ),
+            theme: ligthTheme,
+            darkTheme: darkTheme,
+            themeMode: ThemeMode.system,
             // navigatorKey: navigatorKey,
             // routes: {
             //   '/notification_screen': (context) => NotificationScreen(),
