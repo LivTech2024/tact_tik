@@ -27,7 +27,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
     return SafeArea(
       child: Scaffold(
           backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              Theme.of(context).canvasColor,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: FloatingActionButton(
@@ -35,7 +35,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
               
             },
             backgroundColor:
-                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                Theme.of(context).primaryColor,
             shape: CircleBorder(),
             child: Icon(
               Icons.add,
@@ -45,14 +45,11 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                backgroundColor:
-                    isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
+                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    size: 24.sp,
+                 
                   ),
                   padding: EdgeInsets.only(left: 20.w),
                   onPressed: () {
@@ -63,9 +60,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                 ),
                 title: InterMedium(
                   text: 'Pay Discrepancy',
-                  fontsize: 18.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  letterSpacing: -0.3,
+                  
                 ),
                 centerTitle: true,
                 floating: true,

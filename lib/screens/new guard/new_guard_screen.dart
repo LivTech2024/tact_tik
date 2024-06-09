@@ -33,16 +33,13 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
 
     return Scaffold(
       backgroundColor:
-          isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          Theme.of(context).canvasColor,
       appBar: AppBar(
-        backgroundColor:
-            isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-        elevation: 0,
+        
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            size: width / width24,
+           
           ),
           padding: EdgeInsets.only(left: width / width20),
           onPressed: () {
@@ -51,9 +48,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         ),
         title: InterMedium(
           text: 'New Guard',
-          fontsize: width / width18,
-          color: isDark ? DarkColor.color1 : LightColor.color3,
-          letterSpacing: -.3,
+          
         ),
         centerTitle: true,
       ),
@@ -86,7 +81,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
           : Container(
               height: height / height66,
               color:
-                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+                  Theme.of(context).canvasColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width40),
                 child: Row(

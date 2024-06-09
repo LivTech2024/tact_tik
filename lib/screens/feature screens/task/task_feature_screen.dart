@@ -18,7 +18,7 @@ class TaskFeatureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -35,14 +35,11 @@ class TaskFeatureScreen extends StatelessWidget {
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 10,
+              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: 24.sp,
+                  
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -52,9 +49,7 @@ class TaskFeatureScreen extends StatelessWidget {
               ),
               title: InterMedium(
                 text: 'Task',
-               fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -.3,
+              
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content

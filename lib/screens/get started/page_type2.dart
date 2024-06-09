@@ -42,7 +42,7 @@ class PageType2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      color: Theme.of(context).canvasColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

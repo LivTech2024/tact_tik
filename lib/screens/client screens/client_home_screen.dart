@@ -514,11 +514,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           backgroundColor:
-              isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              Theme.of(context).canvasColor,
           child: Column(
             children: [
               GestureDetector(
@@ -535,10 +535,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   width: double.maxFinite,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.r),
-                    color: isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor
-                            .Primarycolor, // Background color for the drawer header
+                    color: Theme.of(context)
+                        .primaryColor, // Background color for the drawer header
                   ),
                   child: Center(
                     child: Column(
@@ -562,9 +560,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                         SizedBox(height: 10.h),
                         PoppinsSemibold(
                           text: _userName,
-                          color: isDark
-                              ? DarkColor.WidgetColor
-                              : LightColor.WidgetColor,
+                          color: Theme.of(context).cardColor,
                           fontsize: 16.sp,
                           letterSpacing: -.3,
                         ),

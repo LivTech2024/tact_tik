@@ -309,15 +309,13 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor. Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor: DarkColor. AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 24.sp,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -326,9 +324,7 @@ class _CreateDarScreenState extends State<SCreateDarScreen> {
           ),
           title: InterMedium(
             text: 'DAR',
-            fontsize: 18.sp,
-            color: Colors.white,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),

@@ -59,7 +59,7 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
           backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
           elevation: 0,

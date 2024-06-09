@@ -60,7 +60,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: StreamBuilder(
             stream: _assetAllocationStream,
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -74,13 +74,11 @@ class _AssetsScreenState extends State<AssetsScreen> {
                   return CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                        elevation: 0,
+                       
                         leading: IconButton(
                           icon: Icon(
                             Icons.arrow_back_ios,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
-                            size: 24.sp,
+                            
                           ),
                           padding: EdgeInsets.only(left: 20.w),
                           onPressed: () {
@@ -91,8 +89,7 @@ class _AssetsScreenState extends State<AssetsScreen> {
                         ),
                         title: InterMedium(
                           text: 'Assets',
-                          fontsize: 18.sp,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          
                           letterSpacing: -0.3,
                         ),
                         centerTitle: true,

@@ -74,18 +74,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        backgroundColor:Theme.of(context).canvasColor,
+        //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
-          shadowColor:
-              isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -95,8 +90,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
           ),
           title: InterRegular(
             text: 'Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
             letterSpacing: -.3,
           ),
           centerTitle: true,

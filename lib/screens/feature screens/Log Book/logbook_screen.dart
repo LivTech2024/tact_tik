@@ -58,18 +58,15 @@ class _LogBookScreenState extends State<LogBookScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 0,
+              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                   size: 24.sp,
+                  
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -79,9 +76,8 @@ class _LogBookScreenState extends State<LogBookScreen> {
               ),
               title: InterMedium(
                 text: 'LogBook',
-                fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -.3,
+               
+             
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content

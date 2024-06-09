@@ -247,7 +247,7 @@ class _CreatePostOrderState extends State<CreateSPostOrder> {
           ),
           centerTitle: true,
         ),
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),

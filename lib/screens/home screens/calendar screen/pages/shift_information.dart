@@ -97,7 +97,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
     return SafeArea(
       child: isLoading
           ?  Scaffold(
-              backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              backgroundColor:  Theme.of(context).canvasColor,
               body: Center(
                 child: CircularProgressIndicator(
                   color:  isDark ? DarkColor.color1 : LightColor.color3,
@@ -105,15 +105,14 @@ class _ShiftInformationState extends State<ShiftInformation> {
               ),
             )
           : Scaffold(
-              backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              backgroundColor: Theme.of(context).canvasColor,
               appBar: AppBar(
-                backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
+                // backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                 elevation: 0,
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: width / width24,
+                    
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -122,9 +121,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                 ),
                 title: InterMedium(
                   text: widget.toRequest ? 'Shift' : 'Shift- $guardName',
-                  fontsize: width / width18,
-                  color: Colors.white,
-                  letterSpacing: -.3,
+                  
                 ),
                 centerTitle: widget.toRequest,
               ),

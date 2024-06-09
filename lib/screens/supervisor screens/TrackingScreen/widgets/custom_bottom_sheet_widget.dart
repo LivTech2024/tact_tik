@@ -35,7 +35,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            color:  Theme.of(context).canvasColor,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(16.0),
               topRight: Radius.circular(16.0),

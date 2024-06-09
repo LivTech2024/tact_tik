@@ -55,16 +55,14 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+          
           shadowColor:  isDark ? Colors.transparent: LightColor.color3.withOpacity(.1),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color:  isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+            
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -73,9 +71,7 @@ class _SelectGuardsScreenState extends State<SelectDARGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Guards',
-            fontsize: 18.sp,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 var ligthTheme=ThemeData(
+  scaffoldBackgroundColor: LightColor.Secondarycolor,
+  brightness: Brightness.light,
     canvasColor: LightColor.Secondarycolor,
     cardColor: LightColor.WidgetColor,
     primaryColor: LightColor.Primarycolor,
@@ -11,15 +14,19 @@ var ligthTheme=ThemeData(
       shadowColor: LightColor.color3.withOpacity(.1),
       iconTheme: IconThemeData(
         color: LightColor.color3,
+        size: 24.sp,
       ),
       titleTextStyle: TextStyle(
         color: LightColor.color3,
-        fontSize: 20,
+        fontSize: 18.sp,
         fontWeight: FontWeight.bold,
+      letterSpacing: -.3,
       ),
     ),
  );
 var darkTheme=ThemeData(
+  scaffoldBackgroundColor: DarkColor.Secondarycolor,
+  brightness: Brightness.dark,
     canvasColor: DarkColor.Secondarycolor,
     cardColor: DarkColor.WidgetColor,
     primaryColor: DarkColor.Primarycolor,
@@ -29,11 +36,13 @@ var darkTheme=ThemeData(
 
       iconTheme: IconThemeData(
         color: DarkColor.Primarycolor,
+        size: 24.sp,
       ),
       titleTextStyle: TextStyle(
       color: DarkColor.Primarycolor,
-      fontSize: 20,
+      fontSize: 18.sp,
       fontWeight: FontWeight.bold,
+      letterSpacing: -.3,
     ),
       
     ),

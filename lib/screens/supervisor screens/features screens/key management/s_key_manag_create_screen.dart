@@ -172,16 +172,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -190,9 +187,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
           ),
           title: InterMedium(
             text: 'Keys Guards',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+         
           ),
           centerTitle: true,
         ),

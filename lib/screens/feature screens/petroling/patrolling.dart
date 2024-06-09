@@ -140,14 +140,13 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: DarkColor.Secondarycolor,
+        
         appBar: AppBar(
-          backgroundColor: DarkColor.AppBarcolor,
-          elevation: 0,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: Colors.white,
+             
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -156,9 +155,7 @@ class _OpenPatrollingScreenState extends State<OpenPatrollingScreen> {
           ),
           title: InterMedium(
             text: 'Patrolling',
-            fontsize: width / width18,
-            color: Colors.white,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),

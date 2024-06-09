@@ -115,16 +115,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               isEdit ? Icons.close : Icons.arrow_back_ios,
-              color: DarkColor.color1,
-              size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -139,9 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           title: InterMedium(
             text: 'Your Profile',
-            fontsize: 18.sp,
-            color: DarkColor.color1,
-            letterSpacing: -.3,
+         
           ),
           actions: [
             IconButton(
@@ -152,8 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               icon: Icon(
                 isEdit ? Icons.check : Icons.border_color,
-                size: 24.sp,
-                color: DarkColor.color1,
+             
               ),
             ),
           ],

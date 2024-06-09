@@ -251,11 +251,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKeyS,
-        backgroundColor:
-        isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         endDrawer: Drawer(
           backgroundColor:
-          isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+          Theme.of(context).canvasColor,
           child: Column(
             children: [
               Container(

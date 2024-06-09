@@ -253,17 +253,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          shadowColor: isDark ? DarkColor.color1 : LightColor.color3.withOpacity(.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-             size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -275,9 +271,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
           ),
           centerTitle: true,
         ),

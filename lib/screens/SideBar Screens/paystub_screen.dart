@@ -43,15 +43,13 @@ class _PayStubScreenState extends State<PayStubScreen> {
 
         return SafeArea(
           child: Scaffold(
-            backgroundColor: DarkColor.Secondarycolor,
+            
             appBar: AppBar(
-              backgroundColor: DarkColor.AppBarcolor,
-              elevation: 0,
+            
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
-                  size: width / width24,
+                 
                 ),
                 padding: EdgeInsets.only(left: width / width20),
                 onPressed: () {
@@ -61,9 +59,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
 
               title: InterMedium(
                 text: 'Paystub',
-                fontsize: width / width18,
-                color: Colors.white,
-                letterSpacing: -0.3,
+              
               ),
               centerTitle: true,
             ),

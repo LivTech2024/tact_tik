@@ -195,7 +195,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
     bool isEditMode = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -21,7 +21,7 @@ class SiteTourLoadingWidget extends StatelessWidget {
             height: 470.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40.r),
-              color:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
+              color: Theme.of(context).canvasColor,
             ),
             child: Center(
               child: Column(

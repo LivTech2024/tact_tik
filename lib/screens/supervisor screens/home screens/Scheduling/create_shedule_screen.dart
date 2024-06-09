@@ -654,14 +654,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -670,14 +667,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
           ),
           title: InterMedium(
             text: 'Create Schedule',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         body: SingleChildScrollView(
           // physics: PageScrollPhysics(),
           child: Column(

@@ -16,16 +16,13 @@ class MobileChatScreen extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      backgroundColor: Theme.of(context).canvasColor,
       appBar: AppBar(
-        shadowColor: isDark ? DarkColor.color3.withOpacity(.1) : LightColor.color3.withOpacity(0.1),
-        backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-        elevation: 5,
+
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
-            size: width / width24,
+            
           ),
           padding: EdgeInsets.only(left: width / width20),
           onPressed: () {
@@ -34,9 +31,8 @@ class MobileChatScreen extends StatelessWidget {
         ),
         title: InterMedium(
           text: 'Message',
-          fontsize: width / width18,
-          color:  isDark ? DarkColor.color1 : LightColor.color3,
-          letterSpacing: -.3,
+         
+   
         ),
         centerTitle: true,
       ),

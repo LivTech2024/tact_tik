@@ -56,16 +56,13 @@ class EmploymentLetterScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark ? DarkColor.color3.withOpacity(.1) : LightColor.color3.withOpacity(0.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+        
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -74,9 +71,7 @@ class EmploymentLetterScreen extends StatelessWidget {
           ),
           title: InterMedium(
             text: 'Employment Letter',
-            fontsize: 18.w,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+            
           ),
           centerTitle: true,
         ),

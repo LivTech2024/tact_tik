@@ -244,16 +244,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+      
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+              
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -262,9 +259,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
           ),
           title: InterMedium(
             text: 'Assets',
-            fontsize:18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+         
           ),
           centerTitle: true,
         ),

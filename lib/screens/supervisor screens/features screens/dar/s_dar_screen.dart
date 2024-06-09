@@ -100,7 +100,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-        isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        Theme.of(context).canvasColor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')

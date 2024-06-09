@@ -113,16 +113,11 @@ class _ReportScreenState extends State<ReportScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          shadowColor:
-              isDark ? DarkColor.color3 : LightColor.color3.withOpacity(0.1),
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -131,14 +126,13 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
           title: InterMedium(
             text: 'Report',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+           
+            
           ),
           centerTitle: true,
         ),
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+           Theme.of(context).canvasColor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {

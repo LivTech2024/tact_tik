@@ -67,7 +67,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -81,20 +81,17 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
-            size: 24.w,
+           
           ),
         ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              shadowColor: isDark ? Colors.transparent : LightColor.color3.withOpacity(.1),
-              backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-              elevation: 5,
+              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  size: 24.w,
+                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -104,9 +101,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
               ),
               title: InterMedium(
                 text: 'Keys',
-                fontsize: 18.w,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
-                letterSpacing: -0.3,
+                
               ),
               centerTitle: true,
               floating: true,

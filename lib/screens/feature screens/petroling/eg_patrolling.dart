@@ -367,21 +367,18 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+           Theme.of(context).canvasColor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
             // physics: const PageScrollPhysics(),
             slivers: [
               SliverAppBar(
-                backgroundColor:
-                    isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
+                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    size: width / width24,
+                    
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -392,9 +389,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 ),
                 title: InterMedium(
                   text: 'Patrolling',
-                  fontsize: width / width18,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
-                  letterSpacing: -.3,
+                 
                 ),
                 centerTitle: true,
                 floating: true, // Makes the app bar float above the content

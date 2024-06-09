@@ -478,16 +478,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+            Theme.of(context).canvasColor,
         appBar: AppBar(
-          backgroundColor:
-              isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.w,
+              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -496,8 +493,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
           ),
           title: InterMedium(
             text: 'DAR',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            
             letterSpacing: -.3,
           ),
           centerTitle: true,

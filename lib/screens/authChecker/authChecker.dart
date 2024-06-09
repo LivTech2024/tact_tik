@@ -23,8 +23,8 @@ class AuthChecker extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return  Center(
             child: CircularProgressIndicator(
-              backgroundColor: isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
-              color: isDark?DarkColor. Primarycolor:LightColor.Primarycolor ,
+              backgroundColor: Theme.of(context).canvasColor,
+              color: Theme.of(context).primaryColor,
             ),
           );
         } else {
