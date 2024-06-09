@@ -167,8 +167,6 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
         appBar: AppBar(
           
           leading: IconButton(

@@ -477,8 +477,6 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
         appBar: AppBar(
           
           leading: IconButton(

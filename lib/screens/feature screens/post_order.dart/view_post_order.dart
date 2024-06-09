@@ -243,8 +243,6 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
           ),
           centerTitle: true,
         ),
-        backgroundColor:
-            Theme.of(context).canvasColor,
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),

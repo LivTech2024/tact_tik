@@ -93,7 +93,6 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).canvasColor,
         appBar: AppBar(
           
           leading: IconButton(

@@ -16,7 +16,6 @@ class MobileChatScreen extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).canvasColor,
       appBar: AppBar(
 
         leading: IconButton(

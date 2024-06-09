@@ -525,7 +525,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).canvasColor,
         key: _scaffoldKey1, // Assign the GlobalKey to the Scaffold
         endDrawer: Drawer(
           backgroundColor: Theme.of(context).canvasColor,

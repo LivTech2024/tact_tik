@@ -289,7 +289,6 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  Theme.of(context).canvasColor,
         body: Stack(
           children: [
             CustomScrollView(

@@ -97,7 +97,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
     return SafeArea(
       child: isLoading
           ?  Scaffold(
-              backgroundColor:  Theme.of(context).canvasColor,
               body: Center(
                 child: CircularProgressIndicator(
                   color:  isDark ? DarkColor.color1 : LightColor.color3,
@@ -105,7 +104,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
               ),
             )
           : Scaffold(
-              backgroundColor: Theme.of(context).canvasColor,
               appBar: AppBar(
                 // backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                 elevation: 0,

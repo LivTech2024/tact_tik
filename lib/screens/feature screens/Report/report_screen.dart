@@ -131,8 +131,6 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
           centerTitle: true,
         ),
-        backgroundColor:
-           Theme.of(context).canvasColor,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {

@@ -366,19 +366,15 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-           Theme.of(context).canvasColor,
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
             // physics: const PageScrollPhysics(),
             slivers: [
               SliverAppBar(
-                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -389,7 +385,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 ),
                 title: InterMedium(
                   text: 'Patrolling',
-                 
                 ),
                 centerTitle: true,
                 floating: true, // Makes the app bar float above the content
@@ -897,8 +892,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 margin: EdgeInsets.only(bottom: 30.h),
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
-                  color:
-                      Theme.of(context).cardColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 constraints: widget.p.CurrentStatus == "started"
@@ -1130,30 +1124,15 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             ),
                                           ],
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if (_expandCategoryMap[
-                                                      category.title] !=
-                                                  null) {
-                                                _expandCategoryMap[
-                                                        category.title] =
-                                                    !_expandCategoryMap[
-                                                        category.title]!;
-                                              }
-                                              // _expand2 = !_expand2;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            expand
-                                                ? Icons.arrow_circle_up_outlined
-                                                : Icons
-                                                    .arrow_circle_down_outlined,
-                                            size: 24.sp,
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.color3,
-                                          ),
+                                        Icon(
+                                          expand
+                                              ? Icons.arrow_circle_up_outlined
+                                              : Icons
+                                                  .arrow_circle_down_outlined,
+                                          size: 24.sp,
+                                          color: isDark
+                                              ? DarkColor.Primarycolor
+                                              : LightColor.color3,
                                         )
                                       ],
                                     ),

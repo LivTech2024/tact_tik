@@ -74,7 +74,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:Theme.of(context).canvasColor,
         //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         appBar: AppBar(
           

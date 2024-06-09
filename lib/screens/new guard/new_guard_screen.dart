@@ -32,8 +32,6 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
     );
 
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).canvasColor,
       appBar: AppBar(
         
         leading: IconButton(
