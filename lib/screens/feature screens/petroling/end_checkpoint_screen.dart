@@ -100,14 +100,11 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          shadowColor: isDark? Colors.transparent :LightColor.color3.withOpacity(.1),
-          backgroundColor:isDark? DarkColor. AppBarcolor:LightColor.AppBarcolor,
-          elevation: 5,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+             
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -116,9 +113,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
           ),
           title: InterMedium(
             text: 'End Patrol',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+          
           ),
           centerTitle: true,
         ),
@@ -135,7 +130,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       'Add Note',
                       style: TextStyle(
                         fontSize: width / width14,
-                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -143,7 +138,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                     Row(
                       children: [
                         Radio(
-                          activeColor: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          activeColor: Theme.of(context).textTheme.bodySmall!.color,
                           value: 'Emergency',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -155,14 +150,14 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         InterRegular(
                           text: 'Emergency',
                           fontsize: width / width16,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         )
                       ],
                     ),
                     Row(
                       children: [
                         Radio(
-                          activeColor: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          activeColor: Theme.of(context).textTheme.bodySmall!.color,
                           value: 'Normal',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -174,7 +169,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         InterRegular(
                           text: 'Normal',
                           fontsize: width / width16,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         )
                       ],
                     ),
@@ -184,7 +179,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: isDark ? DarkColor.color1 : LightColor.color3),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     SizedBox(height: height / height100)
                   ],
@@ -195,7 +190,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),

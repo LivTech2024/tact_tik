@@ -76,7 +76,7 @@ class _BankDetailsState extends State<BankDetails> {
         children: [
           InterBold(
             text: 'Add Bank Details',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
 
@@ -124,9 +124,7 @@ class _BankDetailsState extends State<BankDetails> {
               decoration: BoxDecoration(
                 boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color:Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
@@ -137,7 +135,7 @@ class _BankDetailsState extends State<BankDetails> {
               child: Center(
                 child: InterBold(
                             text: 'Upload Void Check',
-                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodySmall!.color,
                             fontsize: width / width20,
                           ),
               ),
@@ -172,7 +170,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           InterBold(
             text: 'Add SIN Number',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SetTextfieldWidget(

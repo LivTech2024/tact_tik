@@ -74,7 +74,7 @@ class PageType1 extends StatelessWidget {
           PoppinsSemibold(
             text: tittls[index],
             fontsize: 32.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
           ),
           SizedBox(height: 27.h),
           SizedBox(
@@ -87,7 +87,7 @@ class PageType1 extends StatelessWidget {
           PoppinsRegular(
             text: description[index],
           fontsize: 14.sp,
-            color: isDark ? DarkColor.color2 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
             textAlign: TextAlign.center,
           ),
         ],

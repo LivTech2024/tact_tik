@@ -55,7 +55,7 @@ class _AddressDetailsState extends State<AddressDetails> {
         children: [
           InterBold(
             text: 'Add Address Details',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SetTextfieldWidget(
@@ -96,7 +96,7 @@ class _AddressDetailsState extends State<AddressDetails> {
           ),
           InterBold(
             text: 'Add Profile Photo',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           GestureDetector(
@@ -132,9 +132,7 @@ class _AddressDetailsState extends State<AddressDetails> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color:Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
@@ -146,7 +144,7 @@ class _AddressDetailsState extends State<AddressDetails> {
               child: Center(
                 child: InterBold(
                   text: 'Upload Profile Photo',
-                  color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                  color:  Theme.of(context).textTheme.bodySmall!.color,
                   fontsize: width / width20,
                 ),
               ),

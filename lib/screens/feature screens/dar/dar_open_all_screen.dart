@@ -477,8 +477,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
+        
         appBar: AppBar(
           
           leading: IconButton(
@@ -579,9 +578,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         InterRegular(
                           text: 'Shift Name :',
                           fontsize: 20.w,
-                          color: isDark
-                              ? DarkColor.color17
-                              : LightColor.color3,
+                          color: Theme.of(context)
+                                      .textTheme.displayMedium?.color,
                         ),
                         SizedBox(
                           width: 6.w,
@@ -603,9 +601,8 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         InterRegular(
                           text: 'Location :',
                           fontsize: 20.w,
-                          color: isDark
-                              ? DarkColor.color17
-                              : LightColor.color3,
+                          color: Theme.of(context)
+                                      .textTheme.displayMedium!.color,
                         ),
                         SizedBox(
                           width: 6.w,
@@ -689,10 +686,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3
-                                          .withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -726,9 +720,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                         text:
                                         '${data[index]['TileContent']}',
                                         fontsize: 16.sp,
-                                        color: isDark
-                                            ? DarkColor.color12
-                                            : LightColor.color3,
+                                        color: Theme.of(context)
+                                                        .textTheme
+                                                        .displayLarge!
+                                                        .color,
                                         maxLines: 5,
                                       ),
                                       SizedBox(height: 20.h),

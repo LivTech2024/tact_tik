@@ -289,7 +289,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
     var isFieldEnabled = widget.visitorData != null;
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  Theme.of(context).canvasColor,
+      
         body: Stack(
           children: [
             CustomScrollView(
@@ -324,13 +324,13 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 30.h),
                           InterBold(
                             text: 'Add Visitor',
-                            color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 30.h),
                           InterBold(
                             text: 'Allocation Date',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -362,7 +362,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Name',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color:Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -375,7 +375,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Email',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -388,7 +388,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Contact Number',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -406,7 +406,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Asset Handover',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -419,7 +419,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Asset Return',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -432,7 +432,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'License Plate Number.',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -445,7 +445,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Set Countdown',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -458,7 +458,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Comments',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -471,7 +471,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'No. of Person',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -484,7 +484,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                           SizedBox(height: 20.h),
                           InterBold(
                             text: 'Company Name',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 20.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -505,8 +505,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
                                 // Handle the case when saving or updating visitor data fails
                               }
                             },
-                            backgroundcolor:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                            color:  isDark ? DarkColor.color22 : LightColor.color3,
+                            backgroundcolor:  Theme.of(context).primaryColor,
+                            color:Theme.of(context).textTheme.titleSmall!.color,
                             borderRadius: 10.r,
                             fontsize: 18.sp,
                             height: 60.h,

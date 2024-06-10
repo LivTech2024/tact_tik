@@ -115,7 +115,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                   child: Text('No DAR entries found.',
                       style: TextStyle(
                           color:
-                          isDark ? DarkColor.color1 : LightColor.color3)),
+                           Theme.of(context).textTheme.bodyMedium!.color)),
                 );
               }
 
@@ -146,9 +146,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                         InterBold(
                           text: date,
                           fontsize: 20.sp,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 20.h),
@@ -182,9 +180,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: isDark
-                                        ? Colors.transparent
-                                        : LightColor.color3.withOpacity(.05),
+                                    color:Theme.of(context).shadowColor,
                                     blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
@@ -212,9 +208,10 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                         ? document['EmpDarShiftName']
                                         : "",
                                     fontsize: 18.sp,
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.color3,
+                                    color:  Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .color,
                                   ),
 
                                   SizedBox(height: 5.h),
@@ -222,9 +219,10 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
                                       fontsize: 16.sp,
-                                      color: isDark
-                                          ? DarkColor.color26
-                                          : LightColor.color3,
+                                      color:  Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .color,
                                       maxLines: 4,
                                     ),
                                   ),
@@ -244,17 +242,11 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    shadowColor: isDark
-                        ? DarkColor.color3
-                        : LightColor.color3.withOpacity(.1),
-                    backgroundColor:
-                    isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                    elevation: 5,
+                    
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
-                        size: 24.sp,
+                       
                       ),
                       padding: EdgeInsets.only(left: 20.w),
                       onPressed: () {
@@ -263,9 +255,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                     ),
                     title: InterMedium(
                       text: 'DAR',
-                      fontsize: 18.w,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
-                      letterSpacing: -.3,
+                     
                     ),
                     centerTitle: true,
                     floating: true,
@@ -277,9 +267,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color:Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),

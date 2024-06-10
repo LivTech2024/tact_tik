@@ -74,8 +74,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:Theme.of(context).canvasColor,
-        //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+        
         appBar: AppBar(
           
           leading: IconButton(
@@ -218,9 +217,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -271,9 +268,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 text: patrol[
                                                         'PatrolLogGuardName'] ??
                                                     "",
-                                                color: isDark
-                                                    ? DarkColor.color21
-                                                    : LightColor.color3,
+                                                color:Theme.of(context).textTheme.displaySmall!.color as Color, 
                                                 fontsize: 18.sp,
                                               ),
                                             ],
@@ -299,9 +294,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Started at',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -314,9 +307,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                   ),
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
                                               ],
                                             ),
@@ -330,9 +321,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Ended at',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -345,9 +334,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                   ),
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
                                               ],
                                             ),
@@ -361,17 +348,13 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Status',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
                                                   text: patrol['PatrolLogStatus'] ?? 'incomplete',
                                                   fontsize: 12.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color21
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
 
                                               ],

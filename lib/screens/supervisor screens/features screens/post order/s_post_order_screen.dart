@@ -105,20 +105,11 @@ class _SPostOrderState extends State<SPostOrder> {
             return CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  shadowColor:  isDark
-                      ? Colors.transparent
-                      : LightColor.color3.withOpacity(.1),
-                  backgroundColor:  isDark
-                      ? DarkColor.AppBarcolor
-                      : LightColor.AppBarcolor,
-                  elevation: 5,
+                  
                   leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color3,
-                      size: 24.sp,
+                   
                     ),
                     padding: EdgeInsets.only(left: 20.w),
                     onPressed: () {
@@ -128,9 +119,7 @@ class _SPostOrderState extends State<SPostOrder> {
                   ),
                   title: InterMedium(
                     text: 'Post Orders',
-                    fontsize: 18.sp,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
-                    letterSpacing: -.3,
+                   
                   ),
                   centerTitle: true,
                   floating: true,
@@ -149,9 +138,8 @@ class _SPostOrderState extends State<SPostOrder> {
                             child: InterSemibold(
                               text: date,
                               fontsize: 20.sp,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           ...posts.map((postOrder) {

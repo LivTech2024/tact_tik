@@ -206,9 +206,10 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             child: Icon(
                               Icons.notifications,
                               // Use the notifications_active icon
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3, // Change color if unread
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .color, // Change color if unread
                               size: 28.sp,
                             ),
                           ),
@@ -238,9 +239,8 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           scaleX: -1,
                           child: Icon(
                             Icons.short_text_rounded,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodySmall!.color,
                             size: 40.sp,
                           ),
                         ),
@@ -258,7 +258,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       PoppinsSemibold(
                         text: '${greeting}',
                         color:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                             Theme.of(context).textTheme.bodySmall!.color,
                         letterSpacing: -.5,
                         fontsize: 35.sp,
                       ),
@@ -268,7 +268,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ? widget.userName
                             : 'User not found',
                         color:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                             Theme.of(context).textTheme.bodySmall!.color,
                         fontsize: 30.sp,
                       ),
                       SizedBox(height: 46.h),
@@ -283,9 +283,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color: Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
@@ -338,9 +336,10 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               hintStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 18.sp,
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                               hintText: 'Search screen',
                               contentPadding: EdgeInsets.zero,
@@ -356,9 +355,10 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                   Icon(screen.icon, color: Colors.blueAccent),
                               title: InterRegular(
                                 text: screen.name,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                             );
                           },
@@ -369,14 +369,15 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             ),
                             child: InterRegular(
                               text: 'No Such Screen found',
-                              color: isDark ? DarkColor.color2 : LightColor.color5,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                               fontsize: 18.sp,
                             ),
                           ),
                           decorationBuilder: (context, child) => Material(
                             type: MaterialType.card,
                             elevation: 4,
-                            // surfaceTintColor: LightColor.color3,
+                    
                             borderRadius: BorderRadius.circular(10.r),
                             child: child,
                           ),
@@ -525,9 +526,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           child: InterRegular(
                             text: 'CLEAR',
                             fontsize: 14.sp,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodySmall!.color,
                           ),
                         )
                       : SizedBox()

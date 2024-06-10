@@ -98,7 +98,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
         children: [
           InterBold(
             text: 'Add Licenses',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SizedBox(
@@ -145,9 +145,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color:Theme.of(context).cardColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
@@ -159,7 +157,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               child: Center(
                 child: InterBold(
                   text: 'Upload Security Licenses',
-                  color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                  color:  Theme.of(context).textTheme.bodySmall!.color,
                   fontsize: width / width20,
                 ),
               ),
@@ -187,9 +185,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color: Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
@@ -207,7 +203,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                             .split(' ')[0]
                         : 'Expired Time',
                     fontsize: width / width16,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
+                    color:  Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   SvgPicture.asset(
                     'assets/images/calendar_clock.svg',
@@ -222,7 +218,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
           ),
           InterBold(
             text: 'Add Driving Licenses',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SizedBox(
@@ -269,9 +265,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: isDark
-                          ? Colors.transparent
-                          : LightColor.color3.withOpacity(.05),
+                      color: Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
@@ -283,7 +277,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               child: Center(
                 child: InterBold(
                   text: 'Upload Driving Licenses',
-                  color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                  color:  Theme.of(context).textTheme.bodySmall!.color,
                   fontsize: width / width20,
                 ),
               ),
@@ -310,9 +304,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color:Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
@@ -330,7 +322,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                             .split(' ')[0]
                         : 'Expired Time',
                     fontsize: width / width16,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
+                    color:  Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   SvgPicture.asset(
                     'assets/images/calendar_clock.svg',

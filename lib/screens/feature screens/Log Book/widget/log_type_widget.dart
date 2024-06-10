@@ -34,9 +34,7 @@ class LogTypeWidget extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
          BoxShadow(
-            color: isDark
-                ? Colors.transparent
-                : LightColor.color3.withOpacity(.05),
+            color: Theme.of(context).shadowColor,
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),

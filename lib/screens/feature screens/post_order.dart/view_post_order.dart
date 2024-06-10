@@ -243,8 +243,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
           ),
           centerTitle: true,
         ),
-        backgroundColor:
-            Theme.of(context).canvasColor,
+       
         body: Container(
           height: MediaQuery.of(context).size.height - kToolbarHeight,
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -254,7 +253,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
               InterSemibold(
                 text: widget.date,
                 fontsize: 20.sp,
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
               ),
               SizedBox(height: 30.h),
               CustomeTextField(
@@ -330,7 +329,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 ),
                                 title: InterRegular(
                                   text: 'Add Image',
-                                  color: isDark ? DarkColor.color2 : LightColor.color3,
+                                  color: Theme.of(context).textTheme.bodyLarge!.color,
                                   fontsize: 12.sp,
                                 ),
                                 onTap: () {
@@ -345,7 +344,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 ),
                                 title: InterRegular(
                                   text: 'Add from Gallery',
-                                  color:  isDark ? DarkColor.color2 : LightColor.color3,
+                                  color:  Theme.of(context).textTheme.bodyLarge!.color,
                                   fontsize: 12.sp,
                                 ),
                                 onTap: () {
@@ -360,7 +359,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 ),
                                 title: InterRegular(
                                   text: 'Add PDF',
-                                  color:  isDark ? DarkColor.color2 : LightColor.color3,
+                                  color:  Theme.of(context).textTheme.bodyLarge!.color,
                                   fontsize: 12.sp,
                                 ),
                                 onTap: () {
@@ -419,7 +418,7 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                 height: 46.h,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.r),
-                                  color:  isDark ? DarkColor.color1 : LightColor.color3,
+                                  color:  Theme.of(context).textTheme.bodySmall!.color,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -441,12 +440,12 @@ class _CreatePostOrderState extends State<CreatePostOrder> {
                                           children: [
                                             PoppinsMedium(
                                               text: otherFileName,
-                                              color:  isDark ? DarkColor.color15 : LightColor.color3,
+                                              color:  Theme.of(context).textTheme.titleMedium!.color,
                                               fontsize: 12.sp,
                                             ),
                                             PoppinsRegular(
                                               text: otherFileSize,
-                                              color:  isDark ? DarkColor.color16 : LightColor.color3,
+                                              color:    Theme.of(context).textTheme.titleLarge!.color,
                                               fontsize: 12.sp,
                                             )
                                           ],

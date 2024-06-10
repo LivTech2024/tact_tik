@@ -177,9 +177,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: isDark
-                              ? Colors.transparent
-                              : LightColor.color3.withOpacity(.05),
+                          color: Theme.of(context).shadowColor,
                           blurRadius: 5,
                           spreadRadius: 2,
                           offset: Offset(0, 3),
@@ -357,9 +355,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                               Flexible(
                                   child: InterRegular(
                                 text: widget.feedback,
-                               color: isDark
-                                    ? DarkColor.color10
-                                    : LightColor.color3,
+                               color: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .color,
                                 fontsize: 14.sp,
                                 maxLines: 3,
                               )),
@@ -374,7 +373,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                 InterBold(
                   text: 'Checkpoints',
                  fontsize: 18.sp,
-                  color: isDark ? DarkColor.color21 : LightColor.color3,
+                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
                 ),
                 SizedBox(height: 20.h),
                 ListView.builder(
@@ -418,9 +417,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: isDark
-                                  ? Colors.transparent
-                                  : LightColor.color3.withOpacity(.05),
+                              color: Theme.of(context).shadowColor,
                               blurRadius: 5,
                               spreadRadius: 2,
                               offset: Offset(0, 3),
@@ -450,9 +447,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                   width: 120.w,
                                   child: InterMedium(
                                     // text: 'Checkpoint name Checkpoint name..',
-                                    color: isDark
-                                        ? DarkColor.color21
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color,
                                     text: checkpointName,
                                     // color: color21,
                                     fontsize: 16.sp,
@@ -463,7 +461,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             Icon(
                               Icons.arrow_forward_ios_outlined,
                             size: 24.sp,
-                              color:  isDark ? DarkColor.color17 : LightColor.color3 ,
+                              color: Theme.of(context).textTheme.displayMedium!.color as Color,
                             )
                           ],
                         ),

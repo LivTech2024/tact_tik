@@ -29,14 +29,14 @@ class ProfileEditWidget extends StatelessWidget {
           InterSemibold(
             text: tittle,
             fontsize: 20.sp,
-            color:  isDark ? DarkColor.color1 : LightColor.color3,
+            color:  Theme.of(context).textTheme.bodyMedium!.color,
           ),
           SizedBox(height: 10.h),
           InterRegular(
             text: content,
             fontsize: 16.sp,
             letterSpacing: -.05,
-            color:  isDark ? DarkColor.color3 : LightColor.color3,
+            color:   Theme.of(context).textTheme.headlineSmall!.color as Color?,
           ),
         ],
       ),

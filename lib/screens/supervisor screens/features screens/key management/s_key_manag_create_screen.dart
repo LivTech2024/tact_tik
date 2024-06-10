@@ -209,9 +209,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                             onTap: () {
                               setState(() {
                                 showCreate = true;
-                                colors[0] = isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.color3;
+                                colors[0] =  Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color;
                                 colors[1] = isDark
                                     ? DarkColor.color25
                                     : LightColor.color2;
@@ -232,9 +233,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.h),
                           child: VerticalDivider(
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodySmall!.color,
                           ),
                         ),
                         Expanded(
@@ -245,9 +244,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 colors[0] = isDark
                                     ? DarkColor.color25
                                     : LightColor.color2;
-                                colors[1] = isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.color3;
+                                colors[1] =  Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color;
                               });
                             },
                             child: Container(
@@ -275,9 +275,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Select key',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               Container(
@@ -286,9 +287,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -303,9 +302,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     iconSize: 24.sp,
                                     dropdownColor: Theme.of(context).cardColor,
                                     style: TextStyle(
-                                        color: isDark
-                                            ? DarkColor.color2
-                                            : LightColor.color3),
+                                        color:  Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color),
                                     borderRadius: BorderRadius.circular(10.r),
                                     value: dropdownValue,
                                     onChanged: (String? newValue) {
@@ -329,9 +329,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Recipient Name',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               Container(
@@ -340,9 +341,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color:Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -561,9 +560,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           InterBold(
                                             text: guardName,
                                             fontsize: 14.sp,
-                                            color: isDark
-                                                ? DarkColor.color26
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium!
+                                                .color,
                                           )
                                         ],
                                       ),
@@ -575,9 +575,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Contact',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(
@@ -591,9 +592,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Company Name',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(
@@ -605,9 +607,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Allocate Qt.',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(
@@ -619,9 +622,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Date',
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 fontsize: 16.w,
                               ),
                               SizedBox(height: 10.h),
@@ -663,9 +667,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Allocation Date',
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 fontsize: 16.sp,
                               ),
                               SizedBox(height: 10.h),
@@ -748,9 +753,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Allocation Purpose',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(
@@ -784,9 +790,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Key Name',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(
@@ -798,9 +805,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Allocate Qt.',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(
@@ -813,9 +821,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Description',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 10.h),
                               CustomeTextField(

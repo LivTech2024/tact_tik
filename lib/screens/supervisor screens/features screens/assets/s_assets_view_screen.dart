@@ -112,11 +112,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                     SizedBox(
                       height: 30.h,
                     ),
-                    // InterBold(
-                    //   text: 'Today',
-                    //   fontsize: 20.w,
-                    //   color: isDark ? DarkColor.Primarycolor : LightColor.color3,
-                    // ),
+                   
                     SizedBox(
                       height: 30.h,
                     ),
@@ -139,7 +135,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: 20.sp,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       );
                     }
@@ -172,9 +168,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? Colors.transparent
-                                    : LightColor.color3.withOpacity(.05),
+                                color:Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
@@ -230,17 +224,19 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                           return InterMedium(
                                             text: 'Error: ${snapshot.error}',
                                             fontsize: 16.sp,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           );
                                         } else {
                                           return InterMedium(
                                             text: snapshot.data ?? 'Unknown Equipment',
                                             fontsize: 16.sp,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           );
                                         }
                                       },
@@ -250,9 +246,10 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                                 fontsize: 16.sp,
                               ),
                               SizedBox(width:20.w),

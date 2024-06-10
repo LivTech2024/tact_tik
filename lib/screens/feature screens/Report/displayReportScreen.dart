@@ -255,7 +255,7 @@ class _CreateReportScreenState extends State<displayReport> {
                     InterBold(
                       text: 'New Report',
                       fontsize: width / width20,
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -271,7 +271,7 @@ class _CreateReportScreenState extends State<displayReport> {
                     InterBold(
                       text: 'Category',
                       fontsize: width / width20,
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height20),
@@ -365,12 +365,8 @@ class _CreateReportScreenState extends State<displayReport> {
                             ],
                           ),
                           Checkbox(
-                            activeColor: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
-                            checkColor: isDark
-                                ? DarkColor.color1
-                                : LightColor.color3,
+                            activeColor: Theme.of(context).primaryColor,
+                            checkColor: Theme.of(context).textTheme.bodyMedium!.color,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {

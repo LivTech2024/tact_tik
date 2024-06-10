@@ -194,9 +194,10 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                               InterBold(
                                                 text: name,
                                                 letterSpacing: -.3,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                color:  Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                               ),
                                             ],
                                           ),
@@ -220,9 +221,7 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: isDark
-                                ? DarkColor.color2
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodyLarge!.color,
                             fontsize: 16.sp,
                           ),
                         )

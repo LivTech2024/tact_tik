@@ -62,8 +62,7 @@ class _KeysScreenState extends State<KeysScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
+       
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // TODO Pass Values

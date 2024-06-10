@@ -33,9 +33,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: isDark
-                    ? Colors.transparent
-                    : LightColor.color3.withOpacity(.05),
+                color: Theme.of(context).shadowColor,
                 blurRadius: 5,
                 spreadRadius: 2,
                 offset: Offset(0, 3),
@@ -68,10 +66,10 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     disableModePicker: true,
                     calendarType: CalendarDatePicker2Type.multi,
                     selectedDayTextStyle: TextStyle(
-                      color: isDark ? DarkColor.color2 : LightColor.color3,
+                      color:  Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     selectedYearTextStyle: TextStyle(
-                      color: isDark ? DarkColor.color2 : LightColor.color3,
+                      color:  Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     selectedDayHighlightColor:isDark? Color(0xFF704600):LightColor.Primarycolor,
                     currentDate: DateTime.now(),
@@ -96,7 +94,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
         InterBold(
           text: 'Weekly Shifts',
           fontsize: width / width18,
-          color: isDark ? DarkColor.color2 : LightColor.color3,
+          color:  Theme.of(context).textTheme.bodyLarge!.color,
         )
       ],
     );

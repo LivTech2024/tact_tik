@@ -165,14 +165,11 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          shadowColor: isDark?Colors.transparent:LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 5,
+         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: width / width24,
+             
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -181,9 +178,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           title: InterMedium(
             text: 'Report Checkpoint',
-            fontsize: width / width18,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+        
           ),
           centerTitle: true,
         ),
@@ -200,7 +195,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       'Add Image/Comment',
                       style: TextStyle(
                         fontSize: width / width14,
-                        color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -249,7 +244,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: isDark ? DarkColor.color1 : LightColor.color3),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
@@ -306,9 +301,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   Icon(
                                     Icons.add,
                                     size: width / width20,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                   ),
                                   SizedBox(height: height / height10),
                                   InterMedium(

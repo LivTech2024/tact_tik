@@ -223,9 +223,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       icon: Icon(
                                         Icons.add_a_photo,
                                         size: 24.sp,
-                                        color: isDark
-                                            ? DarkColor.color1
-                                            : LightColor.color3,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
                                       ),
                                     ),
                                   )
@@ -268,9 +269,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 InterSemibold(
                                   text: 'Name',
                                   fontsize: 20.sp,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: 5.h),
                                 Row(
@@ -300,9 +302,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               InterSemibold(
                                 text: 'Contact No',
                                 fontsize: 20.sp,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(height: 5.h),
                               Row(

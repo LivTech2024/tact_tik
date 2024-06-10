@@ -41,7 +41,7 @@ class DayEventsBottomSheet extends StatelessWidget {
             ? Center(
                 child: InterMedium(
                 text: 'No shifts on this day',
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
                 fontsize: width / width18,
               ))
             : SingleChildScrollView(
@@ -57,7 +57,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                       ),
                       child: InterMedium(
                         text: day.format('dd/MM/yy'),
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
+                        color:  Theme.of(context).textTheme.bodyMedium!.color,
                         fontsize: width / width20,
                       ),
                     ),
@@ -149,9 +149,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                               InterSemibold(
                                                 text: event.name,
                                                 fontsize: width / width16,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                                color:  Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                               ),
                                               SizedBox(
                                                   height: height / height8),
@@ -183,9 +184,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                       ],
                                                     ),
                                                      VerticalDivider(
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color:  Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       thickness: 1,
                                                     ),
                                                     Expanded(
@@ -194,9 +196,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                             '${event.startTime}-${event.endTime}',
                                                         fontsize:
                                                             width / width14,
-                                                        color: isDark
-                                                            ? DarkColor.color2
-                                                            : LightColor.color2,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyLarge!
+                                                            .color,
                                                       ),
                                                     ),
                                                   ],
@@ -213,9 +216,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       child: Icon(
                                         Icons.arrow_forward_ios,
                                         size: width / width20,
-                                        color: isDark
-                                            ? DarkColor.color1
-                                            : LightColor.color3,
+                                        color:  Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
                                       ),
                                     ),
                                   ],
@@ -234,7 +238,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                       ),
                       child: InterMedium(
                         text: 'Others',
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
+                        color:  Theme.of(context).textTheme.bodyMedium!.color,
                         fontsize: width / width20,
                       ),
                     ),
@@ -365,7 +369,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                         InterSemibold(
                           text: event.others.othersShiftName,
                           fontsize: width / width16,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height8),
                         IntrinsicHeight(
@@ -376,9 +380,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   Icon(
                                     Icons.location_on,
                                     size: width / width10,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color:  Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(width: width / width4),
                                   InterMedium(
@@ -391,9 +396,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                 ],
                               ),
                                VerticalDivider(
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 thickness: 1,
                               ),
                               Expanded(
@@ -433,7 +439,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                 child: Icon(
                   Icons.arrow_forward_ios,
                   size: width / width20,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
             ],
@@ -508,7 +514,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                         InterSemibold(
                           text: shiftName,
                           fontsize: width / width16,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height8),
                         IntrinsicHeight(
@@ -519,9 +525,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   Icon(
                                     Icons.location_on,
                                     size: width / width10,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color:  Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(width: width / width4),
                                   InterMedium(
@@ -534,9 +541,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                 ],
                               ),
                                VerticalDivider(
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 thickness: 1,
                               ),
                               Expanded(

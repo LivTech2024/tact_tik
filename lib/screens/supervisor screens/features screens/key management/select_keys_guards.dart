@@ -112,9 +112,7 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? Colors.transparent
-                                    : LightColor.color3.withOpacity(.05),
+                                color:Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
@@ -173,9 +171,10 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                                         InterBold(
                                           text: name,
                                           letterSpacing: -.3,
-                                          color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color3,
+                                          color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                         ),
                                       ],
                                     ),
@@ -199,7 +198,7 @@ class _SelectGuardsScreenState extends State<SelectKeysGuardsScreen> {
                       : Center(
                     child: PoppinsBold(
                       text: 'No Guards Found',
-                      color: isDark ? DarkColor.color2 : LightColor.color3,
+                      color:  Theme.of(context).textTheme.bodyMedium!.color,
                       fontsize: 16.sp,
                     ),
                   )

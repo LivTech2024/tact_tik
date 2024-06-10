@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -29,7 +30,7 @@ class PersonalDetails extends StatelessWidget {
         children: [
           InterBold(
             text: 'Add Personal Details',
-            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+            color: Theme.of(context).textTheme.bodySmall!.color,
             fontsize: width / width20,
           ),
           SetTextfieldWidget(

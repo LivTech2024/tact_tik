@@ -155,9 +155,7 @@ class SiteTourScreen extends StatelessWidget {
                                   icon: Icon(
                                     Icons.cancel_outlined,
                                     size: 30.sp,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                   ),
                                   padding: EdgeInsets.zero,
                                 )
@@ -213,9 +211,7 @@ class SiteTourScreen extends StatelessWidget {
                                                     BorderRadius.circular(
                                                   12.r,
                                                 ),
-                                                color: isDark
-                                                    ? DarkColor.color9
-                                                    : LightColor.color3,
+                                                color: Theme.of(context).textTheme.bodyMedium!.color,
                                               ),
                                               height: 55.h,
                                               width: 55.w,
@@ -228,13 +224,9 @@ class SiteTourScreen extends StatelessWidget {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             4.r),
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
                                                     border: Border.all(
-                                                      color: isDark
-                                                          ? DarkColor.Primarycolor
-                                                          : LightColor.color3,
+                                                      color: Theme.of(context).textTheme.bodySmall!.color as Color,
                                                       width: 1,
                                                     ),
                                                   ),
@@ -258,9 +250,7 @@ class SiteTourScreen extends StatelessWidget {
                                                       'No Name',
                                                   // Example name, replace with your data
 
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                                   fontsize: 16.sp,
                                                 ),
                                                 SizedBox(
@@ -371,7 +361,7 @@ class SiteTourScreen extends StatelessWidget {
                           icon: Icon(
                             Icons.keyboard_arrow_left,
                             size: 24.sp,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color:Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                         Bounce(
@@ -381,7 +371,7 @@ class SiteTourScreen extends StatelessWidget {
                           },
                           child: InterBold(
                             text: 'Go to shift',
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 18.sp,
                           ),
                         ),
@@ -395,7 +385,7 @@ class SiteTourScreen extends StatelessWidget {
                           icon: Icon(
                             Icons.keyboard_arrow_right,
                             size: 24.sp,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                       ],

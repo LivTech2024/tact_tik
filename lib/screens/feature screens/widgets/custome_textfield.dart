@@ -40,9 +40,7 @@ class CustomeTextField extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.transparent
-                : LightColor.color3.withOpacity(.05),
+            color:Theme.of(context).shadowColor,
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),
@@ -68,9 +66,7 @@ class CustomeTextField extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w300,
                 fontSize: width / width18,
-                color: isDark
-                    ? DarkColor.color1
-                    : LightColor.color3, // Change text color to white
+                color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
               ),
               decoration: InputDecoration(
                   border: OutlineInputBorder(
@@ -83,9 +79,7 @@ class CustomeTextField extends StatelessWidget {
                   hintStyle: GoogleFonts.poppins(
                     fontWeight: FontWeight.w300,
                     fontSize: width / width18,
-                    color: isDark
-                        ? DarkColor.color2
-                        : LightColor.color3, // Change text color to white
+                    color: Theme.of(context).textTheme.bodyLarge!.color, // Change text color to white
                   ),
                   hintText: hint,
                   contentPadding: EdgeInsets.zero,

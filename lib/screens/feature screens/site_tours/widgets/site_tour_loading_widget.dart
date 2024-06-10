@@ -32,9 +32,7 @@ class SiteTourLoadingWidget extends StatelessWidget {
                   Text(
                     'Getting your location...',
                     style: GoogleFonts.inter(
-                        color: isDark
-                            ? DarkColor.color1
-                            : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400),
                   )

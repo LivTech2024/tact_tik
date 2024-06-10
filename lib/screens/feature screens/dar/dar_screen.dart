@@ -100,9 +100,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
     return SafeArea(
       child: Scaffold(
-        // backgroundColor:
-       backgroundColor: Theme.of(context).canvasColor,
-        //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+       
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -182,9 +180,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: isDark
-                                        ? Colors.transparent
-                                        : LightColor.color3.withOpacity(.05),
+                                    color: Theme.of(context).shadowColor,
                                     blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
@@ -229,9 +225,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
                                       fontsize: 16.sp,
-                                      color: isDark
-                                          ? DarkColor.color26
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .color,
                                       maxLines: 4,
                                     ),
                                   ),
@@ -277,9 +274,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
