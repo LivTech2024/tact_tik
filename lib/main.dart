@@ -19,6 +19,7 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
 import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
@@ -101,10 +102,10 @@ class _MyAppState extends State<MyApp> {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return AuthChecker();
+            return ClientDarScreen();
           } else {
             return Scaffold(
-              
+
               body: Center(
                 child: InterSemibold(
                   text:

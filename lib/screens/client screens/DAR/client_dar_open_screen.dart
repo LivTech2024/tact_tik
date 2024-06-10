@@ -57,6 +57,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.w),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 30.h),
                 Row(
@@ -128,10 +129,8 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             width: 190.w,
                             child: InterSemibold(
                               text: 'Employee Name',
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                               fontsize: 18.sp,
                             ),
                           )
@@ -168,10 +167,8 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                                   '2972 Westheimer Rd. Santa Ana, Illinois... ',
                               fontsize: 14.sp,
                               maxLines: 1,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .color,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ],
                         ),
@@ -180,7 +177,11 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                   ),
                 ),
                 SizedBox(height: 30.h),
-                InterBold(text: 'Place/Spot', fontsize: 18.sp,)
+                InterBold(
+                  text: 'Place/Spot',
+                  fontsize: 18.sp,
+                ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),
