@@ -654,11 +654,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -667,11 +665,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
           ),
           title: InterMedium(
             text: 'Create Schedule',
-            
           ),
           centerTitle: true,
         ),
-        
         body: SingleChildScrollView(
           // physics: PageScrollPhysics(),
           child: Column(
@@ -679,7 +675,6 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
               Container(
                 height: 65.h,
                 width: double.maxFinite,
-                
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 decoration: BoxDecoration(
                   color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
@@ -1381,10 +1376,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           selectedOptionBackgroundColor: isDark
                                               ? DarkColor.Primarycolor
                                               : LightColor.Primarycolor,
-                                          dropdownBackgroundColor: Theme.of(context).cardColor,
+                                          dropdownBackgroundColor:
+                                              Theme.of(context).cardColor,
                                           fieldBackgroundColor:
                                               Colors.transparent,
-                                          optionsBackgroundColor: Theme.of(context).cardColor,
+                                          optionsBackgroundColor:
+                                              Theme.of(context).cardColor,
                                           borderColor: Colors.transparent,
                                           controller: _Patrollcontroller,
                                           onOptionSelected: (options) {
@@ -1643,8 +1640,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                     title: Container(
                                       padding: EdgeInsets.only(left: 10.w),
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .cardColor, 
+                                        color: Theme.of(context).cardColor,
                                         borderRadius:
                                             BorderRadius.circular(10.r),
                                       ),
