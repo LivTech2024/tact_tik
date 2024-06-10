@@ -373,11 +373,9 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
             // physics: const PageScrollPhysics(),
             slivers: [
               SliverAppBar(
-                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -388,7 +386,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
                 ),
                 title: InterMedium(
                   text: 'Patrolling',
-                 
                 ),
                 centerTitle: true,
                 floating: true, // Makes the app bar float above the content
@@ -894,8 +891,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 margin: EdgeInsets.only(bottom: 30.h),
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
-                  color:
-                      Theme.of(context).cardColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 constraints: widget.p.CurrentStatus == "started"

@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ligthTheme,
             darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
+            themeMode: ThemeMode.dark,
             // navigatorKey: navigatorKey,
             // routes: {
             //   '/notification_screen': (context) => NotificationScreen(),

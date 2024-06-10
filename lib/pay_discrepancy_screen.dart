@@ -26,8 +26,6 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor:
-              Theme.of(context).canvasColor,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: FloatingActionButton(

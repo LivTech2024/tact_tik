@@ -243,8 +243,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
         appBar: AppBar(
       
           leading: IconButton(

@@ -106,7 +106,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
               ),
             )
           : Scaffold(
-              backgroundColor: Theme.of(context).canvasColor,
               appBar: AppBar(
                 // backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
                 elevation: 0,

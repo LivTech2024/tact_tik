@@ -59,8 +59,6 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            Theme.of(context).canvasColor,
         appBar: AppBar(
          
           leading: IconButton(
