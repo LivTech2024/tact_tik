@@ -18,9 +18,11 @@ import '../../../utils/colors.dart';
 import 'client_open_patrol_screen.dart';
 
 class ClientCheckPatrolScreen extends StatefulWidget {
+  final String ScreenName;
   final String PatrolIdl;
 
-  ClientCheckPatrolScreen({super.key, required this.PatrolIdl});
+  ClientCheckPatrolScreen(
+      {super.key, required this.PatrolIdl, required this.ScreenName});
 
   @override
   State<ClientCheckPatrolScreen> createState() =>
@@ -76,7 +78,6 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
       child: Scaffold(
         
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -88,7 +89,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             },
           ),
           title: InterRegular(
-            text: 'Guards',
+            text: widget.ScreenName,
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -108,13 +109,16 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                         width: 190.w,
                         child: IconTextWidget(
                           icon: Icons.calendar_today,
-                          Iconcolor:
-                              Theme.of(context).textTheme.bodySmall!.color as Color,
+                          Iconcolor: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .color as Color,
                           text: selectedDate != null
                               ? DateFormat('dd/MM/yyyy').format(selectedDate!)
                               : 'display shift date',
                           fontsize: 14.sp,
-                          color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                          color: Theme.of(context).textTheme.bodySmall!.color
+                              as Color,
                         ),
                       ),
                     ),
@@ -123,13 +127,14 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                       child: IconTextWidget(
                         space: 6.w,
                         icon: Icons.add,
-                          Iconcolor:
-                            Theme.of(context).textTheme.bodySmall!.color as Color,
+                        Iconcolor: Theme.of(context).textTheme.bodySmall!.color
+                            as Color,
                         iconSize: 20.sp,
                         text: 'Select Guard',
                         useBold: true,
                         fontsize: 14.sp,
-                        color: Theme.of(context).textTheme.bodyMedium!.color as Color,
+                        color: Theme.of(context).textTheme.bodyMedium!.color
+                            as Color,
                         // Iconcolor: DarkColor.color1,
                       ),
                     ),
@@ -352,11 +357,12 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
-                                                  text: patrol['PatrolLogStatus'] ?? 'incomplete',
+                                                  text: patrol[
+                                                          'PatrolLogStatus'] ??
+                                                      'incomplete',
                                                   fontsize: 12.sp,
                                                   color: Theme.of(context).textTheme.displaySmall!.color as Color,
                                                 ),
-
                                               ],
                                             ),
                                           ),

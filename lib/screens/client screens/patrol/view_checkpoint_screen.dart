@@ -32,13 +32,10 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
 
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
               size: 24.sp,
             ),
             padding: EdgeInsets.only(left: 20.w),
@@ -49,7 +46,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
           title: InterRegular(
             // text: '$widget.guardName}',
             text: "${widget.GuardName}",
-          
+
             letterSpacing: -.3,
           ),
           centerTitle: true,

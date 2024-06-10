@@ -68,7 +68,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
 
   Future<void> _addImage() async {
     XFile? pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 2);
+        .pickImage(source: ImageSource.camera, imageQuality: 40);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -91,7 +91,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
 
   Future<void> _addGallery() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 2);
+        await ImagePicker().pickMultiImage(imageQuality: 40);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -127,7 +127,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     int minWidth = 800; // Minimum width to reduce resolution step by step
     int minHeight = 800; // Minimum height to reduce resolution step by step
     XFile? result;
-
     do {
       result = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
@@ -307,7 +306,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   InterMedium(
                                     text: 'Add Image',
                                     fontsize: width / width16,
-                                    color: DarkColor. color1,
+                                    color: DarkColor.color1,
                                   )
                                 ],
                               ),
@@ -356,7 +355,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: DarkColor. Primarycolor,
+                      color: DarkColor.Primarycolor,
                     ),
                   ),
                 ),

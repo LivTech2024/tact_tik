@@ -17,7 +17,8 @@ class ClientOpenReport extends StatefulWidget {
   final String reportEmployeeName;
   final String reportLocation;
 
-  const ClientOpenReport({super.key,
+  const ClientOpenReport({
+    super.key,
     required this.reportName,
     required this.reportCategory,
     required this.reportDate,
@@ -25,7 +26,8 @@ class ClientOpenReport extends StatefulWidget {
     required this.reportData,
     required this.reportStatus,
     required this.reportEmployeeName,
-    required this.reportLocation,});
+    required this.reportLocation,
+  });
 
   @override
   State<ClientOpenReport> createState() => _ClientOpenReportState();
@@ -36,13 +38,10 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -51,7 +50,6 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
           ),
           title: InterBold(
             text: 'Report',
-         
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -69,7 +67,7 @@ class _ClientOpenReportState extends State<ClientOpenReport> {
                     InterBold(
                       text: 'Report Name:',
                       fontsize: 18.sp,
-                      color: Theme.of(context).textTheme.bodyMedium!.color ,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(width: 20.h),
                     InterMedium(

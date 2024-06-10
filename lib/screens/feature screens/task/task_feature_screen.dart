@@ -18,7 +18,6 @@ class TaskFeatureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -27,19 +26,21 @@ class TaskFeatureScreen extends StatelessWidget {
                   builder: (context) => TaskFeatureCreateScreen(),
                 ));
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor:
+              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add , size: 24.sp,),
+          child: Icon(
+            Icons.add,
+            size: 24.sp,
+          ),
         ),
         body: CustomScrollView(
           // physics: const PageScrollPhysics(),
           slivers: [
             SliverAppBar(
-              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -49,7 +50,6 @@ class TaskFeatureScreen extends StatelessWidget {
               ),
               title: InterMedium(
                 text: 'Task',
-              
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -87,29 +87,33 @@ class TaskFeatureScreen extends StatelessWidget {
                           )
                         ],
                         color: Theme.of(context).cardColor,
-                       borderRadius: BorderRadius.circular(10.h),
+                        borderRadius: BorderRadius.circular(10.h),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InterSemibold(
                             text: 'Guard Name',
-                              fontsize: 20.sp,
+                            fontsize: 20.sp,
                             color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                           SizedBox(height: 10.h),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
-                             fontsize: 20.sp,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            fontsize: 20.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             maxLines: 5,
                           ),
                           SizedBox(height: 5.h),
                           InterMedium(
                             text:
                                 'Take care of all the computers Make sure they are properly turned off',
-                           fontsize: 14.sp,
-                            color: Theme.of(context).textTheme.headlineSmall!.color,
+                            fontsize: 14.sp,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .color,
                             maxLines: 4,
                           ),
                         ],

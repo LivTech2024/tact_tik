@@ -734,7 +734,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ClientCheckPatrolScreen(
-                                                  PatrolIdl: PatrolId)));
+                                                PatrolIdl: PatrolId,
+                                                ScreenName: PatrolName,
+                                              )));
                                 },
                                 child: Container(
                                   height: 100.h,
@@ -823,7 +825,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 .bodyMedium!
                                                                 .color,
                                                             text:
-                                                                '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                                                                PatrolLocation,
                                                             maxLines: 2,
                                                             fontsize: 14.sp,
                                                           ),
@@ -864,7 +866,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                     ),
                                                     SizedBox(width: 4.w),
                                                     InterMedium(
-                                                      text: '100',
+                                                      text: CheckpointCount
+                                                          .toString(),
                                                       fontsize: 13.sp,
                                                       color: Theme.of(context)
                                                           .textTheme
@@ -907,6 +910,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       NavigateScreen(
                                         ClientCheckPatrolScreen(
                                           PatrolIdl: '',
+                                          ScreenName: '',
                                         ),
                                         context,
                                       );
@@ -1173,7 +1177,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             reportDate, DateTime.now()))
                                         ? 'Today'
                                         : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
-
+                                    print("Report Data : $reports[index]");
                                     return Padding(
                                       padding: EdgeInsets.only(
                                         left: 30.w,
@@ -1187,7 +1191,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                               builder: (context) =>
                                                   ClientOpenReport(
                                                 reportName: reports[index]
-                                                    ['ReportName'],
+                                                    ['ReportEmployeeName'],
                                                 reportCategory: reports[index]
                                                     ['ReportCategory'],
                                                 reportDate: dateString,
@@ -1262,8 +1266,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             .center,
                                                     children: [
                                                       InterSemibold(
-                                                        text: reports[index]
-                                                            ['ReportGuardName'],
+                                                        text: reports[index][
+                                                            'ReportEmployeeName'],
                                                         fontsize: 18.sp,
                                                         color: Theme.of(context)
                                                             .textTheme

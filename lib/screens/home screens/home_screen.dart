@@ -589,7 +589,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.door_back_door_outlined,
                       'Home',
                       0,
-                      () {},
+                      () {
+                        //If on homescreen the
+                      },
                     ),
                     buildListTile(
                       Icons.account_circle_outlined,
@@ -632,7 +634,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.restart_alt,
                       'History',
                       4,
-                      () {
+                      () async {
+                        List<String> emails = [];
+                        // emails.add("sutarvaibhav37@gmail.com");
+                        // // emails.add("pankaj.kumar1312@yahoo.com");
+                        // // emails.add("alerts.tactik@gmail.com");
+                        // // emails.add("security@lestonholdings.com");
+                        // // emails.add("dan@tpssolution.com");
+                        // await sendDARTemplateEmail(
+                        //   "Leston holdings",
+                        //   emails,
+                        //   'Tacttik DAR',
+                        //   "Tacttik DAR",
+                        //   "Shift",
+                        //   "2 JUN",
+                        //   "livjeet kaur",
+                        //   "01:20:27",
+                        //   "06:00:00",
+                        //   "High level place",
+                        //   "completed",
+                        //   "formattedDateTime",
+                        //   "formattedEndTime",
+                        // );
                         // customEmail();
                         Navigator.push(
                           context,
@@ -1001,16 +1024,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       : /*ScreenIndex == 2
                           ? SliverToBoxAdapter(
                               child: Padding(
-                                padding: EdgeInsets.only
-                                  left: width / width30,
-                                  right: width / width30,
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                                // left: width / width30,
+                                // right: width / width30,
                                 child: CustomCalendar(
                                   selectedDates: selectedDates,
                                 ),
                               ),
                             )
-                          :*/
+                          : 
+                            */
                       ScreenIndex == 3
                           ? SliverList(
                               delegate: SliverChildBuilderDelegate(

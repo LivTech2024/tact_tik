@@ -637,9 +637,9 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         currentTime.month, currentTime.day));
                                 showErrorToast(context, "Not On SHift Date");
                               } else {
-                                if (currentTime.isAfter(bufferStart)) {
-                                  showErrorToast(context, "Started Late");
-                                }
+                                // if (currentTime.isAfter(bufferStart)) {
+                                //   showErrorToast(context, "Started Late");
+                                // }
                                 if (currentTime.isBefore(bufferStart)) {
                                   showErrorToast(
                                       context, "Start shift on Time");
