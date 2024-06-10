@@ -366,7 +366,6 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
-        
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
@@ -552,8 +551,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: 30); // image quality 30
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -915,7 +914,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 width: 120.w,
                                 child: InterBold(
                                   text: 'Patrol   ${widget.p.title}',
-                                  color: Theme.of(context).textTheme.bodySmall!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color,
                                   fontsize: 14.sp,
                                   maxLine: 1,
                                 ),
@@ -924,7 +926,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 radius: 10.r,
                                 lineWidth: 3,
                                 percent: completionPercentage.clamp(0.0, 1.0),
-                                progressColor: Theme.of(context).textTheme.bodySmall!.color,
+                                progressColor: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .color,
                               ),
                             ],
                           ),
@@ -934,13 +939,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             icon: Icons.location_on,
                             text: widget.p.title,
                             useBold: false,
-                            color:
-                                Theme.of(context).textTheme.headlineMedium!.color as Color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color as Color,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
-                            color:
-                                Theme.of(context).textTheme.headlineLarge!.color as Color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .color as Color,
                           ),
                           SizedBox(height: 5.h),
                           IconTextWidget(
@@ -948,13 +957,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             icon: Icons.description,
                             text: widget.p.description,
                             useBold: false,
-                            color:
-                                Theme.of(context).textTheme.headlineMedium!.color as Color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color as Color,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
-                            color:
-                                Theme.of(context).textTheme.headlineLarge!.color as Color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .color as Color,
                           ),
                           SizedBox(height: 5.h),
                           IconTextWidget(
@@ -963,8 +976,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             text:
                                 'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
                             useBold: false,
-                            color:
-                                Theme.of(context).textTheme.headlineMedium!.color as Color,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color as Color,
                           ),
                           SizedBox(height: 20.h),
                         ],
@@ -1075,7 +1090,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     ),
                                     margin: EdgeInsets.only(top: 10.h),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).textTheme.titleMedium!.color as Color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .color as Color,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     child: Row(
@@ -1088,14 +1106,20 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               height: 48.h,
                                               width: 48.w,
                                               decoration: BoxDecoration(
-                                                color: Theme.of(context).textTheme.titleLarge!.color as Color,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge!
+                                                    .color as Color,
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
                                               ),
                                               child: Icon(
                                                 Icons.home_sharp,
                                                 size: 24.sp,
-                                                color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall!
+                                                    .color as Color,
                                               ),
                                             ),
                                             SizedBox(
@@ -1105,7 +1129,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               width: 190.w,
                                               child: InterRegular(
                                                 text: category.title,
-                                                color: Theme.of(context).textTheme.displayMedium!.color as Color,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium!
+                                                    .color as Color,
                                                 fontsize: 18.sp,
                                               ),
                                             ),
@@ -1131,7 +1158,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 : Icons
                                                     .arrow_circle_down_outlined,
                                             size: 24.sp,
-                                            color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .color as Color,
                                           ),
                                         )
                                       ],
@@ -1513,8 +1543,19 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     "This Patrol has not being Started");
                                 return;
                               }
+                              if (widget.p.Allchecked == false) {
+                                showErrorToast(context,
+                                    "Complete all the checkpoints ${widget.p.PatrolId}");
+                                // showCustomDialog(
+                                //     context,
+                                //     "Incomplete Checkpoints, Do you want to ",
+                                //     "Incomplete Checkpoints, Do you want to ");
+                                return;
+                              }
+                              //check for the checkpoint status if any one is unchecked then dailog box display checked
+                              // StatusFailureReason
                               _refresh();
-
+                              print("Patrol Data ${widget.p.Allchecked}");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
