@@ -80,9 +80,7 @@ class TaskFeatureScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -97,16 +95,14 @@ class TaskFeatureScreen extends StatelessWidget {
                           InterSemibold(
                             text: 'Guard Name',
                             fontsize: 20.sp,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                           SizedBox(height: 10.h),
                           InterSemibold(
                             text: 'This tittle is only for eg. to understand',
                             fontsize: 20.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             maxLines: 5,
                           ),
                           SizedBox(height: 5.h),
@@ -114,8 +110,10 @@ class TaskFeatureScreen extends StatelessWidget {
                             text:
                                 'Take care of all the computers Make sure they are properly turned off',
                             fontsize: 14.sp,
-                            color:
-                                isDark ? DarkColor.color3 : LightColor.color3,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .color,
                             maxLines: 4,
                           ),
                         ],
@@ -132,4 +130,3 @@ class TaskFeatureScreen extends StatelessWidget {
     );
   }
 }
- 

@@ -308,18 +308,20 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'In time',
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                         fontsize:
                                                             width / width18,
                                                       ),
                                                       InterMedium(
                                                         text: widget
                                                             .ShiftStartTime,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                         fontsize:
                                                             width / width16,
                                                       )

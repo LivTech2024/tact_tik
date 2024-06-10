@@ -366,6 +366,7 @@ class _MyPatrolsListState extends State<MyPatrolsList> {
 
     return SafeArea(
       child: Scaffold(
+        
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
@@ -686,7 +687,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
               'Add Image/Comment',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -863,10 +864,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         },
                         text: 'Submit',
                         fontsize: 14.sp,
-                        backgroundcolor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
               ],
             ),
@@ -885,7 +884,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
               InterBold(
                 text: "Today",
                 fontsize: 18.sp,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
               SizedBox(height: 30.h),
               AnimatedContainer(
@@ -916,9 +915,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 width: 120.w,
                                 child: InterBold(
                                   text: 'Patrol   ${widget.p.title}',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3,
+                                  color: Theme.of(context).textTheme.bodySmall!.color,
                                   fontsize: 14.sp,
                                   maxLine: 1,
                                 ),
@@ -927,9 +924,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 radius: 10.r,
                                 lineWidth: 3,
                                 percent: completionPercentage.clamp(0.0, 1.0),
-                                progressColor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.color3,
+                                progressColor: Theme.of(context).textTheme.bodySmall!.color,
                               ),
                             ],
                           ),
@@ -940,12 +935,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             text: widget.p.title,
                             useBold: false,
                             color:
-                                isDark ? DarkColor.color13 : LightColor.color3,
+                                Theme.of(context).textTheme.headlineMedium!.color as Color,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
                             color:
-                                isDark ? DarkColor.color14 : LightColor.color3,
+                                Theme.of(context).textTheme.headlineLarge!.color as Color,
                           ),
                           SizedBox(height: 5.h),
                           IconTextWidget(
@@ -954,12 +949,12 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             text: widget.p.description,
                             useBold: false,
                             color:
-                                isDark ? DarkColor.color13 : LightColor.color3,
+                                Theme.of(context).textTheme.headlineMedium!.color as Color,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
                             color:
-                                isDark ? DarkColor.color14 : LightColor.color3,
+                                Theme.of(context).textTheme.headlineLarge!.color as Color,
                           ),
                           SizedBox(height: 5.h),
                           IconTextWidget(
@@ -969,7 +964,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
                             useBold: false,
                             color:
-                                isDark ? DarkColor.color13 : LightColor.color3,
+                                Theme.of(context).textTheme.headlineMedium!.color as Color,
                           ),
                           SizedBox(height: 20.h),
                         ],
@@ -1080,9 +1075,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     ),
                                     margin: EdgeInsets.only(top: 10.h),
                                     decoration: BoxDecoration(
-                                      color: isDark
-                                          ? DarkColor.color15
-                                          : LightColor.color3,
+                                      color: Theme.of(context).textTheme.titleMedium!.color as Color,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     child: Row(
@@ -1095,18 +1088,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               height: 48.h,
                                               width: 48.w,
                                               decoration: BoxDecoration(
-                                                color: isDark
-                                                    ? DarkColor.color16
-                                                    : LightColor.color3,
+                                                color: Theme.of(context).textTheme.titleLarge!.color as Color,
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
                                               ),
                                               child: Icon(
                                                 Icons.home_sharp,
                                                 size: 24.sp,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.color3,
+                                                color: Theme.of(context).textTheme.bodySmall!.color as Color,
                                               ),
                                             ),
                                             SizedBox(
@@ -1116,23 +1105,34 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               width: 190.w,
                                               child: InterRegular(
                                                 text: category.title,
-                                                color: isDark
-                                                    ? DarkColor.color17
-                                                    : LightColor.color2,
+                                                color: Theme.of(context).textTheme.displayMedium!.color as Color,
                                                 fontsize: 18.sp,
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Icon(
-                                          expand
-                                              ? Icons.arrow_circle_up_outlined
-                                              : Icons
-                                                  .arrow_circle_down_outlined,
-                                          size: 24.sp,
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.color3,
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              if (_expandCategoryMap[
+                                                      category.title] !=
+                                                  null) {
+                                                _expandCategoryMap[
+                                                        category.title] =
+                                                    !_expandCategoryMap[
+                                                        category.title]!;
+                                              }
+                                              // _expand2 = !_expand2;
+                                            });
+                                          },
+                                          icon: Icon(
+                                            expand
+                                                ? Icons.arrow_circle_up_outlined
+                                                : Icons
+                                                    .arrow_circle_down_outlined,
+                                            size: 24.sp,
+                                            color: Theme.of(context).textTheme.bodySmall!.color as Color,
+                                          ),
                                         )
                                       ],
                                     ),

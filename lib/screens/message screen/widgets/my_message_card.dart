@@ -41,7 +41,7 @@ class MyMessageCard extends StatelessWidget {
                 child: InterMedium(
                   text: message,
                   fontsize: width / width16,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color:  Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
               Positioned(
@@ -52,7 +52,7 @@ class MyMessageCard extends StatelessWidget {
                     InterMedium(
                       text: date,
                       fontsize: width / width13,
-                      color:  isDark ? DarkColor.color2 : LightColor.color3,
+                      color:   Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     SizedBox(
                       width: width / width4
@@ -60,7 +60,7 @@ class MyMessageCard extends StatelessWidget {
                     Icon(
                       Icons.done_all,
                       size: width / width20,
-                      color:  isDark ? DarkColor.color2 : LightColor.color3,
+                      color:   Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                   ],
                 ),

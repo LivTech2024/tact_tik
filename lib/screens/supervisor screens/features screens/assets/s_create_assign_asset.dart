@@ -298,7 +298,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                     ),
                     VerticalDivider(
                       color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     Expanded(
                       child: IgnorePointer(
@@ -344,9 +344,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               InterBold(
                                 text: 'Select Guards',
                                 fontsize: 16.sp,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               IgnorePointer(
                                 ignoring: widget.OnlyView,
@@ -370,9 +371,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                   child: InterBold(
                                     text: 'view all',
                                     fontsize: 14.sp,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                 ),
                               )
@@ -527,7 +529,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Select equipment',
                             fontsize: 16.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           IgnorePointer(
@@ -576,7 +578,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Allocate Qt.',
                             fontsize: 16.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -589,7 +591,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           InterBold(
                             text: 'Allocation Date',
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                 Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                           SizedBox(height: 10.h),
@@ -691,9 +693,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     InterBold(
                                       text: 'Select Guards',
                                       fontsize: width / width16,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     IgnorePointer(
                                       ignoring: widget.OnlyView,
@@ -717,9 +720,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                         child: InterBold(
                                           text: 'view all',
                                           fontsize: width / width14,
-                                          color: isDark
-                                              ? DarkColor.color1
-                                              : LightColor.color3,
+                                          color:  Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color,
                                         ),
                                       ),
                                     )
@@ -749,9 +753,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w300,
                                             fontSize: width / width18,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                           decoration: InputDecoration(
                                             border: OutlineInputBorder(
@@ -765,9 +770,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                             hintStyle: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w300,
                                               fontSize: width / width18,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .color,
                                             ),
                                             hintText: 'Search Guard',
                                             contentPadding: EdgeInsets.zero,
@@ -820,9 +826,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 InterBold(
                                   text: 'Select equipment',
                                   fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height10),
                                 IgnorePointer(
@@ -858,9 +865,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     decoration: InputDecoration(
                                       hintText: 'Select Equipment',
                                       hintStyle: TextStyle(
-                                          color: isDark
-                                              ? DarkColor.color1
-                                              : LightColor.color3),
+                                          color:  Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color),
                                       filled: true,
                                       fillColor: Theme.of(context).cardColor,
                                       border: OutlineInputBorder(
@@ -875,9 +883,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 InterBold(
                                   text: 'Allocate Qt.',
                                   fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height10),
                                 CustomeTextField(
@@ -889,9 +898,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 SizedBox(height: height / height20),
                                 InterBold(
                                   text: 'Allocation Date',
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   fontsize: width / width16,
                                 ),
                                 SizedBox(height: height / height10),
@@ -922,9 +932,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                           .split(' ')[0]
                                                       : 'Start Time',
                                                   fontsize: width / width16,
-                                                  color: isDark
-                                                      ? DarkColor.color1
-                                                      : LightColor.color3,
+                                                  color:  Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                 ),
                                                 SvgPicture.asset(
                                                   'assets/images/calendar_clock.svg',
@@ -959,9 +970,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                                           .split(' ')[0]
                                                       : 'End Time',
                                                   fontsize: width / width16,
-                                                  color: isDark
-                                                      ? DarkColor.color2
-                                                      : LightColor.color3,
+                                                  color:  Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .color,
                                                 ),
                                                 SvgPicture.asset(
                                                   'assets/images/calendar_clock.svg',
@@ -1059,9 +1071,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 InterBold(
                                   text: 'Allocate Qt.',
                                   fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height10),
                                 CustomeTextField(
@@ -1073,9 +1086,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 InterBold(
                                   text: 'Allocate Qt.',
                                   fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height10),
                                 CustomeTextField(
@@ -1086,9 +1100,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 InterBold(
                                   text: 'Description',
                                   fontsize: width / width16,
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height10),
                                 CustomeTextField(
@@ -1150,7 +1165,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Allocate Qt.',
                             fontsize: 16.sp,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1163,7 +1178,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Allocate Qt.',
                             fontsize: width / width16,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(
@@ -1175,7 +1190,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             text: 'Description',
                             fontsize: width / width16,
                             color:
-                                isDark ? DarkColor.color1 : LightColor.color3,
+                                 Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           CustomeTextField(

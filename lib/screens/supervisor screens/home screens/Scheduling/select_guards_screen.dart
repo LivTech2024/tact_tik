@@ -111,7 +111,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                     child: DropdownButton<String>(
                       iconSize: 24.w,
                       dropdownColor:  Theme.of(context).cardColor,
-                      style: TextStyle(color:  isDark ? DarkColor.color2 : LightColor.color3),
+                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
                       
                       borderRadius: BorderRadius.circular(10.r),
                       value: dropdownValue,
@@ -231,9 +231,10 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                 InterBold(
                                                   text: name,
                                                   letterSpacing: -.3,
-                                                  color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color,
                                                   fontsize: 12.sp,
                                                 ),
                                               ],

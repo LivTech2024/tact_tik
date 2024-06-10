@@ -108,9 +108,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                             children: [
                               InterMedium(
                                 text: 'Send To Admin',
-                                color: isDark
-                                    ? DarkColor.color8
-                                    : LightColor.color3,
+                                color:Theme.of(context).textTheme.labelSmall!.color,
                                 fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )

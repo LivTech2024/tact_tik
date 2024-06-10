@@ -67,7 +67,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterMedium(
                   text: 'Time: ' + widget.reportedAt,
                   fontsize: 14.sp,
-                  color: isDark ? DarkColor.color21 : LightColor.color3,
+                  color: Theme.of(context).textTheme.displaySmall!.color,
                 ),
                 SizedBox(height: 50.h),
                 InterBold(
@@ -79,7 +79,7 @@ class _ViewCheckpointScreenState extends State<ViewCheckpointScreen> {
                 InterMedium(
                   text: widget.comment,
                   fontsize: 14.sp,
-                  color: isDark ? DarkColor.color21 : LightColor.color3,
+                  color: Theme.of(context).textTheme.displaySmall!.color,
                   maxLines: 3,
                 ),
                 SizedBox(height: 50.h),

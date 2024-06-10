@@ -287,9 +287,10 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                 ),
                                                 InterMedium(
                                                   text: allocationDateTime,
-                                                  color: isDark
-                                                      ? DarkColor.color17
-                                                      : LightColor.color3,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium!
+                                                      .color,
                                                 fontsize: 16.sp,
                                                 ),
                                               ],

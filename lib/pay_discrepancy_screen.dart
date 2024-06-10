@@ -90,9 +90,7 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                           child: InterBold(
                             text: '11/02/2024',
                             fontsize: 20.sp,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                         ),
                         SizedBox(height: 30.h),
@@ -117,15 +115,17 @@ class _PayDiscrepancyScreenState extends State<PayDiscrepancyScreen> {
                                   InterMedium(
                                         text: 'Discrepancy Title',
                                         fontsize: 16.sp,
-                                        color: isDark
-                                            ? DarkColor.color1
-                                            : LightColor.color3,
+                                        color:  Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                       ),
                                   InterMedium(
                                     text: '11:36 pm',
-                                    color: isDark
-                                        ? DarkColor.color17
-                                        : LightColor.color2,
+                                    color:  Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .color,
                                     fontsize: 16.sp,
                                   ),
                                 ],

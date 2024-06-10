@@ -118,7 +118,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                     InterBold(
                       text: 'Keys',
                       fontsize: 20.sp,
-                      color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     SizedBox(
                       height: 30.h,
@@ -142,7 +142,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: 20.sp,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       );
                     }
@@ -209,17 +209,19 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                   InterMedium(
                                     text: key['KeyName'],
                                     fontsize: 16.sp,
-                                    color: isDark
-                                        ? DarkColor.color1
-                                        : LightColor.color3,
+                                    color:  Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                 ],
                               ),
                               InterMedium(
                                 text: formattedTime,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 fontsize: 16.sp,
                               ),
                               SizedBox(width: 20.w),

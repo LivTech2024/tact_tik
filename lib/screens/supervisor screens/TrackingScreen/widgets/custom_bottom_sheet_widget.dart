@@ -379,9 +379,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 14,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color:  Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                   ],
@@ -396,9 +397,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w800,
                                                         fontSize: 16,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                     Text(
@@ -407,9 +409,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontSize: 14,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color:  Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                       ),
                                                     ),
                                                   ],
@@ -428,7 +431,8 @@ class CustomBottomSheetWidget extends StatelessWidget {
                           separatorBuilder: (BuildContext context, int index) {
                             return  Divider(
                               thickness: 0.5,
-                              color: isDark ? DarkColor.color1 : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             );
                           },
                         );

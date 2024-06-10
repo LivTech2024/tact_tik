@@ -211,7 +211,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                       text: '11/02/2024',
                       fontsize: width / width20,
                       color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                           Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -229,9 +229,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color:  Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -350,9 +348,10 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color:  Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   Icons.add,
                                   size: width / width20,
                                 ),

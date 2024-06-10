@@ -124,7 +124,7 @@ class ViewAssetsScreen extends StatelessWidget {
                           InterMedium(
                             text: startDate,
                             fontsize: 16.sp,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                           ),
                           SvgPicture.asset(
                             'assets/images/calendar_clock.svg',
@@ -148,7 +148,7 @@ class ViewAssetsScreen extends StatelessWidget {
                           InterMedium(
                             text: endDate,
                             fontsize: 16.sp,
-                            color: isDark ? DarkColor.color2 : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
                           ),
                           SvgPicture.asset(
                             'assets/images/calendar_clock.svg',
@@ -163,7 +163,7 @@ class ViewAssetsScreen extends StatelessWidget {
               SizedBox(height: 30.h),
               InterBold(
                 text: 'Equipment',
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color: Theme.of(context).textTheme.bodySmall!.color,
                 fontsize: 16.sp,
               ),
               SizedBox(height: 20.h),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -96,10 +97,11 @@ class _ShiftInformationState extends State<ShiftInformation> {
 
     return SafeArea(
       child: isLoading
-          ?  Scaffold(
+          ? Scaffold(
+              backgroundColor: Theme.of(context).canvasColor,
               body: Center(
                 child: CircularProgressIndicator(
-                  color:  isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             )
@@ -110,7 +112,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    
                   ),
                   padding: EdgeInsets.only(left: width / width20),
                   onPressed: () {
@@ -119,7 +120,6 @@ class _ShiftInformationState extends State<ShiftInformation> {
                 ),
                 title: InterMedium(
                   text: widget.toRequest ? 'Shift' : 'Shift- $guardName',
-                  
                 ),
                 centerTitle: widget.toRequest,
               ),
@@ -135,25 +135,29 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           InterBold(
                             text: "Guard Name : $guardName",
                             fontsize: width / width18,
-                            color: isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Shift Name : $shiftName',
                             fontsize: width / width18,
-                            color:  isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Details',
                             fontsize: width / width16,
-                            color:  isDark ? DarkColor.color1 : LightColor.color3,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height14),
                           InterRegular(
                             text: shiftDetails,
                             fontsize: width / width14,
-                            color:  isDark ? DarkColor.color2 : LightColor.color2,
+                            color:
+                                isDark ? DarkColor.color2 : LightColor.color2,
                             maxLines: 3,
                           ),
                           SizedBox(height: height / height30),
@@ -163,17 +167,13 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               InterBold(
                                 text: 'Supervisor :',
                                 fontsize: width / width16,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: supervisorName,
                                 fontsize: width / width14,
-                                color:  isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context).textTheme.bodyLarge!.color,
                               )
                             ],
                           ),
@@ -184,17 +184,13 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               InterBold(
                                 text: 'Time :',
                                 fontsize: width / width16,
-                                color:  isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: '${widget.startTime}-${widget.endTime}',
                                 fontsize: width / width14,
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context).textTheme.bodyLarge!.color,
                               ),
                             ],
                           ),
@@ -205,17 +201,13 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               Icon(
                                 Icons.location_on,
                                 size: width / width24,
-                                color:  isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: location,
                                 fontsize: width / width14,
-                                color:  isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context).textTheme.bodyLarge!.color,
                               ),
                             ],
                           ),
@@ -227,9 +219,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                 InterBold(
                                   text: '*Shift already taken',
                                   fontsize: width / width18,
-                                  color:  isDark
-                                      ? DarkColor.color1
-                                      : LightColor.color3,
+                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                 ),
                                 SizedBox(height: height / height30),
                                 Row(
@@ -238,16 +228,14 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                     InterBold(
                                       text: 'Time:',
                                       fontsize: width / width16,
-                                      color:  isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
                                     ),
                                     SizedBox(width: width / width4),
                                     InterRegular(
                                       text:
                                           '${widget.startTime}-${widget.endTime}',
                                       fontsize: width / width14,
-                                      color:  isDark
+                                      color: isDark
                                           ? DarkColor.color2
                                           : LightColor.color2,
                                     ),
@@ -269,12 +257,10 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               onAcceptShift(widget.empId, widget.shiftId);
                             }
                           },
-                          backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
+                          backgroundcolor: Theme.of(context).primaryColor,
                           borderRadius: width / width10,
                           fontsize: width / width18,
-                          color: isDark
-                              ? DarkColor.color1
-                              : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height100),
                       ],

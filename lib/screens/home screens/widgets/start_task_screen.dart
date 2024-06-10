@@ -441,9 +441,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: isDark
-                    ? Colors.transparent
-                    : LightColor.color3.withOpacity(.05),
+                color: Theme.of(context).shadowColor,
                 blurRadius: 5,
                 spreadRadius: 2,
                 offset: Offset(0, 3),
@@ -459,7 +457,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               SizedBox(height: 10.h),
               InterBold(
                 text: widget.ShiftDate,
-                color: isDark ? DarkColor.color1 : LightColor.color3,
+                color:  Theme.of(context).textTheme.bodyMedium!.color,
                 fontsize: 18.sp,
               ),
               SizedBox(height: 10.h),
@@ -468,7 +466,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   InterMedium(
                     text: 'location:',
                     fontsize: 14.sp,
-                    color: isDark ? DarkColor.color1 : LightColor.color3,
+                    color:  Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   SizedBox(width: 10.w),
                   InterRegular(
@@ -492,13 +490,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'In time',
                           fontsize: 28.sp,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
-                          color: isDark ? DarkColor.color7 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         clickedIn
@@ -523,13 +521,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'Out time',
                           fontsize: 28.sp,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: 18.99.sp,
-                          color: isDark ? DarkColor.color7 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(
@@ -566,9 +564,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: isDark
-                    ? Colors.transparent
-                    : LightColor.color3.withOpacity(.05),
+                color: Theme.of(context).shadowColor,
                 blurRadius: 5,
                 spreadRadius: 2,
                 offset: const Offset(0, 3),
@@ -785,7 +781,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                 ),
               ),
               VerticalDivider(
-                color: isDark ? Colors.white : LightColor.color3,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
               Expanded(
                 child: IgnorePointer(
@@ -876,9 +872,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                 return AlertDialog(
                                     title: InterRegular(
                                       text: 'Add Reason',
-                                      color: isDark
-                                          ? DarkColor.color22
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .color,
                                       fontsize: width / width12,
                                     ),
                                     content: Column(
@@ -898,9 +895,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         },
                                         child: InterRegular(
                                           text: 'Cancel',
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.color3,
+                                          color:  Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color,
                                         ),
                                       ),
                                       TextButton(
@@ -975,9 +973,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         },
                                         child: InterRegular(
                                           text: 'Submit',
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.color3,
+                                          color: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .color
                                         ),
                                       ),
                                     ]);

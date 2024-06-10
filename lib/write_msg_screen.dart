@@ -90,7 +90,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       text: 'Employee',
                       fontsize: width / width20,
                       color:
-                          isDark ? DarkColor.Primarycolor : LightColor.color3,
+                           Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: height / height30),
@@ -112,9 +112,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -128,9 +126,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                         children: [
                           InterMedium(
                             text: 'Send To Admin',
-                            color: isDark
-                                ? DarkColor.color8
-                                : LightColor.color3,
+                            color:  Theme.of(context).textTheme.labelSmall!.color,
                             fontsize: width / width16,
                             letterSpacing: -.3,
                           ),
@@ -154,9 +150,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color:Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),

@@ -100,9 +100,10 @@ class _SPanicScreenState extends State<SPanicScreen> {
                               child: InterBold(
                                 text: date,
                                 fontsize: 18.sp,
-                                color: isDark
-                                    ? DarkColor.color21
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                               ),
                             ),
                             SizedBox(height: 10.h),
@@ -118,10 +119,7 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
-                                        color: isDark
-                                            ? Colors.transparent
-                                            : LightColor.color3
-                                                .withOpacity(.05),
+                                        color:Theme.of(context).shadowColor,
                                         blurRadius: 5,
                                         spreadRadius: 2,
                                         offset: Offset(0, 3),
@@ -149,18 +147,20 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                           InterBold(
                                             text: createdBy,
                                             letterSpacing: -.3,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                         ],
                                       ),
                                       InterMedium(
                                         text: formattedTime,
                                         fontsize: 16.sp,
-                                        color: isDark
-                                            ? DarkColor.color1
-                                            : LightColor.color3,
+                                        color:  Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
                                       ),
                                     ],
                                   ),

@@ -101,15 +101,13 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color: Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
                   )
                 ],
-                color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
               ),
              
               padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -122,7 +120,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                         setState(() {
                           showGuards = true;
                           colors[0] =
-                              isDark ? DarkColor.Primarycolor : LightColor.color3;
+                              Theme.of(context).textTheme.bodySmall!.color;
                           colors[1] =  isDark ? DarkColor.Primarycolorlight : LightColor.color2;
                         });
                       },
@@ -138,7 +136,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                     ),
                   ),
                    VerticalDivider(
-                    color:  isDark ? DarkColor.Primarycolor : LightColor.color3,
+                    color:   Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   Expanded(
                     child: GestureDetector(
@@ -148,9 +146,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           colors[0] = isDark
                               ? DarkColor.Primarycolorlight
                               : LightColor.color2;
-                          colors[1] = isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3;
+                          colors[1] =  Theme.of(context).textTheme.bodySmall!.color;
                         });
                       },
                       child: SizedBox(
@@ -179,9 +175,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                             iconSize: 24.w,
                             dropdownColor: Theme.of(context).cardColor,
                             style: TextStyle(
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color3, fontSize: 14.sp),
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color, fontSize: 14.sp),
                             borderRadius:
                                 BorderRadius.circular(10.r),
                             value: dropdownValue,
@@ -232,9 +229,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -282,9 +277,10 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                           InterBold(
                                             text: 'name',
                                             letterSpacing: -.3,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                           ),
                                         ],
                                       ),

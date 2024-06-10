@@ -43,7 +43,9 @@ class DarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
-  List colors = isDark?[DarkColor.Primarycolor, DarkColor.color25]:[LightColor.color3, LightColor.color2];
+  List colors = isDark
+      ? [DarkColor.Primarycolor, DarkColor.color25]
+      : [LightColor.color3, LightColor.color2];
 
   bool showAllDARS = false;
 
@@ -100,8 +102,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
     return SafeArea(
       child: Scaffold(
-        // backgroundColor:
-        //     isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
         body: StreamBuilder<QuerySnapshot>(
           stream: _firestore
               .collection('EmployeesDAR')
@@ -116,7 +116,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                   child: Text('No DAR entries found.',
                       style: TextStyle(
                           color:
-                         Theme.of(context).textTheme.bodyMedium!.color)),
+                              Theme.of(context).textTheme.bodyMedium!.color)),
                 );
               }
 
@@ -163,7 +163,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 MaterialPageRoute(
                                   builder: (context) => DarOpenAllScreen(
                                     passdate: (document['EmpDarCreatedAt']
-                                    as Timestamp)
+                                            as Timestamp)
                                         .toDate(),
                                     Username: widget.Username,
                                     Empid: widget.EmpID,
@@ -181,9 +181,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: isDark
-                                        ? Colors.transparent
-                                        : LightColor.color3.withOpacity(.05),
+                                    color: Theme.of(context).shadowColor,
                                     blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
@@ -206,8 +204,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                 children: [
                                   InterBold(
                                     text: (document.data()
-                                    as Map<String, dynamic>)
-                                        .containsKey('EmpDarShiftName')
+                                                as Map<String, dynamic>)
+                                            .containsKey('EmpDarShiftName')
                                         ? document['EmpDarShiftName']
                                         : "",
                                     fontsize: 18.sp,
@@ -218,19 +216,20 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                   ),
                                   isNew
                                       ? InterBold(
-                                    text: "New",
-                                    fontsize: 18.sp,
-                                    color: Colors.green,
-                                  )
+                                          text: "New",
+                                          fontsize: 18.sp,
+                                          color: Colors.green,
+                                        )
                                       : SizedBox(),
                                   SizedBox(height: height10),
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
                                       fontsize: 16.sp,
-                                      color: isDark
-                                          ? DarkColor.color26
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .color,
                                       maxLines: 4,
                                     ),
                                   ),
@@ -250,11 +249,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                   
                     leading: IconButton(
                       icon: Icon(
                         Icons.arrow_back_ios,
-                      
                       ),
                       padding: EdgeInsets.only(left: 20.w),
                       onPressed: () {
@@ -263,7 +260,6 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                     ),
                     title: InterMedium(
                       text: 'DAR',
-                  
                     ),
                     // title: Text('DAR'),
                     centerTitle: true,
@@ -276,9 +272,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -320,7 +314,11 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
-                            child:  VerticalDivider(color: isDark?DarkColor.Primarycolor:LightColor.color3,),
+                            child: VerticalDivider(
+                              color: isDark
+                                  ? DarkColor.Primarycolor
+                                  : LightColor.color3,
+                            ),
                           ),
                           Expanded(
                             child: GestureDetector(

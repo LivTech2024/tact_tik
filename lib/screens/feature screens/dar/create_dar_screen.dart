@@ -319,6 +319,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+       
         appBar: AppBar(
           
           leading: IconButton(

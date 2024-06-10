@@ -499,9 +499,8 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3;
+                            colors[0] =
+                                Theme.of(context).textTheme.bodySmall!.color;
                             colors[1] =
                                 isDark ? DarkColor.color25 : LightColor.color2;
                           });
@@ -522,7 +521,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: VerticalDivider(
-                        color: isDark ? DarkColor.color2 : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     ),
                     Expanded(
@@ -532,9 +531,8 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                             showDARS = false;
                             colors[0] =
                                 isDark ? DarkColor.color25 : LightColor.color2;
-                            colors[1] = isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3;
+                            colors[1] =
+                                Theme.of(context).textTheme.bodySmall!.color;
                           });
                         },
                         child: Container(
@@ -564,9 +562,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               InterRegular(
                                 text: 'Shift Name :',
                                 fontsize: 20.sp,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                               ),
                               SizedBox(
                                 width: 6.w,
@@ -574,9 +573,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               Flexible(
                                 child: InterRegular(
                                   text: widget.ShiftName ?? 'Loading...',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color,
                                   fontsize: 20.sp,
                                 ),
                               ),
@@ -589,9 +589,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               InterRegular(
                                 text: 'Location :',
                                 fontsize: 20.sp,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                               ),
                               SizedBox(
                                 width: 6.w,
@@ -599,9 +600,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                               Flexible(
                                 child: InterRegular(
                                   text: widget.LocationName ?? 'Loading...',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.color3,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color,
                                   fontsize: 20.sp,
                                   maxLines: 3,
                                 ),
@@ -668,10 +670,8 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: isDark
-                                                      ? Colors.transparent
-                                                      : LightColor.color3
-                                                          .withOpacity(.05),
+                                                  color: Theme.of(context)
+                                                      .shadowColor,
                                                   blurRadius: 5,
                                                   spreadRadius: 2,
                                                   offset: const Offset(0, 3),
@@ -694,9 +694,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         "${data[index]['TileTime']}",
                                                     // '${hourlyShiftDetails[index]['startTime'] != null ? hourlyShiftDetails[index]['startTime']!.substring(0, 4) : ''} - ${hourlyShiftDetails[index]['endTime'] != null ? hourlyShiftDetails[index]['endTime']!.substring(0, 4) : ''}',
-                                                    color: isDark
-                                                        ? DarkColor.color21
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .color,
                                                   ),
                                                   SizedBox(
                                                     height: 10.h,
@@ -705,9 +706,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                                     text:
                                                         '${data[index]['TileContent']}',
                                                     fontsize: 16.w,
-                                                    color: isDark
-                                                        ? DarkColor.color12
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .displayLarge!
+                                                        .color,
                                                     maxLines: 5,
                                                   ),
                                                   SizedBox(height: 20.h),
@@ -861,9 +863,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                           InterBold(
                             text: 'Reports',
                             fontsize: 20.sp,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.color3,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                           SizedBox(height: 25.h),
                           FutureBuilder<

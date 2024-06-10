@@ -95,7 +95,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                         Icons.arrow_back_ios,
                         size: width / width24,
                         color:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     ),
                     IconButton(
@@ -107,7 +107,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                         Icons.arrow_forward_ios,
                         size: width / width24,
                         color:
-                            isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     )
                   ],

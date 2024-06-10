@@ -133,7 +133,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                     child: InterMedium(
                       text: 'No Logs Generated For\n${widget.empName}',
                       textAlign: TextAlign.center,
-                      color: isDark ? DarkColor.color1 : LightColor.color3,
+                      color:  Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   );
                 }
@@ -241,9 +241,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: isDark
-                        ? Colors.transparent
-                        : LightColor.color3.withOpacity(.05),
+                    color:Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
@@ -257,9 +255,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 children: [
                   InterBold(
                     text: widget.date,
-                    color: isDark
-                        ? DarkColor.color21
-                        : LightColor.color3,
+                    color:  Theme.of(context).textTheme.displaySmall!.color,
                     fontsize: 18.sp,
                   ),
                   Icon(
@@ -267,9 +263,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
                     size: 24.sp,
-                    color:  isDark
-                        ? DarkColor.color21
-                        : LightColor.color3,
+                    color:   Theme.of(context).textTheme.displaySmall!.color,
                   )
                 ],
               ),
@@ -282,7 +276,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: width / width18,
-                color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                color:  Theme.of(context).textTheme.bodySmall!.color,
               ),
               // ),
             ),

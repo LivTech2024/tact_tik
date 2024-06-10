@@ -130,12 +130,12 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
                         InterBold(
                           text: '',
                           fontsize: width / width18,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                         InterBold(
                           text: '$completedTaskCount/$totalTaskCount',
                           fontsize: width / width18,
-                          color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ],
                     ),

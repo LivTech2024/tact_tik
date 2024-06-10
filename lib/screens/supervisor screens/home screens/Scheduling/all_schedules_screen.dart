@@ -186,7 +186,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                     InterBold(
                       text: 'Search',
                       fontsize: 20.sp,
-                      color: isDark ? Colors.white : LightColor.color3,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                     SizedBox(height: 24.h),
                     Container(
@@ -195,9 +195,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -287,7 +285,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                               ? 'Today'
                               : '${date.toLocal().toIso8601String().split('T').first}',
                           fontsize: 20.sp,
-                          color: isDark ? DarkColor.color1 : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 24.h),
                         ...schedulesForDate.map((schedule) {
@@ -345,16 +343,18 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                         children: [
                                           InterSemibold(
                                             text: shiftName,
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(height: 5.h),
                                           InterRegular(
-                                            color: isDark
-                                                ? DarkColor.color1
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
                                             text: shiftLocation,
                                             maxLines: 1,
                                             fontsize: 14.sp,
@@ -385,9 +385,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                             InterRegular(
                                               text: 'Guards',
                                               fontsize: 14.sp,
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                             ),
                                             SizedBox(height: 12.h),
                                             Wrap(
@@ -410,9 +411,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                 if (employeeImages.length > 3)
                                                   CircleAvatar(
                                                     radius: 10.r,
-                                                    backgroundColor: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    backgroundColor:  Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                     child: InterMedium(
                                                       text:
                                                           '+${employeeImages.length - 3}',
@@ -432,9 +434,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           children: [
                                             InterRegular(
                                               text: 'Shift',
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                               fontsize: 14.sp,
                                             ),
                                             SizedBox(height: 5.h),
@@ -453,9 +456,10 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                                     ),
                                                     SizedBox(width: 6.w),
                                                     InterMedium(
-                                                      color: isDark
-                                                          ? DarkColor.color1
-                                                          : LightColor.color3,
+                                                      color:  Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       text:
                                                           '$shiftStartTime - $shiftEndTime',
                                                       fontsize: 14.sp,

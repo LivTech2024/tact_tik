@@ -566,9 +566,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         icon: Icons.location_on,
                         text: widget.p.title,
                         useBold: false,
-                        color: isDark
-                            ? DarkColor.color13
-                            : LightColor.color3,
+                        color:  Theme.of(context).textTheme.headlineMedium!.color as Color,
                       ),
                       SizedBox(height: height / height16),
                       Divider(
@@ -582,7 +580,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         icon: Icons.description,
                         text: widget.p.description,
                         useBold: false,
-                        color: isDark ? DarkColor.color13 : LightColor.color3,
+                        color: Theme.of(context).textTheme.headlineMedium!.color as Color,
                       ),
                       SizedBox(height: height / height16),
                       Divider(
@@ -597,7 +595,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         text:
                             'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
                         useBold: false,
-                        color: isDark ? DarkColor.color13 : LightColor.color3,
+                        color: Theme.of(context).textTheme.headlineMedium!.color as Color,
                       ),
                       SizedBox(height: height / height20),
                     ],
@@ -673,9 +671,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           width: width / width190,
                                           child: InterRegular(
                                             text: category.title,
-                                            color: isDark
-                                                ? DarkColor.color17
-                                                : LightColor.color3,
+                                            color:  Theme.of(context)
+                                                .textTheme
+                                                .displayMedium!
+                                                .color,
                                             fontsize: width / width18,
                                           ),
                                         ),
@@ -801,9 +800,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                   decoration:
                                                        BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: isDark
-                                                        ? DarkColor.color2
-                                                        : LightColor.color3,
+                                                    color:  Theme.of(context)
+                                                        .textTheme
+                                                        .bodyLarge!
+                                                        .color,
                                                   ),
                                                   child: Icon(
                                                     checkpoint.getFirstStatus(
@@ -833,9 +833,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     InterRegular(
                                                       text: checkpoint.title,
                                                       //Subcheckpoint
-                                                      color: isDark
-                                                          ? DarkColor.color17
-                                                          : LightColor.color3,
+                                                      color:  Theme.of(context)
+                                                          .textTheme
+                                                          .displayMedium!
+                                                          .color,
                                                       fontsize: width / width18,
                                                     ),
                                                     SizedBox(

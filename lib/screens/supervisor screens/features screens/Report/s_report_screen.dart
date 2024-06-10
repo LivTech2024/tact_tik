@@ -112,18 +112,13 @@ class _ReportScreenState extends State<SReportScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:isDark? DarkColor.Secondarycolor:LightColor.Secondarycolor,
+        
         appBar: AppBar(
-          shadowColor: isDark
-              ? Colors.transparent
-              : LightColor.color3.withOpacity(.1),
-          backgroundColor: isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-          elevation: 0,
+          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              color: isDark ? DarkColor.color1 : LightColor.color3,
-              size: 24.sp,
+             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -132,9 +127,7 @@ class _ReportScreenState extends State<SReportScreen> {
           ),
           title: InterMedium(
             text: 'Report',
-            fontsize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
-            letterSpacing: -.3,
+          
           ),
           centerTitle: true,
         ),
@@ -162,7 +155,7 @@ class _ReportScreenState extends State<SReportScreen> {
           },
           backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
           shape: CircleBorder(),
-          child: Icon(Icons.add,color: isDark ? DarkColor.color1 : LightColor.color3,),
+          child: Icon(Icons.add,color: Theme.of(context).textTheme.bodyMedium!.color,),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -196,9 +189,7 @@ class _ReportScreenState extends State<SReportScreen> {
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? Colors.transparent
-                                    : LightColor.color3.withOpacity(.1),
+                                color: Theme.of(context).shadowColor,
                                 blurRadius: 5,
                                 spreadRadius: 2,
                                 offset: Offset(0, 3),
@@ -214,7 +205,8 @@ class _ReportScreenState extends State<SReportScreen> {
                             child: InterRegular(
                               text: tittles[index],
                               fontsize: 16.sp,
-                              color: isDark ? DarkColor.color18 : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodyMedium!.color,
                             ),
                           ),
                         ),
@@ -239,7 +231,7 @@ class _ReportScreenState extends State<SReportScreen> {
                         if (groupReports.isNotEmpty)
                           InterBold(
                             text: groupDate,
-                            color: isDark ? DarkColor.Primarycolor : LightColor.color3,
+                            color:  Theme.of(context).textTheme.bodySmall!.color,
                             fontsize: 20.sp,
                           ),
                         SizedBox(height: 30.h),
@@ -287,9 +279,7 @@ class _ReportScreenState extends State<SReportScreen> {
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: isDark
-                                              ? Colors.transparent
-                                              : LightColor.color3.withOpacity(.1),
+                                          color: Theme.of(context).shadowColor,
                                           blurRadius: 5,
                                           spreadRadius: 2,
                                           offset: Offset(0, 3),
@@ -322,9 +312,10 @@ class _ReportScreenState extends State<SReportScreen> {
                                                 report['ReportName'],
                                                 style: TextStyle(
                                                   fontSize: 20.sp,
-                                                  color: isDark
-                                                      ? DarkColor.color2
-                                                      : LightColor.color3,
+                                                  color:  Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge!
+                                                      .color,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -341,26 +332,29 @@ class _ReportScreenState extends State<SReportScreen> {
                                                         text: 'CATEGORY: ',
                                                         fontsize:
                                                             14.w,
-                                                        color: isDark
-                                                            ? DarkColor.color32
-                                                            : LightColor.color3,
+                                                        color:  Theme.of(context)
+                                                            .textTheme
+                                                            .displayLarge!
+                                                            .color,
                                                       ),
                                                       InterRegular(
                                                         text: report[
                                                             'ReportCategoryName'],
                                                         fontsize:
                                                             14.w,
-                                                        color: isDark
-                                                            ? DarkColor.color26
-                                                            : LightColor.color3,
+                                                        color:  Theme.of(context)
+                                                            .textTheme
+                                                            .displayMedium!
+                                                            .color,
                                                       ),
                                                     ],
                                                   ),
                                                   InterRegular(
                                                     text: formattedTime,
-                                                    color: isDark
-                                                        ? DarkColor.color26
-                                                        : LightColor.color3,
+                                                    color:  Theme.of(context)
+                                                        .textTheme
+                                                        .displayMedium!
+                                                        .color,
                                                     fontsize: 14.w,
                                                   )
                                                 ],

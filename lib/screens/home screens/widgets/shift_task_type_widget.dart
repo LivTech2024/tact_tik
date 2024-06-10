@@ -270,9 +270,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         child: Icon(
                           Icons.qr_code_scanner,
                           size: width / width24,
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.color3,
+                          color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ),
                     ),
@@ -399,16 +397,14 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.transparent
-                                : LightColor.color3.withOpacity(.05),
+                            color: Theme.of(context).shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
                         color:
-                            isDark ? DarkColor.color15 : LightColor.WidgetColor,
+                             Theme.of(context).textTheme.titleMedium!.color,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -422,9 +418,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: isDark
-                                          ? Colors.transparent
-                                          : LightColor.color3.withOpacity(.05),
+                                      color:Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -447,9 +441,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                             ? Icons.done
                                             : Icons.add_a_photo,
                                     size: width / width24,
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.color3,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall!
+                                        .color,
                                   ),
                                 ),
                               ),
@@ -458,9 +453,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               ),
                               InterRegular(
                                 text: widget.taskName,
-                                color: isDark
-                                    ? DarkColor.color17
-                                    : LightColor.color3,
+                                color:  Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .color,
                                 fontsize: width / width18,
                               ),
                             ],
@@ -483,16 +479,18 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                         title: Text(
                                           'Report Qr',
                                           style: TextStyle(
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3),
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color),
                                         ),
                                         content: Text(
                                           'The scanned QR code does work.',
                                           style: TextStyle(
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color3),
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color),
                                         ),
                                         actions: [
                                           TextButton(
@@ -501,9 +499,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                             },
                                             child: Text("Cancel",
                                                 style: TextStyle(
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3)),
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color)),
                                           ),
                                           TextButton(
                                             onPressed: () {
@@ -621,9 +620,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: isDark
-                                        ? Colors.transparent
-                                        : LightColor.color3.withOpacity(.05),
+                                    color: Theme.of(context).shadowColor,
                                     blurRadius: 5,
                                     spreadRadius: 2,
                                     offset: Offset(0, 3),
@@ -635,9 +632,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             child: Center(
                               child: Icon(
                                 Icons.add,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                             ),
                           ),
