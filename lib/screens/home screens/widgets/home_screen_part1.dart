@@ -463,6 +463,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                             )));
                                 break;
                               case 'Assets Screen':
+                              case 'Assets Screen':
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

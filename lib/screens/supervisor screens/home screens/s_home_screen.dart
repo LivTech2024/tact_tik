@@ -36,6 +36,7 @@ import '../../get started/getstarted_screen.dart';
 import '../../home screens/widgets/grid_widget.dart';
 import '../../home screens/widgets/home_screen_part1.dart';
 import '../../home screens/widgets/homescreen_custom_navigation.dart';
+import '../../new guard/new_guard_screen.dart';
 import '../features screens/Report/select_reports_guards.dart';
 import '../features screens/assets/select_assets_guards.dart';
 import '../features screens/dar/select_dar_guards.dart';
@@ -247,7 +248,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.w),
-                  color: Theme.of(context).primaryColor, // Background color for the drawer header
+                  color: Theme.of(context)
+                      .primaryColor, // Background color for the drawer header
                 ),
                 child: Center(
                   child: Column(
@@ -455,7 +457,10 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               InterBold(
                                 text: 'All Guards',
                                 fontsize: 14.sp,
-                                color:Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               GestureDetector(
                                 onTap: () {},
@@ -482,19 +487,31 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              NewGuardScreen()));
+                                },
                                 child: Row(
                                   children: [
                                     Icon(
                                       Icons.add,
                                       size: 20.sp,
-                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     SizedBox(width: 10.w),
                                     InterBold(
                                       text: 'Add',
                                       fontsize: 14.sp,
-                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                   ],
                                 ),

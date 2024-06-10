@@ -39,7 +39,6 @@ class DarOpenAllScreen extends StatefulWidget {
 }
 
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
-  
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -510,8 +509,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           setState(() {
                             showDARS = true;
                             colors[0] = Theme.of(context).primaryColor;
-                            colors[1] =
-                                Theme.of(context).highlightColor;
+                            colors[1] = Theme.of(context).highlightColor;
                           });
                         },
                         child: Container(
@@ -538,8 +536,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = false;
-                            colors[0] =
-                                Theme.of(context).highlightColor;
+                            colors[0] = Theme.of(context).highlightColor;
                             colors[1] = Theme.of(context).primaryColor;
                           });
                         },
@@ -941,14 +938,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Reports for $hourKey',
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .color,
-                                          ),
+                                        InterRegular(
+                                          text: 'Reports for $hourKey',
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color,
+                                          fontsize: 12.sp,
                                         ),
                                         ...reportsForHour.map((report) {
                                           final timestampStr =
@@ -963,33 +959,42 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                             margin:
                                                 EdgeInsets.only(bottom: 30.h),
                                             height: 25.h,
-                                            color: const Color(0xFF7C7C7C),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Theme.of(context).cardColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10.r),
+                                            ),
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  width: 20.w,
+                                                  width: 10.w,
                                                   height: double.infinity,
-                                                  color: Colors.red,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.r)),
                                                 ),
                                                 SizedBox(width: 2.w),
                                                 Expanded(
-                                                  child: Text(
-                                                    '# ${report['ReportSearchId'] ?? ''}',
-                                                    style: const TextStyle(
-                                                      color: Color.fromARGB(
-                                                          255, 48, 48, 48),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                  child: InterMedium(
+                                                    text:
+                                                        '# ${report['ReportSearchId'] ?? ''}',
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .headlineMedium!
+                                                        .color,
                                                   ),
                                                 ),
                                                 SizedBox(width: 2.w),
-                                                Text(
-                                                  formattedTime,
-                                                  style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 48, 48, 48),
-                                                  ),
+                                                InterRegular(
+                                                  text: formattedTime,
+                                                  fontsize: 12.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .color,
                                                 ),
                                               ],
                                             ),

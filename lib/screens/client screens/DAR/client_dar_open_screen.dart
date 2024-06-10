@@ -10,6 +10,7 @@ import '../../../fonts/inter_semibold.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
+import 'client_open_dar_screen.dart';
 
 class ClientDarOpenScreen extends StatefulWidget {
   const ClientDarOpenScreen({super.key});
@@ -197,39 +198,48 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: 10,
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => Container(
-                    height: 46.h,
-                    width: double.maxFinite,
-                    margin: EdgeInsets.only(bottom: 10.h),
-                    decoration: BoxDecoration(
-                      color: DarkColor.WidgetColor,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 150.w,
-                          child: InterMedium(
-                            text: 'checkpointName',
-                            // color: color21,
-                            fontsize: 16.sp,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            InterSemibold(
-                                text: '02.00 - 03.00', fontsize: 16.sp),
-                            SizedBox(width: 5.w),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 24.sp,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      //   ClientOpenDarScreen
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ClientOpenDarScreen()));
+                    },
+                    child: Container(
+                      height: 46.h,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      decoration: BoxDecoration(
+                        color: DarkColor.WidgetColor,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 150.w,
+                            child: InterMedium(
+                              text: 'checkpointName',
+                              // color: color21,
+                              fontsize: 16.sp,
                             ),
-                          ],
-                        )
-                      ],
+                          ),
+                          Row(
+                            children: [
+                              InterSemibold(
+                                  text: '02.00 - 03.00', fontsize: 16.sp),
+                              SizedBox(width: 5.w),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 24.sp,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 )
