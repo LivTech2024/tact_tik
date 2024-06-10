@@ -27,7 +27,7 @@ import 'package:tact_tik/utils/theme_manager.dart';
 import 'package:tact_tik/utils/themes.dart';
 
 ThemeManager themeManager = ThemeManager();
-// bool isDark = true;
+bool isDark = true;
 // final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: darkTheme,
+            theme: ligthTheme,
             darkTheme: darkTheme,
             themeMode: themeManager.themeMode,
             // navigatorKey: navigatorKey,
