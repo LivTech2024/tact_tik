@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/utils/colors.dart';
@@ -20,21 +21,21 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-              ),
-              padding: EdgeInsets.only(left: 20.w),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: InterRegular(
-              text: "Reason",
-            ),
-            centerTitle: true,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
           ),
+          padding: EdgeInsets.only(left: 20.w),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: InterRegular(
+          text: "Reason",
+        ),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
@@ -42,7 +43,7 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 30.h),
-              InterSemibold(
+              InterBold(
                   text: 'Let us know why you have missed?', fontsize: 18.sp),
               SizedBox(height: 20.h),
               ListView.builder(
@@ -72,7 +73,7 @@ class _CheckReasonState extends State<CheckReason> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(minHeight: 50.h),
+      constraints: BoxConstraints(minHeight: 46.h),
       width: double.maxFinite,
       margin: EdgeInsets.only(bottom: 10.h),
       decoration: BoxDecoration(
@@ -84,9 +85,9 @@ class _CheckReasonState extends State<CheckReason> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10.h),
+          // SizedBox(height: 10.h),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
@@ -101,7 +102,7 @@ class _CheckReasonState extends State<CheckReason> {
                   ),
                   SizedBox(width: 10.w),
                   SizedBox(
-                    width: 120.w,
+                    width: 144.w,
                     child: InterMedium(
                       text: 'checkpointName',
                       // color: color21,
@@ -111,6 +112,7 @@ class _CheckReasonState extends State<CheckReason> {
                 ],
               ),
               IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {
                   print('clicked');
                   setState(() {
@@ -118,9 +120,9 @@ class _CheckReasonState extends State<CheckReason> {
                   });
                 },
                 icon: Transform.rotate(
-                  angle: 30, //set the angel
+                  angle: isExpand ? 30 : -30, //set the angel
                   child: Icon(
-                    Icons.arrow_back_ios,
+                    Icons.arrow_forward_ios,
                     size: 24.sp,
                   ),
                 ),

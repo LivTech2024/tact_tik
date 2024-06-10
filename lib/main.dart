@@ -103,7 +103,7 @@ class _MyAppState extends State<MyApp> {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return UncheckedPatrolScreen();
+            return ClientDarScreen();
           } else {
             return Scaffold(
 
