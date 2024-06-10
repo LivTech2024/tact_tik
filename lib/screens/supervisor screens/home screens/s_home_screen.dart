@@ -57,12 +57,6 @@ class SHomeScreen extends StatefulWidget {
 }
 
 class _SHomeScreenState extends State<SHomeScreen> {
-  List IconColors = [
-    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-    isDark ? DarkColor.color4 : LightColor.color3,
-    isDark ? DarkColor.color4 : LightColor.color3,
-    isDark ? DarkColor.color4 : LightColor.color3
-  ];
   int ScreenIndex = 0;
   List<DocumentSnapshot<Object?>> _guardsInfo = [];
   final GlobalKey<ScaffoldState> _scaffoldKeyS = GlobalKey();
@@ -83,56 +77,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
 
   bool NewMessage = false;
 
-  void ChangeScreenIndex(int index) {
-    setState(() {
-      ScreenIndex = index;
-      ChangeIconColor(index);
-      print(ScreenIndex);
-    });
-  }
-
-  void ChangeIconColor(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          IconColors[0] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[1] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          break;
-        case 1:
-          IconColors[0] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[1] =
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor;
-          IconColors[2] = isDark ? DarkColor.color4 : LightColor.color3;
-          IconColors[3] = isDark ? DarkColor.color4 : LightColor.color3;
-          break;
-        case 2:
-          IconColors[0] = DarkColor.Primarycolor;
-          IconColors[1] = DarkColor.color4;
-          IconColors[2] = DarkColor.color4;
-          IconColors[3] = DarkColor.color4;
-          ScreenIndex = 0;
-          NavigateScreen(AllSchedulesScreen(
-            BranchId: '9tgQzYBJTL3QqJKe34eJ',
-            CompanyId: 'aSvLtwII6Cjs7uCISBRR',
-          ));
-          break;
-        case 3:
-          IconColors[0] = DarkColor.Primarycolor;
-          IconColors[1] = DarkColor.color4;
-          IconColors[2] = DarkColor.color4;
-          IconColors[3] = DarkColor.color4;
-          ScreenIndex = 0;
-          NavigateScreen(SuperInboxScreen(
-            companyId: 'aSvLtwII6Cjs7uCISBRR',
-          ));
-          break;
-      }
-    });
-  }
-
   void NavigateScreen(Widget screen) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
@@ -140,17 +84,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
   @override
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
-    if (isDark) {
-      IconColors[0] = DarkColor.Primarycolor;
-      IconColors[1] = DarkColor.color4;
-      IconColors[2] = DarkColor.color4;
-      IconColors[3] = DarkColor.color4;
-    } else {
-      IconColors[0] = LightColor.Primarycolor;
-      IconColors[1] = LightColor.color3;
-      IconColors[2] = LightColor.color3;
-      IconColors[3] = LightColor.color3;
-    }
 
     ScreenIndex = 0;
     _getUserInfo();
@@ -200,7 +133,12 @@ class _SHomeScreenState extends State<SHomeScreen> {
     //     .of(context)
     //     .size
     //     .width;
-
+    List IconColors = [
+      Theme.of(context).primaryColor,
+      Theme.of(context).focusColor,
+      Theme.of(context).focusColor,
+      Theme.of(context).focusColor,
+    ];
     final List<List<String>> data = [
       ['assets/images/panic_mode.png', 'Panic Mode'],
       ['assets/images/site_tour.png', 'Track Guard'],
@@ -222,6 +160,54 @@ class _SHomeScreenState extends State<SHomeScreen> {
       });
     }
 
+    void ChangeIconColor(int index) {
+      setState(() {
+        switch (index) {
+          case 0:
+            IconColors[0] = Theme.of(context).primaryColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            break;
+          case 1:
+            IconColors[0] = Theme.of(context).focusColor;
+            IconColors[1] = Theme.of(context).primaryColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            break;
+          case 2:
+            IconColors[0] = Theme.of(context).focusColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            IconColors[2] = Theme.of(context).primaryColor;
+            IconColors[3] = Theme.of(context).focusColor;
+            ScreenIndex = 0;
+            NavigateScreen(AllSchedulesScreen(
+              BranchId: '9tgQzYBJTL3QqJKe34eJ',
+              CompanyId: 'aSvLtwII6Cjs7uCISBRR',
+            ));
+            break;
+          case 3:
+            IconColors[0] = Theme.of(context).focusColor;
+            IconColors[1] = Theme.of(context).focusColor;
+            IconColors[2] = Theme.of(context).focusColor;
+            IconColors[3] = Theme.of(context).primaryColor;
+            ScreenIndex = 0;
+            NavigateScreen(SuperInboxScreen(
+              companyId: 'aSvLtwII6Cjs7uCISBRR',
+            ));
+            break;
+        }
+      });
+    }
+
+    void ChangeScreenIndex(int index) {
+      setState(() {
+        ScreenIndex = index;
+        ChangeIconColor(index);
+        print(ScreenIndex);
+      });
+    }
+
     ListTile buildListTile(
         IconData icon, String title, int index, VoidCallback onPressed,
         {bool isLogout = false}) {
@@ -230,18 +216,19 @@ class _SHomeScreenState extends State<SHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isDark
-              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
-              : (isSelected
-                  ? LightColor.Primarycolor
-                  : LightColor.color3), // Change color based on selection
+          color: (isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .color), // Change color based on selection
           size: 24.w,
         ),
         title: PoppinsBold(
           text: title,
-          color: isDark
-              ? (isSelected ? DarkColor.Primarycolor : DarkColor.color3)
-              : (isSelected ? LightColor.Primarycolor : LightColor.color3),
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).textTheme.headlineSmall!.color,
           fontsize: 14.w,
         ),
         onTap: onPressed,
@@ -260,10 +247,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.w),
-                  color: isDark
-                      ? DarkColor.Primarycolor
-                      : LightColor
-                          .Primarycolor, // Background color for the drawer header
+                  color: Theme.of(context).primaryColor, // Background color for the drawer header
                 ),
                 child: Center(
                   child: Column(
@@ -275,7 +259,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               AssetImage('assets/images/default.png'),
                           foregroundImage: NetworkImage(_userImg),
                           radius: Platform.isIOS ? 40.r : 50.r,
-                          backgroundColor: DarkColor.Primarycolor,
+                          backgroundColor: Theme.of(context).primaryColor,
                           // maxRadius: width / width50,
                           // minRadius: width / width50,
                         ),
@@ -344,7 +328,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                     }),
                     buildListTile(Icons.swipe_down_alt, 'Theme', 5, () {
                       setState(() {
-                        isDark = !isDark;
+                        themeManager.toggleTheme();
                       });
                     }),
                   ],
@@ -409,20 +393,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Guards',
                             icon: Icons.add_task,
-                            color: isDark
-                                ? (ScreenIndex == 0
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 0
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
-                            textcolor: isDark
-                                ? (ScreenIndex == 0
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 0
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
+                            color: IconColors[0],
+                            textcolor: IconColors[0],
                           ),
                         ),
                         Bounce(
@@ -430,20 +402,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Explore',
                             icon: Icons.grid_view_rounded,
-                            color: isDark
-                                ? (ScreenIndex == 1
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 1
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
-                            textcolor: isDark
-                                ? (ScreenIndex == 1
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 1
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
+                            color: IconColors[1],
+                            textcolor: IconColors[1],
                           ),
                         ),
                         Bounce(
@@ -454,20 +414,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             SVG: 'assets/images/calendar_clock.svg',
                             text: 'Calendar',
                             icon: Icons.calendar_today,
-                            color: isDark
-                                ? (ScreenIndex == 2
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 2
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
-                            textcolor: isDark
-                                ? (ScreenIndex == 2
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 2
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
+                            color: IconColors[2],
+                            textcolor: IconColors[2],
                           ),
                         ),
                         Bounce(
@@ -483,20 +431,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     : 'assets/images/no_message.svg',
                             text: 'Message',
                             icon: Icons.chat_bubble_outline,
-                            color: isDark
-                                ? (ScreenIndex == 3
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 3
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
-                            textcolor: isDark
-                                ? (ScreenIndex == 3
-                                    ? DarkColor.color1
-                                    : DarkColor.color4)
-                                : (ScreenIndex == 3
-                                    ? LightColor.Primarycolor
-                                    : LightColor.color3),
+                            color: IconColors[3],
+                            textcolor: IconColors[3],
                           ),
                         ),
                       ],
@@ -519,9 +455,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                               InterBold(
                                 text: 'All Guards',
                                 fontsize: 14.sp,
-                                color: isDark
-                                    ? DarkColor.color1
-                                    : LightColor.color3,
+                                color:Theme.of(context).textTheme.bodyMedium!.color,
                               ),
                               GestureDetector(
                                 onTap: () {},
@@ -530,17 +464,37 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     Icon(
                                       Icons.add,
                                       size: 20.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     SizedBox(width: 10.w),
                                     InterBold(
                                       text: 'Add',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      size: 20.sp,
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    InterBold(
+                                      text: 'Add',
+                                      fontsize: 14.sp,
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
                                     ),
                                   ],
                                 ),
@@ -744,9 +698,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: isDark
-                  ? Colors.transparent
-                  : LightColor.color3.withOpacity(.05),
+              color: Theme.of(context).shadowColor,
               blurRadius: 5,
               spreadRadius: 2,
               offset: Offset(0, 3),
@@ -801,7 +753,7 @@ class _HomeScreenUserCardState extends State<HomeScreenUserCard> {
                       InterBold(
                         text: widget.guardsInfo['EmployeeName'] ?? "",
                         letterSpacing: -.3,
-                        color: isDark ? DarkColor.color1 : LightColor.color3,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                       ),
                     ],
                   ),

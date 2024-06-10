@@ -57,7 +57,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
               ),
             );
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor:Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -226,12 +226,10 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                                           .circular(
                                                           10.r),
                                                       color:
-                                                       isDark
-                                                          ? DarkColor.Primarycolorlight
-                                                          : LightColor.Primarycolorlight,
+                                                       Theme.of(context).primaryColorLight,
                                                     ),
                                                     child: Center(
-                                                      child: SvgPicture.asset(isDark?
+                                                      child: SvgPicture.asset(Theme.of(context).brightness==Brightness.dark?
                                                         'assets/images/man.svg': 'assets/images/man_light.svg',
                                                         height: 20.h,
                                                       ),
@@ -300,7 +298,7 @@ class _VisiTorsScreenState extends State<VisiTorsScreen> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 10.w),
                                           decoration: BoxDecoration(
-                                            color:  isDark
+                                            color:  Theme.of(context).brightness==Brightness.dark
                                                 ? DarkColor.colorRed
                                                 : LightColor.colorRed,
                                             borderRadius: BorderRadius.only(

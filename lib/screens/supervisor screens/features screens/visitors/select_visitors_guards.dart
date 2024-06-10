@@ -118,7 +118,7 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
+                                  color:  Theme.of(context).brightness == Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.color1,
                                   borderRadius:
@@ -161,11 +161,8 @@ class _SelectGuardsScreenState extends State<SelectVisitorsGuardsScreen> {
                                                       )
                                                     : BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                         image: DecorationImage(
                                                           image: AssetImage(
                                                               'assets/images/default.png'),

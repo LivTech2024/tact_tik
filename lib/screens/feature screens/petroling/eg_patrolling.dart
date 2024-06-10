@@ -817,9 +817,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 ),
                 uploadingLoading
                     ? CircularProgressIndicator(
-                        color: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
+                        color: Theme.of(context).primaryColor,
                       )
                     : Button1(
                         height: 30.h,
@@ -987,9 +985,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     ),
                     Button1(
                       text: 'START',
-                      backgroundcolor: isDark
-                          ? DarkColor.colorgreen
-                          : LightColor.WidgetColor,
+                      backgroundcolor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? DarkColor.colorgreen
+                              : LightColor.WidgetColor,
                       color: Colors.green,
                       borderRadius: 10.r,
                       onPressed: buttonClicked
@@ -1250,9 +1249,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             top: 10.h,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? DarkColor.color15
-                                                : LightColor.color1,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? DarkColor.color15
+                                                    : LightColor.color1,
                                             borderRadius:
                                                 BorderRadius.circular(10.r),
                                           ),
@@ -1266,7 +1267,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                     height: 48.h,
                                                     width: 48.w,
                                                     decoration: BoxDecoration(
-                                                      color: isDark
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
                                                           ? DarkColor.color16
                                                           : LightColor.color1,
                                                       borderRadius:
@@ -1279,9 +1282,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       width: 30.w,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor.color2
-                                                            : LightColor.color2,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyLarge!
+                                                            .color as Color,
                                                       ),
                                                       child: Icon(
                                                         checkpoint.getFirstStatus(
@@ -1299,11 +1303,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         .ShiftId) ==
                                                                 'checked'
                                                             ? Colors.green
-                                                            : (isDark
-                                                                ? DarkColor
-                                                                    .Primarycolor
-                                                                : LightColor
-                                                                    .color3),
+                                                            : (Theme.of(context)
+                                                                    .textTheme
+                                                                    .bodySmall!
+                                                                    .color
+                                                                as Color),
                                                       ),
                                                     ),
                                                   ),
@@ -1318,11 +1322,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           text:
                                                               checkpoint.title,
                                                           //Subcheckpoint
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .color17
-                                                              : LightColor
-                                                                  .color3,
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .displayMedium!
+                                                              .color as Color,
                                                           fontsize: 18.sp,
                                                         ),
                                                         SizedBox(
@@ -1336,11 +1340,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             ? InterRegular(
                                                                 text: checkpoint
                                                                     .timestamp,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .Primarycolor
-                                                                    : LightColor
-                                                                        .color3,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodySmall!
+                                                                    .color as Color,
                                                                 fontsize: 12.sp,
                                                               )
                                                             : SizedBox()
@@ -1360,7 +1364,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       width: 34.w,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
+                                                        color: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
                                                             ? DarkColor.color16
                                                             : LightColor.color1,
                                                       ),
@@ -1442,11 +1448,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           },
                                                           icon: Icon(
                                                             Icons.info,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color18
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium!
+                                                                .color as Color,
                                                             size: 24.sp,
                                                           ),
                                                           padding:
@@ -1464,7 +1470,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       width: 34.w,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
+                                                        color: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
                                                             ? DarkColor.color16
                                                             : LightColor.color1,
                                                       ),
@@ -1499,11 +1507,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           },
                                                           icon: Icon(
                                                             Icons.add_circle,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .Primarycolor
-                                                                : LightColor
-                                                                    .Primarycolor,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
                                                             size: 24.sp,
                                                           ),
                                                           padding:
@@ -1531,9 +1537,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     widget.p.CurrentStatus == 'started'
                         ? Button1(
                             text: 'END',
-                            backgroundcolor: isDark
-                                ? DarkColor.colorRed2
-                                : LightColor.colorRed,
+                            backgroundcolor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? DarkColor.colorRed2
+                                    : LightColor.colorRed,
                             color: Colors.redAccent,
                             borderRadius: 10,
                             onPressed: () async {
@@ -1594,7 +1601,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
             alignment: Alignment.center,
             margin: EdgeInsets.only(top: 10),
             child: CircularProgressIndicator(
-              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ),

@@ -8,6 +8,10 @@ var ligthTheme = ThemeData(
     canvasColor: LightColor.Secondarycolor,
     cardColor: LightColor.WidgetColor,
     primaryColor: LightColor.Primarycolor,
+    primaryColorLight: LightColor.Primarycolorlight,
+    hintColor: LightColor.color1,
+    highlightColor: LightColor.color2,
+    hoverColor: LightColor.color1,
     appBarTheme: AppBarTheme(
       backgroundColor: LightColor.AppBarcolor,
       elevation: 5,
@@ -24,7 +28,7 @@ var ligthTheme = ThemeData(
       ),
     ),
     focusColor: LightColor.color3,
-    shadowColor: LightColor.color3.withOpacity(.5),
+    shadowColor: LightColor.color3.withOpacity(.1),
     textTheme: const TextTheme(
       headlineSmall: TextStyle(
         color: LightColor.color3,
@@ -62,6 +66,9 @@ var ligthTheme = ThemeData(
       headlineMedium: TextStyle(
         color: LightColor.color3,
       ),
+      titleLarge: TextStyle(
+        color: LightColor.color3,
+      ),
     ));
 var darkTheme = ThemeData(
     scaffoldBackgroundColor: DarkColor.Secondarycolor,
@@ -69,6 +76,10 @@ var darkTheme = ThemeData(
     cardColor: DarkColor.WidgetColor,
     canvasColor: DarkColor.Secondarycolor,
     primaryColor: DarkColor.Primarycolor,
+    primaryColorLight: DarkColor.Primarycolorlight,
+    hintColor: DarkColor.color24,
+    highlightColor: DarkColor.color25,
+    hoverColor: DarkColor.color22,
     appBarTheme: AppBarTheme(
       backgroundColor: DarkColor.AppBarcolor,
       elevation: 0,
@@ -84,7 +95,6 @@ var darkTheme = ThemeData(
       ),
     ),
     shadowColor: Colors.transparent,
-    
     focusColor: DarkColor.color4,
     textTheme: const TextTheme(
       titleLarge: TextStyle(

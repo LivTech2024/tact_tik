@@ -181,7 +181,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               ),
                               Container(
                                 height: 100.h,
-                                color: isDark
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? DarkColor.colorRed
                                     : LightColor.colorRed,
                                 padding: EdgeInsets.symmetric(
@@ -302,9 +303,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ],
                                 ),
                                 onPressed: () {},
-                                backgroundcolor: isDark
-                                    ? DarkColor.Primarycolorlight
-                                    : LightColor.Primarycolorlight,
+                                backgroundcolor:Theme.of(context).primaryColorLight,
                                 useBorderRadius: true,
                                 MyBorderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(12.w),

@@ -43,7 +43,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Theme(
-            data: isDark?ThemeData.dark().copyWith(
+            data: Theme.of(context).brightness==Brightness.dark?ThemeData.dark().copyWith(
               colorScheme: ColorScheme.dark(
                 primary:  Color(0xFFCBA76B), // Background color
                 onPrimary:
@@ -71,7 +71,9 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     selectedYearTextStyle: TextStyle(
                       color:  Theme.of(context).textTheme.bodyLarge!.color,
                     ),
-                    selectedDayHighlightColor:isDark? Color(0xFF704600):LightColor.Primarycolor,
+                    selectedDayHighlightColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Color(0xFF704600):LightColor.Primarycolor,
                     currentDate: DateTime.now(),
                     selectableDayPredicate: _selectableDayPredicate,
                     dayBorderRadius: BorderRadius.circular(

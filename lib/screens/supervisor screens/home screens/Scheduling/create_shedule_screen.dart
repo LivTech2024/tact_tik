@@ -64,10 +64,6 @@ class CreateSheduleScreen extends StatefulWidget {
 class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   FireStoreService fireStoreService = FireStoreService();
 
-  List colors = [
-    isDark ? DarkColor.Primarycolor : LightColor.color3,
-    isDark ? DarkColor.color25 : LightColor.color2
-  ];
   List selectedGuards = [];
   String compId = "";
   List<TextEditingController> taskControllers = [];
@@ -307,7 +303,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                 Expanded(
                   child: SfDateRangePicker(
                     selectionTextStyle: TextStyle(
-                        color:  Theme.of(context).textTheme.bodySmall!.color),
+                        color: Theme.of(context).textTheme.bodySmall!.color),
                     // Use primary color here
                     selectionShape: DateRangePickerSelectionShape.circle,
                     selectionColor:
@@ -353,10 +349,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: isDark
-                  ? DarkColor.Primarycolor
-                  : LightColor.Primarycolor, // Change primary color to red
-              secondary: DarkColor.Primarycolor,
+              primary:
+                  Theme.of(context).primaryColor, // Change primary color to red
+              secondary: Theme.of(context).primaryColor,
             ),
           ),
           child: child!,
@@ -403,7 +398,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
           hintStyle: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
             fontSize: width / width18,
-            color:  Theme.of(context)
+            color: Theme.of(context)
                 .textTheme
                 .bodyLarge!
                 .color, // Change text color to white
@@ -649,6 +644,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List colors = [
+      Theme.of(context).textTheme.bodyLarge!.color,
+      Theme.of(context).highlightColor
+    ];
     int requiredEmp = 0;
     return SafeArea(
       child: Scaffold(
@@ -676,10 +675,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 decoration: BoxDecoration(
-                  color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? DarkColor.color24
+                      : LightColor.WidgetColor,
                   boxShadow: [
                     BoxShadow(
-                      color:  Theme.of(context).shadowColor,
+                      color: Theme.of(context).shadowColor,
                       blurRadius: 5,
                       spreadRadius: 2,
                       offset: Offset(0, 3),
@@ -703,8 +704,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                       ),
                     ),
                     VerticalDivider(
-                      color:
-                           Theme.of(context).textTheme.bodySmall!.color,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     Expanded(
                       child: GestureDetector(
@@ -735,7 +735,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               InterBold(
                                 text: 'Select Guards',
                                 fontsize: 16.sp,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -781,7 +781,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 child: InterBold(
                                   text: 'view all',
                                   fontsize: 14.sp,
-                                  color:  Theme.of(context)
+                                  color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
@@ -796,8 +796,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
-                                  color:  Theme.of(context)
-                                      .shadowColor,
+                                  color: Theme.of(context).shadowColor,
                                   blurRadius: 5,
                                   spreadRadius: 2,
                                   offset: Offset(0, 3),
@@ -836,16 +835,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         hintStyle: GoogleFonts.poppins(
                                           fontWeight: FontWeight.w300,
                                           fontSize: 18.w,
-                                          color: isDark
-                                              ? DarkColor.color2
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
                                         ),
                                         hintText: 'Search Guards',
                                         contentPadding: EdgeInsets.zero,
                                       ),
-                                      cursorColor: isDark
-                                          ? DarkColor.Primarycolor
-                                          : LightColor.Primarycolor,
+                                      cursorColor:
+                                          Theme.of(context).primaryColor,
                                     ),
                                     suggestionsCallback: suggestionsCallback,
                                     itemBuilder: (context, Guards guards) {
@@ -855,16 +854,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           width: 30.w,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
                                         ),
                                         title: InterRegular(
                                           text: guards.name,
-                                          color: isDark
-                                              ? DarkColor.color2
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .color,
                                         ),
                                       );
                                     },
@@ -875,9 +874,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ),
                                       child: InterRegular(
                                         text: 'No Such Screen found',
-                                        color: isDark
-                                            ? DarkColor.color2
-                                            : LightColor.color2,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
                                         fontsize: 18.sp,
                                       ),
                                     ),
@@ -905,16 +905,15 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   height: 44.h,
                                   width: 44.w,
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.Primarycolor,
+                                    color: Theme.of(context).primaryColor,
                                     borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Center(
                                     child: Icon(
                                       Icons.search,
                                       size: 20.w,
-                                      color: isDark
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
                                           ? DarkColor.Secondarycolor
                                           : LightColor.color1,
                                     ),
@@ -993,11 +992,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                                       : BoxDecoration(
                                                           shape:
                                                               BoxShape.circle,
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .Primarycolor
-                                                              : LightColor
-                                                                  .Primarycolor,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                           image:
                                                               DecorationImage(
                                                             image: AssetImage(
@@ -1044,7 +1041,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                             InterBold(
                                               text: guardName,
                                               fontsize: 14.sp,
-                                              color:  Theme.of(context)
+                                              color: Theme.of(context)
                                                   .textTheme
                                                   .displayMedium!
                                                   .color,
@@ -1063,7 +1060,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             text: 'Set Details',
                             fontsize: 16.sp,
                             color:
-                                 Theme.of(context).textTheme.bodyMedium!.color,
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: 10.h),
                           // Select Guard
@@ -1082,7 +1079,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               borderRadius: BorderRadius.circular(10.r),
                               border: Border(
                                 bottom: BorderSide(
-                                  color: isDark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1100,7 +1098,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 // Set icon color for enabled state
                                 dropdownColor: Theme.of(context).cardColor,
                                 style: TextStyle(
-                                    color:  Theme.of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color),
@@ -1120,12 +1118,12 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       children: [
                                         selectedPosition == value
                                             ? Icon(Icons.control_camera,
-                                                color:  Theme.of(context)
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color)
                                             : Icon(Icons.control_camera,
-                                                color:  Theme.of(context)
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge!
                                                     .color),
@@ -1134,11 +1132,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         InterRegular(
                                             text: value,
                                             color: selectedPosition == value
-                                                ?  Theme.of(context)
+                                                ? Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color
-                                                :  Theme.of(context)
+                                                : Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge!
                                                     .color),
@@ -1168,7 +1166,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             children: [
                               InterMedium(
                                 text: 'Selected dates: ',
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .color,
@@ -1179,7 +1177,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   Flexible(
                                     child: InterMedium(
                                       text: '${DateFormat('d').format(date)},',
-                                      color:  Theme.of(context)
+                                      color: Theme.of(context)
                                           .textTheme
                                           .bodyLarge!
                                           .color,
@@ -1214,7 +1212,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               borderRadius: BorderRadius.circular(10.r),
                               border: Border(
                                 bottom: BorderSide(
-                                  color: isDark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1225,14 +1224,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 isExpanded: true,
                                 iconSize: 24.w,
                                 icon: Icon(Icons.arrow_drop_down, size: 24.w),
-                                iconEnabledColor:  Theme.of(context)
+                                iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                                 // Set icon color for enabled state
                                 dropdownColor: Theme.of(context).cardColor,
                                 style: TextStyle(
-                                    color:  Theme.of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color),
@@ -1251,7 +1250,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       children: [
                                         selectedLocatin == value
                                             ? Icon(Icons.location_on,
-                                                color:  Theme.of(context)
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color)
@@ -1265,11 +1264,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         InterRegular(
                                             text: value,
                                             color: selectedLocatin == value
-                                                ?  Theme.of(context)
+                                                ? Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color
-                                                :  Theme.of(context)
+                                                : Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge!
                                                     .color),
@@ -1291,7 +1290,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               borderRadius: BorderRadius.circular(10.w),
                               border: Border(
                                 bottom: BorderSide(
-                                  color: isDark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.color3,
                                 ),
@@ -1302,14 +1302,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 isExpanded: true,
                                 iconSize: 24.w,
                                 icon: Icon(Icons.arrow_drop_down),
-                                iconEnabledColor:  Theme.of(context)
+                                iconEnabledColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
                                 // Set icon color for enabled state
                                 dropdownColor: Theme.of(context).cardColor,
                                 style: TextStyle(
-                                    color:  Theme.of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color),
@@ -1330,13 +1330,13 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         selectedClint == value
                                             ? Icon(
                                                 Icons.account_circle_outlined,
-                                                color:  Theme.of(context)
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color)
                                             : Icon(
                                                 Icons.account_circle_outlined,
-                                                color:  Theme.of(context)
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge!
                                                     .color),
@@ -1345,11 +1345,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                         InterRegular(
                                             text: value,
                                             color: selectedClint == value
-                                                ?  Theme.of(context)
+                                                ? Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color
-                                                :  Theme.of(context)
+                                                : Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge!
                                                     .color),
@@ -1390,9 +1390,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       ? Center(
                                           child: CircularProgressIndicator())
                                       : MultiSelectDropDown(
-                                          selectedOptionBackgroundColor: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
+                                          selectedOptionBackgroundColor:
+                                              Theme.of(context).primaryColor,
                                           dropdownBackgroundColor:
                                               Theme.of(context).cardColor,
                                           fieldBackgroundColor:
@@ -1535,9 +1534,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                           Row(
                             children: [
                               Checkbox(
-                                activeColor: Theme.of(context)
-                                    .primaryColor,
-                                checkColor:  Theme.of(context)
+                                activeColor: Theme.of(context).primaryColor,
+                                checkColor: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -1551,9 +1549,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               InterMedium(
                                 text: 'Enable Restricted Radius',
                                 fontsize: 16.w,
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                             ],
                           ),
@@ -1624,11 +1623,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                 print(errorMessage);
                               }
                             },
-                            backgroundcolor: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            backgroundcolor: Theme.of(context).primaryColor,
                             color:
-                                isDark ? DarkColor.color22 : LightColor.color1,
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? DarkColor.color22
+                                    : LightColor.color1,
                             borderRadius: 10.r,
                             fontsize: 14.sp,
                           ),
@@ -1759,7 +1758,8 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   Button1(
                                     height: 50.h,
                                     borderRadius: 10.w,
-                                    backgroundcolor: isDark
+                                    backgroundcolor: Theme.of(context).brightness ==
+                                            Brightness.dark
                                         ? DarkColor.color33
                                         : LightColor.WidgetColor,
                                     color: Theme.of(context)
@@ -1925,9 +1925,9 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       print("Shift Created/Updated");
                                     }
                                   },
-                                  backgroundcolor:  Theme.of(context)
-                                      .primaryColor,
-                                  color:  Theme.of(context)
+                                  backgroundcolor:
+                                      Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,

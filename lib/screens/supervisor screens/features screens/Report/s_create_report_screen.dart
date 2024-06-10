@@ -357,11 +357,9 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             ],
                           ),
                           Checkbox(
-                            activeColor: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            activeColor: Theme.of(context).primaryColor,
                             checkColor:
-                                isDark ? DarkColor.color1 : LightColor.color1,
+                                Colors.white,
                             value: isChecked,
                             onChanged: (bool? value) {
                               setState(() {
@@ -705,9 +703,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
+                        backgroundcolor:  Theme.of(context).primaryColor,
                         borderRadius: 10.h,
                       ),
                     ),

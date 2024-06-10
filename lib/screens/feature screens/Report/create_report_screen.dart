@@ -533,10 +533,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.Primarycolor,
-                                borderRadius: BorderRadius.circular(8.r),
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? DarkColor.WidgetColor : LightColor.Primarycolor,
+                              borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
@@ -748,10 +748,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
-                        borderRadius: 10.r,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                         borderRadius: 10.r,
                       ),
                     ),
                   ],

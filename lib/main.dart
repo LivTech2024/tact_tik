@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:async';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/screens/authChecker/authChecker.dart';
@@ -23,8 +23,10 @@ import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
 import 'package:tact_tik/utils/notification_api/firebase_notification_api.dart';
+import 'package:tact_tik/utils/theme_manager.dart';
 import 'package:tact_tik/utils/themes.dart';
 
+ThemeManager themeManager = ThemeManager();
 bool isDark = true;
 // final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
@@ -41,10 +43,31 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
 
-  // final ThemeChangeController = Get.put(UIProvider);
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    themeManager.addListener(ThemeListerner);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    themeManager.removeListener(ThemeListerner);
+    super.dispose();
+  }
+
+  ThemeListerner() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +78,9 @@ class MyApp extends StatelessWidget {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: darkTheme,
+            theme: ligthTheme,
             darkTheme: darkTheme,
-            themeMode: ThemeMode.dark,
+            themeMode: themeManager.themeMode,
             // navigatorKey: navigatorKey,
             // routes: {
             //   '/notification_screen': (context) => NotificationScreen(),
@@ -71,8 +94,6 @@ class MyApp extends StatelessWidget {
         );
       },
       child: OfflineBuilder(
-        //todo - need to implement specific online connectivity on the patrollling screen
-
         connectivityBuilder: (
           BuildContext context,
           ConnectivityResult connectivity,
@@ -83,14 +104,13 @@ class MyApp extends StatelessWidget {
             return AuthChecker();
           } else {
             return Scaffold(
-              backgroundColor:
-                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              
               body: Center(
                 child: InterSemibold(
                   text:
                       'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
             );

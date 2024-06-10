@@ -139,9 +139,8 @@ class _SPanicScreenState extends State<SPanicScreen> {
                                             backgroundImage: NetworkImage('url'), // Replace with actual image URL if available
                                             foregroundImage: AssetImage('assets/images/default.png'),
                                             radius: 20.r,
-                                            backgroundColor: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            backgroundColor:
+                                                Theme.of(context).primaryColor,
                                           ),
                                           SizedBox(width: 20.w),
                                           InterBold(

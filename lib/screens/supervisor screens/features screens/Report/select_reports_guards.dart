@@ -153,9 +153,8 @@ class _SelectGuardsScreenState extends State<SelectReportsGuardsScreen> {
                                           )
                                               : BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color: isDark
-                                                            ? DarkColor.Primarycolor
-                                                            : LightColor.Primarycolor,
+                                            color:  Theme.of(context)
+                                                            .primaryColor,
                                             image: DecorationImage(
                                               image:  AssetImage(
                                                   'assets/images/default.png'),

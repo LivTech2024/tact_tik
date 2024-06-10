@@ -43,9 +43,8 @@ class DarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
-  List colors = isDark
-      ? [DarkColor.Primarycolor, DarkColor.color25]
-      : [LightColor.color3, LightColor.color2];
+  
+     
 
   bool showAllDARS = false;
 
@@ -99,7 +98,10 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
     bool isNewEntry(DocumentSnapshot document) {
       return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
-
+List colors = [
+      Theme.of(context).textTheme.bodySmall,
+      Theme.of(context).highlightColor
+    ];
     return SafeArea(
       child: Scaffold(
         body: StreamBuilder<QuerySnapshot>(
@@ -279,9 +281,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                           )
                         ],
                         color: Theme.of(context).cardColor,
-                        // borderRadius: BorderRadius.circular(20.r),
+                        
                       ),
-                      // color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -294,9 +296,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                                       .textTheme
                                       .bodySmall!
                                       .color;
-                                  colors[1] = isDark
-                                      ? DarkColor.color25
-                                      : LightColor.color2;
+                                  colors[1] = Theme.of(context)
+                                      .highlightColor;
                                 });
                               },
                               child: Container(
@@ -315,9 +316,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
                             child: VerticalDivider(
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.color3,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           Expanded(
@@ -325,11 +325,9 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                                  // colors[0] = DarkColor.Primarycolor;
-                                  // colors[1] = DarkColor.Primarycolor;
-                                  colors[0] = isDark
-                                      ? DarkColor.color25
-                                      : LightColor.color2;
+                               
+                                  colors[0] = Theme.of(context)
+                                      .highlightColor;
                                   colors[1] = Theme.of(context)
                                       .textTheme
                                       .bodySmall!
@@ -338,9 +336,8 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
                               },
                               child: Container(
                                 height: 65.h,
-                                color: isDark
-                                    ? DarkColor.WidgetColor
-                                    : LightColor.WidgetColor,
+                                color: Theme.of(context)
+                                    .cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',

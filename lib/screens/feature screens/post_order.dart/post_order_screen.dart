@@ -357,21 +357,19 @@ class _PostOrderState extends State<PostOrder> {
                                                               PoppinsMedium(
                                                                 text:
                                                                     otherFileName,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .color16
-                                                                    : LightColor
-                                                                        .color3,
+                                                                color:Theme.of(context)
+                                                                    .textTheme
+                                                                    .titleLarge!
+                                                                    .color,
                                                                 fontsize: 12.sp,
                                                               ),
                                                               PoppinsRegular(
                                                                 text:
                                                                     otherFileSize,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .color16
-                                                                    : LightColor
-                                                                        .color3,
+                                                                color: Theme.of(context)
+                                                                    .textTheme
+                                                                    .titleLarge!
+                                                                    .color,
                                                                 fontsize: 10.sp,
                                                               )
                                                             ],

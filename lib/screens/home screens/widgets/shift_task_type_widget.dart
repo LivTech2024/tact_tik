@@ -259,7 +259,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
             ),
             margin: EdgeInsets.only(top: height / height10),
             decoration: BoxDecoration(
-              color: isDark ? DarkColor.color15 : LightColor.WidgetColor,
+              color: Theme.of(context).brightness==Brightness.dark ? DarkColor.color15 : LightColor.WidgetColor,
               borderRadius: BorderRadius.circular(width / width10),
             ),
             child: Row(
@@ -272,7 +272,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                       width: width / width48,
                       decoration: BoxDecoration(
                         color:
-                            isDark ? DarkColor.color16 : LightColor.WidgetColor,
+                            Theme.of(context).brightness == Brightness.dark ? DarkColor.color16 : LightColor.WidgetColor,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Center(
@@ -432,7 +432,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: isDark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? DarkColor.color16
                                       : LightColor.WidgetColor,
                                   borderRadius:
@@ -526,10 +527,8 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                             },
                                             child: Text('Submit',
                                                 style: TextStyle(
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor
-                                                            .Primarycolor)),
+                                                    color: Theme.of(context)
+                                                        .primaryColor)),
                                           ),
                                         ],
                                       );
@@ -651,14 +650,10 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         ),
                         FloatingActionButton(
                           onPressed: _uploadImages,
-                          backgroundColor: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          backgroundColor: Theme.of(context).primaryColor,
                           shape: CircleBorder(),
                           child: Icon(Icons.cloud_upload,
-                              color: isDark
-                                  ? DarkColor.color1
-                                  : LightColor.color1),
+                              color:Colors.white),
                         )
                       ],
                     ),

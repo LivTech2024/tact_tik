@@ -116,7 +116,9 @@ class SiteTourScreen extends StatelessWidget {
                                 gradient: LinearGradient(
                                   begin: Alignment(0, -1.5),
                                   end: Alignment.bottomCenter,
-                                  colors:isDark? [Colors.black, Colors.transparent]:[ Colors.transparent],
+                                  colors: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? [Colors.black, Colors.transparent]:[ Colors.transparent],
                                 ),
                               ),
                             ),
@@ -146,7 +148,7 @@ class SiteTourScreen extends StatelessWidget {
                                 InterBold(
                                   text: 'Site Tours',
                                   fontsize: 18.sp,
-                                  color: isDark?DarkColor.color1:LightColor.color3,
+                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -259,9 +261,7 @@ class SiteTourScreen extends StatelessWidget {
                                                     text: schedule[
                                                             'ShiftLocationAddress'] ??
                                                         'No Address',
-                                                    color: isDark
-                                                        ? DarkColor.color10
-                                                        : LightColor.color2,
+                                                    color: Theme.of(context).textTheme.labelMedium!.color,
                                                     fontsize: 16.sp,
                                                     maxLines: 1,
                                                   ),
@@ -293,9 +293,7 @@ class SiteTourScreen extends StatelessWidget {
                                             horizontal: 16.w,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color: Theme.of(context).primaryColor,
                                             borderRadius: BorderRadius.circular(
                                               16.r,
                                             ),
@@ -306,14 +304,12 @@ class SiteTourScreen extends StatelessWidget {
                                             children: [
                                               RobotoBold(
                                                 text: 'Get Direction',
-                                                color: isDark ? DarkColor.color1 : LightColor.color1,
+                                                color: Colors.white,
                                                 fontsize: 16.sp,
                                               ),
                                               Icon(
                                                 Icons.arrow_forward_sharp,
-                                                color: isDark
-                                                    ? DarkColor.color1
-                                                    : LightColor.color1,
+                                                color:Colors.white,
                                                 size: 24.sp,
                                               )
                                             ],
