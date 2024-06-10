@@ -27,7 +27,7 @@ import 'package:tact_tik/utils/theme_manager.dart';
 import 'package:tact_tik/utils/themes.dart';
 
 ThemeManager themeManager = ThemeManager();
-bool isDark = true;
+// bool isDark = true;
 // final navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -104,14 +104,13 @@ class _MyAppState extends State<MyApp> {
             return AuthChecker();
           } else {
             return Scaffold(
-              backgroundColor:
-                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              
               body: Center(
                 child: InterSemibold(
                   text:
                       'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
             );

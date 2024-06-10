@@ -190,11 +190,11 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
             horizontal: 20,
             vertical:10,
           ),
-          color: isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor  ,
+          color: Theme.of(context).canvasColor  ,
           child: Button1(
                         text: 'Done',
                         onPressed: (){},
-                        backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
+                        backgroundcolor: Theme.of(context).primaryColor,
                         borderRadius: width / width10,
                       ),
         ),
@@ -340,7 +340,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                               height: 66.w,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: isDark
+                                color: Theme.of(context).brightness == Brightness.dark
                                     ? DarkColor.WidgetColor
                                     : LightColor.Primarycolor,
                                 borderRadius:
@@ -411,9 +411,7 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                             
                            
                         },
-                        backgroundcolor: isDark
-                            ? DarkColor.Primarycolor
-                            : LightColor.Primarycolor,
+                        backgroundcolor: Theme.of(context).primaryColor,
                         borderRadius: width / width10,
                       ),
                     ),

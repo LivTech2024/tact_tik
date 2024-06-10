@@ -472,7 +472,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   InterRegular(
                     text: widget.ShiftAddressName,
                     fontsize: 14.sp,
-                    color: isDark ? DarkColor.color5 : LightColor.color2,
+                    color:  Theme.of(context).textTheme.bodyLarge!.color,
                   )
                 ],
               ),
@@ -768,12 +768,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           text: 'Start Shift',
                           fontsize: 18.sp,
                           color: clickedIn
-                              ? (isDark
-                                  ? DarkColor.Primarycolorlight
-                                  : LightColor.color2)
-                              : (isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor),
+                              ? (Theme.of(context).textTheme.bodySmall!.color)
+                              : (Theme.of(context).primaryColor),
                         ),
                       ),
                     ),
@@ -1078,10 +1074,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           text: 'End Shift',
                           fontsize: 18.sp,
                           color: clickedIn
-                              ? (isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor)
-                              : (isDark
+                              ? (Theme.of(context).textTheme.bodySmall!.color)
+                              : (Theme.of(context).brightness == Brightness.dark
                                   ? DarkColor.Primarycolorlight
                                   : LightColor.color2),
                         ),
@@ -1169,10 +1163,10 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             text: 'Check Patrolling',
             fontsize: 18.sp,
             color: clickedIn
-                ? (isDark ? DarkColor.color5 : LightColor.color1)
-                : (isDark ? DarkColor.color3 : LightColor.color5),
+                ? (Theme.of(context).brightness == Brightness.dark ? DarkColor.color5 : LightColor.color1)
+                : (Theme.of(context).brightness == Brightness.dark ? DarkColor.color3 : LightColor.color5),
             backgroundcolor:
-                isDark ? DarkColor.WidgetColor : LightColor.Primarycolor,
+                Theme.of(context).brightness == Brightness.dark ? DarkColor.WidgetColor : LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,

@@ -71,8 +71,8 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
             text: 'Submit',
             onPressed: (){},
             backgroundcolor:
-                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-            color: isDark ? DarkColor.color1 : LightColor.color1,
+               Theme.of(context).primaryColor,
+            color: Colors.white,
             borderRadius: width / width10,
             fontsize: width / width18,
           )

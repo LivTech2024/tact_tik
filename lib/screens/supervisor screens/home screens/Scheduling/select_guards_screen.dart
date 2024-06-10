@@ -159,7 +159,8 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                 child: Container(
                                   // height: 60,
                                   decoration: BoxDecoration(
-                                    color: isDark
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
                                         ? DarkColor.color19
                                         : LightColor.WidgetColor,
                                     borderRadius: BorderRadius.circular(12.h),
@@ -210,11 +211,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                       : BoxDecoration(
                                                           shape:
                                                               BoxShape.circle,
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .Primarycolor
-                                                              : LightColor
-                                                                  .Primarycolor,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                           image:
                                                               DecorationImage(
                                                             image: AssetImage(

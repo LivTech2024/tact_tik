@@ -694,9 +694,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                             height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
                             onPressed: submitDarTileData,
-                            backgroundcolor: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            backgroundcolor: Theme.of(context).primaryColor,
                             borderRadius: 10.r,
                           )
                         : SizedBox(),

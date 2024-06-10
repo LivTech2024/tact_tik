@@ -38,9 +38,7 @@ class SCreateKeyManagScreen extends StatefulWidget {
 }
 
 class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
-  List colors = isDark
-      ? [DarkColor.Primarycolor, DarkColor.color25]
-      : [LightColor.color3, LightColor.color2];
+
   bool isChecked = false;
   bool showCreate = true;
 
@@ -169,6 +167,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
   @override
   Widget build(BuildContext context) {
+     List colors = [
+      Theme.of(context).textTheme.bodyLarge!.color,
+      Theme.of(context).highlightColor
+    ];
     return SafeArea(
       child: Scaffold(
         backgroundColor:
@@ -200,7 +202,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                   Container(
                     height: 65.h,
                     width: double.maxFinite,
-                    color: isDark ? DarkColor.color24 : LightColor.WidgetColor,
+                    color:  Theme.of(context).brightness == Brightness.dark ? DarkColor.color24 : LightColor.WidgetColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -213,9 +215,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     .textTheme
                                     .bodySmall!
                                     .color;
-                                colors[1] = isDark
-                                    ? DarkColor.color25
-                                    : LightColor.color2;
+                                colors[1] =  Theme.of(context).highlightColor;
                               });
                             },
                             child: Container(
@@ -241,9 +241,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                             onTap: () {
                               setState(() {
                                 showCreate = false;
-                                colors[0] = isDark
-                                    ? DarkColor.color25
-                                    : LightColor.color2;
+                                colors[0] =  Theme.of(context).highlightColor;
                                 colors[1] =  Theme.of(context)
                                     .textTheme
                                     .bodySmall!
@@ -381,16 +379,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                             hintStyle: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w300,
                                               fontSize: 18.w,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color2,
+                                              color: Theme.of(context)
+                                                  .textTheme.bodyLarge!.color,
                                             ),
                                             hintText: 'Search Guards',
                                             contentPadding: EdgeInsets.zero,
                                           ),
-                                          cursorColor: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
+                                          cursorColor:  Theme.of(context).primaryColor,
                                         ),
                                         suggestionsCallback:
                                             suggestionsCallback,
@@ -401,16 +396,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                               width: 30.w,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.Primarycolor,
+                                                color:  Theme.of(context)
+                                                    .primaryColor,
                                               ),
                                             ),
                                             title: InterRegular(
                                               text: guards.name,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color2,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .color,
                                             ),
                                           );
                                         },
@@ -421,9 +416,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           ),
                                           child: InterRegular(
                                             text: 'No Such Screen found',
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color2,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .color,
                                             fontsize: 18.sp,
                                           ),
                                         ),
@@ -451,9 +447,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       height: 44.h,
                                       width: 44.w,
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        color: Theme.of(context).primaryColor,
                                         borderRadius:
                                             BorderRadius.circular(10.r),
                                       ),
@@ -461,7 +455,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         child: Icon(
                                           Icons.search,
                                           size: 20.w,
-                                          color: isDark
+                                          color:  Theme.of(context).brightness == Brightness.dark
                                               ? DarkColor.Secondarycolor
                                               : LightColor.color1,
                                         ),
@@ -511,11 +505,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                       )
                                                     : BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                         image: DecorationImage(
                                                           image: AssetImage(
                                                               'assets/images/default.png'),
@@ -652,9 +643,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                 .split(' ')[0]
                                             : 'Start Time',
                                         fontsize: 16.w,
-                                        color: isDark
-                                            ? DarkColor.color2
-                                            : LightColor.color2,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color,
                                       ),
                                       SvgPicture.asset(
                                         'assets/images/calendar_clock.svg',
@@ -698,9 +690,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                       .split(' ')[0]
                                                   : 'Start Time',
                                               fontsize: 16.sp,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color2,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
                                             ),
                                             SvgPicture.asset(
                                               'assets/images/calendar_clock.svg',
@@ -734,9 +727,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                                       .split(' ')[0]
                                                   : 'End Time',
                                               fontsize: 16.w,
-                                              color: isDark
-                                                  ? DarkColor.color2
-                                                  : LightColor.color2,
+                                              color:  Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .color,
                                             ),
                                             SvgPicture.asset(
                                               'assets/images/calendar_clock.svg',
@@ -772,9 +766,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   _saveData();
                                 },
                                 borderRadius: 10.r,
-                                backgroundcolor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
+                                backgroundcolor:  Theme.of(context).primaryColor,
                               ),
                               SizedBox(
                                 height: 20.h,
@@ -842,9 +834,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                   _saveData();
                                 },
                                 borderRadius: 10.r,
-                                backgroundcolor: isDark
-                                    ? DarkColor.Primarycolor
-                                    : LightColor.Primarycolor,
+                                backgroundcolor:  Theme.of(context).primaryColor,
                               ),
                               SizedBox(
                                 height: 20.h,

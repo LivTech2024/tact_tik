@@ -118,7 +118,7 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
                     Button1(
                       text: 'Done',
                       onPressed: saveTaskToFirestore,
-                      backgroundcolor: isDark? DarkColor.Primarycolor:LightColor.Primarycolor,
+                      backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: width / width10,
                     ),
                   ],

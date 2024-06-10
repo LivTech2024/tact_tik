@@ -131,9 +131,7 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                             letterSpacing: -.3,
                           ),
                           Checkbox(
-                            activeColor:  isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            activeColor: Theme.of(context).primaryColor,
                             checkColor: DarkColor.color1,
                             value: isChecked,
                             onChanged: (bool? value) {
@@ -174,12 +172,8 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       onPressed: () async {
                         
                       },
-                      color: isDark
-                          ? DarkColor.color1
-                          : LightColor.color1,
-                      backgroundcolor: isDark
-                          ? DarkColor.Primarycolor
-                          : LightColor.Primarycolor,
+                      color: DarkColor.color1,
+                      backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: width / width10,
                     ),
                   ],

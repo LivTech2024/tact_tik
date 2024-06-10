@@ -175,11 +175,8 @@ class _SelectGuardsScreenState extends State<SelectHistoryGuardsScreen> {
                                                       )
                                                     : BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: isDark
-                                                            ? DarkColor
-                                                                .Primarycolor
-                                                            : LightColor
-                                                                .Primarycolor,
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
                                                         image: DecorationImage(
                                                           image: AssetImage(
                                                               'assets/images/default.png'),

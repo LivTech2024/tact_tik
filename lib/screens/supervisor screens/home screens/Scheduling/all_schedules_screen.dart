@@ -152,7 +152,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
           child: FloatingActionButton(
             shape: const CircleBorder(),
             backgroundColor:
-                isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                Theme.of(context).primaryColor,
             onPressed: () {
               Navigator.push(
                   context,
@@ -169,7 +169,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
             },
             child: Icon(
               Icons.add,
-              color: isDark ? DarkColor.color15 : LightColor.color1,
+              color: Theme.of(context).brightness == Brightness.dark ? DarkColor.color15 : LightColor.color1,
             ),
           ),
         ),
@@ -225,33 +225,26 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                 hintStyle: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 18.sp,
-                                  color: isDark
-                                      ? Colors.white
-                                      : LightColor
-                                          .color3, // Change text color to white
+                                  color: Theme.of(context).textTheme.bodyMedium!.color, // Change text color to white
                                 ),
                                 hintText: 'Search',
                                 contentPadding: EdgeInsets.zero,
                               ),
-                              cursorColor: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
+                              cursorColor: Theme.of(context).primaryColor,
                             ),
                           ),
                           Container(
                             height: 44.h,
                             width: 44.w,
                             decoration: BoxDecoration(
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
+                              color: Theme.of(context).primaryColor,
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(
                               child: Icon(
                                 Icons.search,
                                 size: 20.w,
-                                color: isDark
+                                color: Theme.of(context).brightness == Brightness.dark
                                     ? DarkColor.Secondarycolor
                                     : LightColor.color1,
                               ),
@@ -327,9 +320,7 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                                           topRight: Radius.circular(10.r),
                                           bottomRight: Radius.circular(10.r),
                                         ),
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     SizedBox(width: 14.w),

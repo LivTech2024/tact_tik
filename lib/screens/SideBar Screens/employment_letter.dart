@@ -104,14 +104,13 @@ class EmploymentLetterScreen extends StatelessWidget {
                   child: InterBold(
                     text: '',
                     fontsize: 18.sp,
-                    color: isDark
-                        ? DarkColor.Primarycolor
-                        : LightColor.Primarycolor,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 Center(
                   child: SvgPicture.asset(
-                    isDark? 'assets/images/folder_dark.svg':
+                    Theme.of(context).brightness == Brightness.dark
+                        ? 'assets/images/folder_dark.svg':
                     'assets/images/folder.svg',
                     width: 190.w,
                   ),
@@ -138,7 +137,7 @@ class EmploymentLetterScreen extends StatelessWidget {
                     ],
                   ),
                   onPressed: () => _downloadAndOpenPdf(context),
-                  backgroundcolor: isDark ? DarkColor.Primarycolorlight : LightColor.Primarycolorlight,
+                  backgroundcolor: Theme.of(context).primaryColor,
                   useBorderRadius: true,
                   MyBorderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(12.w),

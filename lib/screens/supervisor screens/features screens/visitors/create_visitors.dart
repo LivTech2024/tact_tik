@@ -429,8 +429,8 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                               // Handle the case when saving or updating visitor data fails
                             }
                           },
-                          backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                          color: isDark ? DarkColor.color1 : LightColor.color1,
+                          backgroundcolor:  Theme.of(context).primaryColor,
+                          color:Colors.white,
                           borderRadius: 10.w,
                           fontsize: 18.sp,
                         ),

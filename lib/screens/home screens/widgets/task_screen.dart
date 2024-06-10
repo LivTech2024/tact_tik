@@ -296,9 +296,10 @@ class _TaskScreenState extends State<TaskScreen> {
                                                   InterBold(
                                                     text:
                                                         widget.ShiftDate ?? "",
-                                                    color: isDark
-                                                        ? DarkColor.color1
-                                                        : LightColor.color3,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                                     fontsize: width / width18,
                                                   ),
                                                   Row(
@@ -334,18 +335,17 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     children: [
                                                       InterMedium(
                                                         text: 'Out time',
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color,
                                                         fontsize:
                                                             width / width18,
                                                       ),
                                                       InterMedium(
                                                         text:
                                                             widget.ShiftEndTime,
-                                                        color: isDark
-                                                            ? DarkColor.color1
-                                                            : LightColor.color3,
+                                                        color:Theme.of(context).textTheme.bodyMedium!.color,
                                                         fontsize:
                                                             width / width16,
                                                       )
@@ -378,7 +378,9 @@ class _TaskScreenState extends State<TaskScreen> {
                                                     horizontal:
                                                         width / width26),
                                                 height: height / height90,
-                                                color: isDark
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
                                                     ? DarkColor.colorRed
                                                     : LightColor.colorRed,
                                                 child: Row(
@@ -454,8 +456,8 @@ class _TaskScreenState extends State<TaskScreen> {
                         text: 'Start Shift',
                         fontsize: width / width18,
                         color:
-                            isDark ? DarkColor.color5 : LightColor.WidgetColor,
-                        backgroundcolor: isDark
+                            Colors.white,
+                        backgroundcolor: Theme.of(context).brightness == Brightness.dark
                             ? DarkColor.WidgetColor
                             : LightColor.Primarycolor /*.withOpacity(50)*/,
                         onPressed: () async {

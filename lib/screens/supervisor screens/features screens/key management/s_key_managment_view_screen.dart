@@ -77,7 +77,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
               ),
             );
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -191,16 +191,12 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
                                           10.w),
-                                      color: isDark
-                                          ? DarkColor.Primarycolorlight
-                                          : LightColor.Primarycolorlight,
+                                      color: Theme.of(context).primaryColorLight,
                                     ),
                                     child: Center(
                                       child: Icon(
                                         Icons.vpn_key,
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        color: Theme.of(context).primaryColor,
                                         size: 24.w,
                                       ),
                                     ),

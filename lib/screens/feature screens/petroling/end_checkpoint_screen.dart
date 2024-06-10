@@ -496,9 +496,9 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                                 builder: (context) => HomeScreen()));
                         // }
                       },
-                      color: isDark ? DarkColor.color1 : LightColor.color1,
+                      color: Colors.white,
                       borderRadius: width / width20,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
                       height: height / height20,

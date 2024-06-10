@@ -180,9 +180,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             )
                           : BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
+                              color: Theme.of(context).primaryColor,
                               image: DecorationImage(
                                 image: AssetImage('assets/images/default.png'),
                                 filterQuality: FilterQuality.high,
@@ -221,10 +219,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 padding: EdgeInsets.all(2.sp),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor
-                                          .color3, // Background color for unread indicator
+                                  color:Theme.of(context).textTheme.bodySmall?.color, // Background color for unread indicator
                                 ),
                               ),
                             ),
@@ -345,7 +340,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               contentPadding: EdgeInsets.zero,
                               counterText: "",
                             ),
-                            cursorColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                            cursorColor: Theme.of(context).primaryColor,
                           ),
                           suggestionsCallback: suggestionsCallback,
                           itemBuilder: (context, Screens screen) {
@@ -500,9 +495,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         height: 43.h,
                         width: 43.w,
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? DarkColor.Primarycolor
-                              : LightColor.Primarycolor,
+                          color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(9.r),
                         ),
                         child: Center(

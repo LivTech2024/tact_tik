@@ -46,9 +46,7 @@ class _CreateVisitorsState extends State<CreateVisitors> {
   TimeOfDay? OutTime;
   bool _isLoading = false;
   bool showCreate = true;
-  List colors = [
-    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,  isDark ? DarkColor.color25 : LightColor.color2
-  ];
+  
   String? selectedKeyName;
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
@@ -133,8 +131,8 @@ class _CreateVisitorsState extends State<CreateVisitors> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: isDark ? DarkColor.Primarycolor : LightColor.Secondarycolor,
-              secondary: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              primary: Theme.of(context).brightness==Brightness.dark ? DarkColor.Primarycolor : LightColor.Secondarycolor,
+              secondary: Theme.of(context).primaryColor,
             ),
           ),
           child: child!,
@@ -283,7 +281,10 @@ class _CreateVisitorsState extends State<CreateVisitors> {
 
   @override
   Widget build(BuildContext context) {
-
+    List colors = [
+      Theme.of(context).textTheme.bodyMedium!.color,
+      Theme.of(context).highlightColor
+    ];
     bool isEditMode = widget.visitorData != null;
 
     var isFieldEnabled = widget.visitorData != null;

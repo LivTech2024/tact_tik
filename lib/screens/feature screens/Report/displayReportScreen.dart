@@ -288,7 +288,8 @@ class _CreateReportScreenState extends State<displayReport> {
                           isExpanded: true,
                           iconSize: width / width24,
                           dropdownColor: Theme.of(context).cardColor,
-                          style: TextStyle(color: isDark
+                          style: TextStyle(color: Theme.of(context).brightness ==
+                                      Brightness.dark
                                   ? DarkColor.color2
                                   : LightColor.color2),
                           borderRadius: BorderRadius.circular(10),
@@ -348,15 +349,14 @@ class _CreateReportScreenState extends State<displayReport> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: isDark
-                                    ? DarkColor.color2
-                                    : LightColor.color2,
+                                color: Theme.of(context).textTheme.bodyMedium!.color,
                                 size: width / width24,
                               ),
                               SizedBox(width: width / width6),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: isDark
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? DarkColor.color8
                                     : LightColor.color2,
                                 fontsize: width / width16,
@@ -695,7 +695,7 @@ class _CreateReportScreenState extends State<displayReport> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                        backgroundcolor: Theme.of(context).primaryColor,
                         borderRadius: width / width10,
                       ),
                     ),

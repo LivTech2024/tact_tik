@@ -39,7 +39,8 @@ class SupervisorTrackingScreen extends StatelessWidget {
             Get.back();
           },
         ),
-        backgroundColor: isDark? Color(0xff252525):LightColor.AppBarcolor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? Color(0xff252525):LightColor.AppBarcolor,
         centerTitle: true,
         title: InterMedium(
           text: 'Live Tracking',

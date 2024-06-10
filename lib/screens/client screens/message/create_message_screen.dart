@@ -145,7 +145,7 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                   children: [
                     Button1(
                       height: 60.h,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: 10.r,
                       fontsize: 18.sp,
                       color: DarkColor. color1,

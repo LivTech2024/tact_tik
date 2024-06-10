@@ -47,7 +47,7 @@ class PageType1 extends StatelessWidget {
             height: 470.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(40.r),
                 bottomLeft: Radius.circular(40.r),

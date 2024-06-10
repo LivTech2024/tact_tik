@@ -107,8 +107,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
             )
           : Scaffold(
               appBar: AppBar(
-                // backgroundColor:  isDark ? DarkColor.AppBarcolor : LightColor.AppBarcolor,
-                elevation: 0,
+                
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
@@ -157,7 +156,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                             text: shiftDetails,
                             fontsize: width / width14,
                             color:
-                                isDark ? DarkColor.color2 : LightColor.color2,
+                                Theme.of(context).textTheme.bodyLarge!.color,
                             maxLines: 3,
                           ),
                           SizedBox(height: height / height30),
@@ -235,9 +234,7 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                       text:
                                           '${widget.startTime}-${widget.endTime}',
                                       fontsize: width / width14,
-                                      color: isDark
-                                          ? DarkColor.color2
-                                          : LightColor.color2,
+                                      color: Theme.of(context).textTheme.bodyLarge!.color,
                                     ),
                                   ],
                                 ),

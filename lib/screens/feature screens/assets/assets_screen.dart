@@ -224,21 +224,15 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                             BorderRadius
                                                                 .circular(10.r),
                                                         color:
-                                                         isDark
-                                                            ? DarkColor
-                                                                .Primarycolorlight
-                                                            : LightColor
-                                                                .Primarycolorlight,
+                                                         Theme.of(context)
+                                                            .primaryColorLight,
                                                       ),
                                                       child: Center(
                                                         child: Icon(
                                                           Icons
                                                               .home_repair_service,
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .Primarycolor
-                                                              : LightColor
-                                                                  .Primarycolor,
+                                                          color: Theme.of(context)
+                                                                  .primaryColor,
                                                           size: 24.sp,
                                                         ),
                                                       ),
@@ -275,11 +269,11 @@ class _AssetsScreenState extends State<AssetsScreen> {
                                                         return InterMedium(
                                                           text: equipmentName,
                                                              fontsize: 16.sp,
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .color1
-                                                              : LightColor
-                                                                  .color3,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color!,
                                                         );
                                                       },
                                                     ),

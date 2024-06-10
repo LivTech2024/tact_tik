@@ -66,7 +66,7 @@ class LogTypeWidget extends StatelessWidget {
                     : type == LogBookEnum.shift_break
                     ? Icons.free_breakfast
                                 : Icons.error,
-                color:  isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                color: Theme.of(context).primaryColor,
                 size: 24.sp,
               ),
               SizedBox(width: 30.w),

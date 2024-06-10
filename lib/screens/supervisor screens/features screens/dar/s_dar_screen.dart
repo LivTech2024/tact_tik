@@ -43,9 +43,7 @@ class SDarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<SDarDisplayScreen> {
-  List colors = isDark
-      ? [DarkColor.Primarycolor, DarkColor.color25]
-      : [LightColor.color3, LightColor.color2];
+  
 
   bool showAllDARS = false;
 
@@ -98,6 +96,10 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
     bool isNewEntry(DocumentSnapshot document) {
       return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
+    List colors = [
+      Theme.of(context).textTheme.bodyLarge!.color,
+      Theme.of(context).highlightColor
+    ];
 
     return SafeArea(
       child: Scaffold(
@@ -283,12 +285,8 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor;
-                                  colors[1] = isDark
-                                      ? DarkColor.color25
-                                      : LightColor.color2;
+                                  colors[0] = Theme.of(context).primaryColor;
+                                  colors[1] = Theme.of(context).highlightColor;
                                 });
                               },
                               // child: Container(
@@ -315,12 +313,8 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
                                   showAllDARS = true;
                                   // colors[0] = DarkColor.Primarycolor;
                                   // colors[1] = DarkColor.Primarycolor;
-                                  colors[0] = isDark
-                                      ? DarkColor.color25
-                                      : LightColor.color2;
-                                  colors[1] = isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor;
+                                  colors[0] = Theme.of(context).highlightColor;
+                                  colors[1] = Theme.of(context).primaryColor;
                                 });
                               },
                               child: Container(

@@ -51,7 +51,7 @@ class PageType2 extends StatelessWidget {
             height: 470.h,
             width: double.maxFinite,
             decoration: BoxDecoration(
-              color: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(40.r),
                 bottomLeft: Radius.circular(40.r),
@@ -106,9 +106,7 @@ class PageType2 extends StatelessWidget {
                 margin: EdgeInsets.only(left: 24.w, right: 24.w, top: 74.h),
                 decoration: BoxDecoration(
            borderRadius: BorderRadius.circular(15.r),
-                  color: isDark
-                      ? DarkColor.Primarycolor
-                      : LightColor.Primarycolor,
+                  color:Theme.of(context).primaryColor,
                 ),
                 child: Center(
                   child: PoppinsMedium(
