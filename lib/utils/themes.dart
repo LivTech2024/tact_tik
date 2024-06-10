@@ -24,7 +24,7 @@ var ligthTheme = ThemeData(
       ),
     ),
     focusColor: LightColor.color3,
-    shadowColor: LightColor.color3.withOpacity(.5),
+    shadowColor: LightColor.color3.withOpacity(.1),
     textTheme: const TextTheme(
       headlineSmall: TextStyle(
         color: LightColor.color3,
@@ -130,3 +130,5 @@ var darkTheme = ThemeData(
         color: DarkColor.Primarycolor,
       ),
     ));
+
+

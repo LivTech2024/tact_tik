@@ -82,8 +82,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   bool _showWish = true;
   bool NewMessage = false;
 
-  
-
   void NavigateScreen(Widget screen, BuildContext context) {
     void NavigateScreen(Widget screen, BuildContext context) {
       // Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
@@ -438,8 +436,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
 
-    
-
     void ChangeIconColor(int index) {
       setState(() {
         switch (index) {
@@ -451,16 +447,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
             break;
           case 1:
             IconColors[0] = Theme.of(context).focusColor;
-            IconColors[1] =
-                Theme.of(context).primaryColor;
+            IconColors[1] = Theme.of(context).primaryColor;
             IconColors[2] = Theme.of(context).focusColor;
             IconColors[3] = Theme.of(context).focusColor;
             break;
           case 2:
             IconColors[0] = Theme.of(context).focusColor;
             IconColors[1] = Theme.of(context).focusColor;
-            IconColors[2] =
-                Theme.of(context).primaryColor;
+            IconColors[2] = Theme.of(context).primaryColor;
             IconColors[3] = Theme.of(context).focusColor;
 
             break;
@@ -468,14 +462,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
             IconColors[0] = Theme.of(context).focusColor;
             IconColors[1] = Theme.of(context).focusColor;
             IconColors[2] = Theme.of(context).focusColor;
-            IconColors[3] =
-               Theme.of(context).primaryColor;
+            IconColors[3] = Theme.of(context).primaryColor;
 
             break;
         }
       });
     }
-      void ChangeScreenIndex(int index) {
+
+    void ChangeScreenIndex(int index) {
       setState(() {
         ScreenIndex = index;
         ChangeIconColor(index);
@@ -486,6 +480,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           _showWish = true;
       });
     }
+
     ListTile buildListTile(
         IconData icon, String title, int index, VoidCallback onPressed,
         {bool isLogout = false}) {
@@ -494,8 +489,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       return ListTile(
         leading: Icon(
           icon,
-          color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).textTheme.headlineSmall!.color
-              , // Change color based on selection
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .color, // Change color based on selection
           size: 24.w,
         ),
         title: PoppinsBold(
@@ -593,7 +592,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                     ),
                     buildListTile(Icons.swipe_down_alt, 'Theme', 6, () {
                       setState(() {
-                        isDark = !isDark;
+                        themeManager.toggleTheme();
                       });
                     }),
                   ],
@@ -960,7 +959,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 10.r),
                                                       ),
                                                       color: Theme.of(context)
-                                                          .textTheme.titleSmall!.color,
+                                                          .textTheme
+                                                          .titleSmall!
+                                                          .color,
                                                     ),
                                                   ),
                                                   SizedBox(width: 14.w),
@@ -1573,7 +1574,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 InterRegular(
                                                   text: 'Supervisor',
                                                   fontsize: 17.sp,
-                                                  color:Theme.of(context).textTheme.headlineSmall!.color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall!
+                                                      .color,
                                                 ),
                                                 Row(
                                                   // mainAxisAlignment: MainAxisAlignment.end,
