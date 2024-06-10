@@ -401,7 +401,7 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       },
                       color: Colors.white,
                       borderRadius: width / width20,
-                      backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+                      backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
                       height: height / height20,

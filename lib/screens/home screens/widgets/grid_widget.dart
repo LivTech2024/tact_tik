@@ -47,7 +47,7 @@ class gridWidget extends StatelessWidget {
         SizedBox(height: 10.h),
         InterBold(
           text: tittle,
-          color: isDark? DarkColor.color25:LightColor.color3,
+          color: Theme.of(context).textTheme.headlineSmall!.color,
           fontsize: 16.sp,
           letterSpacing: -0.3,
         ),

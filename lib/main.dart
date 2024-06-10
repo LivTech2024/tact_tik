@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: darkTheme,
+            theme: ligthTheme,
             darkTheme: darkTheme,
             themeMode: themeManager.themeMode,
             // navigatorKey: navigatorKey,
@@ -104,14 +104,13 @@ class _MyAppState extends State<MyApp> {
             return AuthChecker();
           } else {
             return Scaffold(
-              backgroundColor:
-                  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+              
               body: Center(
                 child: InterSemibold(
                   text:
                       'No internet connection.\nConnect to Internet or Restart the app',
                   fontsize: 20.sp,
-                  color: isDark ? DarkColor.color1 : LightColor.color3,
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
                 ),
               ),
             );

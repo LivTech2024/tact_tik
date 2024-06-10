@@ -157,7 +157,7 @@ class _ReportScreenState extends State<ReportScreen> {
             });
           },
           backgroundColor:
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+            Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -238,9 +238,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         if (groupReports.isNotEmpty)
                           InterBold(
                             text: groupDate,
-                            color: isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor,
+                            color: Theme.of(context).primaryColor,
                             fontsize: 20.sp,
                           ),
                         SizedBox(height: 30.h),
@@ -306,7 +304,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                             right: 20.w,
                                           ),
                                           child: SvgPicture.asset(
-                                            isDark
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
                                                 ? 'assets/images/report_icon.svg'
                                                 : 'assets/images/report_icon_light.svg',
                                             height: 24.h,

@@ -38,9 +38,7 @@ class SDarOpenAllScreen extends StatefulWidget {
 }
 
 class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
-  List colors = isDark
-      ? [DarkColor.Primarycolor, DarkColor.color25]
-      : [LightColor.color3, LightColor.color2];
+  
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -466,6 +464,10 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List colors = [
+      Theme.of(context).textTheme.bodyLarge!.color,
+      Theme.of(context).highlightColor
+    ];
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -490,7 +492,7 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
               Container(
                 height: 65.h,
                 width: double.maxFinite,
-                color: isDark ? DarkColor.color24 : LightColor.color1,
+                color: Theme.of(context).brightness==Brightness.dark ? DarkColor.color24 : LightColor.color1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -502,12 +504,12 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                             colors[0] =
                                 Theme.of(context).textTheme.bodySmall!.color;
                             colors[1] =
-                                isDark ? DarkColor.color25 : LightColor.color2;
+                                Theme.of(context).highlightColor;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: isDark ? DarkColor.color24 : LightColor.color1,
+                          color: Theme.of(context).brightness == Brightness.dark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: 'Read',
@@ -530,14 +532,14 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                           setState(() {
                             showDARS = false;
                             colors[0] =
-                                isDark ? DarkColor.color25 : LightColor.color2;
+                               Theme.of(context).highlightColor;
                             colors[1] =
                                 Theme.of(context).textTheme.bodySmall!.color;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: isDark ? DarkColor.color24 : LightColor.color1,
+                          color: Theme.of(context).brightness == Brightness.dark ? DarkColor.color24 : LightColor.color1,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
@@ -938,7 +940,9 @@ class _DarOpenAllScreenState extends State<SDarOpenAllScreen> {
                                               Text(
                                                 formattedTime,
                                                 style: TextStyle(
-                                                  color: isDark
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
                                                       ? Color.fromARGB(
                                                           255, 48, 48, 48)
                                                       : LightColor.color3,

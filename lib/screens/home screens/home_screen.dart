@@ -729,7 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           await SharedPreferences.getInstance();
                                       setState(() async {
                                         themeManager.toggleTheme();
-                                        await prefs.setBool('Theme', isDark);
+                                        // await prefs.setBool('Theme', isDark);
                                         // SystemChannels.platform.invokeMethod(
                                         //     'SystemNavigator.pop');
                                       });

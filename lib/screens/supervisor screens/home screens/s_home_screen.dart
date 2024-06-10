@@ -488,17 +488,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     Icon(
                                       Icons.add,
                                       size: 20.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
                                     ),
                                     SizedBox(width: 10.w),
                                     InterBold(
                                       text: 'Add',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color1
-                                          : LightColor.color3,
+                                      color: Theme.of(context).textTheme.bodyMedium!.color,
                                     ),
                                   ],
                                 ),

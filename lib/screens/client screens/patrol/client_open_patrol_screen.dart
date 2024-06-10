@@ -212,9 +212,7 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                       topRight: Radius.circular(10.r),
                                       bottomRight: Radius.circular(10.r),
                                     ),
-                                    color: isDark
-                                        ? DarkColor.Primarycolor
-                                        : LightColor.Primarycolor,
+                                    color:Theme.of(context).primaryColor,
                                   ),
                                 ),
                               ],
@@ -258,9 +256,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                     InterRegular(
                                       text: 'Started at',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.h),
                                     InterMedium(
@@ -282,9 +281,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                     InterRegular(
                                       text: 'Ended at',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.h),
                                     InterMedium(
@@ -306,9 +306,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                     InterRegular(
                                       text: 'Count',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.sp),
                                     InterMedium(
@@ -330,9 +331,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                                     InterRegular(
                                       text: 'Status',
                                       fontsize: 14.sp,
-                                      color: isDark
-                                          ? DarkColor.color21
-                                          : LightColor.color2,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .color!,
                                     ),
                                     SizedBox(height: 12.h),
                                     InterBold(
@@ -354,9 +356,10 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                             children: [
                               InterRegular(
                                 text: 'Feedback :',
-                                color: isDark
-                                    ? DarkColor.color21
-                                    : LightColor.color2,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .displaySmall!
+                                    .color!,
                                 fontsize: 14.sp,
                               ),
                               SizedBox(width: 4.w),

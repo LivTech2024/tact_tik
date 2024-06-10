@@ -223,18 +223,14 @@ class _KeysScreenState extends State<KeysScreen> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
-                                                color: isDark
-                                                    ? DarkColor
-                                                        .Primarycolorlight
-                                                    : LightColor
-                                                        .Primarycolorlight,
+                                                color: Theme.of(context)
+                                                    .primaryColorLight,
                                               ),
                                               child: Center(
                                                 child: Icon(
                                                   Icons.home_repair_service,
-                                                  color: isDark
-                                                      ? DarkColor.Primarycolor
-                                                      : LightColor.Primarycolor,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
                                                   size: 24.sp,
                                                 ),
                                               ),
@@ -274,9 +270,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                         ),
                                         InterMedium(
                                           text: time,
-                                          color: isDark
-                                              ? DarkColor.color17
-                                              : LightColor.color2,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .displayMedium!
+                                              .color,
                                           fontsize: 16.sp,
                                         ),
                                         SizedBox(width: 20.w),

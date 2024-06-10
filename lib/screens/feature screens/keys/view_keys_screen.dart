@@ -219,9 +219,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.startDate, fontsize: 16.sp, color: isDark
-                                  ? DarkColor.color2
-                                  : LightColor.color2),
+                          InterMedium(text: widget.startDate, fontsize: 16.sp, color: Theme.of(context).textTheme.bodyLarge!.color),
                           SvgPicture.asset('assets/images/calendar_clock.svg', width: 20.w)
                         ],
                       ),
@@ -238,9 +236,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          InterMedium(text: widget.endDate, fontsize: 16.sp, color: isDark
-                                  ? DarkColor.color2
-                                  : LightColor.color2),
+                          InterMedium(text: widget.endDate, fontsize: 16.sp, color: Theme.of(context).textTheme.bodyLarge!.color),
                           SvgPicture.asset('assets/images/calendar_clock.svg', width: 20.w)
                         ],
                       ),
@@ -270,16 +266,13 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                           width: 44.w,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.r),
-                            color: isDark
-                                ? DarkColor.Primarycolorlight
-                                : LightColor.Primarycolorlight,
+                            color: Theme.of(context).primaryColorLight,
                           ),
                           child: Center(
                             child: Icon(
                               Icons.home_repair_service,
-                              color: isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
+                              color:
+                                  Theme.of(context).primaryColor,
                               size: 24.sp,
                             ),
                           ),
@@ -311,9 +304,7 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     ),
                     InterMedium(
                       text: widget.time,
-                      color: isDark
-                          ? DarkColor.color17
-                          : LightColor.color2,
+                      color: Theme.of(context).textTheme.displayMedium!.color,
                       fontsize: 16.sp,
                     ),
                     SizedBox(width: 20.w),
@@ -437,8 +428,8 @@ class _ViewAssetsScreenState extends State<ViewKeysScreen> {
                     onPressed: () async {
                       await _saveVisitorData();
                     },
-                    backgroundcolor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-                    color: isDark ? DarkColor.color22 : LightColor.color1,
+                    backgroundcolor: Theme.of(context).primaryColor ,
+                    color: Theme.of(context).hoverColor,
                     borderRadius: 10.r,
                     fontsize: 18.sp,
                   ),

@@ -27,7 +27,7 @@ class TaskFeatureScreen extends StatelessWidget {
                 ));
           },
           backgroundColor:
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+             Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,

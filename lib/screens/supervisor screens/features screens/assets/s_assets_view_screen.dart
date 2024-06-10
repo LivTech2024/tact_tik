@@ -77,7 +77,7 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                       SCreateAssignAssetScreen(companyId: widget.companyId, empId: '', OnlyView: false, equipemtAllocId: '',),
                 ));
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
@@ -196,16 +196,12 @@ class _SAssetsViewScreenState extends State<SAssetsViewScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                             10.w),
-                                        color: isDark
-                                            ? DarkColor.Primarycolorlight
-                                            : LightColor.Primarycolorlight,
+                                        color: Theme.of(context).primaryColorLight,
                                       ),
                                       child: Center(
                                         child: Icon(
                                           Icons.home_repair_service,
-                                          color: isDark
-                                              ? DarkColor.Primarycolor
-                                              : LightColor.Primarycolor,
+                                          color: Theme.of(context).primaryColor,
                                           size: 24.w,
                                         ),
                                       ),

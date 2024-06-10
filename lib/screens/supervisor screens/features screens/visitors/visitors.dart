@@ -47,8 +47,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:
-            isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+      
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -60,7 +59,7 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
             );
           },
           backgroundColor:
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+               Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(Icons.add),
         ),
@@ -236,15 +235,13 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10.r),
-                                                  color: isDark
-                                                      ? DarkColor
-                                                          .Primarycolorlight
-                                                      : LightColor
-                                                          .Primarycolorlight,
+                                                  color: Theme.of(context)
+                                                      .primaryColorLight,
                                                 ),
                                                 child: Center(
                                                   child: SvgPicture.asset(
-                                                    isDark
+                                                     Theme.of(context)
+                                                            .brightness == Brightness.dark
                                                         ? 'assets/images/man.svg'
                                                         : 'assets/images/man_light.svg',
                                                     height: 20.h,
@@ -286,9 +283,10 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                                         text: inTime,
                                                         fontsize:
                                                             12.w,
-                                                        color: isDark
-                                                            ? DarkColor.color3
-                                                            : LightColor.color2,
+                                                        color:  Theme.of(context)
+                                                            .textTheme
+                                                            .headlineSmall!
+                                                            .color,
                                                       )
                                                     ],
                                                   ),
@@ -308,9 +306,10 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                                         text: outTime,
                                                         fontsize:
                                                             12.sp,
-                                                        color: isDark
-                                                            ? DarkColor.color3
-                                                            : LightColor.color2,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .headlineSmall!
+                                                            .color,
                                                       )
                                                     ],
                                                   ),
@@ -326,7 +325,8 @@ class _VisiTorsScreenState extends State<SVisiTorsScreen> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 10.w),
                                           decoration: BoxDecoration(
-                                            color: isDark
+                                            color:  Theme.of(context)
+                                                    .brightness == Brightness.dark
                                                 ? DarkColor.colorRed
                                                 : LightColor.colorRed,
                                             borderRadius: BorderRadius.only(

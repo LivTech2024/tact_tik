@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   gradient: LinearGradient(
                     colors: [
                       Colors.black,
-                      isDark
+                      Theme.of(context).brightness == Brightness.dark
                           ? const Color(0xFF9C6400)
                           : LightColor.Primarycolor,
                     ],
@@ -180,9 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           color: _employeeImageUrl != null
                               ? Color(0xFFAC7310)
-                              : isDark
-                                  ? DarkColor.Primarycolor
-                                  : LightColor.Primarycolor,
+                              : Theme.of(context).primaryColor,
                           shape: BoxShape.circle,
                         ),
 
@@ -353,7 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: PoppinsRegular(
                     text: 'complete your profile !',
                     fontsize: 20.sp,
-                    color: isDark ? DarkColor.color3 : LightColor.color2,
+                    color: Theme.of(context).textTheme.headlineSmall!.color,
                   ),
                 )
             ],

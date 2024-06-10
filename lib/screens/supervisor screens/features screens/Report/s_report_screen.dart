@@ -153,7 +153,7 @@ class _ReportScreenState extends State<SReportScreen> {
               }
             });
           },
-          backgroundColor: isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+          backgroundColor:  Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(Icons.add,color: Theme.of(context).textTheme.bodyMedium!.color,),
         ),
@@ -295,7 +295,10 @@ class _ReportScreenState extends State<SReportScreen> {
                                           padding: EdgeInsets.only(
                                             right: 20.w,
                                           ),
-                                          child: SvgPicture.asset(isDark?
+                                          child: SvgPicture.asset(
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ?
                                             'assets/images/report_icon.svg':'assets/images/report_icon_light.svg',
                                             height: 24.h,
                                             fit: BoxFit.fitHeight,

@@ -48,16 +48,14 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.transparent
-                : LightColor.color3.withOpacity(.05),
+            color:Theme.of(context).shadowColor,
             blurRadius: 5,
             spreadRadius: 2,
             offset: Offset(0, 3),
           )
         ],
         borderRadius: BorderRadius.circular(10.r),
-        color: isDark ? DarkColor.WidgetColor : LightColor.WidgetColor,
+        color: Theme.of(context).cardColor,
       ),
       margin: EdgeInsets.only(top: 10.h),
       child: Center(
@@ -69,7 +67,7 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w300,
             fontSize: 18.sp,
-            color: isDark ? DarkColor.color1 : LightColor.color3,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
           ),
           onSubmitted: (value) {
             setState(() {
@@ -87,14 +85,14 @@ class _SetTextfieldWidgetState extends State<SetTextfieldWidget> {
             hintStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w300,
               fontSize: 18.sp,
-              color: isDark ? DarkColor.color2 : LightColor.color3,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
             ),
             hintText: widget.hintText,
             contentPadding: EdgeInsets.zero,
             counterText: "",
           ),
           cursorColor:
-              isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
+              Theme.of(context).primaryColor,
           controller: widget.controller,
           inputFormatters: widget.inputFormatters,
         ),

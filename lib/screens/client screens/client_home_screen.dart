@@ -818,9 +818,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                       10.r,
                                                     ),
                                                   ),
-                                                  color: isDark
-                                                      ? DarkColor.Primarycolor
-                                                      : LightColor.Primarycolor,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
                                                 ),
                                               ),
                                               SizedBox(width: 14.w),
@@ -895,11 +894,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                   children: [
                                                     Icon(
                                                       Icons.qr_code,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .Primarycolor
-                                                          : LightColor
-                                                              .Primarycolor,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
                                                       size: 24.sp,
                                                     ),
                                                     SizedBox(width: 4.w),
@@ -973,9 +969,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           margin: EdgeInsets.only(top: 10.h),
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color: Theme.of(context).primaryColor,
                                             borderRadius:
                                                 BorderRadius.circular(14.sp),
                                           ),
@@ -1020,11 +1014,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         InterSemibold(
                                                           text: shifts[index]
                                                               ['ShiftName'],
-                                                          color: isDark
-                                                              ? DarkColor
-                                                                  .color22
-                                                              : LightColor
-                                                                  .color3,
+                                                          color: Theme.of(context)
+                                                              .textTheme
+                                                              .titleSmall!
+                                                              .color,
                                                           fontsize: 14.sp,
                                                         ),
                                                         SizedBox(height: 5.h),
@@ -1062,11 +1055,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           InterRegular(
                                                             text: 'Guards',
                                                             fontsize: 14.sp,
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall!
+                                                                .color!,
                                                           ),
                                                           SizedBox(
                                                               height: 12.h),
@@ -1096,11 +1089,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                   3)
                                                                 CircleAvatar(
                                                                   radius: 12.r,
-                                                                  backgroundColor: isDark
-                                                                      ? DarkColor
-                                                                          .color22
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  backgroundColor: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .titleSmall!
+                                                                      .color!,
                                                                   child:
                                                                       InterMedium(
                                                                     text:
@@ -1123,11 +1116,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Started At',
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall!
+                                                                .color!,
                                                             fontsize: 14.sp,
                                                           ),
                                                           SizedBox(height: 5.h),
@@ -1137,11 +1130,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 Icons
                                                                     .check_circle_outlined,
                                                                 size: 24.w,
-                                                                color: isDark
-                                                                    ? DarkColor
-                                                                        .color22
-                                                                    : LightColor
-                                                                        .color3,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .titleSmall!
+                                                                    .color!,
                                                               ),
                                                               SizedBox(
                                                                   width: 6.w),
@@ -1165,11 +1158,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         children: [
                                                           InterRegular(
                                                             text: 'Ended At',
-                                                            color: isDark
-                                                                ? DarkColor
-                                                                    .color22
-                                                                : LightColor
-                                                                    .color3,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .titleSmall!
+                                                                .color!,
                                                             fontsize: 14.sp,
                                                           ),
                                                           SizedBox(height: 5.h),
@@ -1330,11 +1323,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'Report Name:',
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium!
+                                                                      .color!,
                                                                 ),
                                                                 InterMedium(
                                                                   text: reports[
@@ -1343,11 +1336,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'ReportName'],
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .headlineSmall!
+                                                                      .color!,
                                                                 ),
                                                               ],
                                                             ),
@@ -1366,11 +1359,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'Category:',
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium!
+                                                                      .color!,
                                                                 ),
                                                                 InterMedium(
                                                                   text: reports[
@@ -1379,11 +1372,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'ReportCategory'],
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .headlineSmall!
+                                                                      .color!,
                                                                 ),
                                                               ],
                                                             ),
@@ -1402,11 +1395,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'Emp Name:',
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium!
+                                                                      .color!,
                                                                 ),
                                                                 InterMedium(
                                                                   text: reports[
@@ -1415,11 +1408,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'ReportEmployeeName'],
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .headlineSmall!
+                                                                      .color!,
                                                                 ),
                                                               ],
                                                             ),
@@ -1438,11 +1431,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'Status:',
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color1
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium!
+                                                                      .color!,
                                                                 ),
                                                                 InterMedium(
                                                                   text: reports[
@@ -1451,11 +1444,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                       'ReportStatus'],
                                                                   fontsize:
                                                                       16.sp,
-                                                                  color: isDark
-                                                                      ? DarkColor
-                                                                          .color3
-                                                                      : LightColor
-                                                                          .color3,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .headlineSmall!
+                                                                      .color!,
                                                                 ),
                                                               ],
                                                             ),
@@ -1490,9 +1483,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         children: [
                                           InterBold(
                                             text: 'Received Message ',
-                                            color: isDark
-                                                ? DarkColor.Primarycolor
-                                                : LightColor.Primarycolor,
+                                            color:Theme.of(context).primaryColor,
                                             fontsize: 14.sp,
                                           ),
                                           Row(
@@ -1501,18 +1492,16 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             children: [
                                               Icon(
                                                 Icons.add,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.Primarycolor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                                 size: 20.sp,
                                               ),
                                               SizedBox(width: 4.w),
                                               InterBold(
                                                 text: 'Create Message',
                                                 fontsize: 14.sp,
-                                                color: isDark
-                                                    ? DarkColor.Primarycolor
-                                                    : LightColor.Primarycolor,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
                                                 maxLine: 2,
                                               )
                                             ],
@@ -1556,9 +1545,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 1,
-                                        color: isDark
-                                            ? DarkColor.Primarycolor
-                                            : LightColor.Primarycolor,
+                                        color: Theme.of(context)
+                                            .primaryColor,
                                       ),
                                     ),
                                     // color: WidgetColor,

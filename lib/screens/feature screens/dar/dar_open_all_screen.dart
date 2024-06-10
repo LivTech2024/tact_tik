@@ -39,10 +39,7 @@ class DarOpenAllScreen extends StatefulWidget {
 }
 
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
-  List colors = [
-    isDark ? DarkColor.Primarycolor : LightColor.Primarycolor,
-    DarkColor.color25
-  ];
+  
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
@@ -474,7 +471,10 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    List colors = [
+      Theme.of(context).primaryColor,
+      Theme.of(context).textTheme.labelLarge!.color!
+    ];
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -500,7 +500,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
               Container(
                 height: 65.h,
                 width: double.maxFinite,
-                color: isDark ? DarkColor.color24 : LightColor.color1,
+                color: Theme.of(context).hintColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -509,16 +509,14 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                         onTap: () {
                           setState(() {
                             showDARS = true;
-                            colors[0] = isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor;
+                            colors[0] = Theme.of(context).primaryColor;
                             colors[1] =
-                                isDark ? DarkColor.color25 : LightColor.color2;
+                                Theme.of(context).highlightColor;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: isDark ? DarkColor.color24 : LightColor.color1,
+                          color: Theme.of(context).hintColor,
                           child: Center(
                             child: InterBold(
                               text: widget.editable ? 'Edit' : 'Read',
@@ -532,7 +530,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: VerticalDivider(
-                        color: isDark ? DarkColor.color2 : LightColor.color2,
+                        color: Theme.of(context).highlightColor,
                       ),
                     ),
                     Expanded(
@@ -541,15 +539,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                           setState(() {
                             showDARS = false;
                             colors[0] =
-                                isDark ? DarkColor.color25 : LightColor.color2;
-                            colors[1] = isDark
-                                ? DarkColor.Primarycolor
-                                : LightColor.Primarycolor;
+                                Theme.of(context).highlightColor;
+                            colors[1] = Theme.of(context).primaryColor;
                           });
                         },
                         child: Container(
                           height: 65.h,
-                          color: isDark ? DarkColor.color24 : LightColor.color1,
+                          color: Theme.of(context).hintColor,
                           child: Center(
                             child: InterBold(
                               text: 'Reports',
@@ -610,9 +606,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                 child: InterRegular(
                                   text: _userService.shiftLocation ??
                                       'Loading...',
-                                  color: isDark
-                                      ? DarkColor.Primarycolor
-                                      : LightColor.Primarycolor,
+                                  color: Theme.of(context).primaryColor,
                                   fontsize: 20.w,
                                   maxLines: 3,
                                 ),

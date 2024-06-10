@@ -84,7 +84,7 @@ class _SPostOrderState extends State<SPostOrder> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor:  isDark ? DarkColor.Secondarycolor : LightColor.Secondarycolor,
+       
         body: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
           future: _locationDataFuture,
           builder: (context, snapshot) {
@@ -193,9 +193,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                         children: [
                                           InterBold(
                                             text: postOrderTitle,
-                                            color: isDark
-                                                ? DarkColor.color2
-                                                : LightColor.color2,
+                                            color: Theme.of(context).textTheme.bodyLarge!.color,
                                             fontsize: 14.sp,
                                           ),
                                           SizedBox(
@@ -206,9 +204,7 @@ class _SPostOrderState extends State<SPostOrder> {
                                             height: 46.h,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(10.r),
-                                              color: isDark
-                                                  ? DarkColor.color1
-                                                  : LightColor.color1,
+                                              color:Colors.white,
                                             ),
                                             child: Row(
                                               children: [
@@ -224,19 +220,11 @@ class _SPostOrderState extends State<SPostOrder> {
                                                   children: [
                                                     PoppinsMedium(
                                                       text: fileName,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .color15
-                                                          : LightColor
-                                                              .color3,
+                                                      color: Theme.of(context).textTheme.titleMedium!.color,
                                                     ),
                                                     PoppinsRegular(
                                                       text: fileSize,
-                                                      color: isDark
-                                                          ? DarkColor
-                                                              .color16
-                                                          : LightColor
-                                                              .color3,
+                                                      color: Theme.of(context).textTheme.titleLarge!.color,
                                                     )
                                                   ],
                                                 )
