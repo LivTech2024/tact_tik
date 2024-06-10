@@ -102,10 +102,9 @@ class _MyAppState extends State<MyApp> {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return ClientDarScreen();
+            return child;
           } else {
             return Scaffold(
-
               body: Center(
                 child: InterSemibold(
                   text:

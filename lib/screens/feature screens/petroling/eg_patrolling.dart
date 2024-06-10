@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:tact_tik/common/widgets/dialogList.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/unchecked_patrolss.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/report_checkpoint_screen.dart';
@@ -1553,6 +1554,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                               if (widget.p.Allchecked == false) {
                                 showErrorToast(context,
                                     "Complete all the checkpoints ${widget.p.PatrolId}");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UncheckedPatrolScreen()));
                                 // showCustomDialog(
                                 //     context,
                                 //     "Incomplete Checkpoints, Do you want to ",

@@ -118,7 +118,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Shifts')
-          .where('ShiftClientId', isEqualTo: "POt8iM9gm5RUCW8UkrSf")
+          .where('ShiftClientId', isEqualTo: _employeeId)
           .get();
       print('Snapshot ${querySnapshot}');
       List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
@@ -129,7 +129,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
-          // 'members': data['members'],
+          'members': data['members'],
         };
       }).toList();
 
@@ -280,105 +280,105 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           //   });
         }
 
-        if (shiftInfo != null) {
-          String shiftDateStr =
-              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
-          String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
-          String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
-          String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
-          String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
-          String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
+        // if (shiftInfo != null) {
+        //   String shiftDateStr =
+        //       DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+        //   String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
+        //   String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
+        //   String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
+        //   String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
+        //   String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
 
-          String shiftName = shiftInfo['ShiftName'] ?? " ";
-          String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
-          double shiftLocationLatitude = shiftGeolocation.latitude;
-          double shiftLocationLongitude = shiftGeolocation.longitude;
-          String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
-          String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
-          String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+        //   String shiftName = shiftInfo['ShiftName'] ?? " ";
+        //   String shiftId = shiftInfo['ShiftId'] ?? " ";
+        //   GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
+        //   double shiftLocationLatitude = shiftGeolocation.latitude;
+        //   double shiftLocationLongitude = shiftGeolocation.longitude;
+        //   String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
+        //   String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
+        //   String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
 
-          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
-          bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
-          // String ShiftClientId = shiftInfo['ShiftClientId'];
-          // EmpEmail: _empEmail,
-          //                     Branchid: _branchId,
-          //                     cmpId: _cmpId,
-          // String employeeImg = shiftInfo['EmployeeImg'];
-          setState(() {
-            _ShiftDate = shiftDateStr;
-            _ShiftEndTime = shiftEndTimeStr;
-            _ShiftStartTime = shiftStartTimeStr;
-            _ShiftLocation = shiftLocation;
-            _ShiftLocationName = shiftLocationName;
-            _ShiftName = shiftName;
-            _shiftLatitude = shiftLocationLatitude;
-            _shiftLongitude = shiftLocationLongitude;
-            _shiftId = shiftId;
-            _shiftRestrictedRadius = ShiftRestrictedRadius;
-            _ShiftCompanyId = shiftCompanyId;
-            _ShiftBranchId = companyBranchId;
-            _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
-            _shiftLocationId = shiftLocationId;
-            _shiftCLientId = shiftClientId;
-            // _shiftCLientId = ShiftClientId;
-            // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
-            DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
-            if (!selectedDates
-                .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
-              setState(() {
-                selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
-              });
-            }
-            if (!selectedDates.any((date) =>
-                date!.year == shiftDateTime.year &&
-                date.month == shiftDateTime.month &&
-                date.day == shiftDateTime.day)) {
-              setState(() {
-                selectedDates.add(shiftDateTime);
-              });
-            }
-            // storage.setItem("shiftId", shiftId);
-            // storage.setItem("EmpId", EmployeeId);
+        //   int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
+        //   bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
+        //   // String ShiftClientId = shiftInfo['ShiftClientId'];
+        //   // EmpEmail: _empEmail,
+        //   //                     Branchid: _branchId,
+        //   //                     cmpId: _cmpId,
+        //   // String employeeImg = shiftInfo['EmployeeImg'];
+        //   setState(() {
+        //     _ShiftDate = shiftDateStr;
+        //     _ShiftEndTime = shiftEndTimeStr;
+        //     _ShiftStartTime = shiftStartTimeStr;
+        //     _ShiftLocation = shiftLocation;
+        //     _ShiftLocationName = shiftLocationName;
+        //     _ShiftName = shiftName;
+        //     _shiftLatitude = shiftLocationLatitude;
+        //     _shiftLongitude = shiftLocationLongitude;
+        //     _shiftId = shiftId;
+        //     _shiftRestrictedRadius = ShiftRestrictedRadius;
+        //     _ShiftCompanyId = shiftCompanyId;
+        //     _ShiftBranchId = companyBranchId;
+        //     _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
+        //     _shiftLocationId = shiftLocationId;
+        //     _shiftCLientId = shiftClientId;
+        //     // _shiftCLientId = ShiftClientId;
+        //     // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
+        //     DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
+        //     if (!selectedDates
+        //         .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
+        //       setState(() {
+        //         selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+        //       });
+        //     }
+        //     if (!selectedDates.any((date) =>
+        //         date!.year == shiftDateTime.year &&
+        //         date.month == shiftDateTime.month &&
+        //         date.day == shiftDateTime.day)) {
+        //       setState(() {
+        //         selectedDates.add(shiftDateTime);
+        //       });
+        //     }
+        //     // storage.setItem("shiftId", shiftId);
+        //     // storage.setItem("EmpId", EmployeeId);
 
-            // _employeeImg = employeeImg;
-          });
-          print('Shift Info: ${shiftInfo.data()}');
+        //     // _employeeImg = employeeImg;
+        //   });
+        //   print('Shift Info: ${shiftInfo.data()}');
 
-          Future<void> printAllSchedules(String empId) async {
-            var getAllSchedules = await fireStoreService.getAllSchedules(empId);
-            if (getAllSchedules.isNotEmpty) {
-              getAllSchedules.forEach((doc) {
-                var data = doc.data() as Map<String, dynamic>?;
-                if (data != null && data['ShiftDate'] != null) {
-                  var shiftDate = data['ShiftDate'] as Timestamp;
-                  var date = DateTime.fromMillisecondsSinceEpoch(
-                      shiftDate.seconds * 1000);
-                  var formattedDate = DateFormat('yyyy-MM-dd').format(date);
-                  if (!selectedDates.contains(DateTime.parse(formattedDate))) {
-                    setState(() {
-                      selectedDates.add(DateTime.parse(formattedDate));
-                    });
-                  }
-                  // Format the date
-                  print("ShiftDate: $formattedDate");
-                }
+        //   Future<void> printAllSchedules(String empId) async {
+        //     var getAllSchedules = await fireStoreService.getAllSchedules(empId);
+        //     if (getAllSchedules.isNotEmpty) {
+        //       getAllSchedules.forEach((doc) {
+        //         var data = doc.data() as Map<String, dynamic>?;
+        //         if (data != null && data['ShiftDate'] != null) {
+        //           var shiftDate = data['ShiftDate'] as Timestamp;
+        //           var date = DateTime.fromMillisecondsSinceEpoch(
+        //               shiftDate.seconds * 1000);
+        //           var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+        //           if (!selectedDates.contains(DateTime.parse(formattedDate))) {
+        //             setState(() {
+        //               selectedDates.add(DateTime.parse(formattedDate));
+        //             });
+        //           }
+        //           // Format the date
+        //           print("ShiftDate: $formattedDate");
+        //         }
 
-                print(
-                    "All Schedule date : ${doc.data()}"); // Print data of each document
-              });
-            } else {
-              print("No schedules found.");
-            }
-          }
+        //         print(
+        //             "All Schedule date : ${doc.data()}"); // Print data of each document
+        //       });
+        //     } else {
+        //       print("No schedules found.");
+        //     }
+        //   }
 
-          printAllSchedules(EmployeeId);
-        } else {
-          setState(() {
-            issShift = true; //To validate that shift exists for the user.
-          });
-          print('Shift info not found');
-        }
+        //   printAllSchedules(EmployeeId);
+        // } else {
+        //   setState(() {
+        //     issShift = true; //To validate that shift exists for the user.
+        //   });
+        //   print('Shift info not found');
+        // }
         // getAndPrintAllSchedules();
       } else {
         print('User info not found');
@@ -442,15 +442,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     void ChangeIconColor(int index) {
       setState(() {
         switch (index) {
           case 0:
             IconColors[0] = ThemeMode.dark == themeManager.themeMode
-        ? DarkColor.color1
-            : LightColor.Primarycolor;
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
             IconColors[1] = ThemeMode.dark == themeManager.themeMode
                 ? DarkColor.color3
                 : LightColor.color2;
@@ -1068,27 +1066,33 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           Wrap(
                                                             spacing: -5.0,
                                                             children: [
-                                                              for (int i = 0;
-                                                                  i <
-                                                                      (shifts[index]['members'].length >
-                                                                              3
-                                                                          ? 3
-                                                                          : shifts[index]['members']
-                                                                              .length);
-                                                                  i++)
-                                                                CircleAvatar(
-                                                                  radius: 10.r,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                    shifts[index]
-                                                                        [
-                                                                        'members'][i],
-                                                                  ),
-                                                                ),
                                                               if (shifts[index][
-                                                                          'members']
-                                                                      .length >
-                                                                  3)
+                                                                      'members'] !=
+                                                                  null)
+                                                                for (int i = 0;
+                                                                    i <
+                                                                        (shifts[index]['members'].length >
+                                                                                3
+                                                                            ? 3
+                                                                            : shifts[index]['members'].length);
+                                                                    i++)
+                                                                  CircleAvatar(
+                                                                    radius:
+                                                                        10.r,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                      shifts[index]
+                                                                          [
+                                                                          'members'][i],
+                                                                    ),
+                                                                  ),
+                                                              if (shifts[index][
+                                                                          'members'] !=
+                                                                      null &&
+                                                                  shifts[index][
+                                                                              'members']
+                                                                          .length >
+                                                                      3)
                                                                 CircleAvatar(
                                                                   radius: 12.r,
                                                                   backgroundColor: Theme.of(
@@ -1210,7 +1214,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             reportDate, DateTime.now()))
                                         ? 'Today'
                                         : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
-                                    print("Report Data : $reports[index]");
+                                    print("Report Data : ${reports[index]}");
                                     return Padding(
                                       padding: EdgeInsets.only(
                                         left: 30.w,
@@ -1263,7 +1267,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                             Column(
                                               children: List.generate(
                                                 1,
-                                                (index) => Container(
+                                                (innerIndex) => Container(
                                                   constraints: BoxConstraints(
                                                       minHeight: 200.h),
                                                   width: double.maxFinite,
@@ -1461,9 +1465,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 20.sp,
                                             ),
                                           ],
                                         ),

@@ -457,7 +457,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
               SizedBox(height: 10.h),
               InterBold(
                 text: widget.ShiftDate,
-                color:  Theme.of(context).textTheme.bodyMedium!.color,
+                color: Theme.of(context).textTheme.bodyMedium!.color,
                 fontsize: 18.sp,
               ),
               SizedBox(height: 10.h),
@@ -466,13 +466,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                   InterMedium(
                     text: 'location:',
                     fontsize: 14.sp,
-                    color:  Theme.of(context).textTheme.bodyMedium!.color,
+                    color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),
                   SizedBox(width: 10.w),
                   InterRegular(
                     text: widget.ShiftAddressName,
                     fontsize: 14.sp,
-                    color:  Theme.of(context).textTheme.bodyLarge!.color,
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
                   )
                 ],
               ),
@@ -496,7 +496,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterRegular(
                           text: widget.ShiftStartTime,
                           fontsize: 18.99.sp,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         clickedIn
@@ -521,13 +521,13 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                         InterMedium(
                           text: 'Out time',
                           fontsize: 28.sp,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         InterRegular(
                           text: widget.ShiftEndTime,
                           fontsize: 18.99.sp,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: 10.h),
                         InterSemibold(
@@ -891,7 +891,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                         },
                                         child: InterRegular(
                                           text: 'Cancel',
-                                          color:  Theme.of(context)
+                                          color: Theme.of(context)
                                               .textTheme
                                               .bodySmall!
                                               .color,
@@ -968,12 +968,11 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                           }
                                         },
                                         child: InterRegular(
-                                          text: 'Submit',
-                                          color: Theme.of(context)
+                                            text: 'Submit',
+                                            color: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall!
-                                                .color
-                                        ),
+                                                .color),
                                       ),
                                     ]);
                               });
@@ -1163,10 +1162,15 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
             text: 'Check Patrolling',
             fontsize: 18.sp,
             color: clickedIn
-                ? (Theme.of(context).brightness == Brightness.dark ? DarkColor.color5 : LightColor.color1)
-                : (Theme.of(context).brightness == Brightness.dark ? DarkColor.color3 : LightColor.color5),
-            backgroundcolor:
-                Theme.of(context).brightness == Brightness.dark ? DarkColor.WidgetColor : LightColor.Primarycolor,
+                ? (Theme.of(context).brightness == Brightness.dark
+                    ? DarkColor.color5
+                    : LightColor.color1)
+                : (Theme.of(context).brightness == Brightness.dark
+                    ? DarkColor.color3
+                    : LightColor.color5),
+            backgroundcolor: Theme.of(context).brightness == Brightness.dark
+                ? DarkColor.WidgetColor
+                : LightColor.Primarycolor,
             onPressed: () {
               Navigator.push(
                   context,

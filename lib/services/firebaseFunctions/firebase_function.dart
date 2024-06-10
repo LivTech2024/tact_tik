@@ -1293,9 +1293,37 @@ class FireStoreService {
 
 // fetch the patrol checkpoints that are unchecked
 //using the patrol id, empid and shiftid
-  Future<void> uncheckedCheckpointsFetch() async {
-    try {} catch (e) {}
+  Future<void> uncheckedCheckpointsFetch(
+      String PatrolId, String ShiftId, String EmpId) async {
+    try {
+      // Assuming Firestore is initialized and you have a collection reference
+      // 'PatrolCheckPoints' containing the data
+      var snapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .doc(PatrolId)
+          .get();
+
+      // Assuming CheckPointStatus is a list
+      List<dynamic> checkpoints = snapshot.data()!['CheckPointStatus'];
+
+      checkpoints.forEach((checkpoint) {
+        // Extracting checkpoint details
+        String checkPointName = checkpoint['CheckPointName'];
+        String status = checkpoint['Status'];
+        // Extracting status details if available
+        String statusComment = checkpoint['StatusComment'] ?? '';
+        List<String> statusImages =
+            (checkpoint['StatusImage'] ?? []).cast<String>();
+
+        // Use the extracted information as needed
+        print(
+            'Checkpoint: $checkPointName, Status: $status, Comment: $statusComment, Images: $statusImages');
+      });
+    } catch (e) {
+      print('Error fetching checkpoints: $e');
+    }
   }
+
   //upload to uncheckedCheckpointReason
 
   Future<void> EndShiftLogComment(

@@ -2,15 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
 
-class UncheckedPatrolScreen extends StatelessWidget {
+class UncheckedPatrolScreen extends StatefulWidget {
   const UncheckedPatrolScreen({super.key});
 
-  Widget checkReason(){
+  @override
+  State<UncheckedPatrolScreen> createState() => _UncheckedPatrolScreenState();
+}
+
+class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
+  @override
+  void initState() {
+    super.initState();
+    //fethh the unchecked patrol checkpoints and take there inputs
+  }
+
+  Widget checkReason() {
     return Container(
       height: 46.h,
       width: double.maxFinite,
       decoration: BoxDecoration(),
-
     );
   }
 
@@ -27,9 +37,7 @@ class UncheckedPatrolScreen extends StatelessWidget {
             ListView.builder(
               shrinkWrap: true,
               itemCount: 10,
-              itemBuilder: (context, index) => Container(
-
-              ),
+              itemBuilder: (context, index) => Container(),
             )
           ],
         ),
