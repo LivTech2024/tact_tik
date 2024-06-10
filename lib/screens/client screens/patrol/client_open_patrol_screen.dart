@@ -12,6 +12,7 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
 import '../../../fonts/inter_semibold.dart';
 import '../../../utils/colors.dart';
+import '../select_client_guards_screen.dart';
 
 class ClientOpenPatrolScreen extends StatefulWidget {
   final String guardName;
@@ -130,7 +131,13 @@ class _ClientOpenPatrolScreenState extends State<ClientOpenPatrolScreen> {
                     SizedBox(
                       width: 140.w,
                       child: GestureDetector(
-                        // onTap: () => _selectDate(context),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SelectClientGuardsScreen(companyId: '',)));
+                        },
                         child: IconTextWidget(
                           space: 6.w,
                           icon: Icons.add,

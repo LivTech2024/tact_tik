@@ -204,6 +204,21 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
     }
   }
 
+  List IconColors = [
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color1
+        : LightColor.Primarycolor,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+  ];
+
   // 12 datani mall shift start id A local stoarage
   // 2 capital mall
   void _getUserInfo() async {
@@ -427,43 +442,66 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List IconColors = [
-      Theme.of(context).primaryColor,
-      Theme.of(context).focusColor,
-      Theme.of(context).focusColor,
-      Theme.of(context).focusColor,
-    ];
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
+
 
     void ChangeIconColor(int index) {
       setState(() {
         switch (index) {
           case 0:
-            IconColors[0] = Theme.of(context).primaryColor;
-            IconColors[1] = Theme.of(context).focusColor;
-            IconColors[2] = Theme.of(context).focusColor;
-            IconColors[3] = Theme.of(context).focusColor;
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color1
+            : LightColor.Primarycolor;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
             break;
           case 1:
-            IconColors[0] = Theme.of(context).focusColor;
-            IconColors[1] = Theme.of(context).primaryColor;
-            IconColors[2] = Theme.of(context).focusColor;
-            IconColors[3] = Theme.of(context).focusColor;
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
             break;
           case 2:
-            IconColors[0] = Theme.of(context).focusColor;
-            IconColors[1] = Theme.of(context).focusColor;
-            IconColors[2] = Theme.of(context).primaryColor;
-            IconColors[3] = Theme.of(context).focusColor;
-
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
             break;
           case 3:
-            IconColors[0] = Theme.of(context).focusColor;
-            IconColors[1] = Theme.of(context).focusColor;
-            IconColors[2] = Theme.of(context).focusColor;
-            IconColors[3] = Theme.of(context).primaryColor;
-
+            IconColors[0] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[1] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[2] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color3
+                : LightColor.color2;
+            IconColors[3] = ThemeMode.dark == themeManager.themeMode
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
             break;
         }
       });
@@ -474,10 +512,10 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         ScreenIndex = index;
         ChangeIconColor(index);
         print(ScreenIndex);
-        if (index == 1) {
-          _showWish = false;
-        } else
-          _showWish = true;
+        // if (index == 1) {
+        //   _showWish = false;
+        // } else
+        //   _showWish = true;
       });
     }
 
@@ -683,7 +721,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             ),
                             Bounce(
-                              onTap: () => ChangeScreenIndex(3),
+                              // onTap: () => ChangeScreenIndex(3),
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
@@ -755,7 +793,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     borderRadius: BorderRadius.circular(14.r),
                                   ),
                                   padding: EdgeInsets.only(
-                                      top: 20.h, bottom: 20.h, right: 10.w),
+                                      top: 20.h, bottom: 20.h, right: 20.w),
                                   child: Column(
                                     children: [
                                       Row(
