@@ -1056,7 +1056,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             },
                     ),
                     Visibility(
-                        visible: widget.p.CurrentStatus == "started" && _expand,
+                        visible: widget.p.CurrentStatus == "started",
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: widget.p.categories.map((category) {

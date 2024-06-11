@@ -68,8 +68,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 40);
+    XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -91,8 +91,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 40);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
