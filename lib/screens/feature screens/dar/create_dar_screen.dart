@@ -148,8 +148,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 60);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -319,13 +319,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-       
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -334,7 +331,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           ),
           title: InterMedium(
             text: 'DAR',
-       
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -351,8 +347,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: 20.sp,
-                      color:
-                          Theme.of(context).textTheme.bodySmall!.color,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     SizedBox(height: 30.h),
                     CustomeTextField(

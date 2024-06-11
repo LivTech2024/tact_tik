@@ -113,11 +113,9 @@ class _ReportScreenState extends State<ReportScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -126,12 +124,9 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
           title: InterMedium(
             text: 'Report',
-           
-            
           ),
           centerTitle: true,
         ),
-       
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -156,8 +151,7 @@ class _ReportScreenState extends State<ReportScreen> {
               }
             });
           },
-          backgroundColor:
-            Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -192,20 +186,18 @@ class _ReportScreenState extends State<ReportScreen> {
                             minWidth: 70.w,
                           ),
                           decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Theme.of(context).shadowColor,
-                                blurRadius: 5,
-                                spreadRadius: 2,
-                                offset: Offset(0, 3),
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(20.r),
-                            color: currentIndex == index
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).cardColor
-                               
-                          ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(20.r),
+                              color: currentIndex == index
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).cardColor),
                           duration: const Duration(microseconds: 500),
                           child: Center(
                             child: InterRegular(
@@ -253,118 +245,133 @@ class _ReportScreenState extends State<ReportScreen> {
                             final formattedTime =
                                 DateFormat.jm().format(reportDate);
 
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateReportScreen(
-                                      locationId: widget.locationId,
-                                      locationName: widget.locationName,
-                                      companyID: widget.companyId,
-                                      // companyId: widget.companyId,
-                                      empId: widget.empId,
-                                      empName: widget.empName,
-                                      // clientId: widget.clientId,
-                                      ClientId: widget.clientId,
-                                      reportId: report['ReportId'],
-                                      buttonEnable: false,
-                                      ShiftId: widget.ShiftId, SearchId: '',
+                            return Padding(
+                              padding:   EdgeInsets.symmetric(horizontal: 8.w),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateReportScreen(
+                                        locationId: widget.locationId,
+                                        locationName: widget.locationName,
+                                        companyID: widget.companyId,
+                                        // companyId: widget.companyId,
+                                        empId: widget.empId,
+                                        empName: widget.empName,
+                                        // clientId: widget.clientId,
+                                        ClientId: widget.clientId,
+                                        reportId: report['ReportId'],
+                                        buttonEnable: false,
+                                        ShiftId: widget.ShiftId, SearchId: '',
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      bottom: 10.h,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w,
-                                    ),
-                                    height: 100.h,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Theme.of(context).shadowColor,
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: Offset(0, 3),
-                                        )
-                                      ],
-                                      color: Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            right: 20.w,
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: 10.h,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w,
+                                      ),
+                                      height: 100.h,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Theme.of(context).shadowColor,
+                                            blurRadius: 5,
+                                            spreadRadius: 2,
+                                            offset: Offset(0, 3),
+                                          )
+                                        ],
+                                        color: Theme.of(context).cardColor,
+                                        borderRadius: BorderRadius.circular(10.r),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: 20.w,
+                                            ),
+                                            child: SvgPicture.asset(
+                                              Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? 'assets/images/report_icon.svg'
+                                                  : 'assets/images/report_icon_light.svg',
+                                              height: 24.h,
+                                              fit: BoxFit.fitHeight,
+                                            ),
                                           ),
-                                          child: SvgPicture.asset(
-                                            Theme.of(context).brightness ==
-                                                    Brightness.dark
-                                                ? 'assets/images/report_icon.svg'
-                                                : 'assets/images/report_icon_light.svg',
-                                            height: 24.h,
-                                            fit: BoxFit.fitHeight,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                report['ReportName'],
-                                                style: TextStyle(
-                                                  fontSize: 20.sp,
-                                                  color: Theme.of(context).textTheme.bodyMedium!.color,  
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              SizedBox(height: 10.h),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      InterMedium(
-                                                        text: 'CATEGORY: ',
-                                                        fontsize: 14.sp,
-                                                        color: Theme.of(context).textTheme.displaySmall!.color,
-                                                      ),
-                                                      InterRegular(
-                                                        text: report[
-                                                            'ReportCategoryName'],
-                                                        fontsize: 14.sp,
-                                                        color: Theme.of(context).textTheme.displayMedium!.color,
-                                                      ),
-                                                    ],
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  report['ReportName'],
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
-                                                  InterRegular(
-                                                    text: formattedTime,
-                                                    color: Theme.of(context).textTheme.displayMedium!.color,
-                                                    fontsize: 14.sp,
-                                                  )
-                                                ],
-                                              ),
-                                            ],
+                                                ),
+                                                SizedBox(height: 10.h),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        InterMedium(
+                                                          text: 'CATEGORY: ',
+                                                          fontsize: 14.sp,
+                                                          color: Theme.of(context)
+                                                              .textTheme
+                                                              .displaySmall!
+                                                              .color,
+                                                        ),
+                                                        InterRegular(
+                                                          text: report[
+                                                              'ReportCategoryName'],
+                                                          fontsize: 14.sp,
+                                                          color: Theme.of(context)
+                                                              .textTheme
+                                                              .displayMedium!
+                                                              .color,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    InterRegular(
+                                                      text: formattedTime,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .displayMedium!
+                                                          .color,
+                                                      fontsize: 14.sp,
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  )
-                                ],
+                                    SizedBox(
+                                      height: 20.h,
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           },

@@ -164,11 +164,9 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -177,7 +175,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           title: InterMedium(
             text: 'Report Checkpoint',
-        
           ),
           centerTitle: true,
         ),
@@ -243,7 +240,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
@@ -300,7 +298,10 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   Icon(
                                     Icons.add,
                                     size: width / width20,
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(height: height / height10),
                                   InterMedium(
