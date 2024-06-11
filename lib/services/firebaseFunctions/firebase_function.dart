@@ -17,6 +17,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
+import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
 class FireStoreService {
@@ -361,6 +362,24 @@ class FireStoreService {
         patrolData.add(data);
       }
     }
+
+    return patrolData;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllPatrolsByPatrolId(
+      String shiftId, String patrolId) async {
+    // Fetch the Patrols using the Patrol IDs
+    final querySnapshot =
+        await patrols.where("PatrolId", isEqualTo: patrolId).get();
+    List<Map<String, dynamic>> patrolData = [];
+
+    print("Retrieved documents Patrols:");
+    querySnapshot.docs.forEach((doc) {
+      Map<String, dynamic> patrolsData = doc.data() as Map<String, dynamic>;
+      patrolData.add(patrolsData);
+      print("Patrols Fetched");
+      print(patrolsData);
+    });
 
     return patrolData;
   }

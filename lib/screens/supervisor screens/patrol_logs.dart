@@ -546,7 +546,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                             width: width / width120,
                             child: InterBold(
                               text: 'Patrol   ${widget.p.title}',
-                              color: Theme.of(context).textTheme.bodySmall!
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
                                   .color as Color,
                               fontsize: width / width14,
                               maxLine: 1,
@@ -650,14 +652,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           height: height / height48,
                                           width: width / width48,
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColorLight,
+                                            color: Theme.of(context)
+                                                .primaryColorLight,
                                             borderRadius: BorderRadius.circular(
                                                 width / width10),
                                           ),
                                           child: Icon(
                                             Icons.home_sharp,
                                             size: width / width24,
-                                            color: Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
                                         ),
                                         SizedBox(
@@ -782,7 +786,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 height: height / height48,
                                                 width: width / width48,
                                                 decoration: BoxDecoration(
-                                                  color: Theme.of(context).brightness == Brightness.dark
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
                                                       ? DarkColor.color16
                                                       : LightColor.color1,
                                                   borderRadius:

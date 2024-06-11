@@ -10,6 +10,7 @@ import '../../../fonts/inter_semibold.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../home screens/widgets/icon_text_widget.dart';
+import 'client_open_dar_screen.dart';
 
 class ClientDarOpenScreen extends StatefulWidget {
   const ClientDarOpenScreen({super.key});
@@ -145,7 +146,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             Row(
                               children: [
                                 InterRegular(
-                                  text: 'Location',
+                                  text: 'Started at',
                                   fontsize: 14.sp,
                                   color: isDark
                                       ? DarkColor.color21
@@ -153,7 +154,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                                 ),
                                 SizedBox(width: 60.w),
                                 InterRegular(
-                                  text: 'Location',
+                                  text: 'Ended at',
                                   fontsize: 14.sp,
                                   color: isDark
                                       ? DarkColor.color21
@@ -162,13 +163,24 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                               ],
                             ),
                             SizedBox(height: 12.h),
-                            InterMedium(
-                              text:
-                                  '2972 Westheimer Rd. Santa Ana, Illinois... ',
-                              fontsize: 14.sp,
-                              maxLines: 1,
-                              color:
-                                  Theme.of(context).textTheme.bodyMedium!.color,
+                            Row(
+                              children: [
+                                InterRegular(
+                                  text: '11:36',
+                                  fontsize: 14.sp,
+                                  color: isDark
+                                      ? DarkColor.color21
+                                      : LightColor.color2,
+                                ),
+                                SizedBox(width: 90.w),
+                                InterRegular(
+                                  text: '16:56',
+                                  fontsize: 14.sp,
+                                  color: isDark
+                                      ? DarkColor.color21
+                                      : LightColor.color2,
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -182,6 +194,55 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                   fontsize: 18.sp,
                 ),
                 SizedBox(height: 20.h),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: 10,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      //   ClientOpenDarScreen
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ClientOpenDarScreen()));
+                    },
+                    child: Container(
+                      height: 46.h,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.only(bottom: 10.h),
+                      decoration: BoxDecoration(
+                        color: DarkColor.WidgetColor,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 150.w,
+                            child: InterMedium(
+                              text: 'checkpointName',
+                              // color: color21,
+                              fontsize: 16.sp,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              InterSemibold(
+                                  text: '02.00 - 03.00', fontsize: 16.sp),
+                              SizedBox(width: 5.w),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 24.sp,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

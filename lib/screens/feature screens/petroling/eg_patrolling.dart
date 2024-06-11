@@ -1558,7 +1558,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            UncheckedPatrolScreen()));
+                                            UncheckedPatrolScreen(
+                                              ShiftId: widget.p.ShiftId,
+                                              EmployeeID: widget.p.EmpId,
+                                              PatrolID: widget.p.PatrolId,
+                                            )));
                                 // showCustomDialog(
                                 //     context,
                                 //     "Incomplete Checkpoints, Do you want to ",
