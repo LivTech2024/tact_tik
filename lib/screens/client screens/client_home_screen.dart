@@ -106,7 +106,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _getUserInfo();
     fetchShifts();
     fetchReports();
   }
@@ -115,114 +119,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
 
-  Future<void> fetchShifts() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Shifts')
-          .where('ShiftClientId', isEqualTo: _employeeId)
-          .get();
-      print('Snapshot ${querySnapshot}');
-      List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
-          'ShiftDate': data['ShiftDate'].toDate(),
-          'ShiftName': data['ShiftName'],
-          'ShiftLocationAddress': data['ShiftLocationAddress'],
-          'ShiftStartTime': data['ShiftStartTime'],
-          'ShiftEndTime': data['ShiftEndTime'],
-          'members': data['members'],
-        };
-      }).toList();
-
-      setState(() {
-        shifts = fetchedShifts;
-        isLoading = false;
-      });
-    } catch (e) {
-      print("Error fetching shifts: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> fetchReports() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Reports')
-          .orderBy('ReportCreatedAt', descending: true)
-          .where('ReportClientId', isEqualTo: _employeeId)
-          .get();
-      print('Snapshot ${querySnapshot}');
-      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return {
-          'ReportDate': (data['ReportCreatedAt'] != null)
-              ? data['ReportCreatedAt'].toDate()
-              : DateTime.now(), // default to now if missing or null
-          'ReportName': (data['ReportName'] != null &&
-                  data['ReportName'].toString().isNotEmpty)
-              ? data['ReportName']
-              : 'Not Found',
-          'ReportGuardName': (data['ReportEmployeeName'] != null &&
-                  data['ReportEmployeeName'].toString().isNotEmpty)
-              ? data['ReportEmployeeName']
-              : 'Not Found',
-          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
-                  data['ReportEmployeeName'].toString().isNotEmpty)
-              ? data['ReportEmployeeName']
-              : 'Not Found',
-          'ReportStatus': (data['ReportStatus'] != null &&
-                  data['ReportStatus'].toString().isNotEmpty)
-              ? data['ReportStatus']
-              : 'Not Found',
-          'ReportCategory': (data['ReportCategoryName'] != null &&
-                  data['ReportCategoryName'].toString().isNotEmpty)
-              ? data['ReportCategoryName']
-              : 'Not Found',
-          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
-          'ReportData': (data['ReportData'] != null &&
-                  data['ReportData'].toString().isNotEmpty)
-              ? data['ReportData']
-              : 'Not Found',
-          'ReportLocation': (data['ReportLocationName'] != null &&
-                  data['ReportLocationName'].toString().isNotEmpty)
-              ? data['ReportLocationName']
-              : 'Not Found',
-        };
-      }).toList();
-
-      setState(() {
-        reports = fetchedReports;
-        isLoading = false;
-      });
-      print("REPORT DATA HERE IT'S  :$reports");
-    } catch (e) {
-      print("Error fetching reports: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  List IconColors = [
-    ThemeMode.dark == themeManager.themeMode
-        ? DarkColor.color1
-        : LightColor.Primarycolor,
-    ThemeMode.dark == themeManager.themeMode
-        ? DarkColor.color3
-        : LightColor.color2,
-    ThemeMode.dark == themeManager.themeMode
-        ? DarkColor.color3
-        : LightColor.color2,
-    ThemeMode.dark == themeManager.themeMode
-        ? DarkColor.color3
-        : LightColor.color2,
-  ];
-
-  // 12 datani mall shift start id A local stoarage
-  // 2 capital mall
-  void _getUserInfo() async {
+  Future<void> _getUserInfo() async {
     print("Fetching user info");
     var userInfo = await fireStoreService.getClientInfoByCurrentUserEmail();
     if (mounted) {
@@ -233,9 +130,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         String empImage = userInfo['ClientHomePageBgImg'] ?? "";
         print("Employee Id ${EmployeeId}");
         var shiftInfo =
-            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+        await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo =
-            await fireStoreService.getPatrolsByClientId(EmployeeId);
+        await fireStoreService.getPatrolsByClientId(EmployeeId);
         print("User Info ${userName}");
         print("Patrol Info ${patrolInfo}");
 
@@ -386,6 +283,113 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       }
     }
   }
+
+  Future<void> fetchShifts() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .where('ShiftClientId', isEqualTo: _employeeId)
+          .get();
+      List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return {
+          'ShiftDate': data['ShiftDate'].toDate(),
+          'ShiftName': data['ShiftName'],
+          'ShiftLocationAddress': data['ShiftLocationAddress'],
+          'ShiftStartTime': data['ShiftStartTime'],
+          'ShiftEndTime': data['ShiftEndTime'],
+          'members': data['members'],
+        };
+      }).toList();
+      print("SHIFTS: ${fetchedShifts}");
+      print("EMPLOYEE ID: ${_employeeId}");
+      setState(() {
+        shifts = fetchedShifts;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error fetching shifts: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchReports() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Reports')
+          .orderBy('ReportCreatedAt', descending: true)
+          .where('ReportClientId', isEqualTo: _employeeId)
+          .get();
+      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return {
+          'ReportDate': (data['ReportCreatedAt'] != null)
+              ? data['ReportCreatedAt'].toDate()
+              : DateTime.now(), // default to now if missing or null
+          'ReportName': (data['ReportName'] != null &&
+                  data['ReportName'].toString().isNotEmpty)
+              ? data['ReportName']
+              : 'Not Found',
+          'ReportGuardName': (data['ReportEmployeeName'] != null &&
+                  data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
+                  data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportStatus': (data['ReportStatus'] != null &&
+                  data['ReportStatus'].toString().isNotEmpty)
+              ? data['ReportStatus']
+              : 'Not Found',
+          'ReportCategory': (data['ReportCategoryName'] != null &&
+                  data['ReportCategoryName'].toString().isNotEmpty)
+              ? data['ReportCategoryName']
+              : 'Not Found',
+          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
+          'ReportData': (data['ReportData'] != null &&
+                  data['ReportData'].toString().isNotEmpty)
+              ? data['ReportData']
+              : 'Not Found',
+          'ReportLocation': (data['ReportLocationName'] != null &&
+                  data['ReportLocationName'].toString().isNotEmpty)
+              ? data['ReportLocationName']
+              : 'Not Found',
+        };
+      }).toList();
+
+      setState(() {
+        reports = fetchedReports;
+        isLoading = false;
+      });
+      print("REPORT DATA HERE IT'S  :$reports");
+    } catch (e) {
+      print("Error fetching reports: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  List IconColors = [
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color1
+        : LightColor.Primarycolor,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+  ];
+
+  // 12 datani mall shift start id A local stoarage
+  // 2 capital mall
 
 /*  void getAndPrintAllSchedules() async {
     List<DocumentSnapshot> schedules =
@@ -940,7 +944,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         shiftDate, DateTime.now()))
                                     ? 'Today'
                                     : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate.year}";
-
                                 return Padding(
                                   padding: EdgeInsets.only(
                                     left: 30.w,
