@@ -438,7 +438,7 @@ class CheckReason extends StatefulWidget {
 
 class _CheckReasonState extends State<CheckReason> {
   bool isExpand = false;
-
+  final TextEditingController _reasonController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -502,10 +502,20 @@ class _CheckReasonState extends State<CheckReason> {
           ),
           Visibility(
             visible: isExpand,
-            child: InterRegular(
-              text:
-                  'jsgfksdnsd\njkshdfkjshdfshkjsdfksdsd\njsgfksdnsd\njkshdfkjshdfshkjsdfksdsd\njsgfksdnsd\njkshdfkjshdfshkjsdfksdsd\n',
-              fontsize: 16.sp,
+            child: TextField(
+              controller: _reasonController,
+              decoration: InputDecoration(
+                hintText: 'Enter failure reason',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              maxLines: null, // Allow multiple lines
+              style: TextStyle(
+                fontSize: 16.sp,
+              ),
             ),
           )
         ],
@@ -615,7 +625,6 @@ class CheckPointStatus {
   final String status;
   final String? reportedById;
   final String? statusShiftId;
-
   final String? reportedByName;
   final Timestamp? reportedTime;
   final String? failureReason;

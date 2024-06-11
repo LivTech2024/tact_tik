@@ -535,8 +535,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context).brightness ==
                                         Brightness.dark
-                                    ? DarkColor.WidgetColor : LightColor.Primarycolor,
-                              borderRadius: BorderRadius.circular(8.r),
+                                    ? DarkColor.WidgetColor
+                                    : LightColor.Primarycolor,
+                                borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
@@ -750,7 +751,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           });
                         },
                         backgroundcolor: Theme.of(context).primaryColor,
-                         borderRadius: 10.r,
+                        borderRadius: 10.r,
                       ),
                     ),
                   ],
