@@ -727,12 +727,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onPressed: () async {
                                       // final SharedPreferences prefs =
                                       //     await SharedPreferences.getInstance();
-                                      // setState(() async {
-                                      //   themeManager.toggleTheme();
-                                      //   // await prefs.setBool('Theme', isDark);
-                                      //   // SystemChannels.platform.invokeMethod(
-                                      //   //     'SystemNavigator.pop');
-                                      // });
+                                      setState(()  {
+                                        themeManager.toggleTheme();
+                                        // await prefs.setBool('Theme', isDark);
+                                        // SystemChannels.platform.invokeMethod(
+                                        //     'SystemNavigator.pop');
+                                      });
                                     },
                                     child: InterMedium(
                                       text: 'Change & Restart',

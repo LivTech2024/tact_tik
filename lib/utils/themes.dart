@@ -15,7 +15,7 @@ var ligthTheme = ThemeData(
     appBarTheme: AppBarTheme(
       backgroundColor: LightColor.AppBarcolor,
       elevation: 5,
-      shadowColor: LightColor.color3.withOpacity(.1),
+      shadowColor: LightColor.color3.withOpacity(.5 ),
       iconTheme: IconThemeData(
         color: LightColor.color3,
         size: 24.sp,
@@ -23,7 +23,7 @@ var ligthTheme = ThemeData(
       titleTextStyle: TextStyle(
         color: LightColor.color3,
         fontSize: 18.sp,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w500,
         letterSpacing: -.3,
       ),
     ),
@@ -84,13 +84,13 @@ var darkTheme = ThemeData(
       backgroundColor: DarkColor.AppBarcolor,
       elevation: 0,
       iconTheme: IconThemeData(
-        color: DarkColor.Primarycolor,
+        color: DarkColor.color1,
         size: 24.sp,
       ),
       titleTextStyle: TextStyle(
-        color: DarkColor.Primarycolor,
+        color: DarkColor.color1,
         fontSize: 18.sp,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w500,
         letterSpacing: -.3,
       ),
     ),
