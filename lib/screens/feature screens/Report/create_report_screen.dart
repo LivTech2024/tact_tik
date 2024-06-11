@@ -162,7 +162,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30);
+        await ImagePicker().pickMultiImage(imageQuality: 30); //quality was 30
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -185,8 +185,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   }
 
   Future<void> _addImageFromCamera() async {
-    XFile? pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 30);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -252,13 +252,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-       
         appBar: AppBar(
-         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -270,7 +267,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
-           
           ),
           centerTitle: true,
         ),
@@ -285,7 +281,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 30.h),
                     InterBold(
                       text: 'New Report',
-                    fontsize: 20.sp,
+                      fontsize: 20.sp,
                       color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
@@ -301,8 +297,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     SizedBox(height: 30.h),
                     InterBold(
                       text: 'Category',
-                    fontsize: 20.sp,
-                      color:  Theme.of(context).textTheme.bodySmall!.color,
+                      fontsize: 20.sp,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 20.h),
@@ -318,15 +314,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:  Theme.of(context).cardColor,
-                         borderRadius: BorderRadius.circular(10.r),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.sp,
-                          dropdownColor:  Theme.of(context).cardColor,
-                          style: TextStyle(color:  Theme.of(context).textTheme.bodyLarge!.color),
+                          dropdownColor: Theme.of(context).cardColor,
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge!.color),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -356,7 +354,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color:Theme.of(context).shadowColor,
+                              color: Theme.of(context).shadowColor,
                               blurRadius: 10,
                               offset: Offset(0, 5),
                             ),
@@ -369,7 +367,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                           controller: newCategoryController,
                         ),
                       ),
-                      SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
                     Container(
                       decoration: BoxDecoration(
                         boxShadow: [
@@ -380,7 +378,6 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                       
                       ),
                       child: CustomeTextField(
                         hint: 'Explain',
@@ -405,7 +402,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:  Theme.of(context).cardColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -415,14 +412,20 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color:  Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 size: 24.sp,
                               ),
                               SizedBox(width: 6.w),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: Theme.of(context).textTheme.labelSmall!.color,
-                                fontsize:16.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .color,
+                                fontsize: 16.sp,
                                 letterSpacing: -.3,
                               )
                             ],
@@ -537,7 +540,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   Icons.add,
                                   size: 20.sp,
                                 ),

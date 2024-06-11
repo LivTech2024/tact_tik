@@ -10,7 +10,7 @@ import 'package:tact_tik/common/widgets/customErrorToast.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
-
+import 'package:synchronized/synchronized.dart';
 import '../../../common/enums/shift_task_enums.dart';
 import '../../../common/sizes.dart';
 import '../../../fonts/inter_regular.dart';
@@ -129,7 +129,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
   //     print('Error uploading images: $e');
   //   }
   // }
-
+  final Lock _uploadLock = Lock();
   void _uploadImages() async {
     if (uploads.isEmpty ||
         widget.ShiftId.isEmpty ||
@@ -140,29 +140,38 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-    print("Uploads Images  $uploads");
-    try {
-      print("Task Id : ${widget.taskId}");
-      await fireStoreService.addImagesToShiftTasks(
-        uploads,
-        widget.taskId,
-        widget.ShiftId,
-        widget.EmpID,
-        widget.EmpName,
-        widget.shiftReturnTask,
-      );
-      uploads.clear();
-      showSuccessToast(context, "Uploaded Successfully");
-      widget.refreshDataCallback();
-    } catch (e) {
-      showErrorToast(context, "$e");
-      print('Error uploading images: $e');
-    }
-    setState(() {
-      _isLoading = false;
+    // Create a copy of the uploads list to avoid modifications during async process
+    final List<Map<String, dynamic>> uploadsCopy = List.from(uploads);
+
+    // Use a lock to prevent concurrent uploads
+    await _uploadLock.synchronized(() async {
+      setState(() {
+        _isLoading = true;
+      });
+
+      print("Uploads Images  $uploadsCopy");
+      try {
+        print("Task Id : ${widget.taskId}");
+        await fireStoreService.addImagesToShiftTasks(
+          uploadsCopy,
+          widget.taskId,
+          widget.ShiftId,
+          widget.EmpID,
+          widget.EmpName,
+          widget.shiftReturnTask,
+        );
+        // Clear only the original uploads list after successful upload
+        uploads.clear();
+        showSuccessToast(context, "Uploaded Successfully");
+        widget.refreshDataCallback();
+      } catch (e) {
+        showErrorToast(context, "$e");
+        print('Error uploading images: $e');
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     });
   }
 
@@ -270,7 +279,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                         child: Icon(
                           Icons.qr_code_scanner,
                           size: width / width24,
-                          color:  Theme.of(context).textTheme.bodySmall!.color,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ),
                     ),
@@ -403,8 +412,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                             offset: Offset(0, 3),
                           )
                         ],
-                        color:
-                             Theme.of(context).textTheme.titleMedium!.color,
+                        color: Theme.of(context).textTheme.titleMedium!.color,
                         borderRadius: BorderRadius.circular(width / width10),
                       ),
                       child: Row(
@@ -418,7 +426,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color:Theme.of(context).shadowColor,
+                                      color: Theme.of(context).shadowColor,
                                       blurRadius: 5,
                                       spreadRadius: 2,
                                       offset: Offset(0, 3),
@@ -454,7 +462,7 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                               ),
                               InterRegular(
                                 text: widget.taskName,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .displayMedium!
                                     .color,
@@ -476,11 +484,12 @@ class _ShiftTaskTypeWidgetState extends State<ShiftTaskTypeWidget> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        backgroundColor: Theme.of(context).cardColor,
+                                        backgroundColor:
+                                            Theme.of(context).cardColor,
                                         title: Text(
                                           'Report Qr',
                                           style: TextStyle(
-                                              color:  Theme.of(context)
+                                              color: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium!
                                                   .color),

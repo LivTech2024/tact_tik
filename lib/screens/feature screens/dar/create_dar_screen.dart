@@ -148,8 +148,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 60);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);

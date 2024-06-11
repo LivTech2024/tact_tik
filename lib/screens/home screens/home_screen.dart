@@ -802,7 +802,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: ShiftExist
                               ? FutureBuilder(
-                                  future: Future.delayed(Duration(seconds: 2)),
+                                  future: Future.delayed(Duration(seconds: 1)),
                                   builder: (c, s) => s.connectionState ==
                                           ConnectionState.done
                                       ? StartTaskScreen(

@@ -17,6 +17,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
+import 'package:tact_tik/screens/supervisor%20screens/patrol_logs.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 
 class FireStoreService {
@@ -361,6 +362,24 @@ class FireStoreService {
         patrolData.add(data);
       }
     }
+
+    return patrolData;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllPatrolsByPatrolId(
+      String shiftId, String patrolId) async {
+    // Fetch the Patrols using the Patrol IDs
+    final querySnapshot =
+        await patrols.where("PatrolId", isEqualTo: patrolId).get();
+    List<Map<String, dynamic>> patrolData = [];
+
+    print("Retrieved documents Patrols:");
+    querySnapshot.docs.forEach((doc) {
+      Map<String, dynamic> patrolsData = doc.data() as Map<String, dynamic>;
+      patrolData.add(patrolsData);
+      print("Patrols Fetched");
+      print(patrolsData);
+    });
 
     return patrolData;
   }
@@ -1291,6 +1310,41 @@ class FireStoreService {
     }
   }
 
+// fetch the patrol checkpoints that are unchecked
+//using the patrol id, empid and shiftid
+  Future<void> uncheckedCheckpointsFetch(
+      String PatrolId, String ShiftId, String EmpId) async {
+    try {
+      // Assuming Firestore is initialized and you have a collection reference
+      // 'PatrolCheckPoints' containing the data
+      var snapshot = await FirebaseFirestore.instance
+          .collection('Patrols')
+          .doc(PatrolId)
+          .get();
+
+      // Assuming CheckPointStatus is a list
+      List<dynamic> checkpoints = snapshot.data()!['CheckPointStatus'];
+
+      checkpoints.forEach((checkpoint) {
+        // Extracting checkpoint details
+        String checkPointName = checkpoint['CheckPointName'];
+        String status = checkpoint['Status'];
+        // Extracting status details if available
+        String statusComment = checkpoint['StatusComment'] ?? '';
+        List<String> statusImages =
+            (checkpoint['StatusImage'] ?? []).cast<String>();
+
+        // Use the extracted information as needed
+        print(
+            'Checkpoint: $checkPointName, Status: $status, Comment: $statusComment, Images: $statusImages');
+      });
+    } catch (e) {
+      print('Error fetching checkpoints: $e');
+    }
+  }
+
+  //upload to uncheckedCheckpointReason
+
   Future<void> EndShiftLogComment(
       String employeeId,
       String Stopwatch,
@@ -1813,30 +1867,30 @@ class FireStoreService {
   }
 
   Future<void> updateShift(
-      String shiftId,
-      List guards,
-      String? role,
-      String Address,
-      String CompanyBranchId,
-      String CompanyId,
-      List<DateTime> Date,
-      TimeOfDay? startTime,
-      TimeOfDay? EndTime,
-      List patrol,
-      String clientID,
-      String requiredEmp,
-      String photoInterval,
-      String restrictedRadius,
-      bool shiftenablerestriction,
-      GeoPoint coordinates,
-      String locationName,
-      String locationId,
-      String locationAddress,
-      String branchId,
-      String shiftDesc,
-      String ShiftName,
-      List<Map<String, dynamic>> tasks,
-      ) async {
+    String shiftId,
+    List guards,
+    String? role,
+    String Address,
+    String CompanyBranchId,
+    String CompanyId,
+    List<DateTime> Date,
+    TimeOfDay? startTime,
+    TimeOfDay? EndTime,
+    List patrol,
+    String clientID,
+    String requiredEmp,
+    String photoInterval,
+    String restrictedRadius,
+    bool shiftenablerestriction,
+    GeoPoint coordinates,
+    String locationName,
+    String locationId,
+    String locationAddress,
+    String branchId,
+    String shiftDesc,
+    String ShiftName,
+    List<Map<String, dynamic>> tasks,
+  ) async {
     try {
       List<String> convertToStringArray(List list) {
         List<String> stringArray = [];
@@ -1848,7 +1902,7 @@ class FireStoreService {
 
       List<String> guardUserIds = convertToStringArray(guards);
       List<String> selectedGuardIds =
-      guards.map((guard) => guard['GuardId'] as String).toList();
+          guards.map((guard) => guard['GuardId'] as String).toList();
 
       final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
       final DateFormat timeFormatter = DateFormat('HH:mm');
@@ -2012,6 +2066,7 @@ class FireStoreService {
         file.absolute.path,
         quality: 50, // Adjust the quality as needed
       );
+      SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
 
       // Upload the compressed image to Firebase Storage
       await uploadRef.putData(Uint8List.fromList(compressedImage!));
@@ -2038,8 +2093,11 @@ class FireStoreService {
       Reference uploadRef =
           storageRef.child("employees/report/$uniqueName.jpg");
 
-      // Upload the already compressed image to Firebase Storage
-      await uploadRef.putFile(file);
+      // Set metadata with the content type
+      SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+
+      // Upload the already compressed image to Firebase Storage with metadata
+      await uploadRef.putFile(file, metadata);
 
       // Get the download URL of the uploaded image
       String downloadURL = await uploadRef.getDownloadURL();
@@ -2126,13 +2184,18 @@ class FireStoreService {
 
       Reference uploadRef = storageRef.child("employees/Dar/$uniqueName.jpg");
       // Compress the image
-      Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
-        file.absolute.path,
-        quality: 50, // Adjust the quality as needed
-      );
+      // Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+      //   file.absolute.path,
+      //   quality: 50, // Adjust the quality as needed
+      // );
 
       // Upload the compressed image to Firebase Storage
-      await uploadRef.putData(Uint8List.fromList(compressedImage!));
+      // await uploadRef.putData(Uint8List.fromList(compressedImage!));
+
+      SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+
+      // Upload the already compressed image to Firebase Storage with metadata
+      await uploadRef.putFile(file, metadata);
 
       // Get the download URL of the uploaded image
       String downloadURL = await uploadRef.getDownloadURL();
@@ -2456,37 +2519,40 @@ class FireStoreService {
       String EmpName,
       bool shiftTaskReturnStatus) async {
     try {
-      print("Uploads from FIrebase: $uploads");
-      print("Shift Task ID from FIrebase: $ShiftTaskId");
+      print("Uploads from Firebase: $uploads");
+      print("Shift Task ID from Firebase: $ShiftTaskId");
 
       if (ShiftId.isEmpty) {
-        print("Shift ID from FIrebase: $ShiftId");
-      } else {
         print("Shift ID is empty");
+        return;
       }
 
-      // String empId = storage.getItem('EmpId') ?? "";
-      if (ShiftId.isEmpty) {
-        print("LocalStorage shiftId is null or empty");
-      }
       final DocumentReference shiftDocRef =
           FirebaseFirestore.instance.collection("Shifts").doc(ShiftId);
       final DocumentSnapshot shiftDoc = await shiftDocRef.get();
-      print(DocumentSnapshot);
-      if (shiftDoc.exists) {
-        List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
-        print("Shift Doc exists");
-        print(shiftTasks.length);
-        for (int i = 0; i < shiftTasks.length; i++) {
-          print("Success: $ShiftTaskId");
+
+      if (!shiftDoc.exists) {
+        print("Shift document not found");
+        return;
+      }
+
+      List<dynamic> shiftTasks = shiftDoc['ShiftTask'];
+      print("Shift Doc exists with ${shiftTasks.length} tasks");
+
+      for (int i = 0; i < shiftTasks.length; i++) {
+        if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
+          print("Processing ShiftTaskId: $ShiftTaskId");
           List<String> imgUrls = [];
+
           for (var upload in uploads) {
             if (upload['type'] == 'image') {
               File file = upload['file'];
-              print(file);
+              print("Uploading file: $file");
+
               // Upload the image file and get the download URL
               List<Map<String, dynamic>> downloadURLs =
-                  await addImageToStorageShiftTask(file);
+                  await addImageToReportStorage(file);
+
               // Add the image URLs to the list
               for (var urlMap in downloadURLs) {
                 if (urlMap.containsKey('downloadURL')) {
@@ -2496,29 +2562,27 @@ class FireStoreService {
             }
           }
 
-          if (shiftTasks[i]['ShiftTaskId'] == ShiftTaskId) {
-            // Create ShiftTaskStatus object with image URLs
-            Map<String, dynamic> shiftTaskStatus = {
-              "TaskStatus": "completed",
-              "TaskCompletedById": EmpId ?? "",
-              "TaskCompletedByName": EmpName,
-              "TaskCompletionTime": DateTime.now(),
-              "TaskPhotos": imgUrls,
-              // "ShiftTaskReturnStatus": true,
-            };
-            if (shiftTaskReturnStatus) {
-              shiftTaskStatus["ShiftTaskReturnStatus"] = true;
-            }
-            // Update the ShiftTaskStatus array with the new object
-            shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+          // Create ShiftTaskStatus object with image URLs
+          Map<String, dynamic> shiftTaskStatus = {
+            "TaskStatus": "completed",
+            "TaskCompletedById": EmpId,
+            "TaskCompletedByName": EmpName,
+            "TaskCompletionTime": DateTime.now(),
+            "TaskPhotos": imgUrls,
+          };
 
-            // Update the Firestore document with the new ShiftTaskStatus
-            await shiftDocRef.update({'ShiftTask': shiftTasks});
-            break; // Exit loop after updating
+          if (shiftTaskReturnStatus) {
+            shiftTaskStatus["ShiftTaskReturnStatus"] = true;
           }
+
+          // Update the ShiftTaskStatus array with the new object
+          shiftTasks[i]['ShiftTaskStatus'] = [shiftTaskStatus];
+
+          // Update the Firestore document with the new ShiftTaskStatus
+          await shiftDocRef.update({'ShiftTask': shiftTasks});
+          print("ShiftTask updated successfully");
+          break; // Exit loop after updating
         }
-      } else {
-        print("Shift document not found");
       }
     } catch (e) {
       print('Error adding images to ShiftTaskPhotos: $e');
@@ -3778,7 +3842,7 @@ class FireStoreService {
           .get();
       print("Shift Id ${shiftId}");
       for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        // Get the first matching document
+        // Get the first matching documents
         DocumentReference employeeDARDoc = documentSnapshot.reference;
         DocumentSnapshot employeeDARSnapshot = await employeeDARDoc.get();
         Map<String, dynamic> employeeDARData =

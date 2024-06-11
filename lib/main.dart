@@ -105,6 +105,7 @@ class _MyAppState extends State<MyApp> {
             return UncheckedPatrolScreen();
           } else {
             return Scaffold(
+
               body: Center(
                 child: InterSemibold(
                   text:

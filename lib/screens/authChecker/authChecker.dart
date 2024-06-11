@@ -21,7 +21,7 @@ class AuthChecker extends ConsumerWidget {
       future: storage.ready,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return  Center(
+          return Center(
             child: CircularProgressIndicator(
               backgroundColor: Theme.of(context).canvasColor,
               color: Theme.of(context).primaryColor,
