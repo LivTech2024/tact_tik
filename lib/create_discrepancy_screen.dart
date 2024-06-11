@@ -195,7 +195,8 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                         text: 'Done',
                         onPressed: (){},
                         backgroundcolor: Theme.of(context).primaryColor,
-                        borderRadius: width / width10,
+                        borderRadius: 10.r,
+            color: Theme.of(context).textTheme.headlineMedium!.color,
                       ),
         ),
         body: Stack(
@@ -411,8 +412,9 @@ class _CreateDiscrepancyScreenState extends State<CreateDiscrepancyScreen> {
                             
                            
                         },
+                        color: Theme.of(context).textTheme.headlineMedium!.color,
                         backgroundcolor: Theme.of(context).primaryColor,
-                        borderRadius: width / width10,
+                        borderRadius: 10.r,
                       ),
                     ),
                   ],

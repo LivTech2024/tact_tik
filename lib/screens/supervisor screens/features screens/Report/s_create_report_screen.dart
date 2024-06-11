@@ -703,6 +703,7 @@ class _CreateReportScreenState extends State<SCreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
+                        color: Theme.of(context).textTheme.headlineMedium!.color,
                         backgroundcolor:  Theme.of(context).primaryColor,
                         borderRadius: 10.h,
                       ),

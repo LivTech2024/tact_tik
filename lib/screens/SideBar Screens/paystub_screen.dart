@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import '../../utils/colors.dart';
@@ -96,7 +97,7 @@ class _PayStubScreenState extends State<PayStubScreen> {
                       ),
                       Button1(
                         text: 'Open',
-                        color: DarkColor.  color1,
+                        color: Theme.of(context).textTheme.headlineMedium!.color,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -108,11 +109,11 @@ class _PayStubScreenState extends State<PayStubScreen> {
                             ),
                           );
                         },
-                        backgroundcolor: DarkColor.Primarycolorlight,
+                        backgroundcolor: Theme.of(context).primaryColor,
                         useBorderRadius: true,
                         MyBorderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(width / width12),
-                          bottomRight: Radius.circular(width / width12),
+                          bottomLeft: Radius.circular(12.r),
+                          bottomRight: Radius.circular(12.r),
                         ),
                       )
                     ],

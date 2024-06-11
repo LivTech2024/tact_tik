@@ -430,7 +430,7 @@ class _CreateVisitorsState extends State<SCreateVisitors> {
                             }
                           },
                           backgroundcolor:  Theme.of(context).primaryColor,
-                          color:Colors.white,
+                          color:Theme.of(context).textTheme.headlineMedium!.color,
                           borderRadius: 10.w,
                           fontsize: 18.sp,
                         ),

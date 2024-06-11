@@ -765,6 +765,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 onPressed: () {
                                   _saveData();
                                 },
+                                color: Theme.of(context).textTheme.headlineMedium!.color,
                                 borderRadius: 10.r,
                                 backgroundcolor:  Theme.of(context).primaryColor,
                               ),
@@ -833,6 +834,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 onPressed: () {
                                   _saveData();
                                 },
+                                color: Theme.of(context).textTheme.headlineMedium!.color,
                                 borderRadius: 10.r,
                                 backgroundcolor:  Theme.of(context).primaryColor,
                               ),

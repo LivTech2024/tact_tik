@@ -19,6 +19,7 @@ import 'package:tact_tik/screens/authChecker/authChecker.dart';
 // import 'package:tact_tik/screens/home%20screens/message%20screen/message_screen.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tact_tik/screens/client%20screens/patrol/unchecked_patrolss.dart';
 import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/constants.dart';
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: darkTheme,
+            theme: ligthTheme,
             darkTheme: darkTheme,
             themeMode: themeManager.themeMode,
             // navigatorKey: navigatorKey,
@@ -101,9 +102,10 @@ class _MyAppState extends State<MyApp> {
         ) {
           final bool isConnected = connectivity != ConnectivityResult.none;
           if (isConnected) {
-            return child;
+            return UncheckedPatrolScreen();
           } else {
             return Scaffold(
+
               body: Center(
                 child: InterSemibold(
                   text:

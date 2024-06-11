@@ -238,7 +238,7 @@ class _PatrollLogsScreenState extends State<PatrollLogsScreen> {
                     ),
                     Button1(
                       backgroundcolor: Theme.of(context).primaryColor,
-                      color: Colors.white,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       text: "Submit",
                       onPressed: _getUserInfo,
                     ),
@@ -564,33 +564,33 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                       ),
                       SizedBox(height: height / height10),
                       IconTextWidget(
-                        iconSize: width / width24,
+                        iconSize: 24.sp,
                         icon: Icons.location_on,
                         text: widget.p.title,
                         useBold: false,
                         color: Theme.of(context).textTheme.headlineMedium!.color
                             as Color,
                       ),
-                      SizedBox(height: height / height16),
+                      SizedBox(height: 16.h),
                       Divider(
                         color: Theme.of(context).primaryColor,
                       ),
-                      SizedBox(height: height / height5),
+                      SizedBox(height: 5.h),
                       IconTextWidget(
-                        iconSize: width / width24,
+                        iconSize: 24.sp,
                         icon: Icons.description,
                         text: widget.p.description,
                         useBold: false,
                         color: Theme.of(context).textTheme.headlineMedium!.color
                             as Color,
                       ),
-                      SizedBox(height: height / height16),
+                      SizedBox(height: 16.h),
                       Divider(
                         color: Theme.of(context).primaryColor,
                       ),
-                      SizedBox(height: height / height5),
+                      SizedBox(height: 5.h),
                       IconTextWidget(
-                        iconSize: width / width24,
+                        iconSize: 24.sp,
                         icon: Icons.qr_code_scanner,
                         text:
                             'Total  ${widget.p.PatrolRequiredCount}  Completed ${widget.p.CompletedCount}',
@@ -598,7 +598,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                         color: Theme.of(context).textTheme.headlineMedium!.color
                             as Color,
                       ),
-                      SizedBox(height: height / height20),
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),
@@ -629,18 +629,16 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 });
                               },
                               child: Container(
-                                height: height / height70,
+                                height: 70.h,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: width / width20,
-                                    vertical: height / height11),
-                                margin: EdgeInsets.only(top: height / height10),
+                                    horizontal: 20.w, vertical: 11.h),
+                                margin: EdgeInsets.only(top: 10.h),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
                                       ? DarkColor.color15
                                       : LightColor.color1,
-                                  borderRadius:
-                                      BorderRadius.circular(width / width10),
+                                  borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -649,33 +647,33 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     Row(
                                       children: [
                                         Container(
-                                          height: height / height48,
-                                          width: width / width48,
+                                          height: 48.h,
+                                          width: 48.w,
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .primaryColorLight,
-                                            borderRadius: BorderRadius.circular(
-                                                width / width10),
+                                            borderRadius:
+                                                BorderRadius.circular(10.r),
                                           ),
                                           child: Icon(
                                             Icons.home_sharp,
-                                            size: width / width24,
+                                            size: 24.sp,
                                             color:
                                                 Theme.of(context).primaryColor,
                                           ),
                                         ),
                                         SizedBox(
-                                          width: width / width20,
+                                          width: 20.w,
                                         ),
                                         SizedBox(
-                                          width: width / width190,
+                                          width: 190.w,
                                           child: InterRegular(
                                             text: category.title,
                                             color: Theme.of(context)
                                                 .textTheme
                                                 .displayMedium!
                                                 .color,
-                                            fontsize: width / width18,
+                                            fontsize: 18.sp,
                                           ),
                                         ),
                                       ],
@@ -692,7 +690,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                         expand
                                             ? Icons.arrow_circle_up_outlined
                                             : Icons.arrow_circle_down_outlined,
-                                        size: width / width24,
+                                        size: 24.sp,
                                         color: Theme.of(context).primaryColor,
                                       ),
                                     )
@@ -761,20 +759,19 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                       // }
                                     },
                                     child: Container(
-                                      height: height / height70,
+                                      height: 70.h,
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: width / width20,
-                                        vertical: height / height11,
+                                        horizontal: 20.w,
+                                        vertical: 11.h,
                                       ),
-                                      margin: EdgeInsets.only(
-                                          top: height / height10),
+                                      margin: EdgeInsets.only(top: 10.h),
                                       decoration: BoxDecoration(
                                         color: Theme.of(context).brightness ==
                                                 Brightness.dark
                                             ? DarkColor.color15
                                             : LightColor.color1,
-                                        borderRadius: BorderRadius.circular(
-                                            width / width10),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -783,8 +780,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           Row(
                                             children: [
                                               Container(
-                                                height: height / height48,
-                                                width: width / width48,
+                                                height: 48.h,
+                                                width: 48.w,
                                                 decoration: BoxDecoration(
                                                   color: Theme.of(context)
                                                               .brightness ==
@@ -793,11 +790,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       : LightColor.color1,
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          width / width10),
+                                                          10.r),
                                                 ),
                                                 child: Container(
-                                                  height: height / height30,
-                                                  width: width / width30,
+                                                  height: 30.h,
+                                                  width: 30.w,
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color: Theme.of(context)
@@ -824,10 +821,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: width / width20,
+                                                width: 20.w,
                                               ),
                                               SizedBox(
-                                                width: width / width140,
+                                                width: 140.w,
                                                 child: Column(
                                                   children: [
                                                     InterRegular(
@@ -837,16 +834,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           .textTheme
                                                           .displayMedium!
                                                           .color,
-                                                      fontsize: width / width18,
+                                                      fontsize: 18.sp,
                                                     ),
-                                                    SizedBox(
-                                                        height:
-                                                            height / height2),
+                                                    SizedBox(height: 2.h),
                                                     InterRegular(
                                                       text: "",
                                                       color: Theme.of(context)
                                                           .primaryColor,
-                                                      fontsize: width / width12,
+                                                      fontsize: 12.sp,
                                                     )
                                                   ],
                                                 ),
@@ -856,11 +851,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                           Row(
                                             children: [
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
+                                                padding: EdgeInsets.all(8.sp),
                                                 child: Container(
-                                                  height: height / height34,
-                                                  width: width / width34,
+                                                  height: 34.h,
+                                                  width: 34.w,
                                                   decoration:
                                                       const BoxDecoration(
                                                     shape: BoxShape.circle,
@@ -876,15 +870,17 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                             return AlertDialog(
                                                               title: Text(
                                                                 'Report Qr',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headlineMedium,
                                                               ),
                                                               content: Text(
                                                                 'The scanned QR code does not work.',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodyMedium,
                                                               ),
                                                               actions: [
                                                                 TextButton(

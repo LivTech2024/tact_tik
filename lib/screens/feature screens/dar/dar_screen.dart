@@ -16,6 +16,7 @@ import 'package:tact_tik/utils/colors.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../common/sizes.dart';
+import '../../../utils/theme_manager.dart';
 import 'dar_open_all_screen.dart';
 
 class DarDisplayScreen extends StatefulWidget {
@@ -47,7 +48,15 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  List colors = [DarkColor.Primarycolor, DarkColor.color3];
+  List colors = ThemeMode.dark == ThemeManager
+      ? [
+          DarkColor.Primarycolor,
+          DarkColor.color25,
+        ]
+      : [
+          LightColor.Primarycolor,
+          DarkColor.color2,
+        ];
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +106,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
     bool isNewEntry(DocumentSnapshot document) {
       return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
-List colors = [
-      Theme.of(context).textTheme.bodySmall!.color,
-      Theme.of(context).highlightColor
-    ];
+
     return SafeArea(
       child: Scaffold(
         body: StreamBuilder<QuerySnapshot>(
@@ -145,7 +151,8 @@ List colors = [
                         InterBold(
                           text: date,
                           fontsize: 20.sp,
-                          color: Theme.of(context).textTheme.displayMedium!.color,
+                          color:
+                              Theme.of(context).textTheme.displayMedium!.color,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 20.h),
@@ -286,10 +293,7 @@ List colors = [
                               onTap: () {
                                 setState(() {
                                   showAllDARS = false;
-                                  colors[0] = Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .color;
+                                  colors[0] = Theme.of(context).primaryColor;
                                   colors[1] = Theme.of(context).highlightColor;
                                 });
                               },
@@ -320,10 +324,7 @@ List colors = [
                                   showAllDARS = true;
 
                                   colors[0] = Theme.of(context).highlightColor;
-                                  colors[1] = Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .color;
+                                  colors[1] = Theme.of(context).primaryColor;
                                 });
                               },
                               child: Container(

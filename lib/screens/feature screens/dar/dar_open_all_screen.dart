@@ -11,6 +11,7 @@ import 'package:tact_tik/screens/feature%20screens/Report/create_report_screen.d
 import 'package:tact_tik/screens/feature%20screens/dar/create_dar_screen.dart';
 import 'package:tact_tik/services/Userservice.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
+import 'package:tact_tik/utils/theme_manager.dart';
 import 'package:tact_tik/utils/utils_functions.dart';
 
 import '../../../common/sizes.dart';
@@ -41,6 +42,15 @@ class DarOpenAllScreen extends StatefulWidget {
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
+  List colors = ThemeMode.dark == ThemeManager
+      ? [
+          DarkColor.Primarycolor,
+          DarkColor.color25,
+        ]
+      : [
+          LightColor.Primarycolor,
+          DarkColor.color2,
+        ];
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
 
   final _userService = UserService(firestoreService: FireStoreService());
@@ -470,10 +480,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    List colors = [
-      Theme.of(context).primaryColor,
-      Theme.of(context).textTheme.labelLarge!.color!
-    ];
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -958,7 +965,9 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
                                           return Container(
                                             margin:
                                                 EdgeInsets.only(bottom: 30.h),
-                                            height: 25.h,
+                                            height: 30.h,
+                                            padding:
+                                                EdgeInsets.only(right: 10.w),
                                             decoration: BoxDecoration(
                                               color:
                                                   Theme.of(context).cardColor,

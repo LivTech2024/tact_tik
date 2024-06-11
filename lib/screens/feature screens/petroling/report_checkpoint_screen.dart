@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
@@ -400,12 +401,12 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                           });
                         }
                       },
-                      color: Colors.white,
-                      borderRadius: width / width20,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      borderRadius: 20.r,
                       backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      height: height / height20,
+                      height: 20.h,
                     ),
                   ],
                 ),
