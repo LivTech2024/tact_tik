@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
           child: GetMaterialApp(
             title: 'Tact Tik',
             debugShowCheckedModeBanner: false,
-            theme: ligthTheme,
+            theme: darkTheme,
             darkTheme: darkTheme,
             themeMode: themeManager.themeMode,
             // navigatorKey: navigatorKey,
@@ -104,7 +104,7 @@ class _MyAppState extends State<MyApp> {
             return AuthChecker();
           } else {
             return Scaffold(
-              
+
               body: Center(
                 child: InterSemibold(
                   text:

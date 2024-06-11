@@ -253,8 +253,9 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                   bottomRight:
                                                       Radius.circular(10.r),
                                                 ),
-                                                color: Theme.of(context)
-                                                    .primaryColor,
+                                                color: isDark
+                                                    ? DarkColor.Primarycolor
+                                                    : LightColor.Primarycolor,
                                               ),
                                             ),
                                           ],

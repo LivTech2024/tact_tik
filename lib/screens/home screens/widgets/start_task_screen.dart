@@ -768,8 +768,8 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           text: 'Start Shift',
                           fontsize: 18.sp,
                           color: clickedIn
-                              ? (Theme.of(context).textTheme.bodySmall!.color)
-                              : (Theme.of(context).primaryColor),
+                              ? (Theme.of(context).textTheme.titleSmall!.color)
+                              : (Theme.of(context).textTheme.bodySmall!.color),
                         ),
                       ),
                     ),
@@ -1075,9 +1075,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                           fontsize: 18.sp,
                           color: clickedIn
                               ? (Theme.of(context).textTheme.bodySmall!.color)
-                              : (Theme.of(context).brightness == Brightness.dark
-                                  ? DarkColor.Primarycolorlight
-                                  : LightColor.color2),
+                              : (Theme.of(context).textTheme.titleSmall!.color),
                         ),
                       ),
                     ),

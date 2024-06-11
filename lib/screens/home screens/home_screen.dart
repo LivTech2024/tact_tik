@@ -42,6 +42,7 @@ import 'package:tact_tik/services/Provider/provider.dart';
 import 'package:tact_tik/services/auth/auth.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
+import 'package:tact_tik/utils/theme_manager.dart';
 import '../../common/sizes.dart';
 import '../../fonts/roboto_bold.dart';
 import '../../fonts/roboto_medium.dart';
@@ -134,11 +135,28 @@ class _HomeScreenState extends State<HomeScreen> {
     // For example, you can call setState() to update the UI
   }
 
+  List IconColors = [
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color1
+        : LightColor.Primarycolor,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+    ThemeMode.dark == themeManager.themeMode
+        ? DarkColor.color3
+        : LightColor.color2,
+  ];
+
   void initState() {
     // selectedEvent = events[selectedDay] ?? [];
+
     _getUserInfo();
     getAndPrintAllSchedules();
     _requestPermissions();
+
     // _getCurrentUserUid();
 
     // checkLocation();
@@ -425,12 +443,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ['assets/images/assets.png', 'Assets'],
       ['assets/images/keys.png', 'Key'],
     ];
-    List IconColors = [
-      Theme.of(context).primaryColor,
-      Theme.of(context).focusColor,
-      Theme.of(context).focusColor,
-      Theme.of(context).focusColor,
-    ];
 
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
@@ -459,9 +471,9 @@ class _HomeScreenState extends State<HomeScreen> {
             IconColors[3] = Theme.of(context).focusColor;
             break;
           case 2:
-            IconColors[0] = Theme.of(context).focusColor;
+            IconColors[0] = Theme.of(context).primaryColor;
             IconColors[1] = Theme.of(context).focusColor;
-            IconColors[2] = Theme.of(context).primaryColor;
+            IconColors[2] = Theme.of(context).focusColor;
             IconColors[3] = Theme.of(context).focusColor;
             // ScreenIndex = 0;
             // CalendarScreen
@@ -536,8 +548,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.maxFinite,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.r),
-                  color: Theme.of(context).primaryColor
-                      , // Background color for the drawer header
+                  color: Theme.of(context)
+                      .primaryColor, // Background color for the drawer header
                 ),
                 child: Center(
                   child: Column(
@@ -668,19 +680,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     buildListTile(
-                        Theme.of(context).brightness == Brightness.dark ? Icons.light_mode_outlined : Icons.light_mode,
-                        Theme.of(context).brightness==Brightness.dark ? 'Switch To Light Mode' : 'Switch to dark mode',
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Icons.light_mode_outlined
+                            : Icons.light_mode,
+                        Theme.of(context).brightness == Brightness.dark
+                            ? 'Switch To Light Mode'
+                            : 'Switch to dark mode',
                         5, () {
                       showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
                                 title: InterMedium(
                                   text: 'Change Theme',
-                                  color: Theme.of(context).textTheme.bodyLarge!.color!,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color!,
                                   fontsize: 20.sp,
                                 ),
                                 content: InterRegular(
-                                  text: Theme.of(context).brightness == Brightness.dark
+                                  text: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? 'Switch to Light Theme Restart App'
                                       : 'Switch to Dark Theme Restart App',
                                   fontsize: 12.sp,
@@ -705,8 +725,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      final SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
+                                      // final SharedPreferences prefs =
+                                      //     await SharedPreferences.getInstance();
                                       setState(()  {
                                         themeManager.toggleTheme();
                                         // await prefs.setBool('Theme', isDark);
@@ -751,7 +771,6 @@ class _HomeScreenState extends State<HomeScreen> {
         body: RefreshIndicator(
           onRefresh: _refreshData,
           child: CustomScrollView(
-            physics: PageScrollPhysics(),
             slivers: [
               HomeScreenPart1(
                 userName: _userName,
@@ -783,7 +802,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Shifts',
                               icon: Icons.add_task,
-                              color:IconColors[0],
+                              color: IconColors[0],
                               textcolor: IconColors[0],
                             ),
                           ),
@@ -859,7 +878,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : Center(
                                           child: InterMedium(
                                             text: 'Loading...',
-                                            color:Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             fontsize: 14.sp,
                                           ),
                                         ),
@@ -1032,7 +1052,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             )
-                          : 
+                          :
                             */
                       ScreenIndex == 3
                           ? SliverList(
@@ -1053,7 +1073,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           border: Border(
                                             bottom: BorderSide(
                                               width: 1,
-                                              color:Theme.of(context).primaryColor,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                             ),
                                           ),
                                         ),
@@ -1112,7 +1133,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       InterRegular(
                                                         text: 'Supervisor',
                                                         fontsize: 17.sp,
-                                                        color:Theme.of(context).textTheme.bodyMedium!.color!,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .color!,
                                                       ),
                                                       Row(
                                                         // mainAxisAlignment: MainAxisAlignment.end,

@@ -43,12 +43,11 @@ class DarDisplayScreen extends StatefulWidget {
 }
 
 class _DarDisplayScreenState extends State<DarDisplayScreen> {
-  
-     
-
   bool showAllDARS = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  List colors = [DarkColor.Primarycolor, DarkColor.color3];
 
   @override
   Widget build(BuildContext context) {
@@ -115,10 +114,7 @@ List colors = [
               final documents = snapshot.data?.docs;
               if (documents == null || documents.isEmpty) {
                 return Center(
-                  child: Text('No DAR entries found.',
-                      style: TextStyle(
-                          color:
-                              Theme.of(context).textTheme.bodyMedium!.color)),
+                  child: Text('No DAR entries found.', style: TextStyle()),
                 );
               }
 
@@ -149,7 +145,7 @@ List colors = [
                         InterBold(
                           text: date,
                           fontsize: 20.sp,
-                          color: Theme.of(context).textTheme.bodySmall!.color,
+                          color: Theme.of(context).textTheme.displayMedium!.color,
                           letterSpacing: -.3,
                         ),
                         SizedBox(height: 20.h),
@@ -213,7 +209,7 @@ List colors = [
                                     fontsize: 18.sp,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .bodySmall!
+                                        .displayMedium!
                                         .color,
                                   ),
                                   isNew
@@ -223,7 +219,7 @@ List colors = [
                                           color: Colors.green,
                                         )
                                       : SizedBox(),
-                                  SizedBox(height: height10),
+                                  SizedBox(height: 10.h),
                                   Flexible(
                                     child: InterRegular(
                                       text: document['EmpDarLocationName'],
@@ -281,9 +277,7 @@ List colors = [
                           )
                         ],
                         color: Theme.of(context).cardColor,
-                        
                       ),
-                      
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -296,8 +290,7 @@ List colors = [
                                       .textTheme
                                       .bodySmall!
                                       .color;
-                                  colors[1] = Theme.of(context)
-                                      .highlightColor;
+                                  colors[1] = Theme.of(context).highlightColor;
                                 });
                               },
                               child: Container(
@@ -325,9 +318,8 @@ List colors = [
                               onTap: () {
                                 setState(() {
                                   showAllDARS = true;
-                               
-                                  colors[0] = Theme.of(context)
-                                      .highlightColor;
+
+                                  colors[0] = Theme.of(context).highlightColor;
                                   colors[1] = Theme.of(context)
                                       .textTheme
                                       .bodySmall!
@@ -336,8 +328,7 @@ List colors = [
                               },
                               child: Container(
                                 height: 65.h,
-                                color: Theme.of(context)
-                                    .cardColor,
+                                color: Theme.of(context).cardColor,
                                 child: Center(
                                   child: InterBold(
                                     text: 'History',
@@ -369,7 +360,7 @@ List colors = [
               return Center(
                 child: Text(
                   'Error loading DAR entries.',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(),
                 ),
               );
             } else {
