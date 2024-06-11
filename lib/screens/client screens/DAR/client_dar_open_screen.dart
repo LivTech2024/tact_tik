@@ -46,6 +46,9 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark =
+        Theme.of(context).brightness == Brightness.dark ? true : false;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

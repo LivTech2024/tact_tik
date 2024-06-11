@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,9 +26,11 @@ import '../../utils/colors.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
+import '../home screens/widgets/grid_widget.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
+import 'Reports/client_report_screen.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -130,9 +133,9 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         String empImage = userInfo['ClientHomePageBgImg'] ?? "";
         print("Employee Id ${EmployeeId}");
         var shiftInfo =
-        await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
         var patrolInfo =
-        await fireStoreService.getPatrolsByClientId(EmployeeId);
+            await fireStoreService.getPatrolsByClientId(EmployeeId);
         print("User Info ${userName}");
         print("Patrol Info ${patrolInfo}");
 
@@ -549,6 +552,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
       );
     }
 
+    final List<List<String>> data = [
+      ['assets/images/dar.png', 'DAR'],
+      ['assets/images/reports.png', 'Reports'],
+      // ['assets/images/default.png', 'Patrol'],
+    ];
+
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKeyClient, // Assign the GlobalKey to the Scaffold
@@ -715,24 +724,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             Bounce(
                               onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
-                                useSVG: true,
-                                SVG: 'assets/images/lab_profile.svg',
-                                text: 'Reports',
-                                icon: Icons.celebration,
+                                text: 'Explore',
+                                icon: Icons.grid_view_rounded,
                                 color: IconColors[2],
                                 textcolor: IconColors[2],
                               ),
                             ),
                             Bounce(
-                              onTap: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ClientDarScreen(
-                                          clientId: _employeeId,
-                                          companyId: _cmpId),
-                                    ))
-                              },
+                              onTap: () => {},
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
@@ -1217,273 +1216,56 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             ),
                           )
                         : ScreenIndex == 2
-                            ? SliverList(
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200.0,
+                                  // mainAxisSpacing: 10.0,
+                                  // crossAxisSpacing: 10.0,
+                                  // childAspectRatio: 4.0,
+                                ),
                                 delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    DateTime reportDate =
-                                        reports[index]['ReportDate'];
-                                    String dateString = (isSameDate(
-                                            reportDate, DateTime.now()))
-                                        ? 'Today'
-                                        : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
-                                    print("Report Data : ${reports[index]}");
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 30.w,
-                                        right: 30.w,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ClientOpenReport(
-                                                reportName: reports[index]
-                                                    ['ReportEmployeeName'],
-                                                reportCategory: reports[index]
-                                                    ['ReportCategory'],
-                                                reportDate: dateString,
-                                                reportFollowUpRequire: reports[
-                                                            index][
-                                                        'ReportFollowUpRequire']
-                                                    .toString(),
-                                                reportData: reports[index]
-                                                    ['ReportData'],
-                                                reportStatus: reports[index]
-                                                    ['ReportStatus'],
-                                                reportEmployeeName:
-                                                    reports[index]
-                                                        ['ReportEmployeeName'],
-                                                reportLocation: reports[index]
-                                                    ['ReportLocation'],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            InterBold(
-                                              text: dateString,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .color,
-                                              fontsize: 14.sp,
-                                            ),
-                                            SizedBox(
-                                              height: 10.sp,
-                                            ),
-                                            Column(
-                                              children: List.generate(
-                                                1,
-                                                (innerIndex) => Container(
-                                                  constraints: BoxConstraints(
-                                                      minHeight: 200.h),
-                                                  width: double.maxFinite,
-                                                  decoration: BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Theme.of(context)
-                                                            .shadowColor,
-                                                        blurRadius: 5,
-                                                        spreadRadius: 2,
-                                                        offset: Offset(0, 3),
-                                                      )
-                                                    ],
-                                                    color: Theme.of(context)
-                                                        .cardColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14.r),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 18.h,
-                                                    horizontal: 18.w,
-                                                  ),
-                                                  margin: EdgeInsets.only(
-                                                    top: 10.h,
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      InterSemibold(
-                                                        text: reports[index][
-                                                            'ReportEmployeeName'],
-                                                        fontsize: 18.sp,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .color,
-                                                      ),
-                                                      SizedBox(height: 19.h),
-                                                      SizedBox(
-                                                        width: 240.w,
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Report Name:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportName'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Category:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportCategory'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Emp Name:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportEmployeeName'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Status:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportStatus'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                  (BuildContext context, int index) {
+                                    return Bounce(
+                                      onTap: () {
+                                        switch (index) {
+                                          case 0:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientDarScreen(
+                                                          clientId: _employeeId,
+                                                          companyId: _cmpId),
+                                                ));
+                                            break;
+                                          case 1:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientReportScreen(),
+                                                ));
+                                            break;
+                                          // case 2:
+                                          //   Navigator.push(
+                                          //       context,
+                                          //       MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             ClientDarScreen(
+                                          //                 clientId: _employeeId,
+                                          //                 companyId: _cmpId),
+                                          //       ));
+                                          //   break;
+                                        }
+                                      },
+                                      child: gridWidget(
+                                        img: data[index][0],
+                                        tittle: data[index][1],
                                       ),
                                     );
                                   },
-                                  childCount: reports.length,
+                                  childCount: data.length,
                                 ),
                               )
                             : ScreenIndex == 3
