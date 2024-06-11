@@ -319,13 +319,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-       
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -334,7 +331,6 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
           ),
           title: InterMedium(
             text: 'DAR',
-       
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -351,8 +347,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                     InterBold(
                       text: widget.darTiles[widget.index]['TileTime'],
                       fontsize: 20.sp,
-                      color:
-                          Theme.of(context).textTheme.bodySmall!.color,
+                      color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
                     SizedBox(height: 30.h),
                     CustomeTextField(
@@ -561,7 +556,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(bottom: 30.h),
-                                  height: 35.h,
+                                  height: 70.h,
                                   color: Theme.of(context).cardColor,
                                   child: Row(
                                     children: [
@@ -569,7 +564,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                         width: 15.w,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Colors.red,
+                                          color: Theme.of(context).primaryColor,
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                         ),
@@ -577,20 +572,58 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       SizedBox(width: 2.w),
                                       Expanded(
                                         child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                                           children: [
-                                            InterBold(
-                                              text: TilePatrolData.isNotEmpty
-                                                  ? "Patrol Name : ${patrolData['TilePatrolName']}"
-                                                  : "",
-                                              fontsize: 12.sp,
-                                              color: Colors.white,
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                InterBold(
+                                                  text: 'Patrol Name',
+                                                  fontsize: 12.sp,
+                                                  color: Colors.white,
+                                                ),
+                                                InterBold(
+                                                  text: TilePatrolData.isNotEmpty
+                                                      ? "Patrol Name : ${patrolData['TilePatrolName']}"
+                                                      : "",
+                                                  fontsize: 12.sp,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
                                             ),
-                                            InterBold(
-                                              text: TilePatrolData.isNotEmpty
-                                                  ? "${patrolData['TilePatrolData']}"
-                                                  : "",
-                                              fontsize: 12.sp,
-                                              color: Colors.white,
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                InterBold(
+                                                  text: 'Started',
+                                                  fontsize: 12.sp,
+                                                  color: Colors.white,
+                                                ),
+                                                InterBold(
+                                                  text: TilePatrolData.isNotEmpty
+                                                      ? "${patrolData['TilePatrolData']}"
+                                                      : "",
+                                                  fontsize: 12.sp,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                InterBold(
+                                                  text: 'Ended',
+                                                  fontsize: 12.sp,
+                                                  color: Colors.white,
+                                                ),
+                                                InterBold(
+                                                  text: TilePatrolData.isNotEmpty
+                                                      ? "${patrolData['TilePatrolData']}"
+                                                      : "",
+                                                  fontsize: 12.sp,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
@@ -650,13 +683,9 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       ));
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: 30.h,
-                                  ),
-                                  // height: 80.h,
-                                  constraints: BoxConstraints(
-                                    minHeight: 80.h,
-                                  ),
+                                  margin: EdgeInsets.only(bottom: 30.h),
+                                  height: 30.h,
+                                  padding: EdgeInsets.only(right: 10.w),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(10.r),
@@ -693,6 +722,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                         ? Button1(
                             height: 60.h,
                             text: _isSubmitting ? 'Submitting...' : 'Submit',
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color,
                             onPressed: submitDarTileData,
                             backgroundcolor: Theme.of(context).primaryColor,
                             borderRadius: 10.r,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
@@ -255,8 +256,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
                             }
                           },
                           backgroundcolor: Theme.of(context).primaryColor,
-                          borderRadius: width / width10,
-                          fontsize: width / width18,
+                          borderRadius: 10.r,
+                          fontsize: 18.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height100),

@@ -575,6 +575,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       child: Button1(
                         height: 50.h,
                         text: 'Submit',
+                        color: Theme.of(context).textTheme.headlineMedium!.color,
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;

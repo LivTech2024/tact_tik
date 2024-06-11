@@ -687,64 +687,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? 'Switch To Light Mode'
                             : 'Switch to dark mode',
                         5, () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: InterMedium(
-                                  text: 'Change Theme',
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color!,
-                                  fontsize: 20.sp,
-                                ),
-                                content: InterRegular(
-                                  text: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? 'Switch to Light Theme Restart App'
-                                      : 'Switch to Dark Theme Restart App',
-                                  fontsize: 12.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall!
-                                      .color!,
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context, false);
-                                    },
-                                    child: InterMedium(
-                                      text: 'CANCEL',
-                                      fontsize: 16.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headlineSmall!
-                                          .color!,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      // final SharedPreferences prefs =
-                                      //     await SharedPreferences.getInstance();
-                                      setState(()  {
-                                        themeManager.toggleTheme();
-                                        // await prefs.setBool('Theme', isDark);
-                                        // SystemChannels.platform.invokeMethod(
-                                        //     'SystemNavigator.pop');
-                                      });
-                                    },
-                                    child: InterMedium(
-                                      text: 'Change & Restart',
-                                      fontsize: 16.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .color!,
-                                    ),
-                                  ),
-                                ],
-                              ));
+                      setState(() {
+                        themeManager.toggleTheme();
+                        // await prefs.setBool('Theme', isDark);
+                        // SystemChannels.platform.invokeMethod(
+                        //     'SystemNavigator.pop');
+                      });
                     }),
                   ],
                 ),

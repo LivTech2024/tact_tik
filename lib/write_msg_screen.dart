@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -172,9 +173,9 @@ class _WriteMsgScreenState extends State<WriteMsgScreen> {
                       onPressed: () async {
                         
                       },
-                      color: DarkColor.color1,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       backgroundcolor: Theme.of(context).primaryColor,
-                      borderRadius: width / width10,
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

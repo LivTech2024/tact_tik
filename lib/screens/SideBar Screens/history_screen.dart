@@ -289,16 +289,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   children: [
                                     Icon(
                                       Icons.download_for_offline,
-                                      color: DarkColor.  color1,
-                                      size: 24.w,
+                                      color: Theme.of(context).iconTheme.color,
+                                      size: 24.sp,
                                     ),
                                     SizedBox(
                                       width: 10.w,
                                     ),
                                     InterSemibold(
                                       text: 'Download',
-                                      color: DarkColor.color1,
-                                      fontsize: 16.w,
+                                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                                      fontsize: 16.sp,
                                     )
                                   ],
                                 ),

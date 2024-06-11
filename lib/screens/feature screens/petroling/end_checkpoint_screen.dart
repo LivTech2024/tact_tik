@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,9 +95,6 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -106,7 +104,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
               Icons.arrow_back_ios,
              
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -118,23 +116,23 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: width / width30),
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: Stack(
             children: [
               SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     Text(
                       'Add Note',
                       style: TextStyle(
-                        fontSize: width / width14,
+                        fontSize: 14.sp,
                         color: Theme.of(context).textTheme.bodySmall!.color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: height / height10),
+                    SizedBox(height: 10.h),
                     Row(
                       children: [
                         Radio(
@@ -149,7 +147,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         ),
                         InterRegular(
                           text: 'Emergency',
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
                         )
                       ],
@@ -157,7 +155,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                     Row(
                       children: [
                         Radio(
-                          activeColor: Theme.of(context).textTheme.bodySmall!.color,
+                          activeColor: Theme.of(context).primaryColor,
                           value: 'Normal',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -168,12 +166,12 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         ),
                         InterRegular(
                           text: 'Normal',
-                          fontsize: width / width16,
+                          fontsize: 16.sp,
                           color: Theme.of(context).textTheme.bodyMedium!.color,
                         )
                       ],
                     ),
-                    SizedBox(height: height / height10),
+                    SizedBox(height: 10.h),
                     TextField(
                       controller: Controller,
                       decoration: InputDecoration(
@@ -181,7 +179,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       ),
                       style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
-                    SizedBox(height: height / height100)
+                    SizedBox(height: 100.h)
                   ],
                 ),
               ),
@@ -496,12 +494,12 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                                 builder: (context) => HomeScreen()));
                         // }
                       },
-                      color: Colors.white,
-                      borderRadius: width / width20,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      borderRadius: 20.r,
                       backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      height: height / height20,
+                      height: 20.h,
                     ),
                   ],
                 ),

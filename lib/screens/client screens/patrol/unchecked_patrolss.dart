@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/fonts/inter_semibold.dart';
+import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../fonts/inter_medium.dart';
@@ -17,6 +20,29 @@ class UncheckedPatrolScreen extends StatefulWidget {
 }
 
 class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
+  List<TextEditingController> _dataController = [];
+  List<Map<String, dynamic>> data = [
+    {'data': '', 'index': 0}
+  ];
+  bool isExpand = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers for each item
+    for (int i = 0; i < 10; i++) {
+      _dataController.add(TextEditingController());
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _dataController) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,8 +76,23 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: 10,
-                itemBuilder: (context, index) => CheckReason(),
-              )
+                itemBuilder: (context, index) {
+                  return CheckReason(
+                    index: index,
+                    dataController: _dataController[index],
+                  );
+                },
+              ),
+              SizedBox(height: 20.h),
+              Button1(
+                borderRadius: 10.r,
+                height: 70.h,
+                text: 'Submit',
+                backgroundcolor: Theme.of(context).primaryColor,
+                color: Theme.of(context).textTheme.headlineMedium!.color,
+                onPressed: () {},
+              ),
+              SizedBox(height: 40.h)
             ],
           ),
         ),
@@ -61,7 +102,14 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
 }
 
 class CheckReason extends StatefulWidget {
-  CheckReason({super.key});
+  CheckReason(
+      {super.key,
+      /* required this.data,*/ required this.index,
+      required this.dataController});
+
+  // List<Map<String, dynamic>> data;
+  final TextEditingController dataController;
+  final int index;
 
   @override
   State<CheckReason> createState() => _CheckReasonState();
@@ -70,8 +118,11 @@ class CheckReason extends StatefulWidget {
 class _CheckReasonState extends State<CheckReason> {
   bool isExpand = false;
 
+  // List<TextEditingController> dataController = [];
+
   @override
   Widget build(BuildContext context) {
+    print('current index : ${widget.index}');
     return Container(
       constraints: BoxConstraints(minHeight: 46.h),
       width: double.maxFinite,
@@ -131,10 +182,43 @@ class _CheckReasonState extends State<CheckReason> {
           ),
           Visibility(
             visible: isExpand,
-            child: InterRegular(
-              text:
-                  'jsgfksdnsd\njkshdfkjshdfshkjsdfksdsd\njsgfksdnsd\njkshdfkjshdfshkjsdfksdsd\njsgfksdnsd\njkshdfkjshdfshkjsdfksdsd\n',
-              fontsize: 16.sp,
+            child: Column(
+              children: [
+                TextField(
+                  controller: widget.dataController,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 18.sp,
+                    color: Colors.white,
+                  ),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.r),
+                      ),
+                    ),
+                    focusedBorder: InputBorder.none,
+                    hintStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 18.sp,
+                      color: Colors.grey, // color2,
+                    ),
+                    hintText: 'White hear something..',
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  // Primarycolor,
+                  onChanged: (value) {
+                    // data[index]['data'] = value;
+
+                    // setState(() {
+                    //   tasks[index]['name'] = value;
+                    // });
+                    print("textfield value $value");
+                  },
+                ),
+                SizedBox(height: 10.h)
+              ],
             ),
           )
         ],

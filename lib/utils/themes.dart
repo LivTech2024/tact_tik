@@ -12,10 +12,18 @@ var ligthTheme = ThemeData(
     hintColor: LightColor.color1,
     highlightColor: LightColor.color2,
     hoverColor: LightColor.color1,
+    progressIndicatorTheme:
+        ProgressIndicatorThemeData(color: LightColor.Primarycolor),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      iconSize: 24.sp,
+      backgroundColor: LightColor.Primarycolor,
+      shape: CircleBorder(),
+    ),
+    iconTheme: IconThemeData(color: LightColor.Secondarycolor),
     appBarTheme: AppBarTheme(
       backgroundColor: LightColor.AppBarcolor,
       elevation: 5,
-      shadowColor: LightColor.color3.withOpacity(.5 ),
+      shadowColor: LightColor.color3.withOpacity(.5),
       iconTheme: IconThemeData(
         color: LightColor.color3,
         size: 24.sp,
@@ -80,15 +88,23 @@ var darkTheme = ThemeData(
     hintColor: DarkColor.color24,
     highlightColor: DarkColor.color25,
     hoverColor: DarkColor.color22,
+    progressIndicatorTheme:
+        ProgressIndicatorThemeData(color: DarkColor.Primarycolor),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      iconSize: 24.sp,
+      backgroundColor: DarkColor.Primarycolor,
+      shape: CircleBorder(),
+    ),
+    iconTheme: IconThemeData(color: DarkColor.color5),
     appBarTheme: AppBarTheme(
       backgroundColor: DarkColor.AppBarcolor,
       elevation: 0,
       iconTheme: IconThemeData(
-        color: DarkColor.color1,
+        color: DarkColor.color5,
         size: 24.sp,
       ),
       titleTextStyle: TextStyle(
-        color: DarkColor.color1,
+        color: DarkColor.color5,
         fontSize: 18.sp,
         fontWeight: FontWeight.w500,
         letterSpacing: -.3,
@@ -110,7 +126,7 @@ var darkTheme = ThemeData(
         color: DarkColor.color14,
       ),
       headlineMedium: TextStyle(
-        color: DarkColor.color13,
+        color: DarkColor.color5,
       ),
       headlineSmall: TextStyle(
         color: DarkColor.color3,

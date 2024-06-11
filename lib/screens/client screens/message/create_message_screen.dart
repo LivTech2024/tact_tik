@@ -148,12 +148,12 @@ class _CreateMessageScreenState extends State<CreateMessageScreen> {
                       backgroundcolor: Theme.of(context).primaryColor,
                       borderRadius: 10.r,
                       fontsize: 18.sp,
-                      color: DarkColor. color1,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       text: 'Send',
                       onPressed: () {},
                     ),
                     SizedBox(
-                      height: height / height60,
+                      height: 60.h,
                     )
                   ],
                 ),
