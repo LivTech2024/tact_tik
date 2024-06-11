@@ -138,7 +138,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  isEdit ? updateProfile : null;
+                  if (isEdit) {
+                    updateProfile();
+                  }
+                  isEdit = !isEdit;
                 });
               },
               icon: Icon(
