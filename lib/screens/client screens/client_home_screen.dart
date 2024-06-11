@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import '../../fonts/inter_bold.dart';
@@ -719,7 +720,15 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                               ),
                             ),
                             Bounce(
-                              // onTap: () => ChangeScreenIndex(3),
+                              onTap: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ClientDarScreen(
+                                          clientId: _employeeId,
+                                          companyId: _cmpId),
+                                    ))
+                              },
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage

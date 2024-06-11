@@ -98,11 +98,9 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -111,7 +109,6 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
           ),
           title: InterMedium(
             text: 'End Patrol',
-          
           ),
           centerTitle: true,
         ),
@@ -136,7 +133,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                     Row(
                       children: [
                         Radio(
-                          activeColor: Theme.of(context).textTheme.bodySmall!.color,
+                          activeColor:
+                              Theme.of(context).textTheme.bodySmall!.color,
                           value: 'Emergency',
                           groupValue: selectedOption,
                           onChanged: (value) {
@@ -177,7 +175,8 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     SizedBox(height: 100.h)
                   ],
@@ -353,7 +352,7 @@ class _ReportCheckpointScreenState extends State<EndCheckpointScreen> {
                         String? InTime = prefs.getString("StartTime");
                         DateTime now = DateTime.now();
                         DateTime inTime =
-                            DateFormat("HH:mm").parse(InTime ?? "");
+                            DateFormat("HH:mm").parse(InTime ?? "00:00");
                         DateTime combinedDateTime = DateTime(
                             now.year,
                             now.month,

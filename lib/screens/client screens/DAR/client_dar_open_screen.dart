@@ -18,11 +18,11 @@ class ClientDarOpenScreen extends StatefulWidget {
   final List<dynamic> empDarTile;
 
   const ClientDarOpenScreen({
-      super.key,
-      required this.employeeName,
-      required this.startTime,
-      required this.empDarTile,
-      });
+    super.key,
+    required this.employeeName,
+    required this.startTime,
+    required this.empDarTile,
+  });
 
   @override
   State<ClientDarOpenScreen> createState() => _ClientDarOpenScreenState();
@@ -212,8 +212,10 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                     final tileContent = tile['TileContent'] ?? 'Not Defined';
                     final tileTime = tile['TileTime'];
                     final tileLocation = tile['TileLocation'] ?? "Not Defined";
-                    final tileDescription = tile['TileDescription'] ?? 'Not Defined';
-                    final tileReportSearchId = tile['TileReportSearchId'] ?? "Not Defined";
+                    final tileDescription =
+                        tile['TileDescription'] ?? 'Not Defined';
+                    final tileReportSearchId =
+                        tile['TileReportSearchId'] ?? "Not Defined";
 
                     return GestureDetector(
                       onTap: () {
@@ -223,7 +225,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             builder: (context) => ClientOpenDarScreen(
                               tileLocation: tileLocation,
                               tileTime: tileTime,
-                              tileDescription: tileDescription,
+                              tileDescription: tileContent,
                               tileReportSearchId: tileReportSearchId,
                               empName: widget.employeeName,
                             ),
@@ -246,7 +248,9 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             SizedBox(
                               width: 150.w,
                               child: InterMedium(
-                                text: tileContent == '' ? 'Not Defined' : tileContent,
+                                text: tileContent == ''
+                                    ? 'Not Defined'
+                                    : tileContent,
                                 fontsize: 16.sp,
                               ),
                             ),

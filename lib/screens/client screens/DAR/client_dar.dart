@@ -218,145 +218,141 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                   ],
                 ),
                 ListView.builder(
-                  shrinkWrap: true,
+                    shrinkWrap: true,
                     itemCount: groupedData.length,
                     itemBuilder: (context, index) {
                       var entry = groupedData[index];
                       var date = entry.key;
                       var data = entry.value;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 20.h),
-                        InterBold(text: date, fontsize: 18.sp),
-                        SizedBox(height: 10.h),
-                        ...data.map(
-                              (doc) =>
-                                GestureDetector(
-                                  onTap: () {
-                                    Map<String, dynamic> docData = doc.data() as Map<String, dynamic>;
-                                    String employeeName = docData['EmpDarEmpName'];
-                                    String startTime = DateFormat('HH:mm').format((docData['EmpDarDate'] as Timestamp).toDate());
-                                    List<dynamic> empDarTile = docData['EmpDarTile'] ?? [];
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ClientDarOpenScreen(
-                                                  employeeName: employeeName,
-                                                  startTime: startTime,
-                                                  empDarTile: empDarTile,
-                                                )));
-                                  },
-                                  child: Container(
-                                    height: 130.h,
-                                    margin: EdgeInsets.only(top: 10.h),
-                                    width: double.maxFinite,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Theme
-                                              .of(context)
-                                              .shadowColor,
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: Offset(0, 3),
-                                        )
-                                      ],
-                                      color: Theme
-                                          .of(context)
-                                          .cardColor,
-                                      borderRadius: BorderRadius.circular(14.r),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 20.h),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .start,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                SizedBox(height: 5.h),
-                                                Container(
-                                                  height: 30.h,
-                                                  width: 4.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius
-                                                        .only(
-                                                      topRight: Radius.circular(
-                                                          10.r),
-                                                      bottomRight:
-                                                      Radius.circular(10.r),
-                                                    ),
-                                                    color: isDark
-                                                        ? DarkColor.Primarycolor
-                                                        : LightColor
-                                                        .Primarycolor,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(width: 14.w),
-                                            SizedBox(
-                                              width: 190.w,
-                                              child: InterSemibold(
-                                                text: (doc.data() as Map<String, dynamic>)['EmpDarEmpName'],
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
-                                                fontsize: 18.sp,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        // SizedBox(height: 10.h),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 20.w),
-                                          child: Column(
-                                            crossAxisAlignment:
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20.h),
+                            InterBold(text: date, fontsize: 18.sp),
+                            SizedBox(height: 10.h),
+                            ...data.map(
+                              (doc) => GestureDetector(
+                                onTap: () {
+                                  Map<String, dynamic> docData =
+                                      doc.data() as Map<String, dynamic>;
+                                  String employeeName =
+                                      docData['EmpDarEmpName'];
+                                  String startTime = DateFormat('HH:mm').format(
+                                      (docData['EmpDarDate'] as Timestamp)
+                                          .toDate());
+                                  List<dynamic> empDarTile =
+                                      docData['EmpDarTile'] ?? [];
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClientDarOpenScreen(
+                                                employeeName: employeeName,
+                                                startTime: startTime,
+                                                empDarTile: empDarTile,
+                                              )));
+                                },
+                                child: Container(
+                                  height: 130.h,
+                                  margin: EdgeInsets.only(top: 10.h),
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(14.r),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
                                             CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
                                             children: [
-                                              InterRegular(
-                                                text: (doc.data() as Map<String, dynamic>)['EmpDarShiftName'],
-                                                fontsize: 14.sp,
-                                                color: isDark
-                                                    ? DarkColor.color21
-                                                    : LightColor.color2,
-                                              ),
-                                              SizedBox(height: 12.h),
-                                              InterMedium(
-                                                text:
-                                                (doc.data() as Map<String, dynamic>)['EmpDarLocationName'],
-                                                fontsize: 14.sp,
-                                                maxLines: 1,
-                                                color: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .bodyMedium!
-                                                    .color,
+                                              SizedBox(height: 5.h),
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10.r),
+                                                    bottomRight:
+                                                        Radius.circular(10.r),
+                                                  ),
+                                                  color: isDark
+                                                      ? DarkColor.Primarycolor
+                                                      : LightColor.Primarycolor,
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                          SizedBox(width: 14.w),
+                                          SizedBox(
+                                            width: 190.w,
+                                            child: InterSemibold(
+                                              text: (doc.data() as Map<String,
+                                                  dynamic>)['EmpDarEmpName'],
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                              fontsize: 18.sp,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      // SizedBox(height: 10.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20.w),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InterRegular(
+                                              text: (doc.data() as Map<String,
+                                                  dynamic>)['EmpDarShiftName'],
+                                              fontsize: 14.sp,
+                                              color: isDark
+                                                  ? DarkColor.color21
+                                                  : LightColor.color2,
+                                            ),
+                                            SizedBox(height: 12.h),
+                                            InterMedium(
+                                              text: (doc.data()
+                                                      as Map<String, dynamic>)[
+                                                  'EmpDarLocationName'],
+                                              fontsize: 14.sp,
+                                              maxLines: 1,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
-                          ),
-                      ]
-                    );
-                  }
-                )
+                              ),
+                            ),
+                          ]);
+                    })
               ],
             ),
           ),
