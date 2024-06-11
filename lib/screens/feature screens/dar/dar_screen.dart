@@ -99,7 +99,7 @@ class _DarDisplayScreenState extends State<DarDisplayScreen> {
       return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
 List colors = [
-      Theme.of(context).textTheme.bodySmall,
+      Theme.of(context).textTheme.bodySmall!.color,
       Theme.of(context).highlightColor
     ];
     return SafeArea(

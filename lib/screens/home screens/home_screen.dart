@@ -707,7 +707,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onPressed: () async {
                                       final SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
-                                      setState(() async {
+                                      setState(()  {
                                         themeManager.toggleTheme();
                                         // await prefs.setBool('Theme', isDark);
                                         // SystemChannels.platform.invokeMethod(
