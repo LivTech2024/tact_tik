@@ -958,6 +958,7 @@ class FireStoreService {
               'CheckPointComment': status['StatusComment'],
               'CheckPointImage': status['StatusImage'],
               'CheckPointReportedAt': statusReportedTime,
+              'CheckPointFailureReason': status['StatusFailureReason'] ?? ""
             });
             break; // Stop iterating through CheckPointStatus once a match is found
           }
@@ -2904,15 +2905,12 @@ class FireStoreService {
             var status = checkPointStatus.firstWhere(
               (s) =>
                   s["StatusReportedById"] == empId &&
-                  // isSameDay(s["StatusReportedTime"], Timestamp.now()
-                  s["StatusShiftId"] == ShiftId
-              // )
-              ,
+                  s["StatusShiftId"] == ShiftId,
               orElse: () => null,
             );
 
             if (status != null) {
-              // Update the failure reason
+              // Update or replace the failure reason
               status["StatusFailureReason"] = reason;
             } else {
               print(

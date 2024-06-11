@@ -58,6 +58,7 @@ class UncheckedPatrolScreen extends StatefulWidget {
 }
 
 class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
+  bool _isloading = false;
   @override
   void initState() {
     //fetch the unchecked checkpoints and display it
@@ -465,6 +466,9 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                             Theme.of(context).textTheme.headlineMedium!.color,
                         text: 'Next',
                         onPressed: () async {
+                          setState(() {
+                            _isloading = true;
+                          });
                           for (var entry in _checkpointReasons.entries) {
                             print(
                                 'Checkpoint: ${entry.key}, Reason: ${entry.value}');
@@ -505,6 +509,9 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                           });
                           showSuccessToast(context, "Uploaded");
                           print(_checkpointReasons);
+                          setState(() {
+                            _isloading = false;
+                          });
                         }),
                   ),
                   SizedBox(height: 20.h),
@@ -513,6 +520,7 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
             ),
           ),
           Visibility(
+            visible: _isloading,
             child: Center(
               child: CircularProgressIndicator(),
             ),
@@ -649,6 +657,10 @@ class _CheckReasonState extends State<CheckReason> {
                     counterText: '',
                   ),
                   cursorColor: DarkColor.Primarycolor,
+                  onChanged: (value) {
+                    print("Widget ${widget.checkpoint.id} = $value");
+                    _checkpointReasons[widget.checkpoint.id] = value;
+                  },
                 ),
                 SizedBox(height: 10.h)
               ],
