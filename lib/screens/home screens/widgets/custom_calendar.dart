@@ -7,7 +7,7 @@ import '../../../common/sizes.dart';
 import '../../../utils/colors.dart';
 
 final today = DateUtils.dateOnly(DateTime.now());
-  
+
 class CustomCalendar extends StatefulWidget {
   final List<DateTime?> selectedDates;
   const CustomCalendar({Key? key, required this.selectedDates})
@@ -39,23 +39,25 @@ class _CustomCalenderState extends State<CustomCalendar> {
                 offset: Offset(0, 3),
               )
             ],
-            color:  Theme.of(context).cardColor,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Theme(
-            data: Theme.of(context).brightness==Brightness.dark?ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.dark(
-                primary:  Color(0xFFCBA76B), // Background color
-                onPrimary:
-                    const Color(0xFF704600), // Text color for selected dates
-              ),
-            ):ThemeData.light().copyWith(
-              colorScheme: ColorScheme.light(
-                primary:  LightColor.Primarycolorlight, // Background color
-                onPrimary:
-                    LightColor.Primarycolor, // Text color for selected dates
-              ),
-            ),
+            data: Theme.of(context).brightness == Brightness.dark
+                ? ThemeData.dark().copyWith(
+                    colorScheme: ColorScheme.dark(
+                      primary: Color(0xFFCBA76B), // Background color
+                      onPrimary: const Color(
+                          0xFF704600), // Text color for selected dates
+                    ),
+                  )
+                : ThemeData.light().copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: LightColor.Primarycolorlight, // Background color
+                      onPrimary: LightColor
+                          .Primarycolor, // Text color for selected dates
+                    ),
+                  ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -66,14 +68,15 @@ class _CustomCalenderState extends State<CustomCalendar> {
                     disableModePicker: true,
                     calendarType: CalendarDatePicker2Type.multi,
                     selectedDayTextStyle: TextStyle(
-                      color:  Theme.of(context).textTheme.bodyLarge!.color,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     selectedYearTextStyle: TextStyle(
-                      color:  Theme.of(context).textTheme.bodyLarge!.color,
+                      color: Theme.of(context).textTheme.bodyLarge!.color,
                     ),
                     selectedDayHighlightColor:
                         Theme.of(context).brightness == Brightness.dark
-                            ? Color(0xFF704600):LightColor.Primarycolor,
+                            ? Color(0xFF704600)
+                            : LightColor.Primarycolor,
                     currentDate: DateTime.now(),
                     selectableDayPredicate: _selectableDayPredicate,
                     dayBorderRadius: BorderRadius.circular(
@@ -96,7 +99,7 @@ class _CustomCalenderState extends State<CustomCalendar> {
         InterBold(
           text: 'Weekly Shifts',
           fontsize: width / width18,
-          color:  Theme.of(context).textTheme.bodyLarge!.color,
+          color: Theme.of(context).textTheme.bodyLarge!.color,
         )
       ],
     );
