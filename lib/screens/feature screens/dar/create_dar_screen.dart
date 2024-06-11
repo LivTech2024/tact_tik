@@ -569,7 +569,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                               BorderRadius.circular(10.r),
                                         ),
                                       ),
-                                      SizedBox(width: 2.w),
+                                      SizedBox(width: 6.w),
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.spaceAround,

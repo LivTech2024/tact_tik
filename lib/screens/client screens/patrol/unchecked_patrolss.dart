@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
+import 'package:tact_tik/screens/feature%20screens/widgets/custome_textfield.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
@@ -31,6 +36,7 @@ class UncheckedPatrolScreen extends StatefulWidget {
   final String ShiftDate;
   final Timestamp? PatrolStartedTIme;
   final String ShiftName;
+
   UncheckedPatrolScreen(
       {super.key,
       required this.ShiftId,
@@ -329,165 +335,189 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 30.h),
-              InterBold(
-                  text: 'Let us know why you have missed?', fontsize: 18.sp),
-              SizedBox(height: 20.h),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: patrolsData.length,
-                itemBuilder: (context, index) {
-                  Patrol patrol = patrolsData[index];
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 30.h),
+                  InterBold(
+                      text: 'Let us know why you have missed?',
+                      fontsize: 18.sp),
+                  SizedBox(height: 20.h),
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: patrolsData.length,
+                    itemBuilder: (context, index) {
+                      Patrol patrol = patrolsData[index];
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                        child: InterMedium(
-                          text: patrol.title,
-                          fontsize: 18.sp,
-                        ),
-                      ),
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: patrolsData.length,
-                        itemBuilder: (context, index) {
-                          Patrol patrol = patrolsData[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            child: InterMedium(
+                              text: patrol.title,
+                              fontsize: 18.sp,
+                            ),
+                          ),
+                          ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: patrolsData.length,
+                            itemBuilder: (context, index) {
+                              Patrol patrol = patrolsData[index];
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Padding(
-                              //   padding: EdgeInsets.symmetric(vertical: 10.h),
-                              //   child: InterMedium(
-                              //     text: patrol.title,
-                              //     fontsize: 18.sp,
-                              //   ),
-                              // ),
-                              ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: patrol.categories.length,
-                                itemBuilder: (context, categoryIndex) {
-                                  Category category =
-                                      patrol.categories[categoryIndex];
-                                  List<Checkpoint> uncheckedCheckpoints =
-                                      category.checkpoints.where((checkpoint) {
-                                    return checkpoint.checkPointStatus.any(
-                                        (status) =>
-                                            status.status == 'unchecked' &&
-                                            status.reportedById ==
-                                                widget.EmployeeID &&
-                                            status.statusShiftId ==
-                                                widget.ShiftId);
-                                  }).toList();
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Padding(
+                                  //   padding: EdgeInsets.symmetric(vertical: 10.h),
+                                  //   child: InterMedium(
+                                  //     text: patrol.title,
+                                  //     fontsize: 18.sp,
+                                  //   ),
+                                  // ),
+                                  ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: patrol.categories.length,
+                                    itemBuilder: (context, categoryIndex) {
+                                      Category category =
+                                          patrol.categories[categoryIndex];
+                                      List<Checkpoint> uncheckedCheckpoints =
+                                          category.checkpoints
+                                              .where((checkpoint) {
+                                        return checkpoint.checkPointStatus.any(
+                                            (status) =>
+                                                status.status == 'unchecked' &&
+                                                status.reportedById ==
+                                                    widget.EmployeeID &&
+                                                status.statusShiftId ==
+                                                    widget.ShiftId);
+                                      }).toList();
 
-                                  // Debugging prints
-                                  print(
-                                      "Category: ${category.title}, Unchecked Checkpoints: ${uncheckedCheckpoints.length}");
+                                      // Debugging prints
+                                      print(
+                                          "Category: ${category.title}, Unchecked Checkpoints: ${uncheckedCheckpoints.length}");
 
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10.h),
-                                        child: InterMedium(
-                                          text: category.title,
-                                          fontsize: 16.sp,
-                                        ),
-                                      ),
-                                      ListView.builder(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: uncheckedCheckpoints
-                                            .length, // Fix here
-                                        itemBuilder:
-                                            (context, checkpointIndex) {
-                                          if (checkpointIndex >=
-                                              uncheckedCheckpoints.length) {
-                                            print(
-                                                "Checkpoint index out of range: $checkpointIndex / ${uncheckedCheckpoints.length}");
-                                            return SizedBox
-                                                .shrink(); // Return an empty widget to avoid the error
-                                          }
-                                          Checkpoint checkpoint =
-                                              uncheckedCheckpoints[
-                                                  checkpointIndex];
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 10.h,
+                                            ),
+                                            child: InterMedium(
+                                              text: category.title,
+                                              fontsize: 16.sp,
+                                            ),
+                                          ),
+                                          ListView.builder(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount: uncheckedCheckpoints
+                                                .length, // Fix here
+                                            itemBuilder:
+                                                (context, checkpointIndex) {
+                                              if (checkpointIndex >=
+                                                  uncheckedCheckpoints.length) {
+                                                print(
+                                                    "Checkpoint index out of range: $checkpointIndex / ${uncheckedCheckpoints.length}");
+                                                return SizedBox
+                                                    .shrink(); // Return an empty widget to avoid the error
+                                              }
+                                              Checkpoint checkpoint =
+                                                  uncheckedCheckpoints[
+                                                      checkpointIndex];
 
-                                          return CheckReason(
-                                            p: patrol,
-                                            checkpoint: checkpoint,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      )
-                    ],
-                  );
-                },
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    for (var entry in _checkpointReasons.entries) {
-                      print('Checkpoint: ${entry.key}, Reason: ${entry.value}');
-                    }
-                    await fireStoreService
-                        .addFailureReasonToPatrol(_checkpointReasons,
-                            widget.PatrolID, widget.EmployeeID, widget.ShiftId)
-                        .then((_) {
-                      showSuccessToast(context, "Updated");
-                      print(_checkpointReasons);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EndCheckpointScreen(
-                                  EmpId: widget.EmployeeID,
-                                  PatrolID: widget.PatrolID,
-                                  ShiftId: widget.ShiftId,
-                                  EmpName: widget.EmployeeName,
-                                  CompletedCount: widget.CompletedCount,
-                                  PatrolRequiredCount:
-                                      widget.PatrolRequiredCount,
-                                  PatrolCompanyID: widget.PatrolCompanyID,
-                                  PatrolClientID: widget.PatrolClientID,
-                                  LocationId: widget.LocationId,
-                                  ShiftName: widget.ShiftName,
-                                  description: widget.description,
-                                  ShiftDate: widget.ShiftDate,
-                                  PatrolStatusTime: widget.PatrolStartedTIme,
-                                )),
+                                              return CheckReason(
+                                                p: patrol,
+                                                checkpoint: checkpoint,
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        ],
                       );
-                    }).catchError((error) {
-                      // Handle error
-                      print('Error: $error');
-                    });
-                    showSuccessToast(context, "Uploaded");
-                    print(_checkpointReasons);
-                  },
-                  child: Text("Submit"),
-                ),
-              )
-            ],
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                  Center(
+                    child: Button1(
+                        borderRadius: 10.r,
+                        height: 70.h,
+                        backgroundcolor: Theme.of(context).primaryColor,
+                        color:
+                            Theme.of(context).textTheme.headlineMedium!.color,
+                        text: 'Next',
+                        onPressed: () async {
+                          for (var entry in _checkpointReasons.entries) {
+                            print(
+                                'Checkpoint: ${entry.key}, Reason: ${entry.value}');
+                          }
+                          await fireStoreService
+                              .addFailureReasonToPatrol(
+                                  _checkpointReasons,
+                                  widget.PatrolID,
+                                  widget.EmployeeID,
+                                  widget.ShiftId)
+                              .then((_) {
+                            showSuccessToast(context, "Updated");
+                            print(_checkpointReasons);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EndCheckpointScreen(
+                                        EmpId: widget.EmployeeID,
+                                        PatrolID: widget.PatrolID,
+                                        ShiftId: widget.ShiftId,
+                                        EmpName: widget.EmployeeName,
+                                        CompletedCount: widget.CompletedCount,
+                                        PatrolRequiredCount:
+                                            widget.PatrolRequiredCount,
+                                        PatrolCompanyID: widget.PatrolCompanyID,
+                                        PatrolClientID: widget.PatrolClientID,
+                                        LocationId: widget.LocationId,
+                                        ShiftName: widget.ShiftName,
+                                        description: widget.description,
+                                        ShiftDate: widget.ShiftDate,
+                                        PatrolStatusTime:
+                                            widget.PatrolStartedTIme,
+                                      )),
+                            );
+                          }).catchError((error) {
+                            // Handle error
+                            print('Error: $error');
+                          });
+                          showSuccessToast(context, "Uploaded");
+                          print(_checkpointReasons);
+                        }),
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
           ),
-        ),
+          Visibility(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        ],
       ),
     ));
   }
@@ -496,6 +526,7 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
 class CheckReason extends StatefulWidget {
   final Patrol p;
   final Checkpoint checkpoint;
+
   CheckReason({super.key, required this.p, required this.checkpoint});
 
   @override
@@ -505,6 +536,7 @@ class CheckReason extends StatefulWidget {
 class _CheckReasonState extends State<CheckReason> {
   bool isExpand = false;
   final TextEditingController _reasonController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -557,14 +589,14 @@ class _CheckReasonState extends State<CheckReason> {
                   });
                 },
                 icon: Transform.rotate(
-                  angle: isExpand ? 30 : -30, //set the angel
+                  angle: isExpand ? 4.7 : -4.7, //set the angel
                   child: Icon(
                     Icons.arrow_forward_ios,
                     size: 24.sp,
                   ),
                 ),
               ),
-              IconButton(
+              /*  IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () =>
                     print('Reason input for: ${widget.checkpoint.title}'),
@@ -572,29 +604,54 @@ class _CheckReasonState extends State<CheckReason> {
                   Icons.send,
                   size: 24.sp,
                 ),
-              )
+              )*/
             ],
           ),
+          /*_reasonController    */
+          /* print("Widget ${widget.checkpoint.id} = $value");
+                _checkpointReasons[widget.checkpoint.id] = value;*/
           Visibility(
             visible: isExpand,
-            child: TextField(
-              controller: _reasonController,
-              decoration: InputDecoration(
-                hintText: 'Enter failure reason',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
+            child: Column(
+              children: [
+                TextField(
+                  // maxLength: maxlength,
+                  controller: _reasonController,
+                  maxLines: isExpand ? null : 1,
+                  // keyboardType: Key,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 18,
+                    color: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .color, // Change text color to white
+                  ),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.r),
+                      ),
+                    ),
+                    focusedBorder: InputBorder.none,
+                    hintStyle: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 18.sp,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .color, // Change text color to white
+                    ),
+                    hintText: 'Enter failure reason',
+                    contentPadding: EdgeInsets.zero,
+                    // Remove padding
+                    counterText: '',
+                  ),
+                  cursorColor: DarkColor.Primarycolor,
                 ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-              maxLines: null, // Allow multiple lines
-              style: TextStyle(
-                fontSize: 16.sp,
-              ),
-              onChanged: (value) {
-                print("Widget ${widget.checkpoint.id} = $value");
-                _checkpointReasons[widget.checkpoint.id] = value;
-              },
+                SizedBox(height: 10.h)
+              ],
             ),
           )
         ],

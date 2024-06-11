@@ -218,6 +218,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                   ],
                 ),
                 ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: groupedData.length,
                     itemBuilder: (context, index) {

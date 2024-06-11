@@ -55,7 +55,9 @@ class _ClientOpenDarScreenState extends State<ClientOpenDarScreen> {
               children: [
                 SizedBox(height: 30.h),
                 InterBold(
-                  text: widget.tileLocation == '' ? 'Not Defined' : widget.tileLocation,
+                  text: widget.tileLocation == ''
+                      ? 'Not Defined'
+                      : widget.tileLocation,
                   fontsize: 18.sp,
                 ),
                 SizedBox(height: 20.h),
@@ -88,6 +90,91 @@ class _ClientOpenDarScreenState extends State<ClientOpenDarScreen> {
                   text: 'Patrol',
                   fontsize: 20.sp,
                 ),
+                SizedBox(height: 10.h),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        // print("TIle Patrol Data ${TilePatrolData}");
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 30.h),
+                        height: 70.h,
+                        color: Theme.of(context).cardColor,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 15.w,
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                            ),
+                            SizedBox(width: 6.w),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      InterBold(
+                                        text: 'Patrol Name',
+                                        fontsize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                      InterBold(
+                                        text: '',
+                                        fontsize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      InterBold(
+                                        text: 'Started',
+                                        fontsize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                      InterBold(
+                                        text: '',
+                                        fontsize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      InterBold(
+                                        text: 'Ended',
+                                        fontsize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                      InterBold(
+                                        text: '',
+                                        fontsize: 12.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 20.h),
                 InterBold(
                   text: 'Reports',
                   fontsize: 20.sp,
@@ -95,84 +182,87 @@ class _ClientOpenDarScreenState extends State<ClientOpenDarScreen> {
                 ),
                 widget.tileReportSearchId == 'Not Defined'
                     ? Padding(
-                  padding: EdgeInsets.only(top: 20.h),
-                  child: InterRegular(
-                    text: 'No Reports Found',
-                    fontsize: 16.sp,
-                  ),
-                )
+                        padding: EdgeInsets.only(top: 20.h),
+                        child: InterRegular(
+                          text: 'No Reports Found',
+                          fontsize: 16.sp,
+                        ),
+                      )
                     : StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('Reports')
-                      .where('ReportSearchId',
-                      isEqualTo: widget.tileReportSearchId)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
+                        stream: FirebaseFirestore.instance
+                            .collection('Reports')
+                            .where('ReportSearchId',
+                                isEqualTo: widget.tileReportSearchId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
 
-                    if (!snapshot.hasData) {
-                      return CircularProgressIndicator();
-                    }
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
 
-                    final reports = snapshot.data!.docs;
+                          final reports = snapshot.data!.docs;
 
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: reports.length,
-                      itemBuilder: (context, index) {
-                        final report = reports[index].data() as Map<String, dynamic>;
-                        final reportData = report['ReportData'];
-                        final reportCreatedAt =
-                        (report['ReportCreatedAt'] as Timestamp).toDate();
-                        final formattedTime =
-                        DateFormat('hh:mm a').format(reportCreatedAt);
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: reports.length,
+                            itemBuilder: (context, index) {
+                              final report =
+                                  reports[index].data() as Map<String, dynamic>;
+                              final reportData = report['ReportData'];
+                              final reportCreatedAt =
+                                  (report['ReportCreatedAt'] as Timestamp)
+                                      .toDate();
+                              final formattedTime =
+                                  DateFormat('hh:mm a').format(reportCreatedAt);
 
-                        return GestureDetector(
-                          onTap: () {
-                            // Handle report tap
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 30.h),
-                            height: 35.h,
-                            color: Theme.of(context).cardColor,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 15.w,
-                                  height: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-                                ),
-                                SizedBox(width: 2.w),
-                                Expanded(
-                                  child: Column(
+                              return GestureDetector(
+                                onTap: () {
+                                  // Handle report tap
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 30.h),
+                                  height: 35.h,
+                                  color: Theme.of(context).cardColor,
+                                  child: Row(
                                     children: [
-                                      InterBold(
-                                        text: reportData,
-                                        fontsize: 12.sp,
-                                        color: Colors.white,
+                                      Container(
+                                        width: 15.w,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
+                                        ),
                                       ),
-                                      InterBold(
-                                        text: formattedTime,
-                                        fontsize: 12.sp,
-                                        color: Colors.white,
+                                      SizedBox(width: 2.w),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            InterBold(
+                                              text: reportData,
+                                              fontsize: 12.sp,
+                                              color: Colors.white,
+                                            ),
+                                            InterBold(
+                                              text: formattedTime,
+                                              fontsize: 12.sp,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
               ],
             ),
           ),
