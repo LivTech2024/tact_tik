@@ -439,7 +439,7 @@ class CheckReason extends StatefulWidget {
 
 class _CheckReasonState extends State<CheckReason> {
   bool isExpand = false;
-
+  final TextEditingController _reasonController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -504,7 +504,7 @@ class _CheckReasonState extends State<CheckReason> {
           Visibility(
             visible: isExpand,
             child: TextField(
-              // controller: _reasonController,
+              controller: _reasonController,
               decoration: InputDecoration(
                 hintText: 'Enter failure reason',
                 border: OutlineInputBorder(
