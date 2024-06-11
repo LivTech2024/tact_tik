@@ -1562,6 +1562,22 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               ShiftId: widget.p.ShiftId,
                                               EmployeeID: widget.p.EmpId,
                                               PatrolID: widget.p.PatrolId,
+                                              EmployeeName:
+                                                  widget.p.EmployeeName,
+                                              CompletedCount:
+                                                  widget.p.CompletedCount,
+                                              PatrolRequiredCount:
+                                                  widget.p.PatrolRequiredCount,
+                                              PatrolCompanyID:
+                                                  widget.p.PatrolCompanyID,
+                                              PatrolClientID:
+                                                  widget.p.PatrolClientID,
+                                              LocationId: widget.p.LocationId,
+                                              description: widget.p.description,
+                                              ShiftDate: widget.p.ShiftDate,
+                                              PatrolStartedTIme:
+                                                  widget.p.PatrolStartedTIme,
+                                              ShiftName: widget.p.ShiftName,
                                             )));
                                 // showCustomDialog(
                                 //     context,

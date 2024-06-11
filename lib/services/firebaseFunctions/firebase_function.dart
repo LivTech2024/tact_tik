@@ -2813,7 +2813,11 @@ class FireStoreService {
           var status = checkPointStatus.firstWhere(
             (s) =>
                 s["StatusReportedById"] == empId &&
-                isSameDay(s["StatusReportedTime"], Timestamp.now()),
+                // isSameDay(s["StatusReportedTime"], Timestamp.now()
+                s["StatusShiftId"] == ShiftId
+
+            // )
+            ,
             orElse: () => null,
           );
 
@@ -2864,6 +2868,70 @@ class FireStoreService {
       }
     } catch (e) {
       print('Error adding images to PatrolReport: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addFailureReasonToPatrol(
+    Map<String, String> checkpointReasons,
+    String patrolID,
+    String empId,
+    String ShiftId,
+  ) async {
+    try {
+      final querySnapshot = await patrols.doc(patrolID).get();
+
+      if (querySnapshot.exists) {
+        final doc = querySnapshot.data() as Map<String, dynamic>;
+
+        // Check if PatrolCheckPoints is null or not properly initialized
+        List<dynamic> patrolCheckPoints = doc["PatrolCheckPoints"] ?? [];
+
+        // Update the failure reason for each checkpoint
+        checkpointReasons.forEach((checkpointId, reason) {
+          // Find the specific CheckPoint within PatrolCheckPoints
+          var checkPoint = patrolCheckPoints.firstWhere(
+            (cp) => cp["CheckPointId"] == checkpointId,
+            orElse: () => null,
+          );
+
+          if (checkPoint != null) {
+            // Ensure that CheckPointStatus is correctly initialized and cast to List<dynamic>
+            List<dynamic> checkPointStatus =
+                checkPoint["CheckPointStatus"] ?? [];
+
+            // Find the specific status within CheckPointStatus where StatusReportedById matches empId
+            var status = checkPointStatus.firstWhere(
+              (s) =>
+                  s["StatusReportedById"] == empId &&
+                  // isSameDay(s["StatusReportedTime"], Timestamp.now()
+                  s["StatusShiftId"] == ShiftId
+              // )
+              ,
+              orElse: () => null,
+            );
+
+            if (status != null) {
+              // Update the failure reason
+              status["StatusFailureReason"] = reason;
+            } else {
+              print(
+                  "No Status found for CheckPointId: $checkpointId and EmpId: $empId");
+            }
+          } else {
+            print("No CheckPoint found with CheckPointId: $checkpointId");
+          }
+        });
+
+        // Update the Firestore document with the new failure reasons
+        await patrols.doc(patrolID).update({
+          "PatrolCheckPoints": patrolCheckPoints,
+        });
+      } else {
+        print("No document found with PatrolID: $patrolID");
+      }
+    } catch (e) {
+      print('Error adding failure reasons to PatrolCheckPoints: $e');
       throw e;
     }
   }

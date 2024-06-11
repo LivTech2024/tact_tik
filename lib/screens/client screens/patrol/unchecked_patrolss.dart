@@ -4,25 +4,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_regular.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/end_checkpoint_screen.dart';
 import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 import '../../../fonts/inter_medium.dart';
 
 FireStoreService fireStoreService = FireStoreService();
+final Map<String, String> _checkpointReasons = {};
 
 class UncheckedPatrolScreen extends StatefulWidget {
   final String ShiftId;
   final String EmployeeID;
   final String PatrolID;
+  final String EmployeeName;
+  final int CompletedCount;
 
+  final int PatrolRequiredCount;
+  final String PatrolCompanyID;
+  final String PatrolClientID;
+  final String LocationId;
+  final String description;
+  final String ShiftDate;
+  final Timestamp? PatrolStartedTIme;
+  final String ShiftName;
   UncheckedPatrolScreen(
       {super.key,
       required this.ShiftId,
       required this.EmployeeID,
-      required this.PatrolID});
+      required this.PatrolID,
+      required this.EmployeeName,
+      required this.CompletedCount,
+      required this.PatrolRequiredCount,
+      required this.PatrolCompanyID,
+      required this.PatrolClientID,
+      required this.LocationId,
+      required this.description,
+      required this.ShiftDate,
+      required this.PatrolStartedTIme,
+      required this.ShiftName});
 
   @override
   State<UncheckedPatrolScreen> createState() => _UncheckedPatrolScreenState();
@@ -419,6 +442,48 @@ class _UncheckedPatrolScreenState extends State<UncheckedPatrolScreen> {
                     ],
                   );
                 },
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    for (var entry in _checkpointReasons.entries) {
+                      print('Checkpoint: ${entry.key}, Reason: ${entry.value}');
+                    }
+                    await fireStoreService
+                        .addFailureReasonToPatrol(_checkpointReasons,
+                            widget.PatrolID, widget.EmployeeID, widget.ShiftId)
+                        .then((_) {
+                      showSuccessToast(context, "Updated");
+                      print(_checkpointReasons);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EndCheckpointScreen(
+                                  EmpId: widget.EmployeeID,
+                                  PatrolID: widget.PatrolID,
+                                  ShiftId: widget.ShiftId,
+                                  EmpName: widget.EmployeeName,
+                                  CompletedCount: widget.CompletedCount,
+                                  PatrolRequiredCount:
+                                      widget.PatrolRequiredCount,
+                                  PatrolCompanyID: widget.PatrolCompanyID,
+                                  PatrolClientID: widget.PatrolClientID,
+                                  LocationId: widget.LocationId,
+                                  ShiftName: widget.ShiftName,
+                                  description: widget.description,
+                                  ShiftDate: widget.ShiftDate,
+                                  PatrolStatusTime: widget.PatrolStartedTIme,
+                                )),
+                      );
+                    }).catchError((error) {
+                      // Handle error
+                      print('Error: $error');
+                    });
+                    showSuccessToast(context, "Uploaded");
+                    print(_checkpointReasons);
+                  },
+                  child: Text("Submit"),
+                ),
               )
             ],
           ),
@@ -498,6 +563,15 @@ class _CheckReasonState extends State<CheckReason> {
                     size: 24.sp,
                   ),
                 ),
+              ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () =>
+                    print('Reason input for: ${widget.checkpoint.title}'),
+                icon: Icon(
+                  Icons.send,
+                  size: 24.sp,
+                ),
               )
             ],
           ),
@@ -517,6 +591,10 @@ class _CheckReasonState extends State<CheckReason> {
               style: TextStyle(
                 fontSize: 16.sp,
               ),
+              onChanged: (value) {
+                print("Widget ${widget.checkpoint.id} = $value");
+                _checkpointReasons[widget.checkpoint.id] = value;
+              },
             ),
           )
         ],
