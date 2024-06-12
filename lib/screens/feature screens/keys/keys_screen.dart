@@ -38,7 +38,7 @@ class _KeysScreenState extends State<KeysScreen> {
     if (documents != null) {
       for (final document in documents) {
         final allocationDate =
-            (document['KeyAllocationDate'] as Timestamp).toDate();
+        (document['KeyAllocationDate'] as Timestamp).toDate();
         final date = DateTime(
             allocationDate.year, allocationDate.month, allocationDate.day);
 
@@ -62,7 +62,6 @@ class _KeysScreenState extends State<KeysScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-       
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // TODO Pass Values
@@ -75,8 +74,7 @@ class _KeysScreenState extends State<KeysScreen> {
                   ),
                 ));
           },
-          backgroundColor:
-              Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -86,11 +84,9 @@ class _KeysScreenState extends State<KeysScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-             
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -100,7 +96,6 @@ class _KeysScreenState extends State<KeysScreen> {
               ),
               title: InterMedium(
                 text: 'Keys',
-                
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -124,11 +119,26 @@ class _KeysScreenState extends State<KeysScreen> {
                 }
 
                 final documents = snapshot.data?.docs;
+                if (documents == null || documents.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: InterMedium(
+                          text: 'No Keys Assigned',
+                          fontsize: 20.sp,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
                 final groupedDocuments = groupDocumentsByDate(documents);
 
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                        (context, index) {
                       final dateKeys = groupedDocuments.keys.toList();
                       if (index >= dateKeys.length) {
                         return SizedBox.shrink();
@@ -156,22 +166,22 @@ class _KeysScreenState extends State<KeysScreen> {
                             height: 30.h,
                           ),
                           ...groupedDocuments[date]!.map(
-                            (doc) {
+                                (doc) {
                               final allocationDate =
-                                  (doc['KeyAllocationDate'] as Timestamp)
-                                      .toDate();
+                              (doc['KeyAllocationDate'] as Timestamp)
+                                  .toDate();
                               final time =
                                   '${allocationDate.hour.toString().padLeft(2, '0')} : ${allocationDate.minute.toString().padLeft(2, '0')}';
 
                               final startDate =
-                                  (doc['KeyAllocationStartTime'] as Timestamp)
-                                      .toDate();
+                              (doc['KeyAllocationStartTime'] as Timestamp)
+                                  .toDate();
                               final endDate =
-                                  (doc['KeyAllocationEndTime'] as Timestamp)
-                                      .toDate();
+                              (doc['KeyAllocationEndTime'] as Timestamp)
+                                  .toDate();
                               final viewTime =
-                                  (doc['KeyAllocationDate'] as Timestamp)
-                                      .toDate();
+                              (doc['KeyAllocationDate'] as Timestamp)
+                                  .toDate();
                               final keyAllocationId = doc['KeyAllocationId'];
 
                               return Padding(
@@ -188,7 +198,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                                   endDate: DateFormat.yMd()
                                                       .format(endDate),
                                                   keyAllocationId:
-                                                      keyAllocationId,
+                                                  keyAllocationId,
                                                   time: DateFormat('hh:mm:ss a')
                                                       .format(viewTime),
                                                   keyId: widget.keyId,
@@ -209,20 +219,20 @@ class _KeysScreenState extends State<KeysScreen> {
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      CrossAxisAlignment.center,
                                       children: [
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                           children: [
                                             Container(
                                               height: 44.h,
                                               width: 44.w,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(10.r),
+                                                BorderRadius.circular(10.r),
                                                 color: Theme.of(context)
                                                     .primaryColorLight,
                                               ),
@@ -240,7 +250,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                               stream: FirebaseFirestore.instance
                                                   .collection('Keys')
                                                   .where('KeyId',
-                                                      isEqualTo: widget.keyId)
+                                                  isEqualTo: widget.keyId)
                                                   .snapshots(),
                                               builder: (context, snapshot) {
                                                 String keyName =
@@ -250,10 +260,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                                       snapshot.data!.docs;
                                                   keyName = documents.isNotEmpty
                                                       ? (documents.first.data()
-                                                                  as Map<String,
-                                                                      dynamic>)[
-                                                              'KeyName'] ??
-                                                          'Equipment Not Available'
+                                                  as Map<String,
+                                                      dynamic>)[
+                                                  'KeyName'] ??
+                                                      'Equipment Not Available'
                                                       : 'Equipment Not Available';
                                                 }
                                                 return InterMedium(
