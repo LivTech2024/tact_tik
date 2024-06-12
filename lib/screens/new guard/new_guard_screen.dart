@@ -22,7 +22,29 @@ class NewGuardScreen extends StatefulWidget {
 
 class _NewGuardScreenState extends State<NewGuardScreen> {
   bool LastPage = false;
-
+  final TextEditingController FirstNameController = TextEditingController();
+  final TextEditingController LastNameController = TextEditingController();
+  final TextEditingController PhoneNumberController = TextEditingController();
+  final TextEditingController EmailController = TextEditingController();
+  final TextEditingController PasswordController = TextEditingController();
+  final TextEditingController RoleController = TextEditingController();
+  final TextEditingController PayRateController = TextEditingController();
+  final TextEditingController WeekHoursController = TextEditingController();
+  final TextEditingController BranchController = TextEditingController();
+  final TextEditingController AddressController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController PostalCodeController = TextEditingController();
+  final TextEditingController ProvinceController = TextEditingController();
+  final TextEditingController DrivingLicenseController =
+      TextEditingController();
+  final TextEditingController SecurityLicensesController =
+      TextEditingController();
+  final TextEditingController CertificateController = TextEditingController();
+  final TextEditingController AccountNumberController = TextEditingController();
+  final TextEditingController TransitNumberController = TextEditingController();
+  final TextEditingController InstitutionNumberController =
+      TextEditingController();
+  final TextEditingController SINNumberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -33,11 +55,9 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-           
           ),
           padding: EdgeInsets.only(left: width / width20),
           onPressed: () {
@@ -46,7 +66,6 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         ),
         title: InterMedium(
           text: 'New Guard',
-          
         ),
         centerTitle: true,
       ),
@@ -59,27 +78,50 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
           });
         },
         children: [
-          PersonalDetails(),
-          BankDetails(),
-          LicensesDetails(),
-          CertificateDetails(),
-          AddressDetails()
+          PersonalDetails(
+            FirstNameController: FirstNameController,
+            LastNameController: LastNameController,
+            PhoneNumberController: PhoneNumberController,
+            EmailController: EmailController,
+            PasswordController: PasswordController,
+            RoleController: RoleController,
+            PayRateController: PayRateController,
+            WeekHoursController: WeekHoursController,
+            BranchController: BranchController,
+          ),
+          BankDetails(
+            AccountNumberController: AccountNumberController,
+            TransitNumberController: TransitNumberController,
+            InstitutionNumberController: InstitutionNumberController,
+            SINNumberController: SINNumberController,
+          ),
+          LicensesDetails(
+            DrivingLicenseController: DrivingLicenseController,
+            SecurityLicensesController: SecurityLicensesController,
+          ),
+          CertificateDetails(
+            CertificateController: CertificateController,
+          ),
+          AddressDetails(
+            AddressController: AddressController,
+            cityController: cityController,
+            PostalCodeController: PostalCodeController,
+            ProvinceController: ProvinceController,
+          )
         ],
       )),
       bottomSheet: LastPage
-          ?  Button1(
-            text: 'Submit',
-            onPressed: (){},
-            backgroundcolor:
-               Theme.of(context).primaryColor,
-            color: Colors.white,
-            borderRadius: width / width10,
-            fontsize: width / width18,
-          )
+          ? Button1(
+              text: 'Submit',
+              onPressed: () {},
+              backgroundcolor: Theme.of(context).primaryColor,
+              color: Colors.white,
+              borderRadius: width / width10,
+              fontsize: width / width18,
+            )
           : Container(
               height: height / height66,
-              color:
-                  Theme.of(context).canvasColor,
+              color: Theme.of(context).canvasColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width40),
                 child: Row(
@@ -94,8 +136,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       icon: Icon(
                         Icons.arrow_back_ios,
                         size: width / width24,
-                        color:
-                            Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     ),
                     IconButton(
@@ -106,8 +147,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       icon: Icon(
                         Icons.arrow_forward_ios,
                         size: width / width24,
-                        color:
-                            Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     )
                   ],

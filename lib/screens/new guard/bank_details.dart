@@ -11,6 +11,13 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class BankDetails extends StatefulWidget {
+  final TextEditingController AccountNumberController ;
+  final TextEditingController TransitNumberController ;
+  final TextEditingController InstitutionNumberController
+     ;
+  final TextEditingController SINNumberController ;
+
+  const BankDetails({super.key, required this.AccountNumberController, required this.TransitNumberController, required this.InstitutionNumberController, required this.SINNumberController});
   @override
   State<BankDetails> createState() => _BankDetailsState();
 }
@@ -21,13 +28,7 @@ class _BankDetailsState extends State<BankDetails> {
     List<Map<String, dynamic>> uploads = [];
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final TextEditingController AccountNumberController =
-        TextEditingController();
-    final TextEditingController TransitNumberController =
-        TextEditingController();
-    final TextEditingController InstitutionNumberController =
-        TextEditingController();
-    final TextEditingController SINNumberController = TextEditingController();
+    
 
     Future<void> _addImage() async {
       final pickedFile =
@@ -143,7 +144,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Account Number',
-            controller: AccountNumberController,
+            controller:widget. AccountNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -152,7 +153,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Transit Number',
-            controller: TransitNumberController,
+            controller:widget. TransitNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -161,7 +162,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Institution Number',
-            controller: InstitutionNumberController,
+            controller: widget.InstitutionNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -175,7 +176,7 @@ class _BankDetailsState extends State<BankDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'SIN Number',
-            controller: SINNumberController,
+            controller:widget. SINNumberController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),

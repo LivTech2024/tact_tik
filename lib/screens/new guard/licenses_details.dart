@@ -13,6 +13,10 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class LicensesDetails extends StatefulWidget {
+  final TextEditingController DrivingLicenseController ;
+      final TextEditingController SecurityLicensesController ;
+
+  const LicensesDetails({super.key, required this.DrivingLicenseController, required this.SecurityLicensesController});
   @override
   State<LicensesDetails> createState() => _LicensesDetailsState();
 }
@@ -23,12 +27,10 @@ class _LicensesDetailsState extends State<LicensesDetails> {
     List<Map<String, dynamic>> uploads = [];
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final TextEditingController SecurityLicensesController =
-        TextEditingController();
+    
     DateTime? SecurityLicensesExpireDate;
     DateTime? DrivingLicensesExpireDate;
-    final TextEditingController DrivingLicenseController =
-        TextEditingController();
+    
 
     Future<void> _addImage() async {
       final pickedFile =
@@ -168,7 +170,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Security Licenses Number',
-            controller: SecurityLicensesController,
+            controller:widget. SecurityLicensesController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
@@ -288,7 +290,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
           ),
           SetTextfieldWidget(
             hintText: 'Driving License Number',
-            controller: DrivingLicenseController,
+            controller:widget. DrivingLicenseController,
             enabled: !isEditMode,
             isEditMode: isEditMode,
           ),
