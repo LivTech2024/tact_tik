@@ -70,6 +70,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
   List<Map<String, dynamic>> guards = [];
+  List<String> keyNames = ['Select'];
+  Map<String, DocumentSnapshot> keyNameToDocMap = {};
 
   @override
   void initState() {
@@ -85,6 +87,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
     setState(() {
       keys = querySnapshot.docs;
+      keyNames.addAll(querySnapshot.docs.map((doc) => doc.get('KeyName')).toList().cast<String>());
+      keyNameToDocMap = {
+        for (var doc in querySnapshot.docs) doc.get('KeyName'): doc
+      };
     });
   }
 
@@ -325,24 +331,25 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     iconSize: 24.sp,
                                     dropdownColor: Theme.of(context).cardColor,
                                     style: TextStyle(
-                                        color:  Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color),
+                                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                                    ),
                                     borderRadius: BorderRadius.circular(10.r),
                                     value: dropdownValue,
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         dropdownValue = newValue!;
-                                        print('$dropdownValue selected');
+                                        if (newValue != 'Select') {
+                                          selectedKeyId = keyNameToDocMap[newValue]!.id;
+                                        } else {
+                                          selectedKeyId = '';
+                                        }
+                                        print('$dropdownValue selected, selectedKeyId: $selectedKeyId');
                                       });
                                     },
-                                    items: <String?>[...tittles]
-                                        .map<DropdownMenuItem<String>>(
-                                            (String? value) {
+                                    items: keyNames.map<DropdownMenuItem<String>>((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
-                                        child: InterMedium(text: value ?? ''),
+                                        child: InterMedium(text: value),
                                       );
                                     }).toList(),
                                   ),
