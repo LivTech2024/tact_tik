@@ -112,8 +112,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
         ),
-        reverse: SuggestionsController.of<Screens>(context).effectiveDirection ==
-            VerticalDirection.up,
+        reverse:
+            SuggestionsController.of<Screens>(context).effectiveDirection ==
+                VerticalDirection.up,
         itemBuilder: (context, index) => items[index],
       ),
     );
@@ -162,7 +163,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(empId: widget.empId,),
+                          builder: (context) => ProfileScreen(
+                            empId: widget.empId,
+                          ),
                         ),
                       );
                     },
@@ -196,10 +199,9 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                              WriteMsgScreen()));
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WriteMsgScreen()));
                             },
                             child: Icon(
                               Icons.notifications,
@@ -219,7 +221,10 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                 padding: EdgeInsets.all(2.sp),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color:Theme.of(context).textTheme.bodySmall?.color, // Background color for unread indicator
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.color, // Background color for unread indicator
                                 ),
                               ),
                             ),
@@ -234,8 +239,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           scaleX: -1,
                           child: Icon(
                             Icons.short_text_rounded,
-                            color:
-                                Theme.of(context).textTheme.bodySmall!.color,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                             size: 40.sp,
                           ),
                         ),
@@ -252,8 +256,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                     children: [
                       PoppinsSemibold(
                         text: '${greeting}',
-                        color:
-                             Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                         letterSpacing: -.5,
                         fontsize: 35.sp,
                       ),
@@ -262,8 +265,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                         text: widget.userName != ''
                             ? widget.userName
                             : 'User not found',
-                        color:
-                             Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                         fontsize: 30.sp,
                       ),
                       SizedBox(height: 46.h),
@@ -331,7 +333,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                               hintStyle: GoogleFonts.poppins(
                                 fontWeight: FontWeight.w300,
                                 fontSize: 18.sp,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
                                     .color,
@@ -345,12 +347,11 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           suggestionsCallback: suggestionsCallback,
                           itemBuilder: (context, Screens screen) {
                             return ListTile(
-                              
                               leading:
                                   Icon(screen.icon, color: Colors.blueAccent),
                               title: InterRegular(
                                 text: screen.name,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -372,7 +373,6 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           decorationBuilder: (context, child) => Material(
                             type: MaterialType.card,
                             elevation: 4,
-                    
                             borderRadius: BorderRadius.circular(10.r),
                             child: child,
                           ),
@@ -503,7 +503,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           child: Icon(
                             Icons.search,
                             size: 19.sp,
-                            color: Colors.black,
+                            color: Theme.of(context).iconTheme.color,
                           ),
                         ),
                       )
@@ -520,7 +520,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                           child: InterRegular(
                             text: 'CLEAR',
                             fontsize: 14.sp,
-                            color:  Theme.of(context).textTheme.bodySmall!.color,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                         )
                       : SizedBox()

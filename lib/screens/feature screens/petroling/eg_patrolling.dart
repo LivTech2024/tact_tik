@@ -942,6 +942,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 .textTheme
                                 .headlineMedium!
                                 .color as Color,
+                            Iconcolor: Theme.of(context).primaryColor,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
@@ -960,6 +961,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 .textTheme
                                 .headlineMedium!
                                 .color as Color,
+                            Iconcolor: Theme.of(context).primaryColor,
                           ),
                           SizedBox(height: 16.h),
                           Divider(
@@ -979,6 +981,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                 .textTheme
                                 .headlineMedium!
                                 .color as Color,
+                            Iconcolor: Theme.of(context).primaryColor,
                           ),
                           SizedBox(height: 20.h),
                         ],
@@ -986,11 +989,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     ),
                     Button1(
                       text: 'START',
-                      backgroundcolor:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? DarkColor.colorgreen
-                              : LightColor.WidgetColor,
-                      color: Colors.green,
+                      backgroundcolor: Theme.of(context).primaryColor,
+                      color: DarkColor.color5,
                       borderRadius: 10.r,
                       onPressed: buttonClicked
                           ? () async {
@@ -1090,10 +1090,10 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                     ),
                                     margin: EdgeInsets.only(top: 10.h),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .color as Color,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? DarkColor.color27
+                                          : LightColor.WidgetColor,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     child: Row(
@@ -1107,9 +1107,11 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                               width: 48.w,
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge!
-                                                    .color as Color,
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? DarkColor.WidgetColor
+                                                    : LightColor
+                                                        .Primarycolorlight,
                                                 borderRadius:
                                                     BorderRadius.circular(10.r),
                                               ),
@@ -1117,9 +1119,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                 Icons.home_sharp,
                                                 size: 24.sp,
                                                 color: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall!
-                                                    .color as Color,
+                                                    .primaryColor,
                                               ),
                                             ),
                                             SizedBox(
@@ -1138,38 +1138,25 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                             ),
                                           ],
                                         ),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if (_expandCategoryMap[
-                                                      category.title] !=
-                                                  null) {
-                                                _expandCategoryMap[
-                                                        category.title] =
-                                                    !_expandCategoryMap[
-                                                        category.title]!;
-                                              }
-                                              // _expand2 = !_expand2;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            expand
-                                                ? Icons.arrow_circle_up_outlined
-                                                : Icons
-                                                    .arrow_circle_down_outlined,
-                                            size: 24.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .color as Color,
-                                          ),
+                                        Icon(
+                                          expand
+                                              ? Icons.arrow_circle_up_outlined
+                                              : Icons
+                                                  .arrow_circle_down_outlined,
+                                          size: 24.sp,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color as Color,
                                         )
                                       ],
                                     ),
                                   ),
                                 ),
                                 Visibility(
-                                  visible: widget.p.CurrentStatus == 'started',
+                                  visible:
+                                      widget.p.CurrentStatus == 'started' &&
+                                          expand,
                                   child: Column(
                                     children:
                                         category.checkpoints.map((checkpoint) {
@@ -1272,7 +1259,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   .brightness ==
                                                               Brightness.dark
                                                           ? DarkColor.color16
-                                                          : LightColor.color1,
+                                                          : LightColor.Primarycolorlight,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                         10.r,
@@ -1283,10 +1270,21 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                       width: 30.w,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyLarge!
-                                                            .color as Color,
+                                                        color: checkpoint.getFirstStatus(
+                                                                    widget.p
+                                                                        .EmpId,
+                                                                    widget.p
+                                                                        .ShiftId) !=
+                                                                'checked'
+                                                            ? Theme.of(context)
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? DarkColor
+                                                                    .color16
+                                                                : Colors.transparent
+                                                            : Colors
+                                                                .lightGreenAccent,
                                                       ),
                                                       child: Icon(
                                                         checkpoint.getFirstStatus(
@@ -1305,10 +1303,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                 'checked'
                                                             ? Colors.green
                                                             : (Theme.of(context)
-                                                                    .textTheme
-                                                                    .bodySmall!
-                                                                    .color
-                                                                as Color),
+                                                                .primaryColor),
                                                       ),
                                                     ),
                                                   ),
@@ -1369,7 +1364,7 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                     .brightness ==
                                                                 Brightness.dark
                                                             ? DarkColor.color16
-                                                            : LightColor.color1,
+                                                            : LightColor.Primarycolorlight,
                                                       ),
                                                       child: Center(
                                                         child: IconButton(
@@ -1449,11 +1444,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           },
                                                           icon: Icon(
                                                             Icons.info,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyMedium!
-                                                                .color as Color,
+                                                            color: Theme.of(context)
+                                                                .brightness ==
+                                                                Brightness.dark ? DarkColor.color5 : LightColor.Primarycolor,
                                                             size: 24.sp,
                                                           ),
                                                           padding:
