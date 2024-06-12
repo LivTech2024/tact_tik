@@ -90,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _shiftLongitude = 0;
   String _employeeId = "";
   String _employeeCompanyID = "";
+  String _employeeCompanyBranchID = "";
   bool ShiftStarted = false;
   bool ShiftExist = false;
   String _shiftLocationId = "";
@@ -237,6 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _empEmail = empEmail;
           employeeImg = empImage;
           _employeeCompanyID = empCompanyId;
+          _employeeCompanyBranchID = empBranchId;
         });
         print('User Info: ${userInfo.data()}');
         if (patrolInfo != null) {
@@ -752,13 +754,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.add_task,
                               color: ScreenIndex == 0
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 0
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
                           ),
@@ -769,13 +771,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.grid_view_rounded,
                               color: ScreenIndex == 1
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 1
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
                           ),
@@ -803,13 +805,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               icon: Icons.chat_bubble_outline,
                               color: ScreenIndex == 3
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                               textcolor: ScreenIndex == 3
                                   ? ThemeMode.dark == themeManager.themeMode
-                                  ? DarkColor.color1
-                                  : LightColor.Primarycolor
+                                      ? DarkColor.color1
+                                      : LightColor.Primarycolor
                                   : Theme.of(context).focusColor,
                             ),
                           ),
@@ -994,6 +996,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     keyId: _employeeId,
                                                     companyId:
                                                         _employeeCompanyID,
+                                                    branchId:
+                                                        _employeeCompanyBranchID,
                                                   )
                                               // AssetsScreen(
                                               //     assetEmpId:

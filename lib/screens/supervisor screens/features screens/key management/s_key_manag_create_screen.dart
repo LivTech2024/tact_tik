@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:tact_tik/common/widgets/customToast.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 
 import '../../../../common/sizes.dart';
 import '../../../../common/widgets/button1.dart';
@@ -16,6 +20,7 @@ import '../../../../fonts/inter_medium.dart';
 import '../../../../fonts/inter_regular.dart';
 import '../../../../utils/colors.dart';
 import '../../../feature screens/widgets/custome_textfield.dart';
+import '../../home screens/Scheduling/select_guards_screen.dart';
 import '../../home screens/widgets/set_details_widget.dart';
 
 class Guards {
@@ -25,12 +30,20 @@ class Guards {
   Guards(this.name, this.image);
 }
 
+FireStoreService _fireStoreService = FireStoreService();
+
 class SCreateKeyManagScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
-
-  SCreateKeyManagScreen(
-      {super.key, required this.keyId, required this.companyId});
+  final String branchId;
+  final String AllocationKeyId;
+  SCreateKeyManagScreen({
+    super.key,
+    required this.keyId,
+    required this.companyId,
+    required this.branchId,
+    required this.AllocationKeyId,
+  });
 
   @override
   State<SCreateKeyManagScreen> createState() =>
@@ -45,8 +58,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   DateTime? SelectedDate;
   DateTime? EndDate;
   String dropdownValue = 'Select';
-  List<String> tittles = [];
-  List<Map<String, dynamic>> selectedGuards = [];
+  List<String> tittles = [
+    'Select',
+    'yash home key',
+    'vaibhav room key',
+    'heaven key',
+    'jaldhi fix key'
+  ];
+  List selectedGuards = [];
   TextEditingController _tittleController = TextEditingController();
   TextEditingController _RecipientNameController = TextEditingController();
   TextEditingController _ContactController = TextEditingController();
@@ -62,11 +81,19 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
   List<Map<String, dynamic>> guards = [];
-
+  List<String> keyNames = ['Select'];
+  Map<String, DocumentSnapshot> keyNameToDocMap = {};
+  bool editKeyMode = false;
   @override
   void initState() {
     super.initState();
-    _fetchKeys();
+    if (widget.AllocationKeyId.isNotEmpty) {
+      setState(() {
+        editKeyMode = true;
+      });
+    } else {
+      _fetchKeys();
+    }
   }
 
   Future<void> _fetchKeys() async {
@@ -77,6 +104,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
     setState(() {
       keys = querySnapshot.docs;
+      keyNames.addAll(querySnapshot.docs
+          .map((doc) => doc.get('KeyName'))
+          .toList()
+          .cast<String>());
+      keyNameToDocMap = {
+        for (var doc in querySnapshot.docs) doc.get('KeyName'): doc
+      };
     });
   }
 
@@ -102,22 +136,24 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
   Future<void> _selectDate(
       BuildContext context, bool isStart, bool isDate) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    setState(() {
-      if (picked != null) {
+    final DateTime? dateTime = await showOmniDateTimePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+
+    if (dateTime != null) {
+      setState(() {
         if (isStart) {
-          StartDate = picked;
+          StartDate = dateTime;
         } else if (isDate) {
-          SelectedDate = picked;
+          SelectedDate = dateTime;
         } else {
-          EndDate = picked;
+          EndDate = dateTime;
         }
-      }
-    });
+      });
+    }
   }
 
   Future<void> _saveData() async {
@@ -125,9 +161,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         FirebaseFirestore.instance.collection('KeyAllocations');
     DocumentReference docRef = await keyAllocations.add({
       'KeyAllocationCreatedAt': FieldValue.serverTimestamp(),
-      'KeyAllocationDate': FieldValue.serverTimestamp(),
-      'KeyAllocationEndTime': 0,
-      'KeyAllocationStartTime': 0,
+      'KeyAllocationDate': SelectedDate,
+      'KeyAllocationEndTime': EndDate,
+      'KeyAllocationStartTime': StartDate,
       'KeyAllocationId': '',
       'KeyAllocationIsReturned': false,
       'KeyAllocationKeyId': selectedKeyId ?? '',
@@ -143,6 +179,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     });
   }
 
+  void createKey() {}
   final List<Guards> _screens = [
     Guards('Site Tours', 'Image URL'),
     Guards('DAR Screen', 'Image URL'),
@@ -219,9 +256,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                   Container(
                     height: 65.h,
                     width: double.maxFinite,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? DarkColor.color24
-                        : LightColor.WidgetColor,
+                    color: Theme.of(context).cardColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -319,37 +354,102 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     iconSize: 24.sp,
                                     dropdownColor: Theme.of(context).cardColor,
                                     style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .color),
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color,
+                                    ),
                                     borderRadius: BorderRadius.circular(10.r),
                                     value: dropdownValue,
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         dropdownValue = newValue!;
-                                        print('$dropdownValue selected');
+                                        if (newValue != 'Select') {
+                                          selectedKeyId =
+                                              keyNameToDocMap[newValue]!.id;
+                                        } else {
+                                          selectedKeyId = '';
+                                        }
+                                        print(
+                                            '$dropdownValue selected, selectedKeyId: $selectedKeyId');
                                       });
                                     },
-                                    items: <String?>[...tittles]
+                                    items: keyNames
                                         .map<DropdownMenuItem<String>>(
-                                            (String? value) {
+                                            (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
-                                        child: InterMedium(text: value ?? ''),
+                                        child: InterMedium(text: value),
                                       );
                                     }).toList(),
                                   ),
                                 ),
                               ),
                               SizedBox(height: 20.h),
-                              InterBold(
-                                text: 'Recipient Name',
-                                fontsize: 16.w,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InterBold(
+                                    text: 'Recipient Name',
+                                    fontsize: 16.w,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SelectGuardsScreen(
+                                                    companyId: widget.companyId,
+                                                  ))).then((value) => {
+                                            if (value != null)
+                                              {
+                                                print("Value: ${value}"),
+                                                setState(() {
+                                                  bool guardExists =
+                                                      selectedGuards.any(
+                                                          (guard) =>
+                                                              guard[
+                                                                  'GuardId'] ==
+                                                              value['id']);
+
+                                                  if (guardExists) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            'Guard already added'),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    // Add the guard if it does not exist
+                                                    selectedGuards.add({
+                                                      'GuardId': value['id'],
+                                                      'GuardName':
+                                                          value['name'],
+                                                      'GuardImg': value['url']
+                                                    });
+                                                  }
+                                                }),
+                                              }
+                                          });
+                                    },
+                                    child: InterBold(
+                                      text: '+ Add',
+                                      fontsize: 16.w,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                  )
+                                ],
                               ),
                               SizedBox(height: 10.h),
                               Container(
@@ -454,103 +554,129 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 },
                               ),
                               SizedBox(height: 20.h),
-                              Container(
-                                margin: EdgeInsets.only(top: 20.h),
-                                height: 80.h,
-                                width: double.maxFinite,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: selectedGuards.length,
-                                  itemBuilder: (context, index) {
-                                    String guardId =
-                                        selectedGuards[index]['GuardId'];
-                                    String guardName =
-                                        selectedGuards[index]['GuardName'];
-                                    String guardImg =
-                                        selectedGuards[index]['GuardImg'];
-                                    return Padding(
-                                      padding: EdgeInsets.only(right: 20.h),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              Container(
-                                                height: 50.h,
-                                                width: 50.w,
-                                                decoration: guardImg != ""
-                                                    ? BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              guardImg ?? ""),
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      )
-                                                    : BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        image: DecorationImage(
-                                                          image: AssetImage(
-                                                              'assets/images/default.png'),
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                              ),
-                                              Positioned(
-                                                top: -4,
-                                                right: -5,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      selectedGuards
-                                                          .removeAt(index);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    height: 20.h,
-                                                    width: 20.w,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color:
-                                                            DarkColor.color1),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        size: 8,
-                                                        color: DarkColor
-                                                            .Secondarycolor,
-                                                      ),
+                              //This should render both
+                              selectedGuards.isNotEmpty
+                                  ? Container(
+                                      margin: EdgeInsets.only(top: 20.h),
+                                      height: 80.h,
+                                      width: double.maxFinite,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: selectedGuards.length,
+                                        itemBuilder: (context, index) {
+                                          String guardId =
+                                              selectedGuards[index]['GuardId'];
+                                          String guardName =
+                                              selectedGuards[index]
+                                                  ['GuardName'];
+                                          String guardImg =
+                                              selectedGuards[index]['GuardImg'];
+                                          return Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 20.h),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    Container(
+                                                      height: 50.h,
+                                                      width: 50.w,
+                                                      decoration: guardImg != ""
+                                                          ? BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: NetworkImage(
+                                                                    guardImg ??
+                                                                        ""),
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            )
+                                                          : BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: AssetImage(
+                                                                    'assets/images/default.png'),
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
                                                     ),
-                                                  ),
+                                                    Positioned(
+                                                      top: -4,
+                                                      right: -5,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            selectedGuards
+                                                                .removeAt(
+                                                                    index);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          height: 20.h,
+                                                          width: 20.w,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: DarkColor
+                                                                      .color1),
+                                                          child: Center(
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              size: 8,
+                                                              color: DarkColor
+                                                                  .Secondarycolor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          InterBold(
-                                            text: guardName,
-                                            fontsize: 14.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium!
-                                                .color,
-                                          )
-                                        ],
+                                                SizedBox(height: 8.h),
+                                                InterBold(
+                                                  text: guardName,
+                                                  fontsize: 14.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium!
+                                                      .color,
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                      child: InterMedium(
+                                        text: 'No Guards selected',
+                                        fontsize: 16.w,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
+                                    ),
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Contact',
@@ -610,8 +736,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               ),
                               SizedBox(height: 10.h),
                               GestureDetector(
-                                onTap: () {
-                                  _selectDate(context, true, true);
+                                onTap: () async {
+                                  _selectDate(context, false, true);
+                                  // DateTime? dateTime =
+                                  //     await showOmniDateTimePicker(
+                                  //         context: context);
                                 },
                                 child: Container(
                                   height: 60.h,
@@ -630,7 +759,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                         text: SelectedDate != null
                                             ? '${SelectedDate!.toLocal()}'
                                                 .split(' ')[0]
-                                            : 'Start Time',
+                                            : 'Select Date',
                                         fontsize: 16.w,
                                         color: Theme.of(context)
                                             .textTheme
@@ -675,8 +804,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           children: [
                                             InterMedium(
                                               text: StartDate != null
-                                                  ? '${StartDate!.toLocal()}'
-                                                      .split(' ')[0]
+                                                  ? DateFormat(
+                                                          'yyyy-MM-dd – kk:mm')
+                                                      .format(StartDate!)
                                                   : 'Start Time',
                                               fontsize: 16.sp,
                                               color: Theme.of(context)
@@ -712,8 +842,9 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           children: [
                                             InterMedium(
                                               text: EndDate != null
-                                                  ? '${EndDate!.toLocal()}'
-                                                      .split(' ')[0]
+                                                  ? DateFormat(
+                                                          'yyyy-MM-dd – kk:mm')
+                                                      .format(EndDate!)
                                                   : 'End Time',
                                               fontsize: 16.w,
                                               color: Theme.of(context)
@@ -823,8 +954,23 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               ),
                               Button1(
                                 text: 'Save',
-                                onPressed: () {
-                                  _saveData();
+                                onPressed: () async {
+                                  // _saveData();
+                                  var keycreate =
+                                      await _fireStoreService.CreateKey(
+                                          widget.branchId,
+                                          widget.companyId,
+                                          _keyNameController2.text,
+                                          0,
+                                          _DescriptionController.text,
+                                          int.parse(
+                                              _AllocateQtController2.text));
+                                  showSuccessToast(
+                                      context, 'Key has been Created');
+                                  _fetchKeys();
+                                  setState(() {
+                                    showCreate = false;
+                                  });
                                 },
                                 color: Theme.of(context)
                                     .textTheme

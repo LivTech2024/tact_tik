@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/enums/shift_task_enums.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
@@ -123,18 +124,18 @@ class _ShiftTaskScreenState extends State<ShiftTaskScreen> {
               slivers: [
                 SliverToBoxAdapter(
                   child: SizedBox(
-                    height: height / height60,
+                    height: 60.h,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InterBold(
                           text: '',
-                          fontsize: width / width18,
+                          fontsize: 18.sp,
                           color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                         InterBold(
                           text: '$completedTaskCount/$totalTaskCount',
-                          fontsize: width / width18,
+                          fontsize: 18.sp,
                           color:  Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       ],

@@ -994,6 +994,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
+                                        SizedBox(height: 10.h),
                                         InterBold(
                                           text: dateString,
                                           color: Theme.of(context)
@@ -1019,8 +1020,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                 offset: Offset(0, 3),
                                               )
                                             ],
-                                            color:
-                                                Theme.of(context).cardColor,
+                                            color: Theme.of(context).cardColor,
                                             borderRadius:
                                                 BorderRadius.circular(14.sp),
                                           ),
@@ -1066,7 +1066,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           color:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .bodySmall!
+                                                                  .titleSmall!
                                                                   .color,
                                                           fontsize: 14.sp,
                                                         ),
@@ -1108,7 +1108,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .bodySmall!
+                                                                .titleSmall!
                                                                 .color!,
                                                           ),
                                                           SizedBox(
@@ -1175,32 +1175,15 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .bodySmall!
+                                                                .titleSmall!
                                                                 .color!,
                                                             fontsize: 14.sp,
                                                           ),
                                                           SizedBox(height: 5.h),
-                                                          Row(
-                                                            children: [
-                                                              Icon(
-                                                                Icons
-                                                                    .check_circle_outlined,
-                                                                size: 24.w,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .bodySmall!
-                                                                    .color!,
-                                                              ),
-                                                              SizedBox(
-                                                                  width: 6.w),
-                                                              InterMedium(
-                                                                text: shifts[
-                                                                        index][
-                                                                    'ShiftStartTime'],
-                                                                fontsize: 14.sp,
-                                                              ),
-                                                            ],
+                                                          InterMedium(
+                                                            text: shifts[index][
+                                                                'ShiftStartTime'],
+                                                            fontsize: 14.sp,
                                                           ),
                                                         ],
                                                       ),
@@ -1217,7 +1200,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .bodySmall!
+                                                                .titleSmall!
                                                                 .color!,
                                                             fontsize: 14.sp,
                                                           ),

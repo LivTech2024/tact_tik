@@ -15,8 +15,12 @@ import '../../supervisor screens/features screens/key management/s_key_manag_cre
 class KeysScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
-
-  const KeysScreen({super.key, required this.keyId, required this.companyId});
+  final String branchId;
+  const KeysScreen(
+      {super.key,
+      required this.keyId,
+      required this.companyId,
+      required this.branchId});
 
   @override
   State<KeysScreen> createState() => _KeysScreenState();
@@ -62,7 +66,6 @@ class _KeysScreenState extends State<KeysScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-       
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // TODO Pass Values
@@ -71,12 +74,13 @@ class _KeysScreenState extends State<KeysScreen> {
                 MaterialPageRoute(
                   builder: (context) => SCreateKeyManagScreen(
                     keyId: widget.keyId,
-                    companyId: '',
+                    companyId: widget.companyId,
+                    branchId: widget.branchId,
+                    AllocationKeyId: '',
                   ),
                 ));
           },
-          backgroundColor:
-              Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
@@ -86,11 +90,9 @@ class _KeysScreenState extends State<KeysScreen> {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-             
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -100,7 +102,6 @@ class _KeysScreenState extends State<KeysScreen> {
               ),
               title: InterMedium(
                 text: 'Keys',
-                
                 letterSpacing: -0.3,
               ),
               centerTitle: true,
@@ -124,6 +125,21 @@ class _KeysScreenState extends State<KeysScreen> {
                 }
 
                 final documents = snapshot.data?.docs;
+                if (documents == null || documents.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: InterMedium(
+                          text: 'No Keys Assigned',
+                          fontsize: 20.sp,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
                 final groupedDocuments = groupDocumentsByDate(documents);
 
                 return SliverList(
@@ -149,7 +165,8 @@ class _KeysScreenState extends State<KeysScreen> {
                                   ? 'Today'
                                   : DateFormat.yMMMd().format(date),
                               fontsize: 20.sp,
-                              color: Theme.of(context).textTheme.bodySmall!.color,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           SizedBox(
