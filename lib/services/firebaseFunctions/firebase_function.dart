@@ -1484,8 +1484,8 @@ class FireStoreService {
     }
 
     final querySnapshot = await userInfo
-        .where("EmployeeCompanyId", isEqualTo: CompanyId)
-        .where("EmployeeRole", isEqualTo: "GUARD")
+        .where("EmployeeSupervisorId", arrayContains: CompanyId)
+        // .where("EmployeeRole", isEqualTo: "GUARD")
         .orderBy("EmployeeModifiedAt", descending: false)
         .get();
     // Log all retrieved documents

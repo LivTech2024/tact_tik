@@ -346,8 +346,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                     final result = await FirebaseFirestore
                                         .instance
                                         .collection('Employees')
-                                        .where('EmployeeRole',
-                                            isEqualTo: 'GUARD')
+                                        // .where('EmployeeRole',
+                                        //     isEqualTo: 'GUARD')
                                         .where('EmployeeCompanyId',
                                             isEqualTo: widget.companyId)
                                         .get();

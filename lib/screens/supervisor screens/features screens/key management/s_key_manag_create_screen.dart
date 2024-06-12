@@ -91,6 +91,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       setState(() {
         editKeyMode = true;
       });
+      _fetchAllotedData(widget.AllocationKeyId);
+      //fetch the data and display the details and a checkbox based on this condition
     } else {
       _fetchKeys();
     }
@@ -112,6 +114,39 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         for (var doc in querySnapshot.docs) doc.get('KeyName'): doc
       };
     });
+  }
+
+  Future<void> _fetchAllotedData(String allocationId) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('KeyAllocations')
+        .where('KeyAllocationId', isEqualTo: allocationId)
+        .get();
+
+    var data = querySnapshot.docs;
+
+    // Iterate over each document and print its fields
+    for (var doc in data) {
+      print("Document ID: ${doc.id}");
+      print("Key Allocation ID: ${doc['KeyAllocationId']}");
+      print("Key Allocation Created At: ${doc['KeyAllocationCreatedAt']}");
+      print("Key Allocation Key ID: ${doc['KeyAllocationKeyId']}");
+      setState(() {
+        // dropdownValue = doc['KeyAllocationId'].toString();
+        SelectedDate = (doc['KeyAllocationDate'] as Timestamp).toDate();
+        StartDate = (doc['KeyAllocationStartTime'] as Timestamp).toDate();
+        _AllocateQtController1.text = doc['KeyAllocationKeyQty'].toString();
+
+        // EndDate = doc['KeyAllocationEndTime'];s
+        EndDate = (doc['KeyAllocationEndTime'] as Timestamp).toDate();
+        _CompanyNameController.text =
+            doc['KeyAllocationRecipientCompany'].toString() ?? "";
+        _ContactController.text =
+            doc['KeyAllocationRecipientContact'].toString() ?? "";
+        // DateFormat( 'yyyy-MM-dd – kk:mm').format(EndDate!) KeyAllocationRecipientContact
+      });
+      //  (doc['KeyAllocationEndTime'] as Timestamp).toDate();
+      // Add other fields as needed
+    }
   }
 
   Future<void> searchGuards(String query) async {
@@ -180,17 +215,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   }
 
   void createKey() {}
-  final List<Guards> _screens = [
-    Guards('Site Tours', 'Image URL'),
-    Guards('DAR Screen', 'Image URL'),
-    Guards('Reports Screen', 'Image URL'),
-    Guards('Post Screen', 'Image URL'),
-    Guards('Task Screen', 'Image URL'),
-    Guards('LogBook Screen', 'Image URL'),
-    Guards('Visitors Screen', 'Image URL'),
-    Guards('Assets Screen', 'Image URL'),
-    Guards('Key Screen', 'Image URL'),
-  ];
 
   Widget gridLayoutBuilder(
     BuildContext context,
@@ -211,17 +235,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       itemBuilder: (context, index) => items[index],
     );
   }
-
-  Future<List<Guards>> suggestionsCallback(String pattern) async =>
-      Future<List<Guards>>.delayed(
-        Duration(milliseconds: 300),
-        () => _screens.where((product) {
-          // print(product.name);
-          final nameLower = product.name.toLowerCase().split(' ').join('');
-          final patternLower = pattern.toLowerCase().split(' ').join('');
-          return nameLower.contains(patternLower);
-        }).toList(),
-      );
 
   @override
   Widget build(BuildContext context) {

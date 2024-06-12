@@ -476,7 +476,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
     final result = await FirebaseFirestore.instance
         .collection('Employees')
-        .where('EmployeeRole', isEqualTo: 'GUARD')
+        // .where('EmployeeRole', isEqualTo: 'GUARD')
         .where('EmployeeCompanyId', isEqualTo: widget.CompanyId)
         .where('EmployeeNameSearchIndex', arrayContains: query)
         .get();
@@ -821,96 +821,39 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: TypeAheadField<Guards>(
-                                    autoFlipDirection: true,
+                                  child: TextField(
                                     controller: _searchController,
-                                    direction: VerticalDirection.down,
-                                    builder:
-                                        (context, _controller, focusNode) =>
-                                            TextField(
-                                      controller: _controller,
-                                      focusNode: focusNode,
-                                      autofocus: false,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.w,
-                                        color: Colors.white,
-                                      ),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.r),
-                                          ),
-                                        ),
-                                        focusedBorder: InputBorder.none,
-                                        hintStyle: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 18.w,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
-                                        ),
-                                        hintText: 'Search Guards',
-                                        contentPadding: EdgeInsets.zero,
-                                      ),
-                                      cursorColor:
-                                          Theme.of(context).primaryColor,
-                                    ),
-                                    suggestionsCallback: suggestionsCallback,
-                                    itemBuilder: (context, Guards guards) {
-                                      return ListTile(
-                                        leading: Container(
-                                          height: 30.h,
-                                          width: 30.w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                        ),
-                                        title: InterRegular(
-                                          text: guards.name,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
-                                        ),
-                                      );
+                                    onChanged: (query) {
+                                      searchGuards(query);
                                     },
-                                    emptyBuilder: (context) => Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.h,
-                                        horizontal: 10.w,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 18.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.r),
+                                        ),
                                       ),
-                                      child: InterRegular(
-                                        text: 'No Such Screen found',
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 18.sp,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
                                             .color,
-                                        fontsize: 18.sp,
                                       ),
+                                      hintText: 'Search Guard',
+                                      contentPadding: EdgeInsets.zero,
                                     ),
-                                    decorationBuilder: (context, child) =>
-                                        Material(
-                                      type: MaterialType.card,
-                                      elevation: 4,
-                                      borderRadius: BorderRadius.circular(
-                                        10.r,
-                                      ),
-                                      child: child,
-                                    ),
-                                    debounceDuration:
-                                        const Duration(milliseconds: 300),
-                                    onSelected: (Guards guard) {
-                                      print(
-                                          'home screen search bar############################################');
-
-                                      print(guard.name);
-                                    },
-                                    listBuilder: gridLayoutBuilder,
+                                    cursorColor: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 Container(
