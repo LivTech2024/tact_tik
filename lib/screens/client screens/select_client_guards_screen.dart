@@ -75,7 +75,8 @@ class _SelectGuardsScreenState extends State<SelectClientGuardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
+    final bool isDark =
+    Theme.of(context).brightness == Brightness.dark ? true : false;
 
     return SafeArea(
       child: Scaffold(
