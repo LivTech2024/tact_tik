@@ -395,8 +395,16 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Guards',
                             icon: Icons.add_task,
-                            color: IconColors[0],
-                            textcolor: IconColors[0],
+                            color: ScreenIndex == 0
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
+                            textcolor: ScreenIndex == 0
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
                           ),
                         ),
                         Bounce(
@@ -404,8 +412,16 @@ class _SHomeScreenState extends State<SHomeScreen> {
                           child: HomeScreenCustomNavigation(
                             text: 'Explore',
                             icon: Icons.grid_view_rounded,
-                            color: IconColors[1],
-                            textcolor: IconColors[1],
+                            color: ScreenIndex == 1
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
+                            textcolor: ScreenIndex == 1
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
                           ),
                         ),
                         Bounce(
@@ -416,8 +432,16 @@ class _SHomeScreenState extends State<SHomeScreen> {
                             SVG: 'assets/images/calendar_clock.svg',
                             text: 'Calendar',
                             icon: Icons.calendar_today,
-                            color: IconColors[2],
-                            textcolor: IconColors[2],
+                            color: ScreenIndex == 2
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
+                            textcolor: ScreenIndex == 2
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
                           ),
                         ),
                         Bounce(
@@ -433,8 +457,16 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     : 'assets/images/no_message.svg',
                             text: 'Message',
                             icon: Icons.chat_bubble_outline,
-                            color: IconColors[3],
-                            textcolor: IconColors[3],
+                            color: ScreenIndex == 3
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
+                            textcolor: ScreenIndex == 3
+                                ? ThemeMode.dark == themeManager.themeMode
+                                    ? DarkColor.color1
+                                    : LightColor.Primarycolor
+                                : Theme.of(context).focusColor,
                           ),
                         ),
                       ],
