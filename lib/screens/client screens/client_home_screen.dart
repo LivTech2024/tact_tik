@@ -978,8 +978,17 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           margin: EdgeInsets.only(top: 10.h),
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Theme.of(context)
+                                                    .shadowColor,
+                                                blurRadius: 5,
+                                                spreadRadius: 2,
+                                                offset: Offset(0, 3),
+                                              )
+                                            ],
                                             color:
-                                                Theme.of(context).primaryColor,
+                                                Theme.of(context).cardColor,
                                             borderRadius:
                                                 BorderRadius.circular(14.sp),
                                           ),
@@ -1005,9 +1014,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 10.r),
                                                       ),
                                                       color: Theme.of(context)
-                                                          .textTheme
-                                                          .titleSmall!
-                                                          .color,
+                                                          .primaryColor,
                                                     ),
                                                   ),
                                                   SizedBox(width: 14.w),
