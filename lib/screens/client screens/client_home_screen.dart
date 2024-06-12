@@ -1034,7 +1034,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           color:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .titleSmall!
+                                                                  .bodySmall!
                                                                   .color,
                                                           fontsize: 14.sp,
                                                         ),
@@ -1076,7 +1076,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .titleSmall!
+                                                                .bodySmall!
                                                                 .color!,
                                                           ),
                                                           SizedBox(
@@ -1143,7 +1143,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .titleSmall!
+                                                                .bodySmall!
                                                                 .color!,
                                                             fontsize: 14.sp,
                                                           ),
@@ -1157,7 +1157,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                                 color: Theme.of(
                                                                         context)
                                                                     .textTheme
-                                                                    .titleSmall!
+                                                                    .bodySmall!
                                                                     .color!,
                                                               ),
                                                               SizedBox(
@@ -1185,7 +1185,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                             color: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .titleSmall!
+                                                                .bodySmall!
                                                                 .color!,
                                                             fontsize: 14.sp,
                                                           ),
