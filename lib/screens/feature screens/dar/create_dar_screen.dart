@@ -594,31 +594,31 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                 ),
                                               ],
                                             ),
+                                            // Row(
+                                            //   mainAxisAlignment:
+                                            //       MainAxisAlignment.start,
+                                            //   children: [
+                                            //     InterBold(
+                                            //       text: 'Started',
+                                            //       fontsize: 12.sp,
+                                            //       color: Colors.white,
+                                            //     ),
+                                            //     InterBold(
+                                            //       text: TilePatrolData
+                                            //               .isNotEmpty
+                                            //           ? "${patrolData['TilePatrolData']}"
+                                            //           : "",
+                                            //       fontsize: 12.sp,
+                                            //       color: Colors.white,
+                                            //     ),
+                                            //   ],
+                                            // ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
                                                 InterBold(
-                                                  text: 'Started',
-                                                  fontsize: 12.sp,
-                                                  color: Colors.white,
-                                                ),
-                                                InterBold(
-                                                  text: TilePatrolData
-                                                          .isNotEmpty
-                                                      ? "${patrolData['TilePatrolData']}"
-                                                      : "",
-                                                  fontsize: 12.sp,
-                                                  color: Colors.white,
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                InterBold(
-                                                  text: 'Ended',
+                                                  text: '',
                                                   fontsize: 12.sp,
                                                   color: Colors.white,
                                                 ),
