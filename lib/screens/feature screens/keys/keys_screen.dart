@@ -15,8 +15,12 @@ import '../../supervisor screens/features screens/key management/s_key_manag_cre
 class KeysScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
-
-  const KeysScreen({super.key, required this.keyId, required this.companyId});
+  final String branchId;
+  const KeysScreen(
+      {super.key,
+      required this.keyId,
+      required this.companyId,
+      required this.branchId});
 
   @override
   State<KeysScreen> createState() => _KeysScreenState();
@@ -38,7 +42,7 @@ class _KeysScreenState extends State<KeysScreen> {
     if (documents != null) {
       for (final document in documents) {
         final allocationDate =
-        (document['KeyAllocationDate'] as Timestamp).toDate();
+            (document['KeyAllocationDate'] as Timestamp).toDate();
         final date = DateTime(
             allocationDate.year, allocationDate.month, allocationDate.day);
 
@@ -70,7 +74,9 @@ class _KeysScreenState extends State<KeysScreen> {
                 MaterialPageRoute(
                   builder: (context) => SCreateKeyManagScreen(
                     keyId: widget.keyId,
-                    companyId: '',
+                    companyId: widget.companyId,
+                    branchId: widget.branchId,
+                    AllocationKeyId: '',
                   ),
                 ));
           },
@@ -138,7 +144,7 @@ class _KeysScreenState extends State<KeysScreen> {
 
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (context, index) {
+                    (context, index) {
                       final dateKeys = groupedDocuments.keys.toList();
                       if (index >= dateKeys.length) {
                         return SizedBox.shrink();
@@ -159,29 +165,30 @@ class _KeysScreenState extends State<KeysScreen> {
                                   ? 'Today'
                                   : DateFormat.yMMMd().format(date),
                               fontsize: 20.sp,
-                              color: Theme.of(context).textTheme.bodySmall!.color,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                             ),
                           ),
                           SizedBox(
                             height: 30.h,
                           ),
                           ...groupedDocuments[date]!.map(
-                                (doc) {
+                            (doc) {
                               final allocationDate =
-                              (doc['KeyAllocationDate'] as Timestamp)
-                                  .toDate();
+                                  (doc['KeyAllocationDate'] as Timestamp)
+                                      .toDate();
                               final time =
                                   '${allocationDate.hour.toString().padLeft(2, '0')} : ${allocationDate.minute.toString().padLeft(2, '0')}';
 
                               final startDate =
-                              (doc['KeyAllocationStartTime'] as Timestamp)
-                                  .toDate();
+                                  (doc['KeyAllocationStartTime'] as Timestamp)
+                                      .toDate();
                               final endDate =
-                              (doc['KeyAllocationEndTime'] as Timestamp)
-                                  .toDate();
+                                  (doc['KeyAllocationEndTime'] as Timestamp)
+                                      .toDate();
                               final viewTime =
-                              (doc['KeyAllocationDate'] as Timestamp)
-                                  .toDate();
+                                  (doc['KeyAllocationDate'] as Timestamp)
+                                      .toDate();
                               final keyAllocationId = doc['KeyAllocationId'];
 
                               return Padding(
@@ -198,7 +205,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                                   endDate: DateFormat.yMd()
                                                       .format(endDate),
                                                   keyAllocationId:
-                                                  keyAllocationId,
+                                                      keyAllocationId,
                                                   time: DateFormat('hh:mm:ss a')
                                                       .format(viewTime),
                                                   keyId: widget.keyId,
@@ -219,20 +226,20 @@ class _KeysScreenState extends State<KeysScreen> {
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Container(
                                               height: 44.h,
                                               width: 44.w,
                                               decoration: BoxDecoration(
                                                 borderRadius:
-                                                BorderRadius.circular(10.r),
+                                                    BorderRadius.circular(10.r),
                                                 color: Theme.of(context)
                                                     .primaryColorLight,
                                               ),
@@ -250,7 +257,7 @@ class _KeysScreenState extends State<KeysScreen> {
                                               stream: FirebaseFirestore.instance
                                                   .collection('Keys')
                                                   .where('KeyId',
-                                                  isEqualTo: widget.keyId)
+                                                      isEqualTo: widget.keyId)
                                                   .snapshots(),
                                               builder: (context, snapshot) {
                                                 String keyName =
@@ -260,10 +267,10 @@ class _KeysScreenState extends State<KeysScreen> {
                                                       snapshot.data!.docs;
                                                   keyName = documents.isNotEmpty
                                                       ? (documents.first.data()
-                                                  as Map<String,
-                                                      dynamic>)[
-                                                  'KeyName'] ??
-                                                      'Equipment Not Available'
+                                                                  as Map<String,
+                                                                      dynamic>)[
+                                                              'KeyName'] ??
+                                                          'Equipment Not Available'
                                                       : 'Equipment Not Available';
                                                 }
                                                 return InterMedium(

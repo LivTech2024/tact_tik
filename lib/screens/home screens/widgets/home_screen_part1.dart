@@ -480,6 +480,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                                         builder: (context) => KeysScreen(
                                               keyId: widget.empId,
                                               companyId: widget.shiftCompanyId,
+                                              branchId: widget.branchId,
                                             )
                                         // AssetsScreen(
                                         //     assetEmpId:

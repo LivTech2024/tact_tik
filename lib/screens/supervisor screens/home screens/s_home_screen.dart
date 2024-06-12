@@ -75,6 +75,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
   String _employeeId = "";
   String _empEmail = "";
   String _CompanyId = "";
+  String _BranchId = "";
 
   bool NewMessage = false;
 
@@ -99,11 +100,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
+        String BranchId = userInfo['EmployeeCompanyBranchId'];
+
         String Imgurl = userInfo['EmployeeImg'];
         String EmpEmail = userInfo['EmployeeEmail'];
         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(CompanyId);
+            await fireStoreService.getGuardForSupervisor(EmployeeId);
         print("Guards INfor ${guardsInfo}");
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
@@ -114,6 +117,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           _CompanyId = CompanyId;
           _employeeId = EmployeeId;
           _empEmail = EmpEmail;
+          _BranchId = BranchId;
         });
         print('User Info: ${userInfo.data()}');
       } else {
@@ -640,6 +644,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         builder: (context) =>
                                             SKeyManagementViewScreen(
                                           companyId: _CompanyId,
+                                          branchId: _BranchId,
                                         ),
                                       ),
                                     );

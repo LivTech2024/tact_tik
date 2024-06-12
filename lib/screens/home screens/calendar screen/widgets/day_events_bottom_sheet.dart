@@ -86,7 +86,10 @@ class DayEventsBottomSheet extends StatelessWidget {
                                               startTime: event.startTime,
                                               endTime: event.endTime,
                                             )))
-                                : showErrorToast(duration: const Duration(seconds: 3), context, 'Shift already accepted');
+                                : showErrorToast(
+                                    duration: const Duration(seconds: 3),
+                                    context,
+                                    'Shift already accepted');
                           },
                           child: SizedBox(
                             height: height / height100,
@@ -97,8 +100,11 @@ class DayEventsBottomSheet extends StatelessWidget {
                               ),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: event.isShiftAcknowledgedByEmployee ? Colors.green.shade700 : (Theme.of(context).cardColor),
-                                  borderRadius: BorderRadius.circular(width / width10),
+                                  color: event.isShiftAcknowledgedByEmployee
+                                      ? Colors.green.shade700
+                                      : (Theme.of(context).cardColor),
+                                  borderRadius:
+                                      BorderRadius.circular(width / width10),
                                   // border: Border.all(color: Colors.redAccent)
                                 ),
                                 clipBehavior: Clip.antiAlias,
@@ -109,7 +115,9 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       width: width / width4,
                                       decoration: const BoxDecoration(
                                         color: Colors.green,
-                                        borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
                                       ),
                                     ),
                                     SizedBox(width: width / width10),
@@ -120,7 +128,8 @@ class DayEventsBottomSheet extends StatelessWidget {
                                         shape: BoxShape.circle,
                                         color: Theme.of(context).primaryColor,
                                         image: DecorationImage(
-                                          image: AssetImage('assets/images/default.png'),
+                                          image: AssetImage(
+                                              'assets/images/default.png'),
                                           filterQuality: FilterQuality.high,
                                           fit: BoxFit.cover,
                                         ),
@@ -128,19 +137,26 @@ class DayEventsBottomSheet extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: width / width14),
+                                        padding: EdgeInsets.only(
+                                            left: width / width14),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               InterSemibold(
                                                 text: event.name,
                                                 fontsize: width / width16,
-                                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color,
                                               ),
-                                              SizedBox(height: height / height8),
+                                              SizedBox(
+                                                  height: height / height8),
                                               IntrinsicHeight(
                                                 child: Row(
                                                   children: [
@@ -149,25 +165,44 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                         Icon(
                                                           Icons.location_on,
                                                           size: width / width10,
-                                                          color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color,
                                                         ),
-                                                        SizedBox(width: width / width4),
+                                                        SizedBox(
+                                                            width:
+                                                                width / width4),
                                                         InterMedium(
                                                           text: event.location,
-                                                          fontsize: width / width14,
-                                                          color: Theme.of(context).textTheme.bodyLarge!.color,
+                                                          fontsize:
+                                                              width / width14,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge!
+                                                                  .color,
                                                         ),
                                                       ],
                                                     ),
                                                     VerticalDivider(
-                                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                      color: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .color,
                                                       thickness: 1,
                                                     ),
                                                     Expanded(
                                                       child: InterMedium(
-                                                        text: '${event.startTime}-${event.endTime}',
-                                                        fontsize: width / width14,
-                                                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                                                        text:
+                                                            '${event.startTime}-${event.endTime}',
+                                                        fontsize:
+                                                            width / width14,
+                                                        color: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyLarge!
+                                                            .color,
                                                       ),
                                                     ),
                                                   ],
@@ -179,11 +214,15 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(right: width / width10),
+                                      padding: EdgeInsets.only(
+                                          right: width / width10),
                                       child: Icon(
                                         Icons.arrow_forward_ios,
                                         size: width / width20,
-                                        color: Theme.of(context).textTheme.bodyMedium!.color,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
                                       ),
                                     ),
                                   ],
@@ -224,7 +263,9 @@ class DayEventsBottomSheet extends StatelessWidget {
                                     startTime: event.others.startTime!,
                                     endTime: event.others.endTime!,
                                     toRequest: true,
-                                    empId: event.others.ids.length > 1 ? event.others.ids[index] : event.others.ids[0],
+                                    empId: event.others.ids.length > 1
+                                        ? event.others.ids[index]
+                                        : event.others.ids[0],
                                     shiftId: event.others.othersShiftId!,
                                     currentUserId: currentUserId,
                                   ),
@@ -249,7 +290,8 @@ class DayEventsBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget createWidget(BuildContext context, CalendarEventModel event, double height, double width) {
+  Widget createWidget(BuildContext context, CalendarEventModel event,
+      double height, double width) {
     if (event.others.ids.length > 1) {
       return Column(
         children: [
@@ -289,7 +331,8 @@ class DayEventsBottomSheet extends StatelessWidget {
             borderRadius: BorderRadius.circular(width / width10),
 
             /// TODO : Change the border color to red if the shift exchange is not assigned
-            border: Border.all(color: false ? Colors.redAccent : Colors.transparent),
+            border: Border.all(
+                color: false ? Colors.redAccent : Colors.transparent),
           ),
           clipBehavior: Clip.antiAlias,
           child: Row(
@@ -299,7 +342,9 @@ class DayEventsBottomSheet extends StatelessWidget {
                 width: width / width4,
                 decoration: const BoxDecoration(
                   color: Colors.red,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
                 ),
               ),
               SizedBox(width: width / width10),
@@ -339,25 +384,38 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   Icon(
                                     Icons.location_on,
                                     size: width / width10,
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(width: width / width4),
                                   InterMedium(
                                     text: event.others.othersShiftLocation,
                                     fontsize: width / width14,
-                                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
                                   ),
                                 ],
                               ),
                               VerticalDivider(
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 thickness: 1,
                               ),
                               Expanded(
                                 child: InterMedium(
-                                  text: '${event.others.startTime!} - ${event.others.endTime!}',
+                                  text:
+                                      '${event.others.startTime!} - ${event.others.endTime!}',
                                   fontsize: width / width14,
-                                  color: Theme.of(context).textTheme.bodyLarge!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
                                 ),
                               ),
                             ],
@@ -397,8 +455,16 @@ class DayEventsBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget createAnotherWidget(BuildContext context, String id, Color eventColor, String shiftName, String shiftLocation, String startTime,
-      String endTime, double height, double width) {
+  Widget createAnotherWidget(
+      BuildContext context,
+      String id,
+      Color eventColor,
+      String shiftName,
+      String shiftLocation,
+      String startTime,
+      String endTime,
+      double height,
+      double width) {
     return SizedBox(
       height: height / height100,
       child: Padding(
@@ -412,7 +478,8 @@ class DayEventsBottomSheet extends StatelessWidget {
             borderRadius: BorderRadius.circular(width / width10),
 
             /// TODO : Change the border color to red if the shift exchange is not assigned
-            border: Border.all(color: false ? Colors.redAccent : Colors.transparent),
+            border: Border.all(
+                color: false ? Colors.redAccent : Colors.transparent),
           ),
           clipBehavior: Clip.antiAlias,
           child: Row(
@@ -422,7 +489,9 @@ class DayEventsBottomSheet extends StatelessWidget {
                 width: width / width4,
                 decoration: const BoxDecoration(
                   color: Colors.red,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
                 ),
               ),
               SizedBox(width: width / width10),
@@ -462,25 +531,37 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   Icon(
                                     Icons.location_on,
                                     size: width / width10,
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(width: width / width4),
                                   InterMedium(
                                     text: shiftLocation,
                                     fontsize: width / width14,
-                                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
                                   ),
                                 ],
                               ),
                               VerticalDivider(
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                                 thickness: 1,
                               ),
                               Expanded(
                                 child: InterMedium(
                                   text: '${startTime} - ${endTime}',
                                   fontsize: width / width14,
-                                  color: Theme.of(context).textTheme.bodyLarge!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color,
                                 ),
                               ),
                             ],
