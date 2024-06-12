@@ -889,6 +889,14 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                 margin: EdgeInsets.only(bottom: 30.h),
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: Offset(0, 3),
+                    )
+                  ],
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
