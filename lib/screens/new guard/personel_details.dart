@@ -7,19 +7,26 @@ import 'package:tact_tik/main.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class PersonalDetails extends StatelessWidget {
+   final TextEditingController FirstNameController ;
+    final TextEditingController LastNameController;
+    final TextEditingController PhoneNumberController ;
+    final TextEditingController EmailController ;
+    final TextEditingController PasswordController ;
+    final TextEditingController RoleController ;
+    final TextEditingController PayRateController ;
+    final TextEditingController WeekHoursController ;
+    final TextEditingController BranchController  ;
+
+  const PersonalDetails({super.key, required this.FirstNameController, required this.LastNameController, required this.PhoneNumberController, required this.EmailController, required this.PasswordController, required this.RoleController, required this.PayRateController, required this.WeekHoursController, required this.BranchController});
+
+
+
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final TextEditingController FirstNameController = TextEditingController();
-    final TextEditingController LastNameController = TextEditingController();
-    final TextEditingController PhoneNumberController = TextEditingController();
-    final TextEditingController EmailController = TextEditingController();
-    final TextEditingController PasswordController = TextEditingController();
-    final TextEditingController RoleController = TextEditingController();
-    final TextEditingController PayRateController = TextEditingController();
-    final TextEditingController WeekHoursController = TextEditingController();
-    final TextEditingController BranchController = TextEditingController();
+   
     bool isEditMode = false;
     return Container(
       width: width / width50,

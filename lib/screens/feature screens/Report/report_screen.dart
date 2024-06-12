@@ -151,7 +151,7 @@ class _ReportScreenState extends State<ReportScreen> {
               }
             });
           },
-          backgroundColor: Theme.of(context).primaryColor,
+          // backgroundColor: Theme.of(context).primaryColor,
           shape: CircleBorder(),
           child: Icon(
             Icons.add,

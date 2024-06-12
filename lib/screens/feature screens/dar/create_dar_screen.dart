@@ -572,10 +572,12 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                       SizedBox(width: 6.w),
                                       Expanded(
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 InterBold(
                                                   text: 'Patrol Name',
@@ -583,7 +585,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                   color: Colors.white,
                                                 ),
                                                 InterBold(
-                                                  text: TilePatrolData.isNotEmpty
+                                                  text: TilePatrolData
+                                                          .isNotEmpty
                                                       ? "Patrol Name : ${patrolData['TilePatrolName']}"
                                                       : "",
                                                   fontsize: 12.sp,
@@ -592,7 +595,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                               ],
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 InterBold(
                                                   text: 'Started',
@@ -600,7 +604,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                   color: Colors.white,
                                                 ),
                                                 InterBold(
-                                                  text: TilePatrolData.isNotEmpty
+                                                  text: TilePatrolData
+                                                          .isNotEmpty
                                                       ? "${patrolData['TilePatrolData']}"
                                                       : "",
                                                   fontsize: 12.sp,
@@ -609,7 +614,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                               ],
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 InterBold(
                                                   text: 'Ended',
@@ -617,7 +623,8 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                   color: Colors.white,
                                                 ),
                                                 InterBold(
-                                                  text: TilePatrolData.isNotEmpty
+                                                  text: TilePatrolData
+                                                          .isNotEmpty
                                                       ? "${patrolData['TilePatrolData']}"
                                                       : "",
                                                   fontsize: 12.sp,
