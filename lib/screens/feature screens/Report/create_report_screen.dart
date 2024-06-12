@@ -90,7 +90,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
   void getAllReports() async {
     if (widget.SearchId.isNotEmpty) {
       Map<String, dynamic>? data =
-          (await fireStoreService.getReportWithSearchId(widget.SearchId));
+      (await fireStoreService.getReportWithSearchId(widget.SearchId));
       if (data != null) {
         setState(() {
           reportData = data;
@@ -121,7 +121,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
       }
     } else {
       Map<String, dynamic>? data =
-          (await fireStoreService.getReportWithId(widget.reportId));
+      (await fireStoreService.getReportWithId(widget.reportId));
       if (data != null) {
         setState(() {
           reportData = data;
@@ -162,7 +162,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
 
   Future<void> _addImage() async {
     List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 30); //quality was 30
+    await ImagePicker().pickMultiImage(imageQuality: 30); //quality was 30
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -264,7 +264,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
           ),
           title: InterMedium(
             text: reportData.isNotEmpty &&
-                    reportData['ReportIsFollowUpRequired'] == true
+                reportData['ReportIsFollowUpRequired'] == true
                 ? 'FollowUp for ${reportData['ReportName']} '
                 : 'Report',
           ),
@@ -282,7 +282,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     InterBold(
                       text: 'New Report',
                       fontsize: 20.sp,
-                      color: Theme.of(context).textTheme.bodySmall!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodySmall!
+                          .color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 30.h),
@@ -290,7 +294,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       hint: 'Title',
                       controller: titleController,
                       isEnabled: reportData.isNotEmpty &&
-                              reportData['ReportIsFollowUpRequired'] == false
+                          reportData['ReportIsFollowUpRequired'] == false
                           ? false
                           : true,
                     ),
@@ -298,7 +302,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                     InterBold(
                       text: 'Category',
                       fontsize: 20.sp,
-                      color: Theme.of(context).textTheme.bodySmall!.color,
+                      color: Theme
+                          .of(context)
+                          .textTheme
+                          .bodySmall!
+                          .color,
                       letterSpacing: -.3,
                     ),
                     SizedBox(height: 20.h),
@@ -308,23 +316,33 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).shadowColor,
+                            color: Theme
+                                .of(context)
+                                .shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: Theme.of(context).cardColor,
+                        color: Theme
+                            .of(context)
+                            .cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           isExpanded: true,
                           iconSize: 24.sp,
-                          dropdownColor: Theme.of(context).cardColor,
+                          dropdownColor: Theme
+                              .of(context)
+                              .cardColor,
                           style: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.bodyLarge!.color),
+                              Theme
+                                  .of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .color),
                           borderRadius: BorderRadius.circular(10),
                           value: dropdownValue,
                           onChanged: (String? newValue) {
@@ -354,7 +372,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Theme.of(context).shadowColor,
+                              color: Theme
+                                  .of(context)
+                                  .shadowColor,
                               blurRadius: 10,
                               offset: Offset(0, 5),
                             ),
@@ -372,7 +392,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).shadowColor,
+                            color: Theme
+                                .of(context)
+                                .shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
@@ -384,7 +406,7 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                         isExpanded: true,
                         controller: explainController,
                         isEnabled: reportData.isNotEmpty &&
-                                reportData['ReportIsFollowUpRequired'] == false
+                            reportData['ReportIsFollowUpRequired'] == false
                             ? false
                             : true,
                       ),
@@ -396,13 +418,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(context).shadowColor,
+                            color: Theme
+                                .of(context)
+                                .shadowColor,
                             blurRadius: 5,
                             spreadRadius: 2,
                             offset: Offset(0, 3),
                           )
                         ],
-                        color: Theme.of(context).cardColor,
+                        color: Theme
+                            .of(context)
+                            .cardColor,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
@@ -412,7 +438,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             children: [
                               Icon(
                                 Icons.follow_the_signs,
-                                color: Theme.of(context)
+                                color: Theme
+                                    .of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -421,7 +448,8 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               SizedBox(width: 6.w),
                               InterMedium(
                                 text: 'Follow-Up Required ?',
-                                color: Theme.of(context)
+                                color: Theme
+                                    .of(context)
                                     .textTheme
                                     .labelSmall!
                                     .color,
@@ -449,7 +477,10 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       child: Row(
                         children: [
                           Row(
-                            children: uploads.asMap().entries.map((entry) {
+                            children: uploads
+                                .asMap()
+                                .entries
+                                .map((entry) {
                               final index = entry.key;
                               final upload = entry.value;
                               return Stack(
@@ -459,19 +490,21 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                                     height: 66.h,
                                     width: 66.w,
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).cardColor,
+                                      color: Theme
+                                          .of(context)
+                                          .cardColor,
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
                                     margin: EdgeInsets.all(8.sp),
                                     child: upload['type'] == 'image'
                                         ? Image.file(
-                                            upload['file'],
-                                            fit: BoxFit.cover,
-                                          )
+                                      upload['file'],
+                                      fit: BoxFit.cover,
+                                    )
                                         : Icon(
-                                            Icons.videocam,
-                                            size: 20.sp,
-                                          ),
+                                      Icons.videocam,
+                                      size: 20.sp,
+                                    ),
                                   ),
                                   Positioned(
                                     top: -5,
@@ -494,54 +527,58 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             onTap: () {
                               showModalBottomSheet(
                                 context: context,
-                                builder: (context) => Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.video_collection,
-                                        size: 20.sp,
-                                      ),
-                                      title: InterRegular(
-                                        text: 'Add Image from Camera',
-                                        fontsize: 14.sp,
-                                      ),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _addImageFromCamera();
-                                      },
+                                builder: (context) =>
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.video_collection,
+                                            size: 20.sp,
+                                          ),
+                                          title: InterRegular(
+                                            text: 'Add Image from Camera',
+                                            fontsize: 14.sp,
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _addImageFromCamera();
+                                          },
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.photo,
+                                            size: 20.sp,
+                                          ),
+                                          title: InterRegular(
+                                            text: 'Add Image',
+                                            fontsize: 14.sp,
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _addImage();
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.photo,
-                                        size: 20.sp,
-                                      ),
-                                      title: InterRegular(
-                                        text: 'Add Image',
-                                        fontsize: 14.sp,
-                                      ),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        _addImage();
-                                      },
-                                    ),
-                                  ],
-                                ),
                               );
                             },
                             child: Container(
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                color: Theme.of(context).brightness ==
-                                        Brightness.dark
+                                color: Theme
+                                    .of(context)
+                                    .brightness ==
+                                    Brightness.dark
                                     ? DarkColor.WidgetColor
                                     : LightColor.Primarycolor,
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
-                                  color: Theme.of(context)
+                                  color: Theme
+                                      .of(context)
                                       .textTheme
                                       .bodyMedium!
                                       .color,
@@ -582,7 +619,11 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                       child: Button1(
                         height: 50.h,
                         text: 'Submit',
-                        color: Theme.of(context).textTheme.headlineMedium!.color,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .color,
                         onPressed: () async {
                           setState(() {
                             _isLoading = true;
@@ -596,13 +637,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             var id = await fireStoreService.getReportCategoryId(
                                 dropdownValue, widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
+                            await Future.wait(uploads.map((upload) async {
                               if (upload['type'] == 'image') {
                                 // Upload the image and get its download URL
                                 List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
+                                await fireStoreService
+                                    .addImageToReportStorage(
+                                    upload['file']);
                                 // Add the download URL to the list of image URLs
                                 imageUrls.add(urls[0]['downloadURL']);
                               }
@@ -640,17 +681,17 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                               _isLoading = true; // Set loading state
                             });
                             var newId =
-                                await fireStoreService.createReportCategoryId(
-                                    newCategoryController.text,
-                                    widget.companyID);
+                            await fireStoreService.createReportCategoryId(
+                                newCategoryController.text,
+                                widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
+                            await Future.wait(uploads.map((upload) async {
                               if (upload['type'] == 'image') {
                                 // Upload the image and get its download URL
                                 List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
+                                await fireStoreService
+                                    .addImageToReportStorage(
+                                    upload['file']);
                                 // Add the download URL to the list of image URLs
                                 imageUrls.add(urls[0]['downloadURL']);
                               }
@@ -711,13 +752,13 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             var id = await fireStoreService.getReportCategoryId(
                                 dropdownValue, widget.companyID);
                             List<Map<String, dynamic>> imageList =
-                                await Future.wait(uploads.map((upload) async {
+                            await Future.wait(uploads.map((upload) async {
                               if (upload['type'] == 'image') {
                                 // Upload the image and get its download URL
                                 List<Map<String, dynamic>> urls =
-                                    await fireStoreService
-                                        .addImageToReportStorage(
-                                            upload['file']);
+                                await fireStoreService
+                                    .addImageToReportStorage(
+                                    upload['file']);
                                 // Add the download URL to the list of image URLs
                                 imageUrls.add(urls[0]['downloadURL']);
                               }
@@ -750,7 +791,9 @@ class _CreateReportScreenState extends State<CreateReportScreen> {
                             _isLoading = false; // Set loading state
                           });
                         },
-                        backgroundcolor: Theme.of(context).primaryColor,
+                        backgroundcolor: Theme
+                            .of(context)
+                            .primaryColor,
                         borderRadius: 10.r,
                       ),
                     ),
