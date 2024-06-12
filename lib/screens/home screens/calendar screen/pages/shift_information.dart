@@ -50,12 +50,18 @@ class _ShiftInformationState extends State<ShiftInformation> {
   Future<void> _getUsersAndShiftInfo(String empId, String shiftId) async {
     try {
       // Fetch user info from Employees collection
-      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('Employees').doc(empId).get();
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('Employees')
+          .doc(empId)
+          .get();
       if (userSnapshot.exists) {
         guardName = userSnapshot['EmployeeName'];
         final supervisorId = userSnapshot['EmployeeSupervisorId'][0];
         if (supervisorId != null) {
-          DocumentSnapshot supervisorSnapshot = await FirebaseFirestore.instance.collection('Employees').doc(supervisorId).get();
+          DocumentSnapshot supervisorSnapshot = await FirebaseFirestore.instance
+              .collection('Employees')
+              .doc(supervisorId)
+              .get();
           if (supervisorSnapshot.exists) {
             supervisorName = supervisorSnapshot['EmployeeName'];
           }
@@ -63,12 +69,17 @@ class _ShiftInformationState extends State<ShiftInformation> {
       }
 
       // Fetch shift info from Shifts collection
-      DocumentSnapshot shiftSnapshot = await FirebaseFirestore.instance.collection('Shifts').doc(shiftId).get();
+      DocumentSnapshot shiftSnapshot = await FirebaseFirestore.instance
+          .collection('Shifts')
+          .doc(shiftId)
+          .get();
       if (shiftSnapshot.exists) {
         // TODO from employee EmployeeSupervisorId gets name SupervisorName
         shiftName = shiftSnapshot['ShiftName'];
-        shiftDetails = shiftSnapshot['ShiftDescription'] ?? "No Description Available";
-        location = shiftSnapshot['ShiftLocationName'] ?? "No Location Available";
+        shiftDetails =
+            shiftSnapshot['ShiftDescription'] ?? "No Description Available";
+        location =
+            shiftSnapshot['ShiftLocationName'] ?? "No Location Available";
       }
 
       setState(() {
@@ -125,19 +136,22 @@ class _ShiftInformationState extends State<ShiftInformation> {
                           InterBold(
                             text: "Guard Name : $guardName",
                             fontsize: width / width18,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Shift Name : $shiftName',
                             fontsize: width / width18,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height30),
                           InterBold(
                             text: 'Details',
                             fontsize: width / width16,
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                           ),
                           SizedBox(height: height / height14),
                           InterRegular(
@@ -153,13 +167,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               InterBold(
                                 text: 'Supervisor :',
                                 fontsize: width / width16,
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: supervisorName,
                                 fontsize: width / width14,
-                                color: Theme.of(context).textTheme.bodyLarge!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               )
                             ],
                           ),
@@ -170,13 +190,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               InterBold(
                                 text: 'Time :',
                                 fontsize: width / width16,
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: '${widget.startTime}-${widget.endTime}',
                                 fontsize: width / width14,
-                                color: Theme.of(context).textTheme.bodyLarge!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                             ],
                           ),
@@ -187,13 +213,19 @@ class _ShiftInformationState extends State<ShiftInformation> {
                               Icon(
                                 Icons.location_on,
                                 size: width / width24,
-                                color: Theme.of(context).textTheme.bodyMedium!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
                               ),
                               SizedBox(width: width / width4),
                               InterRegular(
                                 text: location,
                                 fontsize: width / width14,
-                                color: Theme.of(context).textTheme.bodyLarge!.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color,
                               ),
                             ],
                           ),
@@ -205,7 +237,10 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                 InterBold(
                                   text: '*Shift already taken',
                                   fontsize: width / width18,
-                                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                 ),
                                 SizedBox(height: height / height30),
                                 Row(
@@ -214,13 +249,20 @@ class _ShiftInformationState extends State<ShiftInformation> {
                                     InterBold(
                                       text: 'Time:',
                                       fontsize: width / width16,
-                                      color: Theme.of(context).textTheme.bodyMedium!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
                                     ),
                                     SizedBox(width: width / width4),
                                     InterRegular(
-                                      text: '${widget.startTime}-${widget.endTime}',
+                                      text:
+                                          '${widget.startTime}-${widget.endTime}',
                                       fontsize: width / width14,
-                                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color,
                                     ),
                                   ],
                                 ),
@@ -268,11 +310,13 @@ class _ShiftInformationState extends State<ShiftInformation> {
           throw Exception("Shift does not exist!");
         }
 
-        List<String> acknowledgedByEmpIds = List<String>.from(snapshot['ShiftAcknowledgedByEmpId']);
+        List<String> acknowledgedByEmpIds =
+            List<String>.from(snapshot['ShiftAcknowledgedByEmpId']);
 
         if (!acknowledgedByEmpIds.contains(empId)) {
           acknowledgedByEmpIds.add(empId);
-          transaction.update(shiftDoc, {'ShiftAcknowledgedByEmpId': acknowledgedByEmpIds});
+          transaction.update(
+              shiftDoc, {'ShiftAcknowledgedByEmpId': acknowledgedByEmpIds});
         }
       });
 
@@ -287,7 +331,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
   Future<void> onExchangeShift(String empId, String shiftId) async {
     try {
       final shiftsCollection = FirebaseFirestore.instance.collection('Shifts');
-      final exchangeCollection = FirebaseFirestore.instance.collection('ShiftExchange');
+      final exchangeCollection =
+          FirebaseFirestore.instance.collection('ShiftExchange');
 
       final shiftDoc = shiftsCollection.doc(shiftId);
 

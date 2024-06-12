@@ -99,58 +99,58 @@ class _CalendarPageState extends State<CalendarPage> {
       body: _isCalenderLoading
           ? const ShimmerCalendar()
           : Column(
-        children: [
-          /// Calendar control row.
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  _changeCalendarPage(showNext: false);
-                },
-              ),
-              ValueListenableBuilder(
-                valueListenable: _monthNameNotifier,
-                builder: (ctx, value, child) => Text(
-                  value,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      color: violet,
-                      fontWeight: FontWeight.w600),
+              children: [
+                /// Calendar control row.
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        _changeCalendarPage(showNext: false);
+                      },
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: _monthNameNotifier,
+                      builder: (ctx, value, child) => Text(
+                        value,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            color: violet,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      onPressed: () {
+                        _changeCalendarPage(showNext: true);
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.arrow_forward_ios),
-                onPressed: () {
-                  _changeCalendarPage(showNext: true);
-                },
-              ),
-            ],
-          ),
 
-          /// Calendar view.
-          Expanded(
-            child: CrCalendar(
-              firstDayOfWeek: WeekDay.monday,
-              eventsTopPadding: height / height30,
-              initialDate: _currentDate,
-              maxEventLines: 3,
-              controller: _calendarController,
-              forceSixWeek: true,
-              dayItemBuilder: (builderArgument) =>
-                  DayItemWidget(properties: builderArgument),
-              weekDaysBuilder: (day) => WeekDaysWidget(day: day),
-              eventBuilder: (drawer) => EventWidget(drawer: drawer),
-              onDayClicked: _showDayEventsInModalSheet,
-              minDate:
-              DateTime.now().subtract(const Duration(days: 1000)),
-              maxDate: DateTime(DateTime.now().year + 1,
-                  DateTime.now().month + 2, DateTime.now().day),
+                /// Calendar view.
+                Expanded(
+                  child: CrCalendar(
+                    firstDayOfWeek: WeekDay.monday,
+                    eventsTopPadding: height / height30,
+                    initialDate: _currentDate,
+                    maxEventLines: 3,
+                    controller: _calendarController,
+                    forceSixWeek: true,
+                    dayItemBuilder: (builderArgument) =>
+                        DayItemWidget(properties: builderArgument),
+                    weekDaysBuilder: (day) => WeekDaysWidget(day: day),
+                    eventBuilder: (drawer) => EventWidget(drawer: drawer),
+                    onDayClicked: _showDayEventsInModalSheet,
+                    minDate:
+                        DateTime.now().subtract(const Duration(days: 1000)),
+                    maxDate: DateTime(DateTime.now().year + 1,
+                        DateTime.now().month + 2, DateTime.now().day),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -241,8 +241,8 @@ class _CalendarPageState extends State<CalendarPage> {
         cancelButtonBuilder: (onPress) => OutlinedButton(
           style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              )),
+            borderRadius: BorderRadius.circular(8),
+          )),
           onPressed: () => onPress?.call(),
           child: const Text('CANCEL'),
         ),
@@ -266,13 +266,13 @@ class _CalendarPageState extends State<CalendarPage> {
       final assignedUserIds = List<String>.from(data['ShiftAssignedUserId']);
       final isAssignedToCurrentUser = assignedUserIds.contains(currentUserId);
       final shiftAcknowledgedUserIds =
-      List<String>.from(data['ShiftAcknowledgedByEmpId']);
+          List<String>.from(data['ShiftAcknowledgedByEmpId']);
       final isShiftAcknowledgedByEmployee =
-      shiftAcknowledgedUserIds.contains(currentUserId);
+          shiftAcknowledgedUserIds.contains(currentUserId);
       final shiftId = data['ShiftId'];
 
       final otherUserIds =
-      assignedUserIds.where((id) => id != currentUserId).toList();
+          assignedUserIds.where((id) => id != currentUserId).toList();
 
       return CalendarEventModel(
           others: OtherUsersModel(
@@ -322,11 +322,11 @@ class _CalendarPageState extends State<CalendarPage> {
         isScrollControlled: true,
         context: context,
         builder: (context) => DayEventsBottomSheet(
-          currentUserId:currentUserId,
-          empId: widget.employeeId,
-          events: events,
-          day: day,
-          screenHeight: MediaQuery.of(context).size.height,
-        ));
+              currentUserId: currentUserId,
+              empId: widget.employeeId,
+              events: events,
+              day: day,
+              screenHeight: MediaQuery.of(context).size.height,
+            ));
   }
 }
