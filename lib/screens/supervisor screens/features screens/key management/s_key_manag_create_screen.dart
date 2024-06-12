@@ -47,7 +47,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   DateTime? EndDate;
   String dropdownValue = 'Select';
   List<String> tittles = [];
-  List selectedGuards = [];
+  List<Map<String, dynamic>> selectedGuards = [];
   TextEditingController _tittleController = TextEditingController();
   TextEditingController _RecipientNameController = TextEditingController();
   TextEditingController _ContactController = TextEditingController();
@@ -57,10 +57,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   TextEditingController _AllocateQtController2 = TextEditingController();
   TextEditingController _keyNameController2 = TextEditingController();
   TextEditingController _DescriptionController = TextEditingController();
-
+  TextEditingController _searchController = TextEditingController();
+  String? selectedGuardId;
   String? selectedKeyName;
   String? selectedKeyId;
   List<DocumentSnapshot> keys = [];
+  List<Map<String, dynamic>> guards = [];
 
   @override
   void initState() {
@@ -76,6 +78,26 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
     setState(() {
       keys = querySnapshot.docs;
+    });
+  }
+
+  Future<void> searchGuards(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        guards.clear();
+      });
+      return;
+    }
+
+    final result = await FirebaseFirestore.instance
+        .collection('Employees')
+        .where('EmployeeRole', isEqualTo: 'GUARD')
+        .where('EmployeeCompanyId', isEqualTo: widget.companyId)
+        .where('EmployeeNameSearchIndex', arrayContains: query)
+        .get();
+
+    setState(() {
+      guards = result.docs.map((doc) => doc.data()).toList();
     });
   }
 
@@ -353,94 +375,40 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
-                                      child: TypeAheadField<Guards>(
-                                        autoFlipDirection: true,
-                                        controller: _RecipientNameController,
-                                        direction: VerticalDirection.down,
-                                        builder:
-                                            (context, _controller, focusNode) =>
-                                                TextField(
-                                          controller: _controller,
-                                          focusNode: focusNode,
-                                          autofocus: false,
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 18.w,
-                                            color: Colors.white,
-                                          ),
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10.r),
-                                              ),
-                                            ),
-                                            focusedBorder: InputBorder.none,
-                                            hintStyle: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w300,
-                                              fontSize: 18.w,
-                                              color: Theme.of(context)
-                                                  .textTheme.bodyLarge!.color,
-                                            ),
-                                            hintText: 'Search Guards',
-                                            contentPadding: EdgeInsets.zero,
-                                          ),
-                                          cursorColor:  Theme.of(context).primaryColor,
-                                        ),
-                                        suggestionsCallback:
-                                            suggestionsCallback,
-                                        itemBuilder: (context, Guards guards) {
-                                          return ListTile(
-                                            leading: Container(
-                                              height: 30.h,
-                                              width: 30.w,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color:  Theme.of(context)
-                                                    .primaryColor,
-                                              ),
-                                            ),
-                                            title: InterRegular(
-                                              text: guards.name,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .color,
-                                            ),
-                                          );
+                                      child: TextField(
+                                        controller: _searchController,
+                                        onChanged: (query) {
+                                          searchGuards(query);
                                         },
-                                        emptyBuilder: (context) => Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 10.h,
-                                            horizontal: 10.w,
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 18.sp,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .color,
+                                        ),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10.r),
+                                            ),
                                           ),
-                                          child: InterRegular(
-                                            text: 'No Such Screen found',
+                                          focusedBorder: InputBorder.none,
+                                          hintStyle: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18.sp,
                                             color: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge!
                                                 .color,
-                                            fontsize: 18.sp,
                                           ),
+                                          hintText: 'Search Guard',
+                                          contentPadding: EdgeInsets.zero,
                                         ),
-                                        decorationBuilder: (context, child) =>
-                                            Material(
-                                          type: MaterialType.card,
-                                          elevation: 4,
-                                          borderRadius: BorderRadius.circular(
-                                            10.r,
-                                          ),
-                                          child: child,
-                                        ),
-                                        debounceDuration:
-                                            const Duration(milliseconds: 300),
-                                        onSelected: (Guards guard) {
-                                          print(
-                                              'home screen search bar############################################');
-
-                                          print(guard.name);
-                                        },
-                                        listBuilder: gridLayoutBuilder,
+                                        cursorColor:
+                                        Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     Container(
@@ -463,6 +431,28 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     )
                                   ],
                                 ),
+                              ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: guards.length,
+                                itemBuilder: (context, index) {
+                                  final guard = guards[index];
+                                  return ListTile(
+                                    title: Text(guard['EmployeeName']),
+                                    onTap: () {
+                                      setState(() {
+                                        _searchController.text = guard['EmployeeName'];
+                                        selectedGuards.add({
+                                          'GuardName': guard['EmployeeName'],
+                                          'GuardImg': guard['EmployeeImg'],
+                                          'GuardId': guard['EmployeeId'],
+                                        });
+                                        selectedGuardId = guard['EmployeeId'];
+                                        guards.clear();
+                                      });
+                                    },
+                                  );
+                                },
                               ),
                               SizedBox(height: 20.h),
                               Container(
