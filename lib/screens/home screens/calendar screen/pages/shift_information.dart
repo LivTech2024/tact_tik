@@ -299,10 +299,11 @@ class _ShiftInformationState extends State<ShiftInformation> {
         }
 
         final exchangeDoc = exchangeCollection.doc();
+        Map<String, dynamic> dataJson = snapshot.data() ?? {};
         transaction.set(exchangeDoc, {
           'ShiftExchReqId': exchangeDoc.id,
-          'ShiftExchReqSenderId': empId,
-          'ShiftExchReqReceiverId': widget.currentUserId,
+          'ShiftExchReqSenderId': widget.currentUserId,
+          'ShiftExchReqReceiverId': (dataJson['ShiftAssignedUserId'] ?? []).first,
           'ShiftExchReqShiftId': shiftId,
           'ShiftExchReqStatus': 'pending',
           'ShiftExchReqCreatedAt': DateTime.now(),
