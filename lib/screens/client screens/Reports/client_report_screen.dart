@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,8 +7,87 @@ import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_semibold.dart';
 import 'client_oprn_report.dart';
 
-class ClientReportScreen extends StatelessWidget {
-  const ClientReportScreen({super.key});
+class ClientReportScreen extends StatefulWidget {
+  final String employeeId;
+  const ClientReportScreen({super.key, required this.employeeId});
+
+  @override
+  State<ClientReportScreen> createState() => _ClientReportScreenState();
+}
+
+class _ClientReportScreenState extends State<ClientReportScreen> {
+  List<Map<String, dynamic>> reports = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchReports();
+  }
+
+  Future<void> fetchReports() async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Reports')
+          .orderBy('ReportCreatedAt', descending: true)
+          .where('ReportClientId', isEqualTo: widget.employeeId)
+          .get();
+      List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return {
+          'ReportDate': (data['ReportCreatedAt'] != null)
+              ? data['ReportCreatedAt'].toDate()
+              : DateTime.now(), // default to now if missing or null
+          'ReportName': (data['ReportName'] != null &&
+              data['ReportName'].toString().isNotEmpty)
+              ? data['ReportName']
+              : 'Not Found',
+          'ReportGuardName': (data['ReportEmployeeName'] != null &&
+              data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportEmployeeName': (data['ReportEmployeeName'] != null &&
+              data['ReportEmployeeName'].toString().isNotEmpty)
+              ? data['ReportEmployeeName']
+              : 'Not Found',
+          'ReportStatus': (data['ReportStatus'] != null &&
+              data['ReportStatus'].toString().isNotEmpty)
+              ? data['ReportStatus']
+              : 'Not Found',
+          'ReportCategory': (data['ReportCategoryName'] != null &&
+              data['ReportCategoryName'].toString().isNotEmpty)
+              ? data['ReportCategoryName']
+              : 'Not Found',
+          'ReportFollowUpRequire': data['ReportIsFollowUpRequired'] ?? false,
+          'ReportData': (data['ReportData'] != null &&
+              data['ReportData'].toString().isNotEmpty)
+              ? data['ReportData']
+              : 'Not Found',
+          'ReportLocation': (data['ReportLocationName'] != null &&
+              data['ReportLocationName'].toString().isNotEmpty)
+              ? data['ReportLocationName']
+              : 'Not Found',
+        };
+      }).toList();
+
+      setState(() {
+        reports = fetchedReports;
+        isLoading = false;
+      });
+      print("REPORT DATA HERE IT'S  :$reports");
+    } catch (e) {
+      print("Error fetching reports: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  bool isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
 
   @override
   Widget build(BuildContext context) {

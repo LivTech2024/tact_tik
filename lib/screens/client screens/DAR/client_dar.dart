@@ -47,12 +47,18 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
         .orderBy('EmpDarDate', descending: true)
         .get();
 
-    // Group the data by date
     Map<String, List<DocumentSnapshot>> dataByDate = {};
     for (var doc in querySnapshot.docs) {
       var data = doc.data() as Map<String, dynamic>;
       var date = (data['EmpDarDate'] as Timestamp).toDate();
       var formattedDate = DateFormat('dd/MM/yyyy').format(date);
+
+      if (selectedDate != null) {
+        var selectedFormattedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
+        if (formattedDate != selectedFormattedDate) {
+          continue;
+        }
+      }
 
       if (dataByDate.containsKey(formattedDate)) {
         dataByDate[formattedDate]!.add(doc);
@@ -68,6 +74,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
     });
   }
 
+
   void NavigateScreen(Widget screen, BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
@@ -77,13 +84,16 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(2101)
+    );
     setState(() {
       if (picked != null) {
         selectedDate = picked;
+        fetchDARData();  // Fetch data for the selected date
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

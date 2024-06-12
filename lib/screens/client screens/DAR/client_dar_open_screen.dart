@@ -215,10 +215,9 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                     final tileContent = tile['TileContent'] ?? 'Not Defined';
                     final tileTime = tile['TileTime'];
                     final tileLocation = tile['TileLocation'] ?? "Not Defined";
-                    final tileDescription =
-                        tile['TileDescription'] ?? 'Not Defined';
-                    final tileReportSearchId =
-                        tile['TileReportSearchId'] ?? "Not Defined";
+                    final tilePatrol = tile['TilePatrol'] ?? [];
+                    final tileReport = tile['TileReport'] ?? [];
+                    final tileImages = tile['TileImages'] ?? [];
 
                     return GestureDetector(
                       onTap: () {
@@ -229,8 +228,10 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                               tileLocation: tileLocation,
                               tileTime: tileTime,
                               tileDescription: tileContent,
-                              tileReportSearchId: tileReportSearchId,
                               empName: widget.employeeName,
+                              tilePatrol: tilePatrol,
+                              tileReport: tileReport,
+                              tileImages: tileImages,
                             ),
                           ),
                         );
@@ -251,9 +252,9 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             SizedBox(
                               width: 150.w,
                               child: InterMedium(
-                                text: tileContent == ''
+                                text: tileLocation == ''
                                     ? 'Not Defined'
-                                    : tileContent,
+                                    : tileLocation,
                                 fontsize: 16.sp,
                               ),
                             ),
