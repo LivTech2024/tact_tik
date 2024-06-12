@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bounce/bounce.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/main.dart';
 import 'package:tact_tik/login_screen.dart';
+import 'package:tact_tik/screens/client%20screens/DAR/client_dar.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_check_patrol_screen.dart';
 import 'package:tact_tik/screens/client%20screens/patrol/client_open_patrol_screen.dart';
 import '../../fonts/inter_bold.dart';
@@ -24,9 +26,11 @@ import '../../utils/colors.dart';
 import '../SideBar Screens/employment_letter.dart';
 import '../SideBar Screens/history_screen.dart';
 import '../SideBar Screens/profile_screen.dart';
+import '../home screens/widgets/grid_widget.dart';
 import '../home screens/widgets/home_screen_part1.dart';
 import '../home screens/widgets/homescreen_custom_navigation.dart';
 import 'Reports/client_oprn_report.dart';
+import 'Reports/client_report_screen.dart';
 
 class ClientHomeScreen extends StatefulWidget {
   const ClientHomeScreen({super.key});
@@ -105,7 +109,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   @override
   void initState() {
     super.initState();
-    _getUserInfo();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _getUserInfo();
     fetchShifts();
     fetchReports();
   }
@@ -114,13 +122,177 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
   List<Map<String, dynamic>> reports = [];
   bool isLoading = true;
 
+  Future<void> _getUserInfo() async {
+    print("Fetching user info");
+    var userInfo = await fireStoreService.getClientInfoByCurrentUserEmail();
+    if (mounted) {
+      if (userInfo != null) {
+        String userName = userInfo['ClientName'];
+        String EmployeeId = userInfo['ClientId'];
+        String empEmail = userInfo['ClientEmail'];
+        String empImage = userInfo['ClientHomePageBgImg'] ?? "";
+        print("Employee Id ${EmployeeId}");
+        var shiftInfo =
+            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
+        var patrolInfo =
+            await fireStoreService.getPatrolsByClientId(EmployeeId);
+        print("User Info ${userName}");
+        print("Patrol Info ${patrolInfo}");
+
+        setState(() {
+          _userName = userName;
+          _employeeId = EmployeeId;
+          _empEmail = empEmail;
+          employeeImg = empImage;
+        });
+        print('User Info: ${userInfo.data()}');
+        if (patrolInfo != null) {
+          setState(() {
+            patrolsList = patrolInfo;
+          });
+          //   String PatrolArea = patrolInfo['PatrolArea'];
+          //   String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
+          //   bool PatrolKeepGuardInRadiusOfLocation =
+          //       patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
+          //   String PatrolLocationName = patrolInfo['PatrolLocationName'];
+          //   String PatrolName = patrolInfo['PatrolName'];
+          //   int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
+          //   Timestamp PatrolTime = patrolInfo['PatrolTime'];
+          //   DateTime patrolDateTime = PatrolTime.toDate();
+
+          //   // Format DateTime as String
+          //   String patrolTimeString =
+          //       DateFormat('hh:mm a').format(patrolDateTime);
+          //   String patrolDateString =
+          //       DateFormat('yyyy-MM-dd').format(patrolDateTime);
+          //   print('Patrol Info: ${patrolInfo.data()}');
+
+          //   setState(() {
+          //     _patrolArea = PatrolArea;
+          //     _patrolCompanyId = PatrolCompanyId;
+          //     _patrolKeepGuardInRadiusOfLocation =
+          //         PatrolKeepGuardInRadiusOfLocation;
+          //     _patrolLocationName = PatrolLocationName;
+          //     _patrolRestrictedRadius = PatrolRestrictedRadius;
+          //     // _patrolTime = patrolTimeString;
+          //     _patrolDate = patrolDateString;
+
+          //     // issShift = false;
+          //   });
+        }
+
+        // if (shiftInfo != null) {
+        //   String shiftDateStr =
+        //       DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
+        //   String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
+        //   String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
+        //   String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
+        //   String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
+        //   String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
+
+        //   String shiftName = shiftInfo['ShiftName'] ?? " ";
+        //   String shiftId = shiftInfo['ShiftId'] ?? " ";
+        //   GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
+        //   double shiftLocationLatitude = shiftGeolocation.latitude;
+        //   double shiftLocationLongitude = shiftGeolocation.longitude;
+        //   String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
+        //   String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
+        //   String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
+
+        //   int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
+        //   bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
+        //   // String ShiftClientId = shiftInfo['ShiftClientId'];
+        //   // EmpEmail: _empEmail,
+        //   //                     Branchid: _branchId,
+        //   //                     cmpId: _cmpId,
+        //   // String employeeImg = shiftInfo['EmployeeImg'];
+        //   setState(() {
+        //     _ShiftDate = shiftDateStr;
+        //     _ShiftEndTime = shiftEndTimeStr;
+        //     _ShiftStartTime = shiftStartTimeStr;
+        //     _ShiftLocation = shiftLocation;
+        //     _ShiftLocationName = shiftLocationName;
+        //     _ShiftName = shiftName;
+        //     _shiftLatitude = shiftLocationLatitude;
+        //     _shiftLongitude = shiftLocationLongitude;
+        //     _shiftId = shiftId;
+        //     _shiftRestrictedRadius = ShiftRestrictedRadius;
+        //     _ShiftCompanyId = shiftCompanyId;
+        //     _ShiftBranchId = companyBranchId;
+        //     _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
+        //     _shiftLocationId = shiftLocationId;
+        //     _shiftCLientId = shiftClientId;
+        //     // _shiftCLientId = ShiftClientId;
+        //     // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
+        //     DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
+        //     if (!selectedDates
+        //         .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
+        //       setState(() {
+        //         selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
+        //       });
+        //     }
+        //     if (!selectedDates.any((date) =>
+        //         date!.year == shiftDateTime.year &&
+        //         date.month == shiftDateTime.month &&
+        //         date.day == shiftDateTime.day)) {
+        //       setState(() {
+        //         selectedDates.add(shiftDateTime);
+        //       });
+        //     }
+        //     // storage.setItem("shiftId", shiftId);
+        //     // storage.setItem("EmpId", EmployeeId);
+
+        //     // _employeeImg = employeeImg;
+        //   });
+        //   print('Shift Info: ${shiftInfo.data()}');
+
+        //   Future<void> printAllSchedules(String empId) async {
+        //     var getAllSchedules = await fireStoreService.getAllSchedules(empId);
+        //     if (getAllSchedules.isNotEmpty) {
+        //       getAllSchedules.forEach((doc) {
+        //         var data = doc.data() as Map<String, dynamic>?;
+        //         if (data != null && data['ShiftDate'] != null) {
+        //           var shiftDate = data['ShiftDate'] as Timestamp;
+        //           var date = DateTime.fromMillisecondsSinceEpoch(
+        //               shiftDate.seconds * 1000);
+        //           var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+        //           if (!selectedDates.contains(DateTime.parse(formattedDate))) {
+        //             setState(() {
+        //               selectedDates.add(DateTime.parse(formattedDate));
+        //             });
+        //           }
+        //           // Format the date
+        //           print("ShiftDate: $formattedDate");
+        //         }
+
+        //         print(
+        //             "All Schedule date : ${doc.data()}"); // Print data of each document
+        //       });
+        //     } else {
+        //       print("No schedules found.");
+        //     }
+        //   }
+
+        //   printAllSchedules(EmployeeId);
+        // } else {
+        //   setState(() {
+        //     issShift = true; //To validate that shift exists for the user.
+        //   });
+        //   print('Shift info not found');
+        // }
+        // getAndPrintAllSchedules();
+      } else {
+        print('User info not found');
+      }
+    }
+  }
+
   Future<void> fetchShifts() async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Shifts')
-          .where('ShiftClientId', isEqualTo: "POt8iM9gm5RUCW8UkrSf")
+          .where('ShiftClientId', isEqualTo: _employeeId)
           .get();
-      print('Snapshot ${querySnapshot}');
       List<Map<String, dynamic>> fetchedShifts = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return {
@@ -129,10 +301,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           'ShiftLocationAddress': data['ShiftLocationAddress'],
           'ShiftStartTime': data['ShiftStartTime'],
           'ShiftEndTime': data['ShiftEndTime'],
-          // 'members': data['members'],
+          'members': data['members'],
         };
       }).toList();
-
+      print("SHIFTS: ${fetchedShifts}");
+      print("EMPLOYEE ID: ${_employeeId}");
       setState(() {
         shifts = fetchedShifts;
         isLoading = false;
@@ -152,7 +325,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
           .orderBy('ReportCreatedAt', descending: true)
           .where('ReportClientId', isEqualTo: _employeeId)
           .get();
-      print('Snapshot ${querySnapshot}');
       List<Map<String, dynamic>> fetchedReports = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return {
@@ -221,170 +393,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   // 12 datani mall shift start id A local stoarage
   // 2 capital mall
-  void _getUserInfo() async {
-    print("Fetching user info");
-    var userInfo = await fireStoreService.getClientInfoByCurrentUserEmail();
-    if (mounted) {
-      if (userInfo != null) {
-        String userName = userInfo['ClientName'];
-        String EmployeeId = userInfo['ClientId'];
-        String empEmail = userInfo['ClientEmail'];
-        String empImage = userInfo['ClientHomePageBgImg'] ?? "";
-        print("Employee Id ${EmployeeId}");
-        var shiftInfo =
-            await fireStoreService.getShiftByEmployeeIdFromUserInfo(EmployeeId);
-        var patrolInfo =
-            await fireStoreService.getPatrolsByClientId(EmployeeId);
-        print("User Info ${userName}");
-        print("Patrol Info ${patrolInfo}");
-
-        setState(() {
-          _userName = userName;
-          _employeeId = EmployeeId;
-          _empEmail = empEmail;
-          employeeImg = empImage;
-        });
-        print('User Info: ${userInfo.data()}');
-        if (patrolInfo != null) {
-          setState(() {
-            patrolsList = patrolInfo;
-          });
-          //   String PatrolArea = patrolInfo['PatrolArea'];
-          //   String PatrolCompanyId = patrolInfo['PatrolCompanyId'];
-          //   bool PatrolKeepGuardInRadiusOfLocation =
-          //       patrolInfo['PatrolKeepGuardInRadiusOfLocation'];
-          //   String PatrolLocationName = patrolInfo['PatrolLocationName'];
-          //   String PatrolName = patrolInfo['PatrolName'];
-          //   int PatrolRestrictedRadius = patrolInfo['PatrolRestrictedRadius'];
-          //   Timestamp PatrolTime = patrolInfo['PatrolTime'];
-          //   DateTime patrolDateTime = PatrolTime.toDate();
-
-          //   // Format DateTime as String
-          //   String patrolTimeString =
-          //       DateFormat('hh:mm a').format(patrolDateTime);
-          //   String patrolDateString =
-          //       DateFormat('yyyy-MM-dd').format(patrolDateTime);
-          //   print('Patrol Info: ${patrolInfo.data()}');
-
-          //   setState(() {
-          //     _patrolArea = PatrolArea;
-          //     _patrolCompanyId = PatrolCompanyId;
-          //     _patrolKeepGuardInRadiusOfLocation =
-          //         PatrolKeepGuardInRadiusOfLocation;
-          //     _patrolLocationName = PatrolLocationName;
-          //     _patrolRestrictedRadius = PatrolRestrictedRadius;
-          //     // _patrolTime = patrolTimeString;
-          //     _patrolDate = patrolDateString;
-
-          //     // issShift = false;
-          //   });
-        }
-
-        if (shiftInfo != null) {
-          String shiftDateStr =
-              DateFormat.yMMMMd().format(shiftInfo['ShiftDate'].toDate());
-          String shiftEndTimeStr = shiftInfo['ShiftEndTime'] ?? " ";
-          String shiftStartTimeStr = shiftInfo['ShiftStartTime'] ?? " ";
-          String shiftLocation = shiftInfo['ShiftLocationAddress'] ?? " ";
-          String shiftLocationId = shiftInfo['ShiftLocationId'] ?? " ";
-          String shiftLocationName = shiftInfo['ShiftLocationName'] ?? " ";
-
-          String shiftName = shiftInfo['ShiftName'] ?? " ";
-          String shiftId = shiftInfo['ShiftId'] ?? " ";
-          GeoPoint shiftGeolocation = shiftInfo['ShiftLocation'] ?? 0;
-          double shiftLocationLatitude = shiftGeolocation.latitude;
-          double shiftLocationLongitude = shiftGeolocation.longitude;
-          String companyBranchId = shiftInfo["ShiftCompanyBranchId"] ?? " ";
-          String shiftCompanyId = shiftInfo["ShiftCompanyId"] ?? " ";
-          String shiftClientId = shiftInfo["ShiftClientId"] ?? " ";
-
-          int ShiftRestrictedRadius = shiftInfo["ShiftRestrictedRadius"] ?? 0;
-          bool shiftKeepUserInRadius = shiftInfo["ShiftEnableRestrictedRadius"];
-          // String ShiftClientId = shiftInfo['ShiftClientId'];
-          // EmpEmail: _empEmail,
-          //                     Branchid: _branchId,
-          //                     cmpId: _cmpId,
-          // String employeeImg = shiftInfo['EmployeeImg'];
-          setState(() {
-            _ShiftDate = shiftDateStr;
-            _ShiftEndTime = shiftEndTimeStr;
-            _ShiftStartTime = shiftStartTimeStr;
-            _ShiftLocation = shiftLocation;
-            _ShiftLocationName = shiftLocationName;
-            _ShiftName = shiftName;
-            _shiftLatitude = shiftLocationLatitude;
-            _shiftLongitude = shiftLocationLongitude;
-            _shiftId = shiftId;
-            _shiftRestrictedRadius = ShiftRestrictedRadius;
-            _ShiftCompanyId = shiftCompanyId;
-            _ShiftBranchId = companyBranchId;
-            _shiftKeepGuardInRadiusOfLocation = shiftKeepUserInRadius;
-            _shiftLocationId = shiftLocationId;
-            _shiftCLientId = shiftClientId;
-            // _shiftCLientId = ShiftClientId;
-            // print("Date time parse: ${DateTime.parse(shiftDateStr)}");
-            DateTime shiftDateTime = DateFormat.yMMMMd().parse(shiftDateStr);
-            if (!selectedDates
-                .contains(DateFormat.yMMMMd().parse(shiftDateStr))) {
-              setState(() {
-                selectedDates.add(DateFormat.yMMMMd().parse(shiftDateStr));
-              });
-            }
-            if (!selectedDates.any((date) =>
-                date!.year == shiftDateTime.year &&
-                date.month == shiftDateTime.month &&
-                date.day == shiftDateTime.day)) {
-              setState(() {
-                selectedDates.add(shiftDateTime);
-              });
-            }
-            // storage.setItem("shiftId", shiftId);
-            // storage.setItem("EmpId", EmployeeId);
-
-            // _employeeImg = employeeImg;
-          });
-          print('Shift Info: ${shiftInfo.data()}');
-
-          Future<void> printAllSchedules(String empId) async {
-            var getAllSchedules = await fireStoreService.getAllSchedules(empId);
-            if (getAllSchedules.isNotEmpty) {
-              getAllSchedules.forEach((doc) {
-                var data = doc.data() as Map<String, dynamic>?;
-                if (data != null && data['ShiftDate'] != null) {
-                  var shiftDate = data['ShiftDate'] as Timestamp;
-                  var date = DateTime.fromMillisecondsSinceEpoch(
-                      shiftDate.seconds * 1000);
-                  var formattedDate = DateFormat('yyyy-MM-dd').format(date);
-                  if (!selectedDates.contains(DateTime.parse(formattedDate))) {
-                    setState(() {
-                      selectedDates.add(DateTime.parse(formattedDate));
-                    });
-                  }
-                  // Format the date
-                  print("ShiftDate: $formattedDate");
-                }
-
-                print(
-                    "All Schedule date : ${doc.data()}"); // Print data of each document
-              });
-            } else {
-              print("No schedules found.");
-            }
-          }
-
-          printAllSchedules(EmployeeId);
-        } else {
-          setState(() {
-            issShift = true; //To validate that shift exists for the user.
-          });
-          print('Shift info not found');
-        }
-        // getAndPrintAllSchedules();
-      } else {
-        print('User info not found');
-      }
-    }
-  }
 
 /*  void getAndPrintAllSchedules() async {
     List<DocumentSnapshot> schedules =
@@ -442,15 +450,13 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     void ChangeIconColor(int index) {
       setState(() {
         switch (index) {
           case 0:
             IconColors[0] = ThemeMode.dark == themeManager.themeMode
-        ? DarkColor.color1
-            : LightColor.Primarycolor;
+                ? DarkColor.color1
+                : LightColor.Primarycolor;
             IconColors[1] = ThemeMode.dark == themeManager.themeMode
                 ? DarkColor.color3
                 : LightColor.color2;
@@ -545,6 +551,12 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
         onTap: onPressed,
       );
     }
+
+    final List<List<String>> data = [
+      ['assets/images/dar.png', 'DAR'],
+      ['assets/images/reports.png', 'Reports'],
+      // ['assets/images/default.png', 'Patrol'],
+    ];
 
     return SafeArea(
       child: Scaffold(
@@ -712,16 +724,14 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             Bounce(
                               onTap: () => ChangeScreenIndex(2),
                               child: HomeScreenCustomNavigation(
-                                useSVG: true,
-                                SVG: 'assets/images/lab_profile.svg',
-                                text: 'Reports',
-                                icon: Icons.celebration,
+                                text: 'Explore',
+                                icon: Icons.grid_view_rounded,
                                 color: IconColors[2],
                                 textcolor: IconColors[2],
                               ),
                             ),
                             Bounce(
-                              // onTap: () => ChangeScreenIndex(3),
+                              onTap: () => {},
                               child: HomeScreenCustomNavigation(
                                 useSVG: true,
                                 SVG: NewMessage
@@ -933,7 +943,6 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         shiftDate, DateTime.now()))
                                     ? 'Today'
                                     : "${shiftDate.day} / ${shiftDate.month} / ${shiftDate.year}";
-
                                 return Padding(
                                   padding: EdgeInsets.only(
                                     left: 30.w,
@@ -969,7 +978,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                           margin: EdgeInsets.only(top: 10.h),
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
-                                            color: Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             borderRadius:
                                                 BorderRadius.circular(14.sp),
                                           ),
@@ -1014,10 +1024,11 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                         InterSemibold(
                                                           text: shifts[index]
                                                               ['ShiftName'],
-                                                          color: Theme.of(context)
-                                                              .textTheme
-                                                              .titleSmall!
-                                                              .color,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleSmall!
+                                                                  .color,
                                                           fontsize: 14.sp,
                                                         ),
                                                         SizedBox(height: 5.h),
@@ -1066,27 +1077,33 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                                           Wrap(
                                                             spacing: -5.0,
                                                             children: [
-                                                              for (int i = 0;
-                                                                  i <
-                                                                      (shifts[index]['members'].length >
-                                                                              3
-                                                                          ? 3
-                                                                          : shifts[index]['members']
-                                                                              .length);
-                                                                  i++)
-                                                                CircleAvatar(
-                                                                  radius: 10.r,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                    shifts[index]
-                                                                        [
-                                                                        'members'][i],
-                                                                  ),
-                                                                ),
                                                               if (shifts[index][
-                                                                          'members']
-                                                                      .length >
-                                                                  3)
+                                                                      'members'] !=
+                                                                  null)
+                                                                for (int i = 0;
+                                                                    i <
+                                                                        (shifts[index]['members'].length >
+                                                                                3
+                                                                            ? 3
+                                                                            : shifts[index]['members'].length);
+                                                                    i++)
+                                                                  CircleAvatar(
+                                                                    radius:
+                                                                        10.r,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                      shifts[index]
+                                                                          [
+                                                                          'members'][i],
+                                                                    ),
+                                                                  ),
+                                                              if (shifts[index][
+                                                                          'members'] !=
+                                                                      null &&
+                                                                  shifts[index][
+                                                                              'members']
+                                                                          .length >
+                                                                      3)
                                                                 CircleAvatar(
                                                                   radius: 12.r,
                                                                   backgroundColor: Theme.of(
@@ -1199,276 +1216,56 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                             ),
                           )
                         : ScreenIndex == 2
-                            ? SliverList(
+                            ? SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200.0,
+                                  // mainAxisSpacing: 10.0,
+                                  // crossAxisSpacing: 10.0,
+                                  // childAspectRatio: 4.0,
+                                ),
                                 delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    DateTime reportDate =
-                                        reports[index]['ReportDate'];
-                                    String dateString = (isSameDate(
-                                            reportDate, DateTime.now()))
-                                        ? 'Today'
-                                        : "${reportDate.day} / ${reportDate.month} / ${reportDate.year}";
-                                    print("Report Data : $reports[index]");
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 30.w,
-                                        right: 30.w,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ClientOpenReport(
-                                                reportName: reports[index]
-                                                    ['ReportEmployeeName'],
-                                                reportCategory: reports[index]
-                                                    ['ReportCategory'],
-                                                reportDate: dateString,
-                                                reportFollowUpRequire: reports[
-                                                            index][
-                                                        'ReportFollowUpRequire']
-                                                    .toString(),
-                                                reportData: reports[index]
-                                                    ['ReportData'],
-                                                reportStatus: reports[index]
-                                                    ['ReportStatus'],
-                                                reportEmployeeName:
-                                                    reports[index]
-                                                        ['ReportEmployeeName'],
-                                                reportLocation: reports[index]
-                                                    ['ReportLocation'],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            InterBold(
-                                              text: dateString,
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .color,
-                                              fontsize: 14.sp,
-                                            ),
-                                            SizedBox(
-                                              height: 10.sp,
-                                            ),
-                                            Column(
-                                              children: List.generate(
-                                                1,
-                                                (index) => Container(
-                                                  constraints: BoxConstraints(
-                                                      minHeight: 200.h),
-                                                  width: double.maxFinite,
-                                                  decoration: BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Theme.of(context)
-                                                            .shadowColor,
-                                                        blurRadius: 5,
-                                                        spreadRadius: 2,
-                                                        offset: Offset(0, 3),
-                                                      )
-                                                    ],
-                                                    color: Theme.of(context)
-                                                        .cardColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14.r),
-                                                  ),
-                                                  padding: EdgeInsets.symmetric(
-                                                    vertical: 18.h,
-                                                    horizontal: 18.w,
-                                                  ),
-                                                  margin: EdgeInsets.only(
-                                                    top: 10.h,
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      InterSemibold(
-                                                        text: reports[index][
-                                                            'ReportEmployeeName'],
-                                                        fontsize: 18.sp,
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .color,
-                                                      ),
-                                                      SizedBox(height: 19.h),
-                                                      SizedBox(
-                                                        width: 240.w,
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Report Name:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportName'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Category:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportCategory'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Emp Name:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportEmployeeName'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.h),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                InterMedium(
-                                                                  text:
-                                                                      'Status:',
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .bodyMedium!
-                                                                      .color!,
-                                                                ),
-                                                                InterMedium(
-                                                                  text: reports[
-                                                                          index]
-                                                                      [
-                                                                      'ReportStatus'],
-                                                                  fontsize:
-                                                                      16.sp,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headlineSmall!
-                                                                      .color!,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 20.sp,
-                                            ),
-                                          ],
-                                        ),
+                                  (BuildContext context, int index) {
+                                    return Bounce(
+                                      onTap: () {
+                                        switch (index) {
+                                          case 0:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientDarScreen(
+                                                          clientId: _employeeId,
+                                                          companyId: _cmpId),
+                                                ));
+                                            break;
+                                          case 1:
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ClientReportScreen(employeeId: _employeeId,),
+                                                ));
+                                            break;
+                                          // case 2:
+                                          //   Navigator.push(
+                                          //       context,
+                                          //       MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             ClientDarScreen(
+                                          //                 clientId: _employeeId,
+                                          //                 companyId: _cmpId),
+                                          //       ));
+                                          //   break;
+                                        }
+                                      },
+                                      child: gridWidget(
+                                        img: data[index][0],
+                                        tittle: data[index][1],
                                       ),
                                     );
                                   },
-                                  childCount: reports.length,
+                                  childCount: data.length,
                                 ),
                               )
                             : ScreenIndex == 3
@@ -1483,7 +1280,8 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                         children: [
                                           InterBold(
                                             text: 'Received Message ',
-                                            color:Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             fontsize: 14.sp,
                                           ),
                                           Row(
@@ -1545,8 +1343,7 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                                     border: Border(
                                       bottom: BorderSide(
                                         width: 1,
-                                        color: Theme.of(context)
-                                            .primaryColor,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     // color: WidgetColor,

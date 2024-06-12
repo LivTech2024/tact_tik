@@ -20,7 +20,6 @@ class ProfileEditWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -29,14 +28,14 @@ class ProfileEditWidget extends StatelessWidget {
           InterSemibold(
             text: tittle,
             fontsize: 20.sp,
-            color:  Theme.of(context).textTheme.bodyMedium!.color,
+            color: Theme.of(context).textTheme.bodyMedium!.color,
           ),
           SizedBox(height: 10.h),
           InterRegular(
             text: content,
             fontsize: 16.sp,
             letterSpacing: -.05,
-            color:   Theme.of(context).textTheme.headlineSmall!.color as Color?,
+            color: Theme.of(context).textTheme.headlineSmall!.color as Color?,
           ),
         ],
       ),

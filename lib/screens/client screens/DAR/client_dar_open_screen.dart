@@ -13,7 +13,16 @@ import '../../home screens/widgets/icon_text_widget.dart';
 import 'client_open_dar_screen.dart';
 
 class ClientDarOpenScreen extends StatefulWidget {
-  const ClientDarOpenScreen({super.key});
+  final String employeeName;
+  final String startTime;
+  final List<dynamic> empDarTile;
+
+  const ClientDarOpenScreen({
+    super.key,
+    required this.employeeName,
+    required this.startTime,
+    required this.empDarTile,
+  });
 
   @override
   State<ClientDarOpenScreen> createState() => _ClientDarOpenScreenState();
@@ -37,6 +46,9 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark =
+        Theme.of(context).brightness == Brightness.dark ? true : false;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -50,7 +62,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
             },
           ),
           title: InterRegular(
-            text: "widget.guardName",
+            text: widget.employeeName,
           ),
           centerTitle: true,
         ),
@@ -129,7 +141,7 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                           SizedBox(
                             width: 190.w,
                             child: InterSemibold(
-                              text: 'Employee Name',
+                              text: widget.employeeName,
                               color:
                                   Theme.of(context).textTheme.bodyMedium!.color,
                               fontsize: 18.sp,
@@ -146,40 +158,40 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                             Row(
                               children: [
                                 InterRegular(
-                                  text: 'Started at',
+                                  text: 'Started At',
                                   fontsize: 14.sp,
                                   color: isDark
                                       ? DarkColor.color21
                                       : LightColor.color2,
                                 ),
                                 SizedBox(width: 60.w),
-                                InterRegular(
-                                  text: 'Ended at',
-                                  fontsize: 14.sp,
-                                  color: isDark
-                                      ? DarkColor.color21
-                                      : LightColor.color2,
-                                ),
+                                // InterRegular(
+                                //   text: 'Ended at',
+                                //   fontsize: 14.sp,
+                                //   color: isDark
+                                //       ? DarkColor.color21
+                                //       : LightColor.color2,
+                                // ),
                               ],
                             ),
                             SizedBox(height: 12.h),
                             Row(
                               children: [
                                 InterRegular(
-                                  text: '11:36',
+                                  text: widget.startTime,
                                   fontsize: 14.sp,
                                   color: isDark
                                       ? DarkColor.color21
                                       : LightColor.color2,
                                 ),
                                 SizedBox(width: 90.w),
-                                InterRegular(
-                                  text: '16:56',
-                                  fontsize: 14.sp,
-                                  color: isDark
-                                      ? DarkColor.color21
-                                      : LightColor.color2,
-                                ),
+                                // InterRegular(
+                                //   text: '16:56',
+                                //   fontsize: 14.sp,
+                                //   color: isDark
+                                //       ? DarkColor.color21
+                                //       : LightColor.color2,
+                                // ),
                               ],
                             ),
                           ],
@@ -196,52 +208,71 @@ class _ClientDarOpenScreenState extends State<ClientDarOpenScreen> {
                 SizedBox(height: 20.h),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: 10,
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      //   ClientOpenDarScreen
-                      Navigator.push(
+                  itemCount: widget.empDarTile.length,
+                  itemBuilder: (context, index) {
+                    final tile = widget.empDarTile[index];
+                    final tileContent = tile['TileContent'] ?? 'Not Defined';
+                    final tileTime = tile['TileTime'];
+                    final tileLocation = tile['TileLocation'] ?? "Not Defined";
+                    final tilePatrol = tile['TilePatrol'] ?? [];
+                    final tileReport = tile['TileReport'] ?? [];
+                    final tileImages = tile['TileImages'] ?? [];
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ClientOpenDarScreen()));
-                    },
-                    child: Container(
-                      height: 46.h,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.only(bottom: 10.h),
-                      decoration: BoxDecoration(
-                        color: DarkColor.WidgetColor,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 150.w,
-                            child: InterMedium(
-                              text: 'checkpointName',
-                              // color: color21,
-                              fontsize: 16.sp,
+                            builder: (context) => ClientOpenDarScreen(
+                              tileLocation: tileLocation,
+                              tileTime: tileTime,
+                              tileDescription: tileContent,
+                              empName: widget.employeeName,
+                              tilePatrol: tilePatrol,
+                              tileReport: tileReport,
+                              tileImages: tileImages,
                             ),
                           ),
-                          Row(
-                            children: [
-                              InterSemibold(
-                                  text: '02.00 - 03.00', fontsize: 16.sp),
-                              SizedBox(width: 5.w),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 24.sp,
+                        );
+                      },
+                      child: Container(
+                        height: 46.h,
+                        width: double.maxFinite,
+                        margin: EdgeInsets.only(bottom: 10.h),
+                        decoration: BoxDecoration(
+                          color: DarkColor.WidgetColor,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 150.w,
+                              child: InterMedium(
+                                text: tileLocation == ''
+                                    ? 'Not Defined'
+                                    : tileLocation,
+                                fontsize: 16.sp,
                               ),
-                            ],
-                          )
-                        ],
+                            ),
+                            Row(
+                              children: [
+                                InterSemibold(text: tileTime, fontsize: 16.sp),
+                                SizedBox(width: 5.w),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 24.sp,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 )
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
@@ -111,17 +112,19 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         ],
       )),
       bottomSheet: LastPage
-          ? Button1(
-              text: 'Submit',
-              onPressed: () {},
-              backgroundcolor: Theme.of(context).primaryColor,
-              color: Colors.white,
-              borderRadius: width / width10,
-              fontsize: width / width18,
-            )
+          ?  Button1(
+            text: 'Submit',
+            onPressed: (){},
+            backgroundcolor:
+               Theme.of(context).primaryColor,
+            color: Theme.of(context).textTheme.headlineMedium!.color,
+            borderRadius: 10.r,
+            fontsize: 18.sp,
+          )
           : Container(
-              height: height / height66,
-              color: Theme.of(context).canvasColor,
+              height: 66.h,
+              color:
+                  Theme.of(context).canvasColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width40),
                 child: Row(
@@ -135,8 +138,9 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       ),
                       icon: Icon(
                         Icons.arrow_back_ios,
-                        size: width / width24,
-                        color: Theme.of(context).textTheme.bodySmall!.color,
+                        size: 24.sp,
+                        color:
+                            Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     ),
                     IconButton(
@@ -146,8 +150,9 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       ),
                       icon: Icon(
                         Icons.arrow_forward_ios,
-                        size: width / width24,
-                        color: Theme.of(context).textTheme.bodySmall!.color,
+                        size: 24.sp,
+                        color:
+                            Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     )
                   ],

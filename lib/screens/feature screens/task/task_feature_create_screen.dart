@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/widgets/button1.dart';
 import 'package:tact_tik/fonts/inter_medium.dart';
 import 'package:tact_tik/main.dart';
@@ -100,26 +101,27 @@ class _TaskFeatureCreateScreenState extends State<TaskFeatureCreateScreen> {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width / width30),
+                padding: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
                   children: [
-                    SizedBox(height: height / height30),
+                    SizedBox(height: 30.h),
                     CustomeTextField(
                       hint: 'Tittle',
                       controller: _tittleController,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     CustomeTextField(
                       hint: 'Explain',
                       isExpanded: true,
                       controller: _explainController,
                     ),
-                    SizedBox(height: height / height20),
+                    SizedBox(height: 20.h),
                     Button1(
                       text: 'Done',
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
                       onPressed: saveTaskToFirestore,
                       backgroundcolor: Theme.of(context).primaryColor,
-                      borderRadius: width / width10,
+                      borderRadius: 10.r,
                     ),
                   ],
                 ),

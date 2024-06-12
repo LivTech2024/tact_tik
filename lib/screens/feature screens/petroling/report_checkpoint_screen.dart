@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tact_tik/common/widgets/customErrorToast.dart';
@@ -67,8 +68,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addImage() async {
-    XFile? pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 40);
+    XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFile != null) {
       try {
         File file = File(pickedFile.path);
@@ -90,8 +91,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
   }
 
   Future<void> _addGallery() async {
-    List<XFile>? pickedFiles =
-        await ImagePicker().pickMultiImage(imageQuality: 40);
+    List<XFile>? pickedFiles = await ImagePicker()
+        .pickMultiImage(imageQuality: Platform.isIOS ? 30 : 50);
     if (pickedFiles != null) {
       for (var pickedFile in pickedFiles) {
         try {
@@ -164,11 +165,9 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: width / width20),
             onPressed: () {
@@ -177,7 +176,6 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
           ),
           title: InterMedium(
             text: 'Report Checkpoint',
-        
           ),
           centerTitle: true,
         ),
@@ -243,7 +241,8 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                       decoration: InputDecoration(
                         hintText: 'Add Comment',
                       ),
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium!.color),
                     ),
                     SizedBox(height: height / height20),
                     GridView.builder(
@@ -300,7 +299,10 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                                   Icon(
                                     Icons.add,
                                     size: width / width20,
-                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color,
                                   ),
                                   SizedBox(height: height / height10),
                                   InterMedium(
@@ -399,12 +401,12 @@ class _ReportCheckpointScreenState extends State<ReportCheckpointScreen> {
                           });
                         }
                       },
-                      color: Colors.white,
-                      borderRadius: width / width20,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                      borderRadius: 20.r,
                       backgroundcolor: Theme.of(context).primaryColor,
                     ),
                     SizedBox(
-                      height: height / height20,
+                      height: 20.h,
                     ),
                   ],
                 ),

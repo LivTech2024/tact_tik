@@ -1,15 +1,12 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
 import 'package:tact_tik/main.dart';
-import 'package:tact_tik/screens/client%20screens/patrol/view_checkpoint_screen.dart';
 import 'package:tact_tik/screens/home%20screens/widgets/icon_text_widget.dart';
 import '../../../fonts/inter_medium.dart';
 import '../../../fonts/inter_regular.dart';
@@ -19,8 +16,12 @@ import '../select_client_guards_screen.dart';
 import 'client_dar_open_screen.dart';
 
 class ClientDarScreen extends StatefulWidget {
+  final String clientId;
+  final String companyId;
   ClientDarScreen({
     super.key,
+    required this.clientId,
+    required this.companyId,
   });
 
   @override
@@ -29,6 +30,50 @@ class ClientDarScreen extends StatefulWidget {
 
 class _ClientDarScreenState extends State<ClientDarScreen> {
   DateTime? selectedDate;
+  List<DocumentSnapshot> darList = [];
+  List<MapEntry<String, List<DocumentSnapshot>>> groupedData = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDARData();
+  }
+
+  void fetchDARData() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('EmployeesDAR')
+        .where('EmpDarClientId', isEqualTo: widget.clientId)
+        .orderBy('EmpDarDate', descending: true)
+        .get();
+
+    Map<String, List<DocumentSnapshot>> dataByDate = {};
+    for (var doc in querySnapshot.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+      var date = (data['EmpDarDate'] as Timestamp).toDate();
+      var formattedDate = DateFormat('dd/MM/yyyy').format(date);
+
+      if (selectedDate != null) {
+        var selectedFormattedDate = DateFormat('dd/MM/yyyy').format(selectedDate!);
+        if (formattedDate != selectedFormattedDate) {
+          continue;
+        }
+      }
+
+      if (dataByDate.containsKey(formattedDate)) {
+        dataByDate[formattedDate]!.add(doc);
+      } else {
+        dataByDate[formattedDate] = [doc];
+      }
+    }
+
+    groupedData = dataByDate.entries.toList();
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
 
   void NavigateScreen(Widget screen, BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
@@ -39,16 +84,21 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(2101)
+    );
     setState(() {
       if (picked != null) {
         selectedDate = picked;
+        fetchDARData();  // Fetch data for the selected date
       }
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final bool isDark =
+    Theme.of(context).brightness == Brightness.dark ? true : false;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -62,7 +112,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
             },
           ),
           title: InterRegular(
-            text: "widget.guardName",
+            text: "DAR Screen",
           ),
           centerTitle: true,
         ),
@@ -97,13 +147,13 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             SelectClientGuardsScreen(
-                            //               companyId: '',
-                            //             )));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SelectClientGuardsScreen(
+                                          companyId: widget.companyId,
+                                        )));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +194,7 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         SelectClientGuardsScreen(
-                                          companyId: '',
+                                          companyId: widget.companyId,
                                         )));
                           },
                           child: Column(
@@ -180,122 +230,140 @@ class _ClientDarScreenState extends State<ClientDarScreen> {
                   ],
                 ),
                 ListView.builder(
-                  itemCount: 10,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      InterBold(text: '23/ 04/ 2024', fontsize: 18.sp),
-                      SizedBox(height: 10.h),
-                      Column(
-                        children: List.generate(
-                          2,
-                          (index) => GestureDetector(
-                            onTap: () {
-                              // ClientDarOpenScreen;
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ClientDarOpenScreen()));
-                            },
-                            child: Container(
-                              height: 130.h,
-                              margin: EdgeInsets.only(top: 10.h),
-                              width: double.maxFinite,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).shadowColor,
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                                color: Theme.of(context).cardColor,
-                                borderRadius: BorderRadius.circular(14.r),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 20.h),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                  physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: groupedData.length,
+                    itemBuilder: (context, index) {
+                      var entry = groupedData[index];
+                      var date = entry.key;
+                      var data = entry.value;
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 20.h),
+                            InterBold(text: date, fontsize: 18.sp),
+                            SizedBox(height: 10.h),
+                            ...data.map(
+                              (doc) => GestureDetector(
+                                onTap: () {
+                                  Map<String, dynamic> docData =
+                                      doc.data() as Map<String, dynamic>;
+                                  String employeeName =
+                                      docData['EmpDarEmpName'];
+                                  String startTime = DateFormat('HH:mm').format(
+                                      (docData['EmpDarDate'] as Timestamp)
+                                          .toDate());
+                                  List<dynamic> empDarTile =
+                                      docData['EmpDarTile'] ?? [];
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClientDarOpenScreen(
+                                                employeeName: employeeName,
+                                                startTime: startTime,
+                                                empDarTile: empDarTile,
+                                              )));
+                                },
+                                child: Container(
+                                  height: 130.h,
+                                  margin: EdgeInsets.only(top: 10.h),
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(14.r),
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Column(
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(height: 5.h),
-                                          Container(
-                                            height: 30.h,
-                                            width: 4.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10.r),
-                                                bottomRight:
-                                                    Radius.circular(10.r),
+                                          Column(
+                                            children: [
+                                              SizedBox(height: 5.h),
+                                              Container(
+                                                height: 30.h,
+                                                width: 4.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(10.r),
+                                                    bottomRight:
+                                                        Radius.circular(10.r),
+                                                  ),
+                                                  color: Theme.of(context).primaryColor,
+                                                ),
                                               ),
-                                              color: isDark
-                                                  ? DarkColor.Primarycolor
-                                                  : LightColor.Primarycolor,
-                                            ),
+                                            ],
                                           ),
+                                          SizedBox(width: 14.w),
+                                          SizedBox(
+                                            width: 190.w,
+                                            child: InterSemibold(
+                                              text: (doc.data() as Map<String,
+                                                  dynamic>)['EmpDarEmpName'],
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                              fontsize: 18.sp,
+                                            ),
+                                          )
                                         ],
                                       ),
-                                      SizedBox(width: 14.w),
-                                      SizedBox(
-                                        width: 190.w,
-                                        child: InterSemibold(
-                                          text: 'Employee Name',
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color,
-                                          fontsize: 18.sp,
+                                      // SizedBox(height: 10.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20.w),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InterRegular(
+                                              text: (doc.data() as Map<String,
+                                                  dynamic>)['EmpDarShiftName'],
+                                              fontsize: 14.sp,
+                                              color: isDark
+                                                  ? DarkColor.color21
+                                                  : LightColor.color2,
+                                            ),
+                                            SizedBox(height: 12.h),
+                                            InterMedium(
+                                              text: (doc.data()
+                                                      as Map<String, dynamic>)[
+                                                  'EmpDarLocationName'],
+                                              fontsize: 14.sp,
+                                              maxLines: 1,
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .color,
+                                            ),
+                                          ],
                                         ),
                                       )
                                     ],
                                   ),
-                                  // SizedBox(height: 10.h),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 20.w),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        InterRegular(
-                                          text: 'Location',
-                                          fontsize: 14.sp,
-                                          color: isDark
-                                              ? DarkColor.color21
-                                              : LightColor.color2,
-                                        ),
-                                        SizedBox(height: 12.h),
-                                        InterMedium(
-                                          text:
-                                              '2972 Westheimer Rd. Santa Ana, Illinois... ',
-                                          fontsize: 14.sp,
-                                          maxLines: 1,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .color,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
+                          ]);
+                    })
               ],
             ),
           ),

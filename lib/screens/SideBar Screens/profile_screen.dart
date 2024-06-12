@@ -116,11 +116,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
-          
           leading: IconButton(
             icon: Icon(
               isEdit ? Icons.close : Icons.arrow_back_ios,
-             
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -135,18 +133,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           title: InterMedium(
             text: 'Your Profile',
-         
           ),
           actions: [
             IconButton(
-              onPressed: (){
+              onPressed: () {
                 setState(() {
-                  isEdit ? updateProfile : null;
+                  if (isEdit) {
+                    updateProfile();
+                  }
+                  isEdit = !isEdit;
                 });
               },
               icon: Icon(
                 isEdit ? Icons.check : Icons.border_color,
-             
               ),
             ),
           ],

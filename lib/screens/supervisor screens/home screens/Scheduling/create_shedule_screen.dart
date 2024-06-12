@@ -1624,10 +1624,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               }
                             },
                             backgroundcolor: Theme.of(context).primaryColor,
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? DarkColor.color22
-                                    : LightColor.color1,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .color,
                             borderRadius: 10.r,
                             fontsize: 14.sp,
                           ),
@@ -1758,13 +1758,14 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                   Button1(
                                     height: 50.h,
                                     borderRadius: 10.w,
-                                    backgroundcolor: Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? DarkColor.color33
-                                        : LightColor.WidgetColor,
+                                    backgroundcolor:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? DarkColor.color33
+                                            : LightColor.WidgetColor,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .bodyMedium!
+                                        .headlineMedium!
                                         .color,
                                     text: "Generate Qr",
                                     onPressed: () async {
@@ -1796,8 +1797,10 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               text: nextScreen == false
                                   ? 'Create Shift Task'
                                   : 'Create Task',
-                              color:
-                                  Theme.of(context).textTheme.bodyMedium!.color,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium!
+                                  .color,
                             ),
                           ),
                           SizedBox(height: 90.h),
@@ -1929,7 +1932,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                       Theme.of(context).primaryColor,
                                   color: Theme.of(context)
                                       .textTheme
-                                      .bodyMedium!
+                                      .headlineMedium!
                                       .color,
                                   borderRadius: 10.r,
                                   fontsize: 14.sp,

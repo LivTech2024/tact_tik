@@ -74,9 +74,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark =
+    Theme.of(context).brightness == Brightness.dark ? true : false;
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
@@ -100,7 +101,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             child: Column(
               children: [
                 SizedBox(height: 30.h),
-                Row(
+                /*Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
@@ -140,7 +141,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 20.h),*/
                 patrolsList.isEmpty ||
                         (selectedDate != null &&
                             patrolsList.every((patrol) {
@@ -273,7 +274,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 text: patrol[
                                                         'PatrolLogGuardName'] ??
                                                     "",
-                                                color:Theme.of(context).textTheme.displaySmall!.color as Color, 
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .displaySmall!
+                                                    .color as Color,
                                                 fontsize: 18.sp,
                                               ),
                                             ],
@@ -299,7 +303,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Started at',
                                                   fontsize: 12.sp,
-                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -312,7 +319,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                   ),
                                                   fontsize: 12.sp,
-                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                               ],
                                             ),
@@ -326,7 +336,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Ended at',
                                                   fontsize: 12.sp,
-                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -339,7 +352,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                     ),
                                                   ),
                                                   fontsize: 12.sp,
-                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                               ],
                                             ),
@@ -353,7 +369,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                 InterRegular(
                                                   text: 'Status',
                                                   fontsize: 12.sp,
-                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                                 SizedBox(height: 12.h),
                                                 InterMedium(
@@ -361,7 +380,10 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                                                           'PatrolLogStatus'] ??
                                                       'incomplete',
                                                   fontsize: 12.sp,
-                                                  color: Theme.of(context).textTheme.displaySmall!.color as Color,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displaySmall!
+                                                      .color as Color,
                                                 ),
                                               ],
                                             ),

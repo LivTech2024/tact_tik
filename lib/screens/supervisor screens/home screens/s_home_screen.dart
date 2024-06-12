@@ -463,30 +463,6 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                     .color,
                               ),
                               GestureDetector(
-                                onTap: () {},
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      size: 20.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    InterBold(
-                                      text: 'Add',
-                                      fontsize: 14.sp,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .color,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                       context,

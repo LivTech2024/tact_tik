@@ -246,7 +246,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 DateFormat.jm().format(reportDate);
 
                             return Padding(
-                              padding:   EdgeInsets.symmetric(horizontal: 8.w),
+                              padding: EdgeInsets.symmetric(horizontal: 8.w),
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -282,14 +282,16 @@ class _ReportScreenState extends State<ReportScreen> {
                                       decoration: BoxDecoration(
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Theme.of(context).shadowColor,
+                                            color:
+                                                Theme.of(context).shadowColor,
                                             blurRadius: 5,
                                             spreadRadius: 2,
                                             offset: Offset(0, 3),
                                           )
                                         ],
                                         color: Theme.of(context).cardColor,
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       child: Row(
                                         children: [
@@ -335,16 +337,18 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         InterMedium(
                                                           text: 'CATEGORY: ',
                                                           fontsize: 14.sp,
-                                                          color: Theme.of(context)
-                                                              .textTheme
-                                                              .displaySmall!
-                                                              .color,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .displaySmall!
+                                                                  .color,
                                                         ),
                                                         InterRegular(
                                                           text: report[
                                                               'ReportCategoryName'],
                                                           fontsize: 14.sp,
-                                                          color: Theme.of(context)
+                                                          color: Theme.of(
+                                                                  context)
                                                               .textTheme
                                                               .displayMedium!
                                                               .color,
