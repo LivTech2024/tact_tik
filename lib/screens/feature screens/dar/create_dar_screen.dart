@@ -464,7 +464,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                   size: 20.sp,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? DarkColor.color11
+                                      ? Color.fromARGB(255, 255, 255, 255)
                                       : LightColor.color3,
                                 ),
                               ),

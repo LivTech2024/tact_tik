@@ -3766,6 +3766,30 @@ class FireStoreService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getReportWithEmpID(String empId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Reports')
+              .where('ReportEmployeeId', isEqualTo: empId)
+              // .where('ReportCompanyId', isEqualTo: companyId)
+              .get();
+
+      final Set<Map<String, dynamic>> dataSet = Set<Map<String, dynamic>>();
+
+      snapshot.docs.forEach((doc) {
+        dataSet.add(doc.data());
+      });
+
+      final List<Map<String, dynamic>> data = dataSet.toList();
+
+      return data;
+    } catch (e) {
+      print("Error fetching report data: $e");
+      return []; // Return empty list in case of error
+    }
+  }
+
   Future<Map<String, dynamic>?> getReportWithId(String reportId) async {
     try {
       final DocumentSnapshot<Map<String, dynamic>> snapshot =

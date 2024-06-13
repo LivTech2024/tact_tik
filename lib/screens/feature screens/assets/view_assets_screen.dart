@@ -35,8 +35,8 @@ class ViewAssetsScreen extends StatelessWidget {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: DarkColor. Primarycolor, // Change primary color to red
-              secondary: DarkColor. Primarycolor,
+              primary: DarkColor.Primarycolor, // Change primary color to red
+              secondary: DarkColor.Primarycolor,
             ),
           ),
           child: child!,
@@ -74,16 +74,12 @@ class ViewAssetsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-         
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -92,7 +88,6 @@ class ViewAssetsScreen extends StatelessWidget {
           ),
           title: InterMedium(
             text: 'View Assets',
-           
             letterSpacing: -.3,
           ),
           centerTitle: true,
@@ -192,7 +187,6 @@ class ViewAssetsScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-
                           InterMedium(
                             text: equipmentName,
                             color:
@@ -201,7 +195,8 @@ class ViewAssetsScreen extends StatelessWidget {
                           ),
                           InterMedium(
                             text: "Quantity: $equipmentQty",
-                            color: Theme.of(context).textTheme.bodyMedium!.color,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
                             fontsize: 16.sp,
                           ),
                         ],

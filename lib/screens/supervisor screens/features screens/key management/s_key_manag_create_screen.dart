@@ -86,7 +86,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   List<Map<String, dynamic>> guards = [];
   List<String> keyNames = ['Select'];
   Map<String, DocumentSnapshot> keyNameToDocMap = {};
-  bool editKeyMode = false;
+  bool editKeyMode = true;
   bool showReturnBtn = false;
   bool _isLoading = false;
   @override
@@ -94,7 +94,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
     super.initState();
     if (widget.AllocationKeyId.isNotEmpty) {
       setState(() {
-        editKeyMode = true;
+        // editKeyMode = false;
         showReturnBtn = true;
       });
       _fetchKeys();
@@ -182,6 +182,12 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
         // KeyAllocationIsReturned
         // DateFormat( 'yyyy-MM-dd – kk:mm').format(EndDate!) KeyAllocationRecipientContact KeyAllocationPurpose
       });
+      if (doc['KeyAllocationIsReturned'] == true) {
+        print("KeyAllocationIsReturned is true");
+        setState(() {
+          editKeyMode = false;
+        });
+      }
       //  (doc['KeyAllocationEndTime'] as Timestamp).toDate();
       // Add other fields as needed
     }
@@ -1057,7 +1063,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                               ),
                                               SizedBox(width: 6.w),
                                               InterMedium(
-                                                text: 'Asset Returned ?',
+                                                text: 'Key Returned ?',
                                                 color: Theme.of(context)
                                                     .textTheme
                                                     .labelSmall!
@@ -1092,25 +1098,27 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     ),
                                   ),
                                 ),
-                              Button1(
-                                text: 'Save',
-                                onPressed: () {
-                                  if (showReturnBtn == true) {
-                                    _updateData();
-                                  } else {
-                                    _saveData();
-                                  }
-                                },
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .color,
-                                borderRadius: 10.r,
-                                backgroundcolor: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              )
+                              editKeyMode == true
+                                  ? Button1(
+                                      text: 'Save',
+                                      onPressed: () {
+                                        if (showReturnBtn == true) {
+                                          _updateData();
+                                        } else {
+                                          _saveData();
+                                        }
+                                      },
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .color,
+                                      borderRadius: 10.r,
+                                      backgroundcolor:
+                                          Theme.of(context).primaryColor,
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                    )
                             ],
                           ),
                         )
@@ -1168,36 +1176,38 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               SizedBox(
                                 height: 40.h,
                               ),
-                              Button1(
-                                text: 'Save',
-                                onPressed: () async {
-                                  // _saveData();
-                                  var keycreate =
-                                      await _fireStoreService.CreateKey(
-                                          widget.branchId,
-                                          widget.companyId,
-                                          _keyNameController2.text,
-                                          0,
-                                          _DescriptionController.text,
-                                          int.parse(
-                                              _AllocateQtController2.text));
-                                  showSuccessToast(
-                                      context, 'Key has been Created');
-                                  _fetchKeys();
-                                  setState(() {
-                                    showCreate = false;
-                                  });
-                                },
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .color,
-                                borderRadius: 10.r,
-                                backgroundcolor: Theme.of(context).primaryColor,
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              )
+                              editKeyMode == true
+                                  ? Button1(
+                                      text: 'Save',
+                                      onPressed: () async {
+                                        // _saveData();
+                                        var keycreate =
+                                            await _fireStoreService.CreateKey(
+                                                widget.branchId,
+                                                widget.companyId,
+                                                _keyNameController2.text,
+                                                0,
+                                                _DescriptionController.text,
+                                                int.parse(_AllocateQtController2
+                                                    .text));
+                                        showSuccessToast(
+                                            context, 'Key has been Created');
+                                        _fetchKeys();
+                                        setState(() {
+                                          showCreate = false;
+                                        });
+                                      },
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .color,
+                                      borderRadius: 10.r,
+                                      backgroundcolor:
+                                          Theme.of(context).primaryColor,
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                    )
                             ],
                           ),
                         ),
