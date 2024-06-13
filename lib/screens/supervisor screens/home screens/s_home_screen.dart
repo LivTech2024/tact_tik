@@ -187,8 +187,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
             IconColors[3] = Theme.of(context).focusColor;
             ScreenIndex = 0;
             NavigateScreen(AllSchedulesScreen(
-              BranchId: '9tgQzYBJTL3QqJKe34eJ',
-              CompanyId: 'aSvLtwII6Cjs7uCISBRR',
+              BranchId: _BranchId,
+              CompanyId: _CompanyId,
             ));
             break;
           case 3:
@@ -198,7 +198,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
             IconColors[3] = Theme.of(context).primaryColor;
             ScreenIndex = 0;
             NavigateScreen(SuperInboxScreen(
-              companyId: 'aSvLtwII6Cjs7uCISBRR',
+              companyId: _CompanyId,
             ));
             break;
         }
@@ -503,8 +503,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              NewGuardScreen(companyId: _CompanyId,)));
+                                          builder: (context) => NewGuardScreen(
+                                                companyId: _CompanyId,
+                                              )));
                                 },
                                 child: Row(
                                   children: [
@@ -568,7 +569,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             SelectDARGuardsScreen(
-                                          companyId: _CompanyId,
+                                          EmployeeId: _employeeId,
                                         ),
                                       ),
                                     );

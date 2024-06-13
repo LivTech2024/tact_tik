@@ -41,12 +41,15 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController PostalCodeController = TextEditingController();
   final TextEditingController ProvinceController = TextEditingController();
-  final TextEditingController DrivingLicenseController = TextEditingController();
-  final TextEditingController SecurityLicensesController = TextEditingController();
+  final TextEditingController DrivingLicenseController =
+      TextEditingController();
+  final TextEditingController SecurityLicensesController =
+      TextEditingController();
   final TextEditingController CertificateController = TextEditingController();
   final TextEditingController AccountNumberController = TextEditingController();
   final TextEditingController TransitNumberController = TextEditingController();
-  final TextEditingController InstitutionNumberController = TextEditingController();
+  final TextEditingController InstitutionNumberController =
+      TextEditingController();
   final TextEditingController SINNumberController = TextEditingController();
   File? bankVoidCheckImg;
   File? certificateDoc;
@@ -65,10 +68,12 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
 
   Future<void> createEmployee() async {
     try {
-      final employeeName = '${FirstNameController.text} ${LastNameController.text}';
+      final employeeName =
+          '${FirstNameController.text} ${LastNameController.text}';
       final nameSearchIndex = generateSearchIndex(employeeName);
 
-      DocumentReference newEmployeeDoc = FirebaseFirestore.instance.collection('Employees').doc();
+      DocumentReference newEmployeeDoc =
+          FirebaseFirestore.instance.collection('Employees').doc();
 
       // Upload files and get download URLs
       String bankVoidCheckImgUrl = '';
@@ -78,23 +83,28 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
       String securityLicenseImgUrl = '';
 
       if (bankVoidCheckImg != null) {
-        bankVoidCheckImgUrl = await uploadFile(bankVoidCheckImg!, 'employees/images/${newEmployeeDoc.id}_bankVoidCheckImg${Path.extension(bankVoidCheckImg!.path)}');
+        bankVoidCheckImgUrl = await uploadFile(bankVoidCheckImg!,
+            'employees/images/${newEmployeeDoc.id}_bankVoidCheckImg${Path.extension(bankVoidCheckImg!.path)}');
       }
 
       if (certificateDoc != null) {
-        certificateDocUrl = await uploadFile(certificateDoc!, 'employees/images/${newEmployeeDoc.id}_certificateDoc${Path.extension(certificateDoc!.path)}');
+        certificateDocUrl = await uploadFile(certificateDoc!,
+            'employees/images/${newEmployeeDoc.id}_certificateDoc${Path.extension(certificateDoc!.path)}');
       }
 
       if (employeeImg != null) {
-        employeeImgUrl = await uploadFile(employeeImg!, 'employees/images/${newEmployeeDoc.id}_employeeImg${Path.extension(employeeImg!.path)}');
+        employeeImgUrl = await uploadFile(employeeImg!,
+            'employees/images/${newEmployeeDoc.id}_employeeImg${Path.extension(employeeImg!.path)}');
       }
 
       if (drivingLicenseImg != null) {
-        drivingLicenseImgUrl = await uploadFile(drivingLicenseImg!, 'employees/images/${newEmployeeDoc.id}_drivingLicenseImg${Path.extension(drivingLicenseImg!.path)}');
+        drivingLicenseImgUrl = await uploadFile(drivingLicenseImg!,
+            'employees/images/${newEmployeeDoc.id}_drivingLicenseImg${Path.extension(drivingLicenseImg!.path)}');
       }
 
       if (securityLicenseImg != null) {
-        securityLicenseImgUrl = await uploadFile(securityLicenseImg!, 'employees/images/${newEmployeeDoc.id}_securityLicenseImg${Path.extension(securityLicenseImg!.path)}');
+        securityLicenseImgUrl = await uploadFile(securityLicenseImg!,
+            'employees/images/${newEmployeeDoc.id}_securityLicenseImg${Path.extension(securityLicenseImg!.path)}');
       }
 
       await newEmployeeDoc.set({
@@ -124,13 +134,17 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
           {
             'LicenseType': 'security',
             'LicenseNumber': SecurityLicensesController.text,
-            'LicenseExpDate': securityExpDate != null ? Timestamp.fromDate(securityExpDate!) : '',
+            'LicenseExpDate': securityExpDate != null
+                ? Timestamp.fromDate(securityExpDate!)
+                : '',
             'LicenseImg': securityLicenseImgUrl,
           },
           {
             'LicenseType': 'driving',
             'LicenseNumber': DrivingLicenseController.text,
-            'LicenseExpDate': drivingExpDate != null ? Timestamp.fromDate(drivingExpDate!) : '',
+            'LicenseExpDate': drivingExpDate != null
+                ? Timestamp.fromDate(drivingExpDate!)
+                : '',
             'LicenseImg': drivingLicenseImgUrl,
           }
         ],
@@ -168,7 +182,6 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
     }
     return searchIndex;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -213,6 +226,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
             PayRateController: PayRateController,
             WeekHoursController: WeekHoursController,
             BranchController: BranchController,
+            CompanyId: widget.companyId,
           ),
           BankDetails(
             AccountNumberController: AccountNumberController,
@@ -263,19 +277,17 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         ],
       )),
       bottomSheet: LastPage
-          ?  Button1(
-            text: 'Submit',
-            onPressed: createEmployee,
-            backgroundcolor:
-               Theme.of(context).primaryColor,
-            color: Theme.of(context).textTheme.headlineMedium!.color,
-            borderRadius: 10.r,
-            fontsize: 18.sp,
-          )
+          ? Button1(
+              text: 'Submit',
+              onPressed: createEmployee,
+              backgroundcolor: Theme.of(context).primaryColor,
+              color: Theme.of(context).textTheme.headlineMedium!.color,
+              borderRadius: 10.r,
+              fontsize: 18.sp,
+            )
           : Container(
               height: 66.h,
-              color:
-                  Theme.of(context).canvasColor,
+              color: Theme.of(context).canvasColor,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width / width40),
                 child: Row(
@@ -290,8 +302,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       icon: Icon(
                         Icons.arrow_back_ios,
                         size: 24.sp,
-                        color:
-                            Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     ),
                     IconButton(
@@ -302,8 +313,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
                       icon: Icon(
                         Icons.arrow_forward_ios,
                         size: 24.sp,
-                        color:
-                            Theme.of(context).textTheme.bodySmall!.color,
+                        color: Theme.of(context).textTheme.bodySmall!.color,
                       ),
                     )
                   ],
