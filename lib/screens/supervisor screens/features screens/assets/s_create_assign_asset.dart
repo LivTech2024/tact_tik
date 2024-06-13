@@ -64,6 +64,13 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
   List<Map<String, dynamic>> guards = [];
   List<DocumentSnapshot> equipment = [];
 
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -667,8 +674,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                           SizedBox(height: 20.h),
                           Container(
                             height: 60.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.w),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(10.r),
@@ -722,12 +728,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 SizedBox(height: 24.h),
                                 Container(
                                   height: 64.h,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
-                                    borderRadius:
-                                        BorderRadius.circular(13.r),
+                                    borderRadius: BorderRadius.circular(13.r),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -776,7 +781,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                         width: 44.w,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).primaryColor,
-                                          borderRadius: BorderRadius.circular(10.r),
+                                          borderRadius:
+                                              BorderRadius.circular(10.r),
                                         ),
                                         child: Center(
                                           child: Icon(
@@ -858,7 +864,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                       filled: true,
                                       fillColor: Theme.of(context).cardColor,
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(13.r),
+                                        borderRadius:
+                                            BorderRadius.circular(13.r),
                                         borderSide: BorderSide.none,
                                       ),
                                     ),
@@ -941,8 +948,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                             height: 60.h,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      10.r),
+                                                  BorderRadius.circular(10.r),
                                               color:
                                                   Theme.of(context).cardColor,
                                             ),
@@ -976,12 +982,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 SizedBox(height: 20.h),
                                 Container(
                                   height: height / height60,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
-                                    borderRadius:
-                                        BorderRadius.circular(10.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
@@ -1026,7 +1031,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                       : true,
                                   child: Button1(
                                     text: 'Done',
-                                    color: Theme.of(context).textTheme.headlineMedium!.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium!
+                                        .color,
                                     onPressed: () {
                                       createEquipmentAllocation();
                                     },
@@ -1050,8 +1058,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 30.w),
+                            padding: EdgeInsets.symmetric(horizontal: 30.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1102,7 +1109,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 SizedBox(height: 40.h),
                                 Button1(
                                   text: 'Done',
-                                  color: Theme.of(context).textTheme.headlineMedium!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium!
+                                      .color,
                                   onPressed: () {
                                     createEquipmentAllocation();
                                   },
@@ -1185,8 +1195,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             onPressed: () {
                               createEquipmentAllocation();
                             },
-                            backgroundcolor:
-                                Theme.of(context).primaryColor,
+                            backgroundcolor: Theme.of(context).primaryColor,
                             borderRadius: 10.r,
                           ),
                         ],

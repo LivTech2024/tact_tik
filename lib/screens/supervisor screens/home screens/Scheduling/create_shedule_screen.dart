@@ -642,12 +642,16 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     );
   }
 
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    List colors = [
-      Theme.of(context).textTheme.bodyLarge!.color,
-      Theme.of(context).highlightColor
-    ];
+    List colors = initColors(context);
     int requiredEmp = 0;
     return SafeArea(
       child: Scaffold(

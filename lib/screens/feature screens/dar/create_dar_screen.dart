@@ -455,12 +455,21 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
+                                 boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).shadowColor,
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                    offset: Offset(0, 3),
+                                  )
+                                ],
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: Center(
                                 child: Icon(
                                   Icons.add,
+                                  color: Theme.of(context).textTheme.bodyMedium!.color,
                                   size: 20.sp,
                                 ),
                               ),

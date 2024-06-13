@@ -29,9 +29,13 @@ class Guards {
 class SCreateKeyManagScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
+  final bool editKeyMode;
 
   SCreateKeyManagScreen(
-      {super.key, required this.keyId, required this.companyId});
+      {super.key,
+      required this.keyId,
+      required this.companyId,
+      this.editKeyMode = false});
 
   @override
   State<SCreateKeyManagScreen> createState() =>
@@ -39,7 +43,6 @@ class SCreateKeyManagScreen extends StatefulWidget {
 }
 
 class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
-
   bool isChecked = false;
   bool showCreate = true;
 
@@ -87,7 +90,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
 
     setState(() {
       keys = querySnapshot.docs;
-      keyNames.addAll(querySnapshot.docs.map((doc) => doc.get('KeyName')).toList().cast<String>());
+      keyNames.addAll(querySnapshot.docs
+          .map((doc) => doc.get('KeyName'))
+          .toList()
+          .cast<String>());
       keyNameToDocMap = {
         for (var doc in querySnapshot.docs) doc.get('KeyName'): doc
       };
@@ -199,10 +205,16 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
           return nameLower.contains(patternLower);
         }).toList(),
       );
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-     List colors = [
+    List colors = [
       Theme.of(context).textTheme.bodyLarge!.color,
       Theme.of(context).highlightColor
     ];
@@ -242,11 +254,11 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                             onTap: () {
                               setState(() {
                                 showCreate = true;
-                                colors[0] =  Theme.of(context)
+                                colors[0] = Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .color;
-                                colors[1] =  Theme.of(context).highlightColor;
+                                colors[1] = Theme.of(context).highlightColor;
                               });
                             },
                             child: Container(
@@ -264,7 +276,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.h),
                           child: VerticalDivider(
-                            color:  Theme.of(context).textTheme.bodySmall!.color,
+                            color: Theme.of(context).textTheme.bodySmall!.color,
                           ),
                         ),
                         Expanded(
@@ -272,8 +284,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                             onTap: () {
                               setState(() {
                                 showCreate = false;
-                                colors[0] =  Theme.of(context).highlightColor;
-                                colors[1] =  Theme.of(context)
+                                colors[0] = Theme.of(context).highlightColor;
+                                colors[1] = Theme.of(context)
                                     .textTheme
                                     .bodySmall!
                                     .color;
@@ -304,7 +316,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Select key',
                                 fontsize: 16.w,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -331,7 +343,10 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     iconSize: 24.sp,
                                     dropdownColor: Theme.of(context).cardColor,
                                     style: TextStyle(
-                                      color: Theme.of(context).textTheme.bodyLarge!.color,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .color,
                                     ),
                                     borderRadius: BorderRadius.circular(10.r),
                                     value: dropdownValue,
@@ -339,14 +354,18 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       setState(() {
                                         dropdownValue = newValue!;
                                         if (newValue != 'Select') {
-                                          selectedKeyId = keyNameToDocMap[newValue]!.id;
+                                          selectedKeyId =
+                                              keyNameToDocMap[newValue]!.id;
                                         } else {
                                           selectedKeyId = '';
                                         }
-                                        print('$dropdownValue selected, selectedKeyId: $selectedKeyId');
+                                        print(
+                                            '$dropdownValue selected, selectedKeyId: $selectedKeyId');
                                       });
                                     },
-                                    items: keyNames.map<DropdownMenuItem<String>>((String value) {
+                                    items: keyNames
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: InterMedium(text: value),
@@ -444,7 +463,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         cursorColor:
-                                        Theme.of(context).primaryColor,
+                                            Theme.of(context).primaryColor,
                                       ),
                                     ),
                                     Container(
@@ -478,7 +497,8 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     title: Text(guard['EmployeeName']),
                                     onTap: () {
                                       setState(() {
-                                        _searchController.text = guard['EmployeeName'];
+                                        _searchController.text =
+                                            guard['EmployeeName'];
                                         selectedGuards.add({
                                           'GuardName': guard['EmployeeName'],
                                           'GuardImg': guard['EmployeeImg'],
@@ -492,116 +512,133 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 },
                               ),
                               SizedBox(height: 20.h),
-                            selectedGuards.isNotEmpty ? Container(
-                                margin: EdgeInsets.only(top: 20.h),
-                                height: 80.h,
-                                width: double.maxFinite,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: selectedGuards.length,
-                                  itemBuilder: (context, index) {
-                                    String guardId =
-                                        selectedGuards[index]['GuardId'];
-                                    String guardName =
-                                        selectedGuards[index]['GuardName'];
-                                    String guardImg =
-                                        selectedGuards[index]['GuardImg'];
-                                    return Padding(
-                                      padding: EdgeInsets.only(right: 20.h),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              Container(
-                                                height: 50.h,
-                                                width: 50.w,
-                                                decoration: guardImg != ""
-                                                    ? BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              guardImg ?? ""),
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      )
-                                                    : BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        image: DecorationImage(
-                                                          image: AssetImage(
-                                                              'assets/images/default.png'),
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                              ),
-                                              Positioned(
-                                                top: -4,
-                                                right: -5,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      selectedGuards
-                                                          .removeAt(index);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    height: 20.h,
-                                                    width: 20.w,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color:
-                                                            DarkColor.color1),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        size: 8,
-                                                        color: DarkColor
-                                                            .Secondarycolor,
-                                                      ),
+                              selectedGuards.isNotEmpty
+                                  ? Container(
+                                      margin: EdgeInsets.only(top: 20.h),
+                                      height: 80.h,
+                                      width: double.maxFinite,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: selectedGuards.length,
+                                        itemBuilder: (context, index) {
+                                          String guardId =
+                                              selectedGuards[index]['GuardId'];
+                                          String guardName =
+                                              selectedGuards[index]
+                                                  ['GuardName'];
+                                          String guardImg =
+                                              selectedGuards[index]['GuardImg'];
+                                          return Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 20.h),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    Container(
+                                                      height: 50.h,
+                                                      width: 50.w,
+                                                      decoration: guardImg != ""
+                                                          ? BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: NetworkImage(
+                                                                    guardImg ??
+                                                                        ""),
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            )
+                                                          : BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: AssetImage(
+                                                                    'assets/images/default.png'),
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
                                                     ),
-                                                  ),
+                                                    Positioned(
+                                                      top: -4,
+                                                      right: -5,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            selectedGuards
+                                                                .removeAt(
+                                                                    index);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          height: 20.h,
+                                                          width: 20.w,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: DarkColor
+                                                                      .color1),
+                                                          child: Center(
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              size: 8,
+                                                              color: DarkColor
+                                                                  .Secondarycolor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          InterBold(
-                                            text: guardName,
-                                            fontsize: 14.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium!
-                                                .color,
-                                          )
-                                        ],
+                                                SizedBox(height: 8.h),
+                                                InterBold(
+                                                  text: guardName,
+                                                  fontsize: 14.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium!
+                                                      .color,
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              ) : SizedBox(
-                              height: 20.h,
-                              child: InterMedium(text: 'No Guards selected',
-                                fontsize: 16.w,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,),
-                            ),
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                      child: InterMedium(
+                                        text: 'No Guards selected',
+                                        fontsize: 16.w,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
+                                    ),
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Contact',
                                 fontsize: 16.w,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -633,7 +670,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               InterBold(
                                 text: 'Allocate Qt.',
                                 fontsize: 16.w,
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -648,7 +685,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Date',
-                                color:  Theme.of(context)
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -665,6 +702,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                     horizontal: 20.w,
                                   ),
                                   decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
                                     borderRadius: BorderRadius.circular(10.r),
                                     color: Theme.of(context).cardColor,
                                   ),
@@ -711,6 +756,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       child: Container(
                                         height: 60.h,
                                         decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                           color: Theme.of(context).cardColor,
@@ -748,6 +802,15 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                       child: Container(
                                         height: 60.h,
                                         decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                              blurRadius: 5,
+                                              spreadRadius: 2,
+                                              offset: Offset(0, 3),
+                                            )
+                                          ],
                                           borderRadius:
                                               BorderRadius.circular(10.r),
                                           color: Theme.of(context).cardColor,
@@ -793,6 +856,53 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 controller: _AllocationPurposeController,
                                 showIcon: true,
                                 isExpanded: true,
+                              ),
+                              SizedBox(height: 20.h),
+                              Visibility(
+                                visible: widget.editKeyMode,
+                                child: Container(
+                                  height: 60.h,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                    color: Theme.of(context).cardColor,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InterMedium(
+                                        text: 'Return Key',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .color,
+                                        fontsize: 16.sp,
+                                        letterSpacing: -.3,
+                                      ),
+                                      Checkbox(
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        checkColor: DarkColor.color1,
+                                        value: isChecked,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            isChecked = value!;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 20.h),
                               Button1(
