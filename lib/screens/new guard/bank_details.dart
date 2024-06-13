@@ -13,11 +13,11 @@ import 'package:tact_tik/utils/colors.dart';
 class BankDetails extends StatefulWidget {
   final TextEditingController AccountNumberController ;
   final TextEditingController TransitNumberController ;
-  final TextEditingController InstitutionNumberController
-     ;
+  final TextEditingController InstitutionNumberController;
   final TextEditingController SINNumberController ;
+  final Function(File) onFileSelected;
 
-  const BankDetails({super.key, required this.AccountNumberController, required this.TransitNumberController, required this.InstitutionNumberController, required this.SINNumberController});
+  const BankDetails({super.key, required this.AccountNumberController, required this.TransitNumberController, required this.InstitutionNumberController, required this.SINNumberController, required this.onFileSelected,});
   @override
   State<BankDetails> createState() => _BankDetailsState();
 }
@@ -36,6 +36,7 @@ class _BankDetailsState extends State<BankDetails> {
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onFileSelected(File(pickedFile.path));
         });
       }
     }
@@ -46,6 +47,7 @@ class _BankDetailsState extends State<BankDetails> {
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onFileSelected(File(pickedFile.path));
         });
       }
     }
@@ -62,6 +64,7 @@ class _BankDetailsState extends State<BankDetails> {
         for (String filePath in filePaths) {
           setState(() {
             uploads.add({'type': 'pdf', 'file': File(filePath)});
+            widget.onFileSelected(File(filePath));
           });
         }
       }

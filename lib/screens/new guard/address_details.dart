@@ -14,8 +14,9 @@ class AddressDetails extends StatefulWidget {
     final TextEditingController cityController ;
     final TextEditingController PostalCodeController ;
     final TextEditingController ProvinceController ;
+  final Function(File) onFileSelected;
 
-  const AddressDetails({super.key, required this.AddressController, required this.cityController, required this.PostalCodeController, required this.ProvinceController});
+  const AddressDetails({super.key, required this.AddressController, required this.cityController, required this.PostalCodeController, required this.ProvinceController, required  this.onFileSelected});
   @override
   State<AddressDetails> createState() => _AddressDetailsState();
 }
@@ -34,6 +35,7 @@ class _AddressDetailsState extends State<AddressDetails> {
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onFileSelected(File(pickedFile.path));
         });
       }
     }
@@ -44,6 +46,7 @@ class _AddressDetailsState extends State<AddressDetails> {
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onFileSelected(File(pickedFile.path));
         });
       }
     }

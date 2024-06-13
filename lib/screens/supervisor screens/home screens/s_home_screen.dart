@@ -504,7 +504,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              NewGuardScreen()));
+                                              NewGuardScreen(companyId: _CompanyId,)));
                                 },
                                 child: Row(
                                   children: [

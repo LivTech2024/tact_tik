@@ -14,45 +14,75 @@ import 'package:tact_tik/utils/colors.dart';
 
 class LicensesDetails extends StatefulWidget {
   final TextEditingController DrivingLicenseController ;
-      final TextEditingController SecurityLicensesController ;
+  final TextEditingController SecurityLicensesController ;
+  final Function(File) onDrivingSelected;
+  final Function(File) onSecuritySelected;
+  final DateTime? DrivingExpiryDate;
+  final DateTime? SecurityExpiryDate;
 
-  const LicensesDetails({super.key, required this.DrivingLicenseController, required this.SecurityLicensesController});
+  const LicensesDetails({super.key, required this.DrivingLicenseController, required this.SecurityLicensesController, required this.onDrivingSelected, required this.onSecuritySelected, required this.DrivingExpiryDate, required this.SecurityExpiryDate});
   @override
   State<LicensesDetails> createState() => _LicensesDetailsState();
 }
 
 class _LicensesDetailsState extends State<LicensesDetails> {
+  DateTime? SecurityLicensesExpireDate;
+  DateTime? DrivingLicensesExpireDate;
+
+  @override
+  void initState() {
+    super.initState();
+    SecurityLicensesExpireDate = widget.SecurityExpiryDate;
+    DrivingLicensesExpireDate = widget.DrivingExpiryDate;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> uploads = [];
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    
-    DateTime? SecurityLicensesExpireDate;
-    DateTime? DrivingLicensesExpireDate;
-    
 
-    Future<void> _addImage() async {
+    Future<void> _addDrivingImage() async {
       final pickedFile =
           await ImagePicker().pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onDrivingSelected(File(pickedFile.path));
+        });
+      }
+    }Future<void> _addSecurityImage() async {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+      if (pickedFile != null) {
+        setState(() {
+          uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onSecuritySelected(File(pickedFile.path));
         });
       }
     }
 
-    Future<void> _addGallery() async {
+    Future<void> _addDrivingGallery() async {
       final pickedFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onDrivingSelected(File(pickedFile.path));
+        });
+      }
+    }Future<void> _addSecurityGallery() async {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onSecuritySelected(File(pickedFile.path));
         });
       }
     }
 
-    Future<void> _openFileExplorer() async {
+    Future<void> _openDrivingFileExplorer() async {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         type: FileType.custom,
@@ -64,6 +94,23 @@ class _LicensesDetailsState extends State<LicensesDetails> {
         for (String filePath in filePaths) {
           setState(() {
             uploads.add({'type': 'pdf', 'file': File(filePath)});
+            widget.onDrivingSelected(File(filePath));
+          });
+        }
+      }
+    }Future<void> _openSecurityFileExplorer() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      if (result != null) {
+        List<String> filePaths = result.paths.map((path) => path!).toList();
+        for (String filePath in filePaths) {
+          setState(() {
+            uploads.add({'type': 'pdf', 'file': File(filePath)});
+            widget.onSecuritySelected(File(filePath));
           });
         }
       }
@@ -117,7 +164,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       leading: Icon(Icons.camera),
                       title: Text('Add Image'),
                       onTap: () {
-                        _addImage();
+                        _addSecurityImage();
                         Navigator.pop(context);
                       },
                     ),
@@ -126,7 +173,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       title: Text('Add from Gallery'),
                       onTap: () {
                         Navigator.pop(context);
-                        _addGallery();
+                        _addSecurityGallery();
                       },
                     ),
                     ListTile(
@@ -134,7 +181,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       title: Text('Add PDF'),
                       onTap: () {
                         Navigator.pop(context);
-                        _openFileExplorer();
+                        _openSecurityFileExplorer();
                       },
                     ),
                   ],
@@ -237,7 +284,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       leading: Icon(Icons.camera),
                       title: Text('Add Image'),
                       onTap: () {
-                        _addImage();
+                        _addDrivingImage();
                         Navigator.pop(context);
                       },
                     ),
@@ -246,7 +293,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       title: Text('Add from Gallery'),
                       onTap: () {
                         Navigator.pop(context);
-                        _addGallery();
+                        _addDrivingGallery();
                       },
                     ),
                     ListTile(
@@ -254,7 +301,7 @@ class _LicensesDetailsState extends State<LicensesDetails> {
                       title: Text('Add PDF'),
                       onTap: () {
                         Navigator.pop(context);
-                        _openFileExplorer();
+                        _openDrivingFileExplorer();
                       },
                     ),
                   ],
