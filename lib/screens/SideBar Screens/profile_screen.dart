@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .update({'EmployeeImg': downloadUrl});
       }
 
-      // Reset the state
+      _fetchEmployeeData();
       setState(() {
         isEdit = false;
         _selectedImageFile = null;
