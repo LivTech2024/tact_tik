@@ -101,7 +101,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
             child: Column(
               children: [
                 SizedBox(height: 30.h),
-                /*Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
@@ -141,7 +141,7 @@ class _ClientCheckPatrolScreenState extends State<ClientCheckPatrolScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),*/
+                SizedBox(height: 20.h),
                 patrolsList.isEmpty ||
                         (selectedDate != null &&
                             patrolsList.every((patrol) {

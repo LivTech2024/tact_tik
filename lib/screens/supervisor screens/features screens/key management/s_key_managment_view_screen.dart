@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/screens/feature%20screens/petroling/patrolling.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/key%20management/s_key_manag_create_screen.dart';
 
 import '../../../../common/sizes.dart';
@@ -14,8 +15,10 @@ import 's_key_manag_create_screen.dart';
 
 class SKeyManagementViewScreen extends StatefulWidget {
   final String companyId;
+  final String branchId;
 
-  const SKeyManagementViewScreen({super.key, required this.companyId});
+  const SKeyManagementViewScreen(
+      {super.key, required this.companyId, required this.branchId});
 
   @override
   _SKeyManagementViewScreenState createState() =>
@@ -33,8 +36,8 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
   Future<void> fetchKeys() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Keys')
-        .where('KeyCompanyId', isEqualTo: widget.companyId)
+        .collection('KeyAllocations')
+        // .where('KeyCompanyId', isEqualTo: widget.companyId)
         .get();
 
     groupKeysByDate(querySnapshot.docs);
@@ -44,7 +47,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
     final Map<String, List<QueryDocumentSnapshot>> tempGroupedKeys = {};
 
     for (var key in keys) {
-      final createdAt = key['KeyCreatedAt'].toDate();
+      final createdAt = key['KeyAllocationCreatedAt'].toDate();
       final dateKey = DateFormat('yyyy-MM-dd').format(createdAt);
 
       if (!tempGroupedKeys.containsKey(dateKey)) {
@@ -63,17 +66,19 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
-        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SCreateKeyManagScreen(keyId: '', companyId: widget.companyId,),
+                builder: (context) => SCreateKeyManagScreen(
+                  keyId: '',
+                  companyId: widget.companyId,
+                  branchId: '',
+                  AllocationKeyId: '',
+                ),
               ),
             );
           },
@@ -81,17 +86,14 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
           shape: CircleBorder(),
           child: Icon(
             Icons.add,
-           
           ),
         ),
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -101,7 +103,6 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
               ),
               title: InterMedium(
                 text: 'Keys',
-                
               ),
               centerTitle: true,
               floating: true,
@@ -116,7 +117,7 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                       height: 30.h,
                     ),
                     InterBold(
-                      text: 'Keys',
+                      text: 'Allotted Keys',
                       fontsize: 20.sp,
                       color: Theme.of(context).textTheme.bodySmall!.color,
                     ),
@@ -133,98 +134,185 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
 
               return SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     if (index == 0) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 30.w,
-                            vertical: 30.h),
+                            horizontal: 30.w, vertical: 30.h),
                         child: InterBold(
                           text: getDateHeader(date),
                           fontsize: 20.sp,
-                          color:  Theme.of(context).textTheme.bodySmall!.color,
+                          color: Theme.of(context).textTheme.bodySmall!.color,
                         ),
                       );
                     }
                     final key = keysForDate[index - 1];
-                    final createdAt = key['KeyCreatedAt'].toDate();
+                    final createdAt = key['KeyAllocationCreatedAt'].toDate();
                     final formattedTime =
-                    DateFormat('hh:mm a').format(createdAt);
+                        DateFormat('hh:mm a').format(createdAt);
                     final keyId = key.id; // Get the document ID
 
-                    return Padding(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 30.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SCreateKeyManagScreen(
-                                keyId: keyId,
-                                companyId: widget.companyId,
-                              ),
-                            ),
+                    return FutureBuilder<String?>(
+                      future: fireStoreService.FetchKeyName(
+                          key['KeyAllocationKeyId']),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
                           );
-                        },
-                        child: Container(
-                          height: 60.w,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: 10.h),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(10.r),
-                            color: Theme.of(context).cardColor,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 44.h,
-                                    width: 44.w,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          10.w),
-                                      color: Theme.of(context).primaryColorLight,
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.vpn_key,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 24.w,
-                                      ),
-                                    ),
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        final keyName = snapshot.data;
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SCreateKeyManagScreen(
+                                    keyId: keyId,
+                                    companyId: widget.companyId,
+                                    branchId: widget.branchId,
+                                    AllocationKeyId: key['KeyAllocationId'],
                                   ),
-                                  SizedBox(width: 20.w),
-                                  InterMedium(
-                                    text: key['KeyName'],
-                                    fontsize: 16.sp,
-                                    color:  Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              constraints: BoxConstraints(
+                                minHeight: 100.w,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 10.h),
+                              width: double.maxFinite,
+                              margin: EdgeInsets.only(bottom: 10.h),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                color: Theme.of(context).cardColor,
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 44.h,
+                                            width: 44.w,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.w),
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.vpn_key,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                size: 24.w,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20.w),
+                                          InterMedium(
+                                            text: keyName ?? '',
+                                            fontsize: 16.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                          ),
+                                        ],
+                                      ),
+                                      InterMedium(
+                                        text: formattedTime,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                        fontsize: 16.sp,
+                                      ),
+                                      // SizedBox(width: 10.w),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 44.h,
+                                            width: 44.w,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.w),
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.account_circle_outlined,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                size: 24.w,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20.w),
+                                          InterMedium(
+                                            text:
+                                                key['KeyAllocationRecipientName'] ??
+                                                    '',
+                                            fontsize: 16.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                          ),
+                                        ],
+                                      ),
+                                      InterMedium(
+                                        text: formattedTime,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                        fontsize: 16.sp,
+                                      ),
+                                      // SizedBox(width: 10.w),
+                                    ],
                                   ),
                                 ],
                               ),
-                              InterMedium(
-                                text: formattedTime,
-                                color:  Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                fontsize: 16.sp,
-                              ),
-                              SizedBox(width: 20.w),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
                   childCount: keysForDate.length + 1,

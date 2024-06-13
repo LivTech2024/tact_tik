@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tact_tik/common/sizes.dart';
 import 'package:tact_tik/common/widgets/setTextfieldWidget.dart';
 import 'package:tact_tik/fonts/inter_bold.dart';
+import 'package:tact_tik/fonts/inter_regular.dart';
 import 'package:tact_tik/main.dart';
+import 'package:tact_tik/services/firebaseFunctions/firebase_function.dart';
 import 'package:tact_tik/utils/colors.dart';
 
 class PersonalDetails extends StatefulWidget {
@@ -13,34 +15,55 @@ class PersonalDetails extends StatefulWidget {
   final TextEditingController PhoneNumberController;
   final TextEditingController EmailController;
   final TextEditingController PasswordController;
-  final TextEditingController RoleController;
+  String SelectedRole;
   final TextEditingController PayRateController;
   final TextEditingController WeekHoursController;
   final TextEditingController BranchController;
-
-  const PersonalDetails(
+  final String CompanyId;
+  PersonalDetails(
       {super.key,
       required this.FirstNameController,
       required this.LastNameController,
       required this.PhoneNumberController,
       required this.EmailController,
       required this.PasswordController,
-      required this.RoleController,
+      required this.SelectedRole,
       required this.PayRateController,
       required this.WeekHoursController,
-      required this.BranchController});
+      required this.BranchController,
+      required this.CompanyId});
 
   @override
   State<PersonalDetails> createState() => _PersonalDetailsState();
 }
 
+List<String> PositionValues = [];
+FireStoreService fireStoreService = FireStoreService();
+
 class _PersonalDetailsState extends State<PersonalDetails> {
+  @override
+  String? selectedPosition;
+  void initState() {
+    getEmployeeRoles();
+    super.initState();
+  }
+
+  void getEmployeeRoles() async {
+    List<String> roles =
+        await fireStoreService.getEmployeeRoles(widget.CompanyId);
+    if (roles.isNotEmpty) {
+      setState(() {
+        PositionValues.addAll(roles);
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     String dropdownValue = 'Guard';
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
     bool isEditMode = false;
     return Container(
       width: width / width50,
@@ -101,38 +124,63 @@ class _PersonalDetailsState extends State<PersonalDetails> {
           ),
           Container(
             height: 60.h,
-            width: double.maxFinite,
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
             decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).shadowColor,
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: Offset(0, 3),
-                )
-              ],
+              // color: Colors.redAccent,
               borderRadius: BorderRadius.circular(10.r),
-              color: Theme.of(context).cardColor,
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? DarkColor.color19
+                      : LightColor.color3,
+                ),
+              ),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
+                isExpanded: true,
                 iconSize: 24.w,
+                icon: Icon(Icons.arrow_drop_down),
+                iconEnabledColor: Theme.of(context).textTheme.bodyMedium!.color,
+                // Set icon color for enabled state
                 dropdownColor: Theme.of(context).cardColor,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge!.color),
-                borderRadius: BorderRadius.circular(10.r),
-                value: dropdownValue, // Ensure this matches one of the items
+                    color: Theme.of(context).textTheme.bodyMedium!.color),
+                value: selectedPosition,
+                hint: Text("Select Roles"),
                 onChanged: (String? newValue) {
                   setState(() {
-                    dropdownValue = newValue!;
+                    selectedPosition = newValue;
+                    widget.SelectedRole = newValue ?? '';
                   });
                 },
-                items: <String>['Guard', 'client', 'supervisor']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: PositionValues.map<DropdownMenuItem<String>>(
+                    (String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Row(
+                      children: [
+                        selectedPosition == value
+                            ? Icon(Icons.control_camera,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color)
+                            : Icon(Icons.control_camera,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .color),
+                        // Conditional icon color based on selection
+                        SizedBox(width: 10.w),
+                        InterRegular(
+                            text: value,
+                            color: selectedPosition == value
+                                ? Theme.of(context).textTheme.bodyMedium!.color
+                                : Theme.of(context).textTheme.bodyLarge!.color),
+                        // Conditional text color based on selection
+                      ],
+                    ),
                   );
                 }).toList(),
               ),

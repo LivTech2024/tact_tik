@@ -46,7 +46,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
         String EmployeeId = userInfo['EmployeeId'] ?? "";
         String CompanyId = userInfo['EmployeeCompanyId'] ?? "";
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(widget.companyId);
+            await fireStoreService.getGuardForSupervisor(EmployeeId);
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
         for (var doc in guardsInfo) {
@@ -75,17 +75,12 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
-           
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              
             ),
             padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
@@ -94,7 +89,6 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
           ),
           title: InterMedium(
             text: 'Guards',
-            
           ),
           centerTitle: true,
         ),
@@ -110,9 +104,9 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       iconSize: 24.w,
-                      dropdownColor:  Theme.of(context).cardColor,
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
-                      
+                      dropdownColor: Theme.of(context).cardColor,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyLarge!.color),
                       borderRadius: BorderRadius.circular(10.r),
                       value: dropdownValue,
                       onChanged: (String? newValue) {
@@ -172,8 +166,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                   //   borderRadius:
                                   //       BorderRadius.circular(width / width12),
                                   // ),
-                                  margin: EdgeInsets.only(
-                                      bottom: 10.h),
+                                  margin: EdgeInsets.only(bottom: 10.h),
                                   width: double.maxFinite,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -225,8 +218,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                                                           ),
                                                         ),
                                                 ),
-                                                SizedBox(
-                                                    width: 20.w),
+                                                SizedBox(width: 20.w),
                                                 InterBold(
                                                   text: name,
                                                   letterSpacing: -.3,
@@ -264,7 +256,7 @@ class _SelectGuardsScreenState extends State<SelectGuardsScreen> {
                       : Center(
                           child: PoppinsBold(
                             text: 'No Guards Found',
-                            color: DarkColor.  color2,
+                            color: DarkColor.color2,
                             fontsize: 16.sp,
                           ),
                         )

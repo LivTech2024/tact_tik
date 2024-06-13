@@ -28,7 +28,7 @@ class SLogBookScreen extends StatefulWidget {
 
 class _LogBookScreenState extends State<SLogBookScreen> {
   late Stream<QuerySnapshot> _logBookStream;
-  
+
   get datePickerController => null;
 
   // Future<String> getempID() async {
@@ -54,19 +54,14 @@ class _LogBookScreenState extends State<SLogBookScreen> {
 
   @override
   Widget build(BuildContext context) {
- 
-
     return SafeArea(
       child: Scaffold(
-       
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-             
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
-                 
                 ),
                 padding: EdgeInsets.only(left: 20.w),
                 onPressed: () {
@@ -76,7 +71,6 @@ class _LogBookScreenState extends State<SLogBookScreen> {
               ),
               title: InterMedium(
                 text: 'LogBook -  ${widget.empName}',
-                
               ),
               centerTitle: true,
               floating: true, // Makes the app bar float above the content
@@ -133,7 +127,7 @@ class _LogBookScreenState extends State<SLogBookScreen> {
                     child: InterMedium(
                       text: 'No Logs Generated For\n${widget.empName}',
                       textAlign: TextAlign.center,
-                      color:  Theme.of(context).textTheme.bodyMedium!.color,
+                      color: Theme.of(context).textTheme.bodyMedium!.color,
                     ),
                   );
                 }
@@ -241,7 +235,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color:Theme.of(context).shadowColor,
+                    color: Theme.of(context).shadowColor,
                     blurRadius: 5,
                     spreadRadius: 2,
                     offset: Offset(0, 3),
@@ -255,7 +249,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 children: [
                   InterBold(
                     text: widget.date,
-                    color:  Theme.of(context).textTheme.displaySmall!.color,
+                    color: Theme.of(context).textTheme.displaySmall!.color,
                     fontsize: 18.sp,
                   ),
                   Icon(
@@ -263,7 +257,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                         ? Icons.arrow_circle_up_outlined
                         : Icons.arrow_circle_down_outlined,
                     size: 24.sp,
-                    color:   Theme.of(context).textTheme.displaySmall!.color,
+                    color: Theme.of(context).textTheme.displaySmall!.color,
                   )
                 ],
               ),
@@ -276,7 +270,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
               child: InterBold(
                 text: widget.shiftName,
                 fontsize: width / width18,
-                color:  Theme.of(context).textTheme.bodySmall!.color,
+                color: Theme.of(context).textTheme.bodySmall!.color,
               ),
               // ),
             ),
@@ -288,7 +282,7 @@ class _LogBookWidgetState extends State<LogBookWidget> {
                 final logReportTime = log['LOGREPORTTIME'] as Timestamp;
                 final dateTime = logReportTime.toDate();
                 final formattedDateTime =
-                DateFormat('hh:mm a').format(dateTime);
+                    DateFormat('hh:mm a').format(dateTime);
                 return LogTypeWidget(
                   type: LogBookEnum.values.byName(log['LOGTYPE']),
                   clientname: log['CLIENTNAME'],

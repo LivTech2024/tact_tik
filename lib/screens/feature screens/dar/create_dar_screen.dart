@@ -471,6 +471,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                   Icons.add,
                                   color: Theme.of(context).textTheme.bodyMedium!.color,
                                   size: 20.sp,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? DarkColor.color11
+                                      : LightColor.color3,
                                 ),
                               ),
                             ),
@@ -603,31 +607,31 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                                 ),
                                               ],
                                             ),
+                                            // Row(
+                                            //   mainAxisAlignment:
+                                            //       MainAxisAlignment.start,
+                                            //   children: [
+                                            //     InterBold(
+                                            //       text: 'Started',
+                                            //       fontsize: 12.sp,
+                                            //       color: Colors.white,
+                                            //     ),
+                                            //     InterBold(
+                                            //       text: TilePatrolData
+                                            //               .isNotEmpty
+                                            //           ? "${patrolData['TilePatrolData']}"
+                                            //           : "",
+                                            //       fontsize: 12.sp,
+                                            //       color: Colors.white,
+                                            //     ),
+                                            //   ],
+                                            // ),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
                                                 InterBold(
-                                                  text: 'Started',
-                                                  fontsize: 12.sp,
-                                                  color: Colors.white,
-                                                ),
-                                                InterBold(
-                                                  text: TilePatrolData
-                                                          .isNotEmpty
-                                                      ? "${patrolData['TilePatrolData']}"
-                                                      : "",
-                                                  fontsize: 12.sp,
-                                                  color: Colors.white,
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                InterBold(
-                                                  text: 'Ended',
+                                                  text: '',
                                                   fontsize: 12.sp,
                                                   color: Colors.white,
                                                 ),

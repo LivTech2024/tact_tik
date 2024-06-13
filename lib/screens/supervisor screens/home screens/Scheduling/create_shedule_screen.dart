@@ -13,6 +13,8 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:multi_select_flutter/chip_field/multi_select_chip_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:number_editing_controller/number_editing_controller.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -87,7 +89,11 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> guards = [];
   String? selectedPatrol;
-  List<ValueItem<String>> patrolItems = [];
+  // ValueItem<String>(label: 'Patrol 1', value: 'Patrol 1'),
+  // ValueItem<String>(label: 'Patrol 2', value: 'Patrol 2'),
+  // ValueItem<String>(label: 'Patrol 3', value: 'Patrol 3'),
+  List<String> patrolItems = [];
+  // print(patrol);
   bool isLoading = false;
 
   @override
@@ -230,21 +236,27 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   }
 
   void getAllPatrolNames() async {
-    List<String> patrolNames =
-        await fireStoreService.getAllPatrolName(widget.CompanyId);
-    if (patrolNames.isNotEmpty) {
-      setState(() {
-        patrolItems = patrolNames
-            .map((name) => ValueItem<String>(label: name, value: name))
-            .toList();
-        isLoading = false;
-      });
-    } else {
+    try {
+      print("Fetching patrol items...");
+      List<String> patrolNames =
+          await fireStoreService.getAllPatrolName(widget.CompanyId);
+      print("Fetched Patrol Names: $patrolNames");
+      if (patrolNames.isNotEmpty) {
+        setState(() {
+          patrolItems = patrolNames;
+
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error fetching patrol names: $e");
+
       setState(() {
         isLoading = false;
       });
     }
-    print(patrolItems);
+
+    // patrolItems.forEach((item) => print("Patrol Item: ${item.label}"));
   }
 
   @override
@@ -273,7 +285,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
   final requiredEmpcontroller = NumberEditingTextController.integer();
   final requiredPhotocontroller = NumberEditingTextController.integer();
   final requiredRadius = NumberEditingTextController.integer();
-  List<ValueItem> _selectedOptions = [];
+  List<String> _selectedOptions = [];
   bool _isRestrictedChecked = false;
   List<DateTime> selectedDates = [];
 
@@ -281,7 +293,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
     {'name': '', 'isQrRequired': false, 'isReturnQrRequired': false}
   ];
   List<Map<int, String>> PatrolList = [];
-  final MultiSelectController _Patrollcontroller = MultiSelectController();
+  MultiSelectController _Patrollcontroller = MultiSelectController();
 
   void _showDatePicker(BuildContext context) {
     showDialog(
@@ -464,7 +476,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
 
     final result = await FirebaseFirestore.instance
         .collection('Employees')
-        .where('EmployeeRole', isEqualTo: 'GUARD')
+        // .where('EmployeeRole', isEqualTo: 'GUARD')
         .where('EmployeeCompanyId', isEqualTo: widget.CompanyId)
         .where('EmployeeNameSearchIndex', arrayContains: query)
         .get();
@@ -813,96 +825,39 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  child: TypeAheadField<Guards>(
-                                    autoFlipDirection: true,
+                                  child: TextField(
                                     controller: _searchController,
-                                    direction: VerticalDirection.down,
-                                    builder:
-                                        (context, _controller, focusNode) =>
-                                            TextField(
-                                      controller: _controller,
-                                      focusNode: focusNode,
-                                      autofocus: false,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 18.w,
-                                        color: Colors.white,
-                                      ),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.r),
-                                          ),
-                                        ),
-                                        focusedBorder: InputBorder.none,
-                                        hintStyle: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 18.w,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
-                                        ),
-                                        hintText: 'Search Guards',
-                                        contentPadding: EdgeInsets.zero,
-                                      ),
-                                      cursorColor:
-                                          Theme.of(context).primaryColor,
-                                    ),
-                                    suggestionsCallback: suggestionsCallback,
-                                    itemBuilder: (context, Guards guards) {
-                                      return ListTile(
-                                        leading: Container(
-                                          height: 30.h,
-                                          width: 30.w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                        ),
-                                        title: InterRegular(
-                                          text: guards.name,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .color,
-                                        ),
-                                      );
+                                    onChanged: (query) {
+                                      searchGuards(query);
                                     },
-                                    emptyBuilder: (context) => Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.h,
-                                        horizontal: 10.w,
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 18.sp,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .color,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.r),
+                                        ),
                                       ),
-                                      child: InterRegular(
-                                        text: 'No Such Screen found',
+                                      focusedBorder: InputBorder.none,
+                                      hintStyle: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 18.sp,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
                                             .color,
-                                        fontsize: 18.sp,
                                       ),
+                                      hintText: 'Search Guard',
+                                      contentPadding: EdgeInsets.zero,
                                     ),
-                                    decorationBuilder: (context, child) =>
-                                        Material(
-                                      type: MaterialType.card,
-                                      elevation: 4,
-                                      borderRadius: BorderRadius.circular(
-                                        10.r,
-                                      ),
-                                      child: child,
-                                    ),
-                                    debounceDuration:
-                                        const Duration(milliseconds: 300),
-                                    onSelected: (Guards guard) {
-                                      print(
-                                          'home screen search bar############################################');
-
-                                      print(guard.name);
-                                    },
-                                    listBuilder: gridLayoutBuilder,
+                                    cursorColor: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 Container(
@@ -1366,69 +1321,134 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                             ),
                           ),
                           SizedBox(height: 10.h),
-                          // Select Guards
+                          // Select Patrols
                           Container(
-                            // height: ,
-                            constraints: BoxConstraints(minHeight: 60.h),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                            ),
-                            decoration: BoxDecoration(
-                              // color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(10.r),
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Theme.of(context).shadowColor,
-                                ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                iconSize: 24.w,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconEnabledColor: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                                // Set icon color for enabled state
+                                dropdownColor: Theme.of(context).cardColor,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color),
+                                value: selectedPosition,
+                                hint: Text("Select Patrols"),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedPosition = newValue;
+                                    // print('$selectedValue selected');
+                                  });
+                                },
+                                items: patrolItems
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        selectedPosition == value
+                                            ? Icon(Icons.control_camera,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color)
+                                            : Icon(Icons.control_camera,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        // Conditional icon color based on selection
+                                        SizedBox(width: 10.w),
+                                        InterRegular(
+                                            text: value,
+                                            color: selectedPosition == value
+                                                ? Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .color
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                        // Conditional text color based on selection
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.checklist,
-                                  color: DarkColor.color1,
-                                  size: 24.w,
-                                ),
-                                Expanded(
-                                  child: isLoading
-                                      ? Center(
-                                          child: CircularProgressIndicator())
-                                      : MultiSelectDropDown(
-                                          selectedOptionBackgroundColor:
-                                              Theme.of(context).primaryColor,
-                                          dropdownBackgroundColor:
-                                              Theme.of(context).cardColor,
-                                          fieldBackgroundColor:
-                                              Colors.transparent,
-                                          optionsBackgroundColor:
-                                              Theme.of(context).cardColor,
-                                          borderColor: Colors.transparent,
-                                          controller: _Patrollcontroller,
-                                          onOptionSelected: (options) {
-                                            setState(() {
-                                              _selectedOptions = options;
-                                            });
-                                            print(_selectedOptions);
-                                            print('length is');
-                                            print(_selectedOptions.length);
-                                          },
-                                          options: patrolItems,
-                                          selectionType: SelectionType.multi,
-                                          chipConfig: const ChipConfig(
-                                            wrapType: WrapType.wrap,
-                                          ),
-                                          dropdownHeight: 300.h,
-                                          optionTextStyle:
-                                              TextStyle(fontSize: 16.sp),
-                                          selectedOptionIcon: Icon(
-                                            Icons.check_circle,
-                                            size: 24.sp,
-                                          ),
-                                        ),
-                                ),
-                              ],
-                            ),
+
+                            // constraints: BoxConstraints(minHeight: 60.h),
+                            // padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            // decoration: BoxDecoration(
+                            //   borderRadius: BorderRadius.circular(10.r),
+                            //   border: Border(
+                            //     bottom: BorderSide(
+                            //       color: Theme.of(context).shadowColor,
+                            //     ),
+                            //   ),
+                            // ),
+                            // child: Row(
+                            //   children: [
+                            //     Icon(
+                            //       Icons.checklist,
+                            //       color: DarkColor.color1,
+                            //       size: 24.w,
+                            //     ),
+                            //     Expanded(
+                            //       child: isLoading
+                            //           ? Center(
+                            //               child: CircularProgressIndicator())
+                            //           // : patrolItems.isEmpty
+                            //           //     ? Center(
+                            //           //         child:
+                            //           //             Text('No patrols available'))
+                            //           : MultiSelectDropDown(
+                            //               selectedOptionBackgroundColor:
+                            //                   Theme.of(context).primaryColor,
+                            //               dropdownBackgroundColor:
+                            //                   Theme.of(context).cardColor,
+                            //               fieldBackgroundColor:
+                            //                   Colors.transparent,
+                            //               optionsBackgroundColor:
+                            //                   Theme.of(context).cardColor,
+                            //               borderColor: Colors.transparent,
+                            //               controller: _Patrollcontroller,
+                            //               onOptionSelected: (options) {
+                            //                 setState(() {
+                            //                   _selectedOptions =
+                            //                       options.cast<String>();
+                            //                 });
+                            //                 print(_selectedOptions);
+                            //                 print(
+                            //                     'Length is ${_selectedOptions.length}');
+                            //               },
+                            //               options: patrolItems,
+                            //               selectionType: SelectionType.multi,
+                            //               chipConfig: const ChipConfig(
+                            //                 wrapType: WrapType.wrap,
+                            //               ),
+                            //               dropdownHeight: 300,
+                            //               optionTextStyle:
+                            //                   TextStyle(fontSize: 16),
+                            //               selectedOptionIcon: Icon(
+                            //                 Icons.check_circle,
+                            //                 size: 24,
+                            //               ),
+                            //             ),
+                            //     ),
+                            //   ],
+                            // ),
                           ),
+
                           // TODO ${_selectedOptions[index].label} Hit Count
                           ListView.builder(
                             shrinkWrap: true,
@@ -1479,7 +1499,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                             color: DarkColor.color2,
                                           ),
                                           hintText:
-                                              '${_selectedOptions[index].label} Hit Count',
+                                              '${_selectedOptions[index]} Hit Count',
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         cursorColor: DarkColor.Primarycolor,
@@ -1487,7 +1507,7 @@ class _CreateSheduleScreenState extends State<CreateSheduleScreen> {
                                           setState(() {
                                             PatrolList[index][0] = value;
                                             PatrolList[index][1] =
-                                                _selectedOptions[index].label;
+                                                _selectedOptions[index]!;
                                           });
                                           print(PatrolList);
                                         },

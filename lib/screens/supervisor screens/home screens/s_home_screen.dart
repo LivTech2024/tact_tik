@@ -75,6 +75,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
   String _employeeId = "";
   String _empEmail = "";
   String _CompanyId = "";
+  String _BranchId = "";
 
   bool NewMessage = false;
 
@@ -99,11 +100,13 @@ class _SHomeScreenState extends State<SHomeScreen> {
         String userName = userInfo['EmployeeName'];
         String EmployeeId = userInfo['EmployeeId'];
         String CompanyId = userInfo['EmployeeCompanyId'];
+        String BranchId = userInfo['EmployeeCompanyBranchId'];
+
         String Imgurl = userInfo['EmployeeImg'];
         String EmpEmail = userInfo['EmployeeEmail'];
         // bool isemployeeAvailable = userInfo['EmployeeIsAvailable'];
         var guardsInfo =
-            await fireStoreService.getGuardForSupervisor(CompanyId);
+            await fireStoreService.getGuardForSupervisor(EmployeeId);
         print("Guards INfor ${guardsInfo}");
         var patrolInfo = await fireStoreService
             .getPatrolsByEmployeeIdFromUserInfo(EmployeeId);
@@ -114,6 +117,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
           _CompanyId = CompanyId;
           _employeeId = EmployeeId;
           _empEmail = EmpEmail;
+          _BranchId = BranchId;
         });
         print('User Info: ${userInfo.data()}');
       } else {
@@ -183,8 +187,8 @@ class _SHomeScreenState extends State<SHomeScreen> {
             IconColors[3] = Theme.of(context).focusColor;
             ScreenIndex = 0;
             NavigateScreen(AllSchedulesScreen(
-              BranchId: '9tgQzYBJTL3QqJKe34eJ',
-              CompanyId: 'aSvLtwII6Cjs7uCISBRR',
+              BranchId: _BranchId,
+              CompanyId: _CompanyId,
             ));
             break;
           case 3:
@@ -194,7 +198,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
             IconColors[3] = Theme.of(context).primaryColor;
             ScreenIndex = 0;
             NavigateScreen(SuperInboxScreen(
-              companyId: 'aSvLtwII6Cjs7uCISBRR',
+              companyId: _CompanyId,
             ));
             break;
         }
@@ -499,8 +503,9 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              NewGuardScreen()));
+                                          builder: (context) => NewGuardScreen(
+                                                companyId: _CompanyId,
+                                              )));
                                 },
                                 child: Row(
                                   children: [
@@ -564,7 +569,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             SelectDARGuardsScreen(
-                                          companyId: _CompanyId,
+                                          EmployeeId: _employeeId,
                                         ),
                                       ),
                                     );
@@ -640,6 +645,7 @@ class _SHomeScreenState extends State<SHomeScreen> {
                                         builder: (context) =>
                                             SKeyManagementViewScreen(
                                           companyId: _CompanyId,
+                                          branchId: _BranchId,
                                         ),
                                       ),
                                     );

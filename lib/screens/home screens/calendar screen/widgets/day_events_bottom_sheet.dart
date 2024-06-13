@@ -22,12 +22,14 @@ class DayEventsBottomSheet extends StatelessWidget {
     required this.day,
     super.key,
     required this.empId,
+    required this.currentUserId,
   });
 
   final String empId;
   final List<CalendarEventModel> events;
   final DateTime day;
   final double screenHeight;
+  final String currentUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                       ),
                       child: InterMedium(
                         text: day.format('dd/MM/yy'),
-                        color:  Theme.of(context).textTheme.bodyMedium!.color,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                         fontsize: width / width20,
                       ),
                     ),
@@ -79,6 +81,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                     MaterialPageRoute(
                                         builder: (context) => ShiftInformation(
                                               empId: empId,
+                                              currentUserId: currentUserId,
                                               shiftId: event.shiftId,
                                               startTime: event.startTime,
                                               endTime: event.endTime,
@@ -121,7 +124,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                     Container(
                                       height: height / height50,
                                       width: width / width50,
-                                      decoration:  BoxDecoration(
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Theme.of(context).primaryColor,
                                         image: DecorationImage(
@@ -147,7 +150,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                               InterSemibold(
                                                 text: event.name,
                                                 fontsize: width / width16,
-                                                color:  Theme.of(context)
+                                                color: Theme.of(context)
                                                     .textTheme
                                                     .bodyMedium!
                                                     .color,
@@ -162,10 +165,11 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                         Icon(
                                                           Icons.location_on,
                                                           size: width / width10,
-                                                          color: Theme.of(context)
-                                                              .textTheme
-                                                              .bodyMedium!
-                                                              .color,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium!
+                                                                  .color,
                                                         ),
                                                         SizedBox(
                                                             width:
@@ -174,15 +178,16 @@ class DayEventsBottomSheet extends StatelessWidget {
                                                           text: event.location,
                                                           fontsize:
                                                               width / width14,
-                                                          color: Theme.of(context)
-                                                              .textTheme
-                                                              .bodyLarge!
-                                                              .color,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge!
+                                                                  .color,
                                                         ),
                                                       ],
                                                     ),
-                                                     VerticalDivider(
-                                                      color:  Theme.of(context)
+                                                    VerticalDivider(
+                                                      color: Theme.of(context)
                                                           .textTheme
                                                           .bodyMedium!
                                                           .color,
@@ -214,7 +219,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                       child: Icon(
                                         Icons.arrow_forward_ios,
                                         size: width / width20,
-                                        color:  Theme.of(context)
+                                        color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
                                             .color,
@@ -236,7 +241,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                       ),
                       child: InterMedium(
                         text: 'Others',
-                        color:  Theme.of(context).textTheme.bodyMedium!.color,
+                        color: Theme.of(context).textTheme.bodyMedium!.color,
                         fontsize: width / width20,
                       ),
                     ),
@@ -262,6 +267,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                         ? event.others.ids[index]
                                         : event.others.ids[0],
                                     shiftId: event.others.othersShiftId!,
+                                    currentUserId: currentUserId,
                                   ),
                                 ),
                               );
@@ -345,7 +351,7 @@ class DayEventsBottomSheet extends StatelessWidget {
               Container(
                 height: height / height50,
                 width: width / width50,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).primaryColor,
                   image: DecorationImage(
@@ -367,7 +373,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                         InterSemibold(
                           text: event.others.othersShiftName,
                           fontsize: width / width16,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height8),
                         IntrinsicHeight(
@@ -378,7 +384,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   Icon(
                                     Icons.location_on,
                                     size: width / width10,
-                                    color:  Theme.of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color,
@@ -387,15 +393,15 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   InterMedium(
                                     text: event.others.othersShiftLocation,
                                     fontsize: width / width14,
-                                    color:Theme.of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
                                         .color,
                                   ),
                                 ],
                               ),
-                               VerticalDivider(
-                                color:  Theme.of(context)
+                              VerticalDivider(
+                                color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
                                     .color,
@@ -492,7 +498,7 @@ class DayEventsBottomSheet extends StatelessWidget {
               Container(
                 height: height / height50,
                 width: width / width50,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).primaryColor,
                   image: DecorationImage(
@@ -514,7 +520,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                         InterSemibold(
                           text: shiftName,
                           fontsize: width / width16,
-                          color:  Theme.of(context).textTheme.bodyMedium!.color,
+                          color: Theme.of(context).textTheme.bodyMedium!.color,
                         ),
                         SizedBox(height: height / height8),
                         IntrinsicHeight(
@@ -525,7 +531,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   Icon(
                                     Icons.location_on,
                                     size: width / width10,
-                                    color:  Theme.of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .bodyMedium!
                                         .color,
@@ -541,7 +547,7 @@ class DayEventsBottomSheet extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                               VerticalDivider(
+                              VerticalDivider(
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyMedium!
@@ -561,8 +567,6 @@ class DayEventsBottomSheet extends StatelessWidget {
                             ],
                           ),
                         ),
-
-                        
                       ],
                     ),
                   ),

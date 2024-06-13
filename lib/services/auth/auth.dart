@@ -19,8 +19,11 @@ class CustomUser {
 class Auth {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   User? get CurrentUser => _firebaseAuth.currentUser;
+
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+
   //fetch all the patrol ids assigned to him using
   final LocalStorage storage;
 

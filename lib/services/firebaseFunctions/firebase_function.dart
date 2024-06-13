@@ -1484,8 +1484,8 @@ class FireStoreService {
     }
 
     final querySnapshot = await userInfo
-        .where("EmployeeCompanyId", isEqualTo: CompanyId)
-        .where("EmployeeRole", isEqualTo: "GUARD")
+        .where("EmployeeSupervisorId", arrayContains: CompanyId)
+        // .where("EmployeeRole", isEqualTo: "GUARD")
         .orderBy("EmployeeModifiedAt", descending: false)
         .get();
     // Log all retrieved documents
@@ -4197,6 +4197,74 @@ class FireStoreService {
     } catch (e) {
       print('Error getting location: $e');
       rethrow; // Rethrow the exception to handle it outside this function
+    }
+  }
+
+  List<String> _generateSearchIndex(String keyName) {
+    List<String> searchIndex = [];
+    for (int i = 0; i < keyName.length; i++) {
+      for (int j = i + 1; j <= keyName.length; j++) {
+        searchIndex.add(keyName.substring(i, j).toLowerCase());
+      }
+    }
+    return searchIndex;
+  }
+
+  //Create Key
+  Future<void> CreateKey(
+      String KeyCompanyBranchId,
+      String KeyCompanyId,
+      String KeyName,
+      int KeyAllotedQuantity,
+      String KeyDescription,
+      int KeyTotalQuantity) async {
+    try {
+      // Define the Firestore instance
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Define the collection name
+      String collectionName = "Keys";
+
+      // Get a document reference with an automatically generated ID
+      DocumentReference docRef = firestore.collection(collectionName).doc();
+
+      // Prepare the data
+      Map<String, dynamic> keyData = {
+        "KeyId": docRef.id, // Set the document ID as KeyId
+        "KeyCompanyBranchId": KeyCompanyBranchId,
+        "KeyCompanyId": KeyCompanyId,
+        "KeyName": KeyName,
+        "KeyAllotedQuantity": KeyAllotedQuantity,
+        "KeyDescription": KeyDescription,
+        "KeyTotalQuantity": KeyTotalQuantity,
+        "KeyCreatedAt": FieldValue.serverTimestamp(),
+        "KeyModifiedAt": FieldValue.serverTimestamp(),
+        "KeyNameSearchIndex": _generateSearchIndex(KeyName),
+      };
+
+      // Add the data to Firestore using the document reference
+      await docRef.set(keyData);
+
+      print("Key created successfully!");
+    } catch (e) {
+      print("Failed to create key: $e");
+    }
+  }
+
+  Future<String?> FetchKeyName(String KeyId) async {
+    try {
+      CollectionReference keysCollection =
+          FirebaseFirestore.instance.collection('Keys');
+      DocumentSnapshot snapshot = await keysCollection.doc(KeyId).get();
+
+      if (snapshot.exists) {
+        return snapshot.get('KeyName');
+      } else {
+        return null; // or throw an exception if you prefer
+      }
+    } catch (e) {
+      print("Error fetching key name: $e");
+      return null; // or handle the error as needed
     }
   }
 
