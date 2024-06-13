@@ -348,7 +348,8 @@ class _ShiftInformationState extends State<ShiftInformation> {
         transaction.set(exchangeDoc, {
           'ShiftExchReqId': exchangeDoc.id,
           'ShiftExchReqSenderId': widget.currentUserId,
-          'ShiftExchReqReceiverId': (dataJson['ShiftAssignedUserId'] ?? []).first,
+          'ShiftExchReqReceiverId':
+              (dataJson['ShiftAssignedUserId'] ?? []).first,
           'ShiftExchReqShiftId': shiftId,
           'ShiftExchReqStatus': 'pending',
           'ShiftExchReqCreatedAt': DateTime.now(),

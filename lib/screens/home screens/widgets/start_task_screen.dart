@@ -176,6 +176,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
     // inTime = DateTime.now();
     // startStopwatch();
     initPrefs();
+    print("Shift id at StartTask Screen ${widget.ShiftId}");
     // initStopwatch();
     // startStopwatch();
 
@@ -304,7 +305,7 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
 
   @override
   void dispose() {
-    _stopwatchTimer.cancel();
+    _stopwatchTimer?.cancel();
     super.dispose();
   }
 
@@ -648,47 +649,63 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                                   updateLateTimeAndStartTimer();
 
                                   ///TODO paste this code to start timer and start locations fetch before you start to push new locations clear previous locations
-                                  // FirebaseFirestore firestore =
-                                  //     FirebaseFirestore.instance;
+                                  FirebaseFirestore firestore =
+                                      FirebaseFirestore.instance;
                                   // // Create a new document reference
 
-                                  // DocumentReference docRef = firestore
-                                  //     .collection('EmployeeRoutes')
-                                  //     .doc();
+                                  // Reference to the Firestore collection
+                                  CollectionReference employeeRoutes =
+                                      firestore.collection('EmployeeRoutes');
 
-                                  // Data to be added
-                                  // Map<String, dynamic> empRouteData = {
-                                  //   'EmpRouteCreatedAt': Timestamp.now(),
-                                  //   'EmpRouteDate': Timestamp.now(),
-                                  //   'EmpRouteEmpId': widget.EmployeId,
-                                  //   'EmployeeName': widget.EmployeeName,
-                                  //   'EmpRouteId': docRef.id,
-                                  //   'EmpRouteLocations': [],
-                                  //   'EmpRouteShiftId': widget.ShiftId,
-                                  //   'EmpRouteShiftStatus': 'started',
-                                  //   'EmployeeShiftStartTime':
-                                  //       widget.ShiftStartTime,
-                                  //   'EmployeeShiftEndTime': widget.ShiftEndTime,
-                                  //   'EmployeeShiftShiftName': widget.ShiftName,
-                                  //   'EmpRouteEmpRole':
-                                  //       userStorage.getItem("Role"),
-                                  // };
-                                  // try {
-                                  //   // Add the document to the collection
-                                  //   await docRef.set(empRouteData);
-                                  //   print(
-                                  //       'Employee route created with ID: ${docRef.id}');
-                                  // } catch (e) {
-                                  //   print('Error creating employee route: $e');
-                                  // }
+                                  // Query to check if a document with the same EmployeId and ShiftId exists
+                                  QuerySnapshot querySnapshot =
+                                      await employeeRoutes
+                                          .where('EmpRouteEmpId',
+                                              isEqualTo: widget.EmployeId)
+                                          .where('EmpRouteShiftId',
+                                              isEqualTo: widget.ShiftId)
+                                          .get();
+                                  if (querySnapshot.docs.isEmpty) {
+                                    // If no document exists, create a new one
+                                    DocumentReference docRef =
+                                        employeeRoutes.doc();
+                                    // Data to be added
+                                    Map<String, dynamic> empRouteData = {
+                                      'EmpRouteCreatedAt': Timestamp.now(),
+                                      'EmpRouteDate': Timestamp.now(),
+                                      'EmpRouteEmpId': widget.EmployeId,
+                                      'EmployeeName': widget.EmployeeName,
+                                      'EmpRouteId': docRef.id,
+                                      'EmpRouteLocations': [],
+                                      'EmpRouteShiftId': widget.ShiftId,
+                                      'EmpRouteShiftStatus': 'started',
+                                      'EmployeeShiftStartTime':
+                                          widget.ShiftStartTime,
+                                      'EmployeeShiftEndTime':
+                                          widget.ShiftEndTime,
+                                      'EmployeeShiftShiftName':
+                                          widget.ShiftName,
+                                      'EmpRouteEmpRole':
+                                          userStorage.getItem("Role"),
+                                    };
+                                    try {
+                                      // Add the document to the collection
+                                      await docRef.set(empRouteData);
+                                      print(
+                                          'Employee route created with ID: ${docRef.id}');
+                                    } catch (e) {
+                                      print(
+                                          'Error creating employee route: $e');
+                                    }
+                                  }
 
                                   // start stop watch
                                   // await controller.startStopWatch();
                                   _startTimer();
                                   //
                                   // // start bg service that get locations and send it to the firebase
-                                  // await homeScreenController
-                                  //     .startBgLocationService();
+                                  await homeScreenController
+                                      .startBgLocationService();
 
                                   setState(() {
                                     _isLoading = true;
@@ -792,42 +809,39 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       // if (controller.stopWatchRunning.value) {
                       /// TODO paste this code to end shift
                       // Get.to(() => MapScreen(onDone: (File file) async {
-                      //       // Fetch the employee's current route document
-                      //       QuerySnapshot routeSnapshot =
-                      //           await FirebaseFirestore.instance
-                      //               .collection('EmployeeRoutes')
-                      //               .where('EmpRouteEmpId',
-                      //                   isEqualTo: widget.EmployeId)
-                      //               .where('EmpRouteShiftStatus',
-                      //                   isEqualTo: 'started')
-                      //               .get();
+                      // Fetch the employee's current route document
+                      QuerySnapshot routeSnapshot = await FirebaseFirestore
+                          .instance
+                          .collection('EmployeeRoutes')
+                          .where('EmpRouteEmpId', isEqualTo: widget.EmployeId)
+                          .where('EmpRouteShiftStatus', isEqualTo: 'started')
+                          .get();
 
-                      //       if (routeSnapshot.docs.isNotEmpty) {
-                      //         // Assuming you only get one active route document per employee
-                      //         DocumentReference routeDocRef =
-                      //             routeSnapshot.docs.first.reference;
+                      if (routeSnapshot.docs.isNotEmpty) {
+                        // Assuming you only get one active route document per employee
+                        DocumentReference routeDocRef =
+                            routeSnapshot.docs.first.reference;
 
-                      //         // Update the EmpRouteShiftStatus to "completed"
-                      //         await routeDocRef.update({
-                      //           'EmpRouteShiftStatus': 'completed',
-                      //           'EmpRouteCompletedAt': Timestamp.now(),
-                      //         });
+                        // Update the EmpRouteShiftStatus to "completed"
+                        await routeDocRef.update({
+                          'EmpRouteShiftStatus': 'completed',
+                          'EmpRouteCompletedAt': Timestamp.now(),
+                        });
+                        print('Shift ended for employee: ${widget.EmployeId}');
+                      } else {
+                        print(
+                            'No active route found for employee:  ${widget.EmployeId}');
+                      }
 
-                      //         print(
-                      //             'Shift ended for employee: ${widget.EmployeId}');
-                      //       } else {
-                      //         print(
-                      //             'No active route found for employee:  ${widget.EmployeId}');
-                      //       }
+                      // await _sendEmailWithScreenshot(file.path);
 
-                      //       // await _sendEmailWithScreenshot(file.path);
-
-                      //       await homeScreenController.stopBgLocationService();
-                      //     }));
+                      await homeScreenController.stopBgLocationService();
+                      // }));
 
                       // setState(() {
                       //   _isLoading = true;
                       // });
+
                       List<String> endTimeParts =
                           widget.ShiftEndTime.split(':');
                       DateTime shiftEndDateTime = DateTime(
@@ -839,11 +853,12 @@ class _StartTaskScreenState extends State<StartTaskScreen> {
                       print("Formatted SHiftEnd time ${shiftEndDateTime}");
                       DateTime currentTime = DateTime.now();
 
-                      Duration bufferDuration = Duration(minutes: 10);
+                      Duration bufferDuration = const Duration(minutes: 10);
 
-// Calculate the time ranges for the buffer period
+                      // Calculate the time ranges for the buffer period
                       DateTime bufferStart =
                           shiftEndDateTime.subtract(bufferDuration);
+
                       DateTime bufferEnd = shiftEndDateTime.add(bufferDuration);
 
                       print("Buffer Start Time: $bufferStart");
