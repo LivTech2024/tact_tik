@@ -455,7 +455,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               height: 66.h,
                               width: 66.w,
                               decoration: BoxDecoration(
-                                 boxShadow: [
+                                boxShadow: [
                                   BoxShadow(
                                     color: Theme.of(context).shadowColor,
                                     blurRadius: 5,
@@ -469,12 +469,15 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               child: Center(
                                 child: Icon(
                                   Icons.add,
-                                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .color,
                                   size: 20.sp,
-                                  color: Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? DarkColor.color11
-                                      : LightColor.color3,
+                                  // color: Theme.of(context).brightness ==
+                                  //         Brightness.dark
+                                  //     ? DarkColor.color11
+                                  //     : LightColor.color3,
                                 ),
                               ),
                             ),
