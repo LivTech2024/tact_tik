@@ -15,19 +15,19 @@ class PersonalDetails extends StatefulWidget {
   final TextEditingController PhoneNumberController;
   final TextEditingController EmailController;
   final TextEditingController PasswordController;
-  final TextEditingController RoleController;
+  String SelectedRole;
   final TextEditingController PayRateController;
   final TextEditingController WeekHoursController;
   final TextEditingController BranchController;
   final String CompanyId;
-  const PersonalDetails(
+  PersonalDetails(
       {super.key,
       required this.FirstNameController,
       required this.LastNameController,
       required this.PhoneNumberController,
       required this.EmailController,
       required this.PasswordController,
-      required this.RoleController,
+      required this.SelectedRole,
       required this.PayRateController,
       required this.WeekHoursController,
       required this.BranchController,
@@ -149,7 +149,7 @@ class _PersonalDetailsState extends State<PersonalDetails> {
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedPosition = newValue;
-                    // print('$selectedValue selected');
+                    widget.SelectedRole = newValue ?? '';
                   });
                 },
                 items: PositionValues.map<DropdownMenuItem<String>>(

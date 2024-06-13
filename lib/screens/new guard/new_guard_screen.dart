@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,7 +34,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
   final TextEditingController PhoneNumberController = TextEditingController();
   final TextEditingController EmailController = TextEditingController();
   final TextEditingController PasswordController = TextEditingController();
-  final TextEditingController RoleController = TextEditingController();
+  final String SelectedRole = '';
   final TextEditingController PayRateController = TextEditingController();
   final TextEditingController WeekHoursController = TextEditingController();
   final TextEditingController BranchController = TextEditingController();
@@ -68,14 +69,18 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
 
   Future<void> createEmployee() async {
     try {
-      final employeeName =
-          '${FirstNameController.text} ${LastNameController.text}';
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: EmailController.text,
+        password: PasswordController.text,
+      );
+
+      String uid = userCredential.user!.uid;
+
+      final employeeName = '${FirstNameController.text} ${LastNameController.text}';
       final nameSearchIndex = generateSearchIndex(employeeName);
 
-      DocumentReference newEmployeeDoc =
-          FirebaseFirestore.instance.collection('Employees').doc();
+      DocumentReference newEmployeeDoc = FirebaseFirestore.instance.collection('Employees').doc(uid);
 
-      // Upload files and get download URLs
       String bankVoidCheckImgUrl = '';
       String certificateDocUrl = '';
       String employeeImgUrl = '';
@@ -84,27 +89,27 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
 
       if (bankVoidCheckImg != null) {
         bankVoidCheckImgUrl = await uploadFile(bankVoidCheckImg!,
-            'employees/images/${newEmployeeDoc.id}_bankVoidCheckImg${Path.extension(bankVoidCheckImg!.path)}');
+            'employees/images/${uid}_bankVoidCheckImg${Path.extension(bankVoidCheckImg!.path)}');
       }
 
       if (certificateDoc != null) {
         certificateDocUrl = await uploadFile(certificateDoc!,
-            'employees/images/${newEmployeeDoc.id}_certificateDoc${Path.extension(certificateDoc!.path)}');
+            'employees/images/${uid}_certificateDoc${Path.extension(certificateDoc!.path)}');
       }
 
       if (employeeImg != null) {
         employeeImgUrl = await uploadFile(employeeImg!,
-            'employees/images/${newEmployeeDoc.id}_employeeImg${Path.extension(employeeImg!.path)}');
+            'employees/images/${uid}_employeeImg${Path.extension(employeeImg!.path)}');
       }
 
       if (drivingLicenseImg != null) {
         drivingLicenseImgUrl = await uploadFile(drivingLicenseImg!,
-            'employees/images/${newEmployeeDoc.id}_drivingLicenseImg${Path.extension(drivingLicenseImg!.path)}');
+            'employees/images/${uid}_drivingLicenseImg${Path.extension(drivingLicenseImg!.path)}');
       }
 
       if (securityLicenseImg != null) {
         securityLicenseImgUrl = await uploadFile(securityLicenseImg!,
-            'employees/images/${newEmployeeDoc.id}_securityLicenseImg${Path.extension(securityLicenseImg!.path)}');
+            'employees/images/${uid}_securityLicenseImg${Path.extension(securityLicenseImg!.path)}');
       }
 
       await newEmployeeDoc.set({
@@ -126,7 +131,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         'EmployeeCompanyId': widget.companyId,
         'EmployeeCreatedAt': Timestamp.now(),
         'EmployeeEmail': EmailController.text,
-        'EmployeeId': newEmployeeDoc.id,
+        'EmployeeId': uid,
         'EmployeeImg': employeeImgUrl,
         'EmployeeIsAvailable': 'available',
         'EmployeeIsBanned': false,
@@ -157,7 +162,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
         'EmployeePhone': PhoneNumberController.text,
         'EmployeePostalCode': PostalCodeController.text,
         'EmployeeProvince': ProvinceController.text,
-        'EmployeeRole': 'GUARD',
+        'EmployeeRole': SelectedRole,
         'EmployeeSinNumber': SINNumberController.text,
         'EmployeeSupervisorId': [],
       });
@@ -172,6 +177,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
       ));
     }
   }
+
 
   List<String> generateSearchIndex(String name) {
     List<String> searchIndex = [];
@@ -222,7 +228,7 @@ class _NewGuardScreenState extends State<NewGuardScreen> {
             PhoneNumberController: PhoneNumberController,
             EmailController: EmailController,
             PasswordController: PasswordController,
-            RoleController: RoleController,
+            SelectedRole: SelectedRole,
             PayRateController: PayRateController,
             WeekHoursController: WeekHoursController,
             BranchController: BranchController,
