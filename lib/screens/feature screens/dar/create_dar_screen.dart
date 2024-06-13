@@ -469,7 +469,7 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                               child: Center(
                                 child: Icon(
                                   Icons.add,
-                                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                                  // color: Theme.of(context).textTheme.bodyMedium!.color,
                                   size: 20.sp,
                                   color: Theme.of(context).brightness ==
                                           Brightness.dark

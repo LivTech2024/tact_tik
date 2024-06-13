@@ -35,9 +35,16 @@ FireStoreService _fireStoreService = FireStoreService();
 class SCreateKeyManagScreen extends StatefulWidget {
   final String keyId;
   final String companyId;
-
-  SCreateKeyManagScreen(
-      {super.key, required this.keyId, required this.companyId});
+  final String branchId;
+  final String AllocationKeyId;
+  final bool editKeyMode;
+  SCreateKeyManagScreen({
+    super.key,
+    required this.keyId,
+    required this.companyId,
+    required this.branchId,
+    required this.AllocationKeyId,this.editKeyMode = false
+  });
 
   @override
   State<SCreateKeyManagScreen> createState() =>
@@ -231,17 +238,6 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       itemBuilder: (context, index) => items[index],
     );
   }
-
-  Future<List<Guards>> suggestionsCallback(String pattern) async =>
-      Future<List<Guards>>.delayed(
-        Duration(milliseconds: 300),
-        () => _screens.where((product) {
-          // print(product.name);
-          final nameLower = product.name.toLowerCase().split(' ').join('');
-          final patternLower = pattern.toLowerCase().split(' ').join('');
-          return nameLower.contains(patternLower);
-        }).toList(),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -591,111 +587,129 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 },
                               ),
                               SizedBox(height: 20.h),
-                            selectedGuards.isNotEmpty ? Container(
-                                margin: EdgeInsets.only(top: 20.h),
-                                height: 80.h,
-                                width: double.maxFinite,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: selectedGuards.length,
-                                  itemBuilder: (context, index) {
-                                    String guardId =
-                                        selectedGuards[index]['GuardId'];
-                                    String guardName =
-                                        selectedGuards[index]['GuardName'];
-                                    String guardImg =
-                                        selectedGuards[index]['GuardImg'];
-                                    return Padding(
-                                      padding: EdgeInsets.only(right: 20.h),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              Container(
-                                                height: 50.h,
-                                                width: 50.w,
-                                                decoration: guardImg != ""
-                                                    ? BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              guardImg ?? ""),
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      )
-                                                    : BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        image: DecorationImage(
-                                                          image: AssetImage(
-                                                              'assets/images/default.png'),
-                                                          filterQuality:
-                                                              FilterQuality
-                                                                  .high,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                              ),
-                                              Positioned(
-                                                top: -4,
-                                                right: -5,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      selectedGuards
-                                                          .removeAt(index);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    height: 20.h,
-                                                    width: 20.w,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color:
-                                                            DarkColor.color1),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        size: 8,
-                                                        color: DarkColor
-                                                            .Secondarycolor,
-                                                      ),
+                              //This should render both
+                              selectedGuards.isNotEmpty
+                                  ? Container(
+                                      margin: EdgeInsets.only(top: 20.h),
+                                      height: 80.h,
+                                      width: double.maxFinite,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: selectedGuards.length,
+                                        itemBuilder: (context, index) {
+                                          String guardId =
+                                              selectedGuards[index]['GuardId'];
+                                          String guardName =
+                                              selectedGuards[index]
+                                                  ['GuardName'];
+                                          String guardImg =
+                                              selectedGuards[index]['GuardImg'];
+                                          return Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 20.h),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    Container(
+                                                      height: 50.h,
+                                                      width: 50.w,
+                                                      decoration: guardImg != ""
+                                                          ? BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: NetworkImage(
+                                                                    guardImg ??
+                                                                        ""),
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            )
+                                                          : BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: AssetImage(
+                                                                    'assets/images/default.png'),
+                                                                filterQuality:
+                                                                    FilterQuality
+                                                                        .high,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
                                                     ),
-                                                  ),
+                                                    Positioned(
+                                                      top: -4,
+                                                      right: -5,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            selectedGuards
+                                                                .removeAt(
+                                                                    index);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          height: 20.h,
+                                                          width: 20.w,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: DarkColor
+                                                                      .color1),
+                                                          child: Center(
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              size: 8,
+                                                              color: DarkColor
+                                                                  .Secondarycolor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(height: 8.h),
-                                          InterBold(
-                                            text: guardName,
-                                            fontsize: 14.sp,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium!
-                                                .color,
-                                          )
-                                        ],
+                                                SizedBox(height: 8.h),
+                                                InterBold(
+                                                  text: guardName,
+                                                  fontsize: 14.sp,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium!
+                                                      .color,
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              ) : SizedBox(
-                              height: 20.h,
-                              child: InterMedium(text: 'No Guards selected',
-                                fontsize: 16.w,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,),
-                            ),
+                                    )
+                                  : SizedBox(
+                                      height: 20.h,
+                                      child: InterMedium(
+                                        text: 'No Guards selected',
+                                        fontsize: 16.w,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                      ),
+                                    ),
                               SizedBox(height: 20.h),
                               InterBold(
                                 text: 'Contact',
