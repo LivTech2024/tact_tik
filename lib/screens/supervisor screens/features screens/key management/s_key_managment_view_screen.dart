@@ -16,6 +16,7 @@ import 's_key_manag_create_screen.dart';
 class SKeyManagementViewScreen extends StatefulWidget {
   final String companyId;
   final String branchId;
+
   const SKeyManagementViewScreen(
       {super.key, required this.companyId, required this.branchId});
 
@@ -157,7 +158,9 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
@@ -182,72 +185,128 @@ class _SKeyManagementViewScreenState extends State<SKeyManagementViewScreen> {
                               );
                             },
                             child: Container(
-                              height: 100.w,
+                              constraints: BoxConstraints(
+                                minHeight: 100.w,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 10.h),
                               width: double.maxFinite,
                               margin: EdgeInsets.only(bottom: 10.h),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.r),
                                 color: Theme.of(context).cardColor,
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                              child: Column(
                                 children: [
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        height: 44.h,
-                                        width: 44.w,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10.w),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10.w),
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                        ),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.vpn_key,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            size: 24.w,
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 44.h,
+                                            width: 44.w,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.w),
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.vpn_key,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                size: 24.w,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          SizedBox(width: 20.w),
+                                          InterMedium(
+                                            text: keyName ?? '',
+                                            fontsize: 16.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(width: 20.w),
                                       InterMedium(
-                                        text: keyName ?? '',
-                                        fontsize: 16.sp,
+                                        text: formattedTime,
                                         color: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
                                             .color,
+                                        fontsize: 16.sp,
                                       ),
+                                      // SizedBox(width: 10.w),
                                     ],
                                   ),
-                                  SizedBox(width: 20.w),
-                                  InterMedium(
-                                    text:
-                                        key['KeyAllocationRecipientName'] ?? '',
-                                    fontsize: 16.sp,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 44.h,
+                                            width: 44.w,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.w),
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.account_circle_outlined,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                size: 24.w,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 20.w),
+                                          InterMedium(
+                                            text:
+                                                key['KeyAllocationRecipientName'] ??
+                                                    '',
+                                            fontsize: 16.sp,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .color,
+                                          ),
+                                        ],
+                                      ),
+                                      InterMedium(
+                                        text: formattedTime,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .color,
+                                        fontsize: 16.sp,
+                                      ),
+                                      // SizedBox(width: 10.w),
+                                    ],
                                   ),
-                                  InterMedium(
-                                    text: formattedTime,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .color,
-                                    fontsize: 16.sp,
-                                  ),
-                                  SizedBox(width: 20.w),
                                 ],
                               ),
                             ),

@@ -37,6 +37,7 @@ class SCreateKeyManagScreen extends StatefulWidget {
   final String companyId;
   final String branchId;
   final String AllocationKeyId;
+
   SCreateKeyManagScreen({
     super.key,
     required this.keyId,
@@ -67,7 +68,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   ];
   List selectedGuards = [];
   TextEditingController _tittleController = TextEditingController();
-  TextEditingController _RecipientNameController = TextEditingController();
+  TextEditingController _GuardNameController = TextEditingController();
   TextEditingController _ContactController = TextEditingController();
   TextEditingController _CompanyNameController = TextEditingController();
   TextEditingController _AllocationPurposeController = TextEditingController();
@@ -76,6 +77,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   TextEditingController _keyNameController2 = TextEditingController();
   TextEditingController _DescriptionController = TextEditingController();
   TextEditingController _searchController = TextEditingController();
+  TextEditingController _recipientController = TextEditingController();
   String? selectedGuardId;
   String? selectedKeyName;
   String? selectedKeyId;
@@ -84,6 +86,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
   List<String> keyNames = ['Select'];
   Map<String, DocumentSnapshot> keyNameToDocMap = {};
   bool editKeyMode = false;
+
   @override
   void initState() {
     super.initState();
@@ -206,7 +209,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       'KeyAllocationPurpose': _AllocationPurposeController.text,
       'KeyAllocationRecipientCompany': _CompanyNameController.text,
       'KeyAllocationRecipientContact': _ContactController.text,
-      'KeyAllocationRecipientName': _RecipientNameController.text,
+      'KeyAllocationRecipientName': _GuardNameController.text,
     });
 
     await docRef.update({
@@ -399,12 +402,29 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 ),
                               ),
                               SizedBox(height: 20.h),
+                              InterBold(
+                                text: 'Recipient Name',
+                                fontsize: 16.w,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                              ),
+                              SizedBox(height: 10.h),
+                              CustomeTextField(
+                                maxlength: 11,
+                                hint: 'Recipient name',
+                                controller: _recipientController,
+                                showIcon: false,
+                                textInputType: TextInputType.number,
+                              ),
+                              SizedBox(height: 20.h),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   InterBold(
-                                    text: 'Recipient Name',
+                                    text: 'Select Guard',
                                     fontsize: 16.w,
                                     color: Theme.of(context)
                                         .textTheme

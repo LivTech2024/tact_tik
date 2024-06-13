@@ -10,6 +10,7 @@ import 'package:tact_tik/fonts/inter_semibold.dart';
 import 'package:tact_tik/fonts/poppins_medium.dart';
 import 'package:tact_tik/fonts/poppins_regular.dart';
 import 'package:tact_tik/main.dart';
+
 // import 'package:workmanager/workmanager.dart';
 import 'package:tact_tik/screens/supervisor%20screens/features%20screens/post%20order/create_post_order.dart';
 // import 'package:workmanager/workmanager.dart';
@@ -237,21 +238,28 @@ class _PostOrderState extends State<PostOrder> {
                                                 BoxConstraints(minWidth: 200.w),
                                             height: 46.h,
                                             decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  blurRadius: 1.8,
+                                                  blurStyle: BlurStyle.outer,
+                                                  spreadRadius: -1,
+                                                )
+                                              ],
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .color,
+                                              color:
+                                                  Theme.of(context).cardColor,
                                             ),
                                             child: Row(
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                      horizontal: 6.w),
+                                                    horizontal: 6.w,
+                                                  ),
                                                   child: SvgPicture.asset(
-                                                      'assets/images/pdf.svg',
-                                                      width: 32.w),
+                                                    'assets/images/pdf.svg',
+                                                    width: 32.w,
+                                                  ),
                                                 ),
                                                 Column(
                                                   crossAxisAlignment:
@@ -357,7 +365,8 @@ class _PostOrderState extends State<PostOrder> {
                                                               PoppinsMedium(
                                                                 text:
                                                                     otherFileName,
-                                                                color:Theme.of(context)
+                                                                color: Theme.of(
+                                                                        context)
                                                                     .textTheme
                                                                     .titleLarge!
                                                                     .color,
@@ -366,7 +375,8 @@ class _PostOrderState extends State<PostOrder> {
                                                               PoppinsRegular(
                                                                 text:
                                                                     otherFileSize,
-                                                                color: Theme.of(context)
+                                                                color: Theme.of(
+                                                                        context)
                                                                     .textTheme
                                                                     .titleLarge!
                                                                     .color,

@@ -462,6 +462,10 @@ class _CreateDarScreenState extends State<CreateDarScreen> {
                                 child: Icon(
                                   Icons.add,
                                   size: 20.sp,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? DarkColor.color11
+                                      : LightColor.color3,
                                 ),
                               ),
                             ),
