@@ -220,10 +220,25 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
       setState(() {
         if (isStart) {
           StartDate = dateTime;
+          if (EndDate != null && StartDate!.isAfter(EndDate!)) {
+            // Reset EndDate if it's before StartDate
+            EndDate = null;
+
+            showErrorToast(context, 'End date must be after the start date.');
+          }
         } else if (isDate) {
           SelectedDate = dateTime;
         } else {
-          EndDate = dateTime;
+          if (StartDate != null && dateTime.isBefore(StartDate!)) {
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text('End date must be after the start date.'),
+            //   ),
+            // );
+            showErrorToast(context, 'End date must be after the start date.');
+          } else {
+            EndDate = dateTime;
+          }
         }
       });
     }
@@ -497,7 +512,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateKeyManagScreen> {
                                 hint: 'Recipient name',
                                 controller: _recipientController,
                                 showIcon: false,
-                                textInputType: TextInputType.number,
+                                textInputType: TextInputType.name,
                               ),
                               SizedBox(height: 20.h),
                               !showReturnBtn
