@@ -14,8 +14,9 @@ import 'package:tact_tik/utils/colors.dart';
 
 class CertificateDetails extends StatefulWidget {
   final TextEditingController CertificateController ;
+  final Function(File) onFileSelected;
 
-   CertificateDetails({super.key, required this.CertificateController});
+   CertificateDetails({super.key, required this.CertificateController, required  this.onFileSelected});
   @override
   State<CertificateDetails> createState() => _CertificateDetailsState();
 }
@@ -33,6 +34,7 @@ class _CertificateDetailsState extends State<CertificateDetails> {
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onFileSelected(File(pickedFile.path));
         });
       }
     }
@@ -43,6 +45,7 @@ class _CertificateDetailsState extends State<CertificateDetails> {
       if (pickedFile != null) {
         setState(() {
           uploads.add({'type': 'image', 'file': File(pickedFile.path)});
+          widget.onFileSelected(File(pickedFile.path));
         });
       }
     }
@@ -59,6 +62,7 @@ class _CertificateDetailsState extends State<CertificateDetails> {
         for (String filePath in filePaths) {
           setState(() {
             uploads.add({'type': 'pdf', 'file': File(filePath)});
+            widget.onFileSelected(File(filePath));
           });
         }
       }

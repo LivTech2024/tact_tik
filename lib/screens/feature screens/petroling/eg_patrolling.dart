@@ -997,7 +997,9 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                     ),
                     Button1(
                       text: 'START',
-                      backgroundcolor: Theme.of(context).primaryColor,
+                      backgroundcolor: widget.p.CurrentStatus == "started"
+                          ? Theme.of(context).primaryColorLight
+                          : Theme.of(context).primaryColor,
                       color: DarkColor.color5,
                       borderRadius: 10.r,
                       onPressed: buttonClicked
@@ -1267,7 +1269,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                   .brightness ==
                                                               Brightness.dark
                                                           ? DarkColor.color16
-                                                          : LightColor.Primarycolorlight,
+                                                          : LightColor
+                                                              .Primarycolorlight,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                         10.r,
@@ -1290,7 +1293,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                         .dark
                                                                 ? DarkColor
                                                                     .color16
-                                                                : Colors.transparent
+                                                                : Colors
+                                                                    .transparent
                                                             : Colors
                                                                 .lightGreenAccent,
                                                       ),
@@ -1372,7 +1376,8 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                                     .brightness ==
                                                                 Brightness.dark
                                                             ? DarkColor.color16
-                                                            : LightColor.Primarycolorlight,
+                                                            : LightColor
+                                                                .Primarycolorlight,
                                                       ),
                                                       child: Center(
                                                         child: IconButton(
@@ -1453,8 +1458,13 @@ class _PatrollingWidgetState extends State<PatrollingWidget> {
                                                           icon: Icon(
                                                             Icons.info,
                                                             color: Theme.of(context)
-                                                                .brightness ==
-                                                                Brightness.dark ? DarkColor.color5 : LightColor.Primarycolor,
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? DarkColor
+                                                                    .color5
+                                                                : LightColor
+                                                                    .Primarycolor,
                                                             size: 24.sp,
                                                           ),
                                                           padding:

@@ -44,12 +44,18 @@ class SDarDisplayScreen extends StatefulWidget {
 
 class _DarDisplayScreenState extends State<SDarDisplayScreen> {
   
-
+initColors(BuildContext context) {
+      return [
+        Theme.of(context).primaryColor,
+        Theme.of(context).highlightColor,
+      ];
+    }
   bool showAllDARS = false;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Widget build(BuildContext context) {
+    
     // keep this code in firebase_function file  and handle its errors here
     Future<String?> _submitDAR() async {
       final _userService = UserService(firestoreService: FireStoreService());
@@ -96,10 +102,7 @@ class _DarDisplayScreenState extends State<SDarDisplayScreen> {
     bool isNewEntry(DocumentSnapshot document) {
       return document['EmpDarShiftId'] == widget.EmpDarShiftID;
     }
-    List colors = [
-      Theme.of(context).textTheme.bodyLarge!.color,
-      Theme.of(context).highlightColor
-    ];
+    List colors = initColors(context);
 
     return SafeArea(
       child: Scaffold(

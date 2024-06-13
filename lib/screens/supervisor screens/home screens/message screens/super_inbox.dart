@@ -63,13 +63,16 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
   }*/
 
   String dropdownValue = 'All Guards'; // Initialize default value
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    List colors = [
-      Theme.of(context).textTheme.bodyLarge!.color,
-      Theme.of(context).highlightColor
-    ];
+    List colors = initColors(context);
 
     return SafeArea(
       child: Scaffold(
@@ -116,7 +119,7 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                           showGuards = true;
                           colors[0] =
                               Theme.of(context).textTheme.bodySmall!.color;
-                          colors[1] = Theme.of(context).highlightColor ;
+                          colors[1] = Theme.of(context).highlightColor;
                         });
                       },
                       child: SizedBox(
@@ -229,7 +232,8 @@ class _SuperInboxScreenState extends State<SuperInboxScreen> {
                                       offset: Offset(0, 3),
                                     )
                                   ],
-                                  color: Theme.of(context).brightness == Brightness.dark
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
                                       ? DarkColor.color19
                                       : LightColor.WidgetColor,
                                   borderRadius: BorderRadius.circular(12.r),

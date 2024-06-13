@@ -786,8 +786,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: HomeScreenCustomNavigation(
                               text: 'Calendar',
                               icon: Icons.calendar_today,
-                              color: IconColors[2],
-                              textcolor: IconColors[2],
+                              color: ScreenIndex == 2
+                                  ? ThemeMode.dark == themeManager.themeMode
+                                      ? Theme.of(context).focusColor
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
+                              textcolor: ScreenIndex == 2
+                                  ? ThemeMode.dark == themeManager.themeMode
+                                      ? Theme.of(context).focusColor
+                                      : LightColor.Primarycolor
+                                  : Theme.of(context).focusColor,
                             ),
                           ),
                           Bounce(
@@ -825,40 +833,50 @@ class _HomeScreenState extends State<HomeScreen> {
               ScreenIndex == 0
                   ? SliverToBoxAdapter(
                       child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30.w),
-                          child: ShiftExist
-                              ? FutureBuilder(
-                                  future: Future.delayed(Duration(seconds: 1)),
-                                  builder: (c, s) => s.connectionState ==
-                                          ConnectionState.done
-                                      ? StartTaskScreen(
-                                          ShiftDate: _ShiftDate,
-                                          ShiftClientID: _shiftCLientId,
-                                          ShiftEndTime: _ShiftEndTime,
-                                          ShiftStartTime: _ShiftStartTime,
-                                          EmployeId: _employeeId,
-                                          ShiftId: _shiftId,
-                                          ShiftAddressName: _ShiftLocationName,
-                                          ShiftCompanyId: _ShiftCompanyId ?? "",
-                                          ShiftBranchId: _ShiftBranchId,
-                                          EmployeeName: _userName ?? "",
-                                          ShiftLocationId: _shiftLocationId,
-                                          resetShiftStarted: () {},
-                                          ShiftIN: true,
-                                          onRefresh: refreshHomeScreen,
-                                          ShiftName: _ShiftName,
-                                          ShiftStatus: _ShiftStatus,
-                                        )
-                                      : Center(
-                                          child: InterMedium(
-                                            text: 'Loading...',
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontsize: 14.sp,
-                                          ),
+                        padding: EdgeInsets.symmetric(horizontal: 30.w),
+                        child: ShiftExist
+                            ? FutureBuilder(
+                                future: Future.delayed(Duration(seconds: 1)),
+                                builder: (c, s) => s.connectionState ==
+                                        ConnectionState.done
+                                    ? StartTaskScreen(
+                                        ShiftDate: _ShiftDate,
+                                        ShiftClientID: _shiftCLientId,
+                                        ShiftEndTime: _ShiftEndTime,
+                                        ShiftStartTime: _ShiftStartTime,
+                                        EmployeId: _employeeId,
+                                        ShiftId: _shiftId,
+                                        ShiftAddressName: _ShiftLocationName,
+                                        ShiftCompanyId: _ShiftCompanyId ?? "",
+                                        ShiftBranchId: _ShiftBranchId,
+                                        EmployeeName: _userName ?? "",
+                                        ShiftLocationId: _shiftLocationId,
+                                        resetShiftStarted: () {},
+                                        ShiftIN: true,
+                                        onRefresh: refreshHomeScreen,
+                                        ShiftName: _ShiftName,
+                                        ShiftStatus: _ShiftStatus,
+                                      )
+                                    : Center(
+                                        child: InterMedium(
+                                          text: 'Loading...',
+                                          color: Theme.of(context).primaryColor,
+                                          fontsize: 14.sp,
                                         ),
-                                )
-                              : SizedBox()),
+                                      ),
+                              )
+                            : SizedBox(
+                                child: Center(
+                                  child: InterBold(
+                                    text: 'No shift Assigned yet',
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .displaySmall!
+                                        .color,
+                                  ),
+                                ),
+                              ),
+                      ),
                     )
                   : ScreenIndex == 1
                       ? SliverGrid(

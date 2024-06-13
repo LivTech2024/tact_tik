@@ -13,7 +13,7 @@ var ligthTheme = ThemeData(
     highlightColor: LightColor.color2,
     hoverColor: LightColor.color1,
     progressIndicatorTheme:
-    ProgressIndicatorThemeData(color: LightColor.Primarycolor),
+        ProgressIndicatorThemeData(color: LightColor.Primarycolor),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       iconSize: 24.sp,
       backgroundColor: LightColor.Primarycolor,
@@ -37,7 +37,6 @@ var ligthTheme = ThemeData(
     ),
     focusColor: LightColor.color3,
     shadowColor: LightColor.color3.withOpacity(.1),
-
     textTheme: const TextTheme(
       titleMedium: TextStyle(
         color: DarkColor.color15,
@@ -94,7 +93,7 @@ var darkTheme = ThemeData(
   highlightColor: DarkColor.color25,
   hoverColor: DarkColor.color22,
   progressIndicatorTheme:
-  ProgressIndicatorThemeData(color: DarkColor.Primarycolor),
+      ProgressIndicatorThemeData(color: DarkColor.Primarycolor),
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     iconSize: 24.sp,
     backgroundColor: DarkColor.Primarycolor,

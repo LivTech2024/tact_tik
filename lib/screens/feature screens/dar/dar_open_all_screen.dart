@@ -42,15 +42,7 @@ class DarOpenAllScreen extends StatefulWidget {
 class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   bool showDARS = true;
   List<Map<String, dynamic>> hourlyShiftDetails = [];
-  List colors = ThemeMode.dark == ThemeManager
-      ? [
-          DarkColor.Primarycolor,
-          DarkColor.color25,
-        ]
-      : [
-          LightColor.Primarycolor,
-          DarkColor.color2,
-        ];
+  
   List<Map<String, dynamic>> hourlyShiftDetails2 = [];
 
   final _userService = UserService(firestoreService: FireStoreService());
@@ -65,6 +57,13 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
 
   void refresh() {
     _fetchShiftDetails();
+  }
+
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
   }
 
   Future<Map<String, List<Map<String, dynamic>>>> fetchReports() async {
@@ -480,7 +479,7 @@ class _DarOpenAllScreenState extends State<DarOpenAllScreen> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-
+    List colors = initColors(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

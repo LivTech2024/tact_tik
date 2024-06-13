@@ -320,7 +320,7 @@ class _HomeScreenPart1State extends State<HomeScreenPart1> {
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w300,
                               fontSize: 18.sp,
-                              color: Colors.white,
+                              color: Theme.of(context).textTheme.titleLarge!.color,
                             ),
                             decoration: InputDecoration(
                               border: OutlineInputBorder(

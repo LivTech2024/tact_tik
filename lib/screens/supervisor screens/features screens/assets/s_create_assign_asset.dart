@@ -32,6 +32,7 @@ class SCreateAssignAssetScreen extends StatefulWidget {
   final String empId;
   final bool OnlyView;
   final String equipemtAllocId;
+  List selectedGuards = [];
 
   SCreateAssignAssetScreen(
       {super.key,
@@ -63,6 +64,14 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
 
   List<Map<String, dynamic>> guards = [];
   List<DocumentSnapshot> equipment = [];
+  List selectedGuards = [];
+
+  initColors(BuildContext context) {
+    return [
+      Theme.of(context).textTheme.bodySmall!.color,
+      Theme.of(context).highlightColor,
+    ];
+  }
 
   @override
   void initState() {
@@ -248,7 +257,7 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
             icon: Icon(
               Icons.arrow_back_ios,
             ),
-            padding: EdgeInsets.only(left: width / width20),
+            padding: EdgeInsets.only(left: 20.w),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -495,6 +504,99 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                               ],
                             ),
                           ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20.h),
+                            height: 80.h,
+                            width: double.maxFinite,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 0,
+                              itemBuilder: (context, index) {
+                                String guardId =
+                                    selectedGuards[index]['GuardId'];
+                                String guardName =
+                                    selectedGuards[index]['GuardName'];
+                                String guardImg =
+                                    selectedGuards[index]['GuardImg'];
+                                return Padding(
+                                  padding: EdgeInsets.only(right: 20.h),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Container(
+                                            height: 50.h,
+                                            width: 50.w,
+                                            decoration: guardImg != ""
+                                                ? BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          guardImg ?? ""),
+                                                      filterQuality:
+                                                          FilterQuality.high,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/images/default.png'),
+                                                      filterQuality:
+                                                          FilterQuality.high,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                          ),
+                                          Positioned(
+                                            top: -4,
+                                            right: -5,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  // selectedGuards
+                                                  //     .removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                height: 20.h,
+                                                width: 20.w,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: DarkColor.color1),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.close,
+                                                    size: 8,
+                                                    color: DarkColor
+                                                        .Secondarycolor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      InterBold(
+                                        text: guardName,
+                                        fontsize: 14.sp,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium!
+                                            .color,
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                           ListView.builder(
                             shrinkWrap: true,
                             itemCount: guards.length,
@@ -669,11 +771,148 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                             height: 60.h,
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
                             decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).shadowColor,
+                                  blurRadius: 5,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
+                              color: Theme.of(context).cardColor,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                      size: 24.sp,
+                                    ),
+                                    SizedBox(width: 6.w),
+                                    InterMedium(
+                                      text: 'Asset Returned ?',
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .color,
+                                      fontsize: 16.sp,
+                                      letterSpacing: -.3,
+                                    )
+                                  ],
+                                ),
+                                Checkbox(
+                                  activeColor: Theme.of(context)
+                                      .primaryColor,
+                                  checkColor: DarkColor.color1,
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      isChecked = !isChecked;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 40.h),
+                          IgnorePointer(
+                            ignoring:
+                                widget.OnlyView == true && isChecked == true
+                                    ? true
+                                    : false,
+                            child: Button1(
+                              text: 'Save',
+                              onPressed: () {
+                                createEquipmentAllocation();
+                              },
+                              backgroundcolor: /*widget.OnlyView == true
+                                  ?*/ isChecked == false
+                                      ? Theme.of(context).primaryColorLight
+                                      : Theme.of(context).primaryColor,
+                                  // : Theme.of(context).primaryColorLight,
+                              borderRadius: 10.r,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 10.h),
+                          InterBold(
+                            text: 'Allocate Qt.',
+                            fontsize: 16.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                          SizedBox(height: 10.h),
+                          CustomeTextField(
+                            hint: 'Title',
+                            controller: _titleController2,
+                            showIcon: true,
+                          ),
+                          SizedBox(height: 10.sp),
+                          InterBold(
+                            text: 'Allocate Qt.',
+                            fontsize: 16.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                          SizedBox(height: 10.h),
+                          CustomeTextField(
+                            hint: '0',
+                            controller: _allocateQtController2,
+                          ),
+                          SizedBox(height: 10.h),
+                          InterBold(
+                            text: 'Description',
+                            fontsize: 16.sp,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color,
+                          ),
+                          SizedBox(height: 10.h),
+                          CustomeTextField(
+                            hint: 'Write something about asset...',
+                            controller: _descriptionController,
+                            showIcon: true,
+                          ),
+                          SizedBox(height: 40.h),
+                          Button1(
+                            text: 'Save',
+                            onPressed: () {
+                              createEquipmentAllocation();
+                            },
+                            backgroundcolor: Theme.of(context).primaryColor,
+                            borderRadius: 10.r,
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*Container(
+                            height: 60.h,
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             //Add receiver name too
-                            child: Row(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
@@ -1050,155 +1289,68 @@ class _SCreateAssignAssetScreenState extends State<SCreateAssignAssetScreen> {
                                 ),
                               ],
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 10.h),
-                                InterBold(
-                                  text: 'Allocate Qt.',
-                                  fontsize: 16.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
-                                ),
-                                SizedBox(height: 10.h),
-                                CustomeTextField(
-                                  hint: 'Title',
-                                  controller: _titleController2,
-                                  showIcon: true,
-                                ),
-                                SizedBox(height: 10.h),
-                                InterBold(
-                                  text: 'Allocate Qt.',
-                                  fontsize: 16.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
-                                ),
-                                SizedBox(height: 10.h),
-                                CustomeTextField(
-                                  hint: '0',
-                                  controller: _allocateQtController2,
-                                ),
-                                SizedBox(height: 10.h),
-                                InterBold(
-                                  text: 'Description',
-                                  fontsize: 16.sp,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .color,
-                                ),
-                                SizedBox(height: 10.h),
-                                CustomeTextField(
-                                  hint: 'Write something about asset...',
-                                  controller: _descriptionController,
-                                  showIcon: true,
-                                ),
-                                SizedBox(height: 40.h),
-                                Button1(
-                                  text: 'Done',
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium!
-                                      .color,
-                                  onPressed: () {
-                                    createEquipmentAllocation();
-                                  },
-                                  backgroundcolor:
-                                      Theme.of(context).primaryColor,
-                                  borderRadius: 10.r,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 40.h),
-                          IgnorePointer(
-                            ignoring: widget.OnlyView
-                                ? isChecked == false
-                                    ? true
-                                    : false
-                                : true,
-                            child: Button1(
-                              text: 'Save',
-                              onPressed: () {
-                                createEquipmentAllocation();
-                              },
-                              backgroundcolor: widget.OnlyView
-                                  ? isChecked == false
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).primaryColor
-                                  : Theme.of(context).primaryColorLight,
-                              borderRadius: 10.r,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 10.h),
-                          InterBold(
-                            text: 'Allocate Qt.',
-                            fontsize: 16.sp,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                          SizedBox(height: 10.h),
-                          CustomeTextField(
-                            hint: 'Title',
-                            controller: _titleController2,
-                            showIcon: true,
-                          ),
-                          SizedBox(height: 10.sp),
-                          InterBold(
-                            text: 'Allocate Qt.',
-                            fontsize: width / width16,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                          SizedBox(height: 10.h),
-                          CustomeTextField(
-                            hint: '0',
-                            controller: _allocateQtController2,
-                          ),
-                          SizedBox(height: 10.h),
-                          InterBold(
-                            text: 'Description',
-                            fontsize: width / width16,
-                            color:
-                                Theme.of(context).textTheme.bodyMedium!.color,
-                          ),
-                          SizedBox(height: 10.h),
-                          CustomeTextField(
-                            hint: 'Write something about asset...',
-                            controller: _descriptionController,
-                            showIcon: true,
-                          ),
-                          SizedBox(height: 40.h),
-                          Button1(
-                            text: 'Save',
-                            onPressed: () {
-                              createEquipmentAllocation();
-                            },
-                            backgroundcolor: Theme.of(context).primaryColor,
-                            borderRadius: 10.r,
-                          ),
-                        ],
-                      ),
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+                          ),*/
+
+/*   Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 10.h),
+                              InterBold(
+                                text: 'Allocate Qt.',
+                                fontsize: 16.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                              ),
+                              SizedBox(height: 10.h),
+                              CustomeTextField(
+                                hint: 'Title',
+                                controller: _titleController2,
+                                showIcon: true,
+                              ),
+                              SizedBox(height: 10.h),
+                              InterBold(
+                                text: 'Allocate Qt.',
+                                fontsize: 16.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                              ),
+                              SizedBox(height: 10.h),
+                              CustomeTextField(
+                                hint: '0',
+                                controller: _allocateQtController2,
+                              ),
+                              SizedBox(height: 10.h),
+                              InterBold(
+                                text: 'Description',
+                                fontsize: 16.sp,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .color,
+                              ),
+                              SizedBox(height: 10.h),
+                              CustomeTextField(
+                                hint: 'Write something about asset...',
+                                controller: _descriptionController,
+                                showIcon: true,
+                              ),
+                              SizedBox(height: 40.h),
+                              Button1(
+                                text: 'Done',
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium!
+                                    .color,
+                                onPressed: () {
+                                  createEquipmentAllocation();
+                                },
+                                backgroundcolor:
+                                    Theme.of(context).primaryColor,
+                                borderRadius: 10.r,
+                              ),
+                            ],
+                          ),*/
